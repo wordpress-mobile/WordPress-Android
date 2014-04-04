@@ -1,8 +1,5 @@
 package org.wordpress.android.models;
 
-/**
- * Created by nbradbury on 11/14/13.
- */
 public enum CommentStatus {
     UNKNOWN,
     UNAPPROVED,

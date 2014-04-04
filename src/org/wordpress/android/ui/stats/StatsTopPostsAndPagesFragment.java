@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,23 +7,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 
 /**
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
  */
-public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
     
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -39,26 +32,21 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  im
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int position) {
             return getFragment(position);
         }
-
         @Override
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel(); 
         }
-
     }
 
     @Override
@@ -73,44 +61,39 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment  im
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
-    
+
     public class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
-            String entry = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.TITLE));
-            String url = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.URL));
-            int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
-
-            // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            } else {
-                entryTextView.setText(entry);
-            }
-            
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
-            // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
 
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+
+            final String entry = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.TITLE));
+            final String url = cursor.getString(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.URL));
+            int total = cursor.getInt(cursor.getColumnIndex(StatsTopPostsAndPagesTable.Columns.VIEWS));
+
+            // entries
+            holder.setEntryTextOrLink(url, entry);
+
+            // totals
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
+        }
     }
 
     @Override

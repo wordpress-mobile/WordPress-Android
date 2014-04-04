@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -15,12 +14,12 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 
 
 /**
- * Created by Eric on 11/20/13.
  *
  * WPMobileStatsUtils handles stats logging. Its public methods should for the most part be service
  * neutral to allow to ease possible changes in the stats libs we use in the future.
@@ -125,7 +124,7 @@ public class WPMobileStatsUtil {
             properties.put("number_of_blogs", numBlogs);
             mixpanel.registerSuperProperties(properties);
         } catch(JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.UTILS, e);
         }
 
         // Application opened and start.
@@ -140,7 +139,7 @@ public class WPMobileStatsUtil {
                 jsonObj.put("$first_name", username);
                 mixpanel.getPeople().set(jsonObj);
             } catch (JSONException e) {
-                e.printStackTrace();
+                AppLog.e(T.UTILS, e);
             }
         }
     }
@@ -157,7 +156,7 @@ public class WPMobileStatsUtil {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 String errMsg = String.format("Error pinging WPCom Stats: %s", volleyError.getMessage());
-                Log.w("WORDPRESS", errMsg);
+                AppLog.w(T.STATS, errMsg);
             }
         };
 
@@ -256,7 +255,6 @@ public class WPMobileStatsUtil {
         WPMobileStatsUtil.instance.flag(event, property);
     }
 
-
     // Instance methods
 
     private boolean connectedToWPCom() {
@@ -353,12 +351,11 @@ public class WPMobileStatsUtil {
         try {
             properties.put(property, value);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.UTILS, e);
         }
     }
 
     private JSONObject propertiesForEvent(String event) {
         return aggregatedProperties.get(event);
     }
-
 }

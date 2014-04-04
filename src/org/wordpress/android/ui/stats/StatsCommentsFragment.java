@@ -1,12 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,19 +8,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -34,14 +22,13 @@ import org.wordpress.android.datasets.StatsMostCommentedTable;
 import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
-import org.wordpress.android.util.StatsRestHelper;
 
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
  */
-public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements TabListener {
+public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
@@ -98,75 +85,53 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {
-            CommentsSummaryFragment fragment = new CommentsSummaryFragment();
-            return fragment;
+            return new CommentsSummaryFragment();
         }
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
-
-        private int mType;
+        private final LayoutInflater inflater;
+        private final int mType;
 
         public CustomCursorAdapter(Context context, Cursor c, int type) {
             super(context, c, true);
             mType = type;
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            
-            // entry
-            String entry;
-            if (mType == TOP_COMMENTERS)
-                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
-            else 
-                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
-
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            entryTextView.setText(entry);
-
-
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
-            // totals
-            int total;
-            if (mType == TOP_COMMENTERS)
-                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
-            else 
-                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
-            
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
-            // image 
-            String imageUrl;
-            if (mType == TOP_COMMENTERS) {
-                imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
-                
-                view.findViewById(R.id.stats_list_cell_image_frame).setVisibility(View.VISIBLE);
-                
-                NetworkImageView imageView = (NetworkImageView) view.findViewById(R.id.stats_list_cell_image);
-                ImageView errorImageView = (ImageView) view.findViewById(R.id.stats_list_cell_blank_image);
-                if (imageUrl != null && imageUrl.length() > 0) {
-                    imageView.setErrorImageResId(R.drawable.stats_blank_image);
-                    imageView.setDefaultImageResId(R.drawable.stats_blank_image);
-                    imageView.setImageUrl(imageUrl, WordPress.imageLoader);
-                    imageView.setVisibility(View.VISIBLE);
-                    errorImageView.setVisibility(View.GONE);
-                } else {
-                    imageView.setVisibility(View.GONE);
-                    errorImageView.setVisibility(View.VISIBLE);
-                }
-            }
-            
+            inflater = LayoutInflater.from(context);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
 
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+
+            final String entry;
+            final int total;
+            if (mType == TOP_COMMENTERS) {
+                entry = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.NAME));
+                total = cursor.getInt(cursor.getColumnIndex(StatsTopCommentersTable.Columns.COMMENTS));
+            } else {
+                entry = cursor.getString(cursor.getColumnIndex(StatsMostCommentedTable.Columns.POST));
+                total = cursor.getInt(cursor.getColumnIndex(StatsMostCommentedTable.Columns.COMMENTS));
+            }
+
+            holder.entryTextView.setText(entry);
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            
+            // image 
+            if (mType == TOP_COMMENTERS) {
+                String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
+                holder.networkImageView.setVisibility(View.VISIBLE);
+                holder.showNetworkImage(imageUrl);
+            } else {
+                holder.networkImageView.setVisibility(View.GONE);
+            }
+        }
     }
     
     @Override
@@ -188,18 +153,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
         private TextView mActiveTimeText;
         private TextView mMostCommentedText;
         
-        private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-            
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(StatUtils.STATS_SUMMARY_UPDATED)) {
-                    StatsSummary stats = (StatsSummary) intent.getSerializableExtra(StatUtils.STATS_SUMMARY_UPDATED_EXTRA);
-                    refreshStats(stats);
-                }
-            }
-        };
-        
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
@@ -214,20 +167,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
         }
         
         @Override
-        public void onPause() {
-            super.onPause();
-
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-            lbm.unregisterReceiver(mReceiver);
-        }
-        
-        @Override
         public void onResume() {
             super.onResume();
-            
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-            lbm.registerReceiver(mReceiver, new IntentFilter(StatUtils.STATS_SUMMARY_UPDATED));
-
             refreshStatsFromFile();
         }
 
@@ -235,12 +176,12 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             if (WordPress.getCurrentBlog() == null)
                 return;
             
-            final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+            final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             new AsyncTask<Void, Void, StatsSummary>() {
 
                 @Override
                 protected StatsSummary doInBackground(Void... params) {
-                    StatsRestHelper.getStatsSummary(blogId);
+                    //StatsRestHelper.getStatsSummary(blogId);
                     return StatUtils.getSummary(blogId);
                 }
                 
@@ -254,7 +195,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
                             refreshStats(result);     
                         }
                     });
-                };
+                }
             }.execute();
         }
 
@@ -277,19 +218,15 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment implements 
             }
     
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-
-            mPerMonthText.setText(formatter.format(perMonth));
-            mTotalText.setText(formatter.format(total));
+            mPerMonthText.setText(FormatUtils.formatDecimal(perMonth));
+            mTotalText.setText(FormatUtils.formatDecimal(total));
             mActiveDayText.setText(activeDay);
             mActiveTimeText.setText(activeTime);
-            
-            Spanned link = Html.fromHtml("<a href=\"" + activePostUrl + "\">" + activePost + "</a>");
-            mMostCommentedText.setText(link);
-            mMostCommentedText.setMovementMethod(LinkMovementMethod.getInstance());
+
+           // StatUtils.setEntryTextOrLink(mMostCommentedText, activePostUrl, activePost);
         }
 
-        
+
     }
 
 }

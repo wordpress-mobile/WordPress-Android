@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,33 +9,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.CursorAdapter;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
-
-import org.json.JSONObject;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.HorizontalTabView.TabListener;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
  */
-public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements TabListener {
+public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY, StatsTimeframe.SUMMARY };
@@ -88,48 +77,39 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
         } else {
-            VideoSummaryFragment fragment = new VideoSummaryFragment();
-            return fragment;
+            return new VideoSummaryFragment();
         }
     }
     
     public class CustomCursorAdapter extends CursorAdapter {
+        private final LayoutInflater inflater;
 
         public CustomCursorAdapter(Context context, Cursor c) {
             super(context, c, true);
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup root) {
+            View view = inflater.inflate(R.layout.stats_list_cell, root, false);
+            view.setTag(new StatsViewHolder(view));
+            return view;
         }
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            
+            final StatsViewHolder holder = (StatsViewHolder) view.getTag();
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.NAME));
             String url = cursor.getString(cursor.getColumnIndex(StatsVideosTable.Columns.URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsVideosTable.Columns.PLAYS));
 
             // entries
-            TextView entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
-            if (url != null && url.length() > 0) {
-                Spanned link = Html.fromHtml("<a href=\"" + url + "\">" + entry + "</a>");
-                entryTextView.setText(link);
-                entryTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            } else {
-                entryTextView.setText(entry);
-            }
+            holder.setEntryTextOrLink(url, entry);
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             // totals
-            TextView totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
-            totalsTextView.setText(formatter.format(total));
-            
+            holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
         }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup root) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            return inflater.inflate(R.layout.stats_list_cell, root, false);
-        }
-
     }
 
     @Override
@@ -188,15 +168,12 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
                 @Override
                 protected StatsVideoSummary doInBackground(String... params) {
                     final String blogId = params[0];
-                    
-                    StatsVideoSummary stats = StatUtils.getVideoSummary(blogId);
-                    
-                    return stats;
+                    return StatUtils.getVideoSummary(blogId);
                 }
                 
                 protected void onPostExecute(StatsVideoSummary result) {
                     refreshSummaryViews(result);
-                };
+                }
             }.execute(blogId);
         }
 
@@ -208,7 +185,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
 
             final String blogId = String.valueOf(WordPress.getCurrentBlog());
                         
-            WordPress.restClient.getStatsVideoSummary(blogId, 
+        /*    WordPress.getRestClientUtils().getStatsVideoSummary(blogId, 
                     new Listener() {
                         
                         @Override
@@ -233,7 +210,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
                                             refreshSummary();      
                                         }
                                     });
-                                };
+                                }
                                 
                             }.execute();
                             
@@ -246,10 +223,10 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
                             // TODO Auto-generated method stub
                             
                         }
-                    });
+                    });*/
         }
         
-        protected void refreshSummaryViews(StatsVideoSummary result) {
+        void refreshSummaryViews(StatsVideoSummary result) {
 
             String header = "";
             int plays = 0;
@@ -265,11 +242,9 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment  implements Ta
                 header = String.format(getString(R.string.stats_video_summary_header), result.getTimeframe());
             }
 
-            DecimalFormat formatter = (DecimalFormat) DecimalFormat.getInstance(Locale.getDefault());
-            
             mHeader.setText(header);
-            mPlays.setText(formatter.format(plays));
-            mImpressions.setText(formatter.format(impressions));
+            mPlays.setText(FormatUtils.formatDecimal(plays));
+            mImpressions.setText(FormatUtils.formatDecimal(impressions));
             mPlaybackTotals.setText(playbackTotals + "");
             mBandwidth.setText(bandwidth);
         }

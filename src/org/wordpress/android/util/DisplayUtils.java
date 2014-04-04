@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Window;
 import android.view.WindowManager;
 
 public class DisplayUtils {
@@ -57,6 +59,11 @@ public class DisplayUtils {
         return (int) px;
     }
 
+    public static int pxToDp(Context context, int px) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) ((px/displayMetrics.density)+0.5);
+    }
+
     public static boolean isTablet(Context context) {
         // http://stackoverflow.com/a/8427523/1673548
         if (context == null)
@@ -64,7 +71,7 @@ public class DisplayUtils {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    /*
+    /**
      * returns the height of the ActionBar if one is enabled - supports both the native ActionBar
      * and ActionBarSherlock - http://stackoverflow.com/a/15476793/1673548
      */
@@ -82,5 +89,18 @@ public class DisplayUtils {
         // if we get this far, it's because the device doesn't support an ActionBar or the app
         // doesn't use ActionBarSherlock - so return the standard ActionBar height (48dp)
         return dpToPx(context, 48);
+    }
+
+    /**
+     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
+     * API 11 since hasFeature() requires API 11
+     */
+    @SuppressLint("NewApi")
+    public static boolean hasActionBarOverlay(Window window) {
+        if (window != null && Build.VERSION.SDK_INT >= 11) {
+            return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        } else {
+            return false;
+        }
     }
 }

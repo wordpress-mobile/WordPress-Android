@@ -9,15 +9,16 @@ import android.text.TextUtils;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.ReaderLog;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.Date;
 
 /**
- *  Created by nbradbury on 6/23/13.
  *  tbl_tags stores the list of topics the user subscribed to or has by default
  *  tbl_recommended_tags stores the list of recommended topics returned by the api
  *  tbl_tags_updates stores the iso8601 dates each topic was updated by the app as follows:
@@ -57,6 +58,13 @@ public class ReaderTagTable {
     }
 
     /*
+     * returns true if tbl_tags is empty
+     */
+    public static boolean isEmpty() {
+        return (SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_tags") == 0);
+    }
+
+    /*
      * replaces all tags with the passed list
      */
     public static void replaceTags(ReaderTagList tags) {
@@ -76,7 +84,7 @@ public class ReaderTagTable {
                 db.setTransactionSuccessful();
 
             } catch (SQLException e) {
-                ReaderLog.e(e);
+                AppLog.e(T.READER, e);
             }
         } finally {
             db.endTransaction();
@@ -121,16 +129,14 @@ public class ReaderTagTable {
     }
 
     private static ReaderTag getTagFromCursor(Cursor c) {
-        if (c==null)
+        if (c == null)
             throw new IllegalArgumentException("null topic cursor");
 
-        ReaderTag tag = new ReaderTag();
+        String tagName = c.getString(c.getColumnIndex("tag_name"));
+        String endpoint = c.getString(c.getColumnIndex("endpoint"));
+        ReaderTagType tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("topic_type")));
 
-        tag.setTagName(c.getString(c.getColumnIndex("tag_name")));
-        tag.setEndpoint(c.getString(c.getColumnIndex("endpoint")));
-        tag.tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("topic_type")));
-
-        return tag;
+        return new ReaderTag(tagName, endpoint, tagType);
     }
 
     public static ReaderTag getTag(String tagName) {
@@ -205,7 +211,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            ReaderLog.e(e);
+            AppLog.e(T.READER, e);
         }
     }
 
@@ -224,7 +230,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            ReaderLog.e(e);
+            AppLog.e(T.READER, e);
         }
     }
 
@@ -252,7 +258,7 @@ public class ReaderTagTable {
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
         } catch (SQLException e) {
-            ReaderLog.e(e);
+            AppLog.e(T.READER, e);
         }
     }
 
@@ -330,7 +336,7 @@ public class ReaderTagTable {
                 db.setTransactionSuccessful();
 
             } catch (SQLException e) {
-                ReaderLog.e(e);
+                AppLog.e(T.READER, e);
             }
         } finally {
             SqlUtils.closeStatement(stmt);

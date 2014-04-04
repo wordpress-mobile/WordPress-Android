@@ -1,9 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -23,29 +20,41 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.xmlrpc.android.XMLRPCClient;
-import org.xmlrpc.android.XMLRPCException;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFactory;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+
 public class SelectCategoriesActivity extends SherlockListActivity {
-    private XMLRPCClient client;
     String finalResult = "";
-    ProgressDialog pd;
     public String categoryErrorMsg = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
     private ListScrollPositionManager mListScrollPositionManager;
+    private PullToRefreshHelper mPullToRefreshHelper;
     private HashSet<String> mSelectedCategories;
     private CategoryNode mCategories;
     private ArrayList<CategoryNode> mCategoryLevels;
     private Map<String, Integer> mCategoryNames = new HashMap<String, Integer>();
+    XMLRPCClientInterface mClient;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -83,7 +92,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         if (extras != null) {
             int blogId = extras.getInt("id");
             try {
-                blog = new Blog(blogId);
+                blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
             } catch (Exception e) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
@@ -94,6 +103,19 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         if (mSelectedCategories == null) {
             mSelectedCategories = new HashSet<String>();
         }
+
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (!NetworkUtils.checkConnection(getBaseContext())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        refreshCategories();
+                    }
+                });
 
         populateOrFetchCategories();
     }
@@ -119,66 +141,33 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
 
     private void populateOrFetchCategories() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getId());
-
+        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
         if (mCategories.getChildren().size() > 0) {
             populateCategoryList();
         } else {
+            mPullToRefreshHelper.setRefreshing(true);
             refreshCategories();
         }
     }
 
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
+            mPullToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
-
                 populateOrFetchCategories();
-
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.adding_cat_success), Toast.LENGTH_SHORT).show();
-            }
-            if (finalResult.equals("addCategory_failed")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
                 }
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
-                dialogBuilder.setTitle(getResources().getText(R.string.adding_cat_failed));
-                dialogBuilder.setMessage(getResources().getText(R.string.adding_cat_failed_check));
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing())
-                    dialogBuilder.create().show();
+            } else if (finalResult.equals("addCategory_failed")) {
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
+                }
             } else if (finalResult.equals("gotCategories")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
-                }
                 populateOrFetchCategories();
-                Toast.makeText(SelectCategoriesActivity.this, getResources().getText(R.string.categories_refreshed), Toast.LENGTH_SHORT).show();
             } else if (finalResult.equals("FAIL")) {
-                if (pd.isShowing()) {
-                    pd.dismiss();
+                if (!isFinishing()) {
+                    ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
                 }
-
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SelectCategoriesActivity.this);
-                dialogBuilder.setTitle(getResources().getText(R.string.category_refresh_error));
-                dialogBuilder.setMessage(categoryErrorMsg);
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Just close the window.
-
-                    }
-                });
-                dialogBuilder.setCancelable(true);
-                if (!isFinishing())
-                    dialogBuilder.create().show();
             }
         }
     };
@@ -190,21 +179,23 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public String fetchCategories() {
         String returnMessage;
         Object result[] = null;
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), };
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
+        Object[] params = {blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),};
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         boolean success = false;
-
         try {
-            result = (Object[]) client.call("wp.getCategories", params);
+            result = (Object[]) mClient.call("wp.getCategories", params);
             success = true;
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (success) {
             // wipe out the categories table
-            WordPress.wpDB.clearCategories(blog.getId());
+            WordPress.wpDB.clearCategories(blog.getLocalTableBlogId());
 
             for (Object aResult : result) {
                 Map<?, ?> curHash = (Map<?, ?>) aResult;
@@ -213,7 +204,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
                 String categoryParentID = curHash.get("parentId").toString();
                 int convertedCategoryID = Integer.parseInt(categoryID);
                 int convertedCategoryParentID = Integer.parseInt(categoryParentID);
-                WordPress.wpDB.insertCategory(blog.getId(), convertedCategoryID, convertedCategoryParentID, categoryName);
+                WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), convertedCategoryID, convertedCategoryParentID, categoryName);
             }
             returnMessage = "gotCategories";
         } else {
@@ -244,16 +235,18 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         struct.put("slug", category_slug);
         struct.put("description", category_desc);
         struct.put("parent_id", parent_id);
-
-        client = new XMLRPCClient(blog.getUrl(), blog.getHttpuser(), blog.getHttppassword());
-
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), struct };
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), struct };
 
         Object result = null;
         try {
-            result = client.call("wp.newCategory", params);
+            result = mClient.call("wp.newCategory", params);
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {
@@ -280,7 +273,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             }
 
             // Insert the new category into database
-            WordPress.wpDB.insertCategory(blog.getId(), category_id, parent_id, new_category_name);
+            WordPress.wpDB.insertCategory(blog.getLocalTableBlogId(), category_id, parent_id, new_category_name);
             returnString = "addCategory_success";
             // auto select new category
             mSelectedCategories.add(new_category_name);
@@ -308,9 +301,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
-                        pd = ProgressDialog.show(SelectCategoriesActivity.this,
-                                getResources().getText(R.string.cat_adding_category),
-                                getResources().getText(R.string.cat_attempt_add_category), true, true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
@@ -336,12 +326,9 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.menu_refresh) {
-            refreshCategories();
-            return true;
-        } else if (itemId == R.id.menu_new_category) {
+        if (itemId == R.id.menu_new_category) {
             Bundle bundle = new Bundle();
-            bundle.putInt("id", blog.getId());
+            bundle.putInt("id", blog.getLocalTableBlogId());
             Intent i = new Intent(SelectCategoriesActivity.this, AddCategoryActivity.class);
             i.putExtras(bundle);
             startActivityForResult(i, 0);
@@ -357,11 +344,16 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private String getCanonicalCategoryName(int category_id) {
         String new_category_name = null;
         Map<?, ?> result = null;
-        Object[] params = { blog.getBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        Object[] params = { blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(), "category", category_id };
+        mClient = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(), blog.getHttppassword());
         try {
-            result = (Map<?, ?>) client.call("wp.getTerm", params);
+            result = (Map<?, ?>) mClient.call("wp.getTerm", params);
         } catch (XMLRPCException e) {
-            e.printStackTrace();
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (IOException e) {
+            AppLog.e(AppLog.T.POSTS, e);
+        } catch (XmlPullParserException e) {
+            AppLog.e(AppLog.T.POSTS, e);
         }
 
         if (result != null) {
@@ -375,8 +367,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     private void refreshCategories() {
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
-        pd = ProgressDialog.show(SelectCategoriesActivity.this, getResources().getText(R.string.refreshing_categories),
-                getResources().getText(R.string.attempting_categories_refresh), true, true);
         Thread th = new Thread() {
             public void run() {
                 finalResult = fetchCategories();

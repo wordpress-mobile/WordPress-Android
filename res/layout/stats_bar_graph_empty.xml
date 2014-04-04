@@ -4,6 +4,4 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:text="@string/stats_bar_graph_empty" >
-    
-
 </TextView>

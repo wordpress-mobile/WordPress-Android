@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    comment box at bottom of comment detail and reader post detail
+    comment box at bottom of comment detail, reader post detail, view post
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,10 +29,10 @@
         android:maxLines="4"
         android:minLines="2"
         android:textColorHint="@color/grey_medium"
-        android:textSize="@dimen/reader_text_sz_large"
-        android:paddingTop="@dimen/reader_margin_extra_small"
-        android:paddingBottom="@dimen/reader_margin_extra_small"
-        android:paddingLeft="@dimen/reader_margin_large" />
+        android:textSize="@dimen/text_sz_large"
+        android:paddingTop="@dimen/margin_extra_small"
+        android:paddingBottom="@dimen/margin_extra_small"
+        android:paddingLeft="@dimen/margin_large" />
 
     <ImageView
         android:id="@+id/image_post_comment"
@@ -40,14 +40,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingRight="@dimen/reader_margin_medium"
-        android:src="@drawable/ic_send" />
+        android:paddingRight="@dimen/margin_medium"
+        android:src="@drawable/ab_icon_send" />
 
     <ProgressBar
         android:id="@+id/progress_submit_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_centerVertical="true"
         android:visibility="gone" />
 

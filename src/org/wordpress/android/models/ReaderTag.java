@@ -6,9 +6,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.util.regex.Pattern;
 
-/**
- * Created by nbradbury on 6/23/13.
- */
 public class ReaderTag {
     private static final int INT_DEFAULT = 0;
     private static final int INT_SUBSCRIBED = 1;
@@ -18,10 +15,10 @@ public class ReaderTag {
     public static String TAG_ID_LIKED = "liked";
 
     // these are the default tag names, which aren't localized in the /read/menu/ response
-    public static String TAG_NAME_LIKED = "Posts I Like";
-    public static String TAG_NAME_FOLLOWING = "Blogs I Follow";
-    public static String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
-    public static String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
+    public static final String TAG_NAME_LIKED = "Posts I Like";
+    public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
+    public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
+    public static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
 
     public static enum ReaderTagType {SUBSCRIBED,
                                       DEFAULT,
@@ -51,6 +48,16 @@ public class ReaderTag {
     private String tagName;
     private String endpoint;
     public ReaderTagType tagType;
+
+    public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
+        if (TextUtils.isEmpty(tagName)) {
+            this.setTagName(getTagNameFromEndpoint(endpoint));
+        } else {
+            this.setTagName(tagName);
+        }
+        this.setEndpoint(endpoint);
+        this.tagType = tagType;
+    }
 
     public String getEndpoint() {
         return StringUtils.notNullStr(endpoint);
@@ -82,7 +89,7 @@ public class ReaderTag {
         this.tagName = StringUtils.notNullStr(name);
     }
     public String getCapitalizedTagName() {
-        if (tagName ==null)
+        if (tagName == null)
             return "";
         // HACK to allow iPhone, iPad, iEverything else
         if (tagName.startsWith("iP"))
@@ -100,5 +107,28 @@ public class ReaderTag {
         if (INVALID_CHARS.matcher(tagName).matches())
             return false;
         return true;
+    }
+
+    /*
+     * extracts the tag name from a valid read/tags/[tagName]/posts endpoint
+     */
+    private static String getTagNameFromEndpoint(final String endpoint) {
+        if (TextUtils.isEmpty(endpoint))
+            return "";
+
+        // make sure passed endpoint is valid
+        if (!endpoint.endsWith("/posts"))
+            return "";
+        int start = endpoint.indexOf("/read/tags/");
+        if (start == -1)
+            return "";
+
+        // skip "/read/tags/" then find the next "/"
+        start += 11;
+        int end = endpoint.indexOf("/", start);
+        if (end == -1)
+            return "";
+
+        return endpoint.substring(start, end);
     }
 }

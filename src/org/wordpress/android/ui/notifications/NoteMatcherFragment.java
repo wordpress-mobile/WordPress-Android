@@ -3,8 +3,6 @@ package org.wordpress.android.ui.notifications;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,11 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class NoteMatcherFragment extends Fragment implements NotificationFragment {
     private Note mNote;
@@ -39,8 +37,6 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         JSONObject subject = getNote().queryJSON("subject", new JSONObject());
         String headerText = JSONUtil.getStringDecoded(subject, "text");
         noteHeader.setText(headerText);
-        noteHeader.setBackgroundColor(getResources().getColor(R.color.light_gray));
-        noteHeader.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
         noteHeader.setClickable(false);
         
         String gravURL = JSONUtil.queryJSON(noteBodyItemAtPositionZero, "icon", "");
@@ -50,7 +46,7 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         }
 
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
-        bodyTextView.setMovementMethod(LinkMovementMethod.getInstance());
+        bodyTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
         String noteHTML = JSONUtil.getString(noteBodyItemAtPositionZero, "html");
         bodyTextView.setText(Html.fromHtml(noteHTML));
 
@@ -60,10 +56,15 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
         noteFooter.setText(footerText);
         JSONObject bodyObject =  getNote().queryJSON("body", new JSONObject());
         String itemURL = JSONUtil.getString(bodyObject, "header_link");
-        if (!itemURL.equals("")) {
-            noteFooter.setUrl(itemURL);
-        }            
-        
+        noteFooter.setNote(getNote(), itemURL);
+
+        if (getActivity() instanceof OnPostClickListener) {
+            noteFooter.setOnPostClickListener(((OnPostClickListener)getActivity()));
+        }
+        if (getActivity() instanceof OnCommentClickListener) {
+            noteFooter.setOnCommentClickListener(((OnCommentClickListener)getActivity()));
+        }
+
         return view;
     }
     

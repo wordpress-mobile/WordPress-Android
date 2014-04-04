@@ -11,7 +11,6 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * Created by nbradbury on 7/18/13.
  * stores likes for Reader posts
  */
 public class ReaderLikeTable {
@@ -62,22 +61,22 @@ public class ReaderLikeTable {
         }
     }
 
-    public static int getNumLikesForPost(ReaderPost post) {
+    /*public static int getNumLikesForPost(ReaderPost post) {
         if (post==null)
             return 0;
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
-    }
+    }*/
 
     /*
      * returns true if the passed user likes the passed post
      */
-    private static boolean isLikedByUser(ReaderPost post, long userId) {
+    /*private static boolean isLikedByUser(ReaderPost post, long userId) {
         if (post==null)
             return false;
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(userId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_post_likes WHERE blog_id=? AND post_id=? AND user_id=?", args);
-    }
+    }*/
 
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked) {
         if (post==null)

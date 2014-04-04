@@ -4,12 +4,15 @@
 # Don't obfuscate output.
 -dontobfuscate
 
-# Allow JS Bridge for WordPress.com reader
--keepattributes JavascriptInterface
--keep public class org.wordpress.android.ui.reader.ReaderBaseFragment$JavaScriptInterface
--keepclassmembers class org.wordpress.android.ui.reader.ReaderBaseFragment$JavaScriptInterface { 
-    <methods>; 
+-keepclassmembers class **.R$* {
+    public static <fields>;
 }
+
+-keepclassmembers enum * {
+    public static **[] values();
+}
+
+-keep class **.R$*
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
 -keep class com.actionbarsherlock.** { *; }

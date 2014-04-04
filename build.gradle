@@ -1,9 +1,13 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.7.+'
+        classpath 'com.android.tools.build:gradle:0.9.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+
     }
 }
 
@@ -11,9 +15,14 @@ repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'http://simperium.github.io/simperium-android' }
+    maven { url 'http://download.crashlytics.com/maven' }
 }
 
 apply plugin: 'android'
+apply plugin: 'crashlytics'
+dependencies {
+    compile 'com.crashlytics.android:crashlytics:1.+'
+}
 
 android {
     lintOptions {
@@ -26,73 +35,95 @@ android {
         exclude "META-INF/NOTICE.txt"
     }
 
-	buildTypes {
-	    release {
+    buildTypes {
+        release {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
-        betagroup {
+        zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
+            packageNameSuffix ".beta"
         }
-	}
+    }
 
     compileSdkVersion 19
-    buildToolsVersion "19"
+    buildToolsVersion "19.0.1"
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.6 Beta 1"
-        versionCode 86
+        versionName "2.7.1"
+        versionCode 103
         minSdkVersion 9
         targetSdkVersion 19
     }
 
-	dependencies {
-	    // Provided by maven central
-	    compile 'com.google.code.gson:gson:2.2.2'
-	    compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-	    compile 'com.android.support:support-v4:18.0.+'
+    dependencies {
+        // Provided by maven central
+        compile 'com.google.code.gson:gson:2.2.2'
+        compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+        compile 'com.android.support:support-v4:19.0.+'
+        compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
 
-	    // These are provided by the WordPress-Android Repository
-	    compile 'org.wordpress:actionbarsherlock:4.4.0'
-	    compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
-	    compile 'org.wordpress:gcm:1.0.0'
-        // compile 'org.wordpress:volley:wp-0.0.1'
-	    compile 'com.automattic:wordpresscom-rest:0.0.3'
-	    compile 'org.wordpress:httpmime:4.1.2'
-	    compile 'org.wordpress:graphview:3.1.1'
-	    compile 'org.wordpress:drag-sort-listview:0.6.1'
-	    compile 'org.wordpress:slidinguppanel:1.0.0'
-	    compile 'org.wordpress:android-passcodelock:0.0.4'
-	    compile 'org.wordpress:commons-lang:2.6'
-	    releaseCompile 'org.wordpress:emailchecker:0.1'
-	    debugCompile 'org.wordpress:emailchecker-debug:0.1'
-	    betagroupCompile 'org.wordpress:emailchecker:0.1'
+        androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
+        androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
+        androidTestCompile 'org.objenesis:objenesis:2.1'
+        androidTestCompile 'org.mockito:mockito-core:+'
 
-	    // Local dependencies
-	    compile files('libs/MixpanelAPI.jar')
+        // These are provided by the WordPress-Android Repository
+        compile 'org.wordpress:actionbarsherlock:4.4.0'
+        compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
+        compile 'org.wordpress:gcm:1.0.0'
+        compile 'org.wordpress:volley:wp-0.0.1'
+        compile 'com.automattic:wordpresscom-rest:0.0.5'
+        compile 'org.wordpress:httpmime:4.1.2'
+        compile 'org.wordpress:graphview:3.1.1'
+        compile 'org.wordpress:drag-sort-listview:0.6.1'
+        compile 'org.wordpress:slidinguppanel:1.0.0'
+        compile 'org.wordpress:android-passcodelock:0.0.5'
+        compile 'org.wordpress:commons-lang:2.6'
+        compile 'org.wordpress:pulltorefresh-main:+'
+        compile 'org.wordpress:pulltorefresh-abs:+'
+        releaseCompile 'org.wordpress:emailchecker:0.2'
+        debugCompile 'org.wordpress:emailchecker-debug:0.2'
+        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Howdy Simperium
         compile 'com.simperium:simperium-android:0.4.1-beta'
         compile 'com.android:volley:2.2'
-	}
+
+        // Local dependencies
+        compile files('libs/MixpanelAPI.jar')
+    }
 
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
         }
 
-        instrumentTest.setRoot('tests')
+        release {
+            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+        }
+
+        debug {
+            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+        }
+
+        zbetagroup {
+            res.srcDirs = ['res-zbetagroup']
+            manifest.srcFile 'AndroidManifestBetagroup.xml'
+        }
+
+        androidTest.setRoot('tests')
     }
-}
+} // end android
 
 // Generates the Config.java class using properties defined in gradle.properties
 // or by other means provided by Gradle
@@ -140,19 +171,38 @@ ${config}
     }
 }
 
-// Add the generateWPConfig task to every flavor's compile tasks
+task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
+    def outputFile = new File("${rootDir}/crashlytics.properties")
+    def inputFile = file("${rootDir}/local.properties")
+    outputs.file outputFile
+    inputs.file inputFile
+    doLast {
+        def properties = new Properties()
+        inputFile.withInputStream { stream ->
+            properties.load(stream)
+        }
+        def crashlyticsApiKey = properties.getProperty('crashlytics.apikey', '0')
+        def writer = new FileWriter(outputFile)
+        writer.write("""// auto-generated file do not modify
+apiKey=${crashlyticsApiKey}""")
+        writer.close()
+    }
+}
+
+// Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
     def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
             task.dependsOn(generateWPConfig)
             task.mustRunAfter(generateWPConfig)
+            task.dependsOn(generateCrashlyticsConfig)
         }
     }
 }
 
 // For app signing
-if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0 ){
+if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.hasProperty(it) } == 0) {
     android {
         signingConfigs {
             release {
@@ -164,5 +214,5 @@ if(["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.ha
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
-    android.buildTypes.betagroup.signingConfig = android.signingConfigs.release
+    android.buildTypes.zbetagroup.signingConfig = android.signingConfigs.release
 }

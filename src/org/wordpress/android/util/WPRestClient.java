@@ -55,11 +55,7 @@ public class WPRestClient {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
         mRestClient = new RestClient(queue);
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            mRestClient.setUserAgent(DeviceUtils.getBlackBerryUserAgent());
-        } else {
-            mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
-        }
+        mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
     }
 
     /**

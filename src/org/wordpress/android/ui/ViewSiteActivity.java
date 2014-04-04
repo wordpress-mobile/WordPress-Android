@@ -1,16 +1,17 @@
 
 package org.wordpress.android.ui;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import android.os.Bundle;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Activity to view the WordPress blog in a WebView
@@ -26,7 +27,6 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         this.setTitle(getResources().getText(R.string.view_site));
 
         // configure webview
-        mWebView.setWebChromeClient(new WordPressWebChromeClient(this));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
@@ -34,6 +34,8 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
     }
 
     private void loadSiteURL() {
+        if (mBlog == null)
+            return;
         String siteURL = null;
         Gson gson = new Gson();
         Type type = new TypeToken<Map<?, ?>>() {}.getType();
@@ -49,7 +51,7 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         }
         loadAuthenticatedUrl(siteURL);
     }
-    
+
     @Override
     public void onBlogChanged() {
         super.onBlogChanged();
@@ -57,4 +59,14 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
         loadSiteURL();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            if (mMenuDrawer != null) {
+                mMenuDrawer.toggleMenu();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

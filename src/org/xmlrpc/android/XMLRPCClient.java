@@ -3,11 +3,13 @@ package org.xmlrpc.android;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -18,32 +20,56 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthState;
+import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 /**
- * A WordPress XMLRPC Client. 
+ * A WordPress XMLRPC Client.
  * Based on android-xmlrpc: code.google.com/p/android-xmlrpc/
  * Async support based on aXMLRPC: https://github.com/timroes/aXMLRPC
  */
 
-public class XMLRPCClient {
+public class XMLRPCClient implements XMLRPCClientInterface {
     private static final String TAG_METHOD_CALL = "methodCall";
     private static final String TAG_METHOD_NAME = "methodName";
     private static final String TAG_METHOD_RESPONSE = "methodResponse";
@@ -52,82 +78,121 @@ public class XMLRPCClient {
     private static final String TAG_FAULT = "fault";
     private static final String TAG_FAULT_CODE = "faultCode";
     private static final String TAG_FAULT_STRING = "faultString";
-    
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 30000;
+    private static final int DEFAULT_SOCKET_TIMEOUT = 60000;
+
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
-    private ConnectionClient client;
-    private HttpPost postMethod;
-    private XmlSerializer serializer;
-    private HttpParams httpParams;
-    
+    private DefaultHttpClient mClient;
+    private HttpPost mPostMethod;
+    private XmlSerializer mSerializer;
+    private HttpParams mHttpParams;
+    private boolean mIsWpcom;
+
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
      * @param XMLRPC server URI
      */
     public XMLRPCClient(URI uri, String httpuser, String httppasswd) {
-        postMethod = new HttpPost(uri);
-        postMethod.addHeader("Content-Type", "text/xml");
+        mPostMethod = new HttpPost(uri);
+        mPostMethod.addHeader("Content-Type", "text/xml");
+        mPostMethod.addHeader("charset", "UTF-8");
+        mPostMethod.addHeader("User-Agent", WordPress.getUserAgent());
 
-        postMethod.addHeader("charset", "UTF-8");
+        mHttpParams = mPostMethod.getParams();
+        HttpProtocolParams.setUseExpectContinue(mHttpParams, false);
 
-        if (DeviceUtils.getInstance().isBlackBerry()) {
-            postMethod.addHeader("User-Agent", DeviceUtils.getBlackBerryUserAgent());
+        UsernamePasswordCredentials credentials = null;
+        if (!TextUtils.isEmpty(httpuser) && !TextUtils.isEmpty(httppasswd)) {
+            credentials = new UsernamePasswordCredentials(httpuser, httppasswd);
+        }
+
+        mClient = instantiateClientForUri(uri, credentials);
+        mSerializer = Xml.newSerializer();
+    }
+
+    private class ConnectionClient extends DefaultHttpClient {
+        public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+            super();
+            TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
+            Scheme scheme = new Scheme("https", tasslf, port);
+            getConnectionManager().getSchemeRegistry().register(scheme);
+        }
+    }
+
+    private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
+        DefaultHttpClient client = null;
+        if (uri.getHost().endsWith("wordpress.com")) {
+            mIsWpcom = true;
+        }
+        if (mIsWpcom || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+            //wpcom blog or self-hosted blog on plain HTTP
+            client = new DefaultHttpClient();
         } else {
-            postMethod.addHeader("User-Agent", "wp-android/" + WordPress.versionName);
+            int port = uri.getPort();
+            if (port == -1) {
+                port = 443;
+            }
+
+            try {
+                client = new ConnectionClient(port);
+            } catch (NoSuchAlgorithmException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (KeyStoreException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (UnrecoverableKeyException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            }
+
+            if (client == null) {
+                client = new DefaultHttpClient();
+            }
         }
 
-        httpParams = postMethod.getParams();
-        HttpProtocolParams.setUseExpectContinue(httpParams, false);
+        // This is probably superfluous, since we're setting the timeouts in the method parameters. See preparePostMethod
+        HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
-        //username & password not needed
-        UsernamePasswordCredentials creds = new UsernamePasswordCredentials(httpuser, httppasswd);
+        //Setup HTTP Basic Auth if necessary
+        if (usernamePasswordCredentials != null) {
+            BasicCredentialsProvider cP = new BasicCredentialsProvider();
+            cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
+            client.setCredentialsProvider(cP);
 
-        //this gets connections working over https
-        if (uri.getScheme() != null){
-            if(uri.getScheme().equals("https")) {
-                if(uri.getPort() == -1)
-                    try {
-                        client = new ConnectionClient(creds, 443);
-                    } catch (KeyManagementException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (NoSuchAlgorithmException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (KeyStoreException e) {
-                        client = new ConnectionClient(creds);
-                    } catch (UnrecoverableKeyException e) {
-                        client = new ConnectionClient(creds);
+            // add an interceptor to sent the credentials preemptively
+            HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
+                @Override
+                public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+                    AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+                    if (authState.getAuthScheme() == null) {
+                        CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
+                        HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+                        AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
+                        Credentials creds = credsProvider.getCredentials(authScope);
+                        authState.setCredentials(creds);
+                        authState.setAuthScheme(new BasicScheme());
                     }
-                    else
-                        try {
-                            client = new ConnectionClient(creds, uri.getPort());
-                        } catch (KeyManagementException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (NoSuchAlgorithmException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (KeyStoreException e) {
-                            client = new ConnectionClient(creds);
-                        } catch (UnrecoverableKeyException e) {
-                            client = new ConnectionClient(creds);
-                        }
-            }
-            else {
-                client = new ConnectionClient(creds);
-            }
-        }
-        else{
-            client = new ConnectionClient(creds);
+                }
+            };
+            client.addRequestInterceptor(preemptiveAuth, 0);
         }
 
-        serializer = Xml.newSerializer();
+        return client;
     }
 
     public void addQuickPostHeader(String type) {
-        postMethod.addHeader("WP-QUICK-POST", type);
+        mPostMethod.addHeader("WP-QUICK-POST", type);
     }
 
     /**
      * Convenience constructor. Creates new instance based on server String address
-     * @param XMLRPC server address
+     * @param url server url
      */
     public XMLRPCClient(String url, String httpuser, String httppasswd) {
         this(URI.create(url), httpuser, httppasswd);
@@ -135,21 +200,21 @@ public class XMLRPCClient {
 
     /**
      * Convenience XMLRPCClient constructor. Creates new instance based on server URL
-     * @param XMLRPC server URL
+     * @param url server URL
      */
     public XMLRPCClient(URL url, String httpuser, String httppasswd) {
         this(URI.create(url.toExternalForm()), httpuser, httppasswd);
     }
-    
+
     /**
      * Set WP.com auth header
-     * @param String authorization token
+     * @param authToken authorization token
      */
     public void setAuthorizationHeader(String authToken) {
-        if( authToken != null) 
-            postMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
+        if( authToken != null)
+            mPostMethod.addHeader("Authorization", String.format("Bearer %s", authToken));
         else
-            postMethod.removeHeaders("Authorization");
+            mPostMethod.removeHeaders("Authorization");
     }
 
     /**
@@ -162,7 +227,7 @@ public class XMLRPCClient {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method, Object[] params) throws XMLRPCException {
+    public Object call(String method, Object[] params) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, params, null);
     }
 
@@ -173,15 +238,15 @@ public class XMLRPCClient {
      * @return deserialized method return value
      * @throws XMLRPCException
      */
-    public Object call(String method) throws XMLRPCException {
+    public Object call(String method) throws XMLRPCException, IOException, XmlPullParserException {
         return call(method, null, null);
     }
-    
-    
-    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException {
+
+
+    public Object call(String method, Object[] params, File tempFile) throws XMLRPCException, IOException, XmlPullParserException {
         return new Caller().callXMLRPC(method, params, tempFile);
     }
-    
+
     /**
      * Convenience call for callAsync with two paramaters
      *
@@ -192,7 +257,7 @@ public class XMLRPCClient {
     public long callAsync(XMLRPCCallback listener, String methodName, Object[] params) {
         return callAsync(listener, methodName, params, null);
     }
-    
+
     /**
      * Asynchronous XMLRPC call
      *
@@ -205,7 +270,152 @@ public class XMLRPCClient {
         new Caller(listener, id, methodName, params, tempFile).start();
         return id;
     }
-    
+
+    @SuppressWarnings("unchecked")
+    public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
+            throws XMLRPCException, IOException, XmlPullParserException, NumberFormatException {
+        // setup pull parser
+        XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
+
+        // Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
+        int bomCheck = -1;
+        int stopper = 0;
+        while ((bomCheck = is.read()) != -1 && stopper <= 5000) {
+            stopper++;
+            String snippet = "";
+            // 60 == '<' character
+            if (bomCheck == 60) {
+                for (int i = 0; i < 4; i++) {
+                    byte[] chunk = new byte[1];
+                    is.read(chunk);
+                    snippet += new String(chunk, "UTF-8");
+                }
+                if (snippet.equals("?xml")) {
+                    // it's all good, add xml tag back and start parsing
+                    String start = "<" + snippet;
+                    List<InputStream> streams = Arrays.asList(new ByteArrayInputStream(start.getBytes()), is);
+                    is = new SequenceInputStream(Collections.enumeration(streams));
+                    break;
+                } else {
+                    // keep searching...
+                    List<InputStream> streams = Arrays.asList(new ByteArrayInputStream(snippet.getBytes()), is);
+                    is = new SequenceInputStream(Collections.enumeration(streams));
+                }
+            }
+        }
+
+        pullParser.setInput(is, "UTF-8");
+
+        // lets start pulling...
+        pullParser.nextTag();
+        pullParser.require(XmlPullParser.START_TAG, null, TAG_METHOD_RESPONSE);
+
+        pullParser.nextTag(); // either TAG_PARAMS (<params>) or TAG_FAULT (<fault>)
+        String tag = pullParser.getName();
+        if (tag.equals(TAG_PARAMS)) {
+            // normal response
+            pullParser.nextTag(); // TAG_PARAM (<param>)
+            pullParser.require(XmlPullParser.START_TAG, null, TAG_PARAM);
+            pullParser.nextTag(); // TAG_VALUE (<value>)
+            // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
+            // deserialize result
+            Object obj = XMLRPCSerializer.deserialize(pullParser);
+            if (entity != null) {
+                entity.consumeContent();
+            }
+            return obj;
+        } else if (tag.equals(TAG_FAULT)) {
+            // fault response
+            pullParser.nextTag(); // TAG_VALUE (<value>)
+            // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
+            // deserialize fault result
+            Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
+            String faultString = (String) map.get(TAG_FAULT_STRING);
+            int faultCode = (Integer) map.get(TAG_FAULT_CODE);
+            if (entity != null) {
+                entity.consumeContent();
+            }
+            throw new XMLRPCFault(faultString, faultCode);
+        } else {
+            if (entity != null) {
+                entity.consumeContent();
+            }
+            throw new XMLRPCException("Bad tag <" + tag + "> in XMLRPC response - neither <params> nor <fault>");
+        }
+    }
+
+    public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
+        // prepare POST body
+        if (method.equals("wp.uploadFile")) {
+
+            if (!tempFile.exists() && !tempFile.mkdirs()) {
+                throw new XMLRPCException("Path to file could not be created.");
+            }
+
+            FileWriter fileWriter = new FileWriter(tempFile);
+            mSerializer.setOutput(fileWriter);
+
+            mSerializer.startDocument(null, null);
+            mSerializer.startTag(null, TAG_METHOD_CALL);
+            // set method name
+            mSerializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            if (params != null && params.length != 0) {
+                // set method params
+                mSerializer.startTag(null, TAG_PARAMS);
+                for (int i = 0; i < params.length; i++) {
+                    mSerializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    XMLRPCSerializer.serialize(mSerializer, params[i]);
+                    mSerializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                }
+                mSerializer.endTag(null, TAG_PARAMS);
+            }
+            mSerializer.endTag(null, TAG_METHOD_CALL);
+            mSerializer.endDocument();
+
+            fileWriter.flush();
+            fileWriter.close();
+
+            FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"");
+            fEntity.setContentType("text/xml");
+            //fEntity.setChunked(true);
+            mPostMethod.setEntity(fEntity);
+        } else {
+            StringWriter bodyWriter = new StringWriter();
+            mSerializer.setOutput(bodyWriter);
+
+            mSerializer.startDocument(null, null);
+            mSerializer.startTag(null, TAG_METHOD_CALL);
+            // set method name
+            mSerializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
+            if (params != null && params.length != 0) {
+                // set method params
+                mSerializer.startTag(null, TAG_PARAMS);
+                for (int i = 0; i < params.length; i++) {
+                    mSerializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
+                    if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
+                        XMLRPCSerializer.serialize(mSerializer, params[i]);
+                    } else {
+                        XMLRPCSerializer.serialize(mSerializer, params[i]);
+                    }
+                    mSerializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
+                }
+                mSerializer.endTag(null, TAG_PARAMS);
+            }
+            mSerializer.endTag(null, TAG_METHOD_CALL);
+            mSerializer.endDocument();
+
+            HttpEntity entity = new StringEntity(bodyWriter.toString());
+            //Log.i("WordPress", bodyWriter.toString());
+            mPostMethod.setEntity(entity);
+        }
+
+        //set timeout to 30 seconds, does it need to be set for both mClient and method?
+        mClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
+        mClient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT);
+        mPostMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+    }
+
     /**
      * The Caller class is used to make asynchronous calls to the server.
      * For synchronous calls the Thread function of this class isn't used.
@@ -217,9 +427,6 @@ public class XMLRPCClient {
         private String methodName;
         private Object[] params;
         private File tempFile;
-
-        private volatile boolean canceled;
-        private ConnectionClient http;
 
         /**
          * Create a new Caller for asynchronous use.
@@ -262,7 +469,7 @@ public class XMLRPCClient {
                 listener.onSuccess(threadId, o);
             } catch(CancelException ex) {
                 // Don't notify the listener, if the call has been canceled.
-            } catch (XMLRPCException ex) {
+            } catch (Exception ex) {
                 listener.onFailure(threadId, ex);
             } finally {
                 backgroundCalls.remove(threadId);
@@ -271,194 +478,148 @@ public class XMLRPCClient {
         }
 
         /**
-         * Cancel this call. This will abort the network communication.
+         * Call method with optional parameters
+         *
+         * @param method name of method to call
+         * @param params parameters to pass to method (may be null if method has no parameters)
+         * @return deserialized method return value
+         * @throws XMLRPCException
          */
-        public void cancel() {
-            // TODO this doesn't work
-            // Set the flag, that this thread has been canceled
-            canceled = true;
-            // Disconnect the connection to the server
-            http.getHttpRequestRetryHandler();
-        }
+        private Object callXMLRPC(String method, Object[] params, File tempFile)
+                throws XMLRPCException, IOException, XmlPullParserException {
+            LoggedInputStream loggedInputStream = null;
+            try {
+                preparePostMethod(method, params, tempFile);
 
-    /**
-     * Call method with optional parameters
-     *
-     * @param method name of method to call
-     * @param params parameters to pass to method (may be null if method has no parameters)
-     * @return deserialized method return value
-     * @throws XMLRPCException
-     */
-    @SuppressWarnings("unchecked")
-    private Object callXMLRPC(String method, Object[] params, File tempFile) throws XMLRPCException {
-        try {
-            // prepare POST body
-            if (method.equals("wp.uploadFile")){
-
-                if (!tempFile.exists() && !tempFile.mkdirs()) {
-                    throw new XMLRPCException("Path to file could not be created.");
+                // execute HTTP POST request
+                HttpResponse response = mClient.execute(mPostMethod);
+                
+                if (response.getStatusLine() == null) // StatusLine is null. We can't read the response code.
+                    throw new XMLRPCException( "HTTP Status code is missing!" );
+                    
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity entity = response.getEntity();
+               
+                if (entity == null) {
+                    //This is an error since the parser will fail here.
+                    throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned AND no response from the server." );
                 }
-
-                FileWriter fileWriter = new FileWriter(tempFile);
-                serializer.setOutput(fileWriter);
-
-                serializer.startDocument(null, null);
-                serializer.startTag(null, TAG_METHOD_CALL);
-                // set method name
-                serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
-                if (params != null && params.length != 0) {
-                    // set method params
-                    serializer.startTag(null, TAG_PARAMS);
-                    for (int i=0; i<params.length; i++) {
-                        serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-                        XMLRPCSerializer.serialize(serializer, params[i]);
-                        serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
-                    }
-                    serializer.endTag(null, TAG_PARAMS);
+                
+                if (statusCode == HttpStatus.SC_OK) {
+                    loggedInputStream = new LoggedInputStream(entity.getContent());
+                    return XMLRPCClient.parseXMLRPCResponse(loggedInputStream, entity);
                 }
-                serializer.endTag(null, TAG_METHOD_CALL);
-                serializer.endDocument();
-
-                fileWriter.flush();
-                fileWriter.close();
-
-                FileEntity fEntity = new FileEntity(tempFile,"text/xml; charset=\"UTF-8\"");
-                fEntity.setContentType("text/xml");
-                //fEntity.setChunked(true);
-                postMethod.setEntity(fEntity);
-            }
-            else{
-                StringWriter bodyWriter = new StringWriter();
-                serializer.setOutput(bodyWriter);
-
-                serializer.startDocument(null, null);
-                serializer.startTag(null, TAG_METHOD_CALL);
-                // set method name
-                serializer.startTag(null, TAG_METHOD_NAME).text(method).endTag(null, TAG_METHOD_NAME);
-                if (params != null && params.length != 0) {
-                    // set method params
-                    serializer.startTag(null, TAG_PARAMS);
-                    for (int i=0; i<params.length; i++) {
-                        serializer.startTag(null, TAG_PARAM).startTag(null, XMLRPCSerializer.TAG_VALUE);
-                        if (method.equals("metaWeblog.editPost") || method.equals("metaWeblog.newPost")) {
-                            XMLRPCSerializer.serialize(serializer, params[i]);
-                        }
-                        else {
-                            XMLRPCSerializer.serialize(serializer, params[i]);
-
-                        }
-                        serializer.endTag(null, XMLRPCSerializer.TAG_VALUE).endTag(null, TAG_PARAM);
-                    }
-                    serializer.endTag(null, TAG_PARAMS);
-                }
-                serializer.endTag(null, TAG_METHOD_CALL);
-                serializer.endDocument();
-
-                HttpEntity entity = new StringEntity(bodyWriter.toString());
-                //Log.i("WordPress", bodyWriter.toString());
-                postMethod.setEntity(entity);
-            }
-
-            //set timeout to 40 seconds, does it need to be set for both client and method?
-            client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-            client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-            postMethod.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 40000);
-            postMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 40000);
-
-            // execute HTTP POST request
-            HttpResponse response = client.execute(postMethod);
-
-            //Log.i("WordPress", "response = " + response.getStatusLine());
-            // check status code
-            int statusCode = response.getStatusLine().getStatusCode();
-
-            deleteTempFile(method, tempFile);
-
-            if (statusCode != HttpStatus.SC_OK) {
-                throw new XMLRPCException("HTTP status code: " + statusCode + " was returned. " + response.getStatusLine().getReasonPhrase());
-            }
-
-            // setup pull parser
-            XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
-            HttpEntity entity = response.getEntity();
-            InputStream is = entity.getContent();
-
-            // Many WordPress configs can output junk before the xml response (php warnings for example), this cleans it.
-            int bomCheck = -1;
-            int stopper = 0;
-            while ((bomCheck = is.read()) != -1 && stopper <= 5000) {
-                stopper++;
-                String snippet = "";
-                //60 == '<' character
-                if (bomCheck == 60) {
-                    for (int i = 0; i < 4; i++) {
-                        byte[] chunk = new byte[1];
-                        is.read(chunk);
-                        snippet += new String(chunk, "UTF-8");
-                    }
-                    if (snippet.equals("?xml")) {
-                        //it's all good, add xml tag back and start parsing
-                        String start = "<" + snippet;
-                        List<InputStream> streams = Arrays.asList(
-                                new ByteArrayInputStream(start.getBytes()),
-                                is);
-                        is = new SequenceInputStream(Collections.enumeration(streams));
-                        break;
+                
+                String statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
+                try {
+                    String responseString = EntityUtils.toString(entity, "UTF-8");
+                    if (TextUtils.isEmpty(responseString)) {
+                        AppLog.e(T.API, "No HTTP error document document from the server");
                     } else {
-                        //keep searching...
-                        List<InputStream> streams = Arrays.asList(
-                                new ByteArrayInputStream(snippet.getBytes()),
-                                is);
-                        is = new SequenceInputStream(Collections.enumeration(streams));
+                        AppLog.e(T.API, "HTTP error document received from the server: " + responseString);
                     }
+
+                    if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                        //Try to intercept out of memory error here and show a better error message.
+                        if (!TextUtils.isEmpty(responseString) && responseString.contains("php fatal error") &&
+                                responseString.contains("bytes exhausted")) {
+                            String newErrorMsg;
+                            if (method.equals("wp.uploadFile")) {
+                                newErrorMsg =
+                                        "The server doesn't have enough memory to upload this file. You may need to increase the PHP memory limit on your site.";
+                            } else {
+                                newErrorMsg =
+                                        "The server doesn't have enough memory to fulfill the request. You may need to increase the PHP memory limit on your site.";
+                            }
+                            throw new XMLRPCException( statusLineReasonPhrase + ".\n\n" + newErrorMsg);
+                        }
+                    }
+     
+                } catch (Exception e) {
+                    // eat all the exceptions here, we dont want to crash the app when trying to show a
+                    // better error message.
+                }
+                throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned. " + statusLineReasonPhrase);
+            } catch (XMLRPCFault e) {
+                if (loggedInputStream!=null) {
+                    AppLog.w(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                // Detect login issues and broadcast a message if the error is known
+                switch (e.getFaultCode()) {
+                    case 403:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+                        break;
+                    case 425:
+                        broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH);
+                        break;
+                    //TODO: Check the login limit here
+                    default:
+                        break;
+                }
+                throw e;
+            } catch (XmlPullParserException e) {
+                AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                checkXMLRPCErrorMessage(e);
+                throw e;
+            } catch (NumberFormatException e) {
+                //we can catch NumberFormatException here and re-throw an XMLRPCException.
+                //The response document is not a valid XML-RPC document after all.
+                AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                throw new XMLRPCException("The response received contains an invalid number. " + e.getMessage());
+            } catch (XMLRPCException e) {
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                checkXMLRPCErrorMessage(e);
+                throw e;
+            } catch (SSLHandshakeException e) {
+                if (mIsWpcom) {
+                    AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
+                } else {
+                    AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                }
+                throw e;
+            } finally {
+                deleteTempFile(method, tempFile);
+                try {
+                    if (loggedInputStream!=null) {
+                        loggedInputStream.close();
+                    }
+                } catch (Exception e) {
                 }
             }
-
-            pullParser.setInput(is, "UTF-8");
-
-            // lets start pulling...
-            pullParser.nextTag();
-            pullParser.require(XmlPullParser.START_TAG, null, TAG_METHOD_RESPONSE);
-
-            pullParser.nextTag(); // either TAG_PARAMS (<params>) or TAG_FAULT (<fault>)
-            String tag = pullParser.getName();
-            if (tag.equals(TAG_PARAMS)) {
-                // normal response
-                pullParser.nextTag(); // TAG_PARAM (<param>)
-                pullParser.require(XmlPullParser.START_TAG, null, TAG_PARAM);
-                pullParser.nextTag(); // TAG_VALUE (<value>)
-                // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
-
-                // deserialize result
-                Object obj = XMLRPCSerializer.deserialize(pullParser);
-                entity.consumeContent();
-                return obj;
-            } else
-            if (tag.equals(TAG_FAULT)) {
-                // fault response
-                pullParser.nextTag(); // TAG_VALUE (<value>)
-                // no parser.require() here since its called in XMLRPCSerializer.deserialize() below
-
-                // deserialize fault result
-                Map<String, Object> map = (Map<String, Object>) XMLRPCSerializer.deserialize(pullParser);
-                String faultString = (String) map.get(TAG_FAULT_STRING);
-                int faultCode = (Integer) map.get(TAG_FAULT_CODE);
-                entity.consumeContent();
-                throw new XMLRPCFault(faultString, faultCode);
-            } else {
-                entity.consumeContent();
-                throw new XMLRPCException("Bad tag <" + tag + "> in XMLRPC response - neither <params> nor <fault>");
-            }
-        } catch (XMLRPCException e) {
-            // catch & propagate XMLRPCException/XMLRPCFault
-            deleteTempFile(method, tempFile);
-            throw e;
-        } catch (Exception e) {
-            // wrap any other Exception(s) around XMLRPCException
-            deleteTempFile(method, tempFile);
-            throw new XMLRPCException(e);
         }
     }
+
+    /**
+     * Detect login issues and broadcast a message if the error is known, App Activities should listen to these
+     * broadcasted events and present user action to take
+     *
+     * @return true if error is known and event broadcasted, false else
+     */
+    private boolean checkXMLRPCErrorMessage(Exception exception) {
+        String errorMessage = exception.getMessage().toLowerCase();
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom 
+                && 
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) 
+        {
+            broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+            return true;
+        }
+        return false;
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        WordPress.getContext().sendBroadcast(intent);
     }
 
     private void deleteTempFile(String method, File tempFile) {
@@ -469,6 +630,8 @@ public class XMLRPCClient {
         }
 
     }
-    
-    private class CancelException extends RuntimeException { }
+
+    private class CancelException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+    }
 }

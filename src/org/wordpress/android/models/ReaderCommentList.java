@@ -5,9 +5,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 7/8/13.
- */
 public class ReaderCommentList extends ArrayList<ReaderComment> {
 
     public static ReaderCommentList fromJson(JSONObject json, long blogId) {

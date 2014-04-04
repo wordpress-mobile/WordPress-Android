@@ -18,25 +18,17 @@ public class CategoryNodeInstrumentationTest extends InstrumentationTestCase {
         testContext = getInstrumentation().getContext();
     }
 
-    public void testLoadDB() {
-        SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
-                "one_category.sql");
-        CategoryNode node = CategoryNode.createCategoryTreeFromDB(1);
-        // At least 1 category exists in test db: one_category.sql
-        assertEquals(1, node.getChildren().size());
-        db.close();
-    }
-
     public void testLoadDB_MalformedCategoryParentId() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(targetContext, testContext,
                 "malformed_category_parent_id.sql");
 
         // This line failed before #36 was solved
         CategoryNode node = CategoryNode.createCategoryTreeFromDB(1);
-        db.close();
     }
 
     public void tearDown() throws Exception {
+        targetContext = null;
+        testContext = null;
         super.tearDown();
     }
 }

@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.wordpress.rest.RestRequest;
@@ -28,6 +27,8 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageHelper;
 
 import java.io.UnsupportedEncodingException;
@@ -52,7 +53,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onError(Context context, String errorId) {
-        Log.v("WORDPRESS", "GCM Error: " + errorId);
+        AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
     private static String mPreviousNoteId = null;
@@ -60,15 +61,15 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onMessage(Context context, Intent intent) {
-        Log.v("WORDPRESS", "Received Message");
+        AppLog.v(T.NOTIFS, "Received Message");
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
-        
+
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
-            Log.v("WORDPRESS", "Hrm. No notification message content received. Aborting.");
+            AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
             return;
         }
 
@@ -76,19 +77,19 @@ public class GCMIntentService extends GCMBaseIntentService {
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
-                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app. 
+                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app.
                 //If they have never used the Reader, then they won't have a userId.
                 //Code for next release is below:
-               /* Log.e("WORDPRESS", "Hrm. No wpcom userId found in the app. Aborting.");
+               /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
                 return;*/
             } else {
                 if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                    Log.e("WORDPRESS", "Hrm. wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+                    AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
                     return;
                 }
             }
         }
-        
+
         String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
         if (title == null)
             title = "WordPress";
@@ -96,23 +97,33 @@ public class GCMIntentService extends GCMBaseIntentService {
         String note_id = extras.getString("note_id");
 
         Note note = null;
-
         // TODO: get the note from the bucket. If we're online and can get a
         // push notification, then we should be getting the note pushed to the
         // bucket as well assuming Simperium.com isn't experiencing any issues
         // ;).
-
-        boolean md5GeneratedNoteId = false;
-        if (note_id == null && note != null) {
-            note_id = String.valueOf(WordPressDB.generateIdFor(note));
-            md5GeneratedNoteId = true;
+        if (extras.getString("note_full_data") != null) {
+            byte[] decode = Base64.decode(intent.getStringExtra("note_full_data"), Base64.DEFAULT);
+            String unzippedString = NotificationUtils.unzipString(decode);
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(unzippedString);
+                JSONArray notesJSON = jsonObject.getJSONArray("notes");
+                note = new Note(notesJSON.getJSONObject(0));
+                WordPress.wpDB.addNote(note, false);
+            } catch (JSONException e) {
+                AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: ", e);
+            }
+        } else { // create a placeholder note
+            note = new Note(extras);
+            WordPress.wpDB.addNote(note, true);
+            refreshNotes();
         }
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
          * was received within the last second, then skip showing it - this handles duplicate
-         * notifications being shown due to the device being registered multiple times with different tokens. 
-         * (still investigating how this could happen - 21-Oct-13) 
+         * notifications being shown due to the device being registered multiple times with different tokens.
+         * (still investigating how this could happen - 21-Oct-13)
          *
          * this also handles the (rare) case where the user receives rapid-fire sub-second like notifications
          * due to sudden popularity (post gets added to FP and is liked by many people all at once, etc.),
@@ -125,7 +136,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (mPreviousNoteId != null && mPreviousNoteId.equals(note_id)) {
             long seconds = TimeUnit.MILLISECONDS.toSeconds(thisTime - mPreviousNoteTime);
             if (seconds <= 1) {
-                Log.w("WORDPRESS", "skipped potential duplicate notification");
+                AppLog.w(T.NOTIFS, "skipped potential duplicate notification");
                 return;
             }
         }
@@ -144,7 +155,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             try {
                 iconURL = URLDecoder.decode(iconURL, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                AppLog.e(T.NOTIFS, e);
             }
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));
@@ -178,8 +189,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setAutoCancel(true)
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            if (md5GeneratedNoteId)
-                resultIntent.putExtra(NotificationsActivity.MD5_NOTE_ID_EXTRA, note_id);
             if (note_id != null)
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
 
@@ -270,27 +279,42 @@ public class GCMIntentService extends GCMBaseIntentService {
         sendBroadcast(msgIntent);
     }
 
+    public void refreshNotes() {
+        NotificationUtils.refreshNotifications(new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                try {
+                    List<Note> notes = NotificationUtils.parseNotes(jsonObject);
+                    WordPress.wpDB.saveNotes(notes, true);
+                    broadcastNewNotification();
+                } catch (JSONException e) {
+                    AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: " + e);
+                }
+            }
+        }, null);
+    }
+
     @Override
     protected void onRegistered(Context context, String regId) {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (regId != null && regId.length() > 0) {
             // Get or create UUID for WP.com notes api
-            String uuid = settings.getString("wp_pref_notifications_uuid", null);
+            String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString("wp_pref_notifications_uuid", uuid);
+                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 editor.commit();
             }
 
-            NotificationUtils.registerPushNotificationsToken(context, regId, true);
+            NotificationUtils.registerDeviceForPushNotifications(context, regId);
         }
     }
 
     @Override
     protected void onUnregistered(Context context, String regId) {
-        Log.v("WORDPRESS", "GCM Unregistered ID: " + regId);
+        AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
     }
 
 }

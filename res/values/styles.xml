@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res/org.wordpress.android">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
         <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
@@ -20,6 +21,8 @@
 
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+
+        <item name="android:windowBackground">@color/background_grey</item>
     </style>
 
     <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
@@ -125,6 +128,7 @@
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">@dimen/menu_drawer_width</item>
+        <item name="mdContentBackground">@color/background_grey</item>
     </style>
 
     <style name="MenuDrawer.Button">
@@ -167,12 +171,12 @@
 
     <style name="StatsHeader">
         <item name="android:textColor">@color/wordpress_blue</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
         <!--  item name="android:textAllCaps">true</item -->
     </style>
 
     <style name="StatsHeaderTotals">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">top</item>
         <item name="android:singleLine">true</item>
@@ -180,7 +184,7 @@
     </style>
 
     <style name="StatsHeaderTotalsLabel">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_gravity">bottom</item>
         <!--  item name="android:fontFamily">sans-serif-light</item -->
@@ -189,9 +193,18 @@
     <style name="StatsTabletRadioButton">
         <item name="android:background">@drawable/stats_button_selector</item>
         <item name="android:button">@android:color/transparent</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="StatsPagerTitle">
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/stats_tablet_header_title</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="MediaGalleryText">
@@ -216,8 +229,14 @@
     <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="FloatingActivityTheme.CheckBox">
+        <item name="android:textColor">@color/blue_dark</item>
+        <item name="android:button">?android:attr/listChoiceIndicatorMultiple</item>
     </style>
 
     <style name="EmptyListText">
@@ -230,23 +249,22 @@
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/nux_primary_button</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:layout_height">@dimen/nux_button_height</item>
+        <item name="android:layout_marginBottom">8dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">-1</item>
-        <item name="android:shadowColor">@color/nux_primary_button_shadow</item>
-        <item name="android:shadowRadius">1</item>
-        <item name="android:background">@drawable/nux_third_button_selector</item>
+        <item name="android:background">@drawable/nux_primary_button_selector</item>
     </style>
 
     <style name="WordPress.NUXWhiteButtonNoBg">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@drawable/nux_white_button_nobg_selector</item>
         <item name="android:padding">8dp</item>
         <item name="android:clickable">true</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">-1</item>
-        <item name="android:shadowColor">@color/nux_secondary_button_shadow</item>
-        <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="WordPress.NUXGreyButtonNoBg">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@drawable/nux_grey_button_nobg_selector</item>
     </style>
 
     <style name="WordPress.NUXEditText">
@@ -258,28 +276,14 @@
         <item name="android:layout_marginLeft">40dp</item>
     </style>
 
-    <style name="WordPress.NUXTos">
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:shadowColor">@color/nux_shadow</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/nux_tos</item>
-    </style>
-
     <style name="WordPress.NUXTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginBottom">24dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/nux_title_font_size</item>
-        <item name="android:lineSpacingExtra">-8sp</item>
-        <item name="android:shadowColor">@color/nux_shadow</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">1</item>
-        <item name="android:shadowRadius">2</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
     </style>
 
     <style name="WordPress.EmptyList">
@@ -291,11 +295,38 @@
 
     <style name="WordPress.EmptyList.Title" parent="WordPress.EmptyList">
         <item name="android:textSize">@dimen/empty_list_title_text_size</item>
-        <item name="org.wordpress.android:fontVariation">light</item>
+        <item name="fontVariation">light</item>
     </style>
 
     <style name="WordPress.EmptyList.Description" parent="WordPress.EmptyList">
         <item name="android:textSize">@dimen/empty_list_description_text_size</item>
     </style>
 
+    <!--
+        moderation views on comment detail
+    -->
+    <style name="WordPress.ModerateButton">
+        <item name="android:textColor">@color/moderate_button_text</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:background">@drawable/moderate_button_selector</item>
+        <item name="android:padding">@dimen/margin_small</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Pull to refresh -->
+    <style name="Widget.Custom.PtrHeader" parent="android:Widget">
+        <item name="ptrProgressBarColor">@color/blue_dark</item>
+        <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
+    </style>
+
+    <!-- On top message -->
+    <style name="WordPress.OnTopMessage">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_height">@dimen/nux_button_height</item>
+        <item name="android:background">@drawable/on_top_message_shape</item>
+    </style>
 </resources>

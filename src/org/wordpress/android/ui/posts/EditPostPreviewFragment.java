@@ -14,9 +14,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
-/**
- * Created by dan on 11/26/13.
- */
 public class EditPostPreviewFragment extends SherlockFragment {
 
     EditPostActivity mActivity;
@@ -38,12 +35,12 @@ public class EditPostPreviewFragment extends SherlockFragment {
 
     public void loadPost(Post post) {
 
-        // Don't load if the Post object of title are null, see #395
-        if (post == null || post.getTitle() == null)
+        // Don't load if the Post object is null, see #395
+        if (post == null)
             return;
 
         String postTitle = "<h1>" + post.getTitle() + "</h1>";
-        String postContent = postTitle + post.getDescription() + "\n\n" + post.getMt_text_more();
+        String postContent = postTitle + post.getDescription() + "\n\n" + post.getMoreText();
 
         if (post.isLocalDraft()) {
             mTextView.setVisibility(View.VISIBLE);

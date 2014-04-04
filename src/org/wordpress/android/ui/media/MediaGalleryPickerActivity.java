@@ -3,6 +3,7 @@ package org.wordpress.android.ui.media;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -17,8 +18,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
+import org.wordpress.android.util.ToastUtils;
 import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.SyncMediaLibraryTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
-    public static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
+    private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
     public static final String PARAM_SELECTED_IDS = "PARAM_SELECTED_IDS";
     public static final String RESULT_IDS = "RESULT_IDS";
     public static final String TAG = MediaGalleryPickerActivity.class.getSimpleName();
@@ -83,15 +84,15 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
-        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems);
+        mGridAdapter = new MediaGridAdapter(this, null, 0, checkedItems, MediaImageLoader.getInstance());
         mGridAdapter.setCallback(this);
         mGridView.setAdapter(mGridAdapter);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        refereshViews();
+        refreshViews();
     }
     
     @Override
@@ -102,12 +103,10 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         outState.putBoolean(STATE_IS_SELECT_ONE_ITEM, mIsSelectOneItem);
     }
 
-    private void refereshViews() {
+    private void refreshViews() {
         if (WordPress.getCurrentBlog() == null)
             return;
-        
-        final String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
+        final String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
         if (cursor.getCount() == 0) {
             refreshMediaFromServer(0);
@@ -180,16 +179,24 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         return false;
     }
 
-    public void refreshMediaFromServer(int offset) {
+    private void noMediaFinish() {
+        ToastUtils.showToast(this, R.string.media_empty_list, ToastUtils.Duration.LONG);
+        // Delay activity finish
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1500);
+    }
 
-        if(offset == 0 || !mIsRefreshing) {
-
+    void refreshMediaFromServer(int offset) {
+        if (offset == 0 || !mIsRefreshing) {
             if (offset == mOldMediaSyncOffset) {
                 // we're pulling the same data again for some reason. Pull from the beginning.
                 offset = 0;
             }
             mOldMediaSyncOffset = offset;
-
             mIsRefreshing = true;
             mGridAdapter.setRefreshing(true);
 
@@ -205,8 +212,12 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 public void onSuccess(int count) {
                     MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                     mHasRetrievedAllMedia = (count == 0);
-                    adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
-
+                    adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
+                    String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+                    if (WordPress.wpDB.getMediaCountAll(blogId) == 0 && count == 0) {
+                        // There is no media at all
+                        noMediaFinish();
+                    }
                     mIsRefreshing = false;
 
                     // the activity may be gone by the time this finishes, so check for it
@@ -217,7 +228,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();
                                 mGridAdapter.setRefreshing(false);
-                                String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+                                String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
                                 Cursor cursor = WordPress.wpDB.getMediaImagesForBlog(blogId, mFilteredItems);
                                 mGridAdapter.swapCursor(cursor);
 
@@ -227,14 +238,15 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                 }
 
                 @Override
-                public void onFailure(int errorCode) {
-
-                    if ( errorCode == ApiHelper.SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP || errorCode == SyncMediaLibraryTask.UNKNOWN_ERROR ) {
-                        String errorMessage = errorCode == SyncMediaLibraryTask.NO_UPLOAD_FILES_CAP ? "You do not have permission to view the media library" : "Something went wrong while refreshing the media library. Try again later.";
-                        Toast.makeText(MediaGalleryPickerActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+                    if (errorType != ApiHelper.ErrorType.NO_ERROR) {
+                        String message = errorType == ApiHelper.ErrorType.NO_UPLOAD_FILES_CAP
+                                ? getString(R.string.media_error_no_permission)
+                                : getString(R.string.error_refresh_media);
+                        Toast.makeText(MediaGalleryPickerActivity.this, message, Toast.LENGTH_SHORT).show();
                         MediaGridAdapter adapter = (MediaGridAdapter) mGridView.getAdapter();
                         mHasRetrievedAllMedia = true;
-                        adapter.setHasRetrieviedAll(mHasRetrievedAllMedia);
+                        adapter.setHasRetrievedAll(mHasRetrievedAllMedia);
                     }
 
                     // the activity may be cone by the time we get this, so check for it

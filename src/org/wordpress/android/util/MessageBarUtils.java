@@ -8,10 +8,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 
-/**
- * Created by nbradbury on 11/12/13.
- */
-
 /*
  * used by activities such as the reader tag editor and the comment list to animate a message in
  * from the bottom, then animate it back out after a brief delay - optional runnable will be
@@ -53,7 +49,7 @@ public class MessageBarUtils {
         txtMessageBar.clearAnimation();
         txtMessageBar.setText(message);
 
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_in);
+        AniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_in);
         txtMessageBar.setVisibility(View.VISIBLE);
 
         new Handler().postDelayed(new Runnable() {
@@ -96,6 +92,6 @@ public class MessageBarUtils {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        ReaderAniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_out, listener);
+        AniUtils.startAnimation(txtMessageBar, R.anim.reader_message_bar_out, listener);
     }
 }

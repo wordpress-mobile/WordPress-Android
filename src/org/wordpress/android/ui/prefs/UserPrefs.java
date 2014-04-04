@@ -6,9 +6,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
 
-/**
- * Created by nbradbury on 6/21/13.
- */
 public class UserPrefs {
     private static final String PREFKEY_USER_ID    = "wp_userid";       // id of the current user
     private static final String PREFKEY_READER_TAG = "reader_tag";    // last selected tag in the reader
@@ -65,6 +62,9 @@ public class UserPrefs {
     }
     public static void clearCurrentUserId() {
         remove(PREFKEY_USER_ID);
+    }
+    public static boolean hasCurrentUserId() {
+        return (getCurrentUserId() != 0);
     }
 
     public static String getReaderTag() {

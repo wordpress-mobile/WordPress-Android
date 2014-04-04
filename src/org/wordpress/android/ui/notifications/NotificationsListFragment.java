@@ -2,40 +2,38 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.ResourceCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Note;
-import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
+
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
+
+import java.util.HashMap;
+
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 public class NotificationsListFragment extends ListFragment {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
@@ -43,6 +41,7 @@ public class NotificationsListFragment extends ListFragment {
     private OnNoteClickListener mNoteClickListener;
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
+    private PullToRefreshHelper mPullToRefreshHelper;
 
     /**
      * For responding to tapping of notes
@@ -60,6 +59,10 @@ public class NotificationsListFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.empty_listview, container, false);
         return v;
+    }
+
+    public void animateRefresh(boolean refresh) {
+        mPullToRefreshHelper.setRefreshing(refresh);
     }
 
     @Override
@@ -80,6 +83,35 @@ public class NotificationsListFragment extends ListFragment {
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
+
+        initPullToRefreshHelper();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        boolean isRefreshing = mPullToRefreshHelper.isRefreshing();
+        super.onConfigurationChanged(newConfig);
+        // Pull to refresh layout is destroyed onDetachedFromWindow,
+        // so we have to re-init the layout, via the helper here
+        initPullToRefreshHelper();
+        mPullToRefreshHelper.setRefreshing(isRefreshing);
+    }
+
+    private void initPullToRefreshHelper() {
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new PullToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        if (getActivity() instanceof NotificationsActivity) {
+                            //((NotificationsActivity) getActivity()).refreshNotes();
+                        }
+                    }
+                }, TextView.class);
     }
 
     @Override
@@ -129,6 +161,10 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
+    boolean hasAdapter() {
+        return (mNotesAdapter != null);
+    }
+
     class NotesAdapter extends ResourceCursorAdapter implements Bucket.Listener<Note> {
 
         int mAvatarSz;
@@ -145,7 +181,7 @@ public class NotificationsListFragment extends ListFragment {
 
             // build a query that sorts by timestamp descending
             mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX,
-                Query.SortType.DESCENDING);
+                    Query.SortType.DESCENDING);
 
             mAvatarSz = DisplayUtils.dpToPx(getActivity(), 48);
             refreshNotes();

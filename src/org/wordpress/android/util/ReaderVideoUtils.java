@@ -10,6 +10,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
 
 public class ReaderVideoUtils {
 	
@@ -93,11 +94,11 @@ public class ReaderVideoUtils {
 			
 			return "";
 		} catch (UnsupportedOperationException e) {
-			ReaderLog.e(e);
+			AppLog.e(T.READER, e);
 			return "";
 		} catch (IndexOutOfBoundsException e) {
 			// thrown by substring
-            ReaderLog.e(e);
+            AppLog.e(T.READER, e);
 			return "";
 		}
 	}
@@ -155,7 +156,7 @@ public class ReaderVideoUtils {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                ReaderLog.e(volleyError);
+                AppLog.e(T.READER, volleyError);
                 thumbListener.onResponse(false, null);
             }
         };

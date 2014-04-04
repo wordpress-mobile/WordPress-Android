@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -13,25 +12,29 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
+
+import java.lang.ref.WeakReference;
 
 /**
- * Created by nbradbury on 10/11/13.
  * ImageGetter for Html.fromHtml()
  * adapted from existing ImageGetter code in NoteCommentFragment
  */
 public class WPImageGetter implements Html.ImageGetter {
-    private Context mContext;
-    private TextView mView;
+    private WeakReference<TextView> mWeakView;
     private int mMaxSize;
 
-    public WPImageGetter(Context context, TextView view) {
-        this(context, view, 0);
+    public WPImageGetter(TextView view) {
+        this(view, 0);
     }
 
-    public WPImageGetter(Context context, TextView view, int maxSize) {
-        mContext = context.getApplicationContext();
-        mView = view;
+    public WPImageGetter(TextView view, int maxSize) {
+        mWeakView = new WeakReference<TextView>(view);
         mMaxSize = maxSize;
+    }
+
+    private TextView getView() {
+        return mWeakView.get();
     }
 
     @Override
@@ -43,40 +46,51 @@ public class WPImageGetter implements Html.ImageGetter {
         if (source.startsWith("//"))
             source = "http:" + source;
 
-        Drawable loading = mContext.getResources().getDrawable(R.drawable.remote_image);
-        Drawable failed = mContext.getResources().getDrawable(R.drawable.remote_failed);
+        // use Photon if a max size is requested (otherwise the full-sized image will be downloaded
+        // and then resized)
+        if (mMaxSize > 0)
+            source = PhotonUtils.getPhotonImageUrl(source, mMaxSize, 0);
+
+        TextView view = getView();
+        Drawable loading = view.getContext().getResources().getDrawable(R.drawable.remote_image);
+        Drawable failed = view.getContext().getResources().getDrawable(R.drawable.remote_failed);
         final RemoteDrawable remote = new RemoteDrawable(loading, failed);
 
         WordPress.imageLoader.get(source, new ImageLoader.ImageListener(){
             @Override
             public void onErrorResponse(VolleyError error){
                 remote.displayFailed();
-                mView.invalidate();
+                TextView view = getView();
+                if (view != null)
+                    view.invalidate();
             }
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate){
                 if (response.getBitmap() != null) {
-                    // view is gone? then stop
-                    if (mView == null) {
+                    // make sure view is still valid
+                    TextView view = getView();
+                    if (view == null) {
+                        AppLog.w(T.UTILS, "WPImageGetter view is invalid");
                         return;
                     }
-                    Drawable drawable = new BitmapDrawable(mContext.getResources(), response.getBitmap());
+
+                    Drawable drawable = new BitmapDrawable(view.getContext().getResources(), response.getBitmap());
                     final int oldHeight = remote.getBounds().height();
-                    int maxWidth = mView.getWidth() - mView.getPaddingLeft() - mView.getPaddingRight();
-                    if (mMaxSize > 0 && maxWidth > mMaxSize)
+                    int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
+                    if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0))
                         maxWidth = mMaxSize;
                     remote.setRemoteDrawable(drawable, maxWidth);
-                    // TODO: resize image to fit visibly within the TextView
+
                     // image is from cache? don't need to modify view height
-                    if (isImmediate) {
+                    if (isImmediate)
                         return;
-                    }
+
                     int newHeight = remote.getBounds().height();
-                    mView.invalidate();
+                    view.invalidate();
                     // For ICS
-                    mView.setHeight(mView.getHeight() + newHeight - oldHeight);
+                    view.setHeight(view.getHeight() + newHeight - oldHeight);
                     // Pre ICS
-                    mView.setEllipsize(null);
+                    view.setEllipsize(null);
                 }
             }
         });

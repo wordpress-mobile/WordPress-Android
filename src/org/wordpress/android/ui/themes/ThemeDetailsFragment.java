@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 import java.util.ArrayList;
 
@@ -82,7 +82,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         else
             return null;
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,14 +124,14 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         return;
 
       int dialogWidth = (int) getActivity().getResources().getDimension(R.dimen.theme_details_fragment_width);
-      
+
       int dialogHeight = (int) getActivity().getResources().getDimension(R.dimen.theme_details_fragment_height);
 
       getDialog().getWindow().setLayout(dialogWidth, dialogHeight);
 
     }
-     
-    
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -143,18 +143,18 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         mCurrentThemeView = (View) mParentView.findViewById(R.id.theme_details_fragment_current_theme_text);
         mPremiumThemeView = (View) mParentView.findViewById(R.id.theme_details_fragment_premium_theme_text);
-        
+
         mLivePreviewButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_preview_button);
         mActivateThemeButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_activate_button);
         mActivatingProgressView = (View) mParentView.findViewById(R.id.theme_details_fragment_activating_progress);
         mActivateThemeContainer = (FrameLayout) mParentView.findViewById(R.id.theme_details_fragment_activate_button_container);
-        
+
         mFeaturesContainer = (LinearLayout) mParentView.findViewById(R.id.theme_details_fragment_features_container);
         mLeftContainer = (View) mParentView.findViewById(R.id.theme_details_fragment_left_container);
-        
+
         mViewSiteButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_view_site_button);
         mViewSiteButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ViewSiteActivity.class);
@@ -162,7 +162,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
                 startActivity(intent);
             }
         });
-        
+
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -190,7 +190,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         return mParentView;
     }
-    
+
     public void showViewSite() {
         mLivePreviewButton.setVisibility(View.GONE);
         mActivateThemeContainer.setVisibility(View.GONE);
@@ -215,7 +215,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.removeItem(R.id.menu_search);
-        menu.removeItem(R.id.menu_refresh);
     }
 
     /*
@@ -238,9 +237,9 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         if (activated)
             showViewSite();
     }
-    
+
     public void loadTheme(String themeId) {
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
         Theme theme = WordPress.wpDB.getTheme(blogId, themeId);
         if (theme != null) {
             if (mNameView != null) {
@@ -248,16 +247,16 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             }
             mImageView.setImageUrl(theme.getScreenshotURL(), WordPress.imageLoader);
             mDescriptionView.setText(Html.fromHtml(theme.getDescription()));
-            mDescriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+            mDescriptionView.setMovementMethod(WPLinkMovementMethod.getInstance());
             mPreviewURL = theme.getPreviewURL();
-            
+
             loadFeatureView(theme.getFeaturesArray());
             if (theme.isPremium()) {
                 mPremiumThemeView.setVisibility(View.VISIBLE);
             } else {
                 mPremiumThemeView.setVisibility(View.GONE);
             }
-            
+
             if (theme.isCurrent()) {
                 showViewSite();
             }
@@ -268,26 +267,26 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         }
 
     }
-    
+
     private void loadFeatureView(ArrayList<String> featuresArray) {
         int size = featuresArray.size();
         View views[] = new View[size];
-        
+
         LayoutInflater inflater = LayoutInflater.from(getActivity());
-        
+
         for (int i = 0; i < size; i++) {
              TextView tv = (TextView) inflater.inflate(R.layout.theme_feature_text, mFeaturesContainer, false);
              tv.setText(featuresArray.get(i));
              views[i] = tv;
         }
-        
+
         // make the list of features appear in such a way that the text appear on the next line
         // when reaching the end of the current line
         populateViews(mFeaturesContainer, views, getActivity());
     }
 
     /**
-     * Copyright 2011 Sherif 
+     * Copyright 2011 Sherif
      * Updated by Karim Varela to handle LinearLayouts with other views on either side.
      * @param linearLayout
      * @param views : The views to wrap within LinearLayout
@@ -298,10 +297,10 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
     {
 
         RelativeLayout.LayoutParams llParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-        
+
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         linearLayout.removeAllViews();
-        
+
         int maxWidth = display.getWidth() - llParams.leftMargin - llParams.rightMargin - mParentView.getPaddingLeft() - mParentView.getPaddingRight();
 
 
@@ -310,16 +309,16 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
             int minDialogWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int dialogWidth = Math.max((int) (display.getWidth() * 0.6), minDialogWidth);
             maxWidth = dialogWidth / 2 - llParams.leftMargin - llParams.rightMargin;
-            
+
         } else if (Utils.isTablet() && mLeftContainer != null) {
             int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
             mLeftContainer.measure(spec, spec);
 
             LinearLayout.LayoutParams params = (LayoutParams) mLeftContainer.getLayoutParams();
-            
+
             maxWidth -= mLeftContainer.getMeasuredWidth() + params.rightMargin + params.leftMargin;
         }
-        
+
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout.LayoutParams params;
@@ -332,7 +331,7 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         int dp4 = (int) Utils.dpToPx(4);
         int dp2 = (int) Utils.dpToPx(2);
-        
+
         for (int i = 0; i < views.length; i++)
         {
             LinearLayout LL = new LinearLayout(context);
@@ -365,5 +364,5 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         }
         linearLayout.addView(newLL);
     }
-    
+
 }

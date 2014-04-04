@@ -1,132 +1,71 @@
 package org.wordpress.android.models;
 
-import android.util.Log;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.Vector;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+
+import java.io.Serializable;
 
 public class Post implements Serializable {
 
     // Increment this value if this model changes
     // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
-    static final long serialVersionUID  = 1L;
+    static final long serialVersionUID  = 2L;
 
     public static String QUICK_MEDIA_TYPE_PHOTO = "QuickPhoto";
     public static String QUICK_MEDIA_TYPE_VIDEO = "QuickVideo";
 
-    private long id;
-    private int blogID;
+    private long localTablePostId;
+    private int localTableBlogId;
     private String categories;
-    private String custom_fields;
+    private String customFields;
     private long dateCreated;
-    private long date_created_gmt;
+    private long dateCreatedGmt;
     private String description;
     private String link;
-    private boolean mt_allow_comments;
-    private boolean mt_allow_pings;
-    private String mt_excerpt;
-    private String mt_keywords;
-    private String mt_text_more;
+    private boolean allowComments;
+    private boolean allowPings;
+    private String excerpt;
+    private String keywords;
+    private String moreText;
     private String permaLink;
-    private String post_status;
-    private String postid;
+    private String status;
+    private String remotePostId;
     private String title;
-    private String userid;
-    private String wp_author_display_name;
-    private String wp_author_id;
-    private String wp_password;
-    private String wp_post_format;
-    private String wp_slug;
+    private String userId;
+    private String authorDisplayName;
+    private String authorId;
+    private String password;
+    private String postFormat;
+    private String slug;
     private boolean localDraft;
     private boolean uploaded;
     private double latitude;
     private double longitude;
     private boolean isPage;
+    private String pageParentId;
+    private String pageParentTitle;
     private boolean isLocalChange;
-
     private String mediaPaths;
     private String quickPostType;
 
-    public List<String> imageUrl = new Vector<String>();
+    public Post() {
 
-    public Post(int blog_id, long post_id, boolean isPage) {
-        // load an existing post
-        List<Object> postVals = WordPress.wpDB.loadPost(blog_id, isPage, post_id);
-        if (postVals != null) {
-            this.id = (Long) postVals.get(0);
-            this.blogID = blog_id;
-            if (postVals.get(2) != null)
-                this.postid = postVals.get(2).toString();
-            this.title = postVals.get(3).toString();
-            this.dateCreated = (Long) postVals.get(4);
-            this.date_created_gmt = (Long) postVals.get(5);
-            this.categories = postVals.get(6).toString();
-            this.custom_fields = postVals.get(7).toString();
-            this.description = postVals.get(8).toString();
-            this.link = postVals.get(9).toString();
-            this.mt_allow_comments = (Integer) postVals.get(10) > 0;
-            this.mt_allow_pings = (Integer) postVals.get(11) > 0;
-            this.mt_excerpt = postVals.get(12).toString();
-            this.mt_keywords = postVals.get(13).toString();
-            if (postVals.get(14) != null)
-                this.mt_text_more = postVals.get(14).toString();
-            else
-                this.mt_text_more = "";
-            this.permaLink = postVals.get(15).toString();
-            this.post_status = postVals.get(16).toString();
-            this.userid = postVals.get(17).toString();
-            this.wp_author_display_name = postVals.get(18).toString();
-            this.wp_author_id = postVals.get(19).toString();
-            this.wp_password = postVals.get(20).toString();
-            this.wp_post_format = postVals.get(21).toString();
-            this.wp_slug = postVals.get(22).toString();
-            this.mediaPaths = postVals.get(23).toString();
-            this.latitude = (Double) postVals.get(24);
-            this.longitude = (Double) postVals.get(25);
-            this.localDraft = (Integer) postVals.get(26) > 0;
-            this.uploaded = (Integer) postVals.get(27) > 0;
-            this.isPage = (Integer) postVals.get(28) > 0;
-            this.isLocalChange = (Integer) postVals.get(29) > 0;
-        } else {
-            this.id = -1;
-        }
     }
 
     public Post(int blogId, boolean isPage) {
         // creates a new, empty post for the passed in blogId
-        this(blogId, "", "", "", "", 0, "", "", "","", 0, 0, isPage, "", false);
-        this.localDraft = true;
-        save();
-    }
-
-    public Post(int blog_id, String title, String content, String excerpt, String picturePaths, long date, String categories, String tags, String status,
-            String password, double latitude, double longitude, boolean isPage, String postFormat, boolean isLocalChange) {
-        this.blogID = blog_id;
-        this.title = title;
-        this.description = content;
-        this.mt_excerpt = excerpt;
-        this.mediaPaths = picturePaths;
-        this.date_created_gmt = date;
-        this.categories = categories;
-        this.mt_keywords = tags;
-        this.post_status = status;
-        this.wp_password = password;
+        this.localTableBlogId = blogId;
         this.isPage = isPage;
-        this.wp_post_format = postFormat;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.isLocalChange = isLocalChange;
+        this.localDraft = true;
     }
 
-    public long getId() {
-        return id;
+    public long getLocalTablePostId() {
+        return localTablePostId;
     }
 
     public long getDateCreated() {
@@ -138,19 +77,27 @@ public class Post implements Serializable {
     }
 
     public long getDate_created_gmt() {
-        return date_created_gmt;
+        return dateCreatedGmt;
     }
 
     public void setDate_created_gmt(long dateCreatedGmt) {
-        date_created_gmt = dateCreatedGmt;
+        this.dateCreatedGmt = dateCreatedGmt;
     }
 
-    public int getBlogID() {
-        return blogID;
+    public void setCategories(String postCategories) {
+        this.categories = postCategories;
     }
 
-    public void setBlogID(int blogID) {
-        this.blogID = blogID;
+    public void setCustomFields(String customFields) {
+        this.customFields = customFields;
+    }
+
+    public int getLocalTableBlogId() {
+        return localTableBlogId;
+    }
+
+    public void setLocalTableBlogId(int localTableBlogId) {
+        this.localTableBlogId = localTableBlogId;
     }
 
     public boolean isLocalDraft() {
@@ -163,13 +110,18 @@ public class Post implements Serializable {
 
     public JSONArray getJSONCategories() {
         JSONArray jArray = null;
-        if (categories == null)
-            categories = "";
+        if (categories == null) {
+            categories = "[]";
+        }
         try {
             categories = StringUtils.unescapeHTML(categories);
-            jArray = new JSONArray(categories);
+            if (TextUtils.isEmpty(categories)) {
+                jArray = new JSONArray();
+            } else {
+                jArray = new JSONArray(categories);
+            }
         } catch (JSONException e) {
-            Log.e("WordPress - getJSONCategories", e.getLocalizedMessage());
+            AppLog.e(T.POSTS, e);
         }
         return jArray;
     }
@@ -178,22 +130,22 @@ public class Post implements Serializable {
         this.categories = categories.toString();
     }
 
-    public JSONArray getCustom_fields() {
+    public JSONArray getCustomFields() {
         JSONArray jArray = null;
         try {
-            jArray = new JSONArray(custom_fields);
+            jArray = new JSONArray(customFields);
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.POSTS, e);
         }
         return jArray;
     }
 
-    public void setCustom_fields(JSONArray customFields) {
-        custom_fields = customFields.toString();
+    public void setCustomFields(JSONArray customFields) {
+        this.customFields = customFields.toString();
     }
 
     public String getDescription() {
-        return description;
+        return StringUtils.notNullStr(description);
     }
 
     public void setDescription(String description) {
@@ -201,141 +153,139 @@ public class Post implements Serializable {
     }
 
     public String getLink() {
-        return link;
+        return StringUtils.notNullStr(link);
     }
 
     public void setLink(String link) {
         this.link = link;
     }
 
-    public boolean isMt_allow_comments() {
-        return mt_allow_comments;
+    public boolean isAllowComments() {
+        return allowComments;
     }
 
-    public void setMt_allow_comments(boolean mtAllowComments) {
-        mt_allow_comments = mtAllowComments;
+    public void setAllowComments(boolean mtAllowComments) {
+        allowComments = mtAllowComments;
     }
 
-    public boolean isMt_allow_pings() {
-        return mt_allow_pings;
+    public boolean isAllowPings() {
+        return allowPings;
     }
 
-    public void setMt_allow_pings(boolean mtAllowPings) {
-        mt_allow_pings = mtAllowPings;
+    public void setAllowPings(boolean mtAllowPings) {
+        allowPings = mtAllowPings;
     }
 
-    public String getMt_excerpt() {
-        return mt_excerpt;
+    public String getPostExcerpt() {
+        return StringUtils.notNullStr(excerpt);
     }
 
-    public void setMt_excerpt(String mtExcerpt) {
-        mt_excerpt = mtExcerpt;
+    public void setPostExcerpt(String mtExcerpt) {
+        excerpt = mtExcerpt;
     }
 
-    public String getMt_keywords() {
-        if (mt_keywords == null)
-            return "";
-        else
-            return mt_keywords;
+    public String getKeywords() {
+            return StringUtils.notNullStr(keywords);
     }
 
-    public void setMt_keywords(String mtKeywords) {
-        mt_keywords = mtKeywords;
+    public void setKeywords(String mtKeywords) {
+        keywords = mtKeywords;
     }
 
-    public String getMt_text_more() {
-        if (mt_text_more == null)
-            return "";
-        else
-            return mt_text_more;
+    public String getMoreText() {
+        return StringUtils.notNullStr(moreText);
     }
 
-    public void setMt_text_more(String mtTextMore) {
-        mt_text_more = mtTextMore;
+    public void setMoreText(String mtTextMore) {
+        moreText = mtTextMore;
     }
 
     public String getPermaLink() {
-        return permaLink;
+        return StringUtils.notNullStr(permaLink);
     }
 
     public void setPermaLink(String permaLink) {
         this.permaLink = permaLink;
     }
 
-    public String getPost_status() {
-        return post_status;
+    public String getPostStatus() {
+        return StringUtils.notNullStr(status);
     }
 
-    public void setPost_status(String postStatus) {
-        post_status = postStatus;
+    public void setPostStatus(String postStatus) {
+        status = postStatus;
     }
 
-    public String getPostid() {
-        return postid;
+    public PostStatus getStatusEnum() {
+        return PostStatus.fromPost(this);
     }
 
-    public void setPostid(String postid) {
-        this.postid = postid;
+    public String getRemotePostId() {
+        return StringUtils.notNullStr(remotePostId);
+    }
+
+    public void setRemotePostId(String postId) {
+        this.remotePostId = postId;
     }
 
     public String getTitle() {
-        return title;
+        return StringUtils.notNullStr(title);
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getUserid() {
-        return userid;
+    public String getUserId() {
+        return StringUtils.notNullStr(userId);
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public void setUserId(String userid) {
+        this.userId = userid;
     }
 
-    public String getWP_author_display_name() {
-        return wp_author_display_name;
+    public String getAuthorDisplayName() {
+        return StringUtils.notNullStr(authorDisplayName);
     }
 
-    public void setWP_author_display_name(String wpAuthorDisplayName) {
-        wp_author_display_name = wpAuthorDisplayName;
+    public void setAuthorDisplayName(String wpAuthorDisplayName) {
+        authorDisplayName = wpAuthorDisplayName;
     }
 
-    public String getWP_author_id() {
-        return wp_author_id;
+    public String getAuthorId() {
+        return StringUtils.notNullStr(authorId);
     }
 
-    public void setWP_author_id(String wpAuthorId) {
-        wp_author_id = wpAuthorId;
+    public void setAuthorId(String wpAuthorId) {
+        authorId = wpAuthorId;
     }
 
-    public String getWP_password() {
-        return wp_password;
+    public String getPassword() {
+        return StringUtils.notNullStr(password);
     }
 
-    public void setWP_password(String wpPassword) {
-        wp_password = wpPassword;
+    public void setPassword(String wpPassword) {
+        password = wpPassword;
     }
 
-    public String getWP_post_format() {
-        return wp_post_format;
+    public String getPostFormat() {
+        return StringUtils.notNullStr(postFormat);
     }
 
-    public void setWP_post_form(String wpPostForm) {
-        wp_post_format = wpPostForm;
+    public void setPostFormat(String wpPostForm) {
+        postFormat = wpPostForm;
     }
 
-    public String getWP_slug() {
-        return wp_slug;
+    public String getSlug() {
+        return StringUtils.notNullStr(slug);
     }
 
-    public void setWP_slug(String wpSlug) {
-        wp_slug = wpSlug;
+    public void setSlug(String wpSlug) {
+        slug = wpSlug;
     }
 
     public String getMediaPaths() {
-        return mediaPaths;
+        return StringUtils.notNullStr(mediaPaths);
     }
 
     public void setMediaPaths(String mediaPaths) {
@@ -366,6 +316,22 @@ public class Post implements Serializable {
         this.isPage = isPage;
     }
 
+    public String getPageParentId() {
+        return StringUtils.notNullStr(pageParentId);
+    }
+
+    public void setPageParentId(String wp_page_parent_id) {
+        this.pageParentId = wp_page_parent_id;
+    }
+
+    public String getPageParentTitle() {
+        return StringUtils.notNullStr(pageParentTitle);
+    }
+
+    public void setPageParentTitle(String wp_page_parent_title) {
+        this.pageParentTitle = wp_page_parent_title;
+    }
+
     public boolean isUploaded() {
         return uploaded;
     }
@@ -382,34 +348,8 @@ public class Post implements Serializable {
         this.isLocalChange = isLocalChange;
     }
 
-    public boolean save() {
-        long newPostID = WordPress.wpDB.savePost(this, this.blogID);
-
-        if (newPostID >= 0 && this.isLocalDraft() && !this.isUploaded()) {
-            this.id = newPostID;
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean update() {
-        int success = WordPress.wpDB.updatePost(this, this.blogID);
-
-        return success > 0;
-    }
-
-    public void delete() {
-        // deletes a post/page draft
-        WordPress.wpDB.deletePost(this);
-    }
-
-    public void deleteMediaFiles() {
-        WordPress.wpDB.deleteMediaFilesForPost(this);
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void setLocalTablePostId(long id) {
+        this.localTablePostId = id;
     }
 
     public void setQuickPostType(String type) {
@@ -417,7 +357,7 @@ public class Post implements Serializable {
     }
 
     public String getQuickPostType() {
-        return quickPostType;
+        return StringUtils.notNullStr(quickPostType);
     }
 
     /**
@@ -427,26 +367,25 @@ public class Post implements Serializable {
      * @return True if this post's data differs from otherPost's data, False otherwise.
      */
     public boolean hasChanges(Post otherPost) {
-        return (!(this.title.equals(otherPost.title) &&
-                this.description.equals(otherPost.description) &&
-                this.mt_excerpt.equals(otherPost.mt_excerpt) &&
-                this.date_created_gmt == otherPost.date_created_gmt &&
-                this.categories.equals(otherPost.categories) &&
-                this.mt_keywords.equals(otherPost.mt_keywords) &&
-                this.post_status.equals(otherPost.post_status) &&
-                this.wp_password.equals(otherPost.wp_password) &&
-                this.wp_post_format.equals(otherPost.wp_post_format) &&
-                this.latitude == otherPost.latitude &&
-                this.longitude == otherPost.longitude)
-        );
+        return otherPost == null || !(StringUtils.equals(title, otherPost.title) &&
+                                      StringUtils.equals(description, otherPost.description) &&
+                                      StringUtils.equals(excerpt, otherPost.excerpt) &&
+                                      StringUtils.equals(keywords, otherPost.keywords) &&
+                                      StringUtils.equals(categories, otherPost.categories) &&
+                                      StringUtils.equals(status, otherPost.status) &&
+                                      StringUtils.equals(password, otherPost.password) &&
+                                      StringUtils.equals(postFormat, otherPost.postFormat) &&
+                                      this.dateCreatedGmt == otherPost.dateCreatedGmt &&
+                                      this.latitude == otherPost.latitude &&
+                                      this.longitude == otherPost.longitude);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + blogID;
-        result = prime * result + (int) (id ^ (id >>> 32));
+        result = prime * result + localTableBlogId;
+        result = prime * result + (int) (localTablePostId ^ (localTablePostId >>> 32));
         result = prime * result + (isPage ? 1231 : 1237);
         return result;
     }
@@ -457,9 +396,9 @@ public class Post implements Serializable {
             return true;
         if (other instanceof Post) {
             Post otherPost = (Post) other;
-            return (this.id == otherPost.id &&
+            return (this.localTablePostId == otherPost.localTablePostId &&
                     this.isPage == otherPost.isPage &&
-                    this.blogID == otherPost.blogID
+                    this.localTableBlogId == otherPost.localTableBlogId
             );
         } else {
             return false;
@@ -468,16 +407,16 @@ public class Post implements Serializable {
 
     /**
      * Get the entire post content
-     * Joins description and mt_text_more fields if both are valid
+     * Joins description and moreText fields if both are valid
      * @return post content as String
      */
     public String getContent() {
         String postContent;
-        if (!getMt_text_more().equals("")) {
+        if (!TextUtils.isEmpty(getMoreText())) {
             if (isLocalDraft())
-                postContent = getDescription() + "\n&lt;!--more--&gt;\n" + getMt_text_more();
+                postContent = getDescription() + "\n&lt;!--more--&gt;\n" + getMoreText();
             else
-                postContent = getDescription() + "\n<!--more-->\n" + getMt_text_more();
+                postContent = getDescription() + "\n<!--more-->\n" + getMoreText();
         } else
             postContent = getDescription();
 
@@ -485,6 +424,6 @@ public class Post implements Serializable {
     }
 
     public boolean isNew() {
-        return getId() >= 0;
+        return getLocalTablePostId() >= 0;
     }
 }

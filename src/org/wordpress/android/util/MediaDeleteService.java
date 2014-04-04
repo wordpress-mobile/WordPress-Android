@@ -1,8 +1,5 @@
 package org.wordpress.android.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +7,11 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.os.IBinder;
 
-import org.xmlrpc.android.ApiHelper;
-import org.xmlrpc.android.ApiHelper.DeleteMediaTask.Callback;
-
 import org.wordpress.android.WordPress;
+import org.xmlrpc.android.ApiHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A service for deleting media files from the media browser.
@@ -74,7 +72,7 @@ public class MediaDeleteService extends Service {
         if (WordPress.getCurrentBlog() == null)
             return null;
         
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         return WordPress.wpDB.getMediaDeleteQueueItem(blogId);
     }
     
@@ -88,7 +86,8 @@ public class MediaDeleteService extends Service {
         final String blogId = cursor.getString((cursor.getColumnIndex("blogId")));
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         
-        ApiHelper.DeleteMediaTask task = new ApiHelper.DeleteMediaTask(mediaId, new Callback() {
+        ApiHelper.DeleteMediaTask task = new ApiHelper.DeleteMediaTask(mediaId,
+                new ApiHelper.GenericCallback() {
             
             @Override
             public void onSuccess() {
@@ -102,7 +101,7 @@ public class MediaDeleteService extends Service {
             }
             
             @Override
-            public void onFailure() {
+            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 // Ideally we would do handle the 401 (unauthorized) and 404 (not found) errors,
                 // but the XMLRPCExceptions don't seem to give messages when they are thrown.
                 
@@ -122,5 +121,4 @@ public class MediaDeleteService extends Service {
         
         mHandler.post(mFetchQueueTask);
     }
-    
 }

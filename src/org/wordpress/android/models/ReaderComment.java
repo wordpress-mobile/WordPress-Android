@@ -9,7 +9,6 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * Created by nbradbury on 7/8/13.
  * TODO: unify this with Comment.java
  */
 public class ReaderComment {
@@ -107,12 +106,6 @@ public class ReaderComment {
     }
     public void setPublished(String published) {
         this.published = StringUtils.notNullStr(published);
-    }
-
-    //
-
-    public boolean hasAvatar() {
-        return !TextUtils.isEmpty(authorAvatar);
     }
 
     public boolean hasAuthorUrl() {

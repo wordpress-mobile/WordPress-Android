@@ -1,62 +1,19 @@
 package org.wordpress.android.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
+import org.wordpress.android.util.AppLog.T;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.util.Log;
-
-import org.wordpress.android.WordPress;
-
-/**
- * As of January 20 2012:
- * The BlackBerry Runtime for Android Apps supports Android 2.3.3 applications.
- *
- * Unsupported App Types:
- * - Widget apps : Apps that are only meant to be widgets are not supported
- * - Apps that include no launchable Activity
- * - Apps that include more than one launchable Activity
- * - Apps whose minimum required Android API level is more than 10, and whose maximum supported level is less than 10
- *
- *  Unsupported Hardware Features:
- *  - Telephony (including SMS and MMS)
- *  - Bluetooth
- *  - Camera:  The intent to launch the camera is supported. However, currently the Camera class in the Android SDK is not supported.
- *  As a result, although you can launch the camera application, you cannot access the Camera hardware.
- * - NFC
- * - Barometers
- * - Ambient light sensor
- * - Proximity sensor
- * - VoIP
- *
- * Unsupported Software Features:
- * - Vending (In App Payments): com.android.vending
- * - Cloud To Device Messaging (Push): com.google.android.c2dm
- * - Google Maps: com.google.android.maps
- * - Text to Speech: com.google.tts
- *
- *
- * Major Details here: https://bdsc.webapps.blackberry.com/android/apisupport
- *
- *
- * @author daniloercoli
- *
- */
-
-
 public class DeviceUtils {
 
     private static DeviceUtils instance;
-
-    private boolean isBlackBerry = false;
     private boolean isKindleFire = false;
-
-    public boolean isBlackBerry() {
-        return isBlackBerry;
-    }
 
     public boolean isKindleFire() {
         return isKindleFire;
@@ -70,16 +27,9 @@ public class DeviceUtils {
     }
 
     private DeviceUtils() {
-        /*isPlayBook =  android.os.Build.MANUFACTURER.equalsIgnoreCase( "Research in Motion" ) &&
-                android.os.Build.MODEL.startsWith( "BlackBerry Runtime for Android" ); */
-        isBlackBerry = System.getProperty("os.name").equalsIgnoreCase("qnx") ? true : false;
         isKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
-    };
-
-    public static String getBlackBerryUserAgent() {
-        return "wp-blackberry/"+WordPress.versionName;
     }
-    
+
     /**
      * Checks camera availability recursively based on API level.
      *
@@ -112,28 +62,26 @@ public class DeviceUtils {
         try {
             Properties prop = new Properties();
             InputStream fileStream;
-            //Read the device name from a precomplied list: see http://making.meetup.com/post/29648976176/human-readble-android-device-names
+            // Read the device name from a precomplied list:
+            // see http://making.meetup.com/post/29648976176/human-readble-android-device-names
             fileStream = context.getAssets().open("android_models.properties");
             prop.load(fileStream);
             fileStream.close();
-            String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_" ) );
-            if ( decodedModel != null && !decodedModel.trim().equals("") )  {
+            String decodedModel = prop.getProperty(undecodedModel.replaceAll(" ", "_"));
+            if (decodedModel != null && !decodedModel.trim().equals("")) {
                 model = decodedModel;
             }
         } catch (IOException e) {
-            Log.e("WORDPRESS", e.getMessage());
+            AppLog.e(T.UTILS, e.getMessage());
         }
 
-        if( model == null ) {  //Device model not found in the list
-           
+        if (model == null) {  //Device model not found in the list
             if (undecodedModel.startsWith(manufacturer)) {
                 model = capitalize(undecodedModel);
             } else {
                 model = capitalize(manufacturer) + " " + undecodedModel;
             }
-
         }
-
         return model;
     }
 
@@ -147,5 +95,5 @@ public class DeviceUtils {
         } else {
             return Character.toUpperCase(first) + s.substring(1);
         }
-    } 
+    }
 }

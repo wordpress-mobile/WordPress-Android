@@ -9,8 +9,9 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
-import org.wordpress.android.ui.reader_native.ReaderActivityLauncher;
-import org.wordpress.android.util.ReaderLog;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 /**
@@ -64,7 +65,7 @@ public class DeepLinkingIntentReceiverActivity extends Activity {
             try {
                 ReaderActivityLauncher.showReaderPostDetail(this, Long.parseLong(mBlogId), Long.parseLong(mPostId));
             } catch (NumberFormatException e) {
-                ReaderLog.e(e);
+                AppLog.e(T.READER, e);
             }
         } else {
             ToastUtils.showToast(this, R.string.error_generic);

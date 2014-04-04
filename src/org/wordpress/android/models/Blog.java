@@ -2,25 +2,22 @@
 
 package org.wordpress.android.models;
 
-import android.text.TextUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-import com.google.gson.reflect.TypeToken;
+import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Map;
-
 public class Blog {
-
-    private int id;
+    private int localTableBlogId;
     private String url;
     private String homeURL;
     private String blogName;
@@ -33,9 +30,7 @@ public class Blog {
     private int scaledImageWidth;
     private String maxImageWidth;
     private int maxImageWidthId;
-    private int lastCommentId;
-    private boolean runService;
-    private int blogId;
+    private int remoteBlogId;
     private boolean location;
     private String dotcom_username;
     private String dotcom_password;
@@ -43,78 +38,60 @@ public class Blog {
     private String api_blogid;
     private boolean dotcomFlag;
     private String wpVersion;
-    private String httpuser;
-    private String httppassword;
+    private String httpuser = "";
+    private String httppassword = "";
     private String postFormats;
-    private String blogOptions;
+    private String blogOptions = "{}";
     private boolean isAdmin;
     private boolean isHidden;
+
+    public Blog() {
+
+    }
+
+    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
+        this.localTableBlogId = localTableBlogId;
+        this.url = url;
+        this.homeURL = homeURL;
+        this.blogName = blogName;
+        this.username = username;
+        this.password = password;
+        this.imagePlacement = imagePlacement;
+        this.featuredImageCapable = featuredImageCapable;
+        this.fullSizeImage = fullSizeImage;
+        this.scaledImage = scaledImage;
+        this.scaledImageWidth = scaledImageWidth;
+        this.maxImageWidth = maxImageWidth;
+        this.maxImageWidthId = maxImageWidthId;
+        this.remoteBlogId = remoteBlogId;
+        this.location = location;
+        this.dotcom_username = dotcom_username;
+        this.dotcom_password = dotcom_password;
+        this.api_key = api_key;
+        this.api_blogid = api_blogid;
+        this.dotcomFlag = dotcomFlag;
+        this.wpVersion = wpVersion;
+        this.httpuser = httpuser;
+        this.httppassword = httppassword;
+        this.postFormats = postFormats;
+        this.blogOptions = blogOptions;
+        this.isAdmin = isAdmin;
+        this.isHidden = isHidden;
+    }
 
     public Blog(String url, String username, String password) {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.id = -1;
+        this.localTableBlogId = -1;
     }
 
-    public Blog(int blog_id) throws Exception {
-        // Instantiate an existing blog
-        List<Object> blogVals = WordPress.wpDB.getBlog(blog_id);
-
-        if (blogVals != null) {
-            this.id = blog_id;
-            this.url = blogVals.get(0).toString();
-            this.blogName = blogVals.get(1).toString();
-            this.username = blogVals.get(2).toString();
-            this.password = blogVals.get(3).toString();
-            this.httpuser = blogVals.get(4).toString();
-            this.httppassword = blogVals.get(5).toString();
-            this.imagePlacement = blogVals.get(6).toString();
-            this.featuredImageCapable = (Integer)blogVals.get(7)>0;
-            this.fullSizeImage = (Integer)blogVals.get(8)>0;
-            this.maxImageWidth = blogVals.get(9).toString();
-            this.maxImageWidthId = (Integer) blogVals.get(10);
-            this.runService = (Integer)blogVals.get(11)>0;
-            this.blogId = (Integer) blogVals.get(12);
-            this.location = (Integer)blogVals.get(13)>0;
-            this.dotcomFlag = (Integer)blogVals.get(14)>0;
-            //these were accidentally set up to contain null values :(
-            if (blogVals.get(15) != null)
-                this.dotcom_username = blogVals.get(15).toString();
-            if (blogVals.get(16) != null)
-                this.dotcom_password = blogVals.get(16).toString();
-            if (blogVals.get(17) != null)
-                this.api_key = blogVals.get(17).toString();
-            if (blogVals.get(18) != null)
-                this.api_blogid = blogVals.get(18).toString();
-            if (blogVals.get(19) != null)
-                this.wpVersion = blogVals.get(19).toString();
-            this.postFormats = blogVals.get(20).toString();
-            this.lastCommentId = (Integer)blogVals.get(21);
-            if(blogVals.get(22)!=null)
-                this.scaledImage = (Integer)blogVals.get(22)>0;
-            if(blogVals.get(23)!=null)
-                this.scaledImageWidth = (Integer)blogVals.get(23);
-            this.homeURL = blogVals.get(24).toString();
-            if(blogVals.get(25) !=null && blogVals.get(25).toString().length() > 0)
-                this.blogOptions = blogVals.get(25).toString();
-            else
-                this.blogOptions = "";
-            if (blogVals.get(26) != null && (Integer) blogVals.get(26) > 0)
-                this.setAdmin(true);
-            if (blogVals.get(27) != null && (Integer) blogVals.get(27) > 0)
-                this.isHidden = true;
-        } else {
-            throw new Exception();
-        }
+    public int getLocalTableBlogId() {
+        return localTableBlogId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setLocalTableBlogId(int id) {
+        this.localTableBlogId = id;
     }
 
     public String getUrl() {
@@ -123,6 +100,20 @@ public class Blog {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public URI getUri() {
+        try {
+            String url = getUrl();
+            if (url == null) {
+                AppLog.e(T.UTILS, "Blog url is null");
+                return null;
+            }
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            AppLog.e(T.UTILS, "Blog url is invalid: " + getUrl());
+            return null;
+        }
     }
 
     public String getHomeURL() {
@@ -173,6 +164,14 @@ public class Blog {
         this.featuredImageCapable = isCapable;
     }
 
+    public boolean bsetFeaturedImageCapable(boolean isCapable) {
+        if (featuredImageCapable == isCapable) {
+            return false;
+        }
+        setFeaturedImageCapable(isCapable);
+        return true;
+    }
+
     public boolean isFullSizeImage() {
         return fullSizeImage;
     }
@@ -197,28 +196,12 @@ public class Blog {
         this.maxImageWidthId = maxImageWidthId;
     }
 
-    public int getLastCommentId() {
-        return lastCommentId;
+    public int getRemoteBlogId() {
+        return remoteBlogId;
     }
 
-    public void setLastCommentId(int lastCommentId) {
-        this.lastCommentId = lastCommentId;
-    }
-
-    public boolean isRunService() {
-        return runService;
-    }
-
-    public void setRunService(boolean runService) {
-        this.runService = runService;
-    }
-
-    public int getBlogId() {
-        return blogId;
-    }
-
-    public void setBlogId(int blogId) {
-        this.blogId = blogId;
+    public void setRemoteBlogId(int blogId) {
+        this.remoteBlogId = blogId;
     }
 
     public boolean isLocation() {
@@ -254,6 +237,20 @@ public class Blog {
     }
 
     public String getApi_blogid() {
+        if (api_blogid == null) {
+            JSONObject jsonOptions = getBlogOptionsJSONObject();
+            if (jsonOptions!=null && jsonOptions.has("jetpack_client_id")) {
+                try {
+                    String jetpackBlogId = jsonOptions.getJSONObject("jetpack_client_id").getString("value");
+                    if (!TextUtils.isEmpty(jetpackBlogId)) {
+                        this.setApi_blogid(jetpackBlogId);
+                        WordPress.wpDB.saveBlog(this);
+                    }   
+                } catch (JSONException e) {
+                    AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + jsonOptions, e);
+                }
+            }
+        }
         return api_blogid;
     }
 
@@ -275,6 +272,14 @@ public class Blog {
 
     public void setWpVersion(String wpVersion) {
         this.wpVersion = wpVersion;
+    }
+
+    public boolean bsetWpVersion(String wpVersion) {
+        if (StringUtils.equals(this.wpVersion, wpVersion)) {
+            return false;
+        }
+        setWpVersion(wpVersion);
+        return true;
     }
 
     public String getHttpuser() {
@@ -301,19 +306,6 @@ public class Blog {
         this.isHidden = isHidden;
     }
 
-    public boolean save(String originalUsername) {
-        // Insert new blog to db
-        if (this.id == -1) {
-            return WordPress.wpDB.addBlog(this);
-        } else {
-            return WordPress.wpDB.saveBlog(this);
-        }
-    }
-
-    public void save(){
-        this.save("");
-    }
-
     public String getPostFormats() {
         return postFormats;
     }
@@ -322,8 +314,17 @@ public class Blog {
         this.postFormats = postFormats;
     }
 
+    public boolean bsetPostFormats(String postFormats) {
+        if (StringUtils.equals(this.postFormats, postFormats)) {
+            return false;
+        }
+        setPostFormats(postFormats);
+        return true;
+    }
+
+    // FIXME - Move to DB
     public int getUnmoderatedCommentCount() {
-        return WordPress.wpDB.getUnmoderatedCommentCount(this.id);
+        return CommentTable.getUnmoderatedCommentCount(this.localTableBlogId);
     }
 
     public boolean isScaledImage() {
@@ -346,12 +347,47 @@ public class Blog {
         return blogOptions;
     }
 
-    public void setBlogOptions(String blogOptions) {
-        this.blogOptions = blogOptions;
+    public JSONObject getBlogOptionsJSONObject() {
+        String optionsString = getBlogOptions();
+        if (TextUtils.isEmpty(optionsString)) {
+            return null;
+        }
+        try {
+            return new JSONObject(optionsString);
+        } catch (JSONException e) {
+            AppLog.e(T.UTILS, "invalid blogOptions json", e);
+        }
+        return null;
     }
 
-    public boolean isActive() {
-        return !password.equals("");
+    public void setBlogOptions(String blogOptions) {
+        this.blogOptions = blogOptions;
+        JSONObject options = getBlogOptionsJSONObject();
+        if (options == null) {
+            this.blogOptions = "{}";
+            options = getBlogOptionsJSONObject();
+        }
+
+        if (options.has("jetpack_client_id")) {
+            try {
+                String jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
+                if (!TextUtils.isEmpty(jetpackBlogId)) {
+                    this.setApi_blogid(jetpackBlogId);
+                }   
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + blogOptions, e);
+            }
+        }
+    }
+
+    // TODO: it's ugly to compare json strings, we have to normalize both strings before
+    // comparison or compare JSON objects after parsing
+    public boolean bsetBlogOptions(String blogOptions) {
+        if (StringUtils.equals(this.blogOptions, blogOptions)) {
+            return false;
+        }
+        setBlogOptions(blogOptions);
+        return true;
     }
 
     public boolean isAdmin() {
@@ -362,21 +398,29 @@ public class Blog {
         this.isAdmin = isAdmin;
     }
 
+    public boolean bsetAdmin(boolean isAdmin) {
+        if (this.isAdmin == isAdmin) {
+            return false;
+        }
+        setAdmin(isAdmin);
+        return true;
+    }
+
     public String getAdminUrl() {
         String adminUrl = null;
-        Gson gson = new Gson();
-        Type type = new TypeToken<Map<?, ?>>() {}.getType();
-        Map<?, ?> blogOptions = gson.fromJson(this.getBlogOptions(), type);
-        if (blogOptions != null) {
-            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("admin_url");
-            if (homeURLMap != null)
-                adminUrl = homeURLMap.get("value").toString();
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null) {
+            try {
+                adminUrl = jsonOptions.getJSONObject("admin_url").getString("value");
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load admin_url from options: " + jsonOptions, e);
+            }
         }
+
         // Try to guess the URL of the dashboard if blogOptions is null (blog not added to the app), or WP version is < 3.6
-        if (adminUrl == null) {
+        if (TextUtils.isEmpty(adminUrl)) {
             if (this.getUrl().lastIndexOf("/") != -1) {
-                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/"))
-                        + "/wp-admin";
+                adminUrl = this.getUrl().substring(0, this.getUrl().lastIndexOf("/")) + "/wp-admin";
             } else {
                 adminUrl = this.getUrl().replace("xmlrpc.php", "wp-admin");
             }
@@ -385,49 +429,49 @@ public class Blog {
     }
 
     public boolean isPrivate() {
-        try {
-            Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            Map<String, Object> blogOptions = gson.fromJson(getBlogOptions(), type);
-            StringMap<?> blogPublicOption = (StringMap<?>) blogOptions.get("blog_public");
-            String blogPublicOptionValue = blogPublicOption.get("value").toString();
-            if (blogPublicOptionValue.equals("-1")) {
-                return true;
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null && jsonOptions.has("blog_public")) {
+            try {
+                String blogPublicValue = jsonOptions.getJSONObject("blog_public").getString("value");
+                if (!TextUtils.isEmpty(blogPublicValue) && "-1".equals(blogPublicValue)) {
+                    return true;
+                }   
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load blog_public from options: " + jsonOptions, e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return false;
     }
 
     public boolean isJetpackPowered() {
-        try {
-            JSONObject options = new JSONObject(getBlogOptions());
-            if (options.has("jetpack_client_id"))
-                return true;
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JSONObject jsonOptions = getBlogOptionsJSONObject();
+        if (jsonOptions != null && jsonOptions.has("jetpack_client_id")) {
+            return true;
         }
         return false;
     }
 
     public boolean isPhotonCapable() {
-        return ((isDotcomFlag() && !isPrivate()) || isJetpackPowered());
+        return ((isDotcomFlag() && !isPrivate()) || (isJetpackPowered() && !hasValidHTTPAuthCredentials()));
     }
 
     public boolean hasValidJetpackCredentials() {
         return !TextUtils.isEmpty(getDotcom_username()) && !TextUtils.isEmpty(getDotcom_password());
     }
 
+    public boolean hasValidHTTPAuthCredentials() {
+        return !TextUtils.isEmpty(getHttppassword()) && !TextUtils.isEmpty(getHttpuser());
+    }
+
     /**
      * Get the WordPress.com blog ID
      * Stored in blogId for WP.com, api_blogId for Jetpack
+     *
      * @return WP.com blogId string, potentially null for Jetpack sites
      */
     public String getDotComBlogId() {
         if (isDotcomFlag())
-            return String.valueOf(getBlogId());
+            return String.valueOf(getRemoteBlogId());
         else
             return getApi_blogid();
     }

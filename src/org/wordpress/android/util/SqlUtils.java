@@ -4,11 +4,12 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDoneException;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteStatement;
 
-/**
- * Created by nbradbury on 6/22/13.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class SqlUtils {
 
     private SqlUtils() {
@@ -72,5 +73,37 @@ public class SqlUtils {
      */
     public static long getRowCount(SQLiteDatabase db, String tableName) {
         return DatabaseUtils.queryNumEntries(db, tableName);
+    }
+
+    /*
+     * drop all tables from the passed SQLiteDatabase
+     */
+    public static boolean dropAllTables(SQLiteDatabase db) throws SQLiteException {
+        if (db == null)
+            return false;
+        if (db.isReadOnly()) {
+            throw new SQLiteException("can't drop tables from a read-only database");
+        }
+
+        List<String> tableNames = new ArrayList<String>();
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+        if (cursor.moveToFirst()) {
+            do {
+                String tableName = cursor.getString(0);
+                if (!tableName.equals("android_metadata") && !tableName.equals("sqlite_sequence"))
+                    tableNames.add(tableName);
+            } while (cursor.moveToNext());
+        }
+
+        db.beginTransaction();
+        try {
+            for (String tableName: tableNames) {
+                db.execSQL("DROP TABLE IF EXISTS " + tableName);
+            }
+            db.setTransactionSuccessful();
+            return true;
+        } finally {
+            db.endTransaction();
+        }
     }
 }

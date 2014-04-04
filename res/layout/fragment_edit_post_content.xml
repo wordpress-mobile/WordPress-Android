@@ -33,8 +33,9 @@
                 android:id="@+id/post_content"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:maxLength="10000000"
+                android:layout_marginLeft="@dimen/post_editor_content_side_margin"
+                android:layout_marginRight="@dimen/post_editor_content_side_margin"
                 android:layout_marginTop="8dp"
                 android:gravity="top"
                 android:layout_weight="1"
@@ -44,8 +45,7 @@
                 android:textSize="18sp"
                 android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                 android:imeOptions="flagNoExtractUi"
-                android:textColorLink="#21759b"
-                android:layerType="software" />
+                android:textColorLink="@color/wordpress_blue" />
         </LinearLayout>
     </ScrollView>
 

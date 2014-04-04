@@ -7,66 +7,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp" >
+        android:padding="@dimen/margin_extra_large" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:textSize="24sp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
+            android:textSize="@dimen/text_sz_extra_large" />
 
         <ViewStub
             android:id="@+id/media_listitem_details_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small"
             android:inflatedId="@+id/media_listitem_details_image" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_file_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/media_listitem_details_dimensions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
     </LinearLayout>
 
 </ScrollView>

@@ -16,15 +16,11 @@ package org.wordpress.android.util;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -42,7 +38,6 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.AlignmentSpan;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.ParagraphStyle;
 import android.text.style.QuoteSpan;
 import android.text.style.RelativeSizeSpan;
@@ -56,7 +51,13 @@ import android.text.style.URLSpan;
 
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
-import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.models.MediaGallery;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog.T;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -64,10 +65,9 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.MediaGallery;
-import org.wordpress.android.models.Post;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.HashMap;
 
 /**
  * This class processes HTML strings into displayable styled text. Not all HTML
@@ -123,7 +123,7 @@ public class WPHtml {
             }
         }
     }
-    
+
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
@@ -344,7 +344,7 @@ public class WPHtml {
                     out.append(getGalleryShortcode((MediaGalleryImageSpan) style[j]));
                 } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaFile().getMediaId() != null) {
                     out.append(getContent((WPImageSpan) style[j]));
-                } else if (style[j] instanceof ImageSpan) {
+                } else if (style[j] instanceof WPImageSpan) {
                     out.append("<img src=\"");
                     out.append(((WPImageSpan) style[j]).getSource());
                     out.append("\" android-uri=\""
@@ -451,7 +451,7 @@ public class WPHtml {
     /** Retrieve an image span content for a media file that exists on the server **/
     public static String getContent(WPImageSpan imageSpan) {
         // based on PostUploadService
-        
+
         String content = "";
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
@@ -459,16 +459,20 @@ public class WPHtml {
         String mediaId = mediaFile.getMediaId();
         if (mediaId == null || mediaId.length() == 0)
             return content;
-        
+
         boolean isVideo = mediaFile.isVideo();
         String url = imageSpan.getImageSource().toString();
-        
+
         if (isVideo) {
-            int xRes = mediaFile.getWidth();
-            int yRes = mediaFile.getHeight();
-            String mimeType = mediaFile.getMimeType();
-            content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                    xRes, yRes, url, mimeType, url);
+            if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                content = mediaFile.getVideoPressShortCode();
+            } else {
+                int xRes = mediaFile.getWidth();
+                int yRes = mediaFile.getHeight();
+                String mimeType = mediaFile.getMimeType();
+                content = String.format("<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                        xRes, yRes, url, mimeType, url);
+            }
         } else {
             String alignment = "";
             switch (mediaFile.getHorizontalAlignment()) {
@@ -489,8 +493,24 @@ public class WPHtml {
             String title = mediaFile.getTitle();
             String caption = mediaFile.getCaption();
             int width = mediaFile.getWidth();
-            
-            content = content + "<a href=\"" + url + "\"><img title=\"" + title + "\" "
+
+            String inlineCSS = " ";
+            try {
+                String localBlogID = imageSpan.getMediaFile().getBlogId();
+                Blog currentBlog = WordPress.wpDB.instantiateBlogByLocalId(Integer.parseInt(localBlogID));
+                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+                if (!mediaFile.getMimeType().equals("image/gif") && !currentBlog.getMaxImageWidth().equals("Original Size")) {
+                    int maxImageWidth = Integer.parseInt(currentBlog.getMaxImageWidth());
+                    width = Math.min(width, maxImageWidth); //use the correct resize settings.
+                    if (!currentBlog.isDotcomFlag()) { //Use inline CSS on self-hosted blogs to enforce picture resize settings
+                        inlineCSS = String.format(" style=\"width:%dpx;max-width:%dpx;\" ", width, width);
+                    }
+                }
+            } catch (Exception e) {
+                AppLog.e(T.UTILS, "Error while loading blog resize settings", e);
+            }
+
+            content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
 
             if (!caption.equals("")) {
@@ -498,10 +518,10 @@ public class WPHtml {
                         alignment, width, TextUtils.htmlEncode(caption), content);
             }
         }
-        
+
         return content;
     }
-    
+
     private static void processWPImage(StringBuilder out, Spanned text,
             int start, int end) {
         int next;
@@ -834,11 +854,16 @@ class HtmlToSpannedConverter implements ContentHandler {
         String src = attributes.getValue("android-uri");
         ImageHelper ih = new ImageHelper();
 
-        Map<String, Object> mediaData = ih.getImageBytesForPath(src, ctx);
+        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, src);
+        if (resizedBitmap == null && src != null) {
+            if (src.contains("video")) {
+                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
+            } else {
+                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
+            }
+        }
 
-        if (mediaData != null) {
-            Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, (byte[]) mediaData.get("bytes"), (String) mediaData.get("orientation"));
-
+        if (resizedBitmap != null) {
             int len = text.length();
             text.append("\uFFFC");
 
@@ -871,8 +896,7 @@ class HtmlToSpannedConverter implements ContentHandler {
                         if ("".equals(aName))
                             aName = attributes.getQName(i);
                         text.append(" ");
-                        text.append(aName + "=\"" + attributes.getValue(i)
-                                + "\"");
+                        text.append(aName + "=\"" + attributes.getValue(i) + "\"");
                     }
                     text.append(" />\n");
                 }
@@ -1071,8 +1095,8 @@ class HtmlToSpannedConverter implements ContentHandler {
                     mysteryTagContent += sb.toString().substring(start, length);
             } else
                 mSpannableStringBuilder.append(sb);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            AppLog.e(T.UTILS, e);
         }
     }
 

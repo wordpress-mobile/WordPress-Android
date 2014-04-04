@@ -5,9 +5,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 6/23/13.
- */
 public class ReaderUserList extends ArrayList<ReaderUser> {
     /*
      * returns all userIds in this list

@@ -12,14 +12,10 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class ReaderPost {
     private String pseudoId;
     public long postId;
@@ -35,7 +31,7 @@ public class ReaderPost {
     private String tags;          // comma-separated list of tags
 
     public long timestamp;        // used for sorting
-    public String published;
+    private String published;
 
     private String url;
     private String featuredImage;
@@ -167,21 +163,23 @@ public class ReaderPost {
         // it as a video
         if (!post.hasFeaturedImage()) {
             JSONObject jsonMedia = json.optJSONObject("featured_media");
-            if (jsonMedia!=null) {
+            if (jsonMedia != null) {
                 String mediaUrl = JSONUtil.getString(jsonMedia, "uri");
-                String type = JSONUtil.getString(jsonMedia, "type");
-                boolean isVideo = (type!=null && type.equals("video"));
-                if (isVideo) {
-                    post.featuredVideo = mediaUrl;
-                } else {
-                    post.featuredImage = mediaUrl;
+                if (!TextUtils.isEmpty(mediaUrl)) {
+                    String type = JSONUtil.getString(jsonMedia, "type");
+                    boolean isVideo = (type != null && type.equals("video"));
+                    if (isVideo) {
+                        post.featuredVideo = mediaUrl;
+                    } else {
+                        post.featuredImage = mediaUrl;
+                    }
                 }
             }
 
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image - this is done since featured_media seems to miss
             // some images that would work well as featured images on mobile
-            if (!post.hasFeaturedImage() && post.isWP())
+            if (!post.hasFeaturedImage())
                 post.featuredImage = findFeaturedImage(post.text);
         }
 
@@ -258,7 +256,7 @@ public class ReaderPost {
     /*
      * called when a post doesn't have a featured image, searches post's content for an image that
      * may still be suitable as a featured image - only works with WP posts due to the search for
-     * specific WP image classes
+     * specific WP image classes (but will also work with RSS posts that come from WP blogs)
      */
     private static String findFeaturedImage(final String text) {
         if (text==null || !text.contains("<img "))
@@ -479,7 +477,7 @@ public class ReaderPost {
         return !TextUtils.isEmpty(tags);
     }
 
-    public List<String> getTagList() {
+    List<String> getTagList() {
         return Arrays.asList(getTags().split(","));
     }
 

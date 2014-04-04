@@ -1,23 +1,27 @@
 package org.wordpress.android.models;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ThemeHelper;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A model to represent a theme
  */
 public class Theme {
-    
+
     private String themeId = null;
     private String screenshotURL = "";
     private String name = "";
@@ -31,9 +35,9 @@ public class Theme {
     private boolean isCurrent = false;
     private boolean isPremium = false;
     private String features;
-    
+
     public Theme() {
-        
+
     }
 
     public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features) {
@@ -51,23 +55,22 @@ public class Theme {
     }
 
     public void setFeatures(String features) {
-        this.features = features; 
+        this.features = features;
     }
-    
+
     public ArrayList<String> getFeaturesArray() {
         ArrayList<String> features = new ArrayList<String>();
-        String [] arr = this.features.split(",");
-        for (String feature : arr) {
-            features.add(feature);
+        if (!TextUtils.isEmpty(this.features)) {
+            String [] arr = this.features.split(",");
+            Collections.addAll(features, arr);
         }
-
         return features;
     }
 
     public String getFeatures() {
         return this.features;
     }
-    
+
     public String getThemeId() {
         return themeId;
     }
@@ -119,7 +122,7 @@ public class Theme {
     public String getLaunchDate() {
         return launchDate;
     }
-    
+
     public long getLaunchDateMs() {
         return launchDateMs;
     }
@@ -130,18 +133,18 @@ public class Theme {
             Date date = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(launchDate);
             this.launchDateMs = date.getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            AppLog.e(T.THEMES, e);
         }
     }
 
     public String getBlogId() {
         return blogId;
     }
-    
+
     public void setBlogId(String blogId) {
         this.blogId = blogId;
     }
-    
+
     public String getPreviewURL() {
         return previewURL;
     }
@@ -155,7 +158,9 @@ public class Theme {
     }
 
     public static Theme fromJSON(JSONObject object) throws JSONException {
-        
+        if (object == null)
+            return null;
+
         String themeId = object.getString("id");
         String screenshotURL = object.getString("screenshot") ;
         String name = object.getString("name");
@@ -164,7 +169,7 @@ public class Theme {
         int popularityRank = object.getInt("popularity_rank");
         String launchDate = object.getString("launch_date");
         String previewURL = object.has("preview_url") ? object.getString("preview_url") : ""; // we don't receive preview_url when we fetch current theme
-        
+
         // parse cost, e.g
         // "cost": {
         //   "display": "$80",
@@ -173,29 +178,37 @@ public class Theme {
         // },
         JSONObject costObject = object.getJSONObject("cost");
         boolean isPremium = costObject.getInt("number") > 0;
-        
+
         // if the theme is free, set the blogId to be empty
         // if the theme is not free, set the blogId to the current blog
-        String blogId = String.valueOf(WordPress.getCurrentBlog().getBlogId());
-        
-        String features = "";
-        JSONArray tags = object.getJSONArray("tags");
-        for (int i = 0; i < tags.length(); i++ ) {
-            String tag = tags.getString(i);
-            String label = ThemeHelper.getLabel(tag);
-            if (label != null) {
-                features += label + ",";
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+
+        // build comma-separated list of features
+        StringBuilder sbFeatures = new StringBuilder();
+        JSONArray tags = object.optJSONArray("tags");
+        if (tags != null && tags.length() > 0) {
+            boolean isFirst = true;
+            for (int i = 0; i < tags.length(); i++ ) {
+                String label = ThemeHelper.getLabel(tags.getString(i));
+                if (!TextUtils.isEmpty(label)) {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        sbFeatures.append(",");
+                    }
+                    sbFeatures.append(label);
+                }
             }
         }
-        features = features.substring(0, features.length() - 1);
-        
-        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features);        
+        String features = sbFeatures.toString();
+
+        return new Theme(themeId, screenshotURL, name, description, trendingRank, popularityRank, launchDate, blogId, previewURL, isPremium, features);
     }
 
     public void setCurrent(boolean isCurrent) {
         this.isCurrent = isCurrent;
     }
-    
+
     public boolean isCurrent() {
         return isCurrent;
     }

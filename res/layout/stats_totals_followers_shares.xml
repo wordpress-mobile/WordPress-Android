@@ -2,31 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/stats_pager_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/stats_tablet_header_title"
-        android:padding="6dp"
-        android:text="@string/stats_view_totals_followers_and_shares"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="12sp" />
+        style="@style/StatsPagerTitle" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/stats_white_background"
-        android:padding="12dp" >
+        android:padding="12dp">
 
         <TextView
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="@dimen/margin_small"
             android:text="@string/stats_totals_followers_shares_header_content" />
 
         <include layout="@layout/stats_header_line" />
@@ -35,9 +28,9 @@
             style="@style/StatsWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_medium"
             android:layout_weight="1"
-            android:padding="16dp" >
+            android:padding="@dimen/margin_extra_large">
 
             <TextView
                 android:id="@+id/stats_totals_followers_shares_posts_count"
@@ -52,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stats_totals_followers_shares_posts_count"
                 android:drawableLeft="@drawable/stats_icon_posts"
-                android:drawablePadding="8dp"
+                android:drawablePadding="@dimen/margin_medium"
                 android:text="@string/stats_totals_followers_shares_label_posts" />
         </RelativeLayout>
 
@@ -60,16 +53,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RelativeLayout
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_categories_count"
@@ -85,7 +78,7 @@
                     android:layout_below="@+id/stats_totals_followers_shares_categories_count"
                     android:layout_centerHorizontal="true"
                     android:drawableLeft="@drawable/stats_icon_categories"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:text="@string/stats_totals_followers_shares_label_categories" />
             </RelativeLayout>
 
@@ -93,9 +86,9 @@
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_tags_count"
@@ -110,7 +103,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_tags_count"
                     android:drawableLeft="@drawable/stats_icon_tags"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:text="@string/stats_totals_followers_shares_label_tags" />
             </RelativeLayout>
         </LinearLayout>
@@ -119,8 +112,8 @@
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:text="@string/stats_totals_followers_shares_header_followers" />
 
         <include layout="@layout/stats_header_line" />
@@ -129,16 +122,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RelativeLayout
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_followers_count"
@@ -153,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_followers_count"
                     android:drawableLeft="@drawable/stats_icon_plus"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:text="@string/stats_totals_followers_shares_label_blog" />
             </RelativeLayout>
 
@@ -161,9 +154,9 @@
                 style="@style/StatsWhiteBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:layout_weight="1"
-                android:padding="16dp" >
+                android:padding="@dimen/margin_extra_large">
 
                 <TextView
                     android:id="@+id/stats_totals_followers_shares_comments_count"
@@ -178,7 +171,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_totals_followers_shares_comments_count"
                     android:drawableLeft="@drawable/stats_icon_plus"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="@dimen/margin_medium"
                     android:text="@string/stats_totals_followers_shares_label_comments" />
             </RelativeLayout>
         </LinearLayout>
@@ -187,8 +180,8 @@
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:text="@string/stats_totals_followers_shares_header_shares" />
 
         <include layout="@layout/stats_header_line" />
@@ -197,8 +190,8 @@
             style="@style/StatsWhiteBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:padding="16dp" >
+            android:layout_marginTop="@dimen/margin_medium"
+            android:padding="@dimen/margin_extra_large">
 
             <TextView
                 android:id="@+id/stats_totals_followers_shares_shares_count"

@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -26,7 +26,6 @@ import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
 
 /**
- * Created by nbradbury on 7/30/13.
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
  *  (1) fading in downloaded images
  *  (2) manipulating images before display
@@ -64,8 +63,9 @@ public class WPNetworkImageView extends ImageView {
         mUrl = url;
         mImageType = imageType;
         mImageListener = imageListener;
-        if (url==null) {
-            showDefaultImage(mImageType);
+
+        if (TextUtils.isEmpty(mUrl)) {
+            showErrorImage(mImageType);
         } else {
             // The URL has potentially changed. See if we need to load it.
             loadImageIfNecessary(false);
@@ -130,7 +130,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showDefaultImage(mImageType);
+            showErrorImage(mImageType);
             return;
         }
 
@@ -142,7 +142,7 @@ public class WPNetworkImageView extends ImageView {
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
-                setImageDrawable(null);
+                showDefaultImage(mImageType);
             }
         }
 
@@ -152,8 +152,8 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        setImageResource(getErrorImageResId(mImageType));
-                        if (mImageListener!=null)
+                        showErrorImage(mImageType);
+                        if (mImageListener != null)
                             mImageListener.onImageLoaded(false);
                     }
 
@@ -167,29 +167,35 @@ public class WPNetworkImageView extends ImageView {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    onResponse(response, false);
+                                    // don't fade in the image since we know it's cached
+                                    handleResponse(response, true, false);
                                 }
                             });
-                            return;
-                        }
-
-                        if (response.getBitmap() != null) {
-                            setImageBitmap(response.getBitmap());
-
-                            // fade the image in if it wasn't cached
-                            if (!isImmediate)
-                                fadeIn();
-
-                            if (mImageListener!=null)
-                                mImageListener.onImageLoaded(true);
                         } else {
-                            setImageDrawable(getDefaultDrawable(getContext(), mImageType));
+                            handleResponse(response, isImmediate, true);
                         }
                     }
                 });
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
+    }
+
+    private void handleResponse(ImageLoader.ImageContainer response,
+                                boolean isCached,
+                                boolean allowFadeIn) {
+        if (response.getBitmap() != null) {
+            setImageBitmap(response.getBitmap());
+
+            // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
+            if (!isCached && allowFadeIn && (mImageType == ImageType.PHOTO || mImageType == ImageType.VIDEO))
+                fadeIn();
+
+            if (mImageListener!=null)
+                mImageListener.onImageLoaded(true);
+        } else {
+            showDefaultImage(mImageType);
+        }
     }
 
     @Override
@@ -217,13 +223,43 @@ public class WPNetworkImageView extends ImageView {
         invalidate();
     }
 
-    public void showDefaultImage(ImageType imageType) {
-        setImageDrawable(getDefaultDrawable(getContext(), imageType));
+    private int getColorRes(int resId) {
+        return getContext().getResources().getColor(resId);
+    }
+
+    private void showErrorImage(ImageType imageType) {
+        switch (imageType) {
+            case PHOTO_FULL:
+                // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            case AVATAR:
+                // "mystery man" for failed avatars
+                setImageResource(R.drawable.placeholder);
+                break;
+            default :
+                // medium grey box for all others
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
+                break;
+        }
+    }
+
+    private void showDefaultImage(ImageType imageType) {
+        switch (imageType) {
+            case PHOTO_FULL:
+                // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            default :
+                // light grey box for all others
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
+                break;
+        }
     }
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mImageType== ImageType.VIDEO)
+        if (mImageType == ImageType.VIDEO)
             drawVideoOverlay(canvas);
     }
 
@@ -267,29 +303,6 @@ public class WPNetworkImageView extends ImageView {
             AlphaAnimation animation = new AlphaAnimation(0.25f, 1f);
             animation.setDuration(FADE_TRANSITION);
             this.startAnimation(animation);
-        }
-    }
-
-    private static int getErrorImageResId(ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no error image for full-screen images
-                return 0;
-            default :
-                return R.drawable.reader_photo_error;
-        }
-    }
-
-    private static Drawable mDefaultPhoto;
-    private static Drawable getDefaultDrawable(Context context, ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL :
-                // no default image for full-screen images
-                return null;
-            default :
-                if (mDefaultPhoto==null)
-                    mDefaultPhoto = context.getResources().getDrawable(R.drawable.reader_photo_default);
-                return mDefaultPhoto;
         }
     }
 }

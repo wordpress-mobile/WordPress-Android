@@ -7,13 +7,14 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
@@ -30,7 +33,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private WPTextView mCancelButton;
-    private ProgressBar mProgressBarSignIn;
+    private RelativeLayout mProgressBarSignIn;
     private boolean mSignoutOnCancelMode;
 
     public NewBlogFragment() {
@@ -66,6 +69,10 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         signoutAndFinish();
     }
 
+    protected void onDoneAction() {
+        validateAndCreateUserAndBlog();
+    }
+
     private void signoutAndFinish() {
         if (mSignoutOnCancelMode) {
             WordPress.signOut(getActivity());
@@ -85,6 +92,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mSignupButton.setVisibility(View.GONE);
         mProgressBarSignIn.setEnabled(false);
         mProgressTextSignIn.setText(message);
+        mSiteTitleTextField.setEnabled(false);
+        mSiteUrlTextField.setEnabled(false);
     }
 
     protected void updateProgress(String message) {
@@ -95,6 +104,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mProgressBarSignIn.setVisibility(View.GONE);
         mProgressTextSignIn.setVisibility(View.GONE);
         mSignupButton.setVisibility(View.VISIBLE);
+        mSiteTitleTextField.setEnabled(true);
+        mSiteUrlTextField.setEnabled(true);
     }
 
     private void showSiteUrlError(int messageId) {
@@ -119,24 +130,23 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         return false;
     }
 
-    private boolean checkUserData() {
-        // try to create the user
+    protected boolean isUserDataValid() {
         final String siteTitle = mSiteTitleTextField.getText().toString().trim();
         final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        boolean retValue = true;
 
         if (siteTitle.equals("")) {
             mSiteTitleTextField.setError(getString(R.string.required_field));
             mSiteTitleTextField.requestFocus();
-            return false;
+            retValue = false;
         }
 
         if (siteUrl.equals("")) {
             mSiteUrlTextField.setError(getString(R.string.required_field));
             mSiteUrlTextField.requestFocus();
-            return false;
+            retValue = false;
         }
-
-        return true;
+        return retValue;
     }
 
     private String titleToUrl(String siteUrl) {
@@ -149,8 +159,14 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     R.string.no_network_message);
             return;
         }
-        if (!checkUserData())
+        if (!isUserDataValid())
             return;
+
+        // prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.
+        // Samsung S4 for example
+        if (View.VISIBLE == mProgressBarSignIn.getVisibility()) {
+            return;
+        }
 
         startProgress(getString(R.string.validating_site_data));
 
@@ -159,7 +175,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "",
-                siteUrl, siteName, language, restClient, getActivity(), new ErrorListener(),
+                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
@@ -188,7 +204,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                                     getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                             setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
                         } catch (JSONException e) {
-                            Log.e(WordPress.TAG, "Invalid JSON response from site/new: " + e);
+                            AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
                         }
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
@@ -221,12 +237,13 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         mCancelButton.setOnClickListener(cancelClickListener);
 
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
-        mProgressBarSignIn = (ProgressBar) rootView.findViewById(R.id.nux_sign_in_progress_bar);
+        mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
         mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
 
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mSiteTitleTextField.addTextChangedListener(this);
         mSiteTitleTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,18 +263,24 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         return rootView;
     }
 
-
-    OnClickListener signupClickListener = new OnClickListener() {
+    private OnClickListener signupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
         }
     };
 
-    OnClickListener cancelClickListener = new OnClickListener() {
+    private OnClickListener cancelClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             signoutAndFinish();
+        }
+    };
+
+    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            return onDoneEvent(actionId, event);
         }
     };
 }
