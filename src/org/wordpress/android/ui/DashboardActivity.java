@@ -65,7 +65,7 @@ public class DashboardActivity extends SherlockActivity {
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         Bundle extras = getIntent().getExtras();
-        if (extras.containsKey("blogID")) {
+        if (extras != null && extras.containsKey("blogID")) {
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(extras.getInt("blogID", -1));
             if (mBlog == null) {
                 mBlog = WordPress.getCurrentBlog();
