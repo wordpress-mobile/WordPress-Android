@@ -53,9 +53,8 @@ import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * Background service to retrieve latest stats - uses a ThreadPoolExecutor to
- * handle concurrent updating of the various stats tasks - see AbsStatsTask for
- * base implementation of an individual stats task
+ * Background service to retrieve latest stats - Uses a Thread to enqueue network calls in Volley; 
+ * Volley takes care of handling multithreading. UI refresh is done by using a ThreadPoolExecutor with a single thread.
  */
 
 public class StatsService extends Service {
@@ -173,8 +172,10 @@ public class StatsService extends Service {
                     waitForResponse();
                 }
 
-                // prevent additional tasks from being submitted, then wait for all tasks to complete. At this time all task should be completed.
+                //Initiates an orderly shutdown in which previously submitted tasks are executed, but no new tasks will be accepted.
+                //At this point all Threads previously enqueued in updateUIExecutor already finished their execution.
                 updateUIExecutor.shutdown();
+
                 broadcastUpdate(false);
                 stopSelf(startId);               
             } //end run
