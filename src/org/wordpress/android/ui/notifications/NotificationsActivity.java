@@ -12,13 +12,9 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
 
-import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -27,9 +23,6 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
-
-import static org.wordpress.android.WordPress.getRestClientUtils;
 
 public class NotificationsActivity extends WPActionBarActivity
                                    implements NotificationFragment.OnPostClickListener,
@@ -95,7 +88,7 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
-    private void launchWithNoteId(){
+    private void launchWithNoteId() {
         /*final Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
@@ -256,21 +249,6 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.commitAllowingStateLoss();
     }
 
-    private void updateLastSeen(String timestamp) {
-        getRestClientUtils().markNotificationsSeen(timestamp, new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        AppLog.d(T.NOTIFS, String.format("Set last seen time %s", response));
-                    }
-                }, new RestRequest.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.d(T.NOTIFS, String.format("Could not set last seen time %s", error));
-                    }
-                }
-        );
-    }
-
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
@@ -279,8 +257,8 @@ public class NotificationsActivity extends WPActionBarActivity
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
-            openNote(updatedNote != null ? updatedNote : note);
+            //Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
+            openNote(note);
         }
     }
 

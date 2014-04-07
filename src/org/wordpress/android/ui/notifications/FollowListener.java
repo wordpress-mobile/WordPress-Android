@@ -37,7 +37,7 @@ class FollowListener implements FollowRow.OnFollowListener {
             enableFollowButton();
 
             // update the associated note so it has the correct follow status
-            NotificationUtils.updateNotification(mNoteId, null);
+            //NotificationUtils.updateNotification(mNoteId, null);
         }
 
         @Override

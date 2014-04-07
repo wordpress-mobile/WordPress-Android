@@ -13,15 +13,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
-import android.util.Base64;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -34,7 +29,6 @@ import org.wordpress.android.util.ImageHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -101,7 +95,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         // push notification, then we should be getting the note pushed to the
         // bucket as well assuming Simperium.com isn't experiencing any issues
         // ;).
-        if (extras.getString("note_full_data") != null) {
+        /*if (extras.getString("note_full_data") != null) {
             byte[] decode = Base64.decode(intent.getStringExtra("note_full_data"), Base64.DEFAULT);
             String unzippedString = NotificationUtils.unzipString(decode);
             JSONObject jsonObject = null;
@@ -117,7 +111,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             note = new Note(extras);
             WordPress.wpDB.addNote(note, true);
             refreshNotes();
-        }
+        }*/
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -277,21 +271,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         Intent msgIntent = new Intent();
         msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
         sendBroadcast(msgIntent);
-    }
-
-    public void refreshNotes() {
-        NotificationUtils.refreshNotifications(new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                try {
-                    List<Note> notes = NotificationUtils.parseNotes(jsonObject);
-                    WordPress.wpDB.saveNotes(notes, true);
-                    broadcastNewNotification();
-                } catch (JSONException e) {
-                    AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: " + e);
-                }
-            }
-        }, null);
     }
 
     @Override
