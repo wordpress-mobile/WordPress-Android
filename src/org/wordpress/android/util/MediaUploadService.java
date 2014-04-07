@@ -8,12 +8,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 import org.xmlrpc.android.ApiHelper.GetMediaItemTask;
@@ -42,24 +41,24 @@ public class MediaUploadService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mContext = this.getApplicationContext();
         mUploadInProgress = false;
-        
+
         cancelOldUploads();
     }
-    
+
     @Override
     public void onStart(Intent intent, int startId) {
         mHandler.post(mFetchQueueTask);
     }
 
     private Runnable mFetchQueueTask = new Runnable() {
-        
+
         @Override
         public void run() {
             Cursor cursor = getQueue();
@@ -77,42 +76,42 @@ public class MediaUploadService extends Service {
             } finally {
                 if (cursor != null)
                     cursor.close();
-            }            
-            
+            }
+
         }
     };
-    
+
     private void cancelOldUploads() {
         // There should be no media files with an upload state of 'uploading' at the start of this service.
         // Since we won't be able to receive notifications for these, set them to 'failed'.
-        
+
         if(WordPress.getCurrentBlog() != null){
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
             WordPress.wpDB.setMediaUploadingToFailed(blogId);
             sendUpdateBroadcast(null, null);
         }
     }
-    
+
     private Cursor getQueue() {
         if (WordPress.getCurrentBlog() == null)
             return null;
-        
+
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         return WordPress.wpDB.getMediaUploadQueue(blogId);
     }
-    
+
     private void uploadMediaFile(Cursor cursor) {
         if (!cursor.moveToFirst())
             return;
-        
+
         mUploadInProgress = true;
-        
+
         final String blogIdStr = cursor.getString((cursor.getColumnIndex("blogId")));
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
         String fileName = cursor.getString(cursor.getColumnIndex("fileName"));
         String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
         String mimeType = cursor.getString(cursor.getColumnIndex("mimeType"));
-        
+
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(blogIdStr);
         mediaFile.setFileName(fileName);
@@ -129,7 +128,7 @@ public class MediaUploadService extends Service {
                 sendUpdateBroadcast(mediaId, null);
                 fetchMediaFile(id);
             }
-            
+
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 WordPress.wpDB.updateMediaUploadState(blogIdStr, mediaId, "failed");
@@ -138,14 +137,7 @@ public class MediaUploadService extends Service {
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
-                    JSONObject properties = new JSONObject();
-                    try {
-                        properties.put("error_message", errorType.name() + "-" + errorMessage);
-                    } catch (JSONException e) {
-                        AppLog.e(T.MEDIA, "Can't serialize message to JSON: " + errorMessage);
-                    }
-                    WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionUploadMedia,
-                            properties);
+                    CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
                 }
             }
         });
@@ -172,7 +164,7 @@ public class MediaUploadService extends Service {
                 sendUpdateBroadcast(id, null);
                 mHandler.post(mFetchQueueTask);
             }
-            
+
             @Override
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mUploadInProgress = false;
@@ -180,14 +172,7 @@ public class MediaUploadService extends Service {
                 mHandler.post(mFetchQueueTask);
                 // Only log the error if it's not caused by the network (internal inconsistency)
                 if (errorType != ErrorType.NETWORK_XMLRPC) {
-                    JSONObject properties = new JSONObject();
-                    try {
-                        properties.put("error_message", errorType.name() + "-" + errorMessage);
-                    } catch (JSONException e) {
-                        AppLog.e(T.MEDIA, "Can't serialize message to JSON: " + errorMessage);
-                    }
-                    WPMobileStatsUtil.trackException(throwable, WPMobileStatsUtil.StatsPropertyExceptionFetchMedia,
-                            properties);
+                    CrashlyticsUtils.logException(throwable, ExceptionType.SPECIFIC, T.MEDIA, errorMessage);
                 }
             }
         });
@@ -205,5 +190,4 @@ public class MediaUploadService extends Service {
         }
         lbm.sendBroadcast(intent);
     }
-    
 }
