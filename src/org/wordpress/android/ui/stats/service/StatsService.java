@@ -416,7 +416,7 @@ public class StatsService extends Service {
                 public void run() {
                     numberOfFinishedNetworkCalls++;
                     AppLog.d(T.STATS, "ViewsByCountry Call " + date + " responded");
-                    if (response == null || !response.has("country")) {
+                    if (response == null || !response.has("country-views")) {
                         notifyResponseReceived();
                         return;
                     }
