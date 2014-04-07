@@ -17,7 +17,6 @@ import android.support.v4.content.IntentCompat;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -89,29 +88,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             title = "WordPress";
         String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
         String note_id = extras.getString("note_id");
-
-        Note note = null;
-        // TODO: get the note from the bucket. If we're online and can get a
-        // push notification, then we should be getting the note pushed to the
-        // bucket as well assuming Simperium.com isn't experiencing any issues
-        // ;).
-        /*if (extras.getString("note_full_data") != null) {
-            byte[] decode = Base64.decode(intent.getStringExtra("note_full_data"), Base64.DEFAULT);
-            String unzippedString = NotificationUtils.unzipString(decode);
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(unzippedString);
-                JSONArray notesJSON = jsonObject.getJSONArray("notes");
-                note = new Note(notesJSON.getJSONObject(0));
-                WordPress.wpDB.addNote(note, false);
-            } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: ", e);
-            }
-        } else { // create a placeholder note
-            note = new Note(extras);
-            WordPress.wpDB.addNote(note, true);
-            refreshNotes();
-        }*/
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification

@@ -12,9 +12,12 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -87,38 +90,30 @@ public class NotificationsActivity extends WPActionBarActivity
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
     private void launchWithNoteId() {
-        /*final Intent intent = getIntent();
+        Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
-            int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
-            Note note = WordPress.wpDB.getNoteById(noteID);
-            if (note != null) {
-                openNote(note);
-            } else {
-                // find it/load it etc
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
-                NotesResponseHandler handler = new NotesResponseHandler(){
-                    @Override
-                    public void onNotes(List<Note> notes){
-                        // there should only be one note!
-                        if (!notes.isEmpty()) {
-                            openNote(notes.get(0));
-                        }
+            String noteID = intent.getStringExtra(NOTE_ID_EXTRA);
+
+            Bucket<Note> notesBucket = WordPress.notesBucket;
+            try {
+                if (notesBucket != null) {
+                    Note note = notesBucket.get(noteID);
+                    if (note != null) {
+                        openNote(note);
                     }
-                };
-                getRestClientUtils().getNotifications(params, handler, handler);
+                }
+            } catch (BucketObjectMissingException e) {
+                AppLog.e(T.NOTIFS, "Could not load notification from bucket.");
             }
         } else {
             // on a tablet: open first note if none selected
             String fragmentTag = mNotesList.getTag();
             if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
-                if (mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
-                    openNote(mNotesList.getNotesAdapter().getItem(0));
+                if (mNotesList.getListAdapter() != null && !mNotesList.getListAdapter().isEmpty()) {
+                    openNote((Note)mNotesList.getListAdapter().getItem(0));
                 }
             }
-            mNotesList.animateRefresh(true);
-            refreshNotes();
-        }*/
+        }
     }
 
     @Override
