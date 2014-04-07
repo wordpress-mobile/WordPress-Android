@@ -34,7 +34,7 @@ public class Note extends Syncable {
 
     public static class Schema extends BucketSchema<Note> {
 
-        static public final String NAME = "notes";
+        static public final String NAME = "note";
         static public final String TIMESTAMP_INDEX = "timestamp";
 
         private static Indexer<Note> sTimestampIndexer = new Indexer<Note>() {

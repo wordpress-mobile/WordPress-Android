@@ -13,12 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
@@ -30,17 +28,16 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 public class NotificationsListFragment extends ListFragment {
-    private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
-    private View mProgressFooterView;
-    private boolean mAllNotesLoaded;
     private PullToRefreshHelper mPullToRefreshHelper;
 
     /**
@@ -130,20 +127,6 @@ public class NotificationsListFragment extends ListFragment {
         }
     }
 
-    @Override
-    public void setListAdapter(ListAdapter adapter) {
-        super.setListAdapter(adapter);
-    }
-
-    public void setNotesAdapter(NotesAdapter adapter) {
-        mNotesAdapter = adapter;
-        this.setListAdapter(adapter);
-    }
-
-    public NotesAdapter getNotesAdapter() {
-        return mNotesAdapter;
-    }
-
     public void setOnNoteClickListener(OnNoteClickListener listener) {
         mNoteClickListener = listener;
     }
@@ -152,17 +135,13 @@ public class NotificationsListFragment extends ListFragment {
         // set the timestamp to now
         try {
             if (mNotesAdapter == null) return;
-            Note newestNote = mNotesAdapter.getNote(0);
+            //Note newestNote = mNotesAdapter.getNote(0);
             BucketObject meta = WordPress.metaBucket.get("meta");
-            meta.setProperty("last_seen", newestNote.getTimestamp());
+            meta.setProperty("last_seen", 0);
             meta.save();
         } catch (BucketObjectMissingException e) {
             // try again later, meta is created by wordpress.com
         }
-    }
-
-    boolean hasAdapter() {
-        return (mNotesAdapter != null);
     }
 
     class NotesAdapter extends ResourceCursorAdapter implements Bucket.Listener<Note> {
@@ -210,6 +189,11 @@ public class NotificationsListFragment extends ListFragment {
             refreshNotes();
         }
 
+        @Override
+        public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+            //noop
+        }
+
         public void refreshNotes() {
             Activity activity = getActivity();
             if (activity == null) return;
@@ -239,15 +223,15 @@ public class NotificationsListFragment extends ListFragment {
         public void bindView(View view, Context context, Cursor cursor) {
 
             Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
-            final Note note = bucketCursor.getObject();
+            Note note = bucketCursor.getObject();
 
-            final TextView txtLabel = (TextView) view.findViewById(R.id.note_label);
-            final TextView txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            final TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
-            final TextView txtDate = (TextView) view.findViewById(R.id.text_date);
-            final ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            final NetworkImageView imgAvatar = (NetworkImageView) view.findViewById(R.id.note_avatar);
-            final ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
+            TextView txtLabel = (TextView) view.findViewById(R.id.note_label);
+            TextView txtDetail = (TextView) view.findViewById(R.id.note_detail);
+            TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+            TextView txtDate = (TextView) view.findViewById(R.id.text_date);
+            ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
+            ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
 
             txtLabel.setText(note.getSubject());
             if (note.isCommentType()) {
@@ -259,13 +243,8 @@ public class NotificationsListFragment extends ListFragment {
 
             txtDate.setText(note.getTimeSpan());
 
-            // gravatars default to having s=256 which is considerably larger than we need here, so
-            // change the s= param to the actual size used here
-            String avatarUrl = note.getIconURL();
-            if (avatarUrl!=null && avatarUrl.contains("s=256"))
-                avatarUrl = avatarUrl.replace("s=256", "s=" + mAvatarSz);
-            imgAvatar.setDefaultImageResId(R.drawable.placeholder);
-            imgAvatar.setImageUrl(avatarUrl, WordPress.imageLoader);
+            String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
+            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
             imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
@@ -302,11 +281,6 @@ public class NotificationsListFragment extends ListFragment {
             mNoteIcons.put(noteType, icon);
             return icon;
         }
-
-        @Override
-        public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-            //noop
-        }
     }
 
     @Override
@@ -316,5 +290,4 @@ public class NotificationsListFragment extends ListFragment {
         }
         super.onSaveInstanceState(outState);
     }
-
 }

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -16,7 +15,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
@@ -30,9 +28,6 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.wordpress.android.WordPress.getRestClientUtils;
 
@@ -101,8 +96,38 @@ public class NotificationsActivity extends WPActionBarActivity
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
     private void launchWithNoteId(){
-        final Intent intent = getIntent();
-        // TODO: Check bucket for note
+        /*final Intent intent = getIntent();
+        if (intent.hasExtra(NOTE_ID_EXTRA)) {
+            int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+            Note note = WordPress.wpDB.getNoteById(noteID);
+            if (note != null) {
+                openNote(note);
+            } else {
+                // find it/load it etc
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
+                NotesResponseHandler handler = new NotesResponseHandler(){
+                    @Override
+                    public void onNotes(List<Note> notes){
+                        // there should only be one note!
+                        if (!notes.isEmpty()) {
+                            openNote(notes.get(0));
+                        }
+                    }
+                };
+                getRestClientUtils().getNotifications(params, handler, handler);
+            }
+        } else {
+            // on a tablet: open first note if none selected
+            String fragmentTag = mNotesList.getTag();
+            if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
+                if (mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
+                    openNote(mNotesList.getNotesAdapter().getItem(0));
+                }
+            }
+            mNotesList.animateRefresh(true);
+            refreshNotes();
+        }*/
     }
 
     @Override
@@ -259,48 +284,6 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    abstract class NotesResponseHandler implements RestRequest.Listener, RestRequest.ErrorListener {
-        NotesResponseHandler(){
-            mLoadingMore = true;
-        }
-        abstract void onNotes(List<Note> notes);
-
-        @Override
-        public void onResponse(JSONObject response){
-            mLoadingMore = false;
-
-            if( response == null ) {
-                //Not sure this could ever happen, but make sure we're catching all response types
-                AppLog.w(T.NOTIFS, "Success, but did not receive any notes");
-                onNotes(new ArrayList<Note>(0));
-                return;
-            }
-
-            try {
-                List<Note> notes = NotificationUtils.parseNotes(response);
-                onNotes(notes);
-            } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, "Success, but can't parse the response", e);
-                showError(getString(R.string.error_parsing_response));
-            }
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error){
-            mLoadingMore = false;
-            showError();
-            AppLog.d(T.NOTIFS, String.format("Error retrieving notes: %s", error));
-        }
-
-        public void showError(final String errorMessage){
-            Toast.makeText(NotificationsActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-        }
-
-        public void showError(){
-            showError(getString(R.string.error_generic));
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (outState.isEmpty()) {
@@ -356,5 +339,4 @@ public class NotificationsActivity extends WPActionBarActivity
           .addToBackStack(tagForFragment)
           .commit();
     }
-
 }
