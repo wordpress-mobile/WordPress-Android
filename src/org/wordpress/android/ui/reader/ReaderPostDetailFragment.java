@@ -745,6 +745,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         new Thread() {
             @Override
             public void run() {
+                if (getView() == null) {
+                    return;
+                }
                 final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
