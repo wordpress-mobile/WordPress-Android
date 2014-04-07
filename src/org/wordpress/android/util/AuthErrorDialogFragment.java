@@ -12,7 +12,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.stats.WPComLoginActivity;
+import org.wordpress.android.ui.accounts.WPComLoginActivity;
 
 /**
  * An alert dialog fragment for XML-RPC authentication failures

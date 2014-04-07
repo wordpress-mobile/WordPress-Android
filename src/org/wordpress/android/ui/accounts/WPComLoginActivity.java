@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
+import org.wordpress.android.util.EditTextUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -43,7 +42,6 @@ import java.net.URISyntaxException;
  * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
  */
 public class WPComLoginActivity extends SherlockFragmentActivity {
-
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private String mUsername;
@@ -64,12 +62,11 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         mSignInButton = (Button) findViewById(R.id.saveDotcom);
         mSignInButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
                 EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
 
-                mUsername = dotcomUsername.getText().toString();
-                mPassword = dotcomPassword.getText().toString();
+                mUsername = EditTextUtils.getText(dotcomUsername);
+                mPassword = EditTextUtils.getText(dotcomPassword);
 
                 if (mUsername.equals("") || mPassword.equals("")) {
                     dotcomUsername.setError(getString(R.string.username_password_required));
@@ -162,7 +159,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             } catch (XmlPullParserException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             }
-            
+
             mIsWpcomAccountWith2FA = false;
             return false;
         }
