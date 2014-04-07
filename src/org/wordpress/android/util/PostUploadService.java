@@ -203,10 +203,8 @@ public class PostUploadService extends Service {
             notificationID = (new Random()).nextInt() + post.getLocalTableBlogId();
             nm.notify(notificationID, n); // needs a unique id
 
-            Blog blog;
-            try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
-            } catch (Exception e) {
+            Blog blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
+            if (blog == null) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;
             }

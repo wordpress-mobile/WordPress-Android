@@ -1,19 +1,18 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.text.TextUtils;
-import android.view.Display;
 import android.widget.ImageView;
 
 import org.apache.http.HttpEntity;
@@ -312,28 +311,42 @@ public class ImageHelper {
         }
     }
 
+    private int getThumbnailWidth(Context context, int targetWidth) {
+        final int DEFAULT_WIDTH = 600;
+        int width;
+        if (targetWidth != 0) {
+            width = targetWidth;
+        } else {
+            // Get the display width
+            if (context == null) {
+                return DEFAULT_WIDTH;
+            }
+            Point size = DisplayUtils.getDisplayPixelSize(context);
+            width = size.x;
+            if (size.y < width) {
+                width = size.y;
+            }
+        }
+        return width;
+    }
+
     /**
      * Resizes an image to be placed in the Post Content Editor
-     * @param ctx
-     * @param filePath
+     *
      * @return resized bitmap
      */
-    public Bitmap getThumbnailForWPImageSpan(Context ctx, String filePath) {
-        if (filePath==null)
+    public Bitmap getThumbnailForWPImageSpan(Context context, String filePath, int targetWidth) {
+        if (filePath == null) {
             return null;
-
-        Display display = ((Activity)ctx).getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
-        int height = display.getHeight();
-        if (width > height)
-            width = height;
+        }
+        int width = getThumbnailWidth(context, targetWidth);
 
         Uri curUri;
-
-        if (!filePath.contains("content://"))
+        if (!filePath.contains("content://")) {
             curUri = Uri.parse("content://media" + filePath);
-        else
+        } else {
             curUri = Uri.parse(filePath);
+        }
 
         if (filePath.contains("video")) {
             int videoId = 0;
@@ -341,21 +354,21 @@ public class ImageHelper {
                 videoId = Integer.parseInt(curUri.getLastPathSegment());
             } catch (NumberFormatException e) {
             }
-            ContentResolver crThumb = ctx.getContentResolver();
+            ContentResolver crThumb = context.getContentResolver();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 1;
             return MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
                     options);
         } else {
-            int[] dimensions = getImageSize(curUri, ctx);
+            int[] dimensions = getImageSize(curUri, context);
             float conversionFactor = 0.40f;
             if (dimensions[0] > dimensions[1]) //width > height
                 conversionFactor = 0.60f;
             int resizedWidth = (int) (width * conversionFactor);
 
             // create resized picture
-            int rotation = getImageOrientation(ctx, filePath);
-            byte[] bytes = createThumbnailFromUri(ctx, curUri, resizedWidth, null, rotation);
+            int rotation = getImageOrientation(context, filePath);
+            byte[] bytes = createThumbnailFromUri(context, curUri, resizedWidth, null, rotation);
 
             // upload resized picture
             if (bytes != null && bytes.length > 0) {
