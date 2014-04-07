@@ -21,6 +21,7 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
+import com.simperium.client.User;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
-public class NotificationsListFragment extends ListFragment {
+public class NotificationsListFragment extends ListFragment implements User.StatusChangeListener {
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -48,18 +49,9 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.empty_listview, container, false);
         return v;
-    }
-
-    public void animateRefresh(boolean refresh) {
-        mPullToRefreshHelper.setRefreshing(refresh);
     }
 
     @Override
@@ -109,6 +101,9 @@ public class NotificationsListFragment extends ListFragment {
                         }
                     }
                 }, TextView.class);
+
+        // No PTR because Simperium is magic.
+        mPullToRefreshHelper.setEnabled(false);
     }
 
     @Override
@@ -186,6 +181,8 @@ public class NotificationsListFragment extends ListFragment {
 
         @Override
         public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+            if (type == Bucket.ChangeType.INDEX)
+                mPullToRefreshHelper.setRefreshing(false);
             refreshNotes();
         }
 
@@ -280,6 +277,14 @@ public class NotificationsListFragment extends ListFragment {
 
             mNoteIcons.put(noteType, icon);
             return icon;
+        }
+    }
+
+    @Override
+    public void onUserStatusChange(User.Status authorized) {
+        // Show refresh indicator if we are indexing Simperium notes for the first time
+        if (!WordPress.notesBucket.hasChangeVersion()) {
+            mPullToRefreshHelper.setRefreshing(true);
         }
     }
 

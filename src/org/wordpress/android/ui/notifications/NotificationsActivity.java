@@ -36,8 +36,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     private NotificationsListFragment mNotesList;
-    private boolean mLoadingMore = false;
-    private boolean mFirstLoadComplete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
