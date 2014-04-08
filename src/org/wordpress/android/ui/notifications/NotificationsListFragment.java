@@ -191,39 +191,41 @@ public class NotificationsListFragment extends ListFragment {
         }
 
         @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            View view = LayoutInflater.from(context).inflate(R.layout.note_list_item, null);
+            NoteViewHolder holder = new NoteViewHolder(view);
+            view.setTag(holder);
+
+            return view;
+        }
+
+        @Override
         public void bindView(View view, Context context, Cursor cursor) {
 
             Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
             Note note = bucketCursor.getObject();
 
-            TextView txtLabel = (TextView) view.findViewById(R.id.note_label);
-            TextView txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            TextView unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
-            TextView txtDate = (TextView) view.findViewById(R.id.text_date);
-            ProgressBar placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
-            ImageView imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
+            NoteViewHolder noteViewHolder = (NoteViewHolder)view.getTag();
 
-            txtLabel.setText(note.getSubject());
+            noteViewHolder.txtLabel.setText(note.getSubject());
             if (note.isCommentType()) {
-                txtDetail.setText(note.getCommentPreview());
-                txtDetail.setVisibility(View.VISIBLE);
+                noteViewHolder.txtDetail.setText(note.getCommentPreview());
+                noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
             } else {
-                txtDetail.setVisibility(View.GONE);
+                noteViewHolder.txtDetail.setVisibility(View.GONE);
             }
 
-            txtDate.setText(note.getTimeSpan());
+            noteViewHolder.txtDate.setText(note.getTimeSpan());
 
             String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
-            imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
-            imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
+            noteViewHolder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
-            unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
-            placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
+            noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
+            noteViewHolder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
 
         }
-
 
         // HashMap of drawables for note types
         private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
@@ -252,6 +254,26 @@ public class NotificationsListFragment extends ListFragment {
 
             mNoteIcons.put(noteType, icon);
             return icon;
+        }
+    }
+
+    private static class NoteViewHolder {
+        private final TextView txtLabel;
+        private final TextView txtDetail;
+        private final TextView unreadIndicator;
+        private final TextView txtDate;
+        private final ProgressBar placeholderLoading;
+        private final WPNetworkImageView imgAvatar;
+        private final ImageView imgNoteIcon;
+
+        NoteViewHolder(View view) {
+            txtLabel = (TextView) view.findViewById(R.id.note_label);
+            txtDetail = (TextView) view.findViewById(R.id.note_detail);
+            unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
+            imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
         }
     }
 
