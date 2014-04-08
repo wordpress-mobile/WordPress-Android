@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /*
  * shows reader posts in a specific blog
@@ -23,6 +25,7 @@ import org.wordpress.android.util.FormatUtils;
 public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
 
     private View mBlogHeaderView;
+    protected static final String ARG_BLOG_URL = "blog_url";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,9 +34,8 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         setContentView(R.layout.reader_activity_blog_detail);
         mBlogHeaderView = findViewById(R.id.layout_blog_header);
 
-        long blogId = getIntent().getLongExtra(ReaderPostListFragment.ARG_BLOG_ID, 0);
-        requestBlogInfo(blogId);
-        showListFragment(blogId);
+        String blogUrl = getIntent().getStringExtra(ARG_BLOG_URL);
+        requestBlogInfo(blogUrl);
     }
 
     @Override
@@ -66,9 +68,12 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         return (getListFragment() != null);
     }
 
-    private void requestBlogInfo(final long blogId) {
+    /*
+     * get blog info by url
+     */
+    private void requestBlogInfo(final String blogUrl) {
         // first get info from local db
-        ReaderBlogInfo blogInfo = ReaderBlogTable.getBlogInfo(blogId);
+        final ReaderBlogInfo blogInfo = ReaderBlogTable.getBlogInfo(blogUrl);
 
         // show existing info for this blog (if any)
         if (blogInfo != null) {
@@ -78,8 +83,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
             showBlogInfo(null);
         }
 
-        // then request latest info for this blog
-        ReaderBlogActions.updateBlogInfo(blogId, new ReaderActions.ActionListener() {
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (isFinishing()) {
@@ -87,10 +91,16 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
                 }
                 hideLoadingProgress();
                 if (succeeded) {
-                    showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
+                    showBlogInfo(ReaderBlogTable.getBlogInfo(blogUrl));
+                } else if (blogInfo == null) {
+                    ToastUtils.showToast(ReaderBlogDetailActivity.this, R.string.reader_toast_err_get_blog);
+                    finish();
                 }
             }
-        });
+        };
+
+        // then request latest info for this blog
+        ReaderBlogActions.updateBlogInfo(blogUrl, actionListener);
     }
 
     /*
@@ -125,6 +135,9 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
                     toggleBlogFollowStatus(txtFollowBtn, blog);
                 }
             });
+
+            if (!hasListFragment())
+                showListFragment(blog.blogId);
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);

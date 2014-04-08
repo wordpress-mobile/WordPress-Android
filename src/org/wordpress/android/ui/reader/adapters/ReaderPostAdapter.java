@@ -283,7 +283,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
+                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.getBlogUrl());
                     }
                 });
                 break;

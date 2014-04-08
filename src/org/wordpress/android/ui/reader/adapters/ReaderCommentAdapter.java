@@ -135,11 +135,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
 
         // tapping avatar or author name opens blog detail
-        if (comment.hasAuthorBlogId()) {
+        if (comment.hasAuthorUrl()) {
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogDetail(view.getContext(), comment.authorBlogId);
+                    ReaderActivityLauncher.showReaderBlogDetail(view.getContext(), comment.getAuthorUrl());
                 }
             };
             holder.imgAvatar.setOnClickListener(authorListener);

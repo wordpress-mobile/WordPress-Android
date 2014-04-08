@@ -12,7 +12,7 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:paddingTop="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_medium"
         android:layout_below="@+id/layout_blog_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

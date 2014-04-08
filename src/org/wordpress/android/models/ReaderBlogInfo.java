@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogInfo {
     public long blogId;
@@ -12,6 +13,7 @@ public class ReaderBlogInfo {
     public boolean isJetpack;
     public boolean isFollowing;
     public int numSubscribers;
+
     private String name;
     private String description;
     private String url;
@@ -40,9 +42,11 @@ public class ReaderBlogInfo {
             return blog;
 
         blog.blogId = json.optLong("ID");
-        blog.name = JSONUtil.getStringDecoded(json, "name");
-        blog.description = JSONUtil.getStringDecoded(json, "description");
-        blog.url = JSONUtil.getString(json, "URL");
+
+        blog.setName(JSONUtil.getStringDecoded(json, "name"));
+        blog.setDescription(JSONUtil.getStringDecoded(json, "description"));
+        blog.setUrl(JSONUtil.getString(json, "URL"));
+
         blog.isJetpack = JSONUtil.getBool(json, "jetpack");
         blog.isPrivate = JSONUtil.getBool(json, "is_private");
         blog.isFollowing = JSONUtil.getBool(json, "is_following");
@@ -62,7 +66,8 @@ public class ReaderBlogInfo {
         return StringUtils.notNullStr(url);
     }
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
+        // always set to normalized URL for comparison
+        this.url = StringUtils.notNullStr(UrlUtils.normalizeUrl(url));
     }
 
     public String getDescription() {

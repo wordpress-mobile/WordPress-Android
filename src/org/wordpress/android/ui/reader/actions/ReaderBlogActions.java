@@ -108,7 +108,7 @@ public class ReaderBlogActions {
     /*
      * requests info about a specific blog
      */
-    public static void updateBlogInfo(final long blogId, final ReaderActions.ActionListener actionListener) {
+    /*public static void updateBlogInfo(final long blogId, final ReaderActions.ActionListener actionListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -124,6 +124,30 @@ public class ReaderBlogActions {
             }
         };
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
+    }*/
+    public static void updateBlogInfo(final String blogUrl, final ReaderActions.ActionListener actionListener) {
+        if (TextUtils.isEmpty(blogUrl)) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdateBlogInfoResponse(jsonObject, actionListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+            }
+        };
+        final String domain = UrlUtils.removeProtocol(blogUrl);
+        WordPress.getRestClientUtils().get("/sites/" + domain, listener, errorListener);
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.ActionListener actionListener) {
         if (jsonObject == null) {
@@ -132,7 +156,7 @@ public class ReaderBlogActions {
             return;
         }
 
-        ReaderBlogTable.addOrUpdateBlogInfo(ReaderBlogInfo.fromJson(jsonObject));
+        ReaderBlogTable.setBlogInfo(ReaderBlogInfo.fromJson(jsonObject));
         if (actionListener != null)
             actionListener.onActionResult(true);
     }

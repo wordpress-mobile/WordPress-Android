@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/reader_post_background"
     android:orientation="vertical"
-    android:padding="@dimen/margin_large">
+    android:padding="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_blog_name"

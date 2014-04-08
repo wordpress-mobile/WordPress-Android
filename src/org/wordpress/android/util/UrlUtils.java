@@ -70,7 +70,7 @@ public class UrlUtils {
      * normalizeUrl("http://google.com/") = normalizeUrl("http://google.com")
      */
     public static String normalizeUrl(final String urlString) {
-        if (urlString==null)
+        if (urlString == null)
             return null;
 
         // this routine is called from some performance-critical code and creating a URI from a string
@@ -99,10 +99,26 @@ public class UrlUtils {
         if (urlString==null)
             return null;
         int pos = urlString.indexOf("?");
-        if (pos==-1)
+        if (pos == -1)
             return urlString;
         return urlString.substring(0, pos);
+    }
 
+    /*
+     * returns the passed url without the protocol (scheme://)
+     */
+    public static String removeProtocol(final String urlString) {
+        if (urlString == null)
+            return null;
+
+        int pos = urlString.indexOf("://");
+        if (pos == -1) {
+            return urlString;
+        } else if (pos == urlString.length()) {
+            return "";
+        } else {
+            return urlString.substring(pos + 3);
+        }
     }
 
     /*

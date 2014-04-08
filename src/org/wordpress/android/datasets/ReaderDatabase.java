@@ -15,12 +15,13 @@ import org.wordpress.android.util.AppLog.T;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 68;
+    private static final int DB_VERSION = 69;
 
     /*
      * version history
      *   67 - added tbl_blog_info to ReaderBlogTable
      *   68 - added author_blog_id to ReaderCommentTable
+     *   69 - renamed tbl_blog_urls to tbl_followed_blogs in ReaderBlogTable
      */
 
     /*

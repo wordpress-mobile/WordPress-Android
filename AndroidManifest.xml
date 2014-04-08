@@ -166,7 +166,7 @@
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderBlogDetailActivity"
-            android:theme="@android:style/Theme.Light.NoTitleBar"/>
+            android:label="@string/reader_title_blog_detail"/>
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
