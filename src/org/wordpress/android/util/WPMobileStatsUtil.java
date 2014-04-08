@@ -16,13 +16,10 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.HashMap;
 
 
 /**
- * Created by Eric on 11/20/13.
  *
  * WPMobileStatsUtils handles stats logging. Its public methods should for the most part be service
  * neutral to allow to ease possible changes in the stats libs we use in the future.
@@ -82,15 +79,6 @@ public class WPMobileStatsUtil {
     public static final String StatsEventPagesClickedNewPage = "Pages - Clicked New Page";
     public static final String StatsEventPageDetailOpenedEditor = "Page - Opened Editor";
     public static final String StatsEventPageDetailClosedEditor = "Page - Closed Editor";
-
-    // Exception logging
-    public static final String StatsEventException = "Exception";
-    public static final String StatsPropertyExceptionNoteParsing = "note_html_parsing_failed";
-    public static final String StatsPropertyExceptionFetchMedia = "fetch_media_failed";
-    public static final String StatsPropertyExceptionUploadMedia = "upload_media_failed";
-
-    // Track Out of Memory errors
-    public static final String StatsEventMediaOutOfMemory = "Out of Memory Error";
 
     /* /Events  */
 
@@ -265,45 +253,6 @@ public class WPMobileStatsUtil {
      */
     public static void flagProperty( String event, String property ) {
         WPMobileStatsUtil.instance.flag(event, property);
-    }
-
-    /**
-     * Tracks the exception stack trace associated to a String id
-     *
-     * @param throwable contains stack trace
-     * @param exceptionId a string id (short name that helps to distinguish different tracked
-     *                    exception)
-     */
-    public static void trackException(Throwable throwable, String exceptionId) {
-        trackException(throwable, exceptionId, null);
-    }
-
-    /**
-     * Tracks the exception stack trace associated to a String id
-     *
-     * @param exception exception we want to track - contains stack trace
-     * @param exceptionId a string id (short name that helps to distinguish different tracked
-     *                    exception)
-     * @param additionalData a JSON Object to track additional data that could help solve this
-     *                       exception
-     */
-    public static void trackException(Throwable throwable, String exceptionId,
-                                      JSONObject additionalData) {
-        JSONObject properties = new JSONObject();
-        try {
-            properties.put("exception_id", exceptionId);
-            if (throwable != null) {
-                StringWriter errors = new StringWriter();
-                throwable.printStackTrace(new PrintWriter(errors));
-                properties.put("stacktrace", errors.toString());
-            }
-            if (additionalData != null) {
-                properties.put("additional_data", additionalData);
-            }
-        } catch (JSONException jsonException) {
-            AppLog.e(T.UTILS, jsonException);
-        }
-        mixpanel.track(StatsEventException, properties);
     }
 
     // Instance methods

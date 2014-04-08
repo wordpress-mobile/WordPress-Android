@@ -11,9 +11,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
-/**
- * Created by nbradbury on 9/7/13.
- */
 public class UrlUtils {
 
     public static String urlEncode(final String text) {

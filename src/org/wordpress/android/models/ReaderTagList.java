@@ -2,9 +2,6 @@ package org.wordpress.android.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 6/23/13.
- */
 public class ReaderTagList extends ArrayList<ReaderTag> {
 
     public int indexOfTag(String tagName) {

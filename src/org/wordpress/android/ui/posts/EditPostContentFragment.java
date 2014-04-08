@@ -70,6 +70,9 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -90,9 +93,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-/**
- * Created by dan on 11/20/13.
- */
 public class EditPostContentFragment extends SherlockFragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
 
@@ -896,11 +896,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     resizedBitmap = downloadedBitmap;
                 } else {
                     //resize the downloaded bitmap
+                    int targetWidth = 400;
                     try {
                         ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
+                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
                     } catch (OutOfMemoryError er) {
-                        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                        CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                                ((float) targetWidth) / downloadedBitmap.getWidth());
+                        CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
                         return;
                     }
                 }
@@ -1027,12 +1032,11 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             mediaTitle = getResources().getString(R.string.video);
         } else {
             ImageHelper ih = new ImageHelper();
-
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath());
-
-            if (thumbnailBitmap == null)
+            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath(),
+                    mPostContentLinearLayout.getWidth());
+            if (thumbnailBitmap == null) {
                 return false;
-
+            }
             mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 

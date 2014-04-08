@@ -47,7 +47,7 @@ function checkENStrings() {
 function checkVersions() {
 	gradle_version=$(grep -E 'versionName' build.gradle \
 		             | grep -Eo "[0-9.]+")
-	tag=$(git tag -l|sort|tail -1)
+	tag=$(git for-each-ref --sort=taggerdate --format '%(tag)' refs/tags|tail -1)
 	if [[ $gradle_version != $tag ]]; then
 		/bin/echo -n "build.gradle version and git tag version mismatch..."
 		pFail

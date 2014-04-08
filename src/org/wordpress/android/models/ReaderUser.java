@@ -7,9 +7,6 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
-/**
- * Created by nbradbury on 6/22/13.
- */
 public class ReaderUser {
 
     public long userId;

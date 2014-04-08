@@ -11,9 +11,6 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-/**
- * Created by nbradbury on 8/25/13.
- */
 public class ReaderUserActions {
 
     /*

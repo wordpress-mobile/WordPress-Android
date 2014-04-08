@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.passcodelock.AppLockManager;
@@ -94,7 +96,10 @@ public class WordPress extends Application {
     public void onCreate() {
         // Enable log recording
         AppLog.enableRecording(true);
-
+        if (!Utils.isDebugBuild()) {
+            Crashlytics.start(this);
+            AppLog.enableCrashlytics(true);
+        }
         versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
@@ -125,7 +130,7 @@ public class WordPress extends Application {
             PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
-         }
+        }
     }
 
     public static void setupVolleyQueue() {

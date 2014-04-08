@@ -5,9 +5,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 6/27/13.
- */
 public class ReaderPostList extends ArrayList<ReaderPost> {
 
     public static ReaderPostList fromJson(JSONObject json) {

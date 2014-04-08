@@ -12,7 +12,6 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.Iterator;
 
 /**
- * Created by nbradbury on 9/2/13.
  * urls of blogs we know about and whether they're followed by the current user
  */
 public class ReaderBlogTable {

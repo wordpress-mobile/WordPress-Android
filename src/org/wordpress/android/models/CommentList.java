@@ -2,9 +2,6 @@ package org.wordpress.android.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 29-Jan-2014
- */
 public class CommentList extends ArrayList<Comment> {
 
     public int indexOfCommentId(long commentId) {

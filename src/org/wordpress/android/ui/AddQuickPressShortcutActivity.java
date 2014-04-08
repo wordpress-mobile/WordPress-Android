@@ -152,11 +152,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     WordPress.wpDB.addQuickPressShortcut(accountIDs[position], quickPressShortcutName.getText().toString());
 
                     if (WordPress.currentBlog == null) {
-                        try {
-                            WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
-                            WordPress.wpDB.updateLastBlogId(accountIDs[position]);
-                        } catch (Exception e) {
-                        }
+                        WordPress.currentBlog = WordPress.wpDB.instantiateBlogByLocalId(accountIDs[position]);
+                        WordPress.wpDB.updateLastBlogId(accountIDs[position]);
                     }
 
                     addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");

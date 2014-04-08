@@ -247,6 +247,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
+                        if (!hasActivity()) {
+                            return;
+                        }
                         switch (step) {
                             case VALIDATE_USER:
                                 updateProgress(getString(R.string.validating_site_data));

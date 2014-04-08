@@ -2,9 +2,6 @@ package org.wordpress.android.models;
 
 import java.util.HashSet;
 
-/**
- * Created by nbradbury on 7/18/13.
- */
 public class ReaderUserIdList extends HashSet<Long> {
     /*
      * returns true if passed list contains the same userIds as this list

@@ -28,7 +28,12 @@ public class WebViewActivity extends WPActionBarActivity {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         
         super.onCreate(savedInstanceState);
-        
+
+        // clear title text so there's no title until actual web page title can be shown
+        // this is done here rather than in the manifest to automatically handle descendants
+        // such as AuthenticatedWebViewActivity
+        setTitle("");
+
         setContentView(R.layout.webview);
 
         ActionBar ab = getSupportActionBar();

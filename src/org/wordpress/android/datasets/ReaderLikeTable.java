@@ -11,7 +11,6 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * Created by nbradbury on 7/18/13.
  * stores likes for Reader posts
  */
 public class ReaderLikeTable {

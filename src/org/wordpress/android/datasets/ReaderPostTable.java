@@ -11,7 +11,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.SqlUtils;
 
 /**
- * Created by nbradbury on 6/27/13.
  * tbl_posts contains all reader posts
  * tbl_post_tags stores the association between posts and tags (posts can exist in more than one tag)
  *
