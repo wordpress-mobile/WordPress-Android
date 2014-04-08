@@ -38,9 +38,9 @@ public class AuthErrorDialogFragment extends SherlockDialogFragment {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
         b.setTitle(R.string.wpcom_signin_dialog_title);
         if (mIsWPCom) {
-            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.please_sign_in));
+            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " +
+                         getResources().getText(R.string.please_sign_in));
             b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
-
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent authIntent = new Intent(getActivity(), WPComLoginActivity.class);
@@ -50,10 +50,10 @@ public class AuthErrorDialogFragment extends SherlockDialogFragment {
                 }
             });
         } else {
-            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(R.string.load_settings));
+            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " +
+                         getResources().getText(R.string.load_settings));
             b.setCancelable(true);
-            b.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
+            b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Intent settingsIntent = new Intent(getActivity(), BlogPreferencesActivity.class);
@@ -61,11 +61,9 @@ public class AuthErrorDialogFragment extends SherlockDialogFragment {
                     getActivity().startActivity(settingsIntent);
                 }
             });
-            b.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-
+            b.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                 }
             });
         }

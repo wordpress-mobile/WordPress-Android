@@ -62,7 +62,7 @@
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
-    <string name="load_settings">Load settings now?</string>
+    <string name="load_settings">You can visit settings and change your username and password there.</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
