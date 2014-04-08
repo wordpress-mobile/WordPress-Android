@@ -54,7 +54,9 @@
       <property name="message" value="Empty line not allowed after brace"/>
     </module>
 
-    <module name="StrictDuplicateCode"/>
+    <module name="StrictDuplicateCode">
+      <property name="min" value="25"/>
+    </module>
 
     <module name="TreeWalker">
 
@@ -207,8 +209,8 @@
         <module name="ArrayTypeStyle"/>
         <!-- <module name="FinalParameters"/> -->
         <module name="TodoComment">
-          <property name="format" value="TODO"/>
-          <property name="severity" value="info"/>
+          <property name="format" value="FIXME"/>
+          <property name="severity" value="warning"/>
         </module>
         <module name="UpperEll"/>
 
