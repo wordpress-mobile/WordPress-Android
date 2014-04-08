@@ -113,7 +113,8 @@ public class ReaderBlogActions {
         internalUpdateBlogInfo(endpoint, infoListener);
     }
     public static void updateBlogInfo(String blogUrl, ReaderActions.RequestBlogInfoListener infoListener) {
-        String endpoint = "/sites/" + UrlUtils.removeProtocol(blogUrl);
+        String domain = UrlUtils.removeProtocol(blogUrl);
+        String endpoint = "/sites/" + domain;
         internalUpdateBlogInfo(endpoint, infoListener);
     }
 

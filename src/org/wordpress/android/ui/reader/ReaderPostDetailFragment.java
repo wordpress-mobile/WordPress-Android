@@ -1393,7 +1393,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.getBlogUrl());
+                    ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost);
                 }
             };
             txtBlogName.setOnClickListener(clickListener);

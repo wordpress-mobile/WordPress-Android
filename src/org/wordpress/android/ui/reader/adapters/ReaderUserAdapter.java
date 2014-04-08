@@ -78,7 +78,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(v.getContext(), user.getUrl());
+                    ReaderActivityLauncher.showReaderBlogDetail(v.getContext(), user.getUrl());
                 }
             });
 

@@ -139,7 +139,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderBlogDetail(view.getContext(), comment.getAuthorUrl());
+                    ReaderActivityLauncher.showReaderBlogDetail(view.getContext(), comment);
                 }
             };
             holder.imgAvatar.setOnClickListener(authorListener);
