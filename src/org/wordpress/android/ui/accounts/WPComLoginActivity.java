@@ -44,6 +44,7 @@ import java.net.URISyntaxException;
 public class WPComLoginActivity extends SherlockFragmentActivity {
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
+    private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";
     private String mUsername;
     private String mPassword;
     private Button mSignInButton;
@@ -54,39 +55,47 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
-        getSupportActionBar().hide();
-
+        setTitle(getString(R.string.wpcom_signin_dialog_title));
         if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
             mIsJetpackAuthRequest = true;
 
         mSignInButton = (Button) findViewById(R.id.saveDotcom);
         mSignInButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
-                EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
-
-                mUsername = EditTextUtils.getText(dotcomUsername);
-                mPassword = EditTextUtils.getText(dotcomPassword);
-
-                if (mUsername.equals("") || mPassword.equals("")) {
-                    dotcomUsername.setError(getString(R.string.username_password_required));
-                    dotcomPassword.setError(getString(R.string.username_password_required));
-                } else {
-                    new SignInTask().execute();
-                }
+                signIn();
             }
         });
 
         TextView wpcomHelp = (TextView) findViewById(R.id.wpcomHelp);
         wpcomHelp.setOnClickListener(new TextView.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://android.wordpress.org/faq"));
+                intent.setData(Uri.parse(NEED_HELP_URL));
                 startActivity(intent);
-
             }
         });
+    }
+
+    private void signIn() {
+        EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
+        EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
+        mUsername = EditTextUtils.getText(dotcomUsername);
+        mPassword = EditTextUtils.getText(dotcomPassword);
+        boolean validUsernameAndPassword = true;
+
+        if (mUsername.equals("")) {
+            dotcomUsername.setError(getString(R.string.required_field));
+            dotcomUsername.requestFocus();
+            validUsernameAndPassword = false;
+        }
+        if (mPassword.equals("")) {
+            dotcomPassword.setError(getString(R.string.required_field));
+            dotcomPassword.requestFocus();
+            validUsernameAndPassword = false;
+        }
+        if (validUsernameAndPassword) {
+            new SignInTask().execute();
+        }
     }
 
     @Override
@@ -96,7 +105,6 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
     }
 
     private class SignInTask extends AsyncTask<Void, Void, Boolean> {
-
         @Override
         protected void onPreExecute() {
             mSignInButton.setText(getString(R.string.attempting_configure));
@@ -183,7 +191,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     finish();
                 }
             } else {
-                String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) : getString(R.string.nux_cannot_log_in);
+                String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) :
+                        getString(R.string.nux_cannot_log_in);
                 Toast.makeText(getBaseContext(),errorMessage, Toast.LENGTH_LONG).show();
                 mSignInButton.setEnabled(true);
                 mSignInButton.setText(R.string.sign_in);
