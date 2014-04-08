@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.Window;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -41,7 +42,8 @@ public class NotificationsActivity extends WPActionBarActivity
     private NotificationsListFragment mNotesList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.notifications);
 
@@ -58,14 +60,15 @@ public class NotificationsActivity extends WPActionBarActivity
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-        }
-
-        if (savedInstanceState != null) {
             popNoteDetail();
+        } else {
+            launchWithNoteId();
         }
 
         // remove window background since background color is set in fragment (reduces overdraw)
         getWindow().setBackgroundDrawable(null);
+
+        setProgressBarIndeterminateVisibility(false);
     }
 
 

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,25 +20,19 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
-import com.simperium.client.User;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
-
-public class NotificationsListFragment extends ListFragment implements User.StatusChangeListener {
+public class NotificationsListFragment extends ListFragment {
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
-    private PullToRefreshHelper mPullToRefreshHelper;
 
     /**
      * For responding to tapping of notes
@@ -58,7 +51,7 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        // setup the initial notes adapter, starst listening to the bucket
+        // setup the initial notes adapter, starts listening to the bucket
         mNotesAdapter = new NotesAdapter(WordPress.notesBucket);
 
         ListView listView = getListView();
@@ -72,38 +65,6 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
-
-        initPullToRefreshHelper();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        boolean isRefreshing = mPullToRefreshHelper.isRefreshing();
-        super.onConfigurationChanged(newConfig);
-        // Pull to refresh layout is destroyed onDetachedFromWindow,
-        // so we have to re-init the layout, via the helper here
-        initPullToRefreshHelper();
-        mPullToRefreshHelper.setRefreshing(isRefreshing);
-    }
-
-    private void initPullToRefreshHelper() {
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new PullToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        if (getActivity() instanceof NotificationsActivity) {
-                            //((NotificationsActivity) getActivity()).refreshNotes();
-                        }
-                    }
-                }, TextView.class);
-
-        // No PTR because Simperium is magic.
-        mPullToRefreshHelper.setEnabled(false);
     }
 
     @Override
@@ -126,7 +87,7 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
         mNoteClickListener = listener;
     }
 
-    protected void updateLastSeenTime(){
+    protected void updateLastSeenTime() {
         // set the timestamp to now
         try {
             if (mNotesAdapter == null) return;
@@ -152,6 +113,11 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
 
             // start listening to bucket change events
             mBucket.addListener(this);
+
+            // Show
+            if (getActivity() != null && !mBucket.hasChangeVersion()) {
+                getActivity().setProgressBarIndeterminateVisibility(true);
+            }
 
             // build a query that sorts by timestamp descending
             mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX,
@@ -181,8 +147,16 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
 
         @Override
         public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
-            if (type == Bucket.ChangeType.INDEX)
-                mPullToRefreshHelper.setRefreshing(false);
+
+            if (getActivity() != null && type == Bucket.ChangeType.INDEX) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getActivity().setProgressBarIndeterminateVisibility(false);
+                    }
+                });
+            }
+
             refreshNotes();
         }
 
@@ -198,7 +172,7 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
             getActivity().runOnUiThread(new Runnable() {
 
                 @Override
-                public void run(){
+                public void run() {
                     swapCursor(mQuery.execute());
                     updateLastSeenTime();
                 }
@@ -253,8 +227,9 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
 
         // HashMap of drawables for note types
         private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
+
         private Drawable getDrawableForType(String noteType) {
-            if (noteType==null)
+            if (noteType == null)
                 return null;
 
             // use like icon for comment likes
@@ -266,25 +241,17 @@ public class NotificationsListFragment extends ListFragment implements User.Stat
                 return icon;
 
             int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
-            if (imageId==0) {
+            if (imageId == 0) {
                 Log.w(WordPress.TAG, "unknown note type - " + noteType);
                 return null;
             }
 
             icon = getResources().getDrawable(imageId);
-            if (icon==null)
+            if (icon == null)
                 return null;
 
             mNoteIcons.put(noteType, icon);
             return icon;
-        }
-    }
-
-    @Override
-    public void onUserStatusChange(User.Status authorized) {
-        // Show refresh indicator if we are indexing Simperium notes for the first time
-        if (!WordPress.notesBucket.hasChangeVersion()) {
-            mPullToRefreshHelper.setRefreshing(true);
         }
     }
 

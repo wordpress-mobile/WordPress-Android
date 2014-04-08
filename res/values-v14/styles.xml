@@ -31,6 +31,7 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
+        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress.WordPress</item>
     </style>
 
     <style name="ActionBar.Transparent.WordPress" parent="@style/Widget.Sherlock.ActionBar">

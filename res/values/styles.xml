@@ -36,11 +36,19 @@
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
         <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
+        <item name="indeterminateProgressStyle">@style/IndeterminateProgress.WordPress</item>
     </style>
 
     <style name="ActionBar.Transparent.WordPress" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_wordpress</item>
         <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
+    </style>
+
+    <style name="IndeterminateProgress.WordPress" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:minWidth">32dp</item>
+        <item name="android:maxWidth">32dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:maxHeight">32dp</item>
     </style>
 
     <style name="PopupMenu.WordPress" parent="@style/Widget.Sherlock.ListPopupWindow">

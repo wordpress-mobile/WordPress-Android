@@ -33,11 +33,19 @@
         <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
+        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress.WordPress</item>
     </style>
 
     <style name="ActionBar.Transparent.WordPress" parent="@style/Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/ab_transparent_wordpress</item>
         <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
+    </style>
+
+    <style name="IndeterminateProgress.WordPress" parent="@android:style/Widget.Holo.Light.ProgressBar">
+        <item name="android:minWidth">32dp</item>
+        <item name="android:maxWidth">32dp</item>
+        <item name="android:minHeight">32dp</item>
+        <item name="android:maxHeight">32dp</item>
     </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->

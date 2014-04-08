@@ -321,7 +321,7 @@ public class Note extends Syncable {
     /**
      * Get the timestamp provided by the API for the note - cached for performance
      */
-    public String getTimestamp(){
+    public String getTimestamp() {
         if (mTimestamp == null)
             mTimestamp = queryJSON("timestamp", "");
         return mTimestamp;
