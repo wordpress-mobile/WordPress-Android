@@ -11,6 +11,7 @@ import java.util.concurrent.TimeoutException;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.RequestFuture;
@@ -208,14 +209,14 @@ public class RestClientUtils {
     /**
      * Make GET request
      */
-    public void get(String path, Listener listener, ErrorListener errorListener) {
-        get(path, null, null, listener, errorListener);
+    public Request<JSONObject> get(String path, Listener listener, ErrorListener errorListener) {
+        return get(path, null, null, listener, errorListener);
     }
 
     /**
      * Make GET request with params
      */
-    public void get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
+    public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
 
@@ -227,6 +228,7 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
         authCheck.send();
+        return request;
     }
 
     /**
