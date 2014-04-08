@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/dotcomLogin"
-                android:layout_width="@dimen/share_action_dialog_width"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
                 android:paddingTop="8dp">
 
     <EditText
         android:id="@+id/dotcomUsername"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/username"
         android:singleLine="true"/>
@@ -20,45 +19,29 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/dotcomUsername"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:singleLine="true"/>
 
-    <View
-        android:id="@+id/horizontal_divider"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="0dp"
-        android:background="?android:attr/dividerHorizontal"
-        android:layout_below="@id/dotcomPassword"/>
-
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/saveDotcom"
+        style="@android:style/Widget.Holo.Light.Button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:measureWithLargestChild="true"
-        android:orientation="horizontal"
-        android:paddingTop="0dip"
-        android:layout_below="@id/horizontal_divider">
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/dotcomPassword"
+        android:text="@string/sign_in"/>
 
-        <Button
-            android:id="@+id/wpcomHelp"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/need_help_signin_wpcom"/>
-
-        <Button
-            android:id="@+id/saveDotcom"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sign_in"/>
-    </LinearLayout>
+    <TextView
+        android:id="@+id/wpcomHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/reader_hyperlink"
+        android:layout_gravity="left"
+        android:layout_marginBottom="16dip"
+        android:paddingLeft="4dip"
+        android:text="@string/need_help_signin_wpcom"
+        android:layout_alignBottom="@+id/saveDotcom"/>
 
 </RelativeLayout>
