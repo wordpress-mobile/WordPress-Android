@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +43,7 @@ import java.net.URISyntaxException;
  * An activity to let the user specify their WordPress.com credentials.
  * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
  */
-public class WPComLoginActivity extends SherlockFragmentActivity {
+public class WPComLoginActivity extends SherlockFragmentActivity implements TextWatcher {
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";
@@ -50,6 +52,9 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
     private Button mSignInButton;
     private boolean mIsJetpackAuthRequest;
     private boolean mIsWpcomAccountWith2FA = false;
+    private boolean mIsInvalidUsernameOrPassword = false;
+    private EditText mUsernameEditText;
+    private EditText mPasswordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,28 +79,45 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 startActivity(intent);
             }
         });
+
+        mUsernameEditText = (EditText) findViewById(R.id.dotcomUsername);
+        mUsernameEditText.addTextChangedListener(this);
+        mPasswordEditText = (EditText) findViewById(R.id.dotcomPassword);
+        mPasswordEditText.addTextChangedListener(this);
     }
 
     private void signIn() {
-        EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
-        EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
-        mUsername = EditTextUtils.getText(dotcomUsername);
-        mPassword = EditTextUtils.getText(dotcomPassword);
+        mUsername = EditTextUtils.getText(mUsernameEditText);
+        mPassword = EditTextUtils.getText(mPasswordEditText);
         boolean validUsernameAndPassword = true;
 
         if (mUsername.equals("")) {
-            dotcomUsername.setError(getString(R.string.required_field));
-            dotcomUsername.requestFocus();
+            mUsernameEditText.setError(getString(R.string.required_field));
+            mUsernameEditText.requestFocus();
             validUsernameAndPassword = false;
         }
         if (mPassword.equals("")) {
-            dotcomPassword.setError(getString(R.string.required_field));
-            dotcomPassword.requestFocus();
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
             validUsernameAndPassword = false;
         }
         if (validUsernameAndPassword) {
             new SignInTask().execute();
         }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        mPasswordEditText.setError(null);
+        mUsernameEditText.setError(null);
     }
 
     @Override
@@ -156,6 +178,9 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             }
             catch (XMLRPCFault xmlRpcFault) {
                 AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+                if (xmlRpcFault.getFaultCode() == 403) {
+                    mIsInvalidUsernameOrPassword = true;
+                }
                 if (xmlRpcFault.getFaultCode() == 425) {
                     mIsWpcomAccountWith2FA = true;
                     return false;
@@ -191,9 +216,14 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     finish();
                 }
             } else {
-                String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) :
-                        getString(R.string.nux_cannot_log_in);
-                Toast.makeText(getBaseContext(),errorMessage, Toast.LENGTH_LONG).show();
+                if (mIsInvalidUsernameOrPassword) {
+                    mUsernameEditText.setError(getString(R.string.username_or_password_incorrect));
+                    mPasswordEditText.setError(getString(R.string.username_or_password_incorrect));
+                } else {
+                    String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) :
+                            getString(R.string.nux_cannot_log_in);
+                    Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_LONG).show();
+                }
                 mSignInButton.setEnabled(true);
                 mSignInButton.setText(R.string.sign_in);
             }
