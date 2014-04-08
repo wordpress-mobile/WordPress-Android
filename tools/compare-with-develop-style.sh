@@ -4,15 +4,6 @@ if [ x"$1" == x ]; then
 	compared_branch=develop
 fi
 
-
-function mcheckstyle() {
-    for i in $@; do
-        if [ -f $i ] ; then
-            checkstyle -c ../cq-configs/checkstyle/checkstyle.xml $i
-        fi
-    done
-}
-
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 current_branch_filtered=$(echo $current_branch | tr "/" "-")
 
@@ -23,11 +14,11 @@ needpop=$?
 modified_files=$(git --no-pager diff develop --name-only)
 
 # Check style on current branch
-mcheckstyle $modified_files > /tmp/checkstyle-$current_branch_filtered.log
+checkstyle -c ../cq-configs/checkstyle/checkstyle.xml $modified_files > /tmp/checkstyle-$current_branch_filtered.log
 
 # Check style on current develop
 git checkout $compared_branch
-mcheckstyle $modified_files > /tmp/checkstyle-develop.log
+checkstyle -c ../cq-configs/checkstyle/checkstyle.xml $modified_files > /tmp/checkstyle-develop.log
 
 git checkout $current_branch
 
