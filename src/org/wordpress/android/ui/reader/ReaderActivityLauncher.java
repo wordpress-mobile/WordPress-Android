@@ -24,6 +24,11 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderBlogDetail(Context context, long blogId) {
+        Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
+        intent.putExtra(ReaderBlogDetailActivity.ARG_BLOG_ID, blogId);
+        context.startActivity(intent);
+    }
     public static void showReaderBlogDetail(Context context, String blogUrl) {
         Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
         intent.putExtra(ReaderBlogDetailActivity.ARG_BLOG_URL, blogUrl);

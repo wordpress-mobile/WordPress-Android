@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogInfo {
     public long blogId;
@@ -66,8 +65,7 @@ public class ReaderBlogInfo {
         return StringUtils.notNullStr(url);
     }
     public void setUrl(String url) {
-        // always set to normalized URL for comparison
-        this.url = StringUtils.notNullStr(UrlUtils.normalizeUrl(url));
+        this.url = StringUtils.notNullStr(url);
     }
 
     public String getDescription() {

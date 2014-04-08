@@ -108,57 +108,44 @@ public class ReaderBlogActions {
     /*
      * requests info about a specific blog
      */
-    /*public static void updateBlogInfo(final long blogId, final ReaderActions.ActionListener actionListener) {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateBlogInfoResponse(jsonObject, actionListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (actionListener != null)
-                    actionListener.onActionResult(false);
-            }
-        };
-        WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
-    }*/
-    public static void updateBlogInfo(final String blogUrl, final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(blogUrl)) {
-            if (actionListener != null)
-                actionListener.onActionResult(false);
-            return;
-        }
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateBlogInfoResponse(jsonObject, actionListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (actionListener != null)
-                    actionListener.onActionResult(false);
-            }
-        };
-        final String domain = UrlUtils.removeProtocol(blogUrl);
-        WordPress.getRestClientUtils().get("/sites/" + domain, listener, errorListener);
+    public static void updateBlogInfo(long blogId, ReaderActions.RequestBlogInfoListener infoListener) {
+        String endpoint = "/sites/" + blogId;
+        internalUpdateBlogInfo(endpoint, infoListener);
     }
-    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.ActionListener actionListener) {
+    public static void updateBlogInfo(String blogUrl, ReaderActions.RequestBlogInfoListener infoListener) {
+        String endpoint = "/sites/" + UrlUtils.removeProtocol(blogUrl);
+        internalUpdateBlogInfo(endpoint, infoListener);
+    }
+
+    private static void internalUpdateBlogInfo(String endpoint, final ReaderActions.RequestBlogInfoListener infoListener) {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdateBlogInfoResponse(jsonObject, infoListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (infoListener != null)
+                    infoListener.onResult(null);
+            }
+        };
+        WordPress.getRestClientUtils().get(endpoint, listener, errorListener);
+    }
+
+    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {
         if (jsonObject == null) {
-            if (actionListener != null)
-                actionListener.onActionResult(false);
+            if (infoListener != null)
+                infoListener.onResult(null);
             return;
         }
 
-        ReaderBlogTable.setBlogInfo(ReaderBlogInfo.fromJson(jsonObject));
-        if (actionListener != null)
-            actionListener.onActionResult(true);
+        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonObject);
+        ReaderBlogTable.setBlogInfo(blogInfo);
+        if (infoListener != null)
+            infoListener.onResult(blogInfo);
     }
 
 }
