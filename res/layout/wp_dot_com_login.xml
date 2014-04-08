@@ -22,7 +22,25 @@
         android:layout_marginBottom="8dp"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentStart="false"
+        android:layout_toLeftOf="@+id/password_visibility"/>
+
+    <ImageView
+        android:id="@+id/password_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/dashicon_eye_closed"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentRight="true"
+        android:tint="@color/nux_eye_icon_color"
+        android:layout_alignBottom="@+id/dotcomPassword"
+        android:layout_marginBottom="8dp"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="8dp"/>
 
     <Button
         android:id="@+id/saveDotcom"

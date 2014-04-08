@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
     private boolean mIsInvalidUsernameOrPassword = false;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
+    private boolean mPasswordVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
         mUsernameEditText.addTextChangedListener(this);
         mPasswordEditText = (EditText) findViewById(R.id.dotcomPassword);
         mPasswordEditText.addTextChangedListener(this);
+        initPasswordVisibilityButton((ImageView) findViewById(R.id.password_visibility), mPasswordEditText);
     }
 
     private void signIn() {
@@ -104,6 +109,24 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
         if (validUsernameAndPassword) {
             new SignInTask().execute();
         }
+    }
+
+    protected void initPasswordVisibilityButton(final ImageView passwordVisibilityToggleView,
+                                                final EditText passwordEditText) {
+        passwordVisibilityToggleView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordVisible = !mPasswordVisible;
+                if (mPasswordVisible) {
+                    passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordEditText.setTransformationMethod(null);
+                } else {
+                    passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                passwordEditText.setSelection(passwordEditText.length());
+            }
+        });
     }
 
     @Override
