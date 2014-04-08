@@ -149,11 +149,17 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
         setResult(Activity.RESULT_CANCELED);
     }
 
+    private void setEditTextAndButtonEnabled(boolean enable) {
+        mUsernameEditText.setEnabled(enable);
+        mPasswordEditText.setEnabled(enable);
+        mSignInButton.setEnabled(enable);
+    }
+
     private class SignInTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             mSignInButton.setText(getString(R.string.attempting_configure));
-            mSignInButton.setEnabled(false);
+            setEditTextAndButtonEnabled(false);
         }
 
         @Override
@@ -247,7 +253,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                             getString(R.string.nux_cannot_log_in);
                     Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_LONG).show();
                 }
-                mSignInButton.setEnabled(true);
+                setEditTextAndButtonEnabled(true);
                 mSignInButton.setText(R.string.sign_in);
             }
         }
