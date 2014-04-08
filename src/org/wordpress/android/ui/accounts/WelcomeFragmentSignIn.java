@@ -205,7 +205,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (mSelfHosted && !TextUtils.isEmpty(EditTextUtils.getText(mUrlEditText).trim())) {
                 baseUrl = EditTextUtils.getText(mUrlEditText).trim();
                 String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
-                if (!lowerCaseBaseUrl.startsWith("https://")&& !lowerCaseBaseUrl.startsWith("http://")) {
+                if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
                     baseUrl = "http://" + baseUrl;
                 }
             }

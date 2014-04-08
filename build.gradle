@@ -158,7 +158,6 @@ task generateWPConfig(group: "generate", description: "Generate Config class") {
 package org.wordpress.android;
 
 public final class Config {
-
 ${config}
 }
 """)
