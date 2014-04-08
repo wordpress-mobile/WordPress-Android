@@ -91,14 +91,14 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             int blogId = extras.getInt("id");
-            try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-            } catch (Exception e) {
+            blog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
+            if (blog == null) {
                 Toast.makeText(this, getResources().getText(R.string.blog_not_found), Toast.LENGTH_SHORT).show();
                 finish();
             }
-            if (extras.containsKey("categories"))
+            if (extras.containsKey("categories")) {
                 mSelectedCategories = (HashSet<String>) extras.getSerializable("categories");
+            }
         }
         if (mSelectedCategories == null) {
             mSelectedCategories = new HashSet<String>();
