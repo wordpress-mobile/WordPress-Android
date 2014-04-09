@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -64,7 +65,12 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
-        setTitle(getString(R.string.wpcom_signin_dialog_title));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setTitle(getString(R.string.wpcom_signin_dialog_title));
+        } else {
+            getSupportActionBar().hide();
+        }
+
         if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
             mIsJetpackAuthRequest = true;
 
