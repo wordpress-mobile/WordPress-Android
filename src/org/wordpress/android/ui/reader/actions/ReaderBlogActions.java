@@ -108,17 +108,7 @@ public class ReaderBlogActions {
     /*
      * requests info about a specific blog
      */
-    public static void updateBlogInfo(long blogId, ReaderActions.RequestBlogInfoListener infoListener) {
-        String endpoint = "/sites/" + blogId;
-        internalUpdateBlogInfo(endpoint, infoListener);
-    }
-    public static void updateBlogInfo(String blogUrl, ReaderActions.RequestBlogInfoListener infoListener) {
-        String domain = UrlUtils.removeProtocol(blogUrl);
-        String endpoint = "/sites/" + domain;
-        internalUpdateBlogInfo(endpoint, infoListener);
-    }
-
-    private static void internalUpdateBlogInfo(String endpoint, final ReaderActions.RequestBlogInfoListener infoListener) {
+    public static void updateBlogInfo(long blogId, final ReaderActions.RequestBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -133,7 +123,7 @@ public class ReaderBlogActions {
                     infoListener.onResult(null);
             }
         };
-        WordPress.getRestClientUtils().get(endpoint, listener, errorListener);
+        WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
     }
 
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {

@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderFragmentType;
@@ -28,11 +27,6 @@ public class ReaderActivityLauncher {
     public static void showReaderBlogDetail(Context context, long blogId) {
         Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
         intent.putExtra(ReaderBlogDetailActivity.ARG_BLOG_ID, blogId);
-        context.startActivity(intent);
-    }
-    public static void showReaderBlogDetail(Context context, String blogUrl) {
-        Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
-        intent.putExtra(ReaderBlogDetailActivity.ARG_BLOG_URL, blogUrl);
         context.startActivity(intent);
     }
 

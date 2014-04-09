@@ -11,8 +11,6 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
-import java.util.Iterator;
-
 /**
  * ideally this would be a single table, but a separate table is necessary for
  * followed blogs since the the read/following/mine endpoint only contains the
@@ -50,31 +48,9 @@ public class ReaderBlogTable {
     }
 
 
-    /*
-     * get blog info by ID (preferred)
-     */
     public static ReaderBlogInfo getBlogInfo(long blogId) {
         String[] args = {Long.toString(blogId)};
         String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
-        try {
-            if (!c.moveToFirst())
-                return null;
-            return getBlogInfoFromCursor(c);
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    /*
-     * get blog info by URL
-     */
-    public static ReaderBlogInfo getBlogInfo(String blogUrl) {
-        if (TextUtils.isEmpty(blogUrl)) {
-            return null;
-        }
-        String[] args = {UrlUtils.normalizeUrl(blogUrl)};
-        String sql = "SELECT * FROM tbl_blog_info WHERE blog_url=?";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (!c.moveToFirst())

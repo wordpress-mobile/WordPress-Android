@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,11 +23,7 @@ import org.wordpress.android.util.ToastUtils;
  * shows reader posts in a specific blog
  */
 public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
-    protected static final String ARG_BLOG_URL = "blog_url";
     protected static final String ARG_BLOG_ID = "blog_id";
-
-    private String mBlogUrl;
-    private long mBlogId;
 
     private View mBlogHeaderView;
     private boolean mHasBlogInfo;
@@ -40,17 +35,9 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         setContentView(R.layout.reader_activity_blog_detail);
         mBlogHeaderView = findViewById(R.id.layout_blog_header);
 
-        // calling intent can set either the blogId or blogUrl - the blogId is preferred but in
-        // some cases only the blogUrl is known
-        if (getIntent().hasExtra(ARG_BLOG_ID)) {
-            mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
-            showBlogInfo(ReaderBlogTable.getBlogInfo(mBlogId));
-        } else {
-            mBlogUrl = getIntent().getStringExtra(ARG_BLOG_URL);
-            showBlogInfo(ReaderBlogTable.getBlogInfo(mBlogUrl));
-        }
-
-        requestBlogInfo();
+        long blogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
+        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
+        requestBlogInfo(blogId);
     }
 
     @Override
@@ -86,7 +73,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
     /*
      * request latest info for this blog
      */
-    private void requestBlogInfo() {
+    private void requestBlogInfo(final long blogId) {
         showLoadingProgress();
 
         ReaderActions.RequestBlogInfoListener listener = new ReaderActions.RequestBlogInfoListener() {
@@ -104,11 +91,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
             }
         };
 
-        if (!TextUtils.isEmpty(mBlogUrl)) {
-            ReaderBlogActions.updateBlogInfo(mBlogUrl, listener);
-        } else {
-            ReaderBlogActions.updateBlogInfo(mBlogId, listener);
-        }
+        ReaderBlogActions.updateBlogInfo(blogId, listener);
     }
 
     private void handleBlogNotFound() {
