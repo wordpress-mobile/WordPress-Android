@@ -337,17 +337,17 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!isPostAdapterEmpty())
-            return;
         if (!hasActivity())
+            return;
+        // don't show empty text/animation unless adapter is empty and we're displaying
+        // posts for a specific tag
+        if (!isPostAdapterEmpty() || getPostListType() != ReaderPostListType.TAG)
             return;
 
         int title;
         int description = -1;
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
-        } else if (getPostListType() == ReaderPostListType.BLOG) {
-            title = R.string.reader_empty_posts_in_blog;
         } else {
             int tagIndex = getActionBarAdapter().getIndexOfTagName(mCurrentTag);
 
