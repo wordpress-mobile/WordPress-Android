@@ -43,7 +43,6 @@ public class ThemePreviewFragment extends SherlockFragment {
     private ThemePreviewFragmentCallback mCallback;
     private WebView mWebView;
     private Blog mBlog;
-    private ProgressBar mProgressBar;
     private String mThemeId;
     private String mPreviewURL;
 
@@ -165,6 +164,9 @@ public class ThemePreviewFragment extends SherlockFragment {
      */
     protected void loadAuthenticatedUrl(String url) {
         try {
+            if (mBlog == null) {
+                return;
+            }
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(mBlog.getUsername(), "UTF-8"),
                     URLEncoder.encode(mBlog.getPassword(), "UTF-8"),
