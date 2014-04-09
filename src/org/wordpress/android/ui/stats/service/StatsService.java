@@ -80,7 +80,7 @@ public class StatsService extends Service {
     private ThreadPoolExecutor updateUIExecutor;
     private Thread orchestrator;
     
-    private LinkedList<Uri> mUpdateUIMatch = new LinkedList<Uri>();
+    private LinkedList<Uri> mUpdateUIMatch = new LinkedList<Uri>(); //Keep a reference to content provider URIs already updated
     
     @Override
     public void onCreate() {
@@ -197,6 +197,18 @@ public class StatsService extends Service {
         orchestrator.start(); 
     }
 
+    
+    
+    /**
+     * 
+     * This method returns true when network calls that update data for the current content provider URI are both finished.
+     * 
+     * In details, the code checks if the current content URI (say StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI) is already
+     * in the list. If it's already there, this code was called from 2nd listener, and we can refresh both UI Fragment.
+     * 
+     * @param uri The current content provider URI
+     * @return true if Fragments can be refreshed.
+     */
     private boolean shouldUpdateFragments(Uri uri) {
         if (mUpdateUIMatch.contains(uri) ) {
             return true;
