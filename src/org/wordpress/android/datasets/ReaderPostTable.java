@@ -21,27 +21,28 @@ public class ReaderPostTable {
           + "blog_id,"              // 2
           + "pseudo_id,"            // 3
           + "author_name,"          // 4
-          + "title,"                // 5
-          + "text,"                 // 6
-          + "excerpt,"              // 7
-          + "url,"                  // 8
-          + "blog_url,"             // 9
-          + "blog_name,"            // 10
-          + "featured_image,"       // 11
-          + "featured_video,"       // 12
-          + "post_avatar,"          // 13
-          + "timestamp,"            // 14
-          + "published,"            // 15
-          + "num_replies,"          // 16
-          + "num_likes,"            // 17
-          + "is_liked,"             // 18
-          + "is_followed,"          // 19
-          + "is_comments_open,"     // 20
-          + "is_reblogged,"         // 21
-          + "is_external,"          // 22
-          + "is_private,"           // 23
-          + "is_videopress,"        // 24
-          + "tag_list";             // 25
+          + "author_id,"            // 5
+          + "title,"                // 6
+          + "text,"                 // 7
+          + "excerpt,"              // 8
+          + "url,"                  // 9
+          + "blog_url,"             // 10
+          + "blog_name,"            // 11
+          + "featured_image,"       // 12
+          + "featured_video,"       // 13
+          + "post_avatar,"          // 14
+          + "timestamp,"            // 15
+          + "published,"            // 16
+          + "num_replies,"          // 17
+          + "num_likes,"            // 18
+          + "is_liked,"             // 19
+          + "is_followed,"          // 20
+          + "is_comments_open,"     // 21
+          + "is_reblogged,"         // 22
+          + "is_external,"          // 23
+          + "is_private,"           // 24
+          + "is_videopress,"        // 25
+          + "tag_list";             // 26
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -50,6 +51,7 @@ public class ReaderPostTable {
                 + " blog_id             INTEGER,"       // blog_id for WP blogs, feed_id for non-WP blogs
                 + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
+                + " author_id           INTEGER DEFAULT 0,"
                 + "	title	            TEXT,"
                 + "	text                TEXT,"
                 + "	excerpt             TEXT,"
@@ -304,7 +306,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
@@ -314,29 +316,30 @@ public class ReaderPostTable {
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
-                stmtPosts.bindString(3, post.getPseudoId());
+                stmtPosts.bindString(3,  post.getPseudoId());
                 stmtPosts.bindString(4,  post.getAuthorName());
-                stmtPosts.bindString(5,  post.getTitle());
-                stmtPosts.bindString(6,  post.getText());
-                stmtPosts.bindString(7,  post.getExcerpt());
-                stmtPosts.bindString(8,  post.getUrl());
-                stmtPosts.bindString(9,  post.getBlogUrl());
-                stmtPosts.bindString(10, post.getBlogName());
-                stmtPosts.bindString(11, post.getFeaturedImage());
-                stmtPosts.bindString(12, post.getFeaturedVideo());
-                stmtPosts.bindString(13, post.getPostAvatar());
-                stmtPosts.bindLong  (14, post.timestamp);
-                stmtPosts.bindString(15, post.getPublished());
-                stmtPosts.bindLong  (16, post.numReplies);
-                stmtPosts.bindLong  (17, post.numLikes);
-                stmtPosts.bindLong  (18, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
-                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindString(25, post.getTags());
+                stmtPosts.bindLong  (5,  post.authorId);
+                stmtPosts.bindString(6,  post.getTitle());
+                stmtPosts.bindString(7,  post.getText());
+                stmtPosts.bindString(8,  post.getExcerpt());
+                stmtPosts.bindString(9,  post.getUrl());
+                stmtPosts.bindString(10,  post.getBlogUrl());
+                stmtPosts.bindString(11, post.getBlogName());
+                stmtPosts.bindString(12, post.getFeaturedImage());
+                stmtPosts.bindString(13, post.getFeaturedVideo());
+                stmtPosts.bindString(14, post.getPostAvatar());
+                stmtPosts.bindLong  (15, post.timestamp);
+                stmtPosts.bindString(16, post.getPublished());
+                stmtPosts.bindLong  (17, post.numReplies);
+                stmtPosts.bindLong  (18, post.numLikes);
+                stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isLikedByCurrentUser));
+                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
+                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isCommentsOpen));
+                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
+                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindString(26, post.getTags());
                 stmtPosts.execute();
                 stmtPosts.clearBindings();
             }
@@ -446,6 +449,7 @@ public class ReaderPostTable {
         private final int idx_pseudo_id;
 
         private final int idx_author_name;
+        private final int idx_author_id;
         private final int idx_blog_name;
         private final int idx_blog_url;
         private final int idx_excerpt;
@@ -482,6 +486,7 @@ public class ReaderPostTable {
             idx_pseudo_id = c.getColumnIndex("pseudo_id");
 
             idx_author_name = c.getColumnIndex("author_name");
+            idx_author_id = c.getColumnIndex("author_id");
             idx_blog_name = c.getColumnIndex("blog_name");
             idx_blog_url = c.getColumnIndex("blog_url");
             idx_excerpt = c.getColumnIndex("excerpt");
@@ -523,6 +528,7 @@ public class ReaderPostTable {
 
         post.postId = c.getLong(cols.idx_post_id);
         post.blogId = c.getLong(cols.idx_blog_id);
+        post.authorId = c.getLong(cols.idx_author_id);
         post.setPseudoId(c.getString(cols.idx_pseudo_id));
 
         post.setAuthorName(c.getString(cols.idx_author_name));

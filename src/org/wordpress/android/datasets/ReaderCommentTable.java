@@ -15,7 +15,20 @@ import org.wordpress.android.util.SqlUtils;
 public class ReaderCommentTable {
 
     private static final String COLUMN_NAMES =
-            "blog_id, post_id, comment_id, parent_id, author_name, author_avatar, author_url, author_blog_id, published, timestamp, status, text";
+                      " blog_id,"
+                    + " post_id,"
+                    + " comment_id,"
+                    + " parent_id,"
+                    + " author_name,"
+                    + " author_avatar,"
+                    + " author_url,"
+                    + " author_id,"
+                    + " author_blog_id,"
+                    + " published,"
+                    + " timestamp,"
+                    + " status,"
+                    + " text";
+
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_comments ("
@@ -26,6 +39,7 @@ public class ReaderCommentTable {
                 + "	author_name	        TEXT,"
                 + " author_avatar       TEXT,"
                 + "	author_url	        TEXT,"
+                + " author_id           INTEGER DEFAULT 0,"
                 + " author_blog_id      INTEGER DEFAULT 0,"
                 + " published           TEXT,"
                 + " timestamp           INTEGER DEFAULT 0,"
@@ -98,7 +112,7 @@ public class ReaderCommentTable {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
                                                   + COLUMN_NAMES
-                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)");
+                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
         try {
             for (ReaderComment comment: comments) {
                 stmt.bindLong  (1, comment.blogId);
@@ -108,11 +122,12 @@ public class ReaderCommentTable {
                 stmt.bindString(5, comment.getAuthorName());
                 stmt.bindString(6, comment.getAuthorAvatar());
                 stmt.bindString(7, comment.getAuthorUrl());
-                stmt.bindLong  (8, comment.authorBlogId);
-                stmt.bindString(9, comment.getPublished());
-                stmt.bindLong  (10, comment.timestamp);
-                stmt.bindString(11, comment.getStatus());
-                stmt.bindString(12, comment.getText());
+                stmt.bindLong  (8, comment.authorId);
+                stmt.bindLong  (9, comment.authorBlogId);
+                stmt.bindString(10, comment.getPublished());
+                stmt.bindLong  (11, comment.timestamp);
+                stmt.bindString(12, comment.getStatus());
+                stmt.bindString(13, comment.getText());
 
                 stmt.execute();
                 stmt.clearBindings();
@@ -157,6 +172,7 @@ public class ReaderCommentTable {
         comment.setAuthorAvatar(c.getString(c.getColumnIndex("author_avatar")));
         comment.setAuthorName(c.getString(c.getColumnIndex("author_name")));
         comment.setAuthorUrl(c.getString(c.getColumnIndex("author_url")));
+        comment.authorId = c.getLong(c.getColumnIndex("author_id"));
         comment.authorBlogId = c.getLong(c.getColumnIndex("author_blog_id"));
 
         comment.setStatus(c.getString(c.getColumnIndex("status")));
