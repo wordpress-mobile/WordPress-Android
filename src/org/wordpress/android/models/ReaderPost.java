@@ -82,7 +82,7 @@ public class ReaderPost {
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor!=null) {
+        if (jsonAuthor != null) {
             post.authorName = JSONUtil.getString(jsonAuthor, "name");
             post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
             post.authorId = jsonAuthor.optLong("ID");
@@ -94,7 +94,7 @@ public class ReaderPost {
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
-        if (jsonEditorial!=null) {
+        if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));

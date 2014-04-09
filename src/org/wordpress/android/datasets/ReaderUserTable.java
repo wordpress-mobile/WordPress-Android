@@ -18,12 +18,10 @@ import java.util.ArrayList;
  * stores info about the current user and liking users
  */
 public class ReaderUserTable {
-    private static final String COLUMN_NAMES =
-            "user_id, user_name, display_name, url, profile_url, avatar_url";
-
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_users ("
                 + "	user_id	        INTEGER PRIMARY KEY,"
+                + " blog_id         INTEGER DEFAULT 0,"
                 + "	user_name	    TEXT,"
                 + "	display_name	TEXT COLLATE NOCASE,"
                 + " url             TEXT,"
@@ -44,21 +42,31 @@ public class ReaderUserTable {
         addOrUpdateUsers(users);
     }
 
+    private static final String COLUMN_NAMES =
+          " user_id,"       // 1
+        + " blog_id,"       // 2
+        + " user_name,"     // 3
+        + " display_name,"  // 4
+        + " url,"           // 5
+        + " profile_url,"   // 6
+        + " avatar_url";    // 7
+
     public static void addOrUpdateUsers(ReaderUserList users) {
         if (users==null || users.size()==0)
             return;
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
-        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_users (" + COLUMN_NAMES + ") VALUES (?1,?2,?3,?4,?5,?6)");
+        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_users (" + COLUMN_NAMES + ") VALUES (?1,?2,?3,?4,?5,?6,?7)");
         try {
             for (ReaderUser user: users) {
                 stmt.bindLong  (1, user.userId);
-                stmt.bindString(2, user.getUserName());
-                stmt.bindString(3, user.getDisplayName());
-                stmt.bindString(4, user.getUrl());
-                stmt.bindString(5, user.getProfileUrl());
-                stmt.bindString(6, user.getAvatarUrl());
+                stmt.bindLong  (2, user.blogId);
+                stmt.bindString(3, user.getUserName());
+                stmt.bindString(4, user.getDisplayName());
+                stmt.bindString(5, user.getUrl());
+                stmt.bindString(6, user.getProfileUrl());
+                stmt.bindString(7, user.getAvatarUrl());
                 stmt.execute();
                 stmt.clearBindings();
             }
@@ -129,7 +137,7 @@ public class ReaderUserTable {
 
     private static ReaderUser getUser(long userId) {
         String args[] = {Long.toString(userId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT " + COLUMN_NAMES + " FROM tbl_users WHERE user_id=?", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_users WHERE user_id=?", args);
         try {
             if (!c.moveToFirst())
                 return null;
@@ -149,7 +157,7 @@ public class ReaderUserTable {
             return new ReaderUserList();
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        String sql = "SELECT " + COLUMN_NAMES + " from tbl_users WHERE user_id IN (SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
+        String sql = "SELECT * from tbl_users WHERE user_id IN (SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
         if (max > 0)
             sql += " LIMIT " + Integer.toString(max);
 
@@ -167,22 +175,16 @@ public class ReaderUserTable {
         }
     }
 
-    private static final int COL_USER_ID = 0;
-    private static final int COL_USER_NAME = 1;
-    private static final int COL_DISPLAY_NAME = 2;
-    private static final int COL_URL = 3;
-    private static final int COL_PROFILE_URL = 4;
-    private static final int COL_AVATAR_URL = 5;
-
     private static ReaderUser getUserFromCursor(Cursor c) {
         ReaderUser user = new ReaderUser();
 
-        user.userId = c.getLong(COL_USER_ID);
-        user.setUserName(c.getString(COL_USER_NAME));
-        user.setDisplayName(c.getString(COL_DISPLAY_NAME));
-        user.setUrl(c.getString(COL_URL));
-        user.setProfileUrl(c.getString(COL_PROFILE_URL));
-        user.setAvatarUrl(c.getString(COL_AVATAR_URL));
+        user.userId = c.getLong(c.getColumnIndex("user_id"));
+        user.blogId = c.getLong(c.getColumnIndex("blog_id"));
+        user.setUserName(c.getString(c.getColumnIndex("user_name")));
+        user.setDisplayName(c.getString(c.getColumnIndex("display_name")));
+        user.setUrl(c.getString(c.getColumnIndex("url")));
+        user.setProfileUrl(c.getString(c.getColumnIndex("profile_url")));
+        user.setAvatarUrl(c.getString(c.getColumnIndex("avatar_url")));
 
         return user;
     }

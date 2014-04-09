@@ -10,6 +10,7 @@ import org.wordpress.android.util.UrlUtils;
 public class ReaderUser {
 
     public long userId;
+    public long blogId;
     private String userName;
     private String displayName;
     private String url;
@@ -25,6 +26,8 @@ public class ReaderUser {
             return user;
 
         user.userId = json.optLong("ID");
+        user.blogId = json.optLong("site_ID");
+
         user.userName = JSONUtil.getString(json, "username");
         user.url = JSONUtil.getString(json, "URL");
         user.profileUrl = JSONUtil.getString(json, "profile_URL");

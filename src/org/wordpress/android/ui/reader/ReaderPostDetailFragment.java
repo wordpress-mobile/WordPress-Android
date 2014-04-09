@@ -1390,15 +1390,17 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             });
 
             // show blog detail when avatar, blog or author name is tapped
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost);
-                }
-            };
-            txtBlogName.setOnClickListener(clickListener);
-            txtAuthorName.setOnClickListener(clickListener);
-            imgAvatar.setOnClickListener(clickListener);
+            if (!mPost.isExternal) {
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId);
+                    }
+                };
+                txtBlogName.setOnClickListener(clickListener);
+                txtAuthorName.setOnClickListener(clickListener);
+                imgAvatar.setOnClickListener(clickListener);
+            }
 
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work
