@@ -349,8 +349,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
         getSupportMenuInflater().inflate(R.menu.media, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        searchView.setOnQueryTextListener(this);
+        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
