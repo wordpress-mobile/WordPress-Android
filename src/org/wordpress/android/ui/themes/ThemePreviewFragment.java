@@ -164,7 +164,7 @@ public class ThemePreviewFragment extends SherlockFragment {
      */
     protected void loadAuthenticatedUrl(String url) {
         try {
-            if (mBlog == null) {
+            if (mBlog == null || url == null) {
                 return;
             }
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
