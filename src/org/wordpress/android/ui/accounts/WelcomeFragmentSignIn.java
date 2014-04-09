@@ -516,7 +516,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             // Update wp.com credentials
-            if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
+            if (mSetupBlog.getXmlrpcUrl() != null && mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
