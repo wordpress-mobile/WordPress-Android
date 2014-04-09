@@ -82,6 +82,9 @@ public class ReaderUser {
         return !TextUtils.isEmpty(url);
     }
 
+    public boolean hasBlogId() {
+        return (blogId != 0);
+    }
     /*
      * not stored - used by ReaderUserAdapter for performance
      */
