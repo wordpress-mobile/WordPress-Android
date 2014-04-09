@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
@@ -21,6 +22,7 @@ public class ReaderBlogActions {
     public enum BlogAction {FOLLOW, UNFOLLOW}
 
     public static boolean performBlogAction(final BlogAction action,
+                                            final long blogId,
                                             final String blogUrl) {
 
         if (TextUtils.isEmpty(blogUrl))
@@ -29,25 +31,27 @@ public class ReaderBlogActions {
         final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
         final boolean isAskingToFollow = (action == BlogAction.FOLLOW);
 
-        if (isCurrentlyFollowing==isAskingToFollow)
+        if (isCurrentlyFollowing == isAskingToFollow)
             return true;
 
         final String path;
+        final String domain = UrlUtils.getDomainFromUrl(blogUrl);
 
         switch (action) {
             case FOLLOW:
-                ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, true);
-                path = "/read/following/mine/new?url=" + UrlUtils.urlEncode(blogUrl);
+                path = "/read/following/mine/new?url=" + domain;
                 break;
 
             case UNFOLLOW:
-                ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, false);
-                path = "/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl);
+                path = "/read/following/mine/delete?url=" + domain;
                 break;
 
             default :
                 return false;
         }
+
+        ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isAskingToFollow);
+        ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -62,6 +66,7 @@ public class ReaderBlogActions {
                 AppLog.e(T.READER, volleyError);
                 // revert to original state
                 ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isCurrentlyFollowing);
+                ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isCurrentlyFollowing);
             }
         };
         WordPress.getRestClientUtils().post(path, listener, errorListener);

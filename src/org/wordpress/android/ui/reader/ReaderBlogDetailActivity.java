@@ -154,7 +154,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
     }
 
     /*
-     * used when viewing posts in a specific blog, toggles the status of the currently displayed blog
+     * used when viewing posts in a specific blog, toggles the follow status of the currently displayed blog
      */
     private void toggleBlogFollowStatus(final TextView txtFollow, final ReaderBlogInfo blogInfo) {
         if (blogInfo == null || txtFollow == null) {
@@ -165,7 +165,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
 
         boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
         ReaderBlogActions.BlogAction blogAction = (isCurrentlyFollowing ? ReaderBlogActions.BlogAction.UNFOLLOW : ReaderBlogActions.BlogAction.FOLLOW);
-        if (!ReaderBlogActions.performBlogAction(blogAction, blogInfo.getUrl()))
+        if (!ReaderBlogActions.performBlogAction(blogAction, blogInfo.blogId, blogInfo.getUrl()))
             return;
 
         boolean isNowFollowing = !isCurrentlyFollowing;

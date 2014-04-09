@@ -511,9 +511,16 @@ public class ReaderPostListFragment extends SherlockFragment
         return (getActivity() != null && !isRemoving());
     }
 
+    void checkFollowStatus() {
+        if (hasPostAdapter() && !isPostAdapterEmpty()) {
+            getPostAdapter().checkFollowStatusForAllPosts();
+        }
+    }
+
     void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
-        if (hasPostAdapter())
+        if (hasPostAdapter() && !isPostAdapterEmpty()) {
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
+        }
     }
 
     /*

@@ -88,6 +88,16 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        // make sure the follow status of each post in the list is accurate - this is necessary
+        // if the user shows blog detail and changes the following status
+        if (hasListFragment()) {
+            getListFragment().checkFollowStatus();
+        }
+    }
+
+    @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
         checkMenuDrawer();

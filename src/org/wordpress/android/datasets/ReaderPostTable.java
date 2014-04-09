@@ -278,7 +278,10 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }
 
-    public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
+    /*
+     * sets the following status for all posts in the passed blog
+     */
+    public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {

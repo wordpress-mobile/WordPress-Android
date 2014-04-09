@@ -20,9 +20,11 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -180,20 +182,41 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPosts.set(index, updatedPost);
         notifyDataSetChanged();
     }
-    
-    public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+
+    /*
+     * ensures that the follow status of each post in the list is accurate
+     */
+    public void checkFollowStatusForAllPosts() {
         boolean isChanged = false;
-        for (ReaderPost readerPost: mPosts) {
-            if (readerPost.blogId == blogId) {
-                readerPost.isFollowedByCurrentUser = followStatus;
+        final ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
+        for (ReaderPost post: mPosts) {
+            boolean isFollowing = post.hasBlogUrl() && followedBlogUrls.contains(post.getBlogUrl());
+            if (isFollowing != post.isFollowedByCurrentUser) {
+                post.isFollowedByCurrentUser = isFollowing;
                 isChanged = true;
             }
         }
-        if (isChanged)
-         notifyDataSetChanged();
+        if (isChanged) {
+            notifyDataSetChanged();
+        }
     }
-    
-    
+
+    /*
+     * sets the follow status of each post in the passed blog
+     */
+    public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+        boolean isChanged = false;
+        for (ReaderPost post: mPosts) {
+            if (post.blogId == blogId) {
+                post.isFollowedByCurrentUser = followStatus;
+                isChanged = true;
+            }
+        }
+        if (isChanged) {
+            notifyDataSetChanged();
+        }
+    }
+
     @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning)
