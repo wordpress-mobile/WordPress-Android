@@ -38,7 +38,7 @@
        <property name="minimum" value="0"/>
        <property name="maximum" value="0"/>
        <property name="message" value="Line has trailing spaces."/>
-       <property name="severity" value="info"/>
+       <property name="severity" value="error"/>
     </module>
 
 
@@ -56,6 +56,12 @@
 
     <module name="StrictDuplicateCode">
       <property name="min" value="25"/>
+    </module>
+
+    <module name="RegexpSingleline">
+      <property name="format" value="\/\/[^ \t]"/>
+      <property name="message" value="Line comments '//' must be followed by one whitespace"/>
+      <property name="severity" value="error"/>
     </module>
 
     <module name="TreeWalker">
@@ -212,6 +218,8 @@
           <property name="format" value="FIXME"/>
           <property name="severity" value="warning"/>
         </module>
+        <module name="TrailingComment"/>
+
         <module name="UpperEll"/>
 
         <module name="FileContentsHolder"/> <!-- Required by comment suppression filters -->
