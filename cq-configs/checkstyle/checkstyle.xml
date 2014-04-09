@@ -125,6 +125,13 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
+        <module name="ImportOrder">
+            <property name="groups" value="android,com,junit,net,org,java,javax"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="above"/>
+        </module>
+
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
         <module name="LineLength">
@@ -136,7 +143,7 @@
         </module>
         <module name="MethodLength">
           <property name="tokens" value="METHOD_DEF"/>
-          <property name="max" value="60"/>
+          <property name="max" value="40"/>
         </module>
         <module name="ParameterNumber"/>
 
