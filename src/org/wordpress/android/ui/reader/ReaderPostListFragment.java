@@ -337,11 +337,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!hasActivity())
-            return;
-        // don't show empty text/animation unless adapter is empty and we're displaying
-        // posts for a specific tag
-        if (!isPostAdapterEmpty() || getPostListType() != ReaderPostListType.TAG)
+        if (!hasActivity() || getActionBarAdapter() == null)
             return;
 
         int title;
@@ -389,7 +385,8 @@ public class ReaderPostListFragment extends SherlockFragment
         public void onDataLoaded(boolean isEmpty) {
             if (!hasActivity())
                 return;
-            if (isEmpty) {
+            // empty text/animation is only show when displaying posts with a specific tag
+            if (isEmpty && getPostListType() == ReaderPostListType.TAG) {
                 startBoxAndPagesAnimation();
                 setEmptyTitleAndDescriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
