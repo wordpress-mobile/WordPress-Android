@@ -256,24 +256,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
-            holder = new PostViewHolder();
-
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.text_title);
-            holder.txtText = (TextView) convertView.findViewById(R.id.text_excerpt);
-            holder.txtBlogName = (TextView) convertView.findViewById(R.id.text_blog_name);
-            holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
-            holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-
-            holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
-            holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
-
-            holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-
-            holder.imgBtnLike = (ImageView) convertView.findViewById(R.id.image_like_btn);
-            holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
-            holder.imgBtnReblog = (ImageView) convertView.findViewById(R.id.image_reblog_btn);
-
+            holder = new PostViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
@@ -318,6 +301,10 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.txtBlogName.setVisibility(View.GONE);
                 holder.imgAvatar.setVisibility(View.GONE);
                 holder.txtFollow.setVisibility(View.GONE);
+                // set the container background to a static one - this prevents the default
+                // background selector from highlighting post, since nothing happens when
+                // a post is tapped
+                holder.layoutContainer.setBackgroundResource(R.drawable.reader_post_background);
                 break;
         }
 
@@ -459,21 +446,43 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private static class PostViewHolder {
-        TextView txtTitle;
-        TextView txtText;
-        TextView txtBlogName;
-        TextView txtDate;
-        TextView txtFollow;
+        private final TextView txtTitle;
+        private final TextView txtText;
+        private final TextView txtBlogName;
+        private final TextView txtDate;
+        private final TextView txtFollow;
 
-        TextView txtLikeCount;
-        TextView txtCommentCount;
+        private final TextView txtLikeCount;
+        private final TextView txtCommentCount;
 
-        ImageView imgBtnLike;
-        ImageView imgBtnComment;
-        ImageView imgBtnReblog;
+        private final ImageView imgBtnLike;
+        private final ImageView imgBtnComment;
+        private final ImageView imgBtnReblog;
 
-        WPNetworkImageView imgFeatured;
-        WPNetworkImageView imgAvatar;
+        private final WPNetworkImageView imgFeatured;
+        private final WPNetworkImageView imgAvatar;
+
+        private final ViewGroup layoutContainer;
+
+        PostViewHolder(View view) {
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtText = (TextView) view.findViewById(R.id.text_excerpt);
+            txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            txtFollow = (TextView) view.findViewById(R.id.text_follow);
+
+            txtCommentCount = (TextView) view.findViewById(R.id.text_comment_count);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
+
+            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+
+            imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
+            imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
+            imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
+
+            layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
+        }
     }
 
     /*

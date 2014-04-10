@@ -47,8 +47,8 @@ import org.wordpress.android.util.StringUtils;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
- * Fragment hosted by ReaderActivity which shows a list of posts with a specific tag
- * or in a specific blog
+ * Fragment hosted by ReaderActivity to show posts with a specific tag
+ * or by ReaderBlogDetailActivity to show posts in a specific blog
  */
 public class ReaderPostListFragment extends SherlockFragment
                                     implements AbsListView.OnScrollListener,
@@ -156,7 +156,8 @@ public class ReaderPostListFragment extends SherlockFragment
         // set the listView's scroll listeners so we can detect up/down scrolling
         mListView.setOnScrollListener(this);
 
-        // tapping a post opens the detail view
+        // tapping a post opens the detail view when viewing posts with a tag (ignored for posts
+        // in a blog, since we don't want to show the detail view)
         if (getPostListType() == ReaderPostListType.TAG) {
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
