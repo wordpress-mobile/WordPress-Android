@@ -66,9 +66,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
-/**
- * Created by nbradbury on 7/8/13.
- */
 public class ReaderPostDetailFragment extends SherlockFragment {
 
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
@@ -419,7 +416,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is reloaded
-        if (getListView().getFirstVisiblePosition() > 0) {
+        if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
             outState.putParcelable(ARG_LIST_STATE, mListState);
         } else {
@@ -748,6 +745,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         new Thread() {
             @Override
             public void run() {
+                if (getView() == null) {
+                    return;
+                }
                 final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
@@ -1258,6 +1258,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         @Override
         protected Boolean doInBackground(Void... params) {
             final View container = getView();
+            if (container == null) {
+                return false;
+            }
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
@@ -1272,9 +1275,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-            if (mPost == null)
+            if (mPost == null) {
                 return false;
-
+            }
             postHtml = getPostHtml();
 
             // detect whether the post has a featured image that's not in the content - if so,
@@ -1296,8 +1299,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            if (!hasActivity())
+            // txtTitle is null if doInBackground() returned because view doesn't exist
+            if (!hasActivity() || txtTitle == null) {
                 return;
+            }
 
             if (!result) {
                 // post couldn't be loaded which means it doesn't exist in db, so request it from

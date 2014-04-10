@@ -196,7 +196,7 @@ class XMLRPCSerializer {
         }
     }
 
-    static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException {
+    static Object deserialize(XmlPullParser parser) throws XmlPullParserException, IOException, NumberFormatException {
         parser.require(XmlPullParser.START_TAG, null, TAG_VALUE);
 
         parser.nextTag();

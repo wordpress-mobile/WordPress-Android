@@ -32,7 +32,7 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
         String filename = prefix + "-" + method + ".xml";
         try {
             InputStream is = mContext.getAssets().open(filename);
-            return XMLRPCClient.parseXMLRPCResponse(is);
+            return XMLRPCClient.parseXMLRPCResponse(is, null);
         } catch (FileNotFoundException e) {
             AppLog.e(T.TESTS, "file not found: " + filename);
         } catch (Exception e) {

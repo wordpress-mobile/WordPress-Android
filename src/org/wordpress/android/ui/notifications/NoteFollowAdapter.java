@@ -23,7 +23,7 @@ import org.wordpress.android.util.StringUtils;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by nbradbury on 3/12/14 - adapter used by NoteSingleLineListFragment and
+ * Adapter used by NoteSingleLineListFragment and
  * NoteCommentLikeFragment to display list of liking/following users which enables
  * following/unfollowing each of them
  */

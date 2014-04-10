@@ -11,7 +11,6 @@ import java.util.Vector;
 
 /**
  * Handle tags that the Html class doesn't understand
- * Created by dan on 7/9/13.
  * Tweaked from source at http://stackoverflow.com/questions/4044509/android-how-to-use-the-html-taghandler
  */
 public class WPHtmlTagHandler implements Html.TagHandler {

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Created by nbradbury on 11/4/13.
  * wrappers for extracting values from a Map object
  */
 public class MapUtils {

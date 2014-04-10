@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SysUtils;
 
 /**
- * Created by nbradbury on 7/8/13 - displays a list of users who like a specific reader post
+ * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends FragmentActivity {
     static final String ARG_BLOG_ID = "blog_id";

@@ -90,19 +90,16 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
-                    try {
-                        Blog quickPressBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
-                        if (quickPressBlog.isHidden()) {
-                            // Don't continue if blog is hidden
-                            showErrorAndFinish(R.string.error_blog_hidden);
-                            return;
-                        }
-                        WordPress.currentBlog = quickPressBlog;
-                    } catch (Exception e) {
-                        // QuickPress Blog not found
+                    Blog quickPressBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
+                    if (quickPressBlog == null) {
                         showErrorAndFinish(R.string.blog_not_found);
                         return;
                     }
+                    if (quickPressBlog.isHidden()) {
+                        showErrorAndFinish(R.string.error_blog_hidden);
+                        return;
+                    }
+                    WordPress.currentBlog = quickPressBlog;
                 }
 
                 // Create a new post for share intents and QuickPress

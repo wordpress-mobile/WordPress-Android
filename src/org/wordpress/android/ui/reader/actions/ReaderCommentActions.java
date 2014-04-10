@@ -22,9 +22,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by nbradbury on 9/1/13.
- */
 public class ReaderCommentActions {
 
     /**

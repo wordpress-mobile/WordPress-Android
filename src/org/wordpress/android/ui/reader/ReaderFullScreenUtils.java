@@ -12,9 +12,6 @@ import android.widget.RelativeLayout;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SysUtils;
 
-/**
- * Created by nbradbury on 2/8/14.
- */
 class ReaderFullScreenUtils {
     public static interface FullScreenListener {
         public boolean onRequestFullScreen(boolean enable);

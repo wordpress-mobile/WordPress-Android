@@ -1,27 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLHandshakeException;
-
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -53,15 +31,36 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  * A WordPress XMLRPC Client.
@@ -122,10 +121,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private DefaultHttpClient instantiateClientForUri(URI uri, UsernamePasswordCredentials usernamePasswordCredentials) {
         DefaultHttpClient client = null;
-        if (uri.getHost().endsWith("wordpress.com")) {
+        if (uri != null && uri.getHost() != null && uri.getHost().endsWith("wordpress.com")) {
             mIsWpcom = true;
         }
-        if (mIsWpcom || (uri.getScheme() == null || uri.getScheme().equals("http"))) {
+        if (mIsWpcom || (uri == null || uri.getScheme() == null || uri.getScheme().equals("http"))) {
             //wpcom blog or self-hosted blog on plain HTTP
             client = new DefaultHttpClient();
         } else {
@@ -271,14 +270,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         return id;
     }
 
-    public static Object parseXMLRPCResponse(InputStream is)
-            throws XMLRPCException, IOException, XmlPullParserException {
-        return parseXMLRPCResponse(is, null);
-    }
-
     @SuppressWarnings("unchecked")
     public static Object parseXMLRPCResponse(InputStream is, HttpEntity entity)
-            throws XMLRPCException, IOException, XmlPullParserException {
+            throws XMLRPCException, IOException, XmlPullParserException, NumberFormatException {
         // setup pull parser
         XmlPullParser pullParser = XmlPullParserFactory.newInstance().newPullParser();
 
@@ -498,23 +492,23 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
                 // execute HTTP POST request
                 HttpResponse response = mClient.execute(mPostMethod);
-                
+
                 if (response.getStatusLine() == null) // StatusLine is null. We can't read the response code.
                     throw new XMLRPCException( "HTTP Status code is missing!" );
-                    
+
                 int statusCode = response.getStatusLine().getStatusCode();
                 HttpEntity entity = response.getEntity();
-               
+
                 if (entity == null) {
                     //This is an error since the parser will fail here.
                     throw new XMLRPCException( "HTTP status code: " + statusCode + " was returned AND no response from the server." );
                 }
-                
+
                 if (statusCode == HttpStatus.SC_OK) {
                     loggedInputStream = new LoggedInputStream(entity.getContent());
                     return XMLRPCClient.parseXMLRPCResponse(loggedInputStream, entity);
                 }
-                
+
                 String statusLineReasonPhrase = StringUtils.notNullStr(response.getStatusLine().getReasonPhrase());
                 try {
                     String responseString = EntityUtils.toString(entity, "UTF-8");
@@ -539,7 +533,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                             throw new XMLRPCException( statusLineReasonPhrase + ".\n\n" + newErrorMsg);
                         }
                     }
-     
+
                 } catch (Exception e) {
                     // eat all the exceptions here, we dont want to crash the app when trying to show a
                     // better error message.
@@ -569,6 +563,14 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                 }
                 checkXMLRPCErrorMessage(e);
                 throw e;
+            } catch (NumberFormatException e) {
+                //we can catch NumberFormatException here and re-throw an XMLRPCException.
+                //The response document is not a valid XML-RPC document after all.
+                AppLog.e(T.API, "Error while parsing the XML-RPC response document received from the server.", e);
+                if (loggedInputStream!=null) {
+                    AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
+                }
+                throw new XMLRPCException("The response received contains an invalid number. " + e.getMessage());
             } catch (XMLRPCException e) {
                 if (loggedInputStream!=null) {
                     AppLog.e(T.API, "Response document received from the server: " + loggedInputStream.getResponseDocument());
@@ -603,9 +605,9 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      */
     private boolean checkXMLRPCErrorMessage(Exception exception) {
         String errorMessage = exception.getMessage().toLowerCase();
-        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom 
-                && 
-            (errorMessage.contains("limit reached") || errorMessage.contains("login limit"))) 
+        if ((errorMessage.contains("code: 503") || errorMessage.contains("code 503"))//TODO Not sure 503 is the correct error code returned by wpcom
+                &&
+            (errorMessage.contains("limit reached") || errorMessage.contains("login limit")))
         {
             broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
             return true;

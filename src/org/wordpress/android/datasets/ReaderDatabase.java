@@ -11,7 +11,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 /**
- * Created by nbradbury on 6/22/13.
  * database for all reader information
  */
 public class ReaderDatabase extends SQLiteOpenHelper {

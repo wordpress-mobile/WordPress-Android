@@ -19,11 +19,11 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -338,15 +338,81 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
-        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
-                getSupportActionBar().getThemedContext(),
-                R.layout.spinner_menu_dropdown_item,
-                R.id.menu_text_dropdown,
-                blogNames
-        );
-
-        mBlogSpinner.setAdapter(mSpinnerAdapter);
+        populateBlogSpinner(blogNames);
         mListView.addHeaderView(spinnerWrapper);
+    }
+
+    /*
+     * sets the adapter for the blog spinner and populates it with the passed array of blog names
+     */
+    private void populateBlogSpinner(String[] blogNames) {
+        if (mBlogSpinner == null)
+            return;
+        mBlogSpinnerInitialized = false;
+        mBlogSpinner.setAdapter(new BlogSpinnerAdapter(getSupportActionBar().getThemedContext(), blogNames));
+    }
+
+    /*
+     * update the blog names shown by the blog spinner
+     */
+    protected void refreshBlogSpinner(String[] blogNames) {
+        // spinner will be null if it's not supposed to be shown
+        if (mBlogSpinner == null || mBlogSpinner.getAdapter() == null) {
+            return;
+        }
+
+        ((BlogSpinnerAdapter) mBlogSpinner.getAdapter()).setBlogNames(blogNames);
+    }
+
+    /*
+     * adapter used by the blog spinner - shows the name of each blog
+     */
+    private class BlogSpinnerAdapter extends BaseAdapter {
+        private String[] mBlogNames;
+        private LayoutInflater mInflater;
+
+        BlogSpinnerAdapter(Context context, String[] blogNames) {
+            super();
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mBlogNames = blogNames;
+        }
+
+        protected void setBlogNames(String[] blogNames) {
+            mBlogNames = blogNames;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return (mBlogNames != null ? mBlogNames.length : 0);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (position < 0 || position >= getCount())
+                return "";
+            return mBlogNames[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.spinner_menu_dropdown_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(R.id.menu_text_dropdown);
+            text.setText((String)getItem(position));
+
+            return view;
+        }
     }
 
     protected void startActivityWithDelay(final Intent i) {
@@ -450,7 +516,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      *
      * @return array of blog names
      */
-    private static String[] getBlogNames() {
+    protected static String[] getBlogNames() {
         List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleAccounts();
 
         int blogCount = accounts.size();
@@ -503,10 +569,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         startActivity(intent);
     }
 
-    protected void showReaderIfNoBlog() {
-        // If logged in without blog, redirect to the Reader view
+    /*
+     * redirect to the Reader if there aren't any visible blogs
+     * returns true if redirected, false otherwise
+     */
+    protected boolean showReaderIfNoBlog() {
         if (WordPress.wpDB.getNumVisibleAccounts() == 0) {
             showReader();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -540,13 +612,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                             || blogNames.length == 0) {
                         initMenuDrawer();
                     } else if (blogNames.length > 1 && mBlogSpinner != null) {
-                        SpinnerAdapter mSpinnerAdapter = new ArrayAdapter<String>(
-                                getSupportActionBar().getThemedContext(),
-                                R.layout.spinner_menu_dropdown_item,
-                                R.id.menu_text_dropdown,
-                                blogNames
-                        );
-                        mBlogSpinner.setAdapter(mSpinnerAdapter);
+                        populateBlogSpinner(blogNames);
                     }
 
                     if (blogNames.length >= 1) {

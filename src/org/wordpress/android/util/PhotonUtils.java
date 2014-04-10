@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import android.text.TextUtils;
 
 /**
- * Created by nbradbury on 7/11/13.
  * routines related to the Photon API
  * http://developer.wordpress.com/docs/photon/
  */

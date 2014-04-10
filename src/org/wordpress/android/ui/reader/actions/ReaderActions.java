@@ -4,7 +4,6 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 
 /**
- * Created by nbradbury on 7/17/13.
  * classes in this package serve as a middleman between local data and server data - used by
  * reader activities/fragments/adapters that wish to perform actions on posts & topics,
  * or wish to get the latest data from the server

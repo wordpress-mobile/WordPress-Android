@@ -58,7 +58,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.EnumSet;
 
 /**
- * Created by nbradbury on 11/11/13.
  * comment detail displayed from both the notification list and the comment list
  * prior to this there were separate comment detail screens for each list
  */

@@ -36,7 +36,6 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
- * Created by nbradbury on 6/27/13.
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {

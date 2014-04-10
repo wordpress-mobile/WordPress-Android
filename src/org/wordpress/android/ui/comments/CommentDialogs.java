@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import org.wordpress.android.R;
 
 /**
- * Created by nbradbury on 2/7/14.
  * Dialogs related to comment moderation displayed from CommentsActivity and NotificationsActivity
  */
 public class CommentDialogs {

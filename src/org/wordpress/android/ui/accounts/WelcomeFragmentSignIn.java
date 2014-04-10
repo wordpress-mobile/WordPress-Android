@@ -1,12 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -36,8 +29,6 @@ import android.widget.TextView;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.emailchecker.EmailChecker;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -48,6 +39,14 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.emailchecker.EmailChecker;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     final private static String DOT_COM_BASE_URL = "https://wordpress.com";
@@ -305,6 +304,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUsernameEditText.requestFocus();
     }
 
+    private void showUrlError(int messageId) {
+        mUrlEditText.setError(getString(messageId));
+        mUrlEditText.requestFocus();
+    }
+
     protected boolean specificShowError(int messageId) {
         switch (getErrorType(messageId)) {
             case USERNAME:
@@ -354,7 +358,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mForgotPassword.setEnabled(true);
     }
 
-    
     protected void askForSslTrust() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.ssl_certificate_error));
@@ -379,7 +382,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
                 try {
                     SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
-                    String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>" 
+                    String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>"
                             + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
                     intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
                     getActivity().startActivityForResult(intent, WelcomeActivity.SHOW_CERT_DETAILS);
@@ -397,7 +400,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         alert.show();
         endProgress();
     }
-    
+
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
@@ -409,7 +412,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setHttpUsername(username);
             mSetupBlog.setHttpPassword(password);
         }
-        
+
         @Override
         protected void onPreExecute() {
             if (mSetupBlog == null) {
@@ -494,7 +497,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         mErrorMsgId = 0;
                         endProgress();
                         return;
-                    } else {
+                    } else if (mErrorMsgId == R.string.invalid_url_message) {
+                        showUrlError(mErrorMsgId);
+                        mErrorMsgId = 0;
+                        endProgress();
+                        return;
+                    }
+                    else {
                         nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
                                 mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
                     }
@@ -507,7 +516,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             // Update wp.com credentials
-            if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
+            if (mSetupBlog.getXmlrpcUrl() != null && mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
