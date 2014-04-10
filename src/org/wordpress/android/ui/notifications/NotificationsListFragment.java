@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,9 +33,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 
-public class NotificationsListFragment extends ListFragment {
+public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
+
+    Bucket<Note> mBucket;
 
     /**
      * For responding to tapping of notes
@@ -52,6 +57,8 @@ public class NotificationsListFragment extends ListFragment {
         super.onActivityCreated(bundle);
 
         // setup the initial notes adapter, starts listening to the bucket
+        mBucket = WordPress.notesBucket;
+
         mNotesAdapter = new NotesAdapter(WordPress.notesBucket);
 
         ListView listView = getListView();
@@ -68,10 +75,21 @@ public class NotificationsListFragment extends ListFragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onResume() {
+        super.onResume();
+        registerReceiver();
+        // start listening to bucket change events
+        mBucket.addListener(this);
+    }
+
+    @Override
+    public void onPause() {
         // unregister the listener and close the cursor
-        mNotesAdapter.stopListening();
-        super.onDestroy();
+        mBucket.removeListener(this);
+        mNotesAdapter.closeCursor();
+
+        unregisterReceiver();
+        super.onPause();
     }
 
     @Override
@@ -90,32 +108,27 @@ public class NotificationsListFragment extends ListFragment {
     protected void updateLastSeenTime() {
         // set the timestamp to now
         try {
-            if (mNotesAdapter == null) return;
-            //Note newestNote = mNotesAdapter.getNote(0);
-            BucketObject meta = WordPress.metaBucket.get("meta");
-            meta.setProperty("last_seen", 0);
-            meta.save();
+            if (mNotesAdapter != null && mNotesAdapter.getCount() > 0) {
+                Note newestNote = mNotesAdapter.getNote(0);
+                BucketObject meta = WordPress.metaBucket.get("meta");
+                meta.setProperty("last_seen", newestNote.getTimestamp());
+                meta.save();
+            }
         } catch (BucketObjectMissingException e) {
             // try again later, meta is created by wordpress.com
         }
     }
 
-    class NotesAdapter extends ResourceCursorAdapter implements Bucket.Listener<Note> {
+    class NotesAdapter extends ResourceCursorAdapter {
 
         int mAvatarSz;
         Query<Note> mQuery;
-        Bucket<Note> mBucket;
 
         NotesAdapter(Bucket<Note> bucket) {
             super(getActivity(), R.layout.note_list_item, null, 0x0);
 
-            mBucket = bucket;
-
-            // start listening to bucket change events
-            mBucket.addListener(this);
-
             // Show
-            if (getActivity() != null && !mBucket.hasChangeVersion()) {
+            if (hasActivity() && !mBucket.hasChangeVersion()) {
                 getActivity().setProgressBarIndeterminateVisibility(true);
             }
 
@@ -127,42 +140,11 @@ public class NotificationsListFragment extends ListFragment {
             refreshNotes();
         }
 
-        public void stopListening() {
-            mBucket.removeListener(this);
+        public void closeCursor() {
             Cursor cursor = getCursor();
             if (cursor != null) {
                 cursor.close();
             }
-        }
-
-        @Override
-        public void onSaveObject(Bucket<Note> bucket, Note object) {
-            refreshNotes();
-        }
-
-        @Override
-        public void onDeleteObject(Bucket<Note> bucket, Note object) {
-            refreshNotes();
-        }
-
-        @Override
-        public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
-
-            if (getActivity() != null && type == Bucket.ChangeType.INDEX) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getActivity().setProgressBarIndeterminateVisibility(false);
-                    }
-                });
-            }
-
-            refreshNotes();
-        }
-
-        @Override
-        public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-            //noop
         }
 
         public void refreshNotes() {
@@ -284,4 +266,75 @@ public class NotificationsListFragment extends ListFragment {
         }
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onSaveObject(Bucket<Note> bucket, Note object) {
+        if (mNotesAdapter != null) {
+            mNotesAdapter.refreshNotes();
+        }
+    }
+
+    @Override
+    public void onDeleteObject(Bucket<Note> bucket, Note object) {
+        if (mNotesAdapter != null) {
+            mNotesAdapter.refreshNotes();
+        }
+    }
+
+    @Override
+    public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+
+        if (hasActivity() && type == Bucket.ChangeType.INDEX) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getActivity().setProgressBarIndeterminateVisibility(false);
+                }
+            });
+        }
+
+        if (mNotesAdapter != null) {
+            mNotesAdapter.refreshNotes();
+        }
+    }
+
+    @Override
+    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+        //noop
+    }
+
+    private boolean hasActivity() {
+        return getActivity() != null;
+    }
+
+
+    private void registerReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+        getActivity().registerReceiver(mReceiver, filter);
+    }
+
+    private void unregisterReceiver() {
+        if (!hasActivity())
+            return;
+
+        try {
+            getActivity().unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
+        }
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null || intent.getAction() == null)
+                return;
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
+                mBucket.removeListener(NotificationsListFragment.this);
+                mBucket = WordPress.notesBucket;
+                mBucket.addListener(NotificationsListFragment.this);
+            }
+        }
+    };
 }

@@ -1,22 +1,23 @@
 package org.wordpress.android.util;
 
-import com.simperium.Simperium;
-import com.simperium.client.User;
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObject;
-import com.simperium.client.BucketNameInvalid;
-
-import org.wordpress.android.WordPress;
-import org.wordpress.android.Config;
-import org.wordpress.android.models.Note;
-
 import android.content.Context;
+import android.content.Intent;
+
+import com.simperium.Simperium;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketNameInvalid;
+import com.simperium.client.BucketObject;
+import com.simperium.client.User;
+
+import org.wordpress.android.Config;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Note;
 
 public class SimperiumUtils {
 
     private static String TOKEN_FORMAT="WPCC/%s/%s";
 
-    public static Simperium configureSimperium(Context context, String token) {
+    public static Simperium configureSimperium(final Context context, String token) {
 
         Simperium simperium = Simperium.newClient(Config.SIMPERIUM_APP_NAME,
             Config.SIMPERIUM_APP_SECRET, context);
@@ -38,6 +39,9 @@ public class SimperiumUtils {
                         case AUTHORIZED:
                             notesBucket.start();
                             metaBucket.start();
+                            Intent broadcastIntent = new Intent();
+                            broadcastIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+                            context.sendBroadcast(broadcastIntent);
                             break;
                         default:
                             android.util.Log.d("WordPress", "User not authorized yet");
