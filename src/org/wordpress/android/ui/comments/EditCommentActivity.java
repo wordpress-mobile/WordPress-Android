@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -230,7 +231,11 @@ public class EditCommentActivity extends SherlockActivity {
             final String content = getEditTextStr(R.id.comment_content);
 
             final Map<String, String> postHash = new HashMap<String, String>();
-            postHash.put("status",       mComment.getStatus());
+
+            // using CommentStatus.toString() rather than getStatus() ensures that the XML-RPC
+            // status value is used - important since comment may have been loaded via the
+            // REST API, which uses different status values
+            postHash.put("status",       CommentStatus.toString(mComment.getStatusEnum()));
             postHash.put("content",      content);
             postHash.put("author",       authorName);
             postHash.put("author_url",   authorUrl);
