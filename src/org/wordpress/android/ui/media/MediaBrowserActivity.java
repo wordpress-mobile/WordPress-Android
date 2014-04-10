@@ -349,6 +349,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
         getSupportMenuInflater().inflate(R.menu.media, menu);
+        mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -472,18 +474,16 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mMediaGridFragment != null) {
             mMediaGridFragment.search(query);
         }
-
         mQuery = query;
         mSearchView.clearFocus();
-
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (mMediaGridFragment != null)
+        if (mMediaGridFragment != null) {
             mMediaGridFragment.search(newText);
-
+        }
         mQuery = newText;
         return true;
     }
