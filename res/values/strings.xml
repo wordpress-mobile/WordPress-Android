@@ -569,7 +569,7 @@
     <string name="reader_title_followed_tags">Followed tags</string>
     <string name="reader_title_popular_tags">Popular tags</string>
     <string name="reader_title_reblog">Reblog</string>
-    <string name="reader_title_blog_detail">Blog</string>
+    <string name="reader_title_blog_detail">WordPress Blog</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
