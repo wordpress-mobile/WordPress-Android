@@ -49,6 +49,7 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -719,8 +720,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             }
         }
+        
+        if (shouldUpdateCurrentBlogStats()) {
+            WordPress.updateCurrentBlogStats();
+        }
     }
 
+    protected boolean shouldUpdateCurrentBlogStats() {
+        return true;
+    }
+    
     /**
      * this method is called when the user signs out of the app - descendants should override
      * this to perform activity-specific cleanup upon signout
