@@ -27,7 +27,7 @@
     <dimen name="action_bar_spinner_y_offset">-8dp</dimen>
     <dimen name="graph_font_size">8sp</dimen>
 
-    <dimen name="share_action_dialog_width">280dp</dimen>
+    <dimen name="default_dialog_width">280dp</dimen>
 
     <dimen name="post_editor_content_side_margin">20dp</dimen>
     <dimen name="post_editor_content_side_margin_gingerbread">8dp</dimen>
