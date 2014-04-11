@@ -41,9 +41,9 @@ import java.util.List;
  * A fragment for editing media on the Media tab
  */
 public class MediaEditFragment extends SherlockFragment {
-
     private static final String ARGS_MEDIA_ID = "media_id";
-    public static final String TAG = "MediaEditFragment"; // also appears in the layouts, from the strings.xml
+    // also appears in the layouts, from the strings.xml
+    public static final String TAG = "MediaEditFragment";
 
     private NetworkImageView mNetworkImageView;
     private ImageView mLocalImageView;
@@ -62,9 +62,9 @@ public class MediaEditFragment extends SherlockFragment {
     private ImageLoader mImageLoader;
 
     public interface MediaEditFragmentCallback {
-        public void onResume(Fragment fragment);
-        public void onPause(Fragment fragment);
-        public void onSavedEdit(String mediaId, boolean result);
+        void onResume(Fragment fragment);
+        void onPause(Fragment fragment);
+        void onSavedEdit(String mediaId, boolean result);
     }
 
     public static MediaEditFragment newInstance(String mediaId) {
@@ -94,7 +94,8 @@ public class MediaEditFragment extends SherlockFragment {
         try {
             mCallback = (MediaEditFragmentCallback) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement " + MediaEditFragmentCallback.class.getSimpleName());
+            throw new ClassCastException(activity.toString() + " must implement "
+                                         + MediaEditFragmentCallback.class.getSimpleName());
         }
     }
 
@@ -113,15 +114,17 @@ public class MediaEditFragment extends SherlockFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (hasCallback())
+        if (hasCallback()) {
             mCallback.onResume(this);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (hasCallback())
+        if (hasCallback()) {
             mCallback.onPause(this);
+        }
     }
 
     public String getMediaId() {
@@ -137,7 +140,6 @@ public class MediaEditFragment extends SherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mScrollView = (ScrollView) inflater.inflate(R.layout.media_edit_fragment, container, false);
 
         mLinearLayout = mScrollView.findViewById(R.id.media_edit_linear_layout);
@@ -148,7 +150,6 @@ public class MediaEditFragment extends SherlockFragment {
         mNetworkImageView = (NetworkImageView) mScrollView.findViewById(R.id.media_edit_fragment_image_network);
         mSaveButton = (Button) mScrollView.findViewById(R.id.media_edit_save_button);
         mSaveButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 editMedia();
@@ -163,9 +164,9 @@ public class MediaEditFragment extends SherlockFragment {
     }
 
     private void disableEditingOnOldVersion() {
-
-        if( MediaUtils.isWordPressVersionWithMediaEditingCapabilities() )
+        if (MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
             return;
+        }
 
         mSaveButton.setEnabled(false);
         mTitleView.setEnabled(false);
@@ -176,7 +177,7 @@ public class MediaEditFragment extends SherlockFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-     }
+    }
 
     public void loadMedia(String mediaId) {
         mMediaId = mediaId;
@@ -192,14 +193,15 @@ public class MediaEditFragment extends SherlockFragment {
             } else {
                 refreshViews(null);
             }
-
         }
     }
 
     void hideKeyboard() {
-        if (getActivity() != null) {
-            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        if (getActivity() != null && getActivity().getCurrentFocus() != null) {
+            InputMethodManager inputManager = (InputMethodManager) getActivity().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -212,14 +214,12 @@ public class MediaEditFragment extends SherlockFragment {
         final Blog currentBlog = WordPress.getCurrentBlog();
         final String caption = mCaptionView.getText().toString();
 
-        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title,
-                description, caption,
+        ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mediaId, title, description, caption,
                 new ApiHelper.GenericCallback() {
                     @Override
                     public void onSuccess() {
                         String blogId = String.valueOf(currentBlog.getLocalTableBlogId());
-                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description,
-                                caption);
+                        WordPress.wpDB.updateMediaFile(blogId, mediaId, title, description, caption);
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_success, Toast.LENGTH_LONG).show();
                         }
@@ -232,8 +232,7 @@ public class MediaEditFragment extends SherlockFragment {
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                         if (getActivity() != null) {
-                            Toast.makeText(getActivity(), R.string.media_edit_failure,
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                         }
                         setMediaUpdating(false);
                         getSherlockActivity().invalidateOptionsMenu();
@@ -241,7 +240,8 @@ public class MediaEditFragment extends SherlockFragment {
                             mCallback.onSavedEdit(mediaId, false);
                         }
                     }
-                });
+                }
+        );
 
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(currentBlog);
@@ -250,7 +250,6 @@ public class MediaEditFragment extends SherlockFragment {
             setMediaUpdating(true);
             task.execute(apiArgs);
         }
-
     }
 
     private void setMediaUpdating(boolean isUpdating) {
@@ -266,6 +265,45 @@ public class MediaEditFragment extends SherlockFragment {
 
     private boolean isMediaUpdating() {
         return mIsMediaUpdating;
+    }
+
+    private void refreshImageView(Cursor cursor, boolean isLocal) {
+        final String imageUri;
+        if (isLocal) {
+            imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
+        } else {
+            imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
+        }
+        if (MediaUtils.isValidImage(imageUri)) {
+            int width = cursor.getInt(cursor.getColumnIndex("width"));
+            int height = cursor.getInt(cursor.getColumnIndex("height"));
+
+            // differentiating between tablet and phone
+            float screenWidth;
+            if (this.isInLayout()) {
+                screenWidth = mLinearLayout.getMeasuredWidth();
+            } else {
+                screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
+            }
+            float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
+
+            if (width > screenWidth) {
+                height = (int) (height / (width / screenWidth));
+            } else if (height > screenHeight) {
+                width = (int) (width / (height / screenHeight));
+            }
+
+            if (isLocal) {
+                loadLocalImage(mLocalImageView, imageUri, width, height);
+                mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
+            } else {
+                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
+                mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
+            }
+        } else {
+            mNetworkImageView.setVisibility(View.GONE);
+            mLocalImageView.setVisibility(View.GONE);
+        }
     }
 
     private void refreshViews(Cursor cursor) {
@@ -301,46 +339,7 @@ public class MediaEditFragment extends SherlockFragment {
         mCaptionView.setText(cursor.getString(cursor.getColumnIndex("caption")));
         mDescriptionView.setText(cursor.getString(cursor.getColumnIndex("description")));
 
-        final String imageUri;
-        if (isLocal) {
-            imageUri = cursor.getString(cursor.getColumnIndex("filePath"));
-        } else {
-            imageUri = cursor.getString(cursor.getColumnIndex("fileURL"));
-        }
-        if (MediaUtils.isValidImage(imageUri)) {
-
-            int width = cursor.getInt(cursor.getColumnIndex("width"));
-            int height = cursor.getInt(cursor.getColumnIndex("height"));
-
-            // differentiating between tablet and phone
-            float screenWidth;
-            if (this.isInLayout()) {
-                screenWidth = mLinearLayout.getMeasuredWidth();
-            } else {
-                screenWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
-            }
-            float screenHeight = getActivity().getResources().getDisplayMetrics().heightPixels;
-
-
-            if (width > screenWidth) {
-                height = (int) (height / (width / screenWidth));
-            } else if (height > screenHeight) {
-                width = (int) (width / (height / screenHeight));
-            }
-
-            if (isLocal) {
-                loadLocalImage(mLocalImageView, imageUri, width, height);
-                mLocalImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
-            } else {
-                mNetworkImageView.setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);
-                mNetworkImageView.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height));
-            }
-
-        } else {
-            mNetworkImageView.setVisibility(View.GONE);
-            mLocalImageView.setVisibility(View.GONE);
-        }
-
+        refreshImageView(cursor, isLocal);
         disableEditingOnOldVersion();
     }
 
@@ -357,8 +356,9 @@ public class MediaEditFragment extends SherlockFragment {
             menu.findItem(R.id.menu_new_media).setVisible(false);
             menu.findItem(R.id.menu_search).setVisible(false);
 
-            if (!MediaUtils.isWordPressVersionWithMediaEditingCapabilities())
+            if (!MediaUtils.isWordPressVersionWithMediaEditingCapabilities()) {
                 menu.findItem(R.id.menu_save_media).setVisible(false);
+            }
         }
     }
 
@@ -368,13 +368,11 @@ public class MediaEditFragment extends SherlockFragment {
         if (itemId == R.id.menu_save_media) {
             item.setActionView(R.layout.progressbar);
             editMedia();
-
         }
         return super.onOptionsItemSelected(item);
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
-
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
 
@@ -383,7 +381,6 @@ public class MediaEditFragment extends SherlockFragment {
                 imageView.setImageBitmap(bitmap);
             } else {
                 BitmapWorkerTask task = new BitmapWorkerTask(imageView, width, height, new BitmapWorkerCallback() {
-
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
                         if (imageView != null) {
