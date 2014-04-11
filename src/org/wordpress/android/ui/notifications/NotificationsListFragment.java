@@ -1,37 +1,24 @@
 package org.wordpress.android.ui.notifications;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.widget.ResourceCursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
-import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-
-import java.util.HashMap;
 
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private NotesAdapter mNotesAdapter;
@@ -59,7 +46,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = WordPress.notesBucket;
 
-        mNotesAdapter = new NotesAdapter(WordPress.notesBucket);
+        mNotesAdapter = new NotesAdapter(getActivity(), WordPress.notesBucket);
 
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -80,6 +67,11 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         registerReceiver();
         // start listening to bucket change events
         mBucket.addListener(this);
+
+        // Show
+        if (hasActivity() && !mBucket.hasChangeVersion()) {
+            getActivity().setProgressBarIndeterminateVisibility(true);
+        }
     }
 
     @Override
@@ -119,144 +111,18 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
     }
 
-    class NotesAdapter extends ResourceCursorAdapter {
+    public void refreshNotes() {
+        if (!hasActivity() || mNotesAdapter == null) {
+            return;
+        }
 
-        int mAvatarSz;
-        Query<Note> mQuery;
-
-        NotesAdapter(Bucket<Note> bucket) {
-            super(getActivity(), R.layout.note_list_item, null, 0x0);
-
-            // Show
-            if (hasActivity() && !mBucket.hasChangeVersion()) {
-                getActivity().setProgressBarIndeterminateVisibility(true);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mNotesAdapter.reloadNotes();
+                updateLastSeenTime();
             }
-
-            // build a query that sorts by timestamp descending
-            mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX,
-                    Query.SortType.DESCENDING);
-
-            mAvatarSz = DisplayUtils.dpToPx(getActivity(), 48);
-            refreshNotes();
-        }
-
-        public void closeCursor() {
-            Cursor cursor = getCursor();
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        public void refreshNotes() {
-            Activity activity = getActivity();
-            if (activity == null) return;
-
-            getActivity().runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    swapCursor(mQuery.execute());
-                    updateLastSeenTime();
-                }
-
-            });
-
-        }
-
-        public Note getNote(int position) {
-            getCursor().moveToPosition(position);
-            return getNote();
-        }
-
-        public Note getNote() {
-            return ((Bucket.ObjectCursor<Note>) getCursor()).getObject();
-        }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            View view = LayoutInflater.from(context).inflate(R.layout.note_list_item, null);
-            NoteViewHolder holder = new NoteViewHolder(view);
-            view.setTag(holder);
-
-            return view;
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-
-            Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
-            Note note = bucketCursor.getObject();
-
-            NoteViewHolder noteViewHolder = (NoteViewHolder)view.getTag();
-
-            noteViewHolder.txtLabel.setText(note.getSubject());
-            if (note.isCommentType()) {
-                noteViewHolder.txtDetail.setText(note.getCommentPreview());
-                noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
-            } else {
-                noteViewHolder.txtDetail.setVisibility(View.GONE);
-            }
-
-            noteViewHolder.txtDate.setText(note.getTimeSpan());
-
-            String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
-            noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-
-            noteViewHolder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
-
-            noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
-            noteViewHolder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
-
-        }
-
-        // HashMap of drawables for note types
-        private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
-
-        private Drawable getDrawableForType(String noteType) {
-            if (noteType == null)
-                return null;
-
-            // use like icon for comment likes
-            if (noteType.equals(Note.NOTE_COMMENT_LIKE_TYPE))
-                noteType = Note.NOTE_LIKE_TYPE;
-
-            Drawable icon = mNoteIcons.get(noteType);
-            if (icon != null)
-                return icon;
-
-            int imageId = getResources().getIdentifier("note_icon_" + noteType, "drawable", getActivity().getPackageName());
-            if (imageId == 0) {
-                Log.w(WordPress.TAG, "unknown note type - " + noteType);
-                return null;
-            }
-
-            icon = getResources().getDrawable(imageId);
-            if (icon == null)
-                return null;
-
-            mNoteIcons.put(noteType, icon);
-            return icon;
-        }
-    }
-
-    private static class NoteViewHolder {
-        private final TextView txtLabel;
-        private final TextView txtDetail;
-        private final TextView unreadIndicator;
-        private final TextView txtDate;
-        private final ProgressBar placeholderLoading;
-        private final WPNetworkImageView imgAvatar;
-        private final ImageView imgNoteIcon;
-
-        NoteViewHolder(View view) {
-            txtLabel = (TextView) view.findViewById(R.id.note_label);
-            txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
-            txtDate = (TextView) view.findViewById(R.id.text_date);
-            placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
-            imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
-        }
+        });
     }
 
     @Override
@@ -267,18 +133,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Simperium bucket listener methods
+     */
     @Override
     public void onSaveObject(Bucket<Note> bucket, Note object) {
-        if (mNotesAdapter != null) {
-            mNotesAdapter.refreshNotes();
-        }
+        refreshNotes();
     }
 
     @Override
     public void onDeleteObject(Bucket<Note> bucket, Note object) {
-        if (mNotesAdapter != null) {
-            mNotesAdapter.refreshNotes();
-        }
+        refreshNotes();
     }
 
     @Override
@@ -293,9 +158,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             });
         }
 
-        if (mNotesAdapter != null) {
-            mNotesAdapter.refreshNotes();
-        }
+        refreshNotes();
     }
 
     @Override
@@ -308,6 +171,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
 
+    /**
+     * Broadcast listener for simperium sign in
+     */
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
@@ -331,6 +197,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             if (intent == null || intent.getAction() == null)
                 return;
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
+                // Get the new bucket instance and start listening again
                 mBucket.removeListener(NotificationsListFragment.this);
                 mBucket = WordPress.notesBucket;
                 mBucket.addListener(NotificationsListFragment.this);
