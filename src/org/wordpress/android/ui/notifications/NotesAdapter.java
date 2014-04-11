@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -62,19 +60,15 @@ class NotesAdapter extends ResourceCursorAdapter {
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.note_list_item, null);
-        NoteViewHolder holder = new NoteViewHolder(view);
-        view.setTag(holder);
-
-        return view;
-    }
-
-    @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
         Note note = bucketCursor.getObject();
+
+        if (view.getTag() == null) {
+            NoteViewHolder holder = new NoteViewHolder(view);
+            view.setTag(holder);
+        }
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
@@ -146,5 +140,3 @@ class NotesAdapter extends ResourceCursorAdapter {
         }
     }
 }
-
-
