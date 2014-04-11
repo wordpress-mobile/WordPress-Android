@@ -23,7 +23,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     public void track(WPStats.Stat stat, JSONObject properties) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
-        if (stat == null)
+        if (instructions == null)
             return;
 
         trackMixpanelDataForInstructions(instructions, properties);
