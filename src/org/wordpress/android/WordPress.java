@@ -529,6 +529,7 @@ public class WordPress extends Application {
 
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
+                WPStats.track(WPStats.Stat.APPLICATION_CLOSED);
                 background = true;
             } else {
                 background = false;
