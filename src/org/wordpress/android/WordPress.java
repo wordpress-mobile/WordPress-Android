@@ -530,7 +530,7 @@ public class WordPress extends Application {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
-        private final int DEFAULT_TIMEOUT = 0 * 60; //2 minutes
+        private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
 
         boolean isInBackground = false;
