@@ -71,8 +71,9 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
             getSupportActionBar().hide();
         }
 
-        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
+        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST)) {
             mIsJetpackAuthRequest = true;
+        }
 
         mSignInButton = (Button) findViewById(R.id.saveDotcom);
         mSignInButton.setOnClickListener(new Button.OnClickListener() {
@@ -178,7 +179,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                 return false;
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, "", "");
-            Object[] signInParams = { mUsername, mPassword };
+            Object[] signInParams = {mUsername, mPassword};
             try {
                 client.call("wp.getUsersBlogs", signInParams);
                 Blog blog = WordPress.getCurrentBlog();
@@ -189,7 +190,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {
-                    //New wpcom credetials inserted here. Reset the app state: there is the possibility a different username/password is inserted here
+                    // New wpcom credetials inserted here. Reset the app state: there is the possibility a different
+                    // username/password is inserted here
                     WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
 
                     Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
@@ -197,7 +199,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
 
-                    //Make sure to update credentials for .wpcom blog even if currentBlog is null
+                    // Make sure to update credentials for .wpcom blog even if currentBlog is null
                     WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
 
                     // Update regular blog credentials for WP.com auth requests
@@ -210,8 +212,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                     WordPress.wpDB.saveBlog(blog);
                 }
                 return true;
-            }
-            catch (XMLRPCFault xmlRpcFault) {
+            } catch (XMLRPCFault xmlRpcFault) {
                 AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
                 if (xmlRpcFault.getFaultCode() == 403) {
                     mIsInvalidUsernameOrPassword = true;
@@ -240,7 +241,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
-                            //Register the device again for Push Notifications
+                            // Register the device again for Push Notifications
                             WordPress.registerForCloudMessaging(WPComLoginActivity.this);
                             ReaderUserActions.setCurrentUser(jsonObject);
                             finish();
@@ -255,8 +256,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
                     mUsernameEditText.setError(getString(R.string.username_or_password_incorrect));
                     mPasswordEditText.setError(getString(R.string.username_or_password_incorrect));
                 } else {
-                    String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) :
-                            getString(R.string.nux_cannot_log_in);
+                    String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled)
+                            : getString(R.string.nux_cannot_log_in);
                     Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_LONG).show();
                 }
                 setEditTextAndButtonEnabled(true);
