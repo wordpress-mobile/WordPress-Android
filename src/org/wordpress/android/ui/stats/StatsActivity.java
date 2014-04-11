@@ -44,6 +44,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.WPStats;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
@@ -92,6 +93,8 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        WPStats.track(WPStats.Stat.STATS_ACCESSED);
 
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
