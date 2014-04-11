@@ -3,9 +3,11 @@ package org.wordpress.android.ui.notifications;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.ResourceCursorAdapter;
+import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,14 +24,14 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 
-class NotesAdapter extends ResourceCursorAdapter {
+class NotesAdapter extends CursorAdapter {
 
     int mAvatarSz;
     Query mQuery;
     Context mContext;
 
     NotesAdapter(Context context, Bucket<Note> bucket) {
-        super(context, R.layout.note_list_item, null, 0x0);
+        super(context, null, 0x0);
 
         mContext = context;
         // build a query that sorts by timestamp descending
@@ -60,15 +62,19 @@ class NotesAdapter extends ResourceCursorAdapter {
     }
 
     @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.note_list_item, null);
+        NoteViewHolder holder = new NoteViewHolder(view);
+        view.setTag(holder);
+
+        return view;
+    }
+
+    @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
         Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
         Note note = bucketCursor.getObject();
-
-        if (view.getTag() == null) {
-            NoteViewHolder holder = new NoteViewHolder(view);
-            view.setTag(holder);
-        }
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
