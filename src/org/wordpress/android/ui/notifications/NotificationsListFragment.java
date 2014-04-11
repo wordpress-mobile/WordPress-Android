@@ -64,6 +64,8 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     @Override
     public void onResume() {
         super.onResume();
+        refreshNotes();
+
         registerReceiver();
         // start listening to bucket change events
         mBucket.addListener(this);

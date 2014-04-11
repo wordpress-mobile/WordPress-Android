@@ -38,7 +38,6 @@ class NotesAdapter extends CursorAdapter {
         mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
         mAvatarSz = DisplayUtils.dpToPx(context, 48);
-        reloadNotes();
     }
 
     public void closeCursor() {
