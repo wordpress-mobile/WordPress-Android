@@ -499,7 +499,6 @@ public class WordPress extends Application {
 
     
     public synchronized static void updateCurrentBlogStats() {
-        //Synch Stats if the service is not running
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog != null) {
             String blogID = null;
