@@ -103,7 +103,7 @@ public class WPMobileStatsUtil {
         Should be called when the application is launched and at sign in/out.
      */
     public static void initialize() {
-        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), Config.MIXPANEL_TOKEN);
+        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), "BAD-TOKEN");
 
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
