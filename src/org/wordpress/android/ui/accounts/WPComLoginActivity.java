@@ -55,8 +55,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
     private String mPassword;
     private Button mSignInButton;
     private boolean mIsJetpackAuthRequest;
-    private boolean mIsWpcomAccountWith2FA = false;
-    private boolean mIsInvalidUsernameOrPassword = false;
+    private boolean mIsWpcomAccountWith2FA;
+    private boolean mIsInvalidUsernameOrPassword;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private boolean mPasswordVisible;
@@ -167,6 +167,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
         protected void onPreExecute() {
             mSignInButton.setText(getString(R.string.attempting_configure));
             setEditTextAndButtonEnabled(false);
+            mIsWpcomAccountWith2FA = false;
+            mIsInvalidUsernameOrPassword = false;
         }
 
         @Override
