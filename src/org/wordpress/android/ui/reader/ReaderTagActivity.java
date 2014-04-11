@@ -24,6 +24,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPStats;
 
 public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdapter.TagActionListener {
     private ViewGroup mLayoutAddTag;
@@ -226,10 +227,12 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         final MessageBarUtils.MessageBarType messageBarType;
         switch (action) {
             case ADD:
+                WPStats.track(WPStats.Stat.READER_FOLLOWED_READER_TAG);
                 messageBarText = getString(R.string.reader_label_added_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.INFO;
                 break;
             case DELETE:
+                WPStats.track(WPStats.Stat.READER_UNFOLLOWED_READER_TAG);
                 messageBarText = getString(R.string.reader_label_removed_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.ALERT;
                 break;

@@ -62,6 +62,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPStats;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -525,7 +526,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // fire listener so host knows about the change
         switch (action) {
             case TOGGLE_LIKE:
-                doPostChanged(mPost.isLikedByCurrentUser ? PostChangeType.LIKED : PostChangeType.UNLIKED);
+                if (mPost.isLikedByCurrentUser) {
+                    WPStats.track(WPStats.Stat.READER_LIKED_ARTICLE);
+                    doPostChanged(PostChangeType.LIKED);
+                } else {
+                    doPostChanged(PostChangeType.UNLIKED);
+                }
                 break;
             case TOGGLE_FOLLOW:
                 doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
@@ -855,6 +861,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                WPStats.track(WPStats.Stat.READER_COMMENTED_ON_ARTICLE);
                 submitComment(replyToCommentId);
             }
         });

@@ -94,6 +94,53 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             case APPLICATION_CLOSED:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Application Closed");
                 break;
+            case THEMES_ACCESSED_THEMES_BROWSER:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
+                break;
+            case THEMES_CHANGED_THEME:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Themes - Changed Theme");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
+                break;
+            case READER_ACCESSED:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_reader");
+                break;
+            case READER_OPENED_ARTICLE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Opened Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
+                break;
+            case READER_LIKED_ARTICLE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Liked Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_liked_article");
+                break;
+            case READER_REBLOGGED_ARTICLE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Reblogged Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
+                break;
+            case READER_INFINITE_SCROLL:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Infinite Scroll");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reader_performed_infinite_scroll");
+                break;
+            case READER_FOLLOWED_READER_TAG:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Followed Reader Tag");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_reader_tag");
+                break;
+            case READER_UNFOLLOWED_READER_TAG:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Unfollowed Reader Tag");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_reader_tag");
+                break;
+            case READER_LOADED_TAG:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Loaded Tag");
+                break;
+            case READER_LOADED_FRESHLY_PRESSED:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
+                break;
+            case READER_COMMENTED_ON_ARTICLE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Commented on Article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_article");
+                break;
         }
         return instructions;
     }

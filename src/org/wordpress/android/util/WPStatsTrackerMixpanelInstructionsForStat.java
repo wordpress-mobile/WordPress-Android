@@ -9,6 +9,8 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     }
 
     private String mixpanelEventName;
+    private String superPropertyToIncrement;
+    private String peoplePropertyToIncrement;
 
     public String getMixpanelEventName() {
         return mixpanelEventName;
@@ -16,5 +18,26 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
 
     public void setMixpanelEventName(String mixpanelEventName) {
         this.mixpanelEventName = mixpanelEventName;
+    }
+
+    public String getSuperPropertyToIncrement() {
+        return superPropertyToIncrement;
+    }
+
+    public void setSuperPropertyToIncrement(String superPropertyToIncrement) {
+        this.superPropertyToIncrement = superPropertyToIncrement;
+    }
+
+    public String getPeoplePropertyToIncrement() {
+        return peoplePropertyToIncrement;
+    }
+
+    public void setPeoplePropertyToIncrement(String peoplePropertyToIncrement) {
+        this.peoplePropertyToIncrement = peoplePropertyToIncrement;
+    }
+
+    public void setSuperPropertyAndPeoplePropertyToIncrement(String property) {
+        setSuperPropertyToIncrement(property);
+        setPeoplePropertyToIncrement(property);
     }
 }
