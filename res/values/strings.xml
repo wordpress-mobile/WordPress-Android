@@ -114,6 +114,7 @@
     <string name="media_edit_description_hint">Enter a description here</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
+    <string name="saving">Saving&#8230;</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>

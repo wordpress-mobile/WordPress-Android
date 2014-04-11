@@ -258,7 +258,7 @@ public class MediaEditFragment extends SherlockFragment {
         mSaveButton.setEnabled(!isUpdating);
 
         if (isUpdating) {
-            mSaveButton.setText("Saving..");
+            mSaveButton.setText(R.string.saving);
         } else {
             mSaveButton.setText(R.string.save);
         }
