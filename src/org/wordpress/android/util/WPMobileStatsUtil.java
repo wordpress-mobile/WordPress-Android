@@ -29,10 +29,6 @@ import java.util.HashMap;
  */
 public class WPMobileStatsUtil {
 
-    /* Events */
-
-    public static final String StatsEventAppOpened = "Application Opened";
-
     // Posts
     public static final String StatsEventPostsOpened = "Posts - Opened";
     public static final String StatsEventPostsClosed= "Posts - Closed";
