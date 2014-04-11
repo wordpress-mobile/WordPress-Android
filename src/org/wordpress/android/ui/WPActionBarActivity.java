@@ -726,6 +726,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
 
+    /**
+     * this method is called when the user switch blog - descendants should override
+     * if want to stop refreshing of Stats when switching blog.
+     */
     protected boolean shouldUpdateCurrentBlogStats() {
         return true;
     }
