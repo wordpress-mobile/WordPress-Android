@@ -42,6 +42,8 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.WPStatsTrackerMixpanel;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -121,8 +123,11 @@ public class WordPress extends Application {
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
+        WPStats.registerTracker(new WPStatsTrackerMixpanel());
+        WPStats.beginSession();
+        WPStats.track(WPStats.Stat.APPLICATION_OPENED);
+
         WPMobileStatsUtil.initialize();
-        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventAppOpened);
 
         super.onCreate();
 
