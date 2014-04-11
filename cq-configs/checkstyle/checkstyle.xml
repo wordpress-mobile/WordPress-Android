@@ -59,7 +59,7 @@
     </module>
 
     <module name="RegexpSingleline">
-      <property name="format" value="\/\/[^ \t]"/>
+      <property name="format" value=" \/\/[^ \t]"/>
       <property name="message" value="Line comments '//' must be followed by one whitespace"/>
       <property name="severity" value="error"/>
     </module>
