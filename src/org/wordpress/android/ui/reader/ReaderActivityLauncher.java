@@ -19,14 +19,14 @@ public class ReaderActivityLauncher {
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_DETAIL);
-        intent.putExtra(ReaderPostDetailFragment.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderPostDetailFragment.ARG_POST_ID, postId);
+        intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderActivity.ARG_POST_ID, postId);
         context.startActivity(intent);
     }
 
     public static void showReaderBlogDetail(Context context, long blogId) {
         Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
-        intent.putExtra(ReaderBlogDetailActivity.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         context.startActivity(intent);
     }
 
@@ -34,15 +34,15 @@ public class ReaderActivityLauncher {
         if (post==null)
             return;
         Intent intent = new Intent(context, ReaderUserListActivity.class);
-        intent.putExtra(ReaderUserListActivity.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderUserListActivity.ARG_POST_ID, post.postId);
+        intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
+        intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);
         context.startActivity(intent);
     }
 
     public static void showReaderTagsForResult(Activity activity, String tagName) {
         Intent intent = new Intent(activity, ReaderTagActivity.class);
         if (!TextUtils.isEmpty(tagName))
-            intent.putExtra(ReaderTagActivity.ARG_TAG_NAME, tagName);
+            intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
         activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 
@@ -58,8 +58,8 @@ public class ReaderActivityLauncher {
         if (post==null)
             return;
         Intent intent = new Intent(activity, ReaderReblogActivity.class);
-        intent.putExtra(ReaderReblogActivity.ARG_BLOG_ID, post.blogId);
-        intent.putExtra(ReaderReblogActivity.ARG_POST_ID, post.postId);
+        intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
+        intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);
         activity.startActivityForResult(intent, Constants.INTENT_READER_REBLOG);
     }
 

@@ -68,16 +68,15 @@ public class ReaderPostListFragment extends SherlockFragment
     private View mEmptyView;
     private ProgressBar mProgress;
 
+    private ReaderPostListType mPostListType;
     private String mCurrentTag;
     private long mCurrentBlogId;
 
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
 
-    static final String ARG_TAG_NAME = "tag_name";
-    static final String ARG_BLOG_ID = "blog_id";
-    private static final String KEY_LIST_STATE = "list_state";
     private Parcelable mListState = null;
+    private static final String KEY_LIST_STATE = "list_state";
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
@@ -88,7 +87,7 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
-        args.putString(ARG_TAG_NAME, tagName);
+        args.putString(ReaderActivity.ARG_TAG_NAME, tagName);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -103,7 +102,7 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
-        args.putLong(ARG_BLOG_ID, blogId);
+        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -118,8 +117,15 @@ public class ReaderPostListFragment extends SherlockFragment
         // note that setCurrentTag() should NOT be called here since it's automatically
         // called from the actionbar navigation handler
         if (args != null) {
-            mCurrentTag = args.getString(ARG_TAG_NAME);
-            mCurrentBlogId = args.getLong(ARG_BLOG_ID);
+            mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
+            mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+        }
+
+        // set the post list type based on the arguments
+        if (hasCurrentTag()) {
+            mPostListType = ReaderPostListType.TAG;
+        } else {
+            mPostListType = ReaderPostListType.BLOG;
         }
     }
 
@@ -204,8 +210,8 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
-            mCurrentTag = savedInstanceState.getString(ARG_TAG_NAME);
-            mCurrentBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
+            mCurrentTag = savedInstanceState.getString(ReaderActivity.ARG_TAG_NAME);
+            mCurrentBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
             mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
         }
 
@@ -235,10 +241,10 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (hasCurrentTag()) {
-            outState.putString(ARG_TAG_NAME, mCurrentTag);
+            outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
         }
         if (mCurrentBlogId != 0) {
-            outState.putLong(ARG_BLOG_ID, mCurrentBlogId);
+            outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
         }
 
         // retain list state so we can return to this position
@@ -441,9 +447,10 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private boolean hasPostAdapter () {
-        return mPostAdapter!=null;
+        return (mPostAdapter != null);
     }
-    private boolean isPostAdapterEmpty() {
+
+    protected boolean isEmpty() {
         return (mPostAdapter==null || mPostAdapter.isEmpty());
     }
 
@@ -513,13 +520,13 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     void checkFollowStatus() {
-        if (hasPostAdapter() && !isPostAdapterEmpty()) {
+        if (hasPostAdapter() && !isEmpty()) {
             getPostAdapter().checkFollowStatusForAllPosts();
         }
     }
 
     void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
-        if (hasPostAdapter() && !isPostAdapterEmpty()) {
+        if (hasPostAdapter() && !isEmpty()) {
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
         }
     }
@@ -588,7 +595,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
-                    if (!isPostAdapterEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
+                    if (!isEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
                         showNewPostsBar(numNewPosts);
                     } else {
                         refreshPosts();
@@ -700,11 +707,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        if (!TextUtils.isEmpty(mCurrentTag)) {
-            return ReaderPostListType.TAG;
-        } else {
-            return ReaderPostListType.BLOG;
-        }
+        return mPostListType;
     }
 
     @Override

@@ -73,15 +73,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    static final String ARG_BLOG_ID = "blog_id";
-    static final String ARG_POST_ID = "post_id";
-    private static final String ARG_LIST_STATE = "list_state";
-
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_ALREADY_REQUESTED = "already_requested";
     private static final String KEY_ORIGINAL_TITLE = "original_title";
+    private static final String KEY_LIST_STATE = "list_state";
 
     private long mPostId;
     private long mBlogId;
@@ -118,8 +115,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
-        args.putLong(ARG_BLOG_ID, blogId);
-        args.putLong(ARG_POST_ID, postId);
+        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
+        args.putLong(ReaderActivity.ARG_POST_ID, postId);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -244,8 +241,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
-            mBlogId = args.getLong(ARG_BLOG_ID);
-            mPostId = args.getLong(ARG_POST_ID);
+            mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+            mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
         }
     }
 
@@ -404,8 +401,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong(ARG_BLOG_ID, mBlogId);
-        outState.putLong(ARG_POST_ID, mPostId);
+        outState.putLong(ReaderActivity.ARG_BLOG_ID, mBlogId);
+        outState.putLong(ReaderActivity.ARG_POST_ID, mPostId);
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
@@ -418,7 +415,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // the scroll position after comment data is reloaded
         if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(ARG_LIST_STATE, mListState);
+            outState.putParcelable(KEY_LIST_STATE, mListState);
         } else {
             mListState = null;
         }
@@ -437,8 +434,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         }
 
         if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ARG_POST_ID);
+            mBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderActivity.ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(KEY_ALREADY_REQUESTED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
@@ -447,7 +444,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
             if (savedInstanceState.containsKey(KEY_ORIGINAL_TITLE))
                 mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
-            mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
+            mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
         }
 
         showPost();

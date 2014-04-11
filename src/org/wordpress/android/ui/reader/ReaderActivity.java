@@ -46,6 +46,9 @@ public class ReaderActivity extends WPActionBarActivity
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
+    protected static final String ARG_TAG_NAME = "tag_name";
+    protected static final String ARG_BLOG_ID = "blog_id";
+    protected static final String ARG_POST_ID = "post_id";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
@@ -61,29 +64,27 @@ public class ReaderActivity extends WPActionBarActivity
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        if (savedInstanceState == null) {
-            // determine which fragment to show, default to post list
-            final ReaderFragmentType fragmentType;
-            if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
-                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
-            } else {
-                fragmentType = ReaderFragmentType.POST_LIST;
-            }
-            switch (fragmentType) {
-                case POST_LIST:
-                    String tagName = getIntent().getStringExtra(ReaderPostListFragment.ARG_TAG_NAME);
-                    if (TextUtils.isEmpty(tagName))
-                        tagName = UserPrefs.getReaderTag();
-                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
-                        tagName = ReaderTag.TAG_NAME_DEFAULT;
-                    showListFragment(tagName);
-                    break;
-                case POST_DETAIL:
-                    long blogId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_BLOG_ID, 0);
-                    long postId = getIntent().getLongExtra(ReaderPostDetailFragment.ARG_POST_ID, 0);
-                    showDetailFragment(blogId, postId);
-                    break;
-            }
+        // determine which fragment to show, default to post list
+        final ReaderFragmentType fragmentType;
+        if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
+            fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
+        } else {
+            fragmentType = ReaderFragmentType.POST_LIST;
+        }
+        switch (fragmentType) {
+            case POST_LIST:
+                String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
+                if (TextUtils.isEmpty(tagName))
+                    tagName = UserPrefs.getReaderTag();
+                if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+                    tagName = ReaderTag.TAG_NAME_DEFAULT;
+                showListFragment(tagName);
+                break;
+            case POST_DETAIL:
+                long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+                long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+                showDetailFragment(blogId, postId);
+                break;
         }
     }
 
@@ -92,7 +93,7 @@ public class ReaderActivity extends WPActionBarActivity
         super.onResume();
         // make sure the follow status of each post in the list is accurate - this is necessary
         // if the user shows blog detail and changes the following status
-        if (hasListFragment()) {
+        if (!isListFragmentEmpty()) {
             getListFragment().checkFollowStatus();
         }
     }
@@ -180,9 +181,9 @@ public class ReaderActivity extends WPActionBarActivity
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
             case Constants.INTENT_READER_REBLOG:
-                if (isResultOK && data!=null) {
-                    long blogId = data.getLongExtra(ReaderReblogActivity.ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ReaderReblogActivity.ARG_POST_ID, 0);
+                if (isResultOK && data != null) {
+                    long blogId = data.getLongExtra(ARG_BLOG_ID, 0);
+                    long postId = data.getLongExtra(ARG_POST_ID, 0);
                     if (listFragment != null)
                         listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
                     if (detailFragment != null)
@@ -241,6 +242,11 @@ public class ReaderActivity extends WPActionBarActivity
 
     private boolean hasListFragment() {
         return (getListFragment() != null);
+    }
+
+    private boolean isListFragmentEmpty() {
+        ReaderPostListFragment fragment = getListFragment();
+        return (fragment != null && !fragment.isEmpty());
     }
 
     /*

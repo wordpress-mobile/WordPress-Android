@@ -23,8 +23,6 @@ import org.wordpress.android.util.ToastUtils;
  * shows reader posts in a specific blog
  */
 public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
-    protected static final String ARG_BLOG_ID = "blog_id";
-
     private View mBlogHeaderView;
     private boolean mHasBlogInfo;
 
@@ -35,7 +33,7 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         setContentView(R.layout.reader_activity_blog_detail);
         mBlogHeaderView = findViewById(R.id.layout_blog_header);
 
-        long blogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
+        long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
         requestBlogInfo(blogId);
     }
