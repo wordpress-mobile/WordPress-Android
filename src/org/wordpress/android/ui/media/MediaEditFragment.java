@@ -386,7 +386,9 @@ public class MediaEditFragment extends SherlockFragment {
 
                     @Override
                     public void onBitmapReady(String path, ImageView imageView, Bitmap bitmap) {
-                        imageView.setImageBitmap(bitmap);
+                        if (imageView != null) {
+                            imageView.setImageBitmap(bitmap);
+                        }
                         WordPress.getBitmapCache().put(path, bitmap);
                     }
                 });
