@@ -59,7 +59,7 @@
     </module>
 
     <module name="RegexpSingleline">
-      <property name="format" value="\/\/[^ \t]"/>
+      <property name="format" value=" \/\/[^ \t]"/>
       <property name="message" value="Line comments '//' must be followed by one whitespace"/>
       <property name="severity" value="error"/>
     </module>
@@ -214,8 +214,10 @@
         <module name="FinalClass"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
-
+        <module name="VisibilityModifier">
+          <property name="packageAllowed" value="true"/>
+          <property name="protectedAllowed" value="true"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See http://checkstyle.sf.net/config_misc.html -->

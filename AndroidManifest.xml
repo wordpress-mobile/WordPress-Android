@@ -200,7 +200,9 @@
         </activity>
 
 
-        <activity android:name=".ui.stats.WPComLoginActivity" android:theme="@style/FloatingActivityTheme">
+        <activity
+            android:name=".ui.accounts.WPComLoginActivity"
+            android:theme="@style/WordPress.Dialog">
         </activity>
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
