@@ -131,6 +131,7 @@ public class WPMobileStatsUtil {
         if (connected) {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mixpanel.identify(username);
+            mixpanel.getPeople().identify(username);
             mixpanel.getPeople().increment("Application Opened", 1);
 
             try {
