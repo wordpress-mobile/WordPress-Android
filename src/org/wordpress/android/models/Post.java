@@ -44,6 +44,7 @@ public class Post implements Serializable {
     private String slug;
     private boolean localDraft;
     private boolean uploaded;
+    private boolean changedFromLocalDraftToPublished;
     private double latitude;
     private double longitude;
     private boolean isPage;
@@ -361,6 +362,20 @@ public class Post implements Serializable {
     }
 
     /**
+     * This indicates if the post has changed from a draft to published. This is primarily used
+     * for stats tracking purposes as we want to ensure that we properly track certain things when
+     * the user first publishes a post
+     * @return
+     */
+    public boolean hasChangedFromLocalDraftToPublished() {
+        return changedFromLocalDraftToPublished;
+    }
+
+    public void setChangedFromLocalDraftToPublished(boolean changedFromLocalDraftToPublished) {
+        this.changedFromLocalDraftToPublished = changedFromLocalDraftToPublished;
+    }
+
+    /**
      * Checks if this post currently has data differing from another post.
      *
      * @param otherPost The post to compare to this post's editable data.
@@ -427,19 +442,4 @@ public class Post implements Serializable {
         return getLocalTablePostId() >= 0;
     }
 
-    public boolean hasPhoto() {
-        return true;
-    }
-
-    public boolean hasVideo() {
-       return true;
-    }
-
-    public boolean hasCategory() {
-        return true;
-    }
-
-    public boolean hasTag() {
-        return true;
-    }
 }

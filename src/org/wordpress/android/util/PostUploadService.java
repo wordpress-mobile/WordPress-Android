@@ -209,10 +209,24 @@ public class PostUploadService extends Service {
                 return false;
             }
 
-            if (TextUtils.isEmpty(post.getPostStatus())) {
+            boolean isFirstTimePublishing = false;
+            if (TextUtils.isEmpty(post.getPostStatus()))
                 post.setPostStatus("publish");
-            }
+
+            if (post.hasChangedFromLocalDraftToPublished())
+                isFirstTimePublishing = true;
+
+            if (!post.isUploaded() && post.getPostStatus().equals("publish"))
+                isFirstTimePublishing = true;
+
             Boolean publishThis = false;
+
+            // These are used for stats purposes
+            Boolean hasImage = false;
+            Boolean hasVideo = false;
+            Boolean hasCategory = false;
+            Boolean hasTag = !post.getKeywords().equals("");
+
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
@@ -250,6 +264,11 @@ public class PostUploadService extends Service {
                         if (!imgPath.equals("")) {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
+                            if (mf.isVideo())
+                                hasVideo = true;
+                            else
+                                hasImage = true;
+
                             if (mf != null) {
                                 String imgHTML = uploadMediaFile(mf, blog);
                                 if (imgHTML != null) {
@@ -278,6 +297,9 @@ public class PostUploadService extends Service {
             JSONArray categoriesJsonArray = post.getJSONCategories();
             String[] postCategories = null;
             if (categoriesJsonArray != null) {
+                if (categoriesJsonArray.length() > 0)
+                    hasCategory = true;
+
                 postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
@@ -402,6 +424,18 @@ public class PostUploadService extends Service {
                 post.setUploaded(true);
                 post.setLocalChange(false);
                 WordPress.wpDB.updatePost(post);
+
+                if (isFirstTimePublishing) {
+                    if (hasImage)
+                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+                    if (hasVideo)
+                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+                    if (hasCategory)
+                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
+                    if (hasTag)
+                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                }
+
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);
