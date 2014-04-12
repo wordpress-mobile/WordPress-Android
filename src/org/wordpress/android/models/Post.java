@@ -426,4 +426,20 @@ public class Post implements Serializable {
     public boolean isNew() {
         return getLocalTablePostId() >= 0;
     }
+
+    public boolean hasPhoto() {
+        return true;
+    }
+
+    public boolean hasVideo() {
+       return true;
+    }
+
+    public boolean hasCategory() {
+        return true;
+    }
+
+    public boolean hasTag() {
+        return true;
+    }
 }

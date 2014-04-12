@@ -8,6 +8,12 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
         return instructions;
     }
 
+    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(String property) {
+        WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
+        instructions.setSuperPropertyAndPeoplePropertyToIncrement(property);
+        return instructions;
+    }
+
     private String mixpanelEventName;
     private String superPropertyToIncrement;
     private String peoplePropertyToIncrement;

@@ -66,6 +66,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         if (connected) {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mMixpanel.identify(username);
+            mMixpanel.getPeople().identify(username);
             mMixpanel.getPeople().increment("Application Opened", 1);
 
             try {
@@ -141,6 +142,38 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Reader - Commented on Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_article");
                 break;
+            case EDITOR_CREATED_POST:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Editor - Created Post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_created_post");
+                break;
+           case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+               instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
+               instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
+               break;
+           case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+               instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Editor - Added Photo via WP Media Library");
+               instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_wp_media_library");
+               break;
+           case EDITOR_PUBLISHED_POST:
+               instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Editor - Published Post");
+               instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_published_post");
+               break;
+          case EDITOR_UPDATED_POST:
+              instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Editor - Updated Post");
+              instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_updated_post");
+              break;
+          case EDITOR_PUBLISHED_POST_WITH_PHOTO:
+              instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_published_posts_with_photos");
+              break;
+          case EDITOR_PUBLISHED_POST_WITH_VIDEO:
+              instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_published_posts_with_videos");
+              break;
+          case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
+              instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_published_posts_with_categories");
+              break;
+          case EDITOR_PUBLISHED_POST_WITH_TAGS:
+              instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_published_posts_with_tags");
+              break;
         }
         return instructions;
     }

@@ -37,6 +37,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.WPStats;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -302,7 +303,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public void newPost() {
-        WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        WPStats.track(WPStats.Stat.EDITOR_CREATED_POST);
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
                 Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
@@ -403,10 +404,6 @@ public class PostsActivity extends WPActionBarActivity
 
     protected String statEventForViewClosing() {
         return WPMobileStatsUtil.StatsEventPostsClosed;
-    }
-
-    protected String statEventForNewPost() {
-        return WPMobileStatsUtil.StatsEventPostsClickedNewPost;
     }
 
     public class deletePostTask extends AsyncTask<Post, Void, Boolean> {

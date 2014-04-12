@@ -24,6 +24,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.WPStats;
 import org.wordpress.android.util.WPViewPager;
 
 public class EditPostActivity extends SherlockFragmentActivity {
@@ -240,10 +241,23 @@ public class EditPostActivity extends SherlockFragmentActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
             if (mPost.isUploaded()) {
-                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedUpdate);
+                WPStats.track(WPStats.Stat.EDITOR_UPDATED_POST);
             } else {
-                WPMobileStatsUtil.flagProperty(getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPublish);
+                WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST);
+
+                if (mPost.hasPhoto())
+                    WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+
+                if (mPost.hasVideo())
+                    WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+
+                if (mPost.hasTag())
+                    WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+
+                if (mPost.hasCategory())
+                    WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
             }
+
             savePost(false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));

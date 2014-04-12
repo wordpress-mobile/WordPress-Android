@@ -15,9 +15,4 @@ public class PagesActivity extends PostsActivity {
     protected String statEventForViewClosing() {
         return WPMobileStatsUtil.StatsEventPagesClosed;
     }
-
-    @Override
-    protected String statEventForNewPost() {
-        return WPMobileStatsUtil.StatsEventPagesClickedNewPage;
-    }
 }
