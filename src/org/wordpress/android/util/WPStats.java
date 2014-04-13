@@ -63,6 +63,7 @@ public class WPStats {
         public void track(Stat stat, JSONObject properties);
         public void beginSession();
         public void endSession();
+        public void clearAllData();
     }
 
     private static final List<Tracker> trackers = new Vector<Tracker>();
@@ -94,6 +95,12 @@ public class WPStats {
     public static void endSession() {
         for(Tracker tracker : trackers) {
             tracker.endSession();
+        }
+    }
+
+    public static void clearAllData() {
+        for(Tracker tracker : trackers) {
+            tracker.clearAllData();
         }
     }
 }

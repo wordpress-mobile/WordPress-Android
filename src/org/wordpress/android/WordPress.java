@@ -408,6 +408,7 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+        WPStats.clearAllData();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
@@ -530,6 +531,7 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 WPStats.track(WPStats.Stat.APPLICATION_CLOSED);
+                WPStats.endSession();
                 background = true;
             } else {
                 background = false;

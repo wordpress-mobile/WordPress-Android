@@ -106,7 +106,15 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
     @Override
     public void endSession() {
-        System.out.println("Ending Session for Mixpanel");
+        aggregatedProperties.clear();
+        mMixpanel.flush();
+    }
+
+    @Override
+    public void clearAllData() {
+        endSession();
+        mMixpanel.clearSuperProperties();
+        mMixpanel.getPeople().clearPushRegistrationId();
     }
 
     private WPStatsTrackerMixpanelInstructionsForStat instructionsForStat(WPStats.Stat stat)
