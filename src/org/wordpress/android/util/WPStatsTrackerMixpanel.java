@@ -174,6 +174,29 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
           case EDITOR_PUBLISHED_POST_WITH_TAGS:
               instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_published_posts_with_tags");
               break;
+            case NOTIFICATIONS_ACCESSED:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Notifications - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_notifications");
+                break;
+            case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Notifications - Opened Notification Details");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_notification_details");
+                break;
+            case NOTIFICATION_PERFORMED_ACTION:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_performed_action_against");
+                break;
+            case NOTIFICATION_APPROVED:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_approved");
+                break;
+            case NOTIFICATION_REPLIED_TO:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_replied_to");
+                break;
+            case NOTIFICATION_TRASHED:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_trashed");
+                break;
+            case NOTIFICATION_FLAGGED_AS_SPAM:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_flagged_as_spam");
+                break;
         }
         return instructions;
     }
