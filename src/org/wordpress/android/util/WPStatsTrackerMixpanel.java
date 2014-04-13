@@ -11,6 +11,7 @@ import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
 
 import java.util.EnumMap;
+import java.util.Iterator;
 
 public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
@@ -44,7 +45,25 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         String eventName = instructions.getMixpanelEventName();
         if (eventName != null && !eventName.isEmpty()) {
             JSONObject savedPropertiesForStat = propertiesForStat(instructions.getStat());
+            if (savedPropertiesForStat == null) {
+                savedPropertiesForStat = new JSONObject();
+            }
+
+            // Retrieve properties user has already passed in and combine them with the saved properties
+            if (properties != null) {
+                Iterator<String> iter = properties.keys();
+                while (iter.hasNext()) {
+                    String key = iter.next();
+                    try {
+                        Object value = properties.get(key);
+                        savedPropertiesForStat.put(key, value);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.UTILS, e);
+                    }
+                }
+            }
             mMixpanel.track(eventName, savedPropertiesForStat);
+            removePropertiesForStat(instructions.getStat());
         }
 
         if (instructions.getPeoplePropertyToIncrement() != null && !instructions.getPeoplePropertyToIncrement().isEmpty())
@@ -308,6 +327,10 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
     private JSONObject propertiesForStat(WPStats.Stat stat) {
         return aggregatedProperties.get(stat);
+    }
+
+    private void removePropertiesForStat(WPStats.Stat stat) {
+        aggregatedProperties.remove(stat);
     }
 
     private Object propertyForStat(String property, WPStats.Stat stat) {
