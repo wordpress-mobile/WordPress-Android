@@ -25,6 +25,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.WPStats;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
@@ -203,6 +204,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                             String password = WordPressDB.decryptPassword(settings.
                                     getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
                             setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
+                            WPStats.track(WPStats.Stat.CREATED_SITE);
                         } catch (JSONException e) {
                             AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
                         }

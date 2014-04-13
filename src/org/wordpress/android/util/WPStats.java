@@ -47,6 +47,7 @@ public class WPStats {
         OPENED_MEDIA_LIBRARY,
         OPENED_SETTINGS,
         CREATED_ACCOUNT,
+        CREATED_SITE,
         SHARED_ITEM,
         SHARED_ITEM_VIA_EMAIL,
         SHARED_ITEM_VIA_SMS,

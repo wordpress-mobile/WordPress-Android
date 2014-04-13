@@ -219,6 +219,12 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             case OPENED_SETTINGS:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_settings", WPStats.Stat.APPLICATION_CLOSED);
                 break;
+            case CREATED_ACCOUNT:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Created Account");
+                break;
+            case CREATED_SITE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Created Site");
+                break;
         }
         return instructions;
     }
