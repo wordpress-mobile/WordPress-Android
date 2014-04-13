@@ -197,6 +197,28 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             case NOTIFICATION_FLAGGED_AS_SPAM:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_times_notifications_flagged_as_spam");
                 break;
+            case OPENED_POSTS:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_posts", WPStats.Stat.APPLICATION_CLOSED);
+                break;
+            case OPENED_PAGES:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_pages", WPStats.Stat.APPLICATION_CLOSED);
+                break;
+            case OPENED_COMMENTS:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_comments", WPStats.Stat.APPLICATION_CLOSED);
+                break;
+            case OPENED_VIEW_SITE:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_view_site", WPStats.Stat.APPLICATION_CLOSED);
+                break;
+            case OPENED_VIEW_ADMIN:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_view_admin", WPStats.Stat.APPLICATION_CLOSED);
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_view_admin");
+                break;
+            case OPENED_MEDIA_LIBRARY:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_media_library", WPStats.Stat.APPLICATION_CLOSED);
+                break;
+            case OPENED_SETTINGS:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithPropertyIncrementor("number_of_times_opened_settings", WPStats.Stat.APPLICATION_CLOSED);
+                break;
         }
         return instructions;
     }

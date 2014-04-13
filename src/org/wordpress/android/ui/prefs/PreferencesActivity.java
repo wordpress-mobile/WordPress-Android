@@ -50,6 +50,7 @@ import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPEditTextPreference;
+import org.wordpress.android.util.WPStats;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.net.MalformedURLException;
@@ -76,6 +77,8 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        WPStats.track(WPStats.Stat.OPENED_SETTINGS);
 
         overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
 
