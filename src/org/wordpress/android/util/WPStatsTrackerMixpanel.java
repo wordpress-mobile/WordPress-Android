@@ -10,9 +10,16 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
 
+import java.util.EnumMap;
+
 public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
     private MixpanelAPI mMixpanel;
+    private EnumMap<WPStats.Stat,JSONObject> aggregatedProperties;
+
+    public WPStatsTrackerMixpanel(){
+        aggregatedProperties = new EnumMap<WPStats.Stat, JSONObject>(WPStats.Stat.class);
+    }
 
     @Override
     public void track(WPStats.Stat stat) {
@@ -30,10 +37,27 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     }
 
     private void trackMixpanelDataForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions, JSONObject properties) {
+        if (instructions.getDisableForSelfHosted()) {
+            return;
+        }
+
         String eventName = instructions.getMixpanelEventName();
         if (eventName != null && !eventName.isEmpty()) {
-            mMixpanel.track(eventName, properties);
+            JSONObject savedPropertiesForStat = propertiesForStat(instructions.getStat());
+            mMixpanel.track(eventName, savedPropertiesForStat);
         }
+
+        if (instructions.getPeoplePropertyToIncrement() != null && !instructions.getPeoplePropertyToIncrement().isEmpty())
+            incrementPeopleProperty(instructions.getPeoplePropertyToIncrement());
+
+        if (instructions.getSuperPropertyToIncrement() != null && !instructions.getSuperPropertyToIncrement().isEmpty())
+            incrementSuperProperty(instructions.getSuperPropertyToIncrement());
+
+        if (instructions.getPropertyToIncrement() != null && !instructions.getPropertyToIncrement().isEmpty())
+            incrementProperty(instructions.getPropertyToIncrement(), instructions.getStatToAttachProperty());
+
+        if (instructions.getSuperPropertyToFlag() != null && !instructions.getSuperPropertyToFlag().isEmpty())
+            flagSuperProperty(instructions.getSuperPropertyToFlag());
     }
 
     @Override
@@ -228,4 +252,80 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         }
         return instructions;
     }
+
+    private void incrementPeopleProperty(String property) {
+        mMixpanel.getPeople().increment(property, 1);
+    }
+
+    private void incrementSuperProperty(String property) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext()) ;
+        int propertyCount = preferences.getInt(property, 0);
+        propertyCount++;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(property, propertyCount);
+        editor.commit();
+
+        try {
+            JSONObject superProperty = new JSONObject();
+            superProperty.put(property, propertyCount);
+            mMixpanel.registerSuperProperties(superProperty);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+    }
+
+    private void flagSuperProperty(String property) {
+        try {
+            JSONObject superProperty = new JSONObject();
+            superProperty.put(property, true);
+            mMixpanel.registerSuperProperties(superProperty);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+    }
+
+    private void savePropertyValueForStat(String property, Object value, WPStats.Stat stat) {
+        JSONObject properties = aggregatedProperties.get(stat);
+        if (properties == null) {
+            properties = new JSONObject();
+            aggregatedProperties.put(stat, properties);
+        }
+
+        try {
+            properties.put(property, value);
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.UTILS, e);
+        }
+    }
+
+    private JSONObject propertiesForStat(WPStats.Stat stat) {
+        return aggregatedProperties.get(stat);
+    }
+
+    private Object propertyForStat(String property, WPStats.Stat stat) {
+        JSONObject properties = aggregatedProperties.get(stat);
+        if (properties == null)
+            return null;
+
+        try {
+            Object valueForProperty  = properties.get(property);
+            return valueForProperty;
+        } catch (JSONException e) {
+        }
+
+        return null;
+    }
+
+    private void incrementProperty(String property, WPStats.Stat stat) {
+        Object currentValueObj = propertyForStat(property, stat);
+        int currentValue = 1;
+        if (currentValueObj != null) {
+            currentValue = Integer.valueOf(currentValueObj.toString());
+            currentValue++;
+        }
+
+        savePropertyValueForStat(property, Integer.toString(currentValue), stat);
+    }
+
 }
+

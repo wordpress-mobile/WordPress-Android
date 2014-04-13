@@ -24,8 +24,11 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     private String mixpanelEventName;
     private String superPropertyToIncrement;
     private String peoplePropertyToIncrement;
+    private String superPropertyToFlag;
     private WPStats.Stat statToAttachProperty;
+    private WPStats.Stat stat;
     private String propertyToIncrement;
+    private boolean disableForSelfHosted;
 
     public String getMixpanelEventName() {
         return mixpanelEventName;
@@ -70,5 +73,29 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
 
     public void setPropertyToIncrement(String propertyToIncrement) {
         this.propertyToIncrement = propertyToIncrement;
+    }
+
+    public boolean getDisableForSelfHosted() {
+        return disableForSelfHosted;
+    }
+
+    public void setDisableForSelfHosted(boolean disableForSelfHosted) {
+        this.disableForSelfHosted = disableForSelfHosted;
+    }
+
+    public WPStats.Stat getStat() {
+        return stat;
+    }
+
+    public void setStat(WPStats.Stat stat) {
+        this.stat = stat;
+    }
+
+    public String getSuperPropertyToFlag() {
+        return superPropertyToFlag;
+    }
+
+    public void setSuperPropertyToFlag(String superPropertyToFlag) {
+        this.superPropertyToFlag = superPropertyToFlag;
     }
 }
