@@ -30,6 +30,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPStats;
 
 /**
  * Activity for configuring blog specific settings.
@@ -343,6 +344,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
      * View the blog admin area in the web browser
      */
     public void viewAdmin(View view) {
+        WPStats.track(WPStats.Stat.OPENED_VIEW_ADMIN);
         mIsViewingAdmin = true;
         Intent i = new Intent(this, DashboardActivity.class);
         i.putExtra("blogID", blog.getLocalTableBlogId());
