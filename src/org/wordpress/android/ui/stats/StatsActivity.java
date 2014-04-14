@@ -50,6 +50,7 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -547,6 +548,7 @@ public class StatsActivity extends WPActionBarActivity {
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         startService(intent);
+        WordPress.statsLastPingDate = new Date(); //set the last ping time
     }
 
     private void verifyCredentials(final String blogId) {
