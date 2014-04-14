@@ -44,6 +44,7 @@ import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPStats;
 import org.wordpress.android.util.WPStatsTrackerMixpanel;
+import org.wordpress.android.util.WPStatsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -124,6 +125,7 @@ public class WordPress extends Application {
         }
 
         WPStats.registerTracker(new WPStatsTrackerMixpanel());
+        WPStats.registerTracker(new WPStatsTrackerWPCom());
         WPStats.beginSession();
         WPStats.track(WPStats.Stat.APPLICATION_OPENED);
 
