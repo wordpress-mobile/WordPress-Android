@@ -721,8 +721,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             }
         }
         
+        WordPress.statsLastPingDate = null; //Reset the Stats timer when switching between blogs
         if (shouldUpdateCurrentBlogStats()) {
-            WordPress.updateCurrentBlogStats();
+            WordPress.updateCurrentBlogStatsInBackground();
         }
     }
 

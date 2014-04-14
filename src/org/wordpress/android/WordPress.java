@@ -83,6 +83,8 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
+    public static Date statsLastPingDate; //last time stats were updated in background
+    
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
@@ -134,7 +136,7 @@ public class WordPress extends Application {
             registerActivityLifecycleCallbacks(pnBackendMponitor);
         }
         
-        updateCurrentBlogStats();
+        updateCurrentBlogStatsInBackground();
     }
 
     public static void setupVolleyQueue() {
@@ -498,7 +500,18 @@ public class WordPress extends Application {
     }
 
     
-    public synchronized static void updateCurrentBlogStats() {
+    public synchronized static void updateCurrentBlogStatsInBackground() {
+        
+        if (statsLastPingDate != null) {
+            Date now = new Date();
+            long nowInMilliseconds = now.getTime();
+            long lastPingDateInMilliseconds = statsLastPingDate.getTime();
+            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
+            if (secondsPassed < 30 * 60) { //30 minutes
+              return;
+            }
+        }
+        
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog != null) {
             String blogID = null;
@@ -512,6 +525,7 @@ public class WordPress extends Application {
                 Intent intent = new Intent(mContext, StatsService.class);
                 intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
                 mContext.startService(intent);
+                statsLastPingDate = new Date(); //set the last ping time
             }
         }
     }
@@ -614,7 +628,7 @@ public class WordPress extends Application {
             }
             
             //Update Stats!
-            WordPress.updateCurrentBlogStats();
+            WordPress.updateCurrentBlogStatsInBackground();
         }
         
         @Override
