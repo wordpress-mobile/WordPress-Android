@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -230,17 +231,20 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
         }
         return false;
     }
-    
+
     /** Sets up the action bar for an {@link PreferenceScreen} */
+    @SuppressLint("NewApi")
     public static void initializeActionBar(PreferenceScreen preferenceScreen) {
         if (android.os.Build.VERSION.SDK_INT < 11)
             return;
-       
+
         final Dialog dialog = preferenceScreen.getDialog();
 
         if (dialog != null) {
             // Initialize the action bar
-            dialog.getActionBar().setDisplayHomeAsUpEnabled(true);
+            if (dialog.getActionBar() != null) {
+                dialog.getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
 
             // Apply custom home button area click listener to close the PreferenceScreen because PreferenceScreens are dialogs which swallow
             // events instead of passing to the activity
@@ -273,10 +277,10 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
                     // The 'If all else fails' default case
                     homeBtn.setOnClickListener(dismissDialogClickListener);
                 }
-            }    
+            }
         }
     }
-    
+
     /**
      * Update the "wpcom blogs" preference category to contain a preference for each blog to configure
      * blog-specific settings.

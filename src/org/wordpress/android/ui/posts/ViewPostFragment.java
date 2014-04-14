@@ -60,8 +60,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.viewpost, container, false);
 
@@ -71,26 +70,20 @@ public class ViewPostFragment extends Fragment {
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
 
         // button listeners here
-        ImageButton editPostButton = (ImageButton) v
-                .findViewById(R.id.editPost);
+        ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !parentActivity.isRefreshing()) {
-                    onDetailPostActionListener.onDetailPostAction(
-                            PostsActivity.POST_EDIT, WordPress.currentPost);
-                    Intent i = new Intent(
-                            getActivity().getApplicationContext(),
-                            EditPostActivity.class);
+                    onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_EDIT, WordPress.currentPost);
+                    Intent i = new Intent(getActivity().getApplicationContext(), EditPostActivity.class);
                     i.putExtra(EditPostActivity.EXTRA_IS_PAGE, WordPress.currentPost.isPage());
                     i.putExtra(EditPostActivity.EXTRA_POSTID, WordPress.currentPost.getLocalTablePostId());
                     getActivity().startActivityForResult(i, PostsActivity.ACTIVITY_EDIT_POST);
                 }
-
             }
         });
 
-        ImageButton shareURLButton = (ImageButton) v
-                .findViewById(R.id.sharePostLink);
+        ImageButton shareURLButton = (ImageButton) v.findViewById(R.id.sharePostLink);
         shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!parentActivity.isRefreshing()) {
@@ -99,8 +92,7 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        ImageButton deletePostButton = (ImageButton) v
-                .findViewById(R.id.deletePost);
+        ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!parentActivity.isRefreshing()) {
@@ -109,8 +101,7 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        ImageButton viewPostButton = (ImageButton) v
-                .findViewById(R.id.viewPost);
+        ImageButton viewPostButton = (ImageButton) v.findViewById(R.id.viewPost);
         viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
@@ -320,15 +311,14 @@ public class ViewPostFragment extends Fragment {
     }
 
     private void submitComment() {
-        if (!hasActivity() || mIsSubmittingComment)
+        if (!hasActivity() || mIsSubmittingComment || WordPress.currentPost == null || !NetworkUtils.checkConnection(
+                getActivity())) {
             return;
-
-        if (!NetworkUtils.checkConnection(getActivity()))
-            return;
-
+        }
         final String commentText = EditTextUtils.getText(mEditComment);
-        if (TextUtils.isEmpty(commentText))
+        if (TextUtils.isEmpty(commentText)) {
             return;
+        }
 
         final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
         final ProgressBar progress = (ProgressBar) mLayoutCommentBox.findViewById(R.id.progress_submit_comment);
@@ -368,5 +358,4 @@ public class ViewPostFragment extends Fragment {
         int accountId = WordPress.getCurrentLocalTableBlogId();
         CommentActions.addComment(accountId, WordPress.currentPost.getRemotePostId(), commentText, actionListener);
     }
-
 }

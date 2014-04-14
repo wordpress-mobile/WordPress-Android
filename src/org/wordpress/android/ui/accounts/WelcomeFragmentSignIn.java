@@ -49,8 +49,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
-    final private static String DOT_COM_BASE_URL = "https://wordpress.com";
-    final private static String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
+    private static final String DOT_COM_BASE_URL = "https://wordpress.com";
+    private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -316,8 +316,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 showUsernameError(messageId);
                 showPasswordError(messageId);
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public void signInDotComUser() {
@@ -362,12 +363,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.ssl_certificate_error));
         alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
-        alert.setPositiveButton(
-                R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 SetupBlogTask setupBlogTask = new SetupBlogTask();
                 try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(
+                            getActivity());
                     selfSignedSSLCertsManager.addCertificates(selfSignedSSLCertsManager.getLastFailureChain());
                 } catch (IOException e) {
                     AppLog.e(T.NUX, e);
@@ -381,10 +382,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(getActivity(), SSLCertsViewActivity.class);
                 try {
-                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(getActivity());
-                    String lastFailureChainDescription = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>"
-                            + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
-                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDescription);
+                    SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(
+                            getActivity());
+                    String lastFailureChainDesc = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>"
+                                + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
+                    intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDesc);
                     getActivity().startActivityForResult(intent, WelcomeActivity.SHOW_CERT_DETAILS);
                 } catch (GeneralSecurityException e) {
                     AppLog.e(T.NUX, e);
@@ -468,7 +470,36 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
-
+        private void signInError() {
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            NUXDialogFragment nuxAlert;
+            if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
+                        getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
+                        "https://wordpress.com/settings/security/?ssl=forced");
+            } else {
+                if (mErrorMsgId == R.string.username_or_password_incorrect) {
+                    showUsernameError(mErrorMsgId);
+                    showPasswordError(mErrorMsgId);
+                    mErrorMsgId = 0;
+                    endProgress();
+                    return;
+                } else if (mErrorMsgId == R.string.invalid_url_message) {
+                    showUrlError(mErrorMsgId);
+                    mErrorMsgId = 0;
+                    endProgress();
+                    return;
+                } else {
+                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                }
+            }
+            ft.add(nuxAlert, "alert");
+            ft.commitAllowingStateLoss();
+            mErrorMsgId = 0;
+            endProgress();
+        }
 
         @Override
         protected void onPostExecute(final List<Object> userBlogList) {
@@ -483,40 +514,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                NUXDialogFragment nuxAlert;
-                if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
-                            getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
-                            "https://wordpress.com/settings/security/?ssl=forced");
-                } else {
-                    if (mErrorMsgId == R.string.username_or_password_incorrect) {
-                        showUsernameError(mErrorMsgId);
-                        showPasswordError(mErrorMsgId);
-                        mErrorMsgId = 0;
-                        endProgress();
-                        return;
-                    } else if (mErrorMsgId == R.string.invalid_url_message) {
-                        showUrlError(mErrorMsgId);
-                        mErrorMsgId = 0;
-                        endProgress();
-                        return;
-                    }
-                    else {
-                        nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
-                    }
-                }
-                ft.add(nuxAlert, "alert");
-                ft.commitAllowingStateLoss();
-                mErrorMsgId = 0;
-                endProgress();
+                signInError();
                 return;
             }
 
             // Update wp.com credentials
-            if (mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
+            if (mSetupBlog.getXmlrpcUrl() != null && mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
