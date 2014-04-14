@@ -163,23 +163,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             BasicCredentialsProvider cP = new BasicCredentialsProvider();
             cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
             client.setCredentialsProvider(cP);
-
-            // add an interceptor to sent the credentials preemptively
-            HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
-                @Override
-                public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                    AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
-                    if (authState.getAuthScheme() == null) {
-                        CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
-                        HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
-                        AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
-                        Credentials creds = credsProvider.getCredentials(authScope);
-                        authState.setCredentials(creds);
-                        authState.setAuthScheme(new BasicScheme());
-                    }
-                }
-            };
-            client.addRequestInterceptor(preemptiveAuth, 0);
         }
 
         return client;
