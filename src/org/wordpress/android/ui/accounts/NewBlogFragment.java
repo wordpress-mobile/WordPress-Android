@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -35,6 +36,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
     private boolean mSignoutOnCancelMode;
+    private boolean mAutoCompleteUrl = true;
 
     public NewBlogFragment() {
     }
@@ -170,8 +172,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
         startProgress(getString(R.string.validating_site_data));
 
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
-        final String siteName = mSiteTitleTextField.getText().toString().trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
+        final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
         CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
@@ -227,54 +229,67 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.create_blog_fragment, container, false);
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
-        mSignupButton.setOnClickListener(signupClickListener);
+        mSignupButton.setOnClickListener(mSignupClickListener);
         mSignupButton.setEnabled(false);
 
         mCancelButton = (WPTextView) rootView.findViewById(R.id.cancel_button);
-        mCancelButton.setOnClickListener(cancelClickListener);
+        mCancelButton.setOnClickListener(mCancelClickListener);
 
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
-        mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
-
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
-        mSiteTitleTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // auto fill blog address from title
-                mSiteUrlTextField.setText(titleToUrl(mSiteTitleTextField.getText().toString()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
         return rootView;
     }
 
-    private OnClickListener signupClickListener = new OnClickListener() {
+    private final OnClickListener mSignupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
         }
     };
 
-    private OnClickListener cancelClickListener = new OnClickListener() {
+    private final OnClickListener mCancelClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             signoutAndFinish();
         }
     };
 
-    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+    private final TextWatcher mSiteTitleWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // auto fill blog address from title if user hasn't modified url
+            if (mAutoCompleteUrl) {
+                mSiteUrlTextField.setText(titleToUrl(EditTextUtils.getText(mSiteTitleTextField)));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
+            return false;
+        }
+    };
+
+    private final TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             return onDoneEvent(actionId, event);
