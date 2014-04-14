@@ -36,7 +36,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMeShortlinks;
-import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPStats;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
@@ -133,8 +132,6 @@ public class PostsActivity extends WPActionBarActivity
             popPostDetail();
 
         attemptToSelectPost();
-
-        WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
 
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
@@ -286,12 +283,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onDestroy() {
-        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(statEventForViewClosing());
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
@@ -396,14 +387,6 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         return super.onCreateDialog(id);
-    }
-
-    protected String statEventForViewOpening() {
-        return WPMobileStatsUtil.StatsEventPostsOpened;
-    }
-
-    protected String statEventForViewClosing() {
-        return WPMobileStatsUtil.StatsEventPostsClosed;
     }
 
     public class deletePostTask extends AsyncTask<Post, Void, Boolean> {
@@ -512,7 +495,6 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         if (action == POST_DELETE) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedDelete);
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
@@ -596,7 +578,6 @@ public class PostsActivity extends WPActionBarActivity
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
 
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShare);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
@@ -604,10 +585,6 @@ public class PostsActivity extends WPActionBarActivity
             if (f != null) {
                 f.clearContent();
             }
-        } else if (action == POST_EDIT) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedEdit);
-        } else if (action == POST_VIEW) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPreview);
         }
     }
 

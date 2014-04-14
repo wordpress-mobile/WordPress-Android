@@ -23,7 +23,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.PostUploadService;
-import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPStats;
 import org.wordpress.android.util.WPViewPager;
 
@@ -67,8 +66,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
     private EditPostPreviewFragment mEditPostPreviewFragment;
 
     private boolean mIsNewPost;
-
-    private String mStatEventEditorClosed = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,14 +111,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId);
-
-                if (isPage) {
-                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPageDetailOpenedEditor);
-                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPageDetailClosedEditor;
-                } else {
-                    WPMobileStatsUtil.trackEventForWPCom(WPMobileStatsUtil.StatsEventPostDetailOpenedEditor);
-                    mStatEventEditorClosed = WPMobileStatsUtil.StatsEventPostDetailClosedEditor;
-                }
             } else {
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
@@ -199,7 +188,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     @Override
     protected void onDestroy() {
-        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(mStatEventEditorClosed);
         super.onDestroy();
     }
 
@@ -362,10 +350,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
         });
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
-    }
-
-    public String getStatEventEditorClosed() {
-        return mStatEventEditorClosed;
     }
 
     public void showPostSettings() {

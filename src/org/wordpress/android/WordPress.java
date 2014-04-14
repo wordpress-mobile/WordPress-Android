@@ -41,7 +41,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPStats;
 import org.wordpress.android.util.WPStatsTrackerMixpanel;
 import org.wordpress.android.util.WPStatsTrackerWPCom;
@@ -128,8 +127,6 @@ public class WordPress extends Application {
         WPStats.registerTracker(new WPStatsTrackerWPCom());
         WPStats.beginSession();
         WPStats.track(WPStats.Stat.APPLICATION_OPENED);
-
-        WPMobileStatsUtil.initialize();
 
         super.onCreate();
 
