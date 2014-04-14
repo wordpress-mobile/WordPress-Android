@@ -68,7 +68,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private View mEmptyView;
     private ProgressBar mProgress;
 
-    private ReaderPostListType mPostListType;
     private String mCurrentTag;
     private long mCurrentBlogId;
 
@@ -76,7 +75,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean mIsFlinging = false;
 
     private Parcelable mListState = null;
-    private static final String KEY_LIST_STATE = "list_state";
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
@@ -120,12 +118,23 @@ public class ReaderPostListFragment extends SherlockFragment
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
         }
+    }
 
-        // set the post list type based on the arguments
-        if (hasCurrentTag()) {
-            mPostListType = ReaderPostListType.TAG;
-        } else {
-            mPostListType = ReaderPostListType.BLOG;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            AppLog.d(T.READER, "reader post list > restoring instance state");
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_TAG_NAME)) {
+                mCurrentTag = savedInstanceState.getString(ReaderActivity.ARG_TAG_NAME);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_BLOG_ID)) {
+                mCurrentBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
+                mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
+            }
         }
     }
 
@@ -208,13 +217,6 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            AppLog.d(T.READER, "reader post list > restoring instance state");
-            mCurrentTag = savedInstanceState.getString(ReaderActivity.ARG_TAG_NAME);
-            mCurrentBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
-            mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
-        }
-
         setHasOptionsMenu(true);
         checkActionBar();
 
@@ -250,7 +252,7 @@ public class ReaderPostListFragment extends SherlockFragment
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
         if (mListView != null && mListView.getFirstVisiblePosition() > 0)
-            outState.putParcelable(KEY_LIST_STATE, mListView.onSaveInstanceState());
+            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListView.onSaveInstanceState());
     }
 
     @Override
@@ -707,7 +709,11 @@ public class ReaderPostListFragment extends SherlockFragment
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        return mPostListType;
+        if (hasCurrentTag()) {
+            return ReaderPostListType.TAG;
+        } else {
+            return ReaderPostListType.BLOG;
+        }
     }
 
     @Override

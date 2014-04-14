@@ -78,7 +78,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_ALREADY_REQUESTED = "already_requested";
     private static final String KEY_ORIGINAL_TITLE = "original_title";
-    private static final String KEY_LIST_STATE = "list_state";
 
     private long mPostId;
     private long mBlogId;
@@ -415,7 +414,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // the scroll position after comment data is reloaded
         if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(KEY_LIST_STATE, mListState);
+            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListState);
         } else {
             mListState = null;
         }
@@ -444,7 +443,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             }
             if (savedInstanceState.containsKey(KEY_ORIGINAL_TITLE))
                 mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
-            mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
+            mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
         }
 
         showPost();

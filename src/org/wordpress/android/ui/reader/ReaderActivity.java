@@ -49,6 +49,7 @@ public class ReaderActivity extends WPActionBarActivity
     protected static final String ARG_TAG_NAME = "tag_name";
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
+    protected static final String KEY_LIST_STATE = "list_state";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
