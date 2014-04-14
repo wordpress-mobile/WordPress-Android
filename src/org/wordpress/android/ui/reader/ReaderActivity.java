@@ -65,27 +65,31 @@ public class ReaderActivity extends WPActionBarActivity
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        // determine which fragment to show, default to post list
-        final ReaderFragmentType fragmentType;
-        if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
-            fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
-        } else {
-            fragmentType = ReaderFragmentType.POST_LIST;
-        }
-        switch (fragmentType) {
-            case POST_LIST:
-                String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
-                if (TextUtils.isEmpty(tagName))
-                    tagName = UserPrefs.getReaderTag();
-                if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
-                    tagName = ReaderTag.TAG_NAME_DEFAULT;
-                showListFragment(tagName);
-                break;
-            case POST_DETAIL:
-                long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-                long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
-                showDetailFragment(blogId, postId);
-                break;
+        // create the post list fragment when this activity is initialized
+        if (savedInstanceState == null) {
+            // determine which fragment to show, default to post list
+            final ReaderFragmentType fragmentType;
+            if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
+                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
+            } else {
+                fragmentType = ReaderFragmentType.POST_LIST;
+            }
+
+            switch (fragmentType) {
+                case POST_LIST:
+                    String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
+                    if (TextUtils.isEmpty(tagName))
+                        tagName = UserPrefs.getReaderTag();
+                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+                        tagName = ReaderTag.TAG_NAME_DEFAULT;
+                    showListFragment(tagName);
+                    break;
+                case POST_DETAIL:
+                    long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+                    long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+                    showDetailFragment(blogId, postId);
+                    break;
+            }
         }
     }
 

@@ -568,8 +568,9 @@ public class ReaderPostAdapter extends BaseAdapter {
                     return false;
             }
 
-            if (mPosts.isSameList(tmpPosts))
+            if (mPosts.isSameList(tmpPosts)) {
                 return false;
+            }
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
@@ -600,8 +601,9 @@ public class ReaderPostAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener!=null)
+            if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
+            }
 
             mIsTaskRunning = false;
         }
@@ -626,8 +628,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         mLastPreloadPos = position;
 
         // skip if listview is in a fling (note that we still set mLastPreloadPos above)
-        if (mIsFlinging)
+        if (mIsFlinging) {
             return;
+        }
 
         ReaderPost post = mPosts.get(position);
         if (post.hasFeaturedImage())
@@ -641,12 +644,14 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void preloadImage(final String imageUrl) {
         // skip if image is already in the LRU memory cache
-        if (WordPress.imageLoader.isCached(imageUrl, 0, 0))
+        if (WordPress.imageLoader.isCached(imageUrl, 0, 0)) {
             return;
+        }
 
         // skip if image is already in the disk cache
-        if (WordPress.requestQueue.getCache().get(imageUrl) != null)
+        if (WordPress.requestQueue.getCache().get(imageUrl) != null) {
             return;
+        }
 
         WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }

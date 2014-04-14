@@ -139,6 +139,27 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        AppLog.d(T.READER, "reader post list > saving instance state");
+
+        switch (getPostListType()) {
+            case TAG:
+                outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
+                break;
+            case BLOG:
+                outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
+                break;
+        }
+
+        // retain list state so we can return to this position
+        // http://stackoverflow.com/a/5694441/1673548
+        if (mListView != null && mListView.getFirstVisiblePosition() > 0) {
+            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListView.onSaveInstanceState());
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Context context = container.getContext();
 
@@ -209,7 +230,6 @@ public class ReaderPostListFragment extends SherlockFragment
             );
         }
 
-        mListView.setAdapter(getPostAdapter());
         return view;
     }
 
@@ -220,9 +240,17 @@ public class ReaderPostListFragment extends SherlockFragment
         setHasOptionsMenu(true);
         checkActionBar();
 
-        if (getPostListType() == ReaderPostListType.BLOG) {
-            getPostAdapter().setCurrentBlog(mCurrentBlogId);
-            updatePostsInCurrentBlog();
+        // assign the list adapter, then tell it to get the appropriate posts
+        mListView.setAdapter(getPostAdapter());
+
+        switch (getPostListType()) {
+            case TAG:
+                getPostAdapter().setCurrentTag(mCurrentTag);
+                break;
+            case BLOG:
+                getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                updatePostsInCurrentBlog();
+                break;
         }
     }
 
@@ -230,29 +258,12 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-
-        if (activity instanceof OnPostSelectedListener)
+        }
+        if (activity instanceof OnPostSelectedListener) {
             mPostSelectedListener = (OnPostSelectedListener) activity;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        AppLog.d(T.READER, "reader post list > saving instance state");
-
-        if (hasCurrentTag()) {
-            outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
         }
-        if (mCurrentBlogId != 0) {
-            outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
-        }
-
-        // retain list state so we can return to this position
-        // http://stackoverflow.com/a/5694441/1673548
-        if (mListView != null && mListView.getFirstVisiblePosition() > 0)
-            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListView.onSaveInstanceState());
     }
 
     @Override
@@ -419,11 +430,13 @@ public class ReaderPostListFragment extends SherlockFragment
             // skip if update is already in progress
             if (isUpdating())
                 return;
-            // skip if we already have the max # of posts
-            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
-                return;
-            // request older posts
-            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
+            if (getPostListType() == ReaderPostListType.TAG) {
+                // skip if we already have the max # of posts
+                if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+                    return;
+                // request older posts
+                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
+            }
         }
     };
 
@@ -439,7 +452,7 @@ public class ReaderPostListFragment extends SherlockFragment
     };
 
     private ReaderPostAdapter getPostAdapter() {
-        if (mPostAdapter==null)
+        if (mPostAdapter == null)
             mPostAdapter = new ReaderPostAdapter(getActivity(),
                                                  getPostListType(),
                                                  mReblogListener,
@@ -453,7 +466,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     protected boolean isEmpty() {
-        return (mPostAdapter==null || mPostAdapter.isEmpty());
+        return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final String tagName) {
@@ -559,8 +572,9 @@ public class ReaderPostListFragment extends SherlockFragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
-        if (hasCurrentTag())
+        if (hasCurrentTag()) {
             updatePostsWithTag(mCurrentTag, updateAction, refreshType);
+        }
     }
 
     private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction,
@@ -801,8 +815,9 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
-        if (tag == null)
+        if (tag == null) {
             return false;
+        }
 
         setCurrentTag(tag.getTagName());
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
