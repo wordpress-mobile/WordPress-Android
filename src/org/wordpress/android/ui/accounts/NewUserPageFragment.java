@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts;
 
 import android.content.Intent;
@@ -22,6 +21,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AlertUtil;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
@@ -63,10 +63,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     }
 
     private boolean fieldsFilled() {
-        return mEmailTextField.getText().toString().trim().length() > 0
-                && mPasswordTextField.getText().toString().trim().length() > 0
-                && mUsernameTextField.getText().toString().trim().length() > 0
-                && mSiteUrlTextField.getText().toString().trim().length() > 0;
+        return EditTextUtils.getText(mEmailTextField).trim().length() > 0
+                && EditTextUtils.getText(mPasswordTextField).trim().length() > 0
+                && EditTextUtils.getText(mUsernameTextField).trim().length() > 0
+                && EditTextUtils.getText(mSiteUrlTextField).trim().length() > 0;
     }
 
     protected void startProgress(String message) {
@@ -97,10 +97,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
     protected boolean isUserDataValid() {
         // try to create the user
-        final String email = mEmailTextField.getText().toString().trim();
-        final String password = mPasswordTextField.getText().toString().trim();
-        final String username = mUsernameTextField.getText().toString().trim();
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        final String email = EditTextUtils.getText(mEmailTextField).trim();
+        final String password = EditTextUtils.getText(mPasswordTextField).trim();
+        final String username = EditTextUtils.getText(mUsernameTextField).trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         boolean retValue = true;
 
         if (email.equals("")) {
@@ -152,14 +152,14 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         validateAndCreateUserAndBlog();
     }
 
-    private OnClickListener signupClickListener = new OnClickListener() {
+    private final OnClickListener mSignupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
         }
     };
 
-    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+    private final TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             return onDoneEvent(actionId, event);
@@ -176,7 +176,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         bundle.putString("username", username);
         Intent intent = new Intent();
         intent.putExtras(bundle);
-        act.setResult(act.RESULT_OK, intent);
+        act.setResult(NewAccountActivity.RESULT_OK, intent);
         act.finish();
     }
 
@@ -220,12 +220,12 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
-            AlertUtil.showAlert(getActivity(), R.string.no_network_title,
-                    R.string.no_network_message);
+            AlertUtil.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
-        if (!isUserDataValid())
+        if (!isUserDataValid()) {
             return;
+        }
 
         // Prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.
         // Samsung S4 for example
@@ -235,10 +235,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
         startProgress(getString(R.string.validating_user_data));
 
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
-        final String email = mEmailTextField.getText().toString().trim();
-        final String password = mPasswordTextField.getText().toString().trim();
-        final String username = mUsernameTextField.getText().toString().trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
+        final String email = EditTextUtils.getText(mEmailTextField).trim();
+        final String password = EditTextUtils.getText(mPasswordTextField).trim();
+        final String username = EditTextUtils.getText(mUsernameTextField).trim();
         final String siteName = siteUrlToSiteName(siteUrl);
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
@@ -260,7 +260,8 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                             case CREATE_USER:
                                 updateProgress(getString(R.string.creating_your_site));
                                 break;
-                            case CREATE_SITE: // no messages
+                            case CREATE_SITE:
+                                // no messages
                             case AUTHENTICATE_USER:
                             default:
                                 break;
@@ -287,9 +288,10 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     }
 
     private void autocorrectEmail() {
-        if (mEmailAutoCorrected)
+        if (mEmailAutoCorrected) {
             return;
-        final String email = mEmailTextField.getText().toString().trim();
+        }
+        final String email = EditTextUtils.getText(mEmailTextField).trim();
         String suggest = mEmailChecker.suggestDomainCorrection(email);
         if (suggest.compareTo(email) != 0) {
             mEmailAutoCorrected = true;
@@ -313,13 +315,12 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.new_account_user_fragment_screen, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.new_account_user_fragment_screen, container, false);
 
         WPTextView termsOfServiceTextView = (WPTextView) rootView.findViewById(R.id.l_agree_terms_of_service);
-        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>", "</u>")));
-        termsOfServiceTextView.setOnClickListener(
-                new OnClickListener() {
+        termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>",
+                "</u>")));
+        termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Uri uri = Uri.parse(Constants.URL_TOS);
@@ -329,7 +330,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         );
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
-        mSignupButton.setOnClickListener(signupClickListener);
+        mSignupButton.setOnClickListener(mSignupClickListener);
         mSignupButton.setEnabled(false);
 
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
@@ -337,7 +338,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
         mEmailTextField = (EditText) rootView.findViewById(R.id.email_address);
         mEmailTextField.setText(UserEmail.getPrimaryEmail(getActivity()));
-        mEmailTextField.setSelection(mEmailTextField.getText().toString().length());
+        mEmailTextField.setSelection(EditTextUtils.getText(mEmailTextField).length());
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
@@ -356,7 +357,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // auto fill blog address
                 mSiteUrlTextField.setError(null);
-                mSiteUrlTextField.setText(mUsernameTextField.getText().toString());
+                mSiteUrlTextField.setText(EditTextUtils.getText(mUsernameTextField));
             }
 
             @Override
