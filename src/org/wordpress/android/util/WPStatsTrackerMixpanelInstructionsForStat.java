@@ -2,6 +2,15 @@ package org.wordpress.android.util;
 
 public class WPStatsTrackerMixpanelInstructionsForStat {
 
+    private String mixpanelEventName;
+    private String superPropertyToIncrement;
+    private String peoplePropertyToIncrement;
+    private String superPropertyToFlag;
+    private WPStats.Stat statToAttachProperty;
+    private WPStats.Stat stat;
+    private String propertyToIncrement;
+    private boolean disableForSelfHosted;
+
     public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsForEventName(String eventName) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
         instructions.setMixpanelEventName(eventName);
@@ -20,15 +29,6 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
         instructions.setPropertyToIncrement(property);
         return instructions;
     }
-
-    private String mixpanelEventName;
-    private String superPropertyToIncrement;
-    private String peoplePropertyToIncrement;
-    private String superPropertyToFlag;
-    private WPStats.Stat statToAttachProperty;
-    private WPStats.Stat stat;
-    private String propertyToIncrement;
-    private boolean disableForSelfHosted;
 
     public String getMixpanelEventName() {
         return mixpanelEventName;
