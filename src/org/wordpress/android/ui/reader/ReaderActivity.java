@@ -57,15 +57,16 @@ public class ReaderActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (isFullScreenSupported())
+        if (isFullScreenSupported()) {
             ReaderFullScreenUtils.enableActionBarOverlay(this);
+        }
 
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_main);
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        // create the post list fragment when this activity is initialized
+        // create the fragment when this activity is first created (but not when restored)
         if (savedInstanceState == null) {
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
@@ -78,10 +79,12 @@ public class ReaderActivity extends WPActionBarActivity
             switch (fragmentType) {
                 case POST_LIST:
                     String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
-                    if (TextUtils.isEmpty(tagName))
+                    if (TextUtils.isEmpty(tagName)) {
                         tagName = UserPrefs.getReaderTag();
-                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName))
+                    }
+                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName)) {
                         tagName = ReaderTag.TAG_NAME_DEFAULT;
+                    }
                     showListFragment(tagName);
                     break;
                 case POST_DETAIL:
@@ -119,16 +122,18 @@ public class ReaderActivity extends WPActionBarActivity
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
-        if (!mHasPerformedInitialUpdate)
+        if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
+        }
     }
 
     @Override
     public void onBackStackChanged() {
         checkMenuDrawer();
         // return from full-screen when backstack changes
-        if (isFullScreen())
+        if (isFullScreen()) {
             onRequestFullScreen(false);
+        }
     }
 
     @Override

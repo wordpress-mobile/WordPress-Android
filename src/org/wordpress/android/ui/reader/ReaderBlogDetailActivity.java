@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ import org.wordpress.android.util.ToastUtils;
 /*
  * shows reader posts in a specific blog
  */
-public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
+public class ReaderBlogDetailActivity extends SherlockFragmentActivity implements ReaderPostListFragment.OnPostSelectedListener {
     private View mBlogHeaderView;
     private boolean mHasBlogInfo;
 
@@ -92,6 +93,9 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         ReaderBlogActions.updateBlogInfo(blogId, listener);
     }
 
+    /*
+     * alert user when blog couldn't be loaded, then dismiss activity after a brief delay
+     */
     private void handleBlogNotFound() {
         ToastUtils.showToast(this, R.string.reader_toast_err_get_blog);
         new Handler().postDelayed(new Runnable() {
@@ -110,13 +114,13 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
             return;
         }
 
-        mHasBlogInfo = (blog != null);
-
         final TextView txtBlogName = (TextView) mBlogHeaderView.findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) mBlogHeaderView.findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) mBlogHeaderView.findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) mBlogHeaderView.findViewById(R.id.text_follow_blog);
         final View divider = mBlogHeaderView.findViewById(R.id.divider_blog_header);
+
+        mHasBlogInfo = (blog != null);
 
         if (mHasBlogInfo) {
             txtBlogName.setText(blog.getName());
@@ -137,8 +141,10 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
                 }
             });
 
-            if (!hasListFragment())
+            // show the list of posts in this blog if it isn't already showing
+            if (!hasListFragment()) {
                 showListFragment(blog.blogId);
+            }
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);
@@ -147,8 +153,9 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
             divider.setVisibility(View.INVISIBLE);
         }
 
-        if (mBlogHeaderView.getVisibility() != View.VISIBLE)
+        if (mBlogHeaderView.getVisibility() != View.VISIBLE) {
             mBlogHeaderView.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
@@ -199,5 +206,23 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         if (progress != null) {
             progress.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onPostSelected(long blogId, long postId) {
+        showDetailFragment(blogId, postId);
+    }
+
+    /*
+     * show fragment containing detail for passed post
+     */
+    private void showDetailFragment(long blogId, long postId) {
+        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+          .replace(R.id.fragment_container, fragment, tagForFragment)
+          .addToBackStack(tagForFragment)
+          .commit();
     }
 }

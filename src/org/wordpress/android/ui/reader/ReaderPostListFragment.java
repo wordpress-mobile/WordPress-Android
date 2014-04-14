@@ -192,22 +192,19 @@ public class ReaderPostListFragment extends SherlockFragment
         // set the listView's scroll listeners so we can detect up/down scrolling
         mListView.setOnScrollListener(this);
 
-        // tapping a post opens the detail view when viewing posts with a tag (ignored for posts
-        // in a blog, since we don't want to show the detail view)
-        if (getPostListType() == ReaderPostListType.TAG) {
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    if (mPostSelectedListener != null) {
-                        // take header into account
-                        position -= mListView.getHeaderViewsCount();
-                        ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                        if (post != null)
-                            mPostSelectedListener.onPostSelected(post.blogId, post.postId);
-                    }
+        // tapping a post opens the detail view
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                if (mPostSelectedListener != null) {
+                    // take header into account
+                    position -= mListView.getHeaderViewsCount();
+                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
+                    if (post != null)
+                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                 }
-            });
-        }
+            }
+        });
 
         // progress bar that appears when loading more posts
         mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);

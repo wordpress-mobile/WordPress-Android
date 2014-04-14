@@ -402,13 +402,17 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         outState.putLong(ReaderActivity.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderActivity.ARG_POST_ID, mPostId);
+
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
-        if (mIsAddCommentBoxShowing)
+
+        if (mIsAddCommentBoxShowing) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        if (mOriginalTitle != null)
+        }
+        if (mOriginalTitle != null) {
             outState.putCharSequence(KEY_ORIGINAL_TITLE, mOriginalTitle);
+        }
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is reloaded
@@ -1419,12 +1423,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 animateIconBar(true);
 
             // make sure the adapter is assigned
-            if (getListView().getAdapter() == null)
+            if (getListView().getAdapter() == null) {
                 getListView().setAdapter(getCommentAdapter());
+            }
 
             // listView is hidden in onCreateView()
-            if (getListView().getVisibility() != View.VISIBLE)
+            if (getListView().getVisibility() != View.VISIBLE) {
                 getListView().setVisibility(View.VISIBLE);
+            }
 
             // webView is hidden in onCreateView() and will be made visible by readerWebViewClient
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
