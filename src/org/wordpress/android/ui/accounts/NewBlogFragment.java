@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
@@ -82,8 +82,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     private boolean fieldsFilled() {
-        return mSiteUrlTextField.getText().toString().trim().length() > 0
-                && mSiteTitleTextField.getText().toString().trim().length() > 0;
+        return EditTextUtils.getText(mSiteUrlTextField).trim().length() > 0
+                && EditTextUtils.getText(mSiteTitleTextField).trim().length() > 0;
     }
 
     protected void startProgress(String message) {
@@ -131,8 +131,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     protected boolean isUserDataValid() {
-        final String siteTitle = mSiteTitleTextField.getText().toString().trim();
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         boolean retValue = true;
 
         if (siteTitle.equals("")) {
@@ -150,17 +150,17 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     private String titleToUrl(String siteUrl) {
-        return siteUrl.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
+        return siteUrl.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
-            AlertUtil.showAlert(getActivity(), R.string.no_network_title,
-                    R.string.no_network_message);
+            AlertUtil.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
-        if (!isUserDataValid())
+        if (!isUserDataValid()) {
             return;
+        }
 
         // prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.
         // Samsung S4 for example
@@ -174,60 +174,57 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
         final String siteName = mSiteTitleTextField.getText().toString().trim();
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "",
-                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
-                new CreateUserAndBlog.Callback() {
-                    @Override
-                    public void onStepFinished(CreateUserAndBlog.Step step) {
-                        if (getActivity() != null) {
-                            updateProgress(getString(R.string.create_new_blog_wpcom));
-                        }
-                    }
+        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
+                getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {
+            @Override
+            public void onStepFinished(CreateUserAndBlog.Step step) {
+                if (getActivity() != null) {
+                    updateProgress(getString(R.string.create_new_blog_wpcom));
+                }
+            }
 
-                    @Override
-                    public void onSuccess(JSONObject createSiteResponse) {
-                        if (getActivity() == null) {
-                            return ;
-                        }
-                        endProgress();
-                        SetupBlog setupBlog = new SetupBlog();
-                        try {
-                            JSONObject details = createSiteResponse.getJSONObject("blog_details");
-                            String blogName = details.getString("blogname");
-                            String xmlRpcUrl = details.getString("xmlrpc");
-                            String homeUrl = details.getString("url");
-                            String blogId = details.getString("blogid");
-                            final SharedPreferences settings = PreferenceManager.
-                                    getDefaultSharedPreferences(getActivity());
-                            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            String password = WordPressDB.decryptPassword(settings.
-                                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-                            setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
-                        } catch (JSONException e) {
-                            AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
-                        }
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    }
+            @Override
+            public void onSuccess(JSONObject createSiteResponse) {
+                if (getActivity() == null) {
+                    return;
+                }
+                endProgress();
+                SetupBlog setupBlog = new SetupBlog();
+                try {
+                    JSONObject details = createSiteResponse.getJSONObject("blog_details");
+                    String blogName = details.getString("blogname");
+                    String xmlRpcUrl = details.getString("xmlrpc");
+                    String homeUrl = details.getString("url");
+                    String blogId = details.getString("blogid");
+                    final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                    String password = WordPressDB.decryptPassword(settings.getString(
+                            WordPress.WPCOM_PASSWORD_PREFERENCE, null));
+                    setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
+                } catch (JSONException e) {
+                    AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
+                }
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
 
-                    @Override
-                    public void onError(int messageId) {
-                        if (getActivity() == null) {
-                            return ;
-                        }
-                        endProgress();
-                        showError(getString(messageId));
-                    }
-                });
+            @Override
+            public void onError(int messageId) {
+                if (getActivity() == null) {
+                    return;
+                }
+                endProgress();
+                showError(getString(messageId));
+            }
+        }
+        );
         createUserAndBlog.startCreateBlogProcess();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.create_blog_fragment, container,
-                false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.create_blog_fragment, container, false);
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
         mSignupButton.setOnClickListener(signupClickListener);
