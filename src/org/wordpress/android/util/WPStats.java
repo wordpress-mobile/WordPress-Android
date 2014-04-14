@@ -49,13 +49,6 @@ public class WPStats {
         CREATED_ACCOUNT,
         CREATED_SITE,
         SHARED_ITEM,
-        SHARED_ITEM_VIA_EMAIL,
-        SHARED_ITEM_VIA_SMS,
-        SHARED_ITEM_VIA_TWITTER,
-        SHARED_ITEM_VIA_FACEBOOK,
-        SENT_ITEM_TO_INSTAPAPER,
-        SENT_ITEM_TO_POCKET,
-        SENT_ITEM_TO_GOOGLE_PLUS,
     };
 
     public interface Tracker {

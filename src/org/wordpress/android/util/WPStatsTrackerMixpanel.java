@@ -276,6 +276,9 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             case CREATED_SITE:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Created Site");
                 break;
+            case SHARED_ITEM:
+                instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_share");
+                break;
         }
         return instructions;
     }

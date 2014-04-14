@@ -333,11 +333,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_browse :
+            case R.id.menu_browse:
                 if (hasPost())
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
                 return true;
-            case R.id.menu_share :
+            case R.id.menu_share:
+                WPStats.track(WPStats.Stat.SHARED_ITEM);
                 sharePage();
                 return true;
             default :
