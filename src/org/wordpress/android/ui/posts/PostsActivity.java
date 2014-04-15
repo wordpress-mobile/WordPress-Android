@@ -354,7 +354,6 @@ public class PostsActivity extends WPActionBarActivity
                 .findFragmentById(R.id.postDetail);
 
         if (post != null) {
-
             WordPress.currentPost = post;
             if (f == null || !f.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
@@ -390,7 +389,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public class deletePostTask extends AsyncTask<Post, Void, Boolean> {
-
         Post post;
 
         @Override
@@ -468,7 +466,6 @@ public class PostsActivity extends WPActionBarActivity
     public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-
             Object[] commentParams = { WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -520,14 +517,12 @@ public class PostsActivity extends WPActionBarActivity
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 // Just close the window.
-
                             }
                         });
                 dialogBuilder.setCancelable(true);
                 if (!isFinishing()) {
                     dialogBuilder.create().show();
                 }
-
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
@@ -552,14 +547,12 @@ public class PostsActivity extends WPActionBarActivity
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 // Just close the window.
-
                             }
                         });
                 dialogBuilder.setCancelable(true);
                 if (!isFinishing()) {
                     dialogBuilder.create().show();
                 }
-
             }
         } else if (action == POST_SHARE) {
             // Only share published posts
@@ -577,7 +570,6 @@ public class PostsActivity extends WPActionBarActivity
             startActivity(Intent.createChooser(share, getResources()
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
-
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
