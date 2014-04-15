@@ -5,8 +5,7 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Vector;
 
-public class WPStats {
-
+public final class WPStats {
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
@@ -52,47 +51,50 @@ public class WPStats {
     };
 
     public interface Tracker {
-        public void track(Stat stat);
-        public void track(Stat stat, JSONObject properties);
-        public void beginSession();
-        public void endSession();
-        public void clearAllData();
+        void track(Stat stat);
+        void track(Stat stat, JSONObject properties);
+        void beginSession();
+        void endSession();
+        void clearAllData();
     }
 
-    private static final List<Tracker> trackers = new Vector<Tracker>();
+    private static final List<Tracker> TRACKERS = new Vector<Tracker>();
+
+    private WPStats() {
+    }
 
     public static void registerTracker(Tracker tracker) {
         if (tracker != null) {
-            trackers.add(tracker);
+            TRACKERS.add(tracker);
         }
     }
 
     public static void track(Stat stat) {
-        for(Tracker tracker : trackers) {
+        for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
         }
     }
 
     public static void track(Stat stat, JSONObject properties) {
-        for(Tracker tracker : trackers) {
+        for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
         }
     }
 
     public static void beginSession() {
-        for(Tracker tracker : trackers) {
+        for (Tracker tracker : TRACKERS) {
             tracker.beginSession();
         }
     }
 
     public static void endSession() {
-        for(Tracker tracker : trackers) {
+        for (Tracker tracker : TRACKERS) {
             tracker.endSession();
         }
     }
 
     public static void clearAllData() {
-        for(Tracker tracker : trackers) {
+        for (Tracker tracker : TRACKERS) {
             tracker.clearAllData();
         }
     }

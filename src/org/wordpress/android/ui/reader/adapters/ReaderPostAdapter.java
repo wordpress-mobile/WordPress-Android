@@ -414,8 +414,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!post.isLikedByCurrentUser)
+        if (!post.isLikedByCurrentUser) {
             WPStats.track(WPStats.Stat.READER_LIKED_ARTICLE);
+        }
 
         if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;

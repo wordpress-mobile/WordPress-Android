@@ -27,6 +27,8 @@ public class WPStatsTrackerWPCom implements WPStats.Tracker {
             case READER_ACCESSED:
                 pingWPComStatsEndpoint("home_page");
                 break;
+            default:
+                // Do nothing
         }
     }
 
@@ -46,7 +48,6 @@ public class WPStatsTrackerWPCom implements WPStats.Tracker {
     }
 
     private void pingWPComStatsEndpoint(String statName) {
-
         Response.Listener<String> listener = new Response.Listener<String>() {
             public void onResponse(String response) {
             }
@@ -59,8 +60,9 @@ public class WPStatsTrackerWPCom implements WPStats.Tracker {
             }
         };
 
-        int rnd = (int)(Math.random() * 100000);
-        String statsURL = String.format("%s%s%s%s%d", Constants.readerURL_v3, "&template=stats&stats_name=", statName, "&rnd=", rnd );
+        int rnd = (int) (Math.random() * 100000);
+        String statsURL = String.format("%s%s%s%s%d", Constants.readerURL_v3,
+                "&template=stats&stats_name=", statName, "&rnd=", rnd);
         StringRequest req = new StringRequest(Request.Method.GET, statsURL, listener, errorListener);
         WordPress.requestQueue.add(req);
     }

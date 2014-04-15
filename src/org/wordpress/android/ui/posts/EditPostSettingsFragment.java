@@ -470,7 +470,8 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // propertly track stats we care about for when users first publish posts.
-        if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT)) && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
+        if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+                && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
             post.setChangedFromLocalDraftToPublished(true);
         }
 

@@ -44,7 +44,7 @@ public class Post implements Serializable {
     private String slug;
     private boolean localDraft;
     private boolean uploaded;
-    private boolean changedFromLocalDraftToPublished;
+    private boolean mChangedFromLocalDraftToPublished;
     private double latitude;
     private double longitude;
     private boolean isPage;
@@ -368,11 +368,11 @@ public class Post implements Serializable {
      * @return
      */
     public boolean hasChangedFromLocalDraftToPublished() {
-        return changedFromLocalDraftToPublished;
+        return mChangedFromLocalDraftToPublished;
     }
 
     public void setChangedFromLocalDraftToPublished(boolean changedFromLocalDraftToPublished) {
-        this.changedFromLocalDraftToPublished = changedFromLocalDraftToPublished;
+        this.mChangedFromLocalDraftToPublished = changedFromLocalDraftToPublished;
     }
 
     /**
@@ -441,5 +441,4 @@ public class Post implements Serializable {
     public boolean isNew() {
         return getLocalTablePostId() >= 0;
     }
-
 }
