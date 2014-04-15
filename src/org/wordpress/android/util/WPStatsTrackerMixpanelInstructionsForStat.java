@@ -1,15 +1,14 @@
 package org.wordpress.android.util;
 
 public class WPStatsTrackerMixpanelInstructionsForStat {
-
-    private String mixpanelEventName;
-    private String superPropertyToIncrement;
-    private String peoplePropertyToIncrement;
-    private String superPropertyToFlag;
-    private WPStats.Stat statToAttachProperty;
-    private WPStats.Stat stat;
-    private String propertyToIncrement;
-    private boolean disableForSelfHosted;
+    private String mMixpanelEventName;
+    private String mSuperPropertyToIncrement;
+    private String mPeoplePropertyToIncrement;
+    private String mSuperPropertyToFlag;
+    private WPStats.Stat mStatToAttachProperty;
+    private WPStats.Stat mStat;
+    private String mPropertyToIncrement;
+    private boolean mDisableForSelfHosted;
 
     public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsForEventName(String eventName) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
@@ -17,13 +16,15 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
         return instructions;
     }
 
-    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(String property) {
+    public static WPStatsTrackerMixpanelInstructionsForStat
+    mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(String property) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
         instructions.setSuperPropertyAndPeoplePropertyToIncrement(property);
         return instructions;
     }
 
-    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithPropertyIncrementor(String property, WPStats.Stat stat) {
+    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithPropertyIncrementor(
+            String property, WPStats.Stat stat) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
         instructions.setStatToAttachProperty(stat);
         instructions.setPropertyToIncrement(property);
@@ -31,27 +32,27 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     }
 
     public String getMixpanelEventName() {
-        return mixpanelEventName;
+        return mMixpanelEventName;
     }
 
     public void setMixpanelEventName(String mixpanelEventName) {
-        this.mixpanelEventName = mixpanelEventName;
+        this.mMixpanelEventName = mixpanelEventName;
     }
 
     public String getSuperPropertyToIncrement() {
-        return superPropertyToIncrement;
+        return mSuperPropertyToIncrement;
     }
 
     public void setSuperPropertyToIncrement(String superPropertyToIncrement) {
-        this.superPropertyToIncrement = superPropertyToIncrement;
+        this.mSuperPropertyToIncrement = superPropertyToIncrement;
     }
 
     public String getPeoplePropertyToIncrement() {
-        return peoplePropertyToIncrement;
+        return mPeoplePropertyToIncrement;
     }
 
     public void setPeoplePropertyToIncrement(String peoplePropertyToIncrement) {
-        this.peoplePropertyToIncrement = peoplePropertyToIncrement;
+        this.mPeoplePropertyToIncrement = peoplePropertyToIncrement;
     }
 
     public void setSuperPropertyAndPeoplePropertyToIncrement(String property) {
@@ -60,42 +61,42 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     }
 
     public WPStats.Stat getStatToAttachProperty() {
-        return statToAttachProperty;
+        return mStatToAttachProperty;
     }
 
     public void setStatToAttachProperty(WPStats.Stat statToAttachProperty) {
-        this.statToAttachProperty = statToAttachProperty;
+        this.mStatToAttachProperty = statToAttachProperty;
     }
 
     public String getPropertyToIncrement() {
-        return propertyToIncrement;
+        return mPropertyToIncrement;
     }
 
     public void setPropertyToIncrement(String propertyToIncrement) {
-        this.propertyToIncrement = propertyToIncrement;
+        this.mPropertyToIncrement = propertyToIncrement;
     }
 
     public boolean getDisableForSelfHosted() {
-        return disableForSelfHosted;
+        return mDisableForSelfHosted;
     }
 
     public void setDisableForSelfHosted(boolean disableForSelfHosted) {
-        this.disableForSelfHosted = disableForSelfHosted;
+        this.mDisableForSelfHosted = disableForSelfHosted;
     }
 
     public WPStats.Stat getStat() {
-        return stat;
+        return mStat;
     }
 
     public void setStat(WPStats.Stat stat) {
-        this.stat = stat;
+        this.mStat = stat;
     }
 
     public String getSuperPropertyToFlag() {
-        return superPropertyToFlag;
+        return mSuperPropertyToFlag;
     }
 
     public void setSuperPropertyToFlag(String superPropertyToFlag) {
-        this.superPropertyToFlag = superPropertyToFlag;
+        this.mSuperPropertyToFlag = superPropertyToFlag;
     }
 }
