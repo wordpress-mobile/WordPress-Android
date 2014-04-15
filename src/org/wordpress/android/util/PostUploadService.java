@@ -210,14 +210,17 @@ public class PostUploadService extends Service {
             }
 
             boolean isFirstTimePublishing = false;
-            if (TextUtils.isEmpty(post.getPostStatus()))
+            if (TextUtils.isEmpty(post.getPostStatus())) {
                 post.setPostStatus("publish");
+            }
 
-            if (post.hasChangedFromLocalDraftToPublished())
+            if (post.hasChangedFromLocalDraftToPublished()) {
                 isFirstTimePublishing = true;
+            }
 
-            if (!post.isUploaded() && post.getPostStatus().equals("publish"))
+            if (!post.isUploaded() && post.getPostStatus().equals("publish")) {
                 isFirstTimePublishing = true;
+            }
 
             Boolean publishThis = false;
 
@@ -264,10 +267,11 @@ public class PostUploadService extends Service {
                         if (!imgPath.equals("")) {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
-                            if (mf.isVideo())
+                            if (mf.isVideo()) {
                                 hasVideo = true;
-                            else
+                            } else {
                                 hasImage = true;
+                            }
 
                             if (mf != null) {
                                 String imgHTML = uploadMediaFile(mf, blog);
@@ -297,8 +301,9 @@ public class PostUploadService extends Service {
             JSONArray categoriesJsonArray = post.getJSONCategories();
             String[] postCategories = null;
             if (categoriesJsonArray != null) {
-                if (categoriesJsonArray.length() > 0)
+                if (categoriesJsonArray.length() > 0) {
                     hasCategory = true;
+                }
 
                 postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
@@ -426,14 +431,18 @@ public class PostUploadService extends Service {
                 WordPress.wpDB.updatePost(post);
 
                 if (isFirstTimePublishing) {
-                    if (hasImage)
+                    if (hasImage) {
                         WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
-                    if (hasVideo)
+                    }
+                    if (hasVideo) {
                         WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
-                    if (hasCategory)
+                    }
+                    if (hasCategory) {
                         WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
-                    if (hasTag)
+                    }
+                    if (hasTag) {
                         WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                    }
                 }
 
                 return true;
