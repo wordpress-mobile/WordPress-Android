@@ -226,7 +226,7 @@ public class WordPress extends Application {
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
                 token = GCMRegistrar.getRegistrationId(ctx);
-                String gcmId = Config.GCM_ID;
+                String gcmId = BuildConfig.GCM_ID;
                 if (gcmId != null && token.equals("")) {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
@@ -573,7 +573,7 @@ public class WordPress extends Application {
                         GCMRegistrar.checkDevice(mContext);
                         GCMRegistrar.checkManifest(mContext);
                         token = GCMRegistrar.getRegistrationId(mContext);
-                        String gcmId = Config.GCM_ID;
+                        String gcmId = BuildConfig.GCM_ID;
                         if (gcmId == null || token == null || token.equals("") ) {
                             AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
                             return;

@@ -11,7 +11,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
@@ -103,7 +103,7 @@ public class WPMobileStatsUtil {
         Should be called when the application is launched and at sign in/out.
      */
     public static void initialize() {
-        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), Config.MIXPANEL_TOKEN);
+        mixpanel = MixpanelAPI.getInstance(WordPress.getContext(), BuildConfig.MIXPANEL_TOKEN);
 
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());

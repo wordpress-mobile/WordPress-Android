@@ -148,7 +148,7 @@ public class WordPressDB {
    
     private SQLiteDatabase db;
 
-    protected static final String PASSWORD_SECRET = Config.DB_SECRET;
+    protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
     private Context context;
 
