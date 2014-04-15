@@ -18,6 +18,12 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     private MixpanelAPI mMixpanel;
     private EnumMap<WPStats.Stat,JSONObject> aggregatedProperties;
 
+    private static final String SESSION_COUNT = "sessionCount";
+    private static final String MIXPANEL_PLATFORM = "Android";
+    private static final String MIXPANEL_SESSION_COUNT = "session_count";
+    private static final String MIXPANEL_CONNECTED_TO_DOTCOM = "connected_to_dotcom";
+    private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
+
     public WPStatsTrackerMixpanel(){
         aggregatedProperties = new EnumMap<WPStats.Stat, JSONObject>(WPStats.Stat.class);
     }
@@ -85,10 +91,10 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        int sessionCount = preferences.getInt("sessionCount", 0);
+        int sessionCount = preferences.getInt(SESSION_COUNT, 0);
         sessionCount++;
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("sessionCount", sessionCount);
+        editor.putInt(SESSION_COUNT, sessionCount);
         editor.commit();
 
         // Register super properties
@@ -96,10 +102,10 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {
             JSONObject properties = new JSONObject();
-            properties.put("platform", "Android");
-            properties.put("session_count", sessionCount);
-            properties.put("connected_to_dotcom", connected);
-            properties.put("number_of_blogs", numBlogs);
+            properties.put(MIXPANEL_PLATFORM, "Android");
+            properties.put(MIXPANEL_SESSION_COUNT, sessionCount);
+            properties.put(MIXPANEL_CONNECTED_TO_DOTCOM, connected);
+            properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             mMixpanel.registerSuperProperties(properties);
         } catch(JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
