@@ -116,7 +116,6 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mMixpanel.identify(username);
             mMixpanel.getPeople().identify(username);
-            mMixpanel.getPeople().increment("Application Opened", 1);
 
             try {
                 JSONObject jsonObj = new JSONObject();
@@ -148,6 +147,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         switch (stat) {
             case APPLICATION_OPENED:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Application Opened");
+                instructions.setSuperPropertyToIncrement("Application Opened");
                 break;
             case APPLICATION_CLOSED:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.mixpanelInstructionsForEventName("Application Closed");
