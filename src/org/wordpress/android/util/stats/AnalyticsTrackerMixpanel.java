@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.stats;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -9,13 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.WPStatsTrackerMixpanelInstructionsForStat;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class WPStatsTrackerMixpanel implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private MixpanelAPI mMixpanel;
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
 
@@ -25,7 +27,7 @@ public class WPStatsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String MIXPANEL_CONNECTED_TO_DOTCOM = "connected_to_dotcom";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
 
-    public WPStatsTrackerMixpanel() {
+    public AnalyticsTrackerMixpanel() {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
     }
 

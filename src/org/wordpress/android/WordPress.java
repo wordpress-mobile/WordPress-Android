@@ -42,7 +42,7 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
-import org.wordpress.android.util.WPStatsTrackerMixpanel;
+import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 import org.wordpress.android.util.WPStatsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -123,7 +123,7 @@ public class WordPress extends Application {
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        AnalyticsTracker.registerTracker(new WPStatsTrackerMixpanel());
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new WPStatsTrackerWPCom());
         AnalyticsTracker.beginSession();
         AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
