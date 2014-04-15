@@ -553,9 +553,12 @@ public class StatsActivity extends WPActionBarActivity {
 
                         if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                             // This site has the wrong WP.com credentials
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(StatsActivity.this);
+                            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                            
                             AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
                             builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
-                                    .setMessage(getString(R.string.jetpack_stats_switch_user));
+                                    .setMessage(getString(R.string.jetpack_stats_switch_user, username));
                             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     startWPComLoginActivity();
