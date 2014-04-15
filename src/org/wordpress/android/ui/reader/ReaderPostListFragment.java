@@ -22,8 +22,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -44,7 +42,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -363,7 +361,7 @@ public class ReaderPostListFragment extends SherlockFragment
             if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
                 return;
             // request older posts
-            WPStats.track(WPStats.Stat.READER_INFINITE_SCROLL);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
             updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
         }
     };
@@ -695,10 +693,10 @@ public class ReaderPostListFragment extends SherlockFragment
 
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("tag", tag.getTagName());
-        WPStats.track(WPStats.Stat.READER_LOADED_TAG, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
 
         if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
-            WPStats.track(WPStats.Stat.READER_LOADED_FRESHLY_PRESSED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
         }
 
         setCurrentTag(tag.getTagName());

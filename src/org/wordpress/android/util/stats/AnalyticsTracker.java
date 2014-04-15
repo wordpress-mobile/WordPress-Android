@@ -1,10 +1,10 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.stats;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public final class WPStats {
+public final class AnalyticsTracker {
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
@@ -59,7 +59,7 @@ public final class WPStats {
 
     private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
 
-    private WPStats() {
+    private AnalyticsTracker() {
     }
 
     public static void registerTracker(Tracker tracker) {

@@ -1,12 +1,14 @@
 package org.wordpress.android.util;
 
+import org.wordpress.android.util.stats.AnalyticsTracker;
+
 public class WPStatsTrackerMixpanelInstructionsForStat {
     private String mMixpanelEventName;
     private String mSuperPropertyToIncrement;
     private String mPeoplePropertyToIncrement;
     private String mSuperPropertyToFlag;
-    private WPStats.Stat mStatToAttachProperty;
-    private WPStats.Stat mStat;
+    private AnalyticsTracker.Stat mStatToAttachProperty;
+    private AnalyticsTracker.Stat mStat;
     private String mPropertyToIncrement;
     private boolean mDisableForSelfHosted;
 
@@ -24,7 +26,7 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     }
 
     public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithPropertyIncrementor(
-            String property, WPStats.Stat stat) {
+            String property, AnalyticsTracker.Stat stat) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
         instructions.setStatToAttachProperty(stat);
         instructions.setPropertyToIncrement(property);
@@ -60,11 +62,11 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
         setPeoplePropertyToIncrement(property);
     }
 
-    public WPStats.Stat getStatToAttachProperty() {
+    public AnalyticsTracker.Stat getStatToAttachProperty() {
         return mStatToAttachProperty;
     }
 
-    public void setStatToAttachProperty(WPStats.Stat statToAttachProperty) {
+    public void setStatToAttachProperty(AnalyticsTracker.Stat statToAttachProperty) {
         this.mStatToAttachProperty = statToAttachProperty;
     }
 
@@ -84,11 +86,11 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
         this.mDisableForSelfHosted = disableForSelfHosted;
     }
 
-    public WPStats.Stat getStat() {
+    public AnalyticsTracker.Stat getStat() {
         return mStat;
     }
 
-    public void setStat(WPStats.Stat stat) {
+    public void setStat(AnalyticsTracker.Stat stat) {
         this.mStat = stat;
     }
 

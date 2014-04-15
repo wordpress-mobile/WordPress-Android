@@ -53,7 +53,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -542,23 +542,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (newStatus) {
             case APPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
-                WPStats.track(WPStats.Stat.NOTIFICATION_APPROVED);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
                 break;
             case UNAPPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
                 break;
             case SPAM:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
-                WPStats.track(WPStats.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
                 break;
             case TRASH:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
-                WPStats.track(WPStats.Stat.NOTIFICATION_TRASHED);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_TRASHED);
                 break;
             default :
                 return;
         }
-        WPStats.track(WPStats.Stat.NOTIFICATION_PERFORMED_ACTION);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
         getActivity().showDialog(dlgId);
 
         // disable buttons during request
@@ -658,7 +658,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
-        WPStats.track(WPStats.Stat.NOTIFICATION_REPLIED_TO);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
         if (mNote != null) {
             CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
         } else {

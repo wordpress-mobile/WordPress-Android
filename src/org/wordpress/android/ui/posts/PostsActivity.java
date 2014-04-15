@@ -36,7 +36,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMeShortlinks;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -294,7 +294,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public void newPost() {
-        WPStats.track(WPStats.Stat.EDITOR_CREATED_POST);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST);
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
                 Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();

@@ -7,17 +7,18 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.Map;
 
-public class WPStatsTrackerWPCom implements WPStats.Tracker {
+public class WPStatsTrackerWPCom implements AnalyticsTracker.Tracker {
     @Override
-    public void track(WPStats.Stat stat) {
+    public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
     }
 
     @Override
-    public void track(WPStats.Stat stat, Map<String, ?> properties) {
+    public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
         switch (stat) {
             case READER_LOADED_FRESHLY_PRESSED:
                 pingWPComStatsEndpoint("freshly");

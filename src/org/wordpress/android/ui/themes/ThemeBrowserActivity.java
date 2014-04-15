@@ -40,7 +40,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -114,7 +114,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mDetailsFragment = (ThemeDetailsFragment) fm.findFragmentByTag(ThemeDetailsFragment.TAG);
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
 
-        WPStats.track(WPStats.Stat.THEMES_ACCESSED_THEMES_BROWSER);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
     }
 
     private boolean areThemesAccessible() {

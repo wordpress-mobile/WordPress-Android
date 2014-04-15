@@ -23,7 +23,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.UserEmail;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -270,7 +270,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
-                        WPStats.track(WPStats.Stat.CREATED_ACCOUNT);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
                         if (hasActivity()) {
                             finishThisStuff(username);

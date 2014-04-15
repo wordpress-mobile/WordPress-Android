@@ -41,7 +41,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPStatsTrackerMixpanel;
 import org.wordpress.android.util.WPStatsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
@@ -123,10 +123,10 @@ public class WordPress extends Application {
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
-        WPStats.registerTracker(new WPStatsTrackerMixpanel());
-        WPStats.registerTracker(new WPStatsTrackerWPCom());
-        WPStats.beginSession();
-        WPStats.track(WPStats.Stat.APPLICATION_OPENED);
+        AnalyticsTracker.registerTracker(new WPStatsTrackerMixpanel());
+        AnalyticsTracker.registerTracker(new WPStatsTrackerWPCom());
+        AnalyticsTracker.beginSession();
+        AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
 
         super.onCreate();
 
@@ -407,7 +407,7 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
-        WPStats.clearAllData();
+        AnalyticsTracker.clearAllData();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
@@ -529,8 +529,8 @@ public class WordPress extends Application {
 
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
-                WPStats.track(WPStats.Stat.APPLICATION_CLOSED);
-                WPStats.endSession();
+                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                AnalyticsTracker.endSession();
                 background = true;
             } else {
                 background = false;

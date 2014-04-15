@@ -36,7 +36,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +66,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        WPStats.track(WPStats.Stat.NOTIFICATIONS_ACCESSED);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
 
         createMenuDrawer(R.layout.notifications);
 
@@ -335,7 +335,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         ft.commitAllowingStateLoss();
 
-        WPStats.track(WPStats.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     /*

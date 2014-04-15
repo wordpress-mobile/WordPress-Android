@@ -31,6 +31,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -432,16 +433,16 @@ public class PostUploadService extends Service {
 
                 if (isFirstTimePublishing) {
                     if (hasImage) {
-                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
                     }
                     if (hasVideo) {
-                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
                     }
                     if (hasCategory) {
-                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
                     }
                     if (hasTag) {
-                        WPStats.track(WPStats.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
                     }
                 }
 

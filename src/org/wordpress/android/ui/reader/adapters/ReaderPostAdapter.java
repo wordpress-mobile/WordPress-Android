@@ -33,7 +33,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -415,7 +415,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         AniUtils.zoomAction(holder.imgBtnLike);
 
         if (!post.isLikedByCurrentUser) {
-            WPStats.track(WPStats.Stat.READER_LIKED_ARTICLE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
         }
 
         if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))

@@ -9,14 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class WPStatsTrackerMixpanel implements WPStats.Tracker {
+public class WPStatsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private MixpanelAPI mMixpanel;
-    private EnumMap<WPStats.Stat, JSONObject> mAggregatedProperties;
+    private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
 
     private static final String SESSION_COUNT = "sessionCount";
     private static final String MIXPANEL_PLATFORM = "Android";
@@ -25,16 +26,16 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
 
     public WPStatsTrackerMixpanel() {
-        mAggregatedProperties = new EnumMap<WPStats.Stat, JSONObject>(WPStats.Stat.class);
+        mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
     }
 
     @Override
-    public void track(WPStats.Stat stat) {
+    public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
     }
 
     @Override
-    public void track(WPStats.Stat stat, Map<String, ?> properties) {
+    public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
         if (instructions == null) {
@@ -158,7 +159,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         mMixpanel.getPeople().clearPushRegistrationId();
     }
 
-    private WPStatsTrackerMixpanelInstructionsForStat instructionsForStat(WPStats.Stat stat)
+    private WPStatsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat)
     {
         WPStatsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
@@ -317,39 +318,39 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
             case OPENED_POSTS:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_posts", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_posts", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_PAGES:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_pages", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_pages", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_COMMENTS:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_comments", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_comments", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_VIEW_SITE:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_view_site", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_view_site", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_VIEW_ADMIN:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_view_admin", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_view_admin", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_view_admin");
                 break;
             case OPENED_MEDIA_LIBRARY:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_media_library", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_media_library", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_SETTINGS:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
-                                "number_of_times_opened_settings", WPStats.Stat.APPLICATION_CLOSED);
+                                "number_of_times_opened_settings", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case CREATED_ACCOUNT:
                 instructions = WPStatsTrackerMixpanelInstructionsForStat.
@@ -401,7 +402,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         }
     }
 
-    private void savePropertyValueForStat(String property, Object value, WPStats.Stat stat) {
+    private void savePropertyValueForStat(String property, Object value, AnalyticsTracker.Stat stat) {
         JSONObject properties = mAggregatedProperties.get(stat);
         if (properties == null) {
             properties = new JSONObject();
@@ -415,15 +416,15 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         }
     }
 
-    private JSONObject propertiesForStat(WPStats.Stat stat) {
+    private JSONObject propertiesForStat(AnalyticsTracker.Stat stat) {
         return mAggregatedProperties.get(stat);
     }
 
-    private void removePropertiesForStat(WPStats.Stat stat) {
+    private void removePropertiesForStat(AnalyticsTracker.Stat stat) {
         mAggregatedProperties.remove(stat);
     }
 
-    private Object propertyForStat(String property, WPStats.Stat stat) {
+    private Object propertyForStat(String property, AnalyticsTracker.Stat stat) {
         JSONObject properties = mAggregatedProperties.get(stat);
         if (properties == null) {
             return null;
@@ -439,7 +440,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
         return null;
     }
 
-    private void incrementProperty(String property, WPStats.Stat stat) {
+    private void incrementProperty(String property, AnalyticsTracker.Stat stat) {
         Object currentValueObj = propertyForStat(property, stat);
         int currentValue = 1;
         if (currentValueObj != null) {

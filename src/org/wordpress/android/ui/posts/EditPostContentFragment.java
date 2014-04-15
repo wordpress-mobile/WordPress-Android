@@ -82,7 +82,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -339,7 +339,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
-                    WPStats.track(WPStats.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
                     }
@@ -347,7 +347,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
-                    WPStats.track(WPStats.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -358,7 +358,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
-                            WPStats.track(WPStats.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {

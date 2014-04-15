@@ -62,7 +62,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.WPStats;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -338,7 +338,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
                 return true;
             case R.id.menu_share:
-                WPStats.track(WPStats.Stat.SHARED_ITEM);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
                 sharePage();
                 return true;
             default :
@@ -528,7 +528,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         switch (action) {
             case TOGGLE_LIKE:
                 if (mPost.isLikedByCurrentUser) {
-                    WPStats.track(WPStats.Stat.READER_LIKED_ARTICLE);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
                     doPostChanged(PostChangeType.LIKED);
                 } else {
                     doPostChanged(PostChangeType.UNLIKED);
@@ -865,7 +865,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WPStats.track(WPStats.Stat.READER_COMMENTED_ON_ARTICLE);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
                 submitComment(replyToCommentId);
             }
         });
