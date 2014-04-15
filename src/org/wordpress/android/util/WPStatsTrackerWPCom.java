@@ -5,9 +5,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
-import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
+
+import java.util.Map;
 
 public class WPStatsTrackerWPCom implements WPStats.Tracker {
     @Override
@@ -16,7 +17,7 @@ public class WPStatsTrackerWPCom implements WPStats.Tracker {
     }
 
     @Override
-    public void track(WPStats.Stat stat, JSONObject properties) {
+    public void track(WPStats.Stat stat, Map<String, ?> properties) {
         switch (stat) {
             case READER_LOADED_FRESHLY_PRESSED:
                 pingWPComStatsEndpoint("freshly");

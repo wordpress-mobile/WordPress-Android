@@ -1,9 +1,8 @@
 package org.wordpress.android.util;
 
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
 
 public final class WPStats {
     public enum Stat {
@@ -52,13 +51,13 @@ public final class WPStats {
 
     public interface Tracker {
         void track(Stat stat);
-        void track(Stat stat, JSONObject properties);
+        void track(Stat stat, Map<String, ?> properties);
         void beginSession();
         void endSession();
         void clearAllData();
     }
 
-    private static final List<Tracker> TRACKERS = new Vector<Tracker>();
+    private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
 
     private WPStats() {
     }
@@ -75,7 +74,7 @@ public final class WPStats {
         }
     }
 
-    public static void track(Stat stat, JSONObject properties) {
+    public static void track(Stat stat, Map<String, ?> properties) {
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
         }

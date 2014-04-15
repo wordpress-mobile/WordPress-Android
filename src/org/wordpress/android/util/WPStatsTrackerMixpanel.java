@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 
 import java.util.EnumMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     private MixpanelAPI mMixpanel;
@@ -33,7 +34,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     }
 
     @Override
-    public void track(WPStats.Stat stat, JSONObject properties) {
+    public void track(WPStats.Stat stat, Map<String, ?> properties) {
         WPStatsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
         if (instructions == null) {
@@ -44,7 +45,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     }
 
     private void trackMixpanelDataForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions,
-                                                  JSONObject properties) {
+                                                  Map<String, ?> properties) {
         if (instructions.getDisableForSelfHosted()) {
             return;
         }
@@ -74,7 +75,7 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
     }
 
     private void trackMixpanelEventForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions,
-                                                   JSONObject properties) {
+                                                   Map<String, ?> properties) {
         String eventName = instructions.getMixpanelEventName();
         if (eventName != null && !eventName.isEmpty()) {
             JSONObject savedPropertiesForStat = propertiesForStat(instructions.getStat());
@@ -84,11 +85,12 @@ public class WPStatsTrackerMixpanel implements WPStats.Tracker {
 
             // Retrieve properties user has already passed in and combine them with the saved properties
             if (properties != null) {
-                Iterator<String> iter = properties.keys();
+                Iterator iter = properties.entrySet().iterator();
                 while (iter.hasNext()) {
-                    String key = iter.next();
+                    Map.Entry pairs = (Map.Entry) iter.next();
+                    String key = (String) pairs.getKey();
                     try {
-                        Object value = properties.get(key);
+                        Object value = pairs.getValue();
                         savedPropertiesForStat.put(key, value);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.UTILS, e);

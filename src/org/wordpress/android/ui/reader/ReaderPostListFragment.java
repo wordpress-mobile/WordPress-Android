@@ -46,6 +46,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPStats;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
@@ -690,17 +693,14 @@ public class ReaderPostListFragment extends SherlockFragment
         if (tag == null)
             return false;
 
-        try {
-            JSONObject properties = new JSONObject();
-            properties.put("tag", tag.getTagName());
-            WPStats.track(WPStats.Stat.READER_LOADED_TAG, properties);
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("tag", tag.getTagName());
+        WPStats.track(WPStats.Stat.READER_LOADED_TAG, properties);
 
-            if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
-                WPStats.track(WPStats.Stat.READER_LOADED_FRESHLY_PRESSED);
-            }
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.UTILS, e);
+        if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
+            WPStats.track(WPStats.Stat.READER_LOADED_FRESHLY_PRESSED);
         }
+
         setCurrentTag(tag.getTagName());
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
