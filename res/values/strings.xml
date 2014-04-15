@@ -628,7 +628,6 @@
     <string name="reader_toast_err_no_connection">Unable to connect</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
-    <string name="reader_toast_err_get_blog">Unable to retrieve this blog</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>

@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -40,7 +39,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostList
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -176,15 +174,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 hideNewPostsBar();
             }
         });
-
-        // add a header to the listView and margin to new posts bar that's the same height as
-        // the ActionBar when fullscreen mode is supported
-        if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.addListViewHeader(context, mListView);
-            final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.topMargin = actionbarHeight;
-        }
 
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
