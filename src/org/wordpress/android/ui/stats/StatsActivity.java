@@ -502,8 +502,12 @@ public class StatsActivity extends WPActionBarActivity {
         refreshStats();
     }
 
+    /**
+     * Do not refresh Stats in BG when user switch between blogs since the refresh 
+     * is already started in foreground at this point.
+     */
     @Override
-    protected boolean shouldUpdateCurrentBlogStats() {
+    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
         return false;
     }
     

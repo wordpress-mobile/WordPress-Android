@@ -723,7 +723,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         
         WordPress.statsLastPingDate = null; //Reset the Stats timer when switching between blogs
-        if (shouldUpdateCurrentBlogStats()) {
+        if (shouldUpdateCurrentBlogStatsInBackground()) {
             WordPress.updateCurrentBlogStatsInBackground();
         }
     }
@@ -732,7 +732,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * this method is called when the user switch blog - descendants should override
      * if want to stop refreshing of Stats when switching blog.
      */
-    protected boolean shouldUpdateCurrentBlogStats() {
+    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
         return true;
     }
     
