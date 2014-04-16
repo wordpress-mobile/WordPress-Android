@@ -44,6 +44,7 @@ public class Post implements Serializable {
     private String slug;
     private boolean localDraft;
     private boolean uploaded;
+    private boolean mChangedFromLocalDraftToPublished;
     private double latitude;
     private double longitude;
     private boolean isPage;
@@ -358,6 +359,20 @@ public class Post implements Serializable {
 
     public String getQuickPostType() {
         return StringUtils.notNullStr(quickPostType);
+    }
+
+    /**
+     * This indicates if the post has changed from a draft to published. This is primarily used
+     * for stats tracking purposes as we want to ensure that we properly track certain things when
+     * the user first publishes a post
+     * @return
+     */
+    public boolean hasChangedFromLocalDraftToPublished() {
+        return mChangedFromLocalDraftToPublished;
+    }
+
+    public void setChangedFromLocalDraftToPublished(boolean changedFromLocalDraftToPublished) {
+        this.mChangedFromLocalDraftToPublished = changedFromLocalDraftToPublished;
     }
 
     /**

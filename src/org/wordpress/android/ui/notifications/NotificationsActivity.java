@@ -36,6 +36,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,9 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+
         createMenuDrawer(R.layout.notifications);
 
         ActionBar actionBar = getSupportActionBar();
@@ -330,6 +334,8 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         ft.commitAllowingStateLoss();
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     /*

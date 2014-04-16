@@ -29,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class FollowRow extends LinearLayout {
 
@@ -224,6 +225,7 @@ public class FollowRow extends LinearLayout {
             if (isFollowing()) {
                 getFollowListener().onUnfollow(FollowRow.this, getSiteId());
             } else {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
                 getFollowListener().onFollow(FollowRow.this, getSiteId());
             }
         }

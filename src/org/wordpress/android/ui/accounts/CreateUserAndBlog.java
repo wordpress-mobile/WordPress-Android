@@ -26,9 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CreateUserAndBlog {
-    final public static int WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC = 0;
-    final public static int WORDPRESS_COM_API_BLOG_VISIBILITY_PRIVATE = 1;
-    final public static int WORDPRESS_COM_API_BLOG_VISIBILITY_HIDDEN = 2;
+    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC = 1;
+    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_BLOCK_SEARCH_ENGINE = 0;
+    public static final int WORDPRESS_COM_API_BLOG_VISIBILITY_PRIVATE = -1;
     private String mEmail;
     private String mUsername;
     private String mPassword;
