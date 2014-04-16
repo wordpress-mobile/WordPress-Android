@@ -494,8 +494,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }
             }
             if (mErrorMsgId == R.string.username_or_password_incorrect_selfhosted_hint) {
-                showUsernameError(mErrorMsgId, getString(R.string.add_self_hosted_blog));
-                showPasswordError(mErrorMsgId, getString(R.string.add_self_hosted_blog));
+                showUsernameError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
+                showPasswordError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
             } else {
                 showUsernameError(mErrorMsgId);
                 showPasswordError(mErrorMsgId);
