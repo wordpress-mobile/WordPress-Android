@@ -71,6 +71,8 @@ class NotesAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        if (cursor.isClosed())
+            return;
 
         Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
         Note note = bucketCursor.getObject();
