@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -115,8 +116,7 @@ public class WordPress extends Application {
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
-        simperium = SimperiumUtils.configureSimperium(this,
-            getWPComAuthToken(this));
+        configureSimperium();
 
         // Volley networking setup
         setupVolleyQueue();
@@ -143,6 +143,13 @@ public class WordPress extends Application {
             PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
+        }
+    }
+
+    // Configure Simperium and start buckets if we are signed in to WP.com
+    private void configureSimperium() {
+        if (!TextUtils.isEmpty(getWPComAuthToken(this))) {
+            SimperiumUtils.configureSimperium(this, getWPComAuthToken(this));
         }
     }
 
