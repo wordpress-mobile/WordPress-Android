@@ -46,7 +46,6 @@ public class SetupBlog {
 
     private boolean mHttpAuthRequired;
     private boolean mErroneousSslCertificate;
-    private boolean mCurrentSslCertificatesForcedTrusted;
 
     public SetupBlog() {
     }
@@ -263,7 +262,7 @@ public class SetupBlog {
         url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        url = UrlUtils.addHttpProcolIfNeeded(url, mCurrentSslCertificatesForcedTrusted);
+        url = UrlUtils.addUrlSchemeIfNeeded(url, false);
 
         if (!URLUtil.isValidUrl(url)) {
             mErrorMsgId = R.string.invalid_url_message;

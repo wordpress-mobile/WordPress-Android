@@ -51,9 +51,9 @@ public class WPWebViewClient extends WebViewClient {
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
         if (mBlog != null && mBlog.hasValidHTTPAuthCredentials()) {
             //Check that the HTTP AUth protected domain is the same of the blog. Do not send current blog's HTTP AUTH credentials to external site.
-            //NOTE: There is still a small security hole here, since the realm is not considered when getting the password. 
+            //NOTE: There is still a small security hole here, since the realm is not considered when getting the password.
             //Unfortunately the real is not stored when setting up the blog, and we cannot compare it at this point.
-            String domainFromHttpAuthRequest = UrlUtils.getDomainFromUrl(UrlUtils.addHttpProcolIfNeeded(host, false));
+            String domainFromHttpAuthRequest = UrlUtils.getDomainFromUrl(UrlUtils.addUrlSchemeIfNeeded(host, false));
             String currentBlogDomain = UrlUtils.getDomainFromUrl(mBlog.getUrl());
             if (domainFromHttpAuthRequest.equals(currentBlogDomain)) {
                 handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
