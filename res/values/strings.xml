@@ -114,6 +114,7 @@
     <string name="media_edit_description_hint">Enter a description here</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
+    <string name="saving">Saving&#8230;</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
@@ -550,7 +551,7 @@
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t access stats</string>
-    <string name="jetpack_stats_switch_user">This WordPress.com account doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
+    <string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
     <!--
        ****

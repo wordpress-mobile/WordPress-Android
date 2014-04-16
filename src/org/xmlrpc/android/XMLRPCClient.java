@@ -1,45 +1,5 @@
 package org.xmlrpc.android;
 
-import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Xml;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthState;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.ExecutionContext;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-import org.xmlpull.v1.XmlSerializer;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -61,6 +21,36 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
+
+import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Xml;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+import org.xmlpull.v1.XmlSerializer;
+
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 /**
  * A WordPress XMLRPC Client.
@@ -163,23 +153,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             BasicCredentialsProvider cP = new BasicCredentialsProvider();
             cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
             client.setCredentialsProvider(cP);
-
-            // add an interceptor to sent the credentials preemptively
-            HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
-                @Override
-                public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                    AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
-                    if (authState.getAuthScheme() == null) {
-                        CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext.CREDS_PROVIDER);
-                        HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
-                        AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
-                        Credentials creds = credsProvider.getCredentials(authScope);
-                        authState.setCredentials(creds);
-                        authState.setAuthScheme(new BasicScheme());
-                    }
-                }
-            };
-            client.addRequestInterceptor(preemptiveAuth, 0);
         }
 
         return client;

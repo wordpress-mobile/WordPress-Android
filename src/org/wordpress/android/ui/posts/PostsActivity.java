@@ -36,7 +36,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
 import org.wordpress.android.util.WPMeShortlinks;
-import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -132,8 +132,6 @@ public class PostsActivity extends WPActionBarActivity
             popPostDetail();
 
         attemptToSelectPost();
-
-        WPMobileStatsUtil.trackEventForWPCom(statEventForViewOpening());
     }
 
     private void showPostUploadErrorAlert(String errorMessage, String infoTitle,
@@ -285,12 +283,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onDestroy() {
-        WPMobileStatsUtil.trackEventForWPComWithSavedProperties(statEventForViewClosing());
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getSupportMenuInflater();
@@ -302,7 +294,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public void newPost() {
-        WPMobileStatsUtil.trackEventForWPCom(statEventForNewPost());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST);
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
                 Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
@@ -362,7 +354,6 @@ public class PostsActivity extends WPActionBarActivity
                 .findFragmentById(R.id.postDetail);
 
         if (post != null) {
-
             WordPress.currentPost = post;
             if (f == null || !f.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
@@ -397,20 +388,7 @@ public class PostsActivity extends WPActionBarActivity
         return super.onCreateDialog(id);
     }
 
-    protected String statEventForViewOpening() {
-        return WPMobileStatsUtil.StatsEventPostsOpened;
-    }
-
-    protected String statEventForViewClosing() {
-        return WPMobileStatsUtil.StatsEventPostsClosed;
-    }
-
-    protected String statEventForNewPost() {
-        return WPMobileStatsUtil.StatsEventPostsClickedNewPost;
-    }
-
     public class deletePostTask extends AsyncTask<Post, Void, Boolean> {
-
         Post post;
 
         @Override
@@ -488,7 +466,6 @@ public class PostsActivity extends WPActionBarActivity
     public class refreshCommentsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-
             Object[] commentParams = { WordPress.currentBlog.getRemoteBlogId(),
                     WordPress.currentBlog.getUsername(),
                     WordPress.currentBlog.getPassword() };
@@ -515,7 +492,6 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         if (action == POST_DELETE) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedDelete);
             if (post.isLocalDraft()) {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
@@ -541,14 +517,12 @@ public class PostsActivity extends WPActionBarActivity
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 // Just close the window.
-
                             }
                         });
                 dialogBuilder.setCancelable(true);
                 if (!isFinishing()) {
                     dialogBuilder.create().show();
                 }
-
             } else {
                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
                         PostsActivity.this);
@@ -573,14 +547,12 @@ public class PostsActivity extends WPActionBarActivity
                             public void onClick(DialogInterface dialog,
                                     int whichButton) {
                                 // Just close the window.
-
                             }
                         });
                 dialogBuilder.setCancelable(true);
                 if (!isFinishing()) {
                     dialogBuilder.create().show();
                 }
-
             }
         } else if (action == POST_SHARE) {
             // Only share published posts
@@ -598,8 +570,6 @@ public class PostsActivity extends WPActionBarActivity
             startActivity(Intent.createChooser(share, getResources()
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
-
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShare);
         } else if (action == POST_CLEAR) {
             FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
@@ -607,10 +577,6 @@ public class PostsActivity extends WPActionBarActivity
             if (f != null) {
                 f.clearContent();
             }
-        } else if (action == POST_EDIT) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedEdit);
-        } else if (action == POST_VIEW) {
-            WPMobileStatsUtil.flagProperty(statEventForViewClosing(), WPMobileStatsUtil.StatsPropertyPostDetailClickedPreview);
         }
     }
 

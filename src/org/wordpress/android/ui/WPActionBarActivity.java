@@ -58,6 +58,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -802,8 +803,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         @Override
         public void onSelectItem() {
             if (!(WPActionBarActivity.this instanceof PostsActivity)
-                    || (WPActionBarActivity.this instanceof PagesActivity))
+                    || (WPActionBarActivity.this instanceof PagesActivity)) {
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_POSTS);
+            }
             Intent intent = new Intent(WPActionBarActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
@@ -824,8 +827,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof MediaBrowserActivity))
+            if (!(WPActionBarActivity.this instanceof MediaBrowserActivity)) {
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY);
+            }
             Intent intent = new Intent(WPActionBarActivity.this, MediaBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
@@ -848,8 +853,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         public void onSelectItem(){
             if (WordPress.getCurrentBlog() == null)
                 return;
-            if (!(WPActionBarActivity.this instanceof PagesActivity))
+            if (!(WPActionBarActivity.this instanceof PagesActivity)) {
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_PAGES);
+            }
             Intent intent = new Intent(WPActionBarActivity.this, PagesActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
@@ -875,8 +882,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         public void onSelectItem(){
             if (WordPress.getCurrentBlog() == null)
                 return;
-            if (!(WPActionBarActivity.this instanceof CommentsActivity))
+            if (!(WPActionBarActivity.this instanceof CommentsActivity)) {
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_COMMENTS);
+            }
             Intent intent = new Intent(WPActionBarActivity.this, CommentsActivity.class);
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
@@ -1006,8 +1015,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof ViewSiteActivity))
+            if (!(WPActionBarActivity.this instanceof ViewSiteActivity)) {
                 mShouldFinish = true;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_VIEW_SITE);
+            }
             Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);

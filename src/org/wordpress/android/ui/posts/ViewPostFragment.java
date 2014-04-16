@@ -31,7 +31,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.WPMobileStatsUtil;
 import org.wordpress.android.util.WPWebViewClient;
 
 public class ViewPostFragment extends Fragment {
@@ -262,9 +261,6 @@ public class ViewPostFragment extends Fragment {
             return;
         if (!hasActivity())
             return;
-
-        WPMobileStatsUtil.flagProperty(WPMobileStatsUtil.StatsEventPostsClosed,
-                WPMobileStatsUtil.StatsPropertyPostDetailClickedComment);
 
         // show the comment box in, force keyboard to appear and highlight the comment button
         mLayoutCommentBox.setVisibility(View.VISIBLE);
