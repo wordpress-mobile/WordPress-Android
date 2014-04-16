@@ -53,6 +53,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -541,19 +542,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (newStatus) {
             case APPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
                 break;
             case UNAPPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
                 break;
             case SPAM:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
                 break;
             case TRASH:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_TRASHED);
                 break;
             default :
                 return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
         getActivity().showDialog(dlgId);
 
         // disable buttons during request
@@ -653,6 +658,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
         if (mNote != null) {
             CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
         } else {
