@@ -7,7 +7,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 
@@ -105,7 +105,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void beginSession() {
-        mMixpanel = MixpanelAPI.getInstance(WordPress.getContext(), Config.MIXPANEL_TOKEN);
+        mMixpanel = MixpanelAPI.getInstance(WordPress.getContext(), BuildConfig.MIXPANEL_TOKEN);
 
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -159,8 +159,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel.getPeople().clearPushRegistrationId();
     }
 
-    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat)
-    {
+    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
             case APPLICATION_OPENED:
@@ -237,48 +236,48 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Editor - Created Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_created_post");
                 break;
-           case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                       mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
-               instructions.
-                       setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
-               break;
-           case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                       mixpanelInstructionsForEventName("Editor - Added Photo via WP Media Library");
-               instructions.setSuperPropertyAndPeoplePropertyToIncrement(
-                       "number_of_times_added_photo_via_wp_media_library");
-               break;
-           case EDITOR_PUBLISHED_POST:
-               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                       mixpanelInstructionsForEventName("Editor - Published Post");
-               instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_published_post");
-               break;
-          case EDITOR_UPDATED_POST:
-              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsForEventName("Editor - Updated Post");
-              instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_updated_post");
+            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
+                instructions.
+                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
+                break;
+            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Added Photo via WP Media Library");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_added_photo_via_wp_media_library");
+                break;
+            case EDITOR_PUBLISHED_POST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Published Post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_published_post");
+                break;
+            case EDITOR_UPDATED_POST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Updated Post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_updated_post");
+                break;
+            case EDITOR_PUBLISHED_POST_WITH_PHOTO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
+                                "number_of_published_posts_with_photos");
+                break;
+            case EDITOR_PUBLISHED_POST_WITH_VIDEO:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
+                                "number_of_published_posts_with_videos");
               break;
-          case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_published_posts_with_photos");
-              break;
-          case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_published_posts_with_videos");
-              break;
-          case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                      mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_published_posts_with_categories");
-              break;
-          case EDITOR_PUBLISHED_POST_WITH_TAGS:
-              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+            case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
+                                "number_of_published_posts_with_categories");
+                break;
+            case EDITOR_PUBLISHED_POST_WITH_TAGS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                               "number_of_published_posts_with_tags");
-              break;
+                break;
             case NOTIFICATIONS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Accessed");
