@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
 public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
+    private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -67,6 +68,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
+    private int mWPComErroneousLogInCount;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -190,6 +192,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     }
 
+    private boolean isWPComLogin() {
+        return !mSelfHosted || TextUtils.isEmpty(EditTextUtils.getText(mUrlEditText).trim());
+    }
+
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -202,7 +208,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         public void onClick(View v) {
             String baseUrl = DOT_COM_BASE_URL;
-            if (mSelfHosted && !TextUtils.isEmpty(EditTextUtils.getText(mUrlEditText).trim())) {
+            if (!isWPComLogin()) {
                 baseUrl = EditTextUtils.getText(mUrlEditText).trim();
                 String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
                 if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
@@ -301,6 +307,16 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     private void showUsernameError(int messageId) {
         mUsernameEditText.setError(getString(messageId));
+        mUsernameEditText.requestFocus();
+    }
+
+    private void showPasswordError(int messageId, String param) {
+        mPasswordEditText.setError(getString(messageId, param));
+        mPasswordEditText.requestFocus();
+    }
+
+    private void showUsernameError(int messageId, String param) {
+        mUsernameEditText.setError(getString(messageId, param));
         mUsernameEditText.requestFocus();
     }
 
@@ -470,6 +486,24 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
+        private void handleInvalidUsernameOrPassword() {
+            if (isWPComLogin()) {
+                mWPComErroneousLogInCount += 1;
+                if (mWPComErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
+                    mErrorMsgId = R.string.username_or_password_incorrect_selfhosted_hint;
+                }
+            }
+            if (mErrorMsgId == R.string.username_or_password_incorrect_selfhosted_hint) {
+                showUsernameError(mErrorMsgId, getString(R.string.add_self_hosted_blog));
+                showPasswordError(mErrorMsgId, getString(R.string.add_self_hosted_blog));
+            } else {
+                showUsernameError(mErrorMsgId);
+                showPasswordError(mErrorMsgId);
+            }
+            mErrorMsgId = 0;
+            endProgress();
+        }
+
         private void signInError() {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             NUXDialogFragment nuxAlert;
@@ -480,10 +514,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         "https://wordpress.com/settings/security/?ssl=forced");
             } else {
                 if (mErrorMsgId == R.string.username_or_password_incorrect) {
-                    showUsernameError(mErrorMsgId);
-                    showPasswordError(mErrorMsgId);
-                    mErrorMsgId = 0;
-                    endProgress();
+                    handleInvalidUsernameOrPassword();
                     return;
                 } else if (mErrorMsgId == R.string.invalid_url_message) {
                     showUrlError(mErrorMsgId);

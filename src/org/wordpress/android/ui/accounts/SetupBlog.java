@@ -33,7 +33,6 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
-
     private String mUsername;
     private String mPassword;
     private String mHttpUsername = "";
