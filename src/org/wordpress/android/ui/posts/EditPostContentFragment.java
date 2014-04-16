@@ -82,7 +82,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -339,6 +339,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
                     }
@@ -346,6 +347,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -356,6 +358,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {
@@ -1112,19 +1115,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             int id = v.getId();
             if (id == R.id.bold) {
                 onFormatButtonClick(mBoldToggleButton, TAG_FORMAT_BAR_BUTTON_STRONG);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBoldButton);
             } else if (id == R.id.em) {
                 onFormatButtonClick(mEmToggleButton, TAG_FORMAT_BAR_BUTTON_EM);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarItalicButton);
             } else if (id == R.id.underline) {
                 onFormatButtonClick(mUnderlineToggleButton, TAG_FORMAT_BAR_BUTTON_UNDERLINE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarUnderlineButton);
             } else if (id == R.id.strike) {
                 onFormatButtonClick(mStrikeToggleButton, TAG_FORMAT_BAR_BUTTON_STRIKE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarDelButton);
             } else if (id == R.id.bquote) {
                 onFormatButtonClick(mBquoteToggleButton, TAG_FORMAT_BAR_BUTTON_QUOTE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBlockquoteButton);
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
@@ -1133,7 +1131,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         mSelectionEnd = str.length();
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarMoreButton);
             } else if (id == R.id.link) {
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
@@ -1150,18 +1147,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         i.putExtra("selectedText", selectedText);
                     }
                 }
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarLinkButton);
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
                 mAddPictureButton.performLongClick();
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarPictureButton);
             }
         }
     };
-
-    public void trackFormatButtonClick(String statPropertyName) {
-        WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), statPropertyName);
-    }
 
     /**
      * Applies formatting to selected text, or marks the entry for a new text style
