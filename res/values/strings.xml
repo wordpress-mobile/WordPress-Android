@@ -551,7 +551,7 @@
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t access stats</string>
-    <string name="jetpack_stats_switch_user">This WordPress.com account doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
+    <string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
     <!--
        ****
