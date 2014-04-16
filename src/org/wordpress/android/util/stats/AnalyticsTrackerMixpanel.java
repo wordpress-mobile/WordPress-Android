@@ -10,7 +10,6 @@ import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPStatsTrackerMixpanelInstructionsForStat;
 
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -37,7 +36,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
-        WPStatsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
+        AnalyticsTrackerMixpanelInstructionsForStat instructions = instructionsForStat(stat);
 
         if (instructions == null) {
             return;
@@ -46,7 +45,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         trackMixpanelDataForInstructions(instructions, properties);
     }
 
-    private void trackMixpanelDataForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions,
+    private void trackMixpanelDataForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions,
                                                   Map<String, ?> properties) {
         if (instructions.getDisableForSelfHosted()) {
             return;
@@ -56,7 +55,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         trackMixpanelPropertiesForInstructions(instructions);
     }
 
-    private void trackMixpanelPropertiesForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions) {
+    private void trackMixpanelPropertiesForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions) {
         if (instructions.getPeoplePropertyToIncrement() != null
                 && !instructions.getPeoplePropertyToIncrement().isEmpty()) {
             incrementPeopleProperty(instructions.getPeoplePropertyToIncrement());
@@ -76,7 +75,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
     }
 
-    private void trackMixpanelEventForInstructions(WPStatsTrackerMixpanelInstructionsForStat instructions,
+    private void trackMixpanelEventForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions,
                                                    Map<String, ?> properties) {
         String eventName = instructions.getMixpanelEventName();
         if (eventName != null && !eventName.isEmpty()) {
@@ -160,209 +159,209 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel.getPeople().clearPushRegistrationId();
     }
 
-    private WPStatsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat)
+    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat)
     {
-        WPStatsTrackerMixpanelInstructionsForStat instructions = null;
+        AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
             case APPLICATION_OPENED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
                 instructions.setSuperPropertyToIncrement("Application Opened");
                 break;
             case APPLICATION_CLOSED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Closed");
                 break;
             case THEMES_ACCESSED_THEMES_BROWSER:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Accessed Theme Browser");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_theme_browser");
                 break;
             case THEMES_CHANGED_THEME:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Themes - Changed Theme");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
                 break;
             case READER_ACCESSED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_reader");
                 break;
             case READER_OPENED_ARTICLE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Opened Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_article");
                 break;
             case READER_LIKED_ARTICLE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Liked Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_liked_article");
                 break;
             case READER_REBLOGGED_ARTICLE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Reblogged Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_reblogged_article");
                 break;
             case READER_INFINITE_SCROLL:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Infinite Scroll");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement(
                         "number_of_times_reader_performed_infinite_scroll");
                 break;
             case READER_FOLLOWED_READER_TAG:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Followed Reader Tag");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_reader_tag");
                 break;
             case READER_UNFOLLOWED_READER_TAG:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Unfollowed Reader Tag");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_unfollowed_reader_tag");
                 break;
             case READER_LOADED_TAG:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Loaded Tag");
                 break;
             case READER_LOADED_FRESHLY_PRESSED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Loaded Freshly Pressed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_loaded_freshly_pressed");
                 break;
             case READER_COMMENTED_ON_ARTICLE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Commented on Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_article");
                 break;
             case EDITOR_CREATED_POST:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_created_post");
                 break;
            case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
-               instructions = WPStatsTrackerMixpanelInstructionsForStat.
+               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                        mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
                instructions.
                        setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_added_photo_via_local_library");
                break;
            case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
-               instructions = WPStatsTrackerMixpanelInstructionsForStat.
+               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                        mixpanelInstructionsForEventName("Editor - Added Photo via WP Media Library");
                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
                        "number_of_times_added_photo_via_wp_media_library");
                break;
            case EDITOR_PUBLISHED_POST:
-               instructions = WPStatsTrackerMixpanelInstructionsForStat.
+               instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                        mixpanelInstructionsForEventName("Editor - Published Post");
                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_published_post");
                break;
           case EDITOR_UPDATED_POST:
-              instructions = WPStatsTrackerMixpanelInstructionsForStat.
+              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsForEventName("Editor - Updated Post");
               instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_updated_post");
               break;
           case EDITOR_PUBLISHED_POST_WITH_PHOTO:
-              instructions = WPStatsTrackerMixpanelInstructionsForStat.
+              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                               "number_of_published_posts_with_photos");
               break;
           case EDITOR_PUBLISHED_POST_WITH_VIDEO:
-              instructions = WPStatsTrackerMixpanelInstructionsForStat.
+              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                               "number_of_published_posts_with_videos");
               break;
           case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
-              instructions = WPStatsTrackerMixpanelInstructionsForStat.
+              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                               "number_of_published_posts_with_categories");
               break;
           case EDITOR_PUBLISHED_POST_WITH_TAGS:
-              instructions = WPStatsTrackerMixpanelInstructionsForStat.
+              instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                               "number_of_published_posts_with_tags");
               break;
             case NOTIFICATIONS_ACCESSED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Accessed");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_notifications");
                 break;
             case NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Notifications - Opened Notification Details");
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_notification_details");
                 break;
             case NOTIFICATION_PERFORMED_ACTION:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_times_notifications_performed_action_against");
                 break;
             case NOTIFICATION_APPROVED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_times_notifications_approved");
                 break;
             case NOTIFICATION_REPLIED_TO:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_times_notifications_replied_to");
                 break;
             case NOTIFICATION_TRASHED:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_times_notifications_trashed");
                 break;
             case NOTIFICATION_FLAGGED_AS_SPAM:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
                                 "number_of_times_notifications_flagged_as_spam");
                 break;
             case OPENED_POSTS:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_posts", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_PAGES:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_pages", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_COMMENTS:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_comments", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_VIEW_SITE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_view_site", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_VIEW_ADMIN:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_view_admin", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_view_admin");
                 break;
             case OPENED_MEDIA_LIBRARY:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_media_library", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case OPENED_SETTINGS:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithPropertyIncrementor(
                                 "number_of_times_opened_settings", AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 break;
             case CREATED_ACCOUNT:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");
                 break;
             case CREATED_SITE:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Site");
                 break;
             case SHARED_ITEM:
-                instructions = WPStatsTrackerMixpanelInstructionsForStat.
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_share");
                 break;
             default:

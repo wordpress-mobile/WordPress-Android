@@ -1,8 +1,6 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.stats;
 
-import org.wordpress.android.util.stats.AnalyticsTracker;
-
-public class WPStatsTrackerMixpanelInstructionsForStat {
+public class AnalyticsTrackerMixpanelInstructionsForStat {
     private String mMixpanelEventName;
     private String mSuperPropertyToIncrement;
     private String mPeoplePropertyToIncrement;
@@ -12,22 +10,22 @@ public class WPStatsTrackerMixpanelInstructionsForStat {
     private String mPropertyToIncrement;
     private boolean mDisableForSelfHosted;
 
-    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsForEventName(String eventName) {
-        WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
+    public static AnalyticsTrackerMixpanelInstructionsForStat mixpanelInstructionsForEventName(String eventName) {
+        AnalyticsTrackerMixpanelInstructionsForStat instructions = new AnalyticsTrackerMixpanelInstructionsForStat();
         instructions.setMixpanelEventName(eventName);
         return instructions;
     }
 
-    public static WPStatsTrackerMixpanelInstructionsForStat
+    public static AnalyticsTrackerMixpanelInstructionsForStat
     mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(String property) {
-        WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
+        AnalyticsTrackerMixpanelInstructionsForStat instructions = new AnalyticsTrackerMixpanelInstructionsForStat();
         instructions.setSuperPropertyAndPeoplePropertyToIncrement(property);
         return instructions;
     }
 
-    public static WPStatsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithPropertyIncrementor(
+    public static AnalyticsTrackerMixpanelInstructionsForStat mixpanelInstructionsWithPropertyIncrementor(
             String property, AnalyticsTracker.Stat stat) {
-        WPStatsTrackerMixpanelInstructionsForStat instructions = new WPStatsTrackerMixpanelInstructionsForStat();
+        AnalyticsTrackerMixpanelInstructionsForStat instructions = new AnalyticsTrackerMixpanelInstructionsForStat();
         instructions.setStatToAttachProperty(stat);
         instructions.setPropertyToIncrement(property);
         return instructions;
