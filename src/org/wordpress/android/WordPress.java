@@ -43,7 +43,7 @@ import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
-import org.wordpress.android.util.WPStatsTrackerWPCom;
+import org.wordpress.android.util.stats.AnalyticsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -124,7 +124,7 @@ public class WordPress extends Application {
         }
 
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.registerTracker(new WPStatsTrackerWPCom());
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
         AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
 

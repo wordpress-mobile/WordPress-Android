@@ -11,7 +11,6 @@ import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPStatsTrackerMixpanelInstructionsForStat;
-import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.EnumMap;
 import java.util.Iterator;

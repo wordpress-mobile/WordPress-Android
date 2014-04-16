@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.util.stats;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -7,11 +7,11 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.AppLog;
 
 import java.util.Map;
 
-public class WPStatsTrackerWPCom implements AnalyticsTracker.Tracker {
+public class AnalyticsTrackerWPCom implements AnalyticsTracker.Tracker {
     @Override
     public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
