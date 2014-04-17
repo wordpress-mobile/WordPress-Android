@@ -68,7 +68,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private ReaderBlogInfoHeader mBlogInfoHeader;
 
     private String mCurrentTag;
     private long mCurrentBlogId;
@@ -168,12 +167,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (isFullScreenSupported()) {
             ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
-        }
-
-        if (getPostListType() == ReaderPostListType.BLOG) {
-            mBlogInfoHeader = new ReaderBlogInfoHeader(container.getContext());
-            mListView.addHeaderView(mBlogInfoHeader);
-            mBlogInfoHeader.setBlogId(mCurrentBlogId);
         }
 
         // bar that appears at top when new posts are downloaded

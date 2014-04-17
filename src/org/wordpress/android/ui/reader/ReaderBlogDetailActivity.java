@@ -10,8 +10,11 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 
 public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
+
+    private ReaderBlogInfoHeader mBlogInfoHeader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,8 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+        mBlogInfoHeader = (ReaderBlogInfoHeader) findViewById(R.id.blog_info_header);
+        mBlogInfoHeader.setBlogId(blogId);
         showListFragmentForBlog(blogId);
     }
 

@@ -14,6 +14,7 @@
         android:id="@+id/image_mshot"
         android:scaleType="fitCenter"
         android:layout_width="match_parent"
+        android:background="@color/grey_medium"
         android:layout_height="200dp" />
 
     <org.wordpress.android.widgets.WPTextView

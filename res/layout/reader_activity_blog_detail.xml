@@ -4,9 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <org.wordpress.android.ui.reader.ReaderBlogInfoHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/blog_info_header"/>
+
     <!-- fragment container -->
     <FrameLayout
         android:id="@+id/fragment_container"
+        android:layout_below="@+id/blog_info_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
