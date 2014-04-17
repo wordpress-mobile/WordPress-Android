@@ -39,9 +39,16 @@ public class SimperiumUtils {
                         case AUTHORIZED:
                             notesBucket.start();
                             metaBucket.start();
-                            Intent broadcastIntent = new Intent();
-                            broadcastIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-                            context.sendBroadcast(broadcastIntent);
+                            Intent simperiumSignedInIntent = new Intent();
+                            simperiumSignedInIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+                            context.sendBroadcast(simperiumSignedInIntent);
+                            break;
+                        case NOT_AUTHORIZED:
+                            notesBucket.stop();
+                            metaBucket.stop();
+                            Intent simperiumNotAuthorizedIntent = new Intent();
+                            simperiumNotAuthorizedIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
+                            context.sendBroadcast(simperiumNotAuthorizedIntent);
                             break;
                         default:
                             android.util.Log.d("WordPress", "User not authorized yet");
@@ -70,8 +77,8 @@ public class SimperiumUtils {
 
         user.setAccessToken(wpccToken);
 
+        // we'll assume the user is AUTHORIZED, and catch NOT_AUTHORIZED if something goes wrong.
         user.setStatus(User.Status.AUTHORIZED);
-
     }
 
 }

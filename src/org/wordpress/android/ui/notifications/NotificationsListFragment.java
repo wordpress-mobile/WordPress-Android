@@ -70,7 +70,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         // start listening to bucket change events
         mBucket.addListener(this);
 
-        // Show
+        // Show progress indicator if we haven't indexed the notes yet
         if (hasActivity() && !mBucket.hasChangeVersion()) {
             getActivity().setProgressBarIndeterminateVisibility(true);
         }
@@ -179,6 +179,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private void registerReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+        filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
         getActivity().registerReceiver(mReceiver, filter);
     }
 
@@ -196,13 +197,20 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent == null || intent.getAction() == null)
+            if (intent == null || intent.getAction() == null || !hasActivity())
                 return;
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
                 // Get the new bucket instance and start listening again
                 mBucket.removeListener(NotificationsListFragment.this);
                 mBucket = WordPress.notesBucket;
                 mBucket.addListener(NotificationsListFragment.this);
+            } else if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
+                getActivity().setProgressBarIndeterminateVisibility(false);
+
+                // Simperium user is not authorized, log in again
+                Intent notAuthorizedIntent = new Intent();
+                notAuthorizedIntent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
+                getActivity().sendBroadcast(notAuthorizedIntent);
             }
         }
     };
