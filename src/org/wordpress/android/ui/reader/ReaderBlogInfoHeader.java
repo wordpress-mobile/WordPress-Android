@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,17 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderBlogInfoHeader extends LinearLayout {
+    private WPNetworkImageView mImageMshot;
+    private int mImageHeight;
+    private int mMaxImageHeight;
+    private static final int SHRINK_SZ = 20;
+
     public ReaderBlogInfoHeader(Context context){
         super(context);
         inflateView(context);
@@ -34,13 +43,49 @@ public class ReaderBlogInfoHeader extends LinearLayout {
 
     private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.reader_blog_info_header, this, true);
+        View header = inflater.inflate(R.layout.reader_blog_info_header, this, true);
+        mImageMshot = (WPNetworkImageView) header.findViewById(R.id.image_mshot);
+        mImageHeight = DisplayUtils.dpToPx(context, 200);
+        mMaxImageHeight = mImageHeight;
     }
 
     public void setBlogId(long blogId) {
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
         requestBlogInfo(blogId);
     }
+
+    protected void shrinkImage() {
+        if (mImageHeight == 0) {
+            return;
+        }
+        mImageHeight -= SHRINK_SZ;
+        if (mImageHeight <= 0) {
+            mImageHeight = 0;
+        }
+        mImageMshot.getLayoutParams().height = mImageHeight;
+    }
+
+    protected void enlargeImage() {
+        if (mImageHeight == mMaxImageHeight) {
+            return;
+        }
+        mImageHeight += SHRINK_SZ;
+        if (mImageHeight >= mMaxImageHeight) {
+            mImageHeight = mMaxImageHeight;
+        }
+        mImageMshot.getLayoutParams().height = mImageHeight;
+    }
+
+    private static String getMshotsUrl(String blogUrl, int width) {
+        if (TextUtils.isEmpty(blogUrl)) {
+            return "";
+        }
+
+        return "http://s.wordpress.com/mshots/v1/"
+                + UrlUtils.urlEncode(blogUrl)
+                + "?w=" + Integer.toString(width);
+    }
+
     /*
      * show blog header with info from passed blog filled in
      */
@@ -69,6 +114,9 @@ public class ReaderBlogInfoHeader extends LinearLayout {
                     toggleBlogFollowStatus(txtFollowBtn, blog);
                 }
             });
+
+            int width = DisplayUtils.getDisplayPixelWidth(getContext());
+            mImageMshot.setImageUrl(getMshotsUrl(blog.getUrl(), width), WPNetworkImageView.ImageType.PHOTO);
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);

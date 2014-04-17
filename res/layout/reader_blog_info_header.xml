@@ -6,15 +6,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_extra_large"
     android:layout_marginBottom="@dimen/margin_extra_large"
+    android:background="@color/white"
     android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_mshot"
+        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_blog_name"
         style="@style/ReaderTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:ellipsize="end"

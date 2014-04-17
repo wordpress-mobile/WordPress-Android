@@ -4,14 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_mshot"
-        style="@style/ReaderImageView.Featured" />
-
     <!-- fragment container -->
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_below="@+id/image_mshot"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
