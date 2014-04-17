@@ -61,7 +61,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
-    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
@@ -245,9 +244,6 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-        }
         if (activity instanceof OnPostSelectedListener) {
             mPostSelectedListener = (OnPostSelectedListener) activity;
         }
@@ -731,10 +727,6 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         // nop
-    }
-
-    private boolean isFullScreenSupported() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
     /*

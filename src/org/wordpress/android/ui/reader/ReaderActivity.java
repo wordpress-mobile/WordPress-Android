@@ -40,7 +40,9 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
  * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
@@ -64,7 +66,6 @@ public class ReaderActivity extends WPActionBarActivity
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
     private boolean mIsFullScreen = false;
-    private boolean mIsBlogDetail = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +77,9 @@ public class ReaderActivity extends WPActionBarActivity
 
         // blog detail shows a list of posts in a specific blog, otherwise we're showing
         // posts with a specific tag
-        mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
+        boolean isBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
 
-        if (mIsBlogDetail) {
+        if (isBlogDetail) {
             setContentView(R.layout.reader_activity_main);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);
@@ -98,7 +99,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-        if (mIsBlogDetail) {
+        if (isBlogDetail) {
             setTitle(R.string.reader_title_blog_detail);
             // add blog info header
             long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
@@ -325,7 +326,7 @@ public class ReaderActivity extends WPActionBarActivity
 
         // add to the backstack if list fragment exists
         if (hasListFragment()) {
-            ft.add(R.id.fragment_container, fragment, tagForFragment);
+            ft.addToBackStack(tagForFragment);
         }
 
         ft.commit();
@@ -491,6 +492,7 @@ public class ReaderActivity extends WPActionBarActivity
         final TextView txtFollowCnt = (TextView) blogHeaderView.findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) blogHeaderView.findViewById(R.id.text_follow_blog);
         final View divider = blogHeaderView.findViewById(R.id.divider_blog_header);
+        final WPNetworkImageView imgMshot = (WPNetworkImageView) blogHeaderView.findViewById(R.id.image_mshot);
 
         if (blog != null) {
             txtBlogName.setText(blog.getName());
@@ -510,6 +512,9 @@ public class ReaderActivity extends WPActionBarActivity
                     toggleBlogFollowStatus(txtFollowBtn, blog);
                 }
             });
+
+            String mshotsUrl = "http://s.wordpress.com/mshots/v1/" + UrlUtils.urlEncode(blog.getUrl());
+            imgMshot.setImageUrl(mshotsUrl, WPNetworkImageView.ImageType.PHOTO);
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);
