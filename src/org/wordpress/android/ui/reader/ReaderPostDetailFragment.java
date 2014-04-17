@@ -865,7 +865,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
                 submitComment(replyToCommentId);
             }
         });
@@ -938,6 +937,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         final String commentText = EditTextUtils.getText(editComment);
         if (TextUtils.isEmpty(commentText))
             return;
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
         // hide the comment box - this provides immediate indication that comment is being posted
         // and prevents users from submitting the same comment twice
