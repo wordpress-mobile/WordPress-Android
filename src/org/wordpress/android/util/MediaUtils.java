@@ -226,7 +226,7 @@ public class MediaUtils {
 
         if (WordPress.currentBlog.getWpVersion() == null)
             return true;
-        
+
         if (WordPress.currentBlog.isDotcomFlag())
             return true;
 
@@ -341,8 +341,9 @@ public class MediaUtils {
     }
 
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
-        if (context == null || imageUri == null)
+        if (context == null || imageUri == null) {
             return null;
+        }
 
         File cacheDir;
 
@@ -354,25 +355,31 @@ public class MediaUtils {
             String mediaFolder = isVideo ? "video" : "images";
             cacheDir = new File(android.os.Environment.getExternalStorageDirectory() + "/WordPress/" + mediaFolder);
         } else {
-            // If no SD card
-            cacheDir = context.getApplicationContext().getCacheDir();
+            if (context.getApplicationContext() != null) {
+                cacheDir = context.getApplicationContext().getCacheDir();
+            }
         }
 
-        if (!cacheDir.exists())
+        if (cacheDir != null && !cacheDir.exists()) {
             cacheDir.mkdirs();
-
+        }
         try {
             InputStream input;
             // Download the file
             if (imageUri.toString().startsWith("content://")) {
                 input = context.getContentResolver().openInputStream(imageUri);
+                if (input == null) {
+                    AppLog.e(T.UTILS, "openInputStream returned null");
+                    return null;
+                }
             } else {
                 input = new URL(imageUri.toString()).openStream();
             }
 
             String fileName = "wp-" + System.currentTimeMillis();
-            if (isVideo)
+            if (isVideo) {
                 fileName += "." + MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+            }
 
             File f = new File(cacheDir, fileName);
 
