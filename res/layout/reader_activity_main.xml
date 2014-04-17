@@ -10,12 +10,6 @@
         android:layout_height="@dimen/abs__action_bar_default_height"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/reader_blog_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/layout_blog_header" />
-
     <!-- fragment container -->
     <FrameLayout
         android:id="@+id/fragment_container"

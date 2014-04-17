@@ -166,6 +166,9 @@
             android:theme="@style/WordPress.Theme.NoBackground"
             android:label="@string/reader" />
         <activity
+            android:name=".ui.reader.ReaderBlogDetailActivity"
+            android:theme="@style/ReaderTheme.Popup" />
+        <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity

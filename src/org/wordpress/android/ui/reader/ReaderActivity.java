@@ -8,19 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -33,16 +29,12 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
-import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
  * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
@@ -60,7 +52,6 @@ public class ReaderActivity extends WPActionBarActivity
     protected static final String ARG_TAG_NAME = "tag_name";
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
-    protected static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
     protected static final String KEY_LIST_STATE = "list_state";
 
     private static boolean mHasPerformedInitialUpdate = false;
@@ -74,16 +65,7 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         super.onCreate(savedInstanceState);
-
-        // blog detail shows a list of posts in a specific blog, otherwise we're showing
-        // posts with a specific tag
-        boolean isBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
-
-        if (isBlogDetail) {
-            setContentView(R.layout.reader_activity_main);
-        } else {
-            createMenuDrawer(R.layout.reader_activity_main);
-        }
+        createMenuDrawer(R.layout.reader_activity_main);
 
         // show view that's the same height as the ActionBar when overlay is
         // enabled (otherwise fragment will be obscured by ActionBar)
@@ -99,17 +81,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-        if (isBlogDetail) {
-            setTitle(R.string.reader_title_blog_detail);
-            // add blog info header
-            long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-            showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
-            requestBlogInfo(blogId);
-            // show posts in this blog
-            if (savedInstanceState == null) {
-                showListFragmentForBlog(blogId);
-            }
-        } else if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
@@ -458,109 +430,5 @@ public class ReaderActivity extends WPActionBarActivity
                 final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
                 listFragment.reloadPost(updatedPost);
         }
-    }
-
-
-    /*
-     * request latest info for this blog
-     */
-    private void requestBlogInfo(final long blogId) {
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_blog_header);
-        ReaderActions.RequestBlogInfoListener listener = new ReaderActions.RequestBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlogInfo blogInfo) {
-                if (isFinishing()) {
-                    return;
-                }
-                progressBar.setVisibility(View.GONE);
-                if (blogInfo != null) {
-                    showBlogInfo(blogInfo);
-                }
-            }
-        };
-        progressBar.setVisibility(View.VISIBLE);
-        ReaderBlogActions.updateBlogInfo(blogId, listener);
-    }
-
-    /*
-     * show blog header with info from passed blog filled in
-     */
-    private void showBlogInfo(final ReaderBlogInfo blog) {
-        final View blogHeaderView = findViewById(R.id.layout_blog_header);
-        final TextView txtBlogName = (TextView) blogHeaderView.findViewById(R.id.text_blog_name);
-        final TextView txtDescription = (TextView) blogHeaderView.findViewById(R.id.text_blog_description);
-        final TextView txtFollowCnt = (TextView) blogHeaderView.findViewById(R.id.text_follow_count);
-        final TextView txtFollowBtn = (TextView) blogHeaderView.findViewById(R.id.text_follow_blog);
-        final View divider = blogHeaderView.findViewById(R.id.divider_blog_header);
-        final WPNetworkImageView imgMshot = (WPNetworkImageView) blogHeaderView.findViewById(R.id.image_mshot);
-
-        if (blog != null) {
-            txtBlogName.setText(blog.getName());
-            txtDescription.setText(blog.getDescription());
-            txtDescription.setVisibility(blog.hasDescription() ? View.VISIBLE : View.GONE);
-            String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blog.numSubscribers));
-            txtFollowCnt.setText(numFollowers);
-
-            boolean isFollowing = ReaderBlogTable.isFollowedBlogUrl(blog.getUrl());
-            showBlogFollowStatus(txtFollowBtn, isFollowing);
-            txtFollowBtn.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
-
-            txtFollowBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleBlogFollowStatus(txtFollowBtn, blog);
-                }
-            });
-
-            String mshotsUrl = "http://s.wordpress.com/mshots/v1/" + UrlUtils.urlEncode(blog.getUrl());
-            imgMshot.setImageUrl(mshotsUrl, WPNetworkImageView.ImageType.PHOTO);
-        } else {
-            txtBlogName.setText(null);
-            txtDescription.setText(null);
-            txtFollowCnt.setText(null);
-            txtFollowBtn.setVisibility(View.INVISIBLE);
-            divider.setVisibility(View.INVISIBLE);
-        }
-
-        if (blogHeaderView.getVisibility() != View.VISIBLE) {
-            blogHeaderView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /*
-     * used when viewing posts in a specific blog, toggles the follow status of the currently displayed blog
-     */
-    private void toggleBlogFollowStatus(final TextView txtFollow, final ReaderBlogInfo blogInfo) {
-        if (blogInfo == null || txtFollow == null) {
-            return;
-        }
-
-        AniUtils.zoomAction(txtFollow);
-
-        boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        ReaderBlogActions.BlogAction blogAction = (isCurrentlyFollowing ? ReaderBlogActions.BlogAction.UNFOLLOW : ReaderBlogActions.BlogAction.FOLLOW);
-        if (!ReaderBlogActions.performBlogAction(blogAction, blogInfo.blogId, blogInfo.getUrl()))
-            return;
-
-        boolean isNowFollowing = !isCurrentlyFollowing;
-        showBlogFollowStatus(txtFollow, isNowFollowing);
-        if (hasListFragment()) {
-            getListFragment().updateFollowStatusOnPostsForBlog(blogInfo.blogId, isNowFollowing);
-        }
-    }
-
-    /*
-     * updates the follow button in the blog header to match whether the current
-     * user is following this blog
-     */
-    private void showBlogFollowStatus(TextView txtFollow, boolean isFollowed) {
-        String following = getString(R.string.reader_btn_unfollow).toUpperCase();
-        String follow = getString(R.string.reader_btn_follow).toUpperCase();
-
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setText(isFollowed ? following : follow);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 }
