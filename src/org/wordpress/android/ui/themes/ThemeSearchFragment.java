@@ -20,15 +20,16 @@ import org.wordpress.android.WordPress;
 /**
  * A fragment for display the results of a theme search
  */
-public class ThemeSearchFragment extends ThemeTabFragment
-    implements OnQueryTextListener, OnActionExpandListener {
-
-    private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
+public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryTextListener, OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
+    private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
+
+    protected ThemeSearchFragment(int page) {
+        super(page);
+    }
 
     public static ThemeSearchFragment newInstance() {
-
-        ThemeSearchFragment fragment = new ThemeSearchFragment();
+        ThemeSearchFragment fragment = new ThemeSearchFragment(-1);
 
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
