@@ -254,6 +254,10 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mListView = (ListView) view.findViewById(android.R.id.list);
         setupListView(mListView);
 
+        if (isFullScreenSupported()) {
+            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
+        }
+
         // add post detail as header to listView - must be done before setting adapter
         ViewGroup headerDetail = (ViewGroup) inflater.inflate(R.layout.reader_listitem_post_detail, mListView, false);
         mListView.addHeaderView(headerDetail, null, false);
@@ -459,11 +463,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
             setTitle(null);
         }
 
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-
-        if (activity instanceof PostChangeListener)
+        }
+        if (activity instanceof PostChangeListener) {
             mPostChangeListener = (PostChangeListener) activity;
+        }
     }
 
     @Override

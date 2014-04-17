@@ -69,14 +69,14 @@ public class ReaderActivity extends WPActionBarActivity
 
         // show view that's the same height as the ActionBar when overlay is
         // enabled (otherwise fragment will be obscured by ActionBar)
-        final View viewActionBarSpacer = findViewById(R.id.view_actionbar_spacer);
+        /*final View viewActionBarSpacer = findViewById(R.id.view_actionbar_spacer);
         if (isFullScreenSupported()) {
             int actionBarHeight = DisplayUtils.getActionBarHeight(this);
             viewActionBarSpacer.setMinimumHeight(actionBarHeight);
             viewActionBarSpacer.setVisibility(View.VISIBLE);
         } else {
             viewActionBarSpacer.setVisibility(View.GONE);
-        }
+        }*/
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);

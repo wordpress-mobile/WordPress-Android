@@ -167,7 +167,7 @@
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderBlogDetailActivity"
-            android:theme="@style/ReaderTheme.Popup" />
+            android:label="@string/reader_title_blog_detail"/>
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />

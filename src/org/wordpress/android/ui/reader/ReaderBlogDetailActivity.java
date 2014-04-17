@@ -7,6 +7,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlogInfo;
@@ -18,7 +22,7 @@ import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-public class ReaderBlogDetailActivity extends FragmentActivity {
+public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,23 +30,31 @@ public class ReaderBlogDetailActivity extends FragmentActivity {
 
         setContentView(R.layout.reader_activity_blog_detail);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
         requestBlogInfo(blogId);
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    private String getMshotsUrl(String blogUrl) {
+    private String getMshotsUrl(String blogUrl, int width) {
         if (TextUtils.isEmpty(blogUrl)) {
             return "";
         }
 
-        int width = DisplayUtils.getDisplayPixelWidth(this);
         return "http://s.wordpress.com/mshots/v1/"
               + UrlUtils.urlEncode(blogUrl)
               + "?w=" + Integer.toString(width);
@@ -97,7 +109,9 @@ public class ReaderBlogDetailActivity extends FragmentActivity {
                     toggleBlogFollowStatus(txtFollowBtn, blog);
                 }
             });
-            imgMshot.setImageUrl(getMshotsUrl(blog.getUrl()), WPNetworkImageView.ImageType.PHOTO);
+
+            int width = DisplayUtils.getDisplayPixelWidth(this);
+            imgMshot.setImageUrl(getMshotsUrl(blog.getUrl(), width), WPNetworkImageView.ImageType.PHOTO);
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);

@@ -61,6 +61,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
+    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private ListView mListView;
@@ -164,6 +165,10 @@ public class ReaderPostListFragment extends SherlockFragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         mListView = (ListView) view.findViewById(android.R.id.list);
 
+        if (isFullScreenSupported()) {
+            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
+        }
+
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
@@ -246,6 +251,9 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (activity instanceof OnPostSelectedListener) {
             mPostSelectedListener = (OnPostSelectedListener) activity;
+        }
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
         }
     }
 
@@ -812,6 +820,10 @@ public class ReaderPostListFragment extends SherlockFragment
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
         return true;
+    }
+
+    private boolean isFullScreenSupported() {
+        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
 }
