@@ -254,12 +254,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         mListView = (ListView) view.findViewById(android.R.id.list);
         setupListView(mListView);
 
-        // add a header to the listView that's the same height as the ActionBar when fullscreen
-        // mode is supported
-        if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
-        }
-
         // add post detail as header to listView - must be done before setting adapter
         ViewGroup headerDetail = (ViewGroup) inflater.inflate(R.layout.reader_listitem_post_detail, mListView, false);
         mListView.addHeaderView(headerDetail, null, false);
