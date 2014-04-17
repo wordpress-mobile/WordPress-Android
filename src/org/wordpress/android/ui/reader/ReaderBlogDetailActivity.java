@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -35,8 +35,10 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
-        requestBlogInfo(blogId);
+        //showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
+        //requestBlogInfo(blogId);
+
+        showListFragmentForBlog(blogId);
     }
 
     @Override
@@ -159,5 +161,27 @@ public class ReaderBlogDetailActivity extends SherlockFragmentActivity {
     private void hideProgress() {
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_loading);
         progressBar.setVisibility(View.GONE);
+    }
+
+    /*
+     * show fragment containing list of latest posts in a specific blog
+     */
+    private void showListFragmentForBlog(long blogId) {
+        Fragment fragment = ReaderPostListFragment.newInstance(blogId);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
+                .commit();
+    }
+
+    private ReaderPostListFragment getListFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        if (fragment == null)
+            return null;
+        return ((ReaderPostListFragment) fragment);
+    }
+
+    private boolean hasListFragment() {
+        return (getListFragment() != null);
     }
 }

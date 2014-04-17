@@ -169,6 +169,12 @@ public class ReaderPostListFragment extends SherlockFragment
             ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
         }
 
+        if (getPostListType() == ReaderPostListType.BLOG) {
+            ReaderBlogInfoHeader header = new ReaderBlogInfoHeader(container.getContext());
+            mListView.addHeaderView(header);
+            header.setBlogId(mCurrentBlogId);
+        }
+
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
