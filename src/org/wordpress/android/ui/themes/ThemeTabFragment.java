@@ -67,6 +67,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
     protected int mPage;
+    private boolean mShouldRefreshOnStart;
     private PullToRefreshHelper mPullToRefreshHelper;
 
     protected ThemeTabFragment(int page) {
@@ -118,15 +119,19 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
                     }
                 }
             });
+            mPullToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
         }
         restoreState(savedInstanceState);
         return view;
     }
 
     public void setRefreshing(boolean refreshing) {
-        mPullToRefreshHelper.setRefreshing(refreshing);
-        if (!refreshing) {
-            refreshView();
+        mShouldRefreshOnStart = refreshing;
+        if (mPullToRefreshHelper != null) {
+            mPullToRefreshHelper.setRefreshing(refreshing);
+            if (!refreshing) {
+                refreshView();
+            }
         }
     }
 
