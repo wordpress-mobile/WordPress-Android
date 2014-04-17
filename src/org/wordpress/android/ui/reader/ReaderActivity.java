@@ -321,12 +321,10 @@ public class ReaderActivity extends WPActionBarActivity
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.fragment_container, fragment, tagForFragment);
 
-        // if list fragment exists, replace it with the detail and add to backstack
+        // add to the backstack if list fragment exists
         if (hasListFragment()) {
-            ft.replace(R.id.fragment_container, fragment, tagForFragment);
-            ft.addToBackStack(tagForFragment);
-        } else {
             ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 

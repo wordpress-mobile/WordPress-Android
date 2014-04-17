@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -163,8 +162,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Context context = container.getContext();
-
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         mListView = (ListView) view.findViewById(android.R.id.list);
 
