@@ -68,6 +68,8 @@
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
+    <dimen name="reader_blog_header_image_height">180dp</dimen>
+
     <dimen name="reader_video_overlay_size">48dp</dimen>
     <dimen name="actionbar_refresh_margin">12dp</dimen>
 

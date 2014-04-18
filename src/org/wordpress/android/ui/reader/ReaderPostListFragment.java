@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -61,6 +63,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
+    private View.OnTouchListener mOnTouchListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -162,11 +165,23 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final Context context = container.getContext();
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         mListView = (ListView) view.findViewById(android.R.id.list);
 
         if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
+            ReaderFullScreenUtils.addListViewHeader(context, mListView);
+        }
+
+        if (mOnTouchListener != null) {
+            mListView.setOnTouchListener(mOnTouchListener);
+        }
+
+        // add blog info header for posts in a specific blog
+        if (getPostListType() == ReaderPostListType.BLOG) {
+            ReaderBlogInfoHeader header = new ReaderBlogInfoHeader(context);
+            mListView.addHeaderView(header);
+            header.setBlogId(mCurrentBlogId);
         }
 
         // bar that appears at top when new posts are downloaded
@@ -252,8 +267,13 @@ public class ReaderPostListFragment extends SherlockFragment
         if (activity instanceof OnPostSelectedListener) {
             mPostSelectedListener = (OnPostSelectedListener) activity;
         }
+
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        }
+
+        if (activity instanceof View.OnTouchListener) {
+            mOnTouchListener = (View.OnTouchListener) activity;
         }
     }
 
