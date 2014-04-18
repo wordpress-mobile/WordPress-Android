@@ -54,6 +54,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     private static final String KEY_INITIAL_UPDATE = "initial_update";
+    private static final int UNSPECIFIED_NOTE_ID = -1;
 
     private NotificationsListFragment mNotesList;
     private boolean mLoadingMore = false;
@@ -61,6 +62,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private BroadcastReceiver mBroadcastReceiver;
     private boolean mDualPane;
     private int mSelectedNoteId;
+    private boolean mHasPerformedInitialUpdate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,9 +84,9 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         if (savedInstanceState != null) {
-            loadNotes(true, savedInstanceState.getInt(NOTE_ID_EXTRA, -1));
+            loadNotes(savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID));
         } else {
-            loadNotes(!mDualPane, -1);
+            loadNotes(UNSPECIFIED_NOTE_ID);
         }
 
         GCMIntentService.activeNotificationsMap.clear();
@@ -105,7 +107,7 @@ public class NotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
-    private void loadNotes(final boolean launchIntentNoteId, final int noteId) {
+    private void loadNotes(final int noteId) {
         new Thread() {
             @Override
             public void run() {
@@ -125,7 +127,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                loadNotes(false, -1);
+                loadNotes(UNSPECIFIED_NOTE_ID);
             }
         };
     }
@@ -136,7 +138,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         GCMIntentService.activeNotificationsMap.clear();
 
-        launchWithNoteId(-1);
+        launchWithNoteId(UNSPECIFIED_NOTE_ID);
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -145,26 +147,25 @@ public class NotificationsActivity extends WPActionBarActivity
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
-    private boolean mHasPerformedInitialUpdate;
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
     private void launchWithNoteId(int noteId) {
         final Intent intent = getIntent();
-        if (noteId == -1) {
+        if (noteId == UNSPECIFIED_NOTE_ID) {
             if (intent.hasExtra(NOTE_ID_EXTRA)) {
                 noteId = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
             }
         }
-        if (noteId != -1) {
+        if (noteId != UNSPECIFIED_NOTE_ID) {
             Note note = WordPress.wpDB.getNoteById(noteId);
             if (note != null) {
                 openNote(note);
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
+                params.put("ids", Integer.toString(noteId));
                 NotesResponseHandler handler = new NotesResponseHandler() {
                     @Override
                     public void onNotes(List<Note> notes) {
