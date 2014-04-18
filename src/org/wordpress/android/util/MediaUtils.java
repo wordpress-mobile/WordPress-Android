@@ -344,8 +344,7 @@ public class MediaUtils {
         if (context == null || imageUri == null) {
             return null;
         }
-
-        File cacheDir;
+        File cacheDir = null;
 
         String mimeType = context.getContentResolver().getType(imageUri);
         boolean isVideo = (mimeType != null && mimeType.contains("video"));
