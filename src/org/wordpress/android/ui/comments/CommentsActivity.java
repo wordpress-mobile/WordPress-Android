@@ -15,7 +15,6 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
@@ -33,7 +32,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         createMenuDrawer(R.layout.comment_activity);
         View detailView = findViewById(R.id.fragment_comment_detail);
         mDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
@@ -48,6 +47,7 @@ public class CommentsActivity extends WPActionBarActivity
             if (commentId != 0) {
                 if (hasListFragment()) {
                     getListFragment().setHighlightedCommentId(commentId);
+                    onCommentSelected(commentId);
                 }
             }
         }
@@ -204,11 +204,7 @@ public class CommentsActivity extends WPActionBarActivity
      * called from comment list when user taps a comment
      */
     @Override
-    public void onCommentSelected(Comment comment) {
-        if (comment == null) {
-            return;
-        }
-
+    public void onCommentSelected(long commentId) {
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
@@ -221,15 +217,15 @@ public class CommentsActivity extends WPActionBarActivity
             if (hasReaderFragment()) {
                 fm.popBackStackImmediate();
             }
-            detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
+            detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), commentId);
             if (listFragment != null) {
-                listFragment.setHighlightedCommentId(comment.commentID);
+                listFragment.setHighlightedCommentId(commentId);
             }
         } else {
             FragmentTransaction ft = fm.beginTransaction();
             String tagForFragment = getString(R.string.fragment_tag_comment_detail);
             detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(),
-                    comment.commentID);
+                    commentId);
             ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
               .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             if (listFragment != null) {
@@ -288,8 +284,9 @@ public class CommentsActivity extends WPActionBarActivity
         // retain the id of the highlighted comment
         if (hasListFragment()) {
             long commentId = getListFragment().getHighlightedCommentId();
-            if (commentId != 0 )
+            if (commentId != 0) {
                 outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
+            }
         }
 
         super.onSaveInstanceState(outState);

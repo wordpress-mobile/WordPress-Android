@@ -339,7 +339,7 @@ public class CommentsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mActionMode == null) {
                     Comment comment = (Comment) getCommentAdapter().getItem(position);
-                    mOnCommentSelectedListener.onCommentSelected(comment);
+                    mOnCommentSelectedListener.onCommentSelected(comment.commentID);
                     getListView().invalidateViews();
                 } else {
                     getCommentAdapter().toggleItemSelected(position, view);
@@ -499,7 +499,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     public interface OnCommentSelectedListener {
-        public void onCommentSelected(Comment comment);
+        public void onCommentSelected(long commentId);
     }
 
     @Override
