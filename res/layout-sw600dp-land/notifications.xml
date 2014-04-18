@@ -17,7 +17,6 @@
         <fragment
             android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
             android:id="@+id/fragment_notes_list"
-            android:tag="tablet-view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>

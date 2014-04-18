@@ -84,7 +84,8 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         if (savedInstanceState != null) {
-            loadNotes(savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID));
+            int noteId = savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
+            loadNotes(noteId);
         } else {
             loadNotes(UNSPECIFIED_NOTE_ID);
         }
@@ -310,14 +311,6 @@ public class NotificationsActivity extends WPActionBarActivity
             return;
         }
 
-        // set arguments from activity if called from a notification
-        /*Intent intent = getIntent();
-        if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
-            if (intent.hasExtra(NOTE_REPLY_EXTRA) || intent.hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
-                detailFragment.setArguments(intent.getExtras());
-            }
-        }*/
-
         // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
         // fragment used here that is not a NotificationFragment)
         if (detailFragment instanceof NotificationFragment) {
@@ -326,16 +319,17 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, detailFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(
+                FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // only add to backstack if we're removing the list view from the fragment container
         View container = findViewById(R.id.layout_fragment_container);
         if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             ft.addToBackStack(null);
-            if (mNotesList != null)
+            if (mNotesList != null) {
                 ft.hide(mNotesList);
+            }
         }
 
         ft.commitAllowingStateLoss();
