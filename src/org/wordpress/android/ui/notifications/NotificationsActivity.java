@@ -177,12 +177,9 @@ public class NotificationsActivity extends WPActionBarActivity
                 getRestClientUtils().getNotifications(params, handler, handler);
             }
         } else {
-            // on a tablet: open first note if none selected
-            String fragmentTag = mNotesList.getTag();
-            if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
-                if (mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
-                    openNote(mNotesList.getNotesAdapter().getItem(0));
-                }
+            // Dual pane and no note specified then open first note
+            if (mDualPane && mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
+                openNote(mNotesList.getNotesAdapter().getItem(0));
             }
             mNotesList.animateRefresh(true);
             refreshNotes();
@@ -289,6 +286,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     private void openNote(final Note note) {
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
+        mNotesList.setNoteSelected(note);
         if (note == null || isFinishing()) {
             return;
         }
@@ -297,11 +295,10 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note.isUnread()) {
             markNoteAsRead(note);
         }
-
         FragmentManager fm = getSupportFragmentManager();
 
         // remove the note detail if it's already on there
-        if (fm.getBackStackEntryCount() > 0){
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         }
 

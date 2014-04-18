@@ -112,6 +112,11 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
     }
 
+    public void setNoteSelected(Note note) {
+        int position = getNotesAdapter().indexOfNote(note);
+        getListView().setItemChecked(position, true);
+    }
+
     NotesAdapter getNotesAdapter() {
         if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), this);

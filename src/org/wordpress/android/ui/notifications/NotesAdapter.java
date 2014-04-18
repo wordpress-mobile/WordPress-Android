@@ -64,12 +64,14 @@ class NotesAdapter extends BaseAdapter {
         return null;
     }
 
-    private int indexOfNote(Note note) {
-        if (note == null)
+    public int indexOfNote(Note note) {
+        if (note == null) {
             return -1;
+        }
         for (int i = 0; i < mNotes.size(); i++) {
-            if (StringUtils.equals(mNotes.get(i).getId(), note.getId()))
+            if (StringUtils.equals(mNotes.get(i).getId(), note.getId())) {
                 return i;
+            }
         }
         return -1;
     }
