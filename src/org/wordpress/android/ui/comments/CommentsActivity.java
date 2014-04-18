@@ -87,7 +87,7 @@ public class CommentsActivity extends WPActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (isLargeOrXLarge()) {
+                if (mDualPane) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
