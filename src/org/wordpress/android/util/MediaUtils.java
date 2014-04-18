@@ -413,7 +413,12 @@ public class MediaUtils {
 
         if (TextUtils.isEmpty(mimeType)) {
             try {
-                String filePathForGuessingMime = mediaFile.getPath().contains("://") ? mediaFile.getPath() : "file://"+mediaFile.getPath();
+                String filePathForGuessingMime;
+                if (mediaFile.getPath().contains("://")) {
+                    filePathForGuessingMime = Uri.encode(mediaFile.getPath(), ":/");
+                } else {
+                    filePathForGuessingMime = "file://"+ Uri.encode(mediaFile.getPath(), "/");
+                }
                 URL urlForGuessingMime = new URL(filePathForGuessingMime);
                 URLConnection uc = urlForGuessingMime.openConnection();
                 String guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);

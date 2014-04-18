@@ -33,6 +33,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
@@ -412,6 +413,10 @@ public class ReaderPostAdapter extends BaseAdapter {
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
+
+        if (!post.isLikedByCurrentUser) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+        }
 
         if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
             return;

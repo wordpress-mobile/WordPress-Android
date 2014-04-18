@@ -52,6 +52,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
+        setRetainInstance(true);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
@@ -80,7 +81,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
-
         return view;
     }
 

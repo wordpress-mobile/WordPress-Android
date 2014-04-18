@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class NotificationsActivity extends WPActionBarActivity
                                    implements NotificationFragment.OnPostClickListener,
@@ -45,6 +46,9 @@ public class NotificationsActivity extends WPActionBarActivity
     public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+
         createMenuDrawer(R.layout.notifications);
 
         ActionBar actionBar = getSupportActionBar();
@@ -243,6 +247,8 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         ft.commitAllowingStateLoss();
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
