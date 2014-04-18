@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -28,25 +29,26 @@ public class CommentsActivity extends WPActionBarActivity
                    CommentActions.OnCommentChangeListener {
 
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
+    private boolean mDualPane;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.comment_activity);
-
+        View detailView = findViewById(R.id.fragment_comment_detail);
+        mDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getString(R.string.tab_comments));
-
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-
         if (savedInstanceState != null) {
             // restore the highlighted comment (for tablet UI after rotation)
             long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
             if (commentId != 0) {
-                if (hasListFragment())
+                if (hasListFragment()) {
                     getListFragment().setHighlightedCommentId(commentId);
+                }
             }
         }
     }
@@ -147,10 +149,12 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_detail));
-        if (fragment == null)
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+                R.string.fragment_tag_comment_detail));
+        if (fragment == null) {
             return null;
-        return (CommentDetailFragment)fragment;
+        }
+        return (CommentDetailFragment) fragment;
     }
 
     private boolean hasDetailFragment() {
@@ -158,10 +162,12 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentsListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_comment_list));
-        if (fragment == null)
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+                R.string.fragment_tag_comment_list));
+        if (fragment == null) {
             return null;
-        return (CommentsListFragment)fragment;
+        }
+        return (CommentsListFragment) fragment;
     }
 
     private boolean hasListFragment() {
@@ -199,8 +205,9 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentSelected(Comment comment) {
-        if (comment == null)
+        if (comment == null) {
             return;
+        }
 
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
@@ -208,25 +215,28 @@ public class CommentsActivity extends WPActionBarActivity
         CommentDetailFragment detailFragment = getDetailFragment();
         CommentsListFragment listFragment = getListFragment();
 
-        if (detailFragment == null) {
+        if (mDualPane) {
+            // dual pane mode with list/detail side-by-side - remove the reader fragment if it exists,
+            // then show this comment in the detail view and highlight it in the list view
+            if (hasReaderFragment()) {
+                fm.popBackStackImmediate();
+            }
+            detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
+            if (listFragment != null) {
+                listFragment.setHighlightedCommentId(comment.commentID);
+            }
+        } else {
             FragmentTransaction ft = fm.beginTransaction();
             String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-            detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-            ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment)
-              .addToBackStack(tagForFragment)
+            detailFragment = CommentDetailFragment.newInstance(WordPress.getCurrentLocalTableBlogId(),
+                    comment.commentID);
+            ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
               .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            if (listFragment != null)
+            if (listFragment != null) {
                 ft.hide(listFragment);
+            }
             ft.commitAllowingStateLoss();
             mMenuDrawer.setDrawerIndicatorEnabled(false);
-        } else {
-            // tablet mode with list/detail side-by-side - remove the reader fragment if it exists,
-            // then show this comment in the detail view and highlight it in the list view
-            if (hasReaderFragment())
-                fm.popBackStackImmediate();
-            detailFragment.setComment(WordPress.getCurrentLocalTableBlogId(), comment.commentID);
-            if (listFragment != null)
-                listFragment.setHighlightedCommentId(comment.commentID);
         }
     }
 
