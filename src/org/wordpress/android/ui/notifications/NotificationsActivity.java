@@ -85,19 +85,22 @@ public class NotificationsActivity extends WPActionBarActivity
 
         if (savedInstanceState != null) {
             int noteId = savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
-            loadNotes(noteId);
+            if (!mDualPane && noteId != UNSPECIFIED_NOTE_ID) {
+                // Not dual pane and a specified note, we want to open the note fragment and then load the list in
+                // background (the list is still needed when the user tap back)
+                Note note = WordPress.wpDB.getNoteById(noteId);
+                openNote(note);
+                loadNotes(false, UNSPECIFIED_NOTE_ID);
+            } else {
+                loadNotes(true, noteId);
+            }
         } else {
-            loadNotes(UNSPECIFIED_NOTE_ID);
+            loadNotes(true, UNSPECIFIED_NOTE_ID);
         }
-
         GCMIntentService.activeNotificationsMap.clear();
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-        }
-
-        if (savedInstanceState != null) {
-            popNoteDetail();
         }
 
         if (mBroadcastReceiver == null) {
@@ -108,7 +111,7 @@ public class NotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
-    private void loadNotes(final int noteId) {
+    private void loadNotes(final boolean launchWithNoteId, final int noteId) {
         new Thread() {
             @Override
             public void run() {
@@ -117,7 +120,9 @@ public class NotificationsActivity extends WPActionBarActivity
                     @Override
                     public void run() {
                         refreshNotificationsListFragment(notes);
-                        launchWithNoteId(noteId);
+                        if (launchWithNoteId) {
+                            launchWithNoteId(noteId);
+                        }
                     }
                 });
             }
@@ -128,7 +133,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                loadNotes(UNSPECIFIED_NOTE_ID);
+                loadNotes(true, UNSPECIFIED_NOTE_ID);
             }
         };
     }
@@ -136,18 +141,18 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
         GCMIntentService.activeNotificationsMap.clear();
-
         launchWithNoteId(UNSPECIFIED_NOTE_ID);
     }
 
-    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
-        public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-        }
-    };
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                    }
+                }
+            };
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
@@ -322,6 +327,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(
                 FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
         // only add to backstack if we're removing the list view from the fragment container
         View container = findViewById(R.id.layout_fragment_container);
         if (container.findViewById(R.id.fragment_notes_list) != null) {
@@ -331,10 +337,7 @@ public class NotificationsActivity extends WPActionBarActivity
                 ft.hide(mNotesList);
             }
         }
-
         ft.commitAllowingStateLoss();
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
     }
 
     /*
