@@ -49,26 +49,27 @@ public class NotificationsActivity extends WPActionBarActivity
                                    implements CommentActions.OnCommentChangeListener,
                                               NotificationFragment.OnPostClickListener,
                                               NotificationFragment.OnCommentClickListener {
-
-    public static final String NOTIFICATION_ACTION      = "org.wordpress.android.NOTIFICATION";
-    public static final String NOTE_ID_EXTRA            = "noteId";
-    public static final String FROM_NOTIFICATION_EXTRA  = "fromNotification";
+    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
+    public static final String NOTE_ID_EXTRA = "noteId";
+    public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-
     private static final String KEY_INITIAL_UPDATE = "initial_update";
 
     private NotificationsListFragment mNotesList;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
+    private boolean mDualPane;
+    private int mSelectedNoteId;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
 
         createMenuDrawer(R.layout.notifications);
+        View fragmentContainer = findViewById(R.id.layout_fragment_container);
+        mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -80,10 +81,11 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        // load notes, and automatically show the note passed in the intent (if any) if
-        // activity isn't being restored
-        boolean launchWithNoteId = (savedInstanceState == null);
-        loadNotes(launchWithNoteId);
+        if (savedInstanceState != null) {
+            loadNotes(true, savedInstanceState.getInt(NOTE_ID_EXTRA, -1));
+        } else {
+            loadNotes(!mDualPane, -1);
+        }
 
         GCMIntentService.activeNotificationsMap.clear();
 
@@ -103,7 +105,7 @@ public class NotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
-    private void loadNotes(final boolean launchWithNoteId) {
+    private void loadNotes(final boolean launchIntentNoteId, final int noteId) {
         new Thread() {
             @Override
             public void run() {
@@ -112,8 +114,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     @Override
                     public void run() {
                         refreshNotificationsListFragment(notes);
-                        if (launchWithNoteId)
-                            launchWithNoteId();
+                        launchWithNoteId(noteId);
                     }
                 });
             }
@@ -124,7 +125,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                loadNotes(false);
+                loadNotes(false, -1);
             }
         };
     }
@@ -135,7 +136,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         GCMIntentService.activeNotificationsMap.clear();
 
-        launchWithNoteId();
+        launchWithNoteId(-1);
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -149,20 +150,24 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
-    private void launchWithNoteId(){
+    private void launchWithNoteId(int noteId) {
         final Intent intent = getIntent();
-        if (intent.hasExtra(NOTE_ID_EXTRA)) {
-            int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
-            Note note = WordPress.wpDB.getNoteById(noteID);
+        if (noteId == -1) {
+            if (intent.hasExtra(NOTE_ID_EXTRA)) {
+                noteId = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+            }
+        }
+        if (noteId != -1) {
+            Note note = WordPress.wpDB.getNoteById(noteId);
             if (note != null) {
                 openNote(note);
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
-                NotesResponseHandler handler = new NotesResponseHandler(){
+                NotesResponseHandler handler = new NotesResponseHandler() {
                     @Override
-                    public void onNotes(List<Note> notes){
+                    public void onNotes(List<Note> notes) {
                         // there should only be one note!
                         if (!notes.isEmpty()) {
                             openNote(notes.get(0));
@@ -188,7 +193,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (isLargeOrXLarge()) {
+                if (mDualPane) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
@@ -282,9 +287,11 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      *  Open a note fragment based on the type of note
      */
-    private void openNote(final Note note){
-        if (note == null || isFinishing())
+    private void openNote(final Note note) {
+        mSelectedNoteId = StringUtils.stringToInt(note.getId());
+        if (note == null || isFinishing()) {
             return;
+        }
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
@@ -515,7 +522,7 @@ public class NotificationsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.remove(NOTE_ID_EXTRA);
+        outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
         super.onSaveInstanceState(outState);
     }
 
@@ -576,5 +583,4 @@ public class NotificationsActivity extends WPActionBarActivity
           .addToBackStack(tagForFragment)
           .commit();
     }
-
 }
