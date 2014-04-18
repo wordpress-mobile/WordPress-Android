@@ -70,8 +70,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             incrementProperty(instructions.getPropertyToIncrement(), instructions.getStatToAttachProperty());
         }
 
-        if (instructions.getSuperPropertyToFlag() != null && !instructions.getSuperPropertyToFlag().isEmpty()) {
-            flagSuperProperty(instructions.getSuperPropertyToFlag());
+        if (instructions.getSuperPropertiesToFlag() != null && instructions.getSuperPropertiesToFlag().size() > 0) {
+            for (String superPropertyToFlag : instructions.getSuperPropertiesToFlag()) {
+                flagSuperProperty(superPropertyToFlag);
+            }
         }
     }
 
