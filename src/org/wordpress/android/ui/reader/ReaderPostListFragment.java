@@ -2,10 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -40,9 +42,11 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostList
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +59,7 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefresh
  */
 public class ReaderPostListFragment extends SherlockFragment
                                     implements AbsListView.OnScrollListener,
+                                               View.OnTouchListener,
                                                ActionBar.OnNavigationListener {
 
     static interface OnPostSelectedListener {
@@ -63,7 +68,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
-    private View.OnTouchListener mOnTouchListener;
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -81,6 +85,9 @@ public class ReaderPostListFragment extends SherlockFragment
     private Parcelable mListState = null;
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
+
+    private WPNetworkImageView mImageMshot;
+    private float mLastMotionY;
 
     /*
      * show posts with a specific tag
@@ -167,21 +174,40 @@ public class ReaderPostListFragment extends SherlockFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+
         mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView.setOnTouchListener(this);
+        mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
 
-        if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.addListViewHeader(context, mListView);
-        }
+        switch (getPostListType()) {
+            case BLOG:
+                // show mshot and blog info header for posts in a specific blog
+                if (isFullScreenSupported()) {
+                    //ReaderFullScreenUtils.addOverlayMargin(context, mImageMshot);
+                }
+                mImageMshot.setVisibility(View.VISIBLE);
+                mImageMshot.setScaleType(ImageView.ScaleType.MATRIX);
+                ReaderBlogInfoHeader header = new ReaderBlogInfoHeader(context);
+                mListView.addHeaderView(header);
+                ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
+                    @Override
+                    public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
+                        // set the mshots url if it hasn't already been set
+                        if (hasActivity() && TextUtils.isEmpty(mImageMshot.getUrl())) {
+                            int width = DisplayUtils.getDisplayPixelWidth(getActivity());
+                            mImageMshot.setImageUrl(blogInfo.getMshotsUrl(width), WPNetworkImageView.ImageType.PHOTO);
+                        }
+                    }
+                };
+                header.setBlogId(mCurrentBlogId, infoListener);
+                break;
 
-        if (mOnTouchListener != null) {
-            mListView.setOnTouchListener(mOnTouchListener);
-        }
-
-        // add blog info header for posts in a specific blog
-        if (getPostListType() == ReaderPostListType.BLOG) {
-            ReaderBlogInfoHeader header = new ReaderBlogInfoHeader(context);
-            mListView.addHeaderView(header);
-            header.setBlogId(mCurrentBlogId);
+            case TAG:
+                mImageMshot.setVisibility(View.GONE);
+                if (isFullScreenSupported()) {
+                    ReaderFullScreenUtils.addListViewHeader(context, mListView);
+                }
+                break;
         }
 
         // bar that appears at top when new posts are downloaded
@@ -270,10 +296,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
             mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-        }
-
-        if (activity instanceof View.OnTouchListener) {
-            mOnTouchListener = (View.OnTouchListener) activity;
         }
     }
 
@@ -846,4 +868,53 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
+    private void scaleMshotImage(float yPos, boolean enlarge) {
+        float scaleFactor = yPos * 0.000005f;
+
+        final float scale;
+        if (enlarge) {
+            scale = 1.0f + scaleFactor;
+            mImageMshot.setVisibility(View.VISIBLE);
+        } else {
+            scale = 1.0f - scaleFactor;
+            if (scale <= 0) {
+                mImageMshot.setVisibility(View.GONE);
+                return;
+            }
+        }
+
+        int centerX = mImageMshot.getWidth() / 2;
+        Matrix matrix = mImageMshot.getImageMatrix();
+        matrix.postScale(scale, scale, centerX, 0);
+        mImageMshot.setImageMatrix(matrix);
+        mImageMshot.invalidate();
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        int action = event.getAction() & MotionEvent.ACTION_MASK;
+        final float y = event.getY();
+        final int yDiff = (int) (y - mLastMotionY);
+        mLastMotionY = y;
+
+        if (getPostListType() == ReaderPostListType.BLOG) {
+            switch (action) {
+                case MotionEvent.ACTION_MOVE:
+                    ListView listView = (ListView) view;
+                    if (yDiff < 0) {
+                        // user is scrolling down
+                        scaleMshotImage(y, false);
+                    } else if (yDiff > 0 && ReaderFullScreenUtils.canScrollUp(listView)) {
+                        // user is scrolling up
+                        scaleMshotImage(y, true);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        return false;
+    }
 }

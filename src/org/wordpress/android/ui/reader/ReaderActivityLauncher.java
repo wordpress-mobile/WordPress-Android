@@ -25,8 +25,10 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderBlogDetail(Context context, long blogId) {
-        Intent intent = new Intent(context, ReaderBlogDetailActivity.class);
+        Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderActivity.ARG_IS_BLOG_DETAIL, true);
+        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }
 

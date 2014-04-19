@@ -56,6 +56,10 @@ public class WPNetworkImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
+    public String getUrl() {
+        return mUrl;
+    }
+
     public void setImageUrl(String url, ImageType imageType) {
         setImageUrl(url, imageType, null);
     }

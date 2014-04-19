@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogInfo {
     public long blogId;
@@ -77,5 +78,11 @@ public class ReaderBlogInfo {
 
     public boolean hasDescription() {
         return !TextUtils.isEmpty(description);
+    }
+
+    public String getMshotsUrl(int width) {
+        return "http://s.wordpress.com/mshots/v1/"
+                + UrlUtils.urlEncode(getUrl())
+                + "?w=" + Integer.toString(width);
     }
 }

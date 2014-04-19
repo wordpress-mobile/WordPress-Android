@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.MenuItem;
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -52,11 +50,13 @@ public class ReaderActivity extends WPActionBarActivity
     protected static final String ARG_TAG_NAME = "tag_name";
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
+    protected static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
     protected static final String KEY_LIST_STATE = "list_state";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
     private boolean mIsFullScreen = false;
+    private boolean mIsBlogDetail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,18 +65,15 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         super.onCreate(savedInstanceState);
-        createMenuDrawer(R.layout.reader_activity_main);
 
-        // show view that's the same height as the ActionBar when overlay is
-        // enabled (otherwise fragment will be obscured by ActionBar)
-        /*final View viewActionBarSpacer = findViewById(R.id.view_actionbar_spacer);
-        if (isFullScreenSupported()) {
-            int actionBarHeight = DisplayUtils.getActionBarHeight(this);
-            viewActionBarSpacer.setMinimumHeight(actionBarHeight);
-            viewActionBarSpacer.setVisibility(View.VISIBLE);
+        mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
+
+        if (mIsBlogDetail) {
+            setContentView(R.layout.reader_activity_main);
+            setTitle(R.string.reader_title_blog_detail);
         } else {
-            viewActionBarSpacer.setVisibility(View.GONE);
-        }*/
+            createMenuDrawer(R.layout.reader_activity_main);
+        }
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
@@ -92,14 +89,19 @@ public class ReaderActivity extends WPActionBarActivity
 
             switch (fragmentType) {
                 case POST_LIST:
-                    String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
-                    if (TextUtils.isEmpty(tagName)) {
-                        tagName = UserPrefs.getReaderTag();
+                    if (mIsBlogDetail) {
+                        long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+                        showListFragmentForBlog(blogId);
+                    } else {
+                        String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
+                        if (TextUtils.isEmpty(tagName)) {
+                            tagName = UserPrefs.getReaderTag();
+                        }
+                        if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName)) {
+                            tagName = ReaderTag.TAG_NAME_DEFAULT;
+                        }
+                        showListFragmentForTag(tagName);
                     }
-                    if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName)) {
-                        tagName = ReaderTag.TAG_NAME_DEFAULT;
-                    }
-                    showListFragmentForTag(tagName);
                     break;
                 case POST_DETAIL:
                     long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);

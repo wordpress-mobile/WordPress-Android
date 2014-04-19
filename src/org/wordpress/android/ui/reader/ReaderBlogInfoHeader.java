@@ -18,6 +18,10 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 
 public class ReaderBlogInfoHeader extends LinearLayout {
+    protected interface OnBlogInfoListener {
+        void onBlogInfoShown(ReaderBlogInfo blogInfo);
+    }
+    private OnBlogInfoListener mListener;
 
     public ReaderBlogInfoHeader(Context context){
         super(context);
@@ -38,7 +42,8 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         inflater.inflate(R.layout.reader_blog_info_header, this, true);
     }
 
-    public void setBlogId(long blogId) {
+    public void setBlogId(long blogId, OnBlogInfoListener listener) {
+        mListener = listener;
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
         requestBlogInfo(blogId);
     }
@@ -46,21 +51,21 @@ public class ReaderBlogInfoHeader extends LinearLayout {
     /*
      * show blog header with info from passed blog filled in
      */
-    private void showBlogInfo(final ReaderBlogInfo blog) {
+    private void showBlogInfo(final ReaderBlogInfo blogInfo) {
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final View divider = findViewById(R.id.divider);
 
-        if (blog != null) {
-            txtBlogName.setText(blog.getName());
-            txtDescription.setText(blog.getDescription());
-            txtDescription.setVisibility(blog.hasDescription() ? View.VISIBLE : View.GONE);
-            String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blog.numSubscribers));
+        if (blogInfo != null) {
+            txtBlogName.setText(blogInfo.getName());
+            txtDescription.setText(blogInfo.getDescription());
+            txtDescription.setVisibility(blogInfo.hasDescription() ? View.VISIBLE : View.GONE);
+            String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blogInfo.numSubscribers));
             txtFollowCnt.setText(numFollowers);
 
-            boolean isFollowing = ReaderBlogTable.isFollowedBlogUrl(blog.getUrl());
+            boolean isFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
             showBlogFollowStatus(txtFollowBtn, isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
@@ -68,9 +73,13 @@ public class ReaderBlogInfoHeader extends LinearLayout {
             txtFollowBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleBlogFollowStatus(txtFollowBtn, blog);
+                    toggleBlogFollowStatus(txtFollowBtn, blogInfo);
                 }
             });
+
+            if (mListener != null) {
+                mListener.onBlogInfoShown(blogInfo);
+            }
         } else {
             txtBlogName.setText(null);
             txtDescription.setText(null);
