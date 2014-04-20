@@ -889,7 +889,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     /*
      * mshot requests will return a 307 if the mshot has never been requested before, handle
-     * this by resubmitting request after a brief delay to give time for server to generate
+     * this by resubmitting request after a few seconds to give time for server to generate
      * the image
      */
     private void showHeaderImage(final String imageUrl) {
@@ -911,7 +911,7 @@ public class ReaderPostListFragment extends SherlockFragment
                                     showHeaderImage(imageUrl);
                                 }
                             }
-                        }, 3000);
+                        }, 4000);
                     }
                 }
             }
@@ -939,16 +939,16 @@ public class ReaderPostListFragment extends SherlockFragment
         int top = (firstChild != null ? firstChild.getTop() : 0);
 
         // calculate the scale based on the top position
-        float scale = 1.0f + (top * 0.0005f);
+        float scale = 0.9f + (top * 0.0005f);
         if (scale <= 0 || scale == mPreviousHeaderImageScale) {
             return;
         }
 
-        int centerX = (mHeaderImage.getWidth() / 2) - getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+        float centerX = mHeaderImage.getWidth() * 0.5f;
         Matrix matrix = new Matrix();
-        if (matrix.postScale(scale, scale, centerX, 0)) {
-            mHeaderImage.setImageMatrix(matrix);
-            mPreviousHeaderImageScale = scale;
-        }
+        matrix.setScale(scale, scale, centerX, 0);
+        mHeaderImage.setImageMatrix(matrix);
+
+        mPreviousHeaderImageScale = scale;
     }
 }
