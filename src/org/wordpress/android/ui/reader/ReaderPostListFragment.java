@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -88,8 +89,8 @@ public class ReaderPostListFragment extends SherlockFragment
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
+    private GestureDetector mGestureDetector;
     private WPNetworkImageView mImageMshot;
-    private float mLastMotionY;
 
     /*
      * show posts with a specific tag
@@ -186,8 +187,11 @@ public class ReaderPostListFragment extends SherlockFragment
         boolean hasTransparentActionBar = isFullScreenSupported();
 
         mListView = (ListView) view.findViewById(android.R.id.list);
-        mListView.setOnTouchListener(this);
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
+
+        // handle scroll events so we can scale the mshot image as the user scrolls
+        mListView.setOnTouchListener(this);
+        mGestureDetector = new GestureDetector(context, new ScrollGestureListener());
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -881,9 +885,9 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * mshots requests will return a 307 if the mshot has never been requested before, handle
-     * this by resubmitting request after a brief delay (to give time for server to generate
-     * the image)
+     * mshot requests will return a 307 if the mshot has never been requested before, handle
+     * this by resubmitting request after a brief delay to give time for server to generate
+     * the image
      */
     private void showMshotUrl(final String imageUrl) {
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
@@ -899,13 +903,16 @@ public class ReaderPostListFragment extends SherlockFragment
                                 mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT);
                             }
                         }
-                    }, 4000);
+                    }, 3000);
                 }
             }
         };
         mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
     }
 
+    /*
+     * scale the mshot image based on the current scroll position
+     */
     private void scaleMshotImage() {
         // get the top position of the blog info header
         final View firstChild = mListView.getChildAt(0);
@@ -921,7 +928,6 @@ public class ReaderPostListFragment extends SherlockFragment
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);
-        mImageMshot.invalidate();
     }
 
     /*
@@ -929,26 +935,25 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (getPostListType() == ReaderPostListType.BLOG) {
-            int action = event.getAction() & MotionEvent.ACTION_MASK;
-            switch (action) {
-                case MotionEvent.ACTION_MOVE:
-                    float yDiff = event.getY() - mLastMotionY;
-                    if (yDiff < 0.0f && ReaderFullScreenUtils.canScrollDown(mListView)) {
-                        // user is scrolling down
-                        scaleMshotImage();
-                    } else if (yDiff > 0.0f && ReaderFullScreenUtils.canScrollUp(mListView)) {
-                        // user is scrolling up
-                        scaleMshotImage();
-                    }
-                    break;
+        if (mGestureDetector != null && getPostListType() == ReaderPostListType.BLOG) {
+            return mGestureDetector.onTouchEvent(event);
+        } else {
+            return false;
+        }
+    }
 
-                default:
-                    break;
-            }
+    private class ScrollGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            scaleMshotImage();
+            return super.onScroll(e1, e2, distanceX, distanceY);
         }
 
-        mLastMotionY = event.getY();
-        return false;
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            scaleMshotImage();
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
     }
+
 }

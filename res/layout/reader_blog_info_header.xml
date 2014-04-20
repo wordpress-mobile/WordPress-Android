@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_mshot_spacer"
         android:orientation="vertical"
-        android:background="#e0ffffff">
+        android:background="@color/white">
 
         <View
             android:layout_width="match_parent"

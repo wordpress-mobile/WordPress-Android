@@ -21,6 +21,7 @@ import org.wordpress.android.util.FormatUtils;
 
 /*
  * header view showing blog name, description, follower count & follow button
+ * designed for use on ReaderPostListFragment, which shows an mshot of the blog
  */
 public class ReaderBlogInfoHeader extends LinearLayout {
     private boolean mHasBlogInfo;
@@ -49,10 +50,10 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         View view = inflater.inflate(R.layout.reader_blog_info_header, this, true);
 
         // adjust the spacer so the info overlaps the mshot image on ReaderPostListFragment
-        View spacer = view.findViewById(R.id.view_mshot_spacer);
+        /*View spacer = view.findViewById(R.id.view_mshot_spacer);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) spacer.getLayoutParams();
         int mshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-        params.height = (int)(mshotHeight * 0.75f);
+        params.height = (int)(mshotHeight * 0.75f);*/
     }
 
     public void setBlogId(long blogId, OnBlogInfoListener listener) {
@@ -70,6 +71,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final View divider = findViewById(R.id.divider);
+        final View spacer = findViewById(R.id.view_mshot_spacer);
 
         mHasBlogInfo = (blogInfo != null);
 
@@ -84,6 +86,18 @@ public class ReaderBlogInfoHeader extends LinearLayout {
             showBlogFollowStatus(txtFollowBtn, isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
+
+            View.OnClickListener urlListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
+                }
+            };
+
+            // tapping the spacer opens the blog in the browser - will appear to the user
+            // that they tapped the mshot image
+            spacer.setOnClickListener(urlListener);
+            txtBlogName.setOnClickListener(urlListener);
 
             txtFollowBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
