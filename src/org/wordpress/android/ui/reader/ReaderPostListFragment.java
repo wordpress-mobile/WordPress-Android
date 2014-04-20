@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -911,28 +912,18 @@ public class ReaderPostListFragment extends SherlockFragment
         mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
     }
 
-    private void scaleMshotImage(boolean enlarge) {
-        // get the top position of the blog info header, adjusting for the height
-        // of the mshot image
+    private void scaleMshotImage() {
+        // get the top position of the blog info header, which includes the mshot spacer
         final View firstChild = mListView.getChildAt(0);
-        int top = (firstChild != null ? firstChild.getTop() : 0) + mShotHeight;
-        if (top <= 0) {
-            mImageMshot.setVisibility(View.GONE);
+        int top = (firstChild != null ? firstChild.getTop() : 0);
+
+        float scale = 1.0f + (top * 0.001f);
+        if (scale <= 0) {
             return;
         }
 
-        mImageMshot.setVisibility(View.VISIBLE);
-
-        float scaleFactor = top * 0.00002f;
-        float scale;
-        if (enlarge) {
-            scale = 1.0f + scaleFactor;
-        } else {
-            scale = 1.0f - scaleFactor;
-        }
-
         int centerX = mDisplayWidth / 2;
-        Matrix matrix = mImageMshot.getImageMatrix();
+        Matrix matrix = new Matrix();
         matrix.postScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);
         mImageMshot.invalidate();
@@ -950,10 +941,10 @@ public class ReaderPostListFragment extends SherlockFragment
                     float yDiff = event.getY() - mLastMotionY;
                     if (yDiff < 0.0f && ReaderFullScreenUtils.canScrollDown(mListView)) {
                         // user is scrolling down
-                        scaleMshotImage(false);
+                        scaleMshotImage();
                     } else if (yDiff > 0.0f && ReaderFullScreenUtils.canScrollUp(mListView)) {
                         // user is scrolling up
-                        scaleMshotImage(true);
+                        scaleMshotImage();
                     }
                     break;
 
