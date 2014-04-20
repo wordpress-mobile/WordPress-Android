@@ -63,7 +63,6 @@ public class WPNetworkImageView extends ImageView {
 
     public void reset() {
         mUrl = null;
-        mImageType = ImageType.PHOTO;
         if (mImageContainer != null) {
             mImageContainer.cancelRequest();
             mImageContainer = null;
@@ -254,10 +253,6 @@ public class WPNetworkImageView extends ImageView {
                 // null default for full-screen photos
                 setImageDrawable(null);
                 break;
-            case MSHOT:
-                // null default for mshots
-                setImageDrawable(null);
-                break;
             case AVATAR:
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);
@@ -273,10 +268,6 @@ public class WPNetworkImageView extends ImageView {
         switch (imageType) {
             case PHOTO_FULL:
                 // null default for full-screen photos
-                setImageDrawable(null);
-                break;
-            case MSHOT:
-                // null default for mshots
                 setImageDrawable(null);
                 break;
             default :

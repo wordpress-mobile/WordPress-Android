@@ -4,7 +4,7 @@
     single post in reader post list
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_container"
     android:background="@drawable/reader_postlist_selector"
     android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:layout_toRightOf="@+id/image_avatar"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="text_blog_name"
+        tools:text="text_blog_name"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium" />
 
@@ -51,7 +51,7 @@
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
-        android:text="text_title" />
+        tools:text="text_title" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_excerpt"
@@ -61,7 +61,7 @@
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_medium"
-        android:text="text_excerpt" />
+        tools:text="text_excerpt" />
 
     <View
         android:id="@+id/divider"
@@ -89,7 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="text_date" />
+            tools:text="text_date" />
 
         <ImageView
             android:id="@+id/image_reblog_btn"
@@ -109,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-8dp"
-            android:text="2" />
+            tools:text="2" />
 
         <ImageView
             android:id="@+id/image_like_btn"
@@ -123,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-8dp"
-            android:text="12" />
+            tools:text="12" />
 
     </LinearLayout>
 

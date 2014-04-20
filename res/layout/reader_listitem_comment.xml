@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_extra_light"
@@ -40,7 +41,7 @@
         android:layout_toLeftOf="@+id/text_comment_date"
         android:layout_toRightOf="@+id/image_avatar"
         android:background="@drawable/reader_transparent_selector"
-        android:text="text_comment_author" />
+        tools:text="text_comment_author" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_date"
@@ -51,7 +52,7 @@
         android:layout_alignTop="@+id/image_avatar"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
-        android:text="date" />
+        tools:text="date" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_text"
@@ -61,7 +62,7 @@
         android:layout_marginTop="@dimen/margin_small"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="text_comment_text" />
+        tools:text="text_comment_text" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_reply"
@@ -74,7 +75,7 @@
         android:paddingBottom="@dimen/margin_small"
         android:paddingRight="@dimen/margin_large"
         android:paddingTop="@dimen/margin_small"
-        android:text="@string/reader_label_reply"
+        tools:text="@string/reader_label_reply"
         android:textColor="@color/grey_medium"
         android:textSize="@dimen/text_sz_small" />
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -45,7 +46,13 @@ public class ReaderBlogInfoHeader extends LinearLayout {
 
     private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.reader_blog_info_header, this, true);
+        View view = inflater.inflate(R.layout.reader_blog_info_header, this, true);
+
+        // adjust the spacer so the info overlaps the mshot image on ReaderPostListFragment
+        View spacer = view.findViewById(R.id.view_mshot_spacer);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) spacer.getLayoutParams();
+        int mshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+        params.height = (int)(mshotHeight * 0.75f);
     }
 
     public void setBlogId(long blogId, OnBlogInfoListener listener) {
@@ -89,9 +96,6 @@ public class ReaderBlogInfoHeader extends LinearLayout {
                 mListener.onBlogInfoShown(blogInfo);
             }
         } else {
-            txtBlogName.setText(null);
-            txtDescription.setText(null);
-            txtFollowCnt.setText(null);
             txtFollowBtn.setVisibility(View.INVISIBLE);
             divider.setVisibility(View.INVISIBLE);
         }

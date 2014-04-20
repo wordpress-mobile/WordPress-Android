@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,7 +12,7 @@
         style="@style/ReaderTextView.DialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/reader_title_reblog" />
+        tools:text="@string/reader_title_reblog" />
 
     <View
         android:id="@+id/divider_title"
@@ -33,7 +34,7 @@
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/reader_label_reblog_empty" />
+        tools:text="@string/reader_label_reblog_empty" />
 
     <RelativeLayout
         android:id="@+id/layout_content"
@@ -46,7 +47,7 @@
             style="@style/ReaderTextView.Label.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reader_label_reblog_to" />
+            tools:text="@string/reader_label_reblog_to" />
 
         <Spinner
             android:id="@+id/spinner_reblog"
@@ -61,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/spinner_reblog"
             android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/reader_hint_reblog_comment" />
+            tools:text="@string/reader_hint_reblog_comment" />
 
         <EditText
             android:id="@+id/edit_comment"
@@ -82,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/edit_comment"
-            android:text="@string/reader_btn_reblog" />
+            tools:text="@string/reader_btn_reblog" />
 
         <ProgressBar
             android:id="@+id/progress"

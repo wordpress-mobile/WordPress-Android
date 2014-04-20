@@ -884,7 +884,6 @@ public class ReaderPostListFragment extends SherlockFragment
      * mshots requests will return a 307 if the mshot has never been requested before, handle
      * this by resubmitting request after a brief delay (to give time for server to generate
      * the image)
-     * TODO: Volley needs to handle 307 correctly
      */
     private void showMshotUrl(final String imageUrl) {
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
@@ -892,7 +891,7 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onImageLoaded(boolean succeeded) {
                 if (!succeeded && hasActivity()) {
                     AppLog.d(T.READER, "retrying mshot request");
-                    mImageMshot.setImageUrl(null, WPNetworkImageView.ImageType.MSHOT);
+                    mImageMshot.reset();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -900,7 +899,7 @@ public class ReaderPostListFragment extends SherlockFragment
                                 mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT);
                             }
                         }
-                    }, 2000);
+                    }, 4000);
                 }
             }
         };

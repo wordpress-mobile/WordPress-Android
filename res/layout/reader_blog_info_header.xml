@@ -4,6 +4,7 @@
     blog info header used by reader blog detail
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -18,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/view_mshot_spacer"
         android:orientation="vertical"
-        android:background="@color/white">
+        android:background="#e0ffffff">
 
         <View
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
             android:layout_marginRight="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="text_blog_name"
+            tools:text="text_blog_name"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_extra_large" />
 
@@ -48,7 +49,7 @@
             android:layout_marginRight="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:maxLines="6"
-            android:text="text_blog_description" />
+            tools:text="text_blog_description" />
 
         <View
             android:id="@+id/divider"
@@ -71,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Followers" />
+                tools:text="Followers" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_blog"
