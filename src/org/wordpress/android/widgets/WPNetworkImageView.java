@@ -253,6 +253,10 @@ public class WPNetworkImageView extends ImageView {
                 // null default for full-screen photos
                 setImageDrawable(null);
                 break;
+            case MSHOT:
+                // null default for mshots
+                setImageDrawable(null);
+                break;
             case AVATAR:
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);

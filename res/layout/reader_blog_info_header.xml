@@ -11,13 +11,13 @@
     <!-- empty view to take up same amount of space as mshot image -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_mshot_image_height"
-        android:id="@+id/view_mshot_spacer" />
+        android:layout_height="@dimen/reader_header_image_height"
+        android:id="@+id/view_header_image_spacer" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view_mshot_spacer"
+        android:layout_below="@+id/view_header_image_spacer"
         android:orientation="vertical"
         android:background="@color/white">
 

@@ -71,7 +71,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final View divider = findViewById(R.id.divider);
-        final View spacer = findViewById(R.id.view_mshot_spacer);
+        final View spacer = findViewById(R.id.view_header_image_spacer);
 
         mHasBlogInfo = (blogInfo != null);
 
