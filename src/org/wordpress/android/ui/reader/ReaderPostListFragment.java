@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -224,7 +225,7 @@ public class ReaderPostListFragment extends SherlockFragment
                         // set the mshots url if it hasn't already been set
                         if (hasActivity() && TextUtils.isEmpty(mImageMshot.getUrl())) {
                             int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-                            mImageMshot.setImageUrl(blogInfo.getMshotsUrl(width), WPNetworkImageView.ImageType.PHOTO);
+                            showMshotUrl(blogInfo.getMshotsUrl(width));
                         }
                     }
                 };
@@ -883,6 +884,33 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
+    /*
+     * mshots requests will return a 307 if the mshot has never been requested before, handle
+     * this by resubmitting request after a brief delay (to give time for server to generate
+     * the image)
+     * TODO: Volley needs to handle 307 correctly
+     */
+    private void showMshotUrl(final String imageUrl) {
+        WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
+            @Override
+            public void onImageLoaded(boolean succeeded) {
+                if (!succeeded && hasActivity()) {
+                    AppLog.d(T.READER, "retrying mshot request");
+                    mImageMshot.setImageUrl(null, WPNetworkImageView.ImageType.MSHOT);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (hasActivity()) {
+                                mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT);
+                            }
+                        }
+                    }, 2000);
+                }
+            }
+        };
+        mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
+    }
+
     private void scaleMshotImage(boolean enlarge) {
         // get the top position of the blog info header, adjusting for the height
         // of the mshot image
@@ -895,7 +923,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         mImageMshot.setVisibility(View.VISIBLE);
 
-        float scaleFactor = Math.abs(top) * 0.00002f;
+        float scaleFactor = top * 0.00002f;
         float scale;
         if (enlarge) {
             scale = 1.0f + scaleFactor;
@@ -915,17 +943,15 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        int action = event.getAction() & MotionEvent.ACTION_MASK;
-        float y = event.getY();
-
         if (getPostListType() == ReaderPostListType.BLOG) {
+            int action = event.getAction() & MotionEvent.ACTION_MASK;
             switch (action) {
                 case MotionEvent.ACTION_MOVE:
-                    int yDiff = (int) (y - mLastMotionY);
-                    if (yDiff < 0 && ReaderFullScreenUtils.canScrollDown(mListView)) {
+                    float yDiff = event.getY() - mLastMotionY;
+                    if (yDiff < 0.0f && ReaderFullScreenUtils.canScrollDown(mListView)) {
                         // user is scrolling down
                         scaleMshotImage(false);
-                    } else if (yDiff > 0 && ReaderFullScreenUtils.canScrollUp(mListView)) {
+                    } else if (yDiff > 0.0f && ReaderFullScreenUtils.canScrollUp(mListView)) {
                         // user is scrolling up
                         scaleMshotImage(true);
                     }
@@ -936,7 +962,7 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         }
 
-        mLastMotionY = y;
+        mLastMotionY = event.getY();
         return false;
     }
 }

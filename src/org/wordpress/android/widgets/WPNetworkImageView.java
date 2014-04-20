@@ -35,6 +35,7 @@ import org.wordpress.android.util.SysUtils;
 public class WPNetworkImageView extends ImageView {
     public static enum ImageType {PHOTO,
                                   PHOTO_FULL,
+                                  MSHOT,
                                   VIDEO,
                                   AVATAR}
     private ImageType mImageType = ImageType.PHOTO;
@@ -58,6 +59,15 @@ public class WPNetworkImageView extends ImageView {
 
     public String getUrl() {
         return mUrl;
+    }
+
+    public void reset() {
+        mUrl = null;
+        mImageType = ImageType.PHOTO;
+        if (mImageContainer != null) {
+            mImageContainer.cancelRequest();
+            mImageContainer = null;
+        }
     }
 
     public void setImageUrl(String url, ImageType imageType) {
@@ -185,6 +195,12 @@ public class WPNetworkImageView extends ImageView {
         mImageContainer = newContainer;
     }
 
+    private static boolean canFadeInImageType(ImageType imageType) {
+        return imageType == ImageType.PHOTO
+            || imageType == ImageType.VIDEO
+            || imageType == ImageType.MSHOT;
+    }
+
     private void handleResponse(ImageLoader.ImageContainer response,
                                 boolean isCached,
                                 boolean allowFadeIn) {
@@ -192,11 +208,12 @@ public class WPNetworkImageView extends ImageView {
             setImageBitmap(response.getBitmap());
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
-            if (!isCached && allowFadeIn && (mImageType == ImageType.PHOTO || mImageType == ImageType.VIDEO))
+            if (!isCached && allowFadeIn && canFadeInImageType(mImageType))
                 fadeIn();
 
-            if (mImageListener!=null)
+            if (mImageListener != null) {
                 mImageListener.onImageLoaded(true);
+            }
         } else {
             showDefaultImage(mImageType);
         }
@@ -237,6 +254,10 @@ public class WPNetworkImageView extends ImageView {
                 // null default for full-screen photos
                 setImageDrawable(null);
                 break;
+            case MSHOT:
+                // null default for mshots
+                setImageDrawable(null);
+                break;
             case AVATAR:
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);
@@ -252,6 +273,10 @@ public class WPNetworkImageView extends ImageView {
         switch (imageType) {
             case PHOTO_FULL:
                 // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            case MSHOT:
+                // null default for mshots
                 setImageDrawable(null);
                 break;
             default :
