@@ -7,9 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <!-- empty view to take up same amount of space as mshot image -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_blog_header_image_height"
+        android:layout_height="@dimen/reader_mshot_image_height"
         android:id="@+id/view_mshot_spacer" />
 
     <LinearLayout

@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -90,8 +89,6 @@ public class ReaderPostListFragment extends SherlockFragment
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
     private WPNetworkImageView mImageMshot;
-    private int mShotHeight;
-    private int mDisplayWidth;
     private float mLastMotionY;
 
     /*
@@ -187,8 +184,6 @@ public class ReaderPostListFragment extends SherlockFragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
 
         boolean hasTransparentActionBar = isFullScreenSupported();
-        mShotHeight = getResources().getDimensionPixelSize(R.dimen.reader_blog_header_image_height);
-        mDisplayWidth = DisplayUtils.getDisplayPixelWidth(context);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setOnTouchListener(this);
@@ -913,16 +908,17 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void scaleMshotImage() {
-        // get the top position of the blog info header, which includes the mshot spacer
+        // get the top position of the blog info header
         final View firstChild = mListView.getChildAt(0);
         int top = (firstChild != null ? firstChild.getTop() : 0);
 
-        float scale = 1.0f + (top * 0.001f);
+        // calculate the scale based on the top position
+        float scale = 1.0f + (top * 0.0005f);
         if (scale <= 0) {
             return;
         }
 
-        int centerX = mDisplayWidth / 2;
+        int centerX = (mImageMshot.getWidth() / 2);
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);

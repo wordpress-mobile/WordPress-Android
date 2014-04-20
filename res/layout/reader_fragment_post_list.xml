@@ -9,7 +9,7 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_mshot"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_blog_header_image_height"
+        android:layout_height="@dimen/reader_mshot_image_height"
         android:scaleType="matrix"
         android:visibility="gone"
         android:layout_marginLeft="@dimen/reader_list_margin"
