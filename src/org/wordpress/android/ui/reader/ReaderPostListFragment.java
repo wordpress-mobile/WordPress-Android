@@ -35,6 +35,7 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
@@ -279,7 +280,7 @@ public class ReaderPostListFragment extends SherlockFragment
                                 mPullToRefreshHelper.setRefreshing(false);
                                 return;
                             }
-                            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                            updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
                         }
                     }
             );
@@ -301,10 +302,11 @@ public class ReaderPostListFragment extends SherlockFragment
         switch (getPostListType()) {
             case TAG:
                 getPostAdapter().setCurrentTag(mCurrentTag);
+                updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
                 break;
             case BLOG:
                 getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                updatePostsInCurrentBlog();
+                updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                 break;
         }
     }
@@ -482,18 +484,31 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
         @Override
-        public void onRequestData(ReaderActions.RequestDataAction action) {
+        public void onRequestData(RequestDataAction action) {
             // skip if update is already in progress
-            if (isUpdating())
+            if (isUpdating()) {
                 return;
-            if (getPostListType() == ReaderPostListType.TAG) {
-                // skip if we already have the max # of posts
-                if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
-                    return;
-                // request older posts
-                updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
             }
+
+            switch (getPostListType()) {
+                case TAG:
+                    // skip if we already have the max # of posts
+                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+                        return;
+                    // request older posts
+                    updatePostsWithCurrentTag(RequestDataAction.LOAD_OLDER);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                    break;
+
+                case BLOG:
+                    // TODO
+                    /*if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+                        return;
+                    updatePostsInCurrentBlog(RequestDataAction.LOAD_OLDER);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);*/
+                    break;
+            }
+
         }
     };
 
@@ -560,7 +575,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName))
-            updatePostsWithTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+            updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
     }
 
     /*
@@ -606,10 +621,9 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * get latest posts for the current blog from the server
      */
-    void updatePostsInCurrentBlog() {
-        final ReaderActions.RequestDataAction updateAction = ReaderActions.RequestDataAction.LOAD_NEWER;
+    void updatePostsInCurrentBlog(final RequestDataAction updateAction) {
         setIsUpdating(true, updateAction);
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, new ReaderActions.ActionListener() {
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!hasActivity()) {
@@ -628,13 +642,14 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * get latest posts for this tag from the server
      */
-    private void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
+    private void updatePostsWithCurrentTag(RequestDataAction updateAction) {
         if (hasCurrentTag()) {
-            updatePostsWithTag(mCurrentTag, updateAction, refreshType);
+            updatePostsWithTag(mCurrentTag, updateAction, RefreshType.MANUAL);
         }
     }
 
-    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction,
+    private void updatePostsWithTag(final String tagName,
+                                    final RequestDataAction updateAction,
                                     RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName)) {
             return;
@@ -668,7 +683,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
-                    if (!isEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
+                    if (!isEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
                         showNewPostsBar(numNewPosts);
                     } else {
                         refreshPosts();
@@ -689,7 +704,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mPullToRefreshHelper != null);
     }
 
-    public void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
+    public void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
         }

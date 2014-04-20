@@ -459,7 +459,10 @@ public class ReaderPostActions {
     /*
      * get the latest posts in the passed blog
      */
-    public static void requestPostsForBlog(final long blogId, final ReaderActions.ActionListener actionListener){
+    public static void requestPostsForBlog(final long blogId,
+                                           final ReaderActions.RequestDataAction updateAction,
+                                           final ReaderActions.ActionListener actionListener){
+        // TODO: add after param when requesting older posts
         String path = "sites/" + blogId + "/posts/" + "/?meta=site,likes";
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
