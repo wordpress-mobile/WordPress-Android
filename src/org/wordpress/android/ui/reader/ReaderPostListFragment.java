@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -174,15 +175,35 @@ public class ReaderPostListFragment extends SherlockFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+        boolean hasTransparentActionBar = isFullScreenSupported();
 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setOnTouchListener(this);
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
 
+        // bar that appears at top when new posts are downloaded
+        mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
+        mNewPostsBar.setVisibility(View.GONE);
+        mNewPostsBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reloadPosts(true);
+                hideNewPostsBar();
+            }
+        });
+
+        // move new posts bar down to accommodate transparent ActionBar
+        if (hasTransparentActionBar) {
+            final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
+            params.topMargin = actionbarHeight;
+
+        }
+
         switch (getPostListType()) {
             case BLOG:
                 // show mshot and blog info header for posts in a specific blog
-                if (isFullScreenSupported()) {
+                if (hasTransparentActionBar) {
                     //ReaderFullScreenUtils.addOverlayMargin(context, mImageMshot);
                 }
                 mImageMshot.setVisibility(View.VISIBLE);
@@ -204,22 +225,11 @@ public class ReaderPostListFragment extends SherlockFragment
 
             case TAG:
                 mImageMshot.setVisibility(View.GONE);
-                if (isFullScreenSupported()) {
+                if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
                 }
                 break;
         }
-
-        // bar that appears at top when new posts are downloaded
-        mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
-        mNewPostsBar.setVisibility(View.GONE);
-        mNewPostsBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reloadPosts(true);
-                hideNewPostsBar();
-            }
-        });
 
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
