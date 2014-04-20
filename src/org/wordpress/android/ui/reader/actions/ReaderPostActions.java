@@ -399,8 +399,9 @@ public class ReaderPostActions {
 
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
-                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER)
+                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
+                }
 
                 // json "date_range" tells the the range of dates in the response, which we want to
                 // store for use the next time we request newer/older if this response contained any
@@ -462,8 +463,15 @@ public class ReaderPostActions {
     public static void requestPostsForBlog(final long blogId,
                                            final ReaderActions.RequestDataAction updateAction,
                                            final ReaderActions.ActionListener actionListener){
-        // TODO: add after param when requesting older posts
         String path = "sites/" + blogId + "/posts/" + "/?meta=site,likes";
+
+        // append the date of the oldest cached post in this blog when requesting older posts
+        if (updateAction == ReaderActions.RequestDataAction.LOAD_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                path += "&before=" + UrlUtils.urlEncode(dateOldest);
+            }
+        }
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {

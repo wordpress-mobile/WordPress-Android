@@ -266,7 +266,7 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the iso8601 published date of the oldest post
+     * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
@@ -276,6 +276,16 @@ public class ReaderPostTable {
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=? ORDER BY published LIMIT 1";
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
+    }
+
+    /*
+     * returns the iso8601 published date of the oldest post in the passed blog
+     */
+    public static String getOldestPubDateInBlog(long blogId) {
+        String sql = "SELECT published FROM tbl_posts"
+                  + " WHERE blog_id = ?"
+                  + " ORDER BY published LIMIT 1";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
     }
 
     /*

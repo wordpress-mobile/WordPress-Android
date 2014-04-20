@@ -493,19 +493,20 @@ public class ReaderPostListFragment extends SherlockFragment
             switch (getPostListType()) {
                 case TAG:
                     // skip if we already have the max # of posts
-                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY) {
                         return;
+                    }
                     // request older posts
                     updatePostsWithCurrentTag(RequestDataAction.LOAD_OLDER);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     break;
 
                 case BLOG:
-                    // TODO
-                    /*if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
+                    if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) >= Constants.READER_MAX_POSTS_TO_DISPLAY) {
                         return;
+                    }
                     updatePostsInCurrentBlog(RequestDataAction.LOAD_OLDER);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);*/
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     break;
             }
 
@@ -619,7 +620,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * get latest posts for the current blog from the server
+     * get posts for the current blog from the server
      */
     void updatePostsInCurrentBlog(final RequestDataAction updateAction) {
         setIsUpdating(true, updateAction);
@@ -629,7 +630,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (!hasActivity()) {
                     return;
                 }
-
                 setIsUpdating(false, updateAction);
                 if (succeeded) {
                     refreshPosts();
@@ -926,7 +926,7 @@ public class ReaderPostListFragment extends SherlockFragment
                                     showHeaderImage(imageUrl);
                                 }
                             }
-                        }, 4000);
+                        }, 5000);
                     }
                 }
             }
