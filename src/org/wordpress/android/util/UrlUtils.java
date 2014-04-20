@@ -140,4 +140,18 @@ public class UrlUtils {
         return mimeType;
     }
 
+    /**
+     * returns false if the url is not valid or if the url host is null, else true
+     */
+    public static boolean isValidUrl(String url) {
+        try {
+            URI uri = URI.create(url);
+            if (uri.getHost() == null) {
+                return false;
+            }
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
 }
