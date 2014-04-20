@@ -176,12 +176,10 @@ public class ReaderActivity extends WPActionBarActivity
      * show the drawer indicator if there isn't a detail fragment
      */
     private void checkMenuDrawer() {
-        if (mMenuDrawer == null) {
-            AppLog.w(T.READER, "reader activity > null menu drawer");
-            return;
+        if (mMenuDrawer != null) {
+            int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+            mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
         }
-        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
-        mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
     }
 
     @Override

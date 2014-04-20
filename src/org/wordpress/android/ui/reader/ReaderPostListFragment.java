@@ -79,6 +79,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private String mCurrentTag;
     private long mCurrentBlogId;
+    private ReaderPostListType mPostListType = ReaderPostListType.TAG;
 
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
@@ -88,6 +89,8 @@ public class ReaderPostListFragment extends SherlockFragment
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
     private WPNetworkImageView mImageMshot;
+    private int mShotHeight;
+    private int mDisplayWidth;
     private float mLastMotionY;
 
     /*
@@ -129,6 +132,12 @@ public class ReaderPostListFragment extends SherlockFragment
         if (args != null) {
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+        }
+
+        if (hasCurrentTag()) {
+            mPostListType = ReaderPostListType.TAG;
+        } else {
+            mPostListType = ReaderPostListType.BLOG;
         }
     }
 
@@ -175,7 +184,10 @@ public class ReaderPostListFragment extends SherlockFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+
         boolean hasTransparentActionBar = isFullScreenSupported();
+        mShotHeight = getResources().getDimensionPixelSize(R.dimen.reader_blog_header_image_height);
+        mDisplayWidth = DisplayUtils.getDisplayPixelWidth(context);
 
         mListView = (ListView) view.findViewById(android.R.id.list);
         mListView.setOnTouchListener(this);
@@ -768,11 +780,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        if (hasCurrentTag()) {
-            return ReaderPostListType.TAG;
-        } else {
-            return ReaderPostListType.BLOG;
-        }
+        return mPostListType;
     }
 
     @Override
@@ -879,22 +887,29 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
-    private void scaleMshotImage(float yPos, boolean enlarge) {
-        float scaleFactor = yPos * 0.000005f;
-
-        final float scale;
-        if (enlarge) {
-            scale = 1.0f + scaleFactor;
-            mImageMshot.setVisibility(View.VISIBLE);
-        } else {
-            scale = 1.0f - scaleFactor;
-            if (scale <= 0) {
-                mImageMshot.setVisibility(View.GONE);
-                return;
-            }
+    /*
+     * scale the mshot image as the user scrolls
+     */
+    private void scaleMshotImage(boolean enlarge) {
+        // get the top position of the blog info header, adjusting for the height
+        // of the mshot image
+        final View firstChild = mListView.getChildAt(0);
+        int top = (firstChild != null ? firstChild.getTop() : 0) + mShotHeight;
+        if (top <= 0) {
+            mImageMshot.setVisibility(View.GONE);
+            return;
         }
 
-        int centerX = mImageMshot.getWidth() / 2;
+        mImageMshot.setVisibility(View.VISIBLE);
+        float scaleFactor = Math.abs(top) * 0.000025f;
+        float scale;
+        if (enlarge) {
+            scale = 1.0f + scaleFactor;
+        } else {
+            scale = 1.0f - scaleFactor;
+        }
+
+        int centerX = mDisplayWidth / 2;
         Matrix matrix = mImageMshot.getImageMatrix();
         matrix.postScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);
@@ -904,20 +919,18 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         int action = event.getAction() & MotionEvent.ACTION_MASK;
-        final float y = event.getY();
-        final int yDiff = (int) (y - mLastMotionY);
-        mLastMotionY = y;
+        float y = event.getY();
 
         if (getPostListType() == ReaderPostListType.BLOG) {
             switch (action) {
                 case MotionEvent.ACTION_MOVE:
-                    ListView listView = (ListView) view;
-                    if (yDiff < 0) {
+                    int yDiff = (int) (y - mLastMotionY);
+                    if (yDiff < 0 && ReaderFullScreenUtils.canScrollDown(mListView)) {
                         // user is scrolling down
-                        scaleMshotImage(y, false);
-                    } else if (yDiff > 0 && ReaderFullScreenUtils.canScrollUp(listView)) {
+                        scaleMshotImage(false);
+                    } else if (yDiff > 0 && ReaderFullScreenUtils.canScrollUp(mListView)) {
                         // user is scrolling up
-                        scaleMshotImage(y, true);
+                        scaleMshotImage(true);
                     }
                     break;
 
@@ -926,6 +939,7 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         }
 
+        mLastMotionY = y;
         return false;
     }
 }
