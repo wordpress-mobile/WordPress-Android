@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -17,7 +18,12 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 
+/*
+ * header view showing blog name, description, follower count & follow button
+ */
 public class ReaderBlogInfoHeader extends LinearLayout {
+    private boolean mHasBlogInfo;
+
     protected interface OnBlogInfoListener {
         void onBlogInfoShown(ReaderBlogInfo blogInfo);
     }
@@ -58,7 +64,9 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final View divider = findViewById(R.id.divider);
 
-        if (blogInfo != null) {
+        mHasBlogInfo = (blogInfo != null);
+
+        if (mHasBlogInfo) {
             txtBlogName.setText(blogInfo.getName());
             txtDescription.setText(blogInfo.getDescription());
             txtDescription.setVisibility(blogInfo.hasDescription() ? View.VISIBLE : View.GONE);
@@ -93,9 +101,13 @@ public class ReaderBlogInfoHeader extends LinearLayout {
     * request latest info for this blog
     */
     private void requestBlogInfo(final long blogId) {
+        if (!mHasBlogInfo) {
+            showProgress();
+        }
         ReaderActions.RequestBlogInfoListener listener = new ReaderActions.RequestBlogInfoListener() {
             @Override
             public void onResult(ReaderBlogInfo blogInfo) {
+                hideProgress();
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
                 }
@@ -103,7 +115,6 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         };
         ReaderBlogActions.updateBlogInfo(blogId, listener);
     }
-
 
     private void toggleBlogFollowStatus(final TextView txtFollow, final ReaderBlogInfo blogInfo) {
         if (blogInfo == null || txtFollow == null) {
@@ -133,5 +144,15 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         txtFollow.setText(isFollowed ? following : follow);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+    }
+
+    private void showProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_blog_info);
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_blog_info);
+        progress.setVisibility(View.GONE);
     }
 }

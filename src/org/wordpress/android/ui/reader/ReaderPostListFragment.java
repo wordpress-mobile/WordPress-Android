@@ -17,7 +17,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -206,20 +205,17 @@ public class ReaderPostListFragment extends SherlockFragment
 
         // move new posts bar down to accommodate transparent ActionBar
         if (hasTransparentActionBar) {
-            final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.topMargin = actionbarHeight;
-
+            ReaderFullScreenUtils.addTopMargin(context, mNewPostsBar);
         }
 
         switch (getPostListType()) {
             case BLOG:
                 // show mshot and blog info header for posts in a specific blog
                 if (hasTransparentActionBar) {
-                    //ReaderFullScreenUtils.addOverlayMargin(context, mImageMshot);
+                    ReaderFullScreenUtils.addTopMargin(context, mImageMshot);
                 }
                 mImageMshot.setVisibility(View.VISIBLE);
-                mImageMshot.setScaleType(ImageView.ScaleType.MATRIX);
+
                 ReaderBlogInfoHeader header = new ReaderBlogInfoHeader(context);
                 mListView.addHeaderView(header);
                 ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
@@ -887,9 +883,6 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
-    /*
-     * scale the mshot image as the user scrolls
-     */
     private void scaleMshotImage(boolean enlarge) {
         // get the top position of the blog info header, adjusting for the height
         // of the mshot image
@@ -901,7 +894,8 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         mImageMshot.setVisibility(View.VISIBLE);
-        float scaleFactor = Math.abs(top) * 0.000025f;
+
+        float scaleFactor = Math.abs(top) * 0.00002f;
         float scale;
         if (enlarge) {
             scale = 1.0f + scaleFactor;
@@ -916,6 +910,9 @@ public class ReaderPostListFragment extends SherlockFragment
         mImageMshot.invalidate();
     }
 
+    /*
+     * scale the mshot image as the user scrolls
+     */
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         int action = event.getAction() & MotionEvent.ACTION_MASK;

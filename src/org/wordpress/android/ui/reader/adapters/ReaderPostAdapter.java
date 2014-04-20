@@ -400,8 +400,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
         // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one
-        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET))
+        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET)) {
             preloadPostImages(position + PRELOAD_OFFSET);
+        }
 
         return convertView;
     }

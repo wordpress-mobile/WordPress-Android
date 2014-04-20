@@ -3,10 +3,9 @@
 <!--
     blog info header used by reader blog detail
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <View
         android:layout_width="match_parent"
@@ -16,6 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/view_mshot_spacer"
         android:orientation="vertical"
         android:background="@color/white">
 
@@ -79,4 +79,14 @@
                 android:layout_centerVertical="true" />
         </RelativeLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_blog_info"
+        style="@style/ReaderProgressBar"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

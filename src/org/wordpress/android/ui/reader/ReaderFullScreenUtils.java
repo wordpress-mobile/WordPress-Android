@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.view.View;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.ListView;
@@ -30,10 +31,20 @@ class ReaderFullScreenUtils {
      * mode is supported, should be called before adding any other listView headers
      */
     static void addListViewHeader(Context context, ListView listView) {
-        final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
         RelativeLayout headerFake = new RelativeLayout(context);
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
+        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
+                                                                DisplayUtils.getActionBarHeight(context)));
         listView.addHeaderView(headerFake, null, false);
+    }
+
+    /*
+     * add a top margin to the passed view that's the same height as the ActionBar
+     */
+    static void addTopMargin(Context context, View view) {
+        if (view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+            params.topMargin = DisplayUtils.getActionBarHeight(context);
+        }
     }
 
     /*
