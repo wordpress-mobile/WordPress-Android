@@ -231,12 +231,13 @@ public class ReaderPostListFragment extends SherlockFragment
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                if (mPostSelectedListener != null) {
-                    // take header into account
-                    position -= mListView.getHeaderViewsCount();
+                // take headers into account
+                position -= mListView.getHeaderViewsCount();
+                if (position >= 0 && mPostSelectedListener != null) {
                     ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                    if (post != null)
+                    if (post != null) {
                         mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    }
                 }
             }
         });

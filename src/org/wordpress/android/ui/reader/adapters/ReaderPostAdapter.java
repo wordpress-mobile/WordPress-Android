@@ -287,14 +287,14 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
 
                 // tapping avatar shows blog detail
-                if (!post.isExternal) {
-                    holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!post.isExternal) {
                             ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
                         }
-                    });
-                }
+                    }
+                });
                 break;
 
             case BLOG:

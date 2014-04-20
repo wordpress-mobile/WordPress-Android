@@ -75,14 +75,14 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
             // tapping anywhere in the view shows the user's blog
-            if (user.hasBlogId()) {
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (user.hasBlogId()) {
                         ReaderActivityLauncher.showReaderBlogDetail(v.getContext(), user.blogId);
                     }
-                });
-            }
+                }
+            });
 
             // since the user has a blog url, enable following/unfollowing it
             if (holder.txtFollow.isSelected() != user.isFollowed)
