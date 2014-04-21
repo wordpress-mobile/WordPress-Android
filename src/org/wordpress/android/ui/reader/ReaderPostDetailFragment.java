@@ -1199,15 +1199,22 @@ public class ReaderPostDetailFragment extends SherlockFragment
      * and CSS is customized so embedded videos can play
      */
     private boolean hasEmbedsOrIframes() {
-        return (mPost != null
-            && (mPost.getText().contains("<embed") || mPost.getText().contains("<iframe")));
-
+        if (mPost == null) {
+            return false;
+        } else if (mPost.isVideoPress || mPost.hasFeaturedVideo()) {
+            return true;
+        } else {
+            return (mPost.getText().contains("<embed")
+                 || mPost.getText().contains("<iframe")
+                 || mPost.getText().contains("videos.files.wordpress.com"));
+        }
     }
 
     @SuppressLint("NewApi")
     private void showPost() {
-        if (mIsPostTaskRunning)
+        if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
+        }
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
