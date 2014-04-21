@@ -207,6 +207,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addTopMargin(context, mHeaderImage);
                 }
+                mHeaderImage.setImageType(WPNetworkImageView.ImageType.MSHOT);
                 mHeaderImage.setVisibility(View.VISIBLE);
 
                 // determine the width of the mshot

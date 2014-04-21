@@ -87,6 +87,10 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
+    public void setImageType(ImageType imageType) {
+        mImageType = imageType;
+    }
+
     /*
      * retrieves and displays the thumbnail for the passed video
      */
@@ -285,7 +289,7 @@ public class WPNetworkImageView extends ImageView {
         return getContext().getResources().getColor(resId);
     }
 
-    public void showErrorImage(ImageType imageType) {
+    private void showErrorImage(ImageType imageType) {
         switch (imageType) {
             case PHOTO_FULL:
                 // null default for full-screen photos
@@ -294,6 +298,10 @@ public class WPNetworkImageView extends ImageView {
             case AVATAR:
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);
+                break;
+            case MSHOT:
+                // light grey box for mshots
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
                 break;
             default :
                 // medium grey box for all others
