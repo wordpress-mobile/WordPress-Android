@@ -35,16 +35,16 @@ public class ProfilingUtils {
         return sInstance;
     }
 
-    private ProfilingUtils() {
+    public ProfilingUtils() {
         reset("init");
     }
 
-    private void reset(String label) {
+    public void reset(String label) {
         mLabel = label;
         reset();
     }
 
-    private void reset() {
+    public void reset() {
         if (mSplits == null) {
             mSplits = new ArrayList<Long>();
             mSplitLabels = new ArrayList<String>();
@@ -55,13 +55,13 @@ public class ProfilingUtils {
         addSplit(null);
     }
 
-    private void addSplit(String splitLabel) {
+    public void addSplit(String splitLabel) {
         long now = SystemClock.elapsedRealtime();
         mSplits.add(now);
         mSplitLabels.add(splitLabel);
     }
 
-    private void dumpToLog() {
+    public void dumpToLog() {
         AppLog.d(T.PROFILING, mLabel + ": begin");
         final long first = mSplits.get(0);
         long now = first;
