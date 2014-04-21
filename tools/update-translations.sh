@@ -1,6 +1,8 @@
 #!/bin/sh
 
-for line in $(cat tools/language-codes.csv) ; do
+LANG_FILE=tools/exported-language-codes.csv
+
+for line in $(cat $LANG_FILE) ; do
     code=$(echo $line|cut -d "," -f1|tr -d " ")
     local=$(echo $line|cut -d "," -f2|tr -d " ")
     echo updating $local - $code
