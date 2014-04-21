@@ -67,8 +67,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
-public class ReaderPostDetailFragment extends SherlockFragment {
-
+public class ReaderPostDetailFragment extends SherlockFragment
+                                      implements WPListView.OnScrollDirectionListener {
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
     static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
@@ -105,13 +105,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
-    private boolean mIsMoving;
-    private float mLastMotionY;
-
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
     private PostChangeListener mPostChangeListener;
-
-    private static final int MOVE_MIN_DIFF = 8;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false);
@@ -128,62 +123,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    private WPListView getListView() {
-        return mListView;
-    }
-
-    private void setupListView(WPListView listView) {
-        /*
-         * if full-screen mode is supported, enable full-screen when user scrolls down
-         * and disable full-screen when user scrolls up
-         */
-        if (isFullScreenSupported()) {
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction() & MotionEvent.ACTION_MASK;
-                    final float y = event.getY();
-                    final int yDiff = (int) (y - mLastMotionY);
-                    final boolean isFullScreen = isFullScreen();
-                    mLastMotionY = y;
-
-                    switch (action) {
-                        case MotionEvent.ACTION_MOVE :
-                            if (mIsMoving) {
-                                if (mIsAddCommentBoxShowing) {
-                                    // user is typing a comment, so don't toggle full-screen
-                                    return false;
-                                } else if (yDiff < -MOVE_MIN_DIFF && !isFullScreen && mListView.canScrollDown()) {
-                                    // user is scrolling down, so enable full-screen
-                                    setIsFullScreen(true);
-                                    return true;
-                                } else if (isFullScreen && !mListView.canScrollUp()) {
-                                    // disable full-screen if user scrolls to the top
-                                    setIsFullScreen(false);
-                                } else if (isFullScreen && !mListView.canScrollDown()) {
-                                    // disable full-screen if user scrolls to the bottom
-                                    setIsFullScreen(false);
-                                } else if (yDiff > MOVE_MIN_DIFF && isFullScreen) {
-                                    // user is scrolling up, so disable full-screen
-                                    setIsFullScreen(false);
-                                    return true;
-                                }
-                            } else {
-                                mIsMoving = true;
-                            }
-                            break;
-
-                        default :
-                            mIsMoving = false;
-                            break;
-                    }
-
-                    return false;
-                }
-            });
-        }
     }
 
     /*
@@ -259,9 +198,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
         // locate & init listView
         mListView = (WPListView) view.findViewById(android.R.id.list);
-        setupListView(mListView);
-
         if (isFullScreenSupported()) {
+            mListView.setOnScrollDirectionListener(this);
             ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
         }
 
@@ -313,6 +251,43 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         });
 
         return view;
+    }
+
+    private WPListView getListView() {
+        return mListView;
+    }
+
+    @Override
+    public void onScrollUp() {
+        // don't change fullscreen if user is typing a comment
+        if (mIsAddCommentBoxShowing) {
+            return;
+        }
+
+        // otherwise always disable fullscreen when scrolling up
+        if (isFullScreen()) {
+            setIsFullScreen(false);
+        }
+    }
+
+    @Override
+    public void onScrollDown() {
+        // don't change fullscreen if user is typing a comment
+        if (mIsAddCommentBoxShowing) {
+            return;
+        }
+
+        boolean isFullScreen = isFullScreen();
+        boolean canScrollDown = mListView.canScrollDown();
+        boolean canScrollUp = mListView.canScrollUp();
+
+        if (isFullScreen && !canScrollDown) {
+            // disable full screen once user hits the bottom
+            setIsFullScreen(false);
+        } else if (!isFullScreen && canScrollDown && canScrollUp) {
+            // enable full screen when scrolling down
+            setIsFullScreen(true);
+        }
     }
 
     private boolean hasPost() {
