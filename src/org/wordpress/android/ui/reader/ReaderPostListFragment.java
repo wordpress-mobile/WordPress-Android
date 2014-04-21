@@ -900,17 +900,23 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
-    private void loadHeaderImage(final String imageUrl) {
+    private void loadHeaderImage(final ReaderBlogInfo blogInfo) {
+        // can't get mshot for private blogs
+        if (blogInfo == null || blogInfo.isPrivate) {
+            return;
+        }
+
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
-                // image should be scaled immediately after loading in case user scrolled
                 if (hasActivity() && succeeded) {
-                    mHasLoadedHeaderImage = true;
+                    // image should be scaled immediately after loading in case user scrolled
                     scaleHeaderImage();
+                    mHasLoadedHeaderImage = true;
                 }
             }
         };
+        final String imageUrl = blogInfo.getMshotsUrl(mHeaderImageWidth);
         mHeaderImage.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
     }
 
@@ -919,13 +925,13 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     @Override
     public void onScrollChanged() {
-        if (getPostListType() == ReaderPostListType.BLOG) {
+        if (mHasLoadedHeaderImage && getPostListType() == ReaderPostListType.BLOG) {
             scaleHeaderImage();
         }
     }
 
     private void scaleHeaderImage() {
-        if (!hasActivity() || !mHasLoadedHeaderImage) {
+        if (!hasActivity()) {
             return;
         }
 
@@ -961,7 +967,7 @@ public class ReaderPostListFragment extends SherlockFragment
             @Override
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
                 if (hasActivity() && TextUtils.isEmpty(mHeaderImage.getUrl())) {
-                    loadHeaderImage(blogInfo.getMshotsUrl(mHeaderImageWidth));
+                    loadHeaderImage(blogInfo);
                 }
             }
         };

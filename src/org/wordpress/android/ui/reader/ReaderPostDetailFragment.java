@@ -1190,8 +1190,9 @@ public class ReaderPostDetailFragment extends SherlockFragment
      * called when post couldn't be loaded and failed to be returned from server
      */
     private void postFailed() {
-        if (hasActivity())
+        if (hasActivity()) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+        }
     }
 
     /*

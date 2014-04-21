@@ -82,7 +82,7 @@ public class ReaderBlogInfo {
 
     public String getMshotsUrl(int width) {
         return "http://s.wordpress.com/mshots/v1/"
-                + UrlUtils.urlEncode(getUrl())
-                + "?w=" + Integer.toString(width);
+             + UrlUtils.urlEncode(getUrl())
+             + "?w=" + Integer.toString(width);
     }
 }

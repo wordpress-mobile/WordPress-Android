@@ -252,7 +252,14 @@ public class WPNetworkImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        loadImageIfNecessary(true);
+        if (isInEditMode()) {
+            // draw light blue box during design-time
+            if (getDrawable() == null) {
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.blue_extra_light)));
+            }
+        } else {
+            loadImageIfNecessary(true);
+        }
     }
 
     @Override
@@ -278,14 +285,10 @@ public class WPNetworkImageView extends ImageView {
         return getContext().getResources().getColor(resId);
     }
 
-    private void showErrorImage(ImageType imageType) {
+    public void showErrorImage(ImageType imageType) {
         switch (imageType) {
             case PHOTO_FULL:
                 // null default for full-screen photos
-                setImageDrawable(null);
-                break;
-            case MSHOT:
-                // null default for mshots
                 setImageDrawable(null);
                 break;
             case AVATAR:
@@ -314,13 +317,15 @@ public class WPNetworkImageView extends ImageView {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mImageType == ImageType.VIDEO)
+        if (mImageType == ImageType.VIDEO) {
             drawVideoOverlay(canvas);
+        }
     }
 
     private void drawVideoOverlay(Canvas canvas) {
-        if (canvas==null)
+        if (canvas == null) {
             return;
+        }
 
         Bitmap overlay = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_reader_video_overlay, null);
         int overlaySize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size);
@@ -330,8 +335,9 @@ public class WPNetworkImageView extends ImageView {
         int srcHeight = this.getHeight();
 
         // skip if overlay is larger than source image
-        if (overlaySize > srcWidth || overlaySize > srcHeight)
+        if (overlaySize > srcWidth || overlaySize > srcHeight) {
             return;
+        }
 
         final int left = (srcWidth / 2) - (overlaySize / 2);
         final int top = (srcHeight / 2) - (overlaySize / 2);
