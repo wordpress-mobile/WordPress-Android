@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -73,7 +74,6 @@ public class WordPress extends Application {
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
@@ -97,6 +97,7 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         // Enable log recording
+        ProfilingUtils.start("WordPress.onCreate");
         AppLog.enableRecording(true);
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
@@ -140,7 +141,7 @@ public class WordPress extends Application {
     public static void setupVolleyQueue() {
         requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
+        VolleyLog.setTag(AppLog.TAG);
         // http://stackoverflow.com/a/17035814
         imageLoader.setBatchedResponseDelay(0);
     }
