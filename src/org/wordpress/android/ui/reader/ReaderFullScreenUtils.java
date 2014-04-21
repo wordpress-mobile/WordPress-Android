@@ -46,25 +46,4 @@ class ReaderFullScreenUtils {
             params.topMargin = DisplayUtils.getActionBarHeight(context);
         }
     }
-
-    /*
-     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
-     * because canScrollVertically() requires API 14
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    static boolean canScrollUp(ListView listView) {
-        if (listView == null)
-            return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
-        return listView.canScrollVertically(-1);
-    }
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    static boolean canScrollDown(ListView listView) {
-        if (listView == null)
-            return false;
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
-        return listView.canScrollVertically(1);
-    }
 }

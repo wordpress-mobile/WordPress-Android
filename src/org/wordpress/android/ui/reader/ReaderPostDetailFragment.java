@@ -26,7 +26,6 @@ import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -63,6 +62,7 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
 
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
-    private ListView mListView;
+    private WPListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private WebView mWebView;
@@ -130,11 +130,11 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         return fragment;
     }
 
-    private ListView getListView() {
+    private WPListView getListView() {
         return mListView;
     }
 
-    private void setupListView(ListView listView) {
+    private void setupListView(WPListView listView) {
         /*
          * if full-screen mode is supported, enable full-screen when user scrolls down
          * and disable full-screen when user scrolls up
@@ -155,14 +155,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                                 if (mIsAddCommentBoxShowing) {
                                     // user is typing a comment, so don't toggle full-screen
                                     return false;
-                                } else if (yDiff < -MOVE_MIN_DIFF && !isFullScreen && ReaderFullScreenUtils.canScrollDown(mListView)) {
+                                } else if (yDiff < -MOVE_MIN_DIFF && !isFullScreen && mListView.canScrollDown()) {
                                     // user is scrolling down, so enable full-screen
                                     setIsFullScreen(true);
                                     return true;
-                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollUp(mListView)) {
+                                } else if (isFullScreen && !mListView.canScrollUp()) {
                                     // disable full-screen if user scrolls to the top
                                     setIsFullScreen(false);
-                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollDown(mListView)) {
+                                } else if (isFullScreen && !mListView.canScrollDown()) {
                                     // disable full-screen if user scrolls to the bottom
                                     setIsFullScreen(false);
                                 } else if (yDiff > MOVE_MIN_DIFF && isFullScreen) {
@@ -258,7 +258,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         // locate & init listView
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = (WPListView) view.findViewById(android.R.id.list);
         setupListView(mListView);
 
         if (isFullScreenSupported()) {

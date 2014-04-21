@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:id="@+id/layout_post_detail_container">
 
-    <ListView
+    <org.wordpress.android.widgets.WPListView
         android:id="@id/android:list"
         style="@style/ReaderListView.NoDivider"
         android:layout_above="@+id/layout_comment_box"
