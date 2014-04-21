@@ -63,6 +63,7 @@ public class CommentsListFragment extends Fragment {
     private static final int COMMENTS_PER_PAGE = 30;
     private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     private static final String KEY_HAS_CHECKED_DELETED_COMMENTS = "has_checked_deleted_comments";
+    private boolean mFirstLoad = true;
 
     private ListView getListView() {
         return mListView;
@@ -82,6 +83,12 @@ public class CommentsListFragment extends Fragment {
                         showEmptyView();
                     } else {
                         hideEmptyView();
+                    }
+                    if (mFirstLoad) {
+                        mFirstLoad = false;
+                        if (getActivity() != null && getActivity() instanceof CommentsActivity) {
+                            ((CommentsActivity) getActivity()).commentAdapterFirstLoad();
+                        }
                     }
                 }
             };
@@ -132,6 +139,13 @@ public class CommentsListFragment extends Fragment {
         if (hasCommentAdapter()) {
             getCommentAdapter().clear();
         }
+    }
+
+    public long getFirstCommentId() {
+        if (getCommentAdapter() != null && getCommentAdapter().getCount() > 0) {
+            return ((Comment) getCommentAdapter().getItem(0)).commentID;
+        }
+        return 0;
     }
 
     @Override

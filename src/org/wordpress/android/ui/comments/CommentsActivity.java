@@ -30,6 +30,7 @@ public class CommentsActivity extends WPActionBarActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private boolean mDualPane;
     private long mSelectedCommentId;
+    private boolean mCommentSelected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,10 @@ public class CommentsActivity extends WPActionBarActivity
         setTitle(getString(R.string.tab_comments));
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
+        restoreSavedInstance(savedInstanceState);
+    }
+
+    private void restoreSavedInstance(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             // restore the highlighted comment
             long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
@@ -61,6 +66,17 @@ public class CommentsActivity extends WPActionBarActivity
                     onCommentSelected(commentId);
                 }
             }
+        }
+    }
+
+    /**
+     * Called by CommentAdapter after comment adapter first load
+     */
+    public void commentAdapterFirstLoad() {
+        // if dual pane mode and no selected comments, select the first comment in the list
+        if (mDualPane && !mCommentSelected && hasListFragment()) {
+            long firstCommentId = getListFragment().getFirstCommentId();
+            onCommentSelected(firstCommentId);
         }
     }
 
@@ -225,7 +241,7 @@ public class CommentsActivity extends WPActionBarActivity
             return;
         }
         fm.executePendingTransactions();
-
+        mCommentSelected = true;
         CommentDetailFragment detailFragment = getDetailFragment();
         CommentsListFragment listFragment = getListFragment();
 
