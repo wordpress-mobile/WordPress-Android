@@ -12,6 +12,7 @@
         android:layout_height="@dimen/reader_header_image_height"
         android:scaleType="matrix"
         android:visibility="gone"
+        android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin" />
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout

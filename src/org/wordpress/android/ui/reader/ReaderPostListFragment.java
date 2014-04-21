@@ -77,11 +77,12 @@ public class ReaderPostListFragment extends SherlockFragment
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+
     private WPNetworkImageView mHeaderImage;
+    private ReaderBlogInfoHeader mBlogInfoHeader;
 
     private String mCurrentTag;
     private long mCurrentBlogId;
-    private ReaderPostListType mPostListType = ReaderPostListType.TAG;
 
     private boolean mIsUpdating = false;
     private boolean mIsFlinging = false;
@@ -90,11 +91,10 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private boolean mAlreadyRetriedHeaderImage;
     private boolean mHasLoadedHeaderImage;
+    private int mHeaderImageWidth;
     private float mPreviousHeaderImageScale;
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
-
-
 
     /*
      * show posts with a specific tag
@@ -135,12 +135,6 @@ public class ReaderPostListFragment extends SherlockFragment
         if (args != null) {
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
-        }
-
-        if (hasCurrentTag()) {
-            mPostListType = ReaderPostListType.TAG;
-        } else {
-            mPostListType = ReaderPostListType.BLOG;
         }
     }
 
@@ -217,23 +211,17 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
                 mHeaderImage.setVisibility(View.VISIBLE);
 
-                ReaderBlogInfoHeader infoHeader = new ReaderBlogInfoHeader(context);
-                mListView.addHeaderView(infoHeader);
-                ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
-                    @Override
-                    public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
-                        // set the mshots url if it hasn't already been set
-                        if (hasActivity() && TextUtils.isEmpty(mHeaderImage.getUrl())) {
-                            int width = DisplayUtils.getDisplayPixelWidth(getActivity());
-                            showHeaderImage(blogInfo.getMshotsUrl(width));
-                        }
-                    }
-                };
-                infoHeader.setBlogId(mCurrentBlogId, infoListener);
+                // determine the width of the mshot
+                int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+                mHeaderImageWidth = displayWidth - (marginWidth * 2);
+
+                mBlogInfoHeader = new ReaderBlogInfoHeader(context);
+                mListView.addHeaderView(mBlogInfoHeader);
+                getBlogInfo();
 
                 // listen for scroll changes so we can scale the header image
                 mListView.setOnScrollChangedListener(this);
-
                 break;
 
             case TAG:
@@ -269,22 +257,27 @@ public class ReaderPostListFragment extends SherlockFragment
         mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
-        // pull to refresh setup - only used when viewing posts for a specific tag
-        if (getPostListType() == ReaderPostListType.TAG) {
-            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                    (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
-                    new RefreshListener() {
-                        @Override
-                        public void onRefreshStarted(View view) {
-                            if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                                mPullToRefreshHelper.setRefreshing(false);
-                                return;
-                            }
-                            updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+        // pull to refresh setup
+        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                            mPullToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        switch (getPostListType()) {
+                            case TAG:
+                                updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                                break;
+                            case BLOG:
+                                updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                                break;
                         }
                     }
-            );
-        }
+                }
+        );
 
         return view;
     }
@@ -302,7 +295,9 @@ public class ReaderPostListFragment extends SherlockFragment
         switch (getPostListType()) {
             case TAG:
                 getPostAdapter().setCurrentTag(mCurrentTag);
-                updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                    updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                }
                 break;
             case BLOG:
                 getPostAdapter().setCurrentBlog(mCurrentBlogId);
@@ -575,8 +570,9 @@ public class ReaderPostListFragment extends SherlockFragment
         hideNewPostsBar();
 
         // update posts in this tag if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(tagName))
+        if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
             updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+        }
     }
 
     /*
@@ -795,7 +791,11 @@ public class ReaderPostListFragment extends SherlockFragment
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        return mPostListType;
+        if (hasCurrentTag()) {
+            return ReaderPostListType.TAG;
+        } else {
+            return ReaderPostListType.BLOG;
+        }
     }
 
     @Override
@@ -959,11 +959,32 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        float centerX = mHeaderImage.getWidth() * 0.5f;
+        float centerX = mHeaderImageWidth * 0.5f;
         Matrix matrix = new Matrix();
         matrix.setScale(scale, scale, centerX, 0);
         mHeaderImage.setImageMatrix(matrix);
 
         mPreviousHeaderImageScale = scale;
+    }
+
+    /*
+     * show info about the current blog in the blog header
+     */
+    private void getBlogInfo() {
+        if (mBlogInfoHeader == null) {
+            return;
+        }
+
+        // listener will fire every time the blog info is displayed, use it to set the mshots
+        // url if it hasn't already been set
+        ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
+            @Override
+            public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
+                if (hasActivity() && TextUtils.isEmpty(mHeaderImage.getUrl())) {
+                    showHeaderImage(blogInfo.getMshotsUrl(mHeaderImageWidth));
+                }
+            }
+        };
+        mBlogInfoHeader.setBlogId(mCurrentBlogId, infoListener);
     }
 }

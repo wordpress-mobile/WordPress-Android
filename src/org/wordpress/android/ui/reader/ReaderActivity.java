@@ -65,9 +65,9 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         super.onCreate(savedInstanceState);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
-
         if (mIsBlogDetail) {
             setContentView(R.layout.reader_activity_main);
             setTitle(R.string.reader_title_blog_detail);
@@ -75,10 +75,9 @@ public class ReaderActivity extends WPActionBarActivity
             createMenuDrawer(R.layout.reader_activity_main);
         }
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
-
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
@@ -294,11 +293,13 @@ public class ReaderActivity extends WPActionBarActivity
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.add(R.id.fragment_container, fragment, tagForFragment);
 
         // add to the backstack if list fragment exists
         if (hasListFragment()) {
+            ft.replace(R.id.fragment_container, fragment, tagForFragment);
             ft.addToBackStack(tagForFragment);
+        } else {
+            ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 
         ft.commit();
