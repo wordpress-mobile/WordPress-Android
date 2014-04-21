@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ListView;
 
@@ -15,7 +16,7 @@ public class WPListView extends ListView {
     private float mLastMotionY;
     private boolean mIsMoving;
 
-    // use this listener to detect whenever list is scrolled, even during a fling - note that
+    // use this listener to detect when list is scrolled, even during a fling - note that
     // this may fire very frequently, so make sure code inside listener is optimized
     private ViewTreeObserver.OnScrollChangedListener mScrollChangedListener;
 
@@ -44,6 +45,15 @@ public class WPListView extends ListView {
 
     public void setOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener listener) {
         mScrollChangedListener = listener;
+    }
+
+    /*
+     * return the top position of the first child - this can be used to determine how far the
+     * listView has been scrolled
+     */
+    public int getFirstChildTop() {
+        final View firstChild = getChildAt(0);
+        return (firstChild != null ? firstChild.getTop() : 0);
     }
 
     @Override
