@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,8 +23,10 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.VolleyUtils;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
@@ -38,9 +41,14 @@ public class WPNetworkImageView extends ImageView {
                                   MSHOT,
                                   VIDEO,
                                   AVATAR}
+
     private ImageType mImageType = ImageType.PHOTO;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
+
+    private int mRetryCnt;
+    private static final int MAX_RETRIES = 3;
+    private static final long RETRY_DELAY = 1500;
 
     public interface ImageListener {
         public void onImageLoaded(boolean succeeded);
@@ -61,14 +69,6 @@ public class WPNetworkImageView extends ImageView {
         return mUrl;
     }
 
-    public void reset() {
-        mUrl = null;
-        if (mImageContainer != null) {
-            mImageContainer.cancelRequest();
-            mImageContainer = null;
-        }
-    }
-
     public void setImageUrl(String url, ImageType imageType) {
         setImageUrl(url, imageType, null);
     }
@@ -76,6 +76,7 @@ public class WPNetworkImageView extends ImageView {
         mUrl = url;
         mImageType = imageType;
         mImageListener = imageListener;
+        mRetryCnt = 0;
 
         if (TextUtils.isEmpty(mUrl)) {
             showErrorImage(mImageType);
@@ -117,6 +118,21 @@ public class WPNetworkImageView extends ImageView {
                 }
             });
         }
+    }
+
+    private void retry(final boolean isInLayoutPass) {
+        // retry after a brief delay
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AppLog.d(AppLog.T.READER, String.format("retrying image request (%d)", mRetryCnt));
+                if (mImageContainer != null) {
+                    mImageContainer.cancelRequest();
+                    mImageContainer = null;
+                }
+                loadImageIfNecessary(isInLayoutPass);
+            }
+        }, RETRY_DELAY);
     }
 
     /**
@@ -165,9 +181,21 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showErrorImage(mImageType);
-                        if (mImageListener != null)
-                            mImageListener.onImageLoaded(false);
+                        // mshot requests return a 307 if the mshot has never been requested,
+                        // handle this by retrying request after a short delay to give time
+                        // for server to generate the image
+                        if (mImageType == ImageType.MSHOT
+                                && mRetryCnt < MAX_RETRIES
+                                && VolleyUtils.statusCodeFromVolleyError(error) == 307)
+                        {
+                            mRetryCnt++;
+                            retry(isInLayoutPass);
+                        } else {
+                            showErrorImage(mImageType);
+                            if (mImageListener != null) {
+                                mImageListener.onImageLoaded(false);
+                            }
+                        }
                     }
 
                     @Override

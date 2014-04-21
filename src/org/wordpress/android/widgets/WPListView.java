@@ -9,7 +9,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ListView;
 
 /**
- * ListView which reports scroll changes and offers a few additional properties
+ * ListView which reports scroll changes and offers additional properties
  */
 public class WPListView extends ListView {
     public interface OnScrollDirectionListener {

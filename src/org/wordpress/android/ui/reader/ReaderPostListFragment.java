@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -89,7 +88,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private Parcelable mListState = null;
 
-    private boolean mAlreadyRetriedHeaderImage;
     private boolean mHasLoadedHeaderImage;
     private int mHeaderImageWidth;
     private float mPreviousHeaderImageScale;
@@ -902,32 +900,14 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
-    /*
-     * mshot requests will return a 307 if the mshot has never been requested before, handle
-     * this by resubmitting request after a few seconds to give time for server to generate
-     * the image
-     */
-    private void showHeaderImage(final String imageUrl) {
+    private void loadHeaderImage(final String imageUrl) {
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
-                if (hasActivity()) {
-                    if (succeeded) {
-                        mHasLoadedHeaderImage = true;
-                        scaleHeaderImage();
-                    } else if (!mAlreadyRetriedHeaderImage) {
-                        mAlreadyRetriedHeaderImage = true;
-                        mHeaderImage.reset();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (hasActivity()) {
-                                    AppLog.d(T.READER, "retrying mshot request");
-                                    showHeaderImage(imageUrl);
-                                }
-                            }
-                        }, 5000);
-                    }
+                // image should be scaled immediately after loading in case user scrolled
+                if (hasActivity() && succeeded) {
+                    mHasLoadedHeaderImage = true;
+                    scaleHeaderImage();
                 }
             }
         };
@@ -981,7 +961,7 @@ public class ReaderPostListFragment extends SherlockFragment
             @Override
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
                 if (hasActivity() && TextUtils.isEmpty(mHeaderImage.getUrl())) {
-                    showHeaderImage(blogInfo.getMshotsUrl(mHeaderImageWidth));
+                    loadHeaderImage(blogInfo.getMshotsUrl(mHeaderImageWidth));
                 }
             }
         };
