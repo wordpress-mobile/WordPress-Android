@@ -33,7 +33,8 @@ import org.wordpress.android.util.VolleyUtils;
  *  (1) fading in downloaded images
  *  (2) manipulating images before display
  *  (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
- *  (4) adding a listener to determine when image has completed downloading (or failed)
+ *  (4) adding a listener to determine when image request has completed or failed
+ *  (5) automatically retrying mshot requests that return a 307
  */
 public class WPNetworkImageView extends ImageView {
     public static enum ImageType {PHOTO,
@@ -48,7 +49,7 @@ public class WPNetworkImageView extends ImageView {
 
     private int mRetryCnt;
     private static final int MAX_RETRIES = 3;
-    private static final long RETRY_DELAY = 1500;
+    private static final long RETRY_DELAY = 2000;
 
     public interface ImageListener {
         public void onImageLoaded(boolean succeeded);
@@ -120,8 +121,10 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
+    /*
+     * retry the current image request after a brief delay
+     */
     private void retry(final boolean isInLayoutPass) {
-        // retry after a brief delay
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

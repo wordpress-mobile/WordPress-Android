@@ -955,8 +955,8 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        // listener will fire every time the blog info is displayed, use it to set the mshots
-        // url if it hasn't already been set
+        // listener will fire every time the blog info is displayed, use it to set the
+        // mshot url if it hasn't already been set
         ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
             @Override
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {

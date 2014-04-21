@@ -12,15 +12,18 @@ import android.widget.ListView;
  * ListView which reports scroll changes and offers additional properties
  */
 public class WPListView extends ListView {
+    private float mLastMotionY;
+    private boolean mIsMoving;
+
+    // use this listener to detect whenever list is scrolled, even during a fling - note that
+    // this may fire very frequently, so make sure code inside listener is optimized
+    private ViewTreeObserver.OnScrollChangedListener mScrollChangedListener;
+
+    // use this listener to detect simple up/down scrolling
     public interface OnScrollDirectionListener {
         public void onScrollUp();
         public void onScrollDown();
     }
-
-    private float mLastMotionY;
-    private boolean mIsMoving;
-
-    private ViewTreeObserver.OnScrollChangedListener mScrollChangedListener;
     private OnScrollDirectionListener mOnScrollDirectionListener;
 
     public WPListView(Context context) {
@@ -46,9 +49,6 @@ public class WPListView extends ListView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-
-        // note that onScrollChanged occurs quite often, so make sure to optimize the listener
-        // to avoid unnecessary layout/calculation
         if (mScrollChangedListener != null) {
             mScrollChangedListener.onScrollChanged();
         }
