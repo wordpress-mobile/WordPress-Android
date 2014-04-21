@@ -1,5 +1,8 @@
 package org.wordpress.android.networking;
 
+import android.content.Context;
+import android.util.Base64;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -14,12 +17,11 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -40,34 +42,33 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
-import android.content.Context;
-import android.util.Base64;
-
 /**
- * An {@link HttpStack} based on the code of {@link com.android.volley.toolbox.HurlStack} that internally uses a {@link HttpURLConnection}. 
- * 
- * This implementation of {@link HttpStack} internally initializes {@link SelfSignedSSLCertsManager} in a secondary thread since initialization could
- * take a few seconds.
+ * An {@link HttpStack} based on the code of {@link com.android.volley.toolbox.HurlStack} that internally
+ * uses a {@link HttpURLConnection}.
+ *
+ * This implementation of {@link HttpStack} internally initializes {@link SelfSignedSSLCertsManager} in a secondary
+ * thread since initialization could take a few seconds.
  */
 public class WPDelayedHurlStack implements HttpStack {
-
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
 
     private SSLSocketFactory mSslSocketFactory;
     private final Blog mCurrentBlog;
     private final Context mCtx;
     private final Object monitor = new Object();
-    
+
     public WPDelayedHurlStack(final Context ctx, final Blog currentBlog) {
         mCurrentBlog = currentBlog;
         mCtx = ctx;
-        
-        //initializes SelfSignedSSLCertsManager in a separate thread.
-        Thread SSLContextInitializer = new Thread() {
+
+        // initializes SelfSignedSSLCertsManager in a separate thread.
+        Thread sslContextInitializer = new Thread() {
             @Override
             public void run() {
                 try {
-                    TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(ctx).getLocalKeyStore()) };
+                    TrustManager[] trustAllowedCerts = new TrustManager[]{
+                            new WPTrustManager(SelfSignedSSLCertsManager.getInstance(ctx).getLocalKeyStore())
+                    };
                     SSLContext context = SSLContext.getInstance("SSL");
                     context.init(null, trustAllowedCerts, new SecureRandom());
                     mSslSocketFactory = context.getSocketFactory();
@@ -82,26 +83,27 @@ public class WPDelayedHurlStack implements HttpStack {
                 }
             }
         };
-        SSLContextInitializer.start();
+        sslContextInitializer.start();
     }
-    
+
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders)
             throws IOException, AuthFailureError {
-        
         if (request.getUrl() != null) {
-            if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && mCurrentBlog != null && mCurrentBlog.hasValidHTTPAuthCredentials()) {
+            if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && mCurrentBlog != null
+                    && mCurrentBlog.hasValidHTTPAuthCredentials()) {
                 String creds = String.format("%s:%s", mCurrentBlog.getHttpuser(), mCurrentBlog.getHttppassword());
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 additionalHeaders.put("Authorization", auth);
             }
 
-            if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null && WordPress.getWPComAuthToken(mCtx) != null) {
+            if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && mCtx != null
+                    && WordPress.getWPComAuthToken(mCtx) != null) {
                 // Add the auth header to access private WP.com files
                 additionalHeaders.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(mCtx));
             }
         }
-        
+
         additionalHeaders.put("User-Agent", WordPress.getUserAgent());
 
         String url = request.getUrl();
@@ -160,20 +162,21 @@ public class WPDelayedHurlStack implements HttpStack {
      * Create an {@link HttpURLConnection} for the specified {@code url}.
      */
     protected HttpURLConnection createConnection(URL url) throws IOException {
-      
         // Check that the custom SslSocketFactory is not null on HTTPS connections
-        if ("https".equals(url.getProtocol()) && !url.getHost().endsWith("wordpress.com") && !url.getHost().endsWith("gravatar.com")) { 
-            //WordPress.com doesn't need the custom mSslSocketFactory
+        if ("https".equals(url.getProtocol()) && !url.getHost().endsWith("wordpress.com")
+                && !url.getHost().endsWith("gravatar.com")) {
+            // WordPress.com doesn't need the custom mSslSocketFactory
             synchronized (monitor) {
                 while (mSslSocketFactory == null) {
                     try {
                         monitor.wait(500);
                     } catch (InterruptedException e) {
+                        // we can't do much here.
                     }
                 }
             }
         }
-        
+
         return (HttpURLConnection) url.openConnection();
     }
 
@@ -194,7 +197,7 @@ public class WPDelayedHurlStack implements HttpStack {
 
         // use caller-provided custom SslSocketFactory, if any, for HTTPS
         if ("https".equals(url.getProtocol()) && mSslSocketFactory != null) {
-            ((HttpsURLConnection)connection).setSSLSocketFactory(mSslSocketFactory);
+            ((HttpsURLConnection) connection).setSSLSocketFactory(mSslSocketFactory);
         }
 
         return connection;
