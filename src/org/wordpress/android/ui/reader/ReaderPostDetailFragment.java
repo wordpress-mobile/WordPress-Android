@@ -91,12 +91,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private ProgressBar mProgressFooter;
     private WebView mWebView;
 
-    private boolean mIsAddCommentBoxShowing = false;
+    private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
-    private boolean mHasAlreadyUpdatedPost = false;
-    private boolean mHasAlreadyRequestedPost = false;
-    private boolean mIsUpdatingComments = false;
+    private boolean mHasAlreadyUpdatedPost;
+    private boolean mHasAlreadyRequestedPost;
+    private boolean mIsUpdatingComments;
     private boolean mWebViewIsPaused;
+    private boolean mIsBlogDetail;
+
     private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
 
@@ -112,11 +114,15 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     private static final int MOVE_MIN_DIFF = 8;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
+        return newInstance(blogId, postId, false);
+    }
+    public static ReaderPostDetailFragment newInstance(long blogId, long postId, boolean isBlogDetail) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
         args.putLong(ReaderActivity.ARG_POST_ID, postId);
+        args.putBoolean(ReaderActivity.ARG_IS_BLOG_DETAIL, isBlogDetail);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -243,6 +249,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         if (args != null) {
             mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
+            mIsBlogDetail = args.getBoolean(ReaderActivity.ARG_IS_BLOG_DETAIL);
         }
     }
 
@@ -1405,8 +1412,9 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 }
             });
 
-            // show blog detail when avatar, blog or author name is tapped
-            if (!mPost.isExternal) {
+            // show blog detail when avatar, blog or author name is tapped unless this fragment
+            // was shown from blog detail
+            if (!mPost.isExternal && !mIsBlogDetail) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

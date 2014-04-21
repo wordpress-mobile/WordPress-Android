@@ -290,7 +290,7 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, mIsBlogDetail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
