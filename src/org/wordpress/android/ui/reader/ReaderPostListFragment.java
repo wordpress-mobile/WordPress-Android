@@ -83,8 +83,8 @@ public class ReaderPostListFragment extends SherlockFragment
     private String mCurrentTag;
     private long mCurrentBlogId;
 
-    private boolean mIsUpdating = false;
-    private boolean mIsFlinging = false;
+    private boolean mIsUpdating;
+    private boolean mIsFlinging;
 
     private Parcelable mListState = null;
 

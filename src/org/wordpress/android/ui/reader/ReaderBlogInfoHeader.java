@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -142,9 +141,10 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         AniUtils.zoomAction(txtFollow);
 
         boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        ReaderBlogActions.BlogAction blogAction = (isCurrentlyFollowing ? ReaderBlogActions.BlogAction.UNFOLLOW : ReaderBlogActions.BlogAction.FOLLOW);
-        if (!ReaderBlogActions.performBlogAction(blogAction, blogInfo.blogId, blogInfo.getUrl()))
+        ReaderBlogActions.FollowAction action = (isCurrentlyFollowing ? ReaderBlogActions.FollowAction.UNFOLLOW : ReaderBlogActions.FollowAction.FOLLOW);
+        if (!ReaderBlogActions.performFollowAction(action, blogInfo.blogId, blogInfo.getUrl())) {
             return;
+        }
 
         boolean isNowFollowing = !isCurrentlyFollowing;
         showBlogFollowStatus(txtFollow, isNowFollowing);

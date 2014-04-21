@@ -19,20 +19,21 @@ import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogActions {
 
-    public enum BlogAction {FOLLOW, UNFOLLOW}
+    public enum FollowAction {FOLLOW, UNFOLLOW}
 
-    public static boolean performBlogAction(final BlogAction action,
-                                            final long blogId,
-                                            final String blogUrl) {
+    public static boolean performFollowAction(final FollowAction action,
+                                              final long blogId,
+                                              final String blogUrl) {
 
         if (TextUtils.isEmpty(blogUrl))
             return false;
 
         final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
-        final boolean isAskingToFollow = (action == BlogAction.FOLLOW);
+        final boolean isAskingToFollow = (action == FollowAction.FOLLOW);
 
-        if (isCurrentlyFollowing == isAskingToFollow)
+        if (isCurrentlyFollowing == isAskingToFollow) {
             return true;
+        }
 
         final String path;
         final String domain = UrlUtils.getDomainFromUrl(blogUrl);
@@ -93,8 +94,9 @@ public class ReaderBlogActions {
         WordPress.getRestClientUtils().get("/read/following/mine", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject) {
-        if (jsonObject==null)
+        if (jsonObject == null) {
             return;
+        }
 
         new Thread() {
             @Override
@@ -102,8 +104,9 @@ public class ReaderBlogActions {
                 ReaderUrlList urls = new ReaderUrlList();
                 JSONArray jsonBlogs = jsonObject.optJSONArray("subscriptions");
                 if (jsonBlogs!=null) {
-                    for (int i=0; i < jsonBlogs.length(); i++)
+                    for (int i=0; i < jsonBlogs.length(); i++) {
                         urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
+                    }
                 }
                 ReaderBlogTable.setFollowedBlogUrls(urls);
             }
@@ -111,7 +114,7 @@ public class ReaderBlogActions {
     }
 
     /*
-     * requests info about a specific blog
+     * request info about a specific blog
      */
     public static void updateBlogInfo(long blogId, final ReaderActions.RequestBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -130,7 +133,6 @@ public class ReaderBlogActions {
         };
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
     }
-
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null)

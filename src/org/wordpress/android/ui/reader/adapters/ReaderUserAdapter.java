@@ -108,14 +108,16 @@ public class ReaderUserAdapter extends BaseAdapter {
     }
 
     private void toggleFollowUser(ReaderUser user, TextView txtFollow) {
-        if (user==null || !user.hasUrl())
+        if (user == null || !user.hasUrl()) {
             return;
+        }
 
         boolean isAskingToFollow = !user.isFollowed;
-        ReaderBlogActions.BlogAction action = (isAskingToFollow ? ReaderBlogActions.BlogAction.FOLLOW : ReaderBlogActions.BlogAction.UNFOLLOW);
+        ReaderBlogActions.FollowAction action = (isAskingToFollow ? ReaderBlogActions.FollowAction.FOLLOW : ReaderBlogActions.FollowAction.UNFOLLOW);
 
-        if (!ReaderBlogActions.performBlogAction(action, user.blogId, user.getUrl()))
+        if (!ReaderBlogActions.performFollowAction(action, user.blogId, user.getUrl())) {
             return;
+        }
 
         user.isFollowed = isAskingToFollow;
         showFollowStatus(txtFollow, isAskingToFollow);
