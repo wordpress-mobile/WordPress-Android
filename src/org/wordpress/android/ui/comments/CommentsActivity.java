@@ -26,9 +26,10 @@ public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
-
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
+    private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private boolean mDualPane;
+    private long mSelectedCommentId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,21 @@ public class CommentsActivity extends WPActionBarActivity
         FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         if (savedInstanceState != null) {
-            // restore the highlighted comment (for tablet UI after rotation)
+            // restore the highlighted comment
             long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
             if (commentId != 0) {
                 if (hasListFragment()) {
                     getListFragment().setHighlightedCommentId(commentId);
+                    // on dual pane mode, the highlighted comment is also selected
+                }
+                if (mDualPane) {
+                    onCommentSelected(commentId);
+                }
+            }
+            // restore the selected comment
+            if (!mDualPane) {
+                commentId = savedInstanceState.getLong(KEY_SELECTED_COMMENT_ID);
+                if (commentId != 0) {
                     onCommentSelected(commentId);
                 }
             }
@@ -102,12 +113,15 @@ public class CommentsActivity extends WPActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
-        public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-        }
-    };
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                        mSelectedCommentId = 0;
+                    }
+                }
+            };
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -205,7 +219,11 @@ public class CommentsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentSelected(long commentId) {
+        mSelectedCommentId = commentId;
         FragmentManager fm = getSupportFragmentManager();
+        if (fm == null) {
+            return;
+        }
         fm.executePendingTransactions();
 
         CommentDetailFragment detailFragment = getDetailFragment();
@@ -229,6 +247,7 @@ public class CommentsActivity extends WPActionBarActivity
             ft.add(R.id.layout_fragment_container, detailFragment, tagForFragment).addToBackStack(tagForFragment)
               .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             if (listFragment != null) {
+                listFragment.setHighlightedCommentId(commentId);
                 ft.hide(listFragment);
             }
             ft.commitAllowingStateLoss();
@@ -281,14 +300,16 @@ public class CommentsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
 
-        // retain the id of the highlighted comment
+        // retain the id of the highlighted and selected comments
+        if (mSelectedCommentId != 0) {
+            outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
+        }
         if (hasListFragment()) {
             long commentId = getListFragment().getHighlightedCommentId();
             if (commentId != 0) {
                 outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
             }
         }
-
         super.onSaveInstanceState(outState);
     }
 
