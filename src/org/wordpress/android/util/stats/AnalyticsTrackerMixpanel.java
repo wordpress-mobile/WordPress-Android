@@ -366,6 +366,24 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_share");
                 break;
+            case ADDED_SELF_HOSTED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Added Self Hosted Site");
+                break;
+            case SIGNED_INTO_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Signed into Jetpack");
+                instructions.addSuperPropertyToFlag("jetpack_user");
+                instructions.addSuperPropertyToFlag("dotcom_user");
+                break;
+            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Signed into Jetpack from Stats Screen");
+                break;
+            case STATS_SELECTED_INSTALL_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Selected Install Jetpack");
+                break;
             default:
                 instructions = null;
                 break;

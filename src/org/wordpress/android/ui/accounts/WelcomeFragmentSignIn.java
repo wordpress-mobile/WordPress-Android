@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -422,6 +423,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
+        private boolean isSelfHostedBlog;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -439,6 +441,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setUsername(EditTextUtils.getText(mUsernameEditText).trim());
             mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
             if (mSelfHosted) {
+                isSelfHostedBlog = true;
                 mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
             } else {
                 mSetupBlog.setSelfHostedURL(null);
@@ -547,6 +550,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
                 signInError();
                 return;
+            }
+
+            if (isSelfHostedBlog) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
             }
 
             // Update wp.com credentials
