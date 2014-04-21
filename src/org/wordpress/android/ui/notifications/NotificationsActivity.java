@@ -292,11 +292,11 @@ public class NotificationsActivity extends WPActionBarActivity
      *  Open a note fragment based on the type of note
      */
     private void openNote(final Note note) {
-        mSelectedNoteId = StringUtils.stringToInt(note.getId());
-        mNotesList.setNoteSelected(note);
         if (note == null || isFinishing()) {
             return;
         }
+        mSelectedNoteId = StringUtils.stringToInt(note.getId());
+        mNotesList.setNoteSelected(note);
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
