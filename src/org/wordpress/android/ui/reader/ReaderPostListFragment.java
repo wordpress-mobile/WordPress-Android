@@ -85,6 +85,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
+    private boolean mWasPaused;
 
     private Parcelable mListState = null;
 
@@ -151,6 +152,25 @@ public class ReaderPostListFragment extends SherlockFragment
             if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
                 mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
             }
+            mWasPaused = savedInstanceState.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWasPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // if the fragment is resuming from a paused state, make sure the follow status of
+        // the adapter's posts is accurate - this is necessary in case the user returned
+        // from an activity where the follow status may have been changed
+        if (mWasPaused) {
+            mWasPaused = false;
+            checkFollowStatus();
         }
     }
 
@@ -167,6 +187,8 @@ public class ReaderPostListFragment extends SherlockFragment
                 outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
                 break;
         }
+
+        outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
@@ -283,6 +305,19 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof OnPostSelectedListener) {
+            mPostSelectedListener = (OnPostSelectedListener) activity;
+        }
+
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -309,19 +344,6 @@ public class ReaderPostListFragment extends SherlockFragment
                     updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
                     break;
             }
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof OnPostSelectedListener) {
-            mPostSelectedListener = (OnPostSelectedListener) activity;
-        }
-
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
         }
     }
 
@@ -615,12 +637,12 @@ public class ReaderPostListFragment extends SherlockFragment
      * blogs they're in
      */
     void checkFollowStatus() {
-        if (hasPostAdapter() && !isEmpty()) {
+        if (hasPostAdapter()) {
             getPostAdapter().checkFollowStatusForAllPosts();
         }
     }
     void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
-        if (hasPostAdapter() && !isEmpty()) {
+        if (hasPostAdapter()) {
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
         }
     }

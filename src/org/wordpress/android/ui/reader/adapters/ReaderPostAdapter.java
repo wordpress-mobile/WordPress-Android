@@ -189,6 +189,9 @@ public class ReaderPostAdapter extends BaseAdapter {
      * ensures that the follow status of each post in the list is accurate
      */
     public void checkFollowStatusForAllPosts() {
+        if (isEmpty()) {
+            return;
+        }
         boolean isChanged = false;
         final ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
         for (ReaderPost post: mPosts) {
@@ -207,6 +210,9 @@ public class ReaderPostAdapter extends BaseAdapter {
      * sets the follow status of each post in the passed blog
      */
     public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+        if (isEmpty()) {
+            return;
+        }
         boolean isChanged = false;
         for (ReaderPost post: mPosts) {
             if (post.blogId == blogId) {

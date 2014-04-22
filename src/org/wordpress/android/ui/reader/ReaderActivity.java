@@ -51,7 +51,9 @@ public class ReaderActivity extends WPActionBarActivity
     protected static final String ARG_BLOG_ID = "blog_id";
     protected static final String ARG_POST_ID = "post_id";
     protected static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
+
     protected static final String KEY_LIST_STATE = "list_state";
+    protected static final String KEY_WAS_PAUSED = "was_paused";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;
@@ -108,16 +110,6 @@ public class ReaderActivity extends WPActionBarActivity
                     showDetailFragment(blogId, postId);
                     break;
             }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // make sure the follow status of each post in the list is accurate - this is necessary
-        // if the user shows blog detail and changes the following status
-        if (!isListFragmentEmpty()) {
-            getListFragment().checkFollowStatus();
         }
     }
 
