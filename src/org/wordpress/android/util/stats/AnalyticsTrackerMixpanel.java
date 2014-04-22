@@ -22,7 +22,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String SESSION_COUNT = "sessionCount";
     private static final String MIXPANEL_PLATFORM = "Android";
     private static final String MIXPANEL_SESSION_COUNT = "session_count";
-    private static final String MIXPANEL_CONNECTED_TO_DOTCOM = "connected_to_dotcom";
+    private static final String DOTCOM_USER = "dotcom_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
 
     public AnalyticsTrackerMixpanel() {
@@ -124,7 +124,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             JSONObject properties = new JSONObject();
             properties.put(MIXPANEL_PLATFORM, "Android");
             properties.put(MIXPANEL_SESSION_COUNT, sessionCount);
-            properties.put(MIXPANEL_CONNECTED_TO_DOTCOM, connected);
+            properties.put(DOTCOM_USER, connected);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
