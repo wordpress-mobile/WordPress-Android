@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.Config;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog;
 
 import java.util.EnumMap;
@@ -121,14 +120,14 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
         // Register super properties
         boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
-        boolean jetpack_user = WordPress.wpDB.hasAnyJetpackBlogs();
+        boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {
             JSONObject properties = new JSONObject();
             properties.put(MIXPANEL_PLATFORM, "Android");
             properties.put(MIXPANEL_SESSION_COUNT, sessionCount);
             properties.put(DOTCOM_USER, connected);
-            properties.put(JETPACK_USER, jetpack_user);
+            properties.put(JETPACK_USER, jetpackUser);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
