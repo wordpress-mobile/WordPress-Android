@@ -98,7 +98,6 @@
 	<string name="mnu_comment_trash">Supprimer</string>
 	<string name="xmlrpc_error">Connexion impossible. Entrer le chemin complet vers xmlrpc.php de votre site et essayez à nouveau.</string>
 	<string name="please_sign_in">Reconnectez-vous.</string>
-	<string name="visit_security_settings">Verifiez les paramètres de sécurité</string>
 	<string name="select_categories">Sélectionner les catégories</string>
 	<string name="account_details">Détails du compte</string>
 	<string name="show_and_hide_blogs">Montrer/cacher les blogs WordPress.com</string>
@@ -230,6 +229,7 @@
 	<string name="dlg_spamming_comments">Marquage comme indésirable</string>
 	<string name="dlg_approving_comments">Approbation</string>
 	<string name="dlg_unapproving_comments">Désapprobation</string>
+	<string name="visit_security_settings">Visitez la page sécurité</string>
 	<string name="refreshing_categories">Actualisation des catégories</string>
 	<string name="cat_adding_category">Ajout de catégorie</string>
 	<string name="deleting_page">Suppression de la page</string>
