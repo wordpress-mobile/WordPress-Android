@@ -25,8 +25,9 @@ public class ReaderBlogActions {
                                               final long blogId,
                                               final String blogUrl) {
 
-        if (TextUtils.isEmpty(blogUrl))
+        if (TextUtils.isEmpty(blogUrl)) {
             return false;
+        }
 
         final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
         final boolean isAskingToFollow = (action == FollowAction.FOLLOW);
@@ -104,8 +105,9 @@ public class ReaderBlogActions {
                 ReaderUrlList urls = new ReaderUrlList();
                 JSONArray jsonBlogs = jsonObject.optJSONArray("subscriptions");
                 if (jsonBlogs!=null) {
-                    for (int i=0; i < jsonBlogs.length(); i++)
+                    for (int i=0; i < jsonBlogs.length(); i++) {
                         urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
+                    }
                 }
                 ReaderBlogTable.setFollowedBlogUrls(urls);
             }
@@ -126,8 +128,9 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (infoListener != null)
+                if (infoListener != null) {
                     infoListener.onResult(null);
+                }
             }
         };
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
@@ -135,15 +138,17 @@ public class ReaderBlogActions {
 
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {
         if (jsonObject == null) {
-            if (infoListener != null)
+            if (infoListener != null) {
                 infoListener.onResult(null);
+            }
             return;
         }
 
         ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonObject);
         ReaderBlogTable.setBlogInfo(blogInfo);
-        if (infoListener != null)
+        if (infoListener != null) {
             infoListener.onResult(blogInfo);
+        }
     }
 
 }

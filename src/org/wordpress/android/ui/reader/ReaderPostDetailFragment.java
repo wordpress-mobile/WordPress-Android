@@ -1396,8 +1396,8 @@ public class ReaderPostDetailFragment extends SherlockFragment
             });
 
             // show blog detail when avatar, blog or author name is tapped unless this fragment
-            // was shown from blog detail
-            if (!mIsBlogDetail) {
+            // was shown from blog detail, or this is a post from an external feed
+            if (!mIsBlogDetail && !mPost.isExternal) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

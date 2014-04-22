@@ -287,11 +287,13 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
 
-            // tapping avatar shows blog detail
+            // tapping avatar shows blog detail unless this post is from an external feed
             holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
+                    if (!post.isExternal) {
+                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
+                    }
                 }
             });
         }
