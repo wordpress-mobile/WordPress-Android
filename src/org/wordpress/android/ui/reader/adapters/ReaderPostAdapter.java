@@ -490,11 +490,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null)) {
+        boolean isAskingToLike = !post.isLikedByCurrentUser;
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             return;
         }
 
-        if (!post.isLikedByCurrentUser) {
+        if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
         }
 
@@ -510,27 +511,23 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnLike.setSelected(isLikedByCurrentUser);
     }
 
-    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
-            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
-        }
-        if (isRebloggedByCurrentUser) {
-            imgBtnReblog.setOnClickListener(null);
-        }
-    }
-
+    /*
+     * triggered when user taps the follow button
+     */
     private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
         AniUtils.zoomAction(holder.txtFollow);
 
-        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
+        boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        if (!ReaderPostActions.performFollowAction(post, isAskingToFollow)) {
             return;
+        }
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
-        showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
+        showFollowStatus(holder.txtFollow, isAskingToFollow);
         
-        //Update 'following' status on all other posts in the same blog.
-        updateFollowStatusOnPostsForBlog(post.blogId, updatedPost.isFollowedByCurrentUser);
+        // update follow status of all other posts in the same blog
+        updateFollowStatusOnPostsForBlog(post.blogId, isAskingToFollow);
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
@@ -542,6 +539,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         txtFollow.setText(isFollowed ? mFollowing : mFollow);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+    }
+
+    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
+        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
+            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
+        }
+        if (isRebloggedByCurrentUser) {
+            imgBtnReblog.setOnClickListener(null);
+        }
     }
 
     /*

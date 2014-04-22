@@ -19,48 +19,38 @@ import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogActions {
 
-    public enum FollowAction {FOLLOW, UNFOLLOW}
-
-    public static boolean performFollowAction(final FollowAction action,
-                                              final long blogId,
-                                              final String blogUrl) {
+    public static boolean performFollowAction(final long blogId,
+                                              final String blogUrl,
+                                              final boolean isAskingToFollow) {
 
         if (TextUtils.isEmpty(blogUrl)) {
             return false;
         }
 
         final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
-        final boolean isAskingToFollow = (action == FollowAction.FOLLOW);
-
         if (isCurrentlyFollowing == isAskingToFollow) {
             return true;
         }
 
         final String path;
+        final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String domain = UrlUtils.getDomainFromUrl(blogUrl);
 
-        switch (action) {
-            case FOLLOW:
-                // if we know the blog's id, use /sites/$siteId/follows/new - this is important
-                // because /read/following/mine/new?url= follows it as a feed rather than a
-                // blog, so its posts show up without support for likes, comments, etc.
-                if (blogId != 0) {
-                    path = "/sites/" + blogId + "/follows/new";
-                } else {
-                    path = "/read/following/mine/new?url=" + domain;
-                }
-                break;
-
-            case UNFOLLOW:
-                if (blogId != 0) {
-                    path = "/sites/" + blogId + "/follows/mine/delete";
-                } else {
-                    path = "/read/following/mine/delete?url=" + domain;
-                }
-                break;
-
-            default :
-                return false;
+        if (isAskingToFollow) {
+            // if we know the blog's id, use /sites/$siteId/follows/new - this is important
+            // because /read/following/mine/new?url= follows it as a feed rather than a
+            // blog, so its posts show up without support for likes, comments, etc.
+            if (blogId != 0) {
+                path = "/sites/" + blogId + "/follows/new";
+            } else {
+                path = "/read/following/mine/new?url=" + domain;
+            }
+        } else {
+            if (blogId != 0) {
+                path = "/sites/" + blogId + "/follows/mine/delete";
+            } else {
+                path = "/read/following/mine/delete?url=" + domain;
+            }
         }
 
         ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isAskingToFollow);
@@ -69,13 +59,13 @@ public class ReaderBlogActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, "blog action " + action.name() + " succeeded");
+                AppLog.d(T.READER, "blog " + actionName + " succeeded");
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(T.READER, "blog action " + action.name() + " failed");
+                AppLog.w(T.READER, "blog " + actionName + " failed");
                 AppLog.e(T.READER, volleyError);
                 // revert to original state
                 ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isCurrentlyFollowing);

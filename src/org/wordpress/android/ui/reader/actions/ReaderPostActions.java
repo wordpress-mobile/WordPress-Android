@@ -31,77 +31,103 @@ import java.util.Map;
 
 public class ReaderPostActions {
 
-    public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
-
     private ReaderPostActions() {
         throw new AssertionError();
     }
 
     /**
-     * perform the passed action on the passed post both locally and via API - this is
-     * optimistic in that changes to the passed post are made locally before calling API.
-     * this routines is also non-blocking - it returns before the API call completes, so
-     * callers that want to be alerted when the API call completes should pass a listener
-     **/
-    public static boolean performPostAction(final PostAction action,
-                                            final ReaderPost post,
-                                            final ReaderActions.ActionListener actionListener) {
+     * like/unlike the passed post
+     */
+    public static boolean performLikeAction(final ReaderPost post,
+                                            final boolean isAskingToLike) {
         // get post BEFORE we make changes so we can revert on error
         final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
 
-        // change local post and determine API endpoint
-        String path;
-        switch (action) {
-            case TOGGLE_LIKE:
-                boolean isLiking = !post.isLikedByCurrentUser;
-                post.isLikedByCurrentUser = isLiking;
-                if (isLiking) {
-                    post.numLikes++;
-                } else if (!isLiking && post.numLikes > 0) {
-                    post.numLikes--;
-                }
-                ReaderPostTable.addOrUpdatePost(post);
-                ReaderLikeTable.setCurrentUserLikesPost(post, isLiking);
-                path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
-                if (isLiking) {
-                    path += "new";
-                } else {
-                    path += "mine/delete";
-                }
-                break;
-
-            // TODO: this duplicates code in ReaderBlogActions, need to use the same routine
-            case TOGGLE_FOLLOW :
-                boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-                post.isFollowedByCurrentUser = isAskingToFollow;
-                ReaderPostTable.addOrUpdatePost(post);
-                ReaderPostTable.setFollowStatusForPostsInBlog(post.blogId, isAskingToFollow);
-                path = "sites/" + post.blogId + "/follows/";
-                if (isAskingToFollow) {
-                    path += "new";
-                } else {
-                    path += "mine/delete";
-                }
-                if (post.hasBlogUrl()) {
-                    ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), isAskingToFollow);
-                }
-                break;
-
-            default :
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
-                return false;
+        // do nothing and return true if post's like state is same as passed
+        if (originalPost != null && originalPost.isLikedByCurrentUser == isAskingToLike) {
+            return true;
         }
 
-        // make API call, and revert to the original post on error
+        // update post in local db
+        post.isLikedByCurrentUser = isAskingToLike;
+        if (isAskingToLike) {
+            post.numLikes++;
+        } else if (!isAskingToLike && post.numLikes > 0) {
+            post.numLikes--;
+        }
+        ReaderPostTable.addOrUpdatePost(post);
+        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
+
+        final String actionName = isAskingToLike ? "like" : "unlike";
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
+        if (isAskingToLike) {
+            path += "new";
+        } else {
+            path += "mine/delete";
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, "post action " + action.name() + " succeeded");
-                if (actionListener != null) {
-                    actionListener.onActionResult(true);
+                AppLog.d(T.READER, String.format("post %s succeeded", actionName));
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                String error = VolleyUtils.errStringFromVolleyError(volleyError);
+                if (TextUtils.isEmpty(error)) {
+                    AppLog.w(T.READER, String.format("post %s failed", actionName));
+                } else {
+                    AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
+                AppLog.e(T.READER, volleyError);
+
+                // revert to original post
+                if (originalPost != null) {
+                    ReaderPostTable.addOrUpdatePost(originalPost);
+                    ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
+                }
+            }
+        };
+
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
+
+        return true;
+    }
+
+    /**
+     * follow/unfollow the blog the passed post is in
+     **/
+    public static boolean performFollowAction(final ReaderPost post,
+                                              final boolean isAskingToFollow) {
+
+        final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
+
+        if (originalPost != null && originalPost.isFollowedByCurrentUser == isAskingToFollow) {
+            return true;
+        }
+
+        post.isFollowedByCurrentUser = isAskingToFollow;
+        ReaderPostTable.addOrUpdatePost(post);
+        ReaderPostTable.setFollowStatusForPostsInBlog(post.blogId, isAskingToFollow);
+
+        final String actionName = isAskingToFollow ? "follow" : "unfollow";
+        String path = "sites/" + post.blogId + "/follows/";
+        if (isAskingToFollow) {
+            path += "new";
+        } else {
+            path += "mine/delete";
+        }
+        if (post.hasBlogUrl()) {
+            ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), isAskingToFollow);
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                AppLog.d(T.READER, String.format("post %s succeeded", actionName));
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -109,28 +135,18 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 String error = VolleyUtils.errStringFromVolleyError(volleyError);
                 if (TextUtils.isEmpty(error)) {
-                    AppLog.w(T.READER, String.format("post action %s failed", action.name()));
+                    AppLog.w(T.READER, String.format("post %s failed", actionName));
                 } else {
-                    AppLog.w(T.READER, String.format("post action %s failed (%s)", action.name(), error));
+                    AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
                 // revert to original post
-                if (originalPost!=null) {
+                if (originalPost != null) {
                     ReaderPostTable.addOrUpdatePost(originalPost);
-                    switch (action) {
-                        case TOGGLE_LIKE:
-                            ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
-                            break;
-                        case TOGGLE_FOLLOW :
-                            ReaderPostTable.setFollowStatusForPostsInBlog(originalPost.blogId, originalPost.isFollowedByCurrentUser);
-                            if (originalPost.hasBlogUrl()) {
-                                ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
-                            }
-                           break;
+                    ReaderPostTable.setFollowStatusForPostsInBlog(originalPost.blogId, originalPost.isFollowedByCurrentUser);
+                    if (originalPost.hasBlogUrl()) {
+                        ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
                     }
-                }
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
                 }
             }
         };

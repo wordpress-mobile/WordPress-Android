@@ -15,7 +15,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.FollowAction;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 
@@ -128,7 +127,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         ReaderBlogActions.updateBlogInfo(blogId, listener);
     }
 
-    private void toggleBlogFollowStatus(final TextView txtFollow, final ReaderBlogInfo blogInfo) {
+    private void toggleBlogFollowStatus(TextView txtFollow, ReaderBlogInfo blogInfo) {
         if (blogInfo == null || txtFollow == null) {
             return;
         }
@@ -136,8 +135,9 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         AniUtils.zoomAction(txtFollow);
 
         boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        FollowAction action = (isCurrentlyFollowing ? FollowAction.UNFOLLOW : FollowAction.FOLLOW);
-        if (ReaderBlogActions.performFollowAction(action, blogInfo.blogId, blogInfo.getUrl())) {
+        boolean isAskingToFollow = !isCurrentlyFollowing;
+
+        if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow)) {
             boolean isNowFollowing = !isCurrentlyFollowing;
             showBlogFollowStatus(txtFollow, isNowFollowing);
         }

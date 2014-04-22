@@ -489,16 +489,17 @@ public class ReaderPostDetailFragment extends SherlockFragment
     }
 
     /*
-     * called when user chooses to like or follow - actionView is the ImageView or TextView
-     * associated with the action (ex: like button)
+     * changes the like on the passed post
      */
-    private void doPostAction(View actionView, ReaderPostActions.PostAction action, final ReaderPost post) {
-        boolean isSelected = actionView.isSelected();
-        actionView.setSelected(!isSelected);
-        AniUtils.zoomAction(actionView);
+    private void togglePostLike(ReaderPost post, View likeButton) {
+        boolean isSelected = likeButton.isSelected();
+        likeButton.setSelected(!isSelected);
+        AniUtils.zoomAction(likeButton);
 
-        if (!ReaderPostActions.performPostAction(action, post, null)) {
-            actionView.setSelected(isSelected);
+        boolean isAskingToLike = !post.isLikedByCurrentUser;
+
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+            likeButton.setSelected(isSelected);
             return;
         }
 
@@ -506,30 +507,42 @@ public class ReaderPostDetailFragment extends SherlockFragment
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
 
         // fire listener so host knows about the change
-        switch (action) {
-            case TOGGLE_LIKE:
-                if (mPost.isLikedByCurrentUser) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-                    doPostChanged(PostChangeType.LIKED);
-                } else {
-                    doPostChanged(PostChangeType.UNLIKED);
-                }
-                break;
-            case TOGGLE_FOLLOW:
-                doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
-                break;
+        if (isAskingToLike) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+            doPostChanged(PostChangeType.LIKED);
+        } else {
+            doPostChanged(PostChangeType.UNLIKED);
         }
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
-        switch (action) {
-            case TOGGLE_LIKE:
-                refreshLikes(true);
-                break;
-            case TOGGLE_FOLLOW:
-                refreshFollowed();
-                break;
+        refreshLikes(true);
+    }
+
+    /*
+     * change the follow state of the blog the passed post is in
+     */
+    private void togglePostFollowed(ReaderPost post, View followButton) {
+        boolean isSelected = followButton.isSelected();
+        followButton.setSelected(!isSelected);
+        AniUtils.zoomAction(followButton);
+
+        boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+
+        if (!ReaderPostActions.performFollowAction(post, isAskingToFollow)) {
+            followButton.setSelected(isSelected);
+            return;
         }
+
+        // get the post again, since it has changed
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+
+        // fire listener so host knows about the change
+        doPostChanged(isAskingToFollow ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
+
+        // call returns before api completes, but local version of post will have been changed
+        // so refresh to show those changes
+        refreshFollowed();
     }
 
     /*
@@ -762,7 +775,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                doPostAction(imgBtnLike, ReaderPostActions.PostAction.TOGGLE_LIKE, mPost);
+                                togglePostLike(mPost, imgBtnLike);
                             }
                         });
 
@@ -992,7 +1005,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
+                togglePostFollowed(mPost, txtFollow);
             }
         });
     }
