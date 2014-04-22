@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.Oauth;
 
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
@@ -61,7 +61,7 @@ public class OAuthAuthenticator implements Authenticator {
     }
 
     public void requestAccessToken(final AuthenticatorRequest request, final Blog blog) {
-        Oauth oauth = new Oauth(Config.OAUTH_APP_ID, Config.OAUTH_APP_SECRET, Config.OAUTH_REDIRECT_URI);
+        Oauth oauth = new Oauth(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET, BuildConfig.OAUTH_REDIRECT_URI);
         String username;
         String password;
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
