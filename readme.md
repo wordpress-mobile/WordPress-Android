@@ -7,13 +7,14 @@ read on.
 ## Build Instructions ##
 
 The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need generate the
+files you need to build the project. You first need to generate the
 local.properties file and create the gradle.properties file, the easiest
 way is to copy our example:
 
-    $ android update project -p . # generate or update local.properties
+    $ android update project -p . --target android-14 # generate or update local.properties
     $ cp gradle.properties-example gradle.properties
 
+Note: generated `build.xml`, `proguard-project.txt` and `project.properties` are not used and can be deleted.
 After this step, you can invoke gradle to build, install and test the project:
 
     $ ./gradlew assembleDebug # assemble the debug .apk
