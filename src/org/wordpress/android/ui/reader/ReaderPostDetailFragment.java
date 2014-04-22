@@ -45,6 +45,7 @@ import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -528,8 +529,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         AniUtils.zoomAction(followButton);
 
         boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-
-        if (!ReaderPostActions.performFollowAction(post, isAskingToFollow)) {
+        if (!ReaderBlogActions.performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow)) {
             followButton.setSelected(isSelected);
             return;
         }

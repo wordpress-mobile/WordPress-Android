@@ -12,7 +12,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderUrlList;
-import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -32,13 +31,6 @@ public class ReaderBlogActions {
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
         if (!hasBlogId && !hasBlogUrl) {
             return false;
-        }
-
-        if (hasBlogUrl) {
-            boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
-            if (isCurrentlyFollowing == isAskingToFollow) {
-                return true;
-            }
         }
 
         final String path;

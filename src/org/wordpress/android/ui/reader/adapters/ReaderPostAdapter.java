@@ -21,13 +21,12 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -514,7 +513,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         AniUtils.zoomAction(holder.txtFollow);
 
         boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        if (!ReaderPostActions.performFollowAction(post, isAskingToFollow)) {
+        if (!ReaderBlogActions.performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow)) {
             return;
         }
 

@@ -9,7 +9,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -18,7 +17,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -93,65 +91,6 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(path, listener, errorListener);
-
-        return true;
-    }
-
-    /**
-     * follow/unfollow the blog the passed post is in
-     * TODO: this duplicates ReaderBlogActions.performFollowAction
-     **/
-    public static boolean performFollowAction(final ReaderPost post,
-                                              final boolean isAskingToFollow) {
-
-        final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
-
-        if (originalPost != null && originalPost.isFollowedByCurrentUser == isAskingToFollow) {
-            return true;
-        }
-
-        post.isFollowedByCurrentUser = isAskingToFollow;
-        ReaderPostTable.addOrUpdatePost(post);
-        ReaderPostTable.setFollowStatusForPostsInBlog(post.blogId, isAskingToFollow);
-
-        final String actionName = isAskingToFollow ? "follow" : "unfollow";
-        String path = "sites/" + post.blogId + "/follows/";
-        if (isAskingToFollow) {
-            path += "new";
-        } else {
-            path += "mine/delete";
-        }
-        if (post.hasBlogUrl()) {
-            ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), isAskingToFollow);
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, String.format("post %s succeeded", actionName));
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                String error = VolleyUtils.errStringFromVolleyError(volleyError);
-                if (TextUtils.isEmpty(error)) {
-                    AppLog.w(T.READER, String.format("post %s failed", actionName));
-                } else {
-                    AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
-                }
-                AppLog.e(T.READER, volleyError);
-                // revert to original post
-                if (originalPost != null) {
-                    ReaderPostTable.addOrUpdatePost(originalPost);
-                    ReaderPostTable.setFollowStatusForPostsInBlog(originalPost.blogId, originalPost.isFollowedByCurrentUser);
-                    if (originalPost.hasBlogUrl()) {
-                        ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
-                    }
-                }
-            }
-        };
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
