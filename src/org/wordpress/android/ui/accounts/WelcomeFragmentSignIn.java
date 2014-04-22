@@ -423,7 +423,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
-        private boolean isSelfHostedBlog;
 
         private void setHttpCredentials(String username, String password) {
             if (mSetupBlog == null) {
@@ -441,7 +440,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             mSetupBlog.setUsername(EditTextUtils.getText(mUsernameEditText).trim());
             mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
             if (mSelfHosted) {
-                isSelfHostedBlog = true;
                 mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
             } else {
                 mSetupBlog.setSelfHostedURL(null);
@@ -552,7 +550,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            if (isSelfHostedBlog) {
+            if (mSelfHosted) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
             }
 
