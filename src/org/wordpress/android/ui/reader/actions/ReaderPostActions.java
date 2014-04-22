@@ -33,8 +33,6 @@ public class ReaderPostActions {
 
     public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
 
-    // TODO: following duplicates code in ReaderBlogActions, need to use the same routine
-
     private ReaderPostActions() {
         throw new AssertionError();
     }
@@ -72,6 +70,7 @@ public class ReaderPostActions {
                 }
                 break;
 
+            // TODO: this duplicates code in ReaderBlogActions, need to use the same routine
             case TOGGLE_FOLLOW :
                 boolean isAskingToFollow = !post.isFollowedByCurrentUser;
                 post.isFollowedByCurrentUser = isAskingToFollow;

@@ -41,11 +41,22 @@ public class ReaderBlogActions {
 
         switch (action) {
             case FOLLOW:
-                path = "/read/following/mine/new?url=" + domain;
+                // if we know the blog's id, use /sites/$siteId/follows/new - this is important
+                // because /read/following/mine/new?url= follows it as a feed rather than a
+                // blog, so its posts show up without support for likes, comments, etc.
+                if (blogId != 0) {
+                    path = "/sites/" + blogId + "/follows/new";
+                } else {
+                    path = "/read/following/mine/new?url=" + domain;
+                }
                 break;
 
             case UNFOLLOW:
-                path = "/read/following/mine/delete?url=" + domain;
+                if (blogId != 0) {
+                    path = "/sites/" + blogId + "/follows/mine/delete";
+                } else {
+                    path = "/read/following/mine/delete?url=" + domain;
+                }
                 break;
 
             default :
