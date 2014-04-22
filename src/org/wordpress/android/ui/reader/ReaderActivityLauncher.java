@@ -25,6 +25,9 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderBlogDetail(Context context, long blogId) {
+        if (blogId == 0) {
+            return;
+        }
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderActivity.ARG_IS_BLOG_DETAIL, true);

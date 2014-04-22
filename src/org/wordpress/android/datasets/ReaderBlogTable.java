@@ -22,6 +22,7 @@ import org.wordpress.android.util.UrlUtils;
  * note that URLs are normalized for comparison
  */
 public class ReaderBlogTable {
+
     protected static void createTables(SQLiteDatabase db) {
         // blog info
         db.execSQL("CREATE TABLE tbl_blog_info ("
@@ -46,7 +47,6 @@ public class ReaderBlogTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
         db.execSQL("DROP TABLE IF EXISTS tbl_followed_blogs");
     }
-
 
     public static ReaderBlogInfo getBlogInfo(long blogId) {
         String[] args = {Long.toString(blogId)};
@@ -168,11 +168,11 @@ public class ReaderBlogTable {
         if (TextUtils.isEmpty(url))
             return;
 
-        final String normUrl = UrlUtils.normalizeUrl(url);
-
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
+            final String normUrl = UrlUtils.normalizeUrl(url);
+
             // update in tbl_followed_blogs
             SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
             try {
@@ -186,7 +186,7 @@ public class ReaderBlogTable {
             // update in tbl_blog_info
             ContentValues values = new ContentValues();
             values.put("is_following", SqlUtils.boolToSql(isFollowed));
-            String[] args = {UrlUtils.normalizeUrl(url)};
+            String[] args = {normUrl};
             db.update("tbl_blog_info", values, "blog_url=?", args);
 
             db.setTransactionSuccessful();

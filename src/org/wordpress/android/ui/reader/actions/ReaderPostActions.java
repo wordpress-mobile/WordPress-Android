@@ -33,6 +33,8 @@ public class ReaderPostActions {
 
     public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
 
+    // TODO: following duplicates code in ReaderBlogActions, need to use the same routine
+
     private ReaderPostActions() {
         throw new AssertionError();
     }
@@ -81,13 +83,15 @@ public class ReaderPostActions {
                 } else {
                     path += "mine/delete";
                 }
-                if (post.hasBlogUrl())
+                if (post.hasBlogUrl()) {
                     ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), isAskingToFollow);
+                }
                 break;
 
             default :
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
+                }
                 return false;
         }
 
@@ -96,8 +100,9 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, "post action " + action.name() + " succeeded");
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -119,13 +124,15 @@ public class ReaderPostActions {
                             break;
                         case TOGGLE_FOLLOW :
                             ReaderPostTable.setFollowStatusForPostsInBlog(originalPost.blogId, originalPost.isFollowedByCurrentUser);
-                            if (originalPost.hasBlogUrl())
+                            if (originalPost.hasBlogUrl()) {
                                 ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
+                            }
                            break;
                     }
                 }
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
+                }
             }
         };
         WordPress.getRestClientUtils().post(path, listener, errorListener);
@@ -149,8 +156,9 @@ public class ReaderPostActions {
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("destination_site_id", Long.toString(destinationBlogId));
-        if (!TextUtils.isEmpty(optionalComment))
+        if (!TextUtils.isEmpty(optionalComment)) {
             params.put("note", optionalComment);
+        }
 
         StringBuilder sb = new StringBuilder("/sites/")
                 .append(post.blogId)

@@ -104,9 +104,8 @@ public class ReaderBlogActions {
                 ReaderUrlList urls = new ReaderUrlList();
                 JSONArray jsonBlogs = jsonObject.optJSONArray("subscriptions");
                 if (jsonBlogs!=null) {
-                    for (int i=0; i < jsonBlogs.length(); i++) {
+                    for (int i=0; i < jsonBlogs.length(); i++)
                         urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
-                    }
                 }
                 ReaderBlogTable.setFollowedBlogUrls(urls);
             }
@@ -114,7 +113,7 @@ public class ReaderBlogActions {
     }
 
     /*
-     * request info about a specific blog
+     * requests info about a specific blog
      */
     public static void updateBlogInfo(long blogId, final ReaderActions.RequestBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -133,6 +132,7 @@ public class ReaderBlogActions {
         };
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
     }
+
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null)

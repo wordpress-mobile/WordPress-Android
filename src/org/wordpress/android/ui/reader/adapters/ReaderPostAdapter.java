@@ -291,9 +291,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!post.isExternal) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
-                    }
+                    ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
                 }
             });
         }

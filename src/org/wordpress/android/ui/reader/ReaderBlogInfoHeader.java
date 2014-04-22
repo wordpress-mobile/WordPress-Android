@@ -15,6 +15,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions.FollowAction;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 
@@ -46,13 +47,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
 
     private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.reader_blog_info_header, this, true);
-
-        // adjust the spacer so the info overlaps the mshot image on ReaderPostListFragment
-        /*View spacer = view.findViewById(R.id.view_mshot_spacer);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) spacer.getLayoutParams();
-        int mshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-        params.height = (int)(mshotHeight * 0.75f);*/
+        inflater.inflate(R.layout.reader_blog_info_header, this, true);
     }
 
     public void setBlogId(long blogId, OnBlogInfoListener listener) {
@@ -94,7 +89,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
             };
 
             // tapping the spacer opens the blog in the browser - will appear to the user
-            // that they tapped the mshot image
+            // that they tapped the mshot image on ReaderPostListFragment
             spacer.setOnClickListener(urlListener);
             txtBlogName.setOnClickListener(urlListener);
 
@@ -141,13 +136,11 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         AniUtils.zoomAction(txtFollow);
 
         boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        ReaderBlogActions.FollowAction action = (isCurrentlyFollowing ? ReaderBlogActions.FollowAction.UNFOLLOW : ReaderBlogActions.FollowAction.FOLLOW);
-        if (!ReaderBlogActions.performFollowAction(action, blogInfo.blogId, blogInfo.getUrl())) {
-            return;
+        FollowAction action = (isCurrentlyFollowing ? FollowAction.UNFOLLOW : FollowAction.FOLLOW);
+        if (ReaderBlogActions.performFollowAction(action, blogInfo.blogId, blogInfo.getUrl())) {
+            boolean isNowFollowing = !isCurrentlyFollowing;
+            showBlogFollowStatus(txtFollow, isNowFollowing);
         }
-
-        boolean isNowFollowing = !isCurrentlyFollowing;
-        showBlogFollowStatus(txtFollow, isNowFollowing);
     }
 
     /*
