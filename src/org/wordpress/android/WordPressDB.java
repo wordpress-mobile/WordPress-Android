@@ -1828,4 +1828,8 @@ public class WordPressDB {
             AppLog.e(T.DB, "failed to copy database", e);
         }
     }
+
+    public boolean hasAnyJetpackBlogs() {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+    }
 }

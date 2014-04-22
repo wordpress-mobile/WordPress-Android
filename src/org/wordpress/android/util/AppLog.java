@@ -19,8 +19,9 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS}
-    public static final String TAG = WordPress.TAG;
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING}
+    public static final String TAG = "WordPress";
+
     private static boolean mEnableRecording = false;
     private static boolean mEnableCrashlytics = false;
 
@@ -208,8 +209,8 @@ public class AppLog {
         }
         return sb.toString();
     }
-    
-    
+
+
     /*
      * returns entire log as plain text
      */
