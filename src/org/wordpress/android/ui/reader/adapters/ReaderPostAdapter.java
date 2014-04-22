@@ -513,7 +513,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         AniUtils.zoomAction(holder.txtFollow);
 
         boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        if (!ReaderBlogActions.performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow)) {
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow)) {
             return;
         }
 

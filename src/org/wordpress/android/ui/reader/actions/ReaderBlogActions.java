@@ -11,6 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -20,8 +21,8 @@ import org.wordpress.android.util.UrlUtils;
 public class ReaderBlogActions {
 
     /*
-     * follow/unfollow the passed blog - make sure to passed the blogId when known since
-     * following solely by url causes the blog to be followed as a feed
+     * follow/unfollow a blog - make sure to pass the blogId when known
+     * since following solely by url causes the blog to be followed as a feed
      */
     public static boolean performFollowAction(final long blogId,
                                               final String blogUrl,
@@ -30,6 +31,7 @@ public class ReaderBlogActions {
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
         if (!hasBlogId && !hasBlogUrl) {
+            AppLog.w(T.READER, "follow action performed without blogId or blogUrl");
             return false;
         }
 
@@ -37,9 +39,9 @@ public class ReaderBlogActions {
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
 
         if (isAskingToFollow) {
-            // if we know the blog's id, use /sites/$siteId/follows/new - this is important
-            // because /read/following/mine/new?url= follows it as a feed rather than a
-            // blog, so its posts show up without support for likes, comments, etc.
+            // if we have a blogId, use /sites/$siteId/follows/new - this is important
+            // because /read/following/mine/new follows it as a feed rather than a blog,
+            // so its posts show up without support for likes, comments, etc.
             if (hasBlogId) {
                 path = "/sites/" + blogId + "/follows/new";
             } else {
@@ -62,7 +64,6 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
         }
-
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -88,6 +89,16 @@ public class ReaderBlogActions {
 
         // return before API call completes
         return true;
+    }
+
+    /*
+     * helper routine when following a blog from a post view
+     */
+    public static boolean performFollowAction(ReaderPost post, boolean isAskingToFollow) {
+        if (post == null) {
+            return false;
+        }
+        return performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow);
     }
 
     /*
@@ -149,7 +160,6 @@ public class ReaderBlogActions {
         };
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
     }
-
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null) {

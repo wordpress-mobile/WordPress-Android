@@ -529,7 +529,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         AniUtils.zoomAction(followButton);
 
         boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        if (!ReaderBlogActions.performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow)) {
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow)) {
             followButton.setSelected(isSelected);
             return;
         }
