@@ -139,7 +139,7 @@ public class ReaderPostTable {
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return;
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
@@ -209,7 +209,7 @@ public class ReaderPostTable {
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
     public static int getNumCommentsForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return 0;
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
@@ -222,7 +222,7 @@ public class ReaderPostTable {
      * may differ from ReaderPostTable.getNumLikesForPost (which returns # local likes for this post)
      */
     public static int getNumLikesForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return 0;
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
@@ -231,7 +231,7 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return false;
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
@@ -240,12 +240,32 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostFollowed(ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return false;
+        }
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_followed FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
+    }
+
+    /*
+     * updates the follow status of all posts in the passed list, returns true if any changed
+     */
+    public static boolean checkFollowStatusOnPosts(ReaderPostList posts) {
+        if (posts == null || posts.size() == 0) {
+            return false;
+        }
+
+        boolean isChanged = false;
+        for (ReaderPost post: posts) {
+            boolean isFollowed = isPostFollowed(post);
+            if (isFollowed != post.isFollowedByCurrentUser) {
+                post.isFollowedByCurrentUser = isFollowed;
+                isChanged = true;
+            }
+        }
+        return isChanged;
     }
 
     public static int deletePostsWithTag(String tagName) {

@@ -165,12 +165,14 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onResume() {
         super.onResume();
-        // if the fragment is resuming from a paused state, make sure the follow status of
-        // the adapter's posts is accurate - this is necessary in case the user returned
-        // from an activity where the follow status may have been changed
+        // if the fragment is resuming from a paused state, refresh the adapter to make sure
+        // the follow status of all posts is accurate - this is necessary in case the user
+        // returned from an activity where the follow status may have been changed
         if (mWasPaused) {
             mWasPaused = false;
-            checkFollowStatus();
+            if (hasPostAdapter()) {
+                getPostAdapter().checkFollowStatusForAllPosts();
+            }
         }
     }
 
@@ -632,15 +634,6 @@ public class ReaderPostListFragment extends SherlockFragment
         return (getActivity() != null && !isRemoving());
     }
 
-    /*
-     * make sure the posts in the adapter reflect the current follow status of the
-     * blogs they're in
-     */
-    void checkFollowStatus() {
-        if (hasPostAdapter()) {
-            getPostAdapter().checkFollowStatusForAllPosts();
-        }
-    }
     void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
         if (hasPostAdapter()) {
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);

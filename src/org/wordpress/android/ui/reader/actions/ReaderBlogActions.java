@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderUrlList;
+import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -69,6 +70,7 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
         }
+
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

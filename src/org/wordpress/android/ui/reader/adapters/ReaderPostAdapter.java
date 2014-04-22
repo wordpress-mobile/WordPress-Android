@@ -186,22 +186,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * ensures that the follow status of each post in the list is accurate
+     * ensures that the follow status of each post in the list reflects what is currently
+     * stored in the reader post table
      */
     public void checkFollowStatusForAllPosts() {
-        if (isEmpty()) {
-            return;
-        }
-        boolean isChanged = false;
-        final ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
-        for (ReaderPost post: mPosts) {
-            boolean isFollowing = post.hasBlogUrl() && followedBlogUrls.contains(post.getBlogUrl());
-            if (isFollowing != post.isFollowedByCurrentUser) {
-                post.isFollowedByCurrentUser = isFollowing;
-                isChanged = true;
-            }
-        }
-        if (isChanged) {
+        if (ReaderPostTable.checkFollowStatusOnPosts(mPosts)) {
             notifyDataSetChanged();
         }
     }
