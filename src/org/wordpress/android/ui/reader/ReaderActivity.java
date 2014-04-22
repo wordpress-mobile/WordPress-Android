@@ -313,15 +313,12 @@ public class ReaderActivity extends WPActionBarActivity
      * initial update performed at startup to ensure we have the latest reader-related info
      */
     private void performInitialUpdate() {
-        if (!NetworkUtils.isNetworkAvailable(this))
+        if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
-
-        // animate refresh button in post list if tags are being updated for the first time
-        ReaderPostListFragment listFragment = getListFragment();
-        final boolean animateRefresh = (listFragment != null && ReaderTagTable.isEmpty());
-        if (animateRefresh) {
-            listFragment.setIsUpdating(true, RequestDataAction.LOAD_NEWER);
         }
+
+        // remember whether we have any tags before updating
+        final boolean isTagTableEmpty = ReaderTagTable.isEmpty();
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -330,13 +327,16 @@ public class ReaderActivity extends WPActionBarActivity
             @Override
             public void onUpdateResult(UpdateResult result) {
                 mHasPerformedInitialUpdate = true;
+
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment != null) {
-                    if (animateRefresh) {
-                        listFragment.setIsUpdating(false, RequestDataAction.LOAD_NEWER);
-                    }
                     if (result == UpdateResult.CHANGED) {
                         listFragment.refreshTags();
+                        // if the tag table was empty and we have no posts (first run), tell the
+                        // list fragment to get posts with the current tag now that we have tags
+                        if (isTagTableEmpty && ReaderPostTable.isEmpty()) {
+                            listFragment.updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                        }
                     }
                 }
 

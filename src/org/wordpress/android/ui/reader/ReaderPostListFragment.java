@@ -666,7 +666,7 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * get latest posts for this tag from the server
      */
-    private void updatePostsWithCurrentTag(RequestDataAction updateAction) {
+    protected void updatePostsWithCurrentTag(RequestDataAction updateAction) {
         if (hasCurrentTag()) {
             updatePostsWithTag(mCurrentTag, updateAction, RefreshType.AUTOMATIC);
         }
@@ -680,6 +680,13 @@ public class ReaderPostListFragment extends SherlockFragment
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
+            return;
+        }
+
+        // can't update when the tag table is empty - this may happen during first run, in which
+        // case ReaderActivity will re-issue the update once tags are populated
+        if (ReaderTagTable.isEmpty()) {
+            AppLog.w(T.READER, "reader post list > tag table is empty, canceled tag update");
             return;
         }
 
