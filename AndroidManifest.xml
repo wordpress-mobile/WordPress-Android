@@ -111,6 +111,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -268,5 +269,8 @@
         <service android:name=".ui.stats.service.StatsService"
             android:label="Stats Update Service"
             android:exported="false" />
+
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
     </application>
 </manifest>

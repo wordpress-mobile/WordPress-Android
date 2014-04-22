@@ -228,6 +228,9 @@ public class StatsActivity extends WPActionBarActivity {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
+                                AnalyticsTracker.track(
+                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
                                     refreshStats();
@@ -405,6 +408,7 @@ public class StatsActivity extends WPActionBarActivity {
                             jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
                                     + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
                             startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
