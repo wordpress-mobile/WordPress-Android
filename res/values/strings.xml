@@ -114,6 +114,7 @@
     <string name="media_edit_description_hint">Enter a description here</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
+    <string name="saving">Saving&#8230;</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
@@ -550,7 +551,7 @@
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t access stats</string>
-    <string name="jetpack_stats_switch_user">This WordPress.com account doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
+    <string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
     <!--
        ****
@@ -689,6 +690,7 @@
     <string name="username_invalid">Invalid username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
+    <string name="username_or_password_incorrect_selfhosted_hint">The username or password you entered is incorrect. Have a self-hosted site? Tap \"%s\" and add the URL.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_cannot_log_in">We can\'t log you in</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>

@@ -218,8 +218,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                 endProgress();
                 showError(getString(messageId));
             }
-        }
-        );
+        });
         createUserAndBlog.startCreateBlogProcess();
     }
 
