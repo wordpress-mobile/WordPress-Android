@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="media_add_popup_title">增加媒體庫</string>
+	<string name="media_add_new_media_gallery">創建藝廊</string>
+	<string name="select_from_media_library">從媒體庫選擇</string>
+	<string name="jetpack_not_found">找不到 Jetpack</string>
+	<string name="jetpack_message">Jetpack 外掛需要統計資訊。你想要安裝 Jetpack 嗎？</string>
+	<string name="reader_timespan_now">現在</string>
+	<string name="reader_untitled_post">（未命名）</string>
+	<string name="reader_share_subject">從 %s 分享</string>
+	<string name="reader_btn_unfollow">追蹤</string>
+	<string name="reader_hint_comment_on_post">新增你的迴響</string>
+	<string name="reader_hint_add_tag">輸入一個標籤</string>
+	<string name="reader_hint_comment_on_comment">回應該迴響</string>
+	<string name="reader_hint_reblog_comment">選用迴響</string>
+	<string name="reader_label_added_tag">新增 %s</string>
+	<string name="reader_label_removed_tag">移除 %s</string>
+	<string name="reader_btn_reblog">轉載</string>
+	<string name="reader_toast_reblog_success">文章已被轉載</string>
+	<string name="reader_toast_err_reblog_failed">無法轉載該文章</string>
+	<string name="reader_toast_err_already_reblogged">你已經轉載該文章</string>
+	<string name="reader_label_reblog_to">轉載該文章至</string>
+	<string name="reader_title_reblog">轉載</string>
+	<string name="reader_menu_tags">標籤</string>
+	<string name="reader_btn_share">分享</string>
+	<string name="reader_btn_follow">追蹤</string>
+	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
+	<string name="connecting_wpcom">連結至 WordPress.com</string>
+	<string name="username_invalid">無效的使用者名稱</string>
+	<string name="themes">佈景主題</string>
+	<string name="all">全部</string>
+	<string name="images">圖片</string>
+	<string name="unattached">未附加</string>
+	<string name="custom_date">自訂日期</string>
+	<string name="media_add_popup_capture_photo">拍照</string>
+	<string name="media_add_popup_capture_video">錄影</string>
+	<string name="media_gallery_type_slideshow">幻燈片</string>
+	<string name="media_gallery_image_order_random">隨機</string>
+	<string name="media_no_video_title">VideoPress 不能用</string>
+	<string name="media_edit_description_text">說明</string>
+	<string name="media_edit_title_hint">在這裡輸入標題</string>
+	<string name="theme_set_success">成功設定佈景主題</string>
+	<string name="theme_auth_error_title">抓取佈景主題失敗</string>
+	<string name="media_gallery_image_order_reverse">反轉順序</string>
+	<string name="media_gallery_type">型態</string>
+	<string name="media_edit_title_text">標題</string>
+	<string name="media_edit_caption_text">副標題</string>
+	<string name="media_edit_caption_hint">在這裡輸入副標題</string>
+	<string name="share_action_title">加入到</string>
+	<string name="media_gallery_type_squares">方塊</string>
+	<string name="media_gallery_type_tiled">磁磚</string>
+	<string name="media_gallery_type_circles">圓形</string>
+	<string name="media_edit_description_hint">請在這輸入簡述</string>
+	<string name="media_edit_success">更新</string>
+	<string name="media_edit_failure">更新失敗</string>
+	<string name="confirm_delete_media">你確定你想刪除這個多媒體項目？</string>
+	<string name="confirm_delete_multi_media">你確定你想刪除這個項目？</string>
+	<string name="themes_details_label">細節</string>
+	<string name="view_stats_full_site">檢視全站</string>
+	<string name="remote_changes">你修改的文章尚未上傳。要繼續重新整理，並覆蓋本機的更動嗎？</string>
+	<string name="upload">上傳</string>
+	<string name="manage">管理</string>
+	<string name="discard">放棄</string>
+	<string name="prompt_save_changes">你想要儲存變更嗎？</string>
+	<string name="sign_out_confirm">您確定要登出？</string>
+	<string name="sign_in">登入</string>
+	<string name="sign_out">登出</string>
+	<string name="attempting_configure">正在登入...</string>
+	<string name="notifications">通知</string>
+	<string name="manage_notifications">通知設定</string>
+	<string name="enable_notifications">啓用通知</string>
+	<string name="types">類型</string>
+	<string name="options">選項</string>
+	<string name="notifications_turn_off">關閉</string>
+	<string name="notifications_turn_off_1hr">關閉1小時</string>
+	<string name="notifications_turn_off_8hr">關閉8小時</string>
+	<string name="note_reply_successful">回覆已發佈</string>
+	<string name="new_notifications">%d 個新通知</string>
+	<string name="more_notifications">還有 %d 個。</string>
+	<string name="tooltip_follow">追蹤或取消追蹤這個網誌</string>
+	<string name="loading">載入中...</string>
+	<string name="post_signature">文章簽名</string>
+	<string name="add_tagline">為新文章新增一個簽名</string>
+	<string name="httppassword">HTTP 密碼</string>
+	<string name="httpuser">HTTP 使用者帳號</string>
+	<string name="error_media_upload">上傳媒體時發生錯誤</string>
+	<string name="publish_date">發佈</string>
+	<string name="content_description_add_media">新增媒體</string>
+	<string name="post_content">內容（輕按以增加文字或媒體）</string>
+	<string name="incorrect_credentials">錯誤的使用者帳號或密碼。</string>
+	<string name="password">密碼</string>
+	<string name="username">使用者帳號</string>
+	<string name="reader">閱讀器</string>
+	<string name="pages">頁面</string>
+	<string name="caption">說明（可選）</string>
+	<string name="width">寬度</string>
+	<string name="posts">文章</string>
+	<string name="anonymous">匿名</string>
+	<string name="page">頁面</string>
+	<string name="post">文章</string>
+	<string name="featured">選為精選圖片</string>
+	<string name="featured_in_post">文章內容包含圖片</string>
+	<string name="no_network_title">沒有網路連線</string>
+	<string name="ok">OK</string>
+	<string name="blogusername">網誌使用者帳號</string>
+	<string name="upload_scaled_image">上傳並建立縮圖連結</string>
+	<string name="scaled_image">圖片縮放寬度</string>
+	<string name="update_location">更新</string>
+	<string name="remove_location">移除</string>
+	<string name="scheduled">定時</string>
+	<string name="help_stats">需要幫助？</string>
+	<string name="link_enter_url">URL</string>
+	<string name="posted_from">發自 WordPress for Android</string>
+	<string name="uploading">正在上傳</string>
+	<string name="version">版本</string>
+	<string name="tos">服務條款</string>
+	<string name="app_title">WordPress for Android</string>
+	<string name="publisher">發行商：Automattic, Inc</string>
+	<string name="about">關於</string>
+	<string name="max_thumbnail_px_width">預設圖片寬度</string>
+	<string name="image_alignment">對齊</string>
+	<string name="refresh">更新</string>
+	<string name="untitled">無標題</string>
+	<string name="edit">編輯</string>
+	<string name="post_id">文章</string>
+	<string name="page_id">頁面</string>
+	<string name="post_password">密碼（非必要）</string>
+	<string name="immediately">立即</string>
+	<string name="quickpress_add_alert_title">設定捷徑名稱</string>
+	<string name="settings">設定</string>
+	<string name="quickpress_add_error">捷徑名稱不能為空</string>
+	<string name="quickpress_window_title">選擇用於 QuickPress 捷徑的網誌</string>
+	<string name="publish_post">發佈</string>
+	<string name="draft">草稿</string>
+	<string name="post_private">私密</string>
+	<string name="upload_full_size_image">上傳並連結到完整圖片</string>
+	<string name="load_settings">立即載入設定？</string>
+	<string name="stats_password">密碼</string>
+	<string name="title">標題</string>
+	<string name="tags_separate_with_commas">標籤（多個標籤請以英文逗號“,”隔開）</string>
+	<string name="categories">分類</string>
+	<string name="stats_username">帳號</string>
+	<string name="tab_stats">統計</string>
+	<string name="delete_sure_post">是否確定要刪除這篇文章</string>
+	<string name="delete_sure_page">是否確定要刪除該頁面</string>
+	<string name="notification_blink">閃爍通知燈</string>
+	<string name="notification_sound">播放通知音效</string>
+	<string name="notification_vibrate">振動</string>
+	<string name="status">狀態</string>
+	<string name="location">位置</string>
+	<string name="sdcard_title">需要 SD 卡</string>
+	<string name="select_video">從媒體庫選擇影片</string>
+	<string name="media">媒體</string>
+	<string name="delete">刪除</string>
+	<string name="none">無</string>
+	<string name="blogs">部落格</string>
+	<string name="sure_to_remove_account">您確定要移除這個部落格？</string>
+	<string name="select_photo">從媒體庫選擇照片</string>
+	<string name="error">錯誤</string>
+	<string name="cancel">取消</string>
+	<string name="save">儲存</string>
+	<string name="add">新增</string>
+	<string name="categories_refreshed">分類已更新</string>
+	<string name="category_refresh_error">分類更新錯誤</string>
+	<string name="on">於</string>
+	<string name="delete_sure">您確定要刪除草稿</string>
+	<string name="reply">回覆</string>
+	<string name="yes">是</string>
+	<string name="no">否</string>
+	<string name="preview">預覽</string>
+	<string name="tab_comments">迴響</string>
+	<string-array name="alignment_array">
+		<item>無</item>
+		<item>靠左</item>
+		<item>置中</item>
+		<item>靠右</item>
+	</string-array>
+	<string-array name="post_formats_array">
+		<item>註記</item>
+		<item>音訊</item>
+		<item>聊天</item>
+		<item>藝廊</item>
+		<item>圖像</item>
+		<item>連結</item>
+		<item>引用</item>
+		<item>標準</item>
+		<item>狀態</item>
+		<item>影片</item>
+	</string-array>
+</resources>
