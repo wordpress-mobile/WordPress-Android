@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.ToastUtils;
 
 /*
  * header view showing blog name, description, follower count & follow button
@@ -120,6 +121,8 @@ public class ReaderBlogInfoHeader extends LinearLayout {
                 hideProgress();
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
+                } else if (!mHasBlogInfo) {
+                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog);
                 }
             }
         };

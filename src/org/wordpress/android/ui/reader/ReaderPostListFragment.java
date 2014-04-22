@@ -972,7 +972,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * scale the mshot image based on the current scroll position
      */
     private void scaleHeaderImage() {
-        if (!hasActivity()) {
+        if (!hasActivity() || mHeaderImage == null) {
             return;
         }
 
