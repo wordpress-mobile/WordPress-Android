@@ -151,7 +151,7 @@ public class UrlUtils {
     /**
      * returns false if the url is not valid or if the url host is null, else true
      */
-    public static boolean isValidUrl(String url) {
+    public static boolean isValidUrlAndHostNotNull(String url) {
         try {
             URI uri = URI.create(url);
             if (uri.getHost() == null) {

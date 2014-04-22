@@ -197,7 +197,7 @@ public class SetupBlog {
 
     private String getmXmlrpcByUserEnteredPath(String baseUrl) {
         String xmlRpcUrl = null;
-        if (!UrlUtils.isValidUrl(baseUrl)) {
+        if (!UrlUtils.isValidUrlAndHostNotNull(baseUrl)) {
             AppLog.e(T.NUX, "invalid URL: " + baseUrl);
             mErrorMsgId = R.string.invalid_url_message;
             return null;
