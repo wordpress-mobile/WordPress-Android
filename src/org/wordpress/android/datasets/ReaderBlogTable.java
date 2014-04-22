@@ -79,27 +79,31 @@ public class ReaderBlogTable {
         return blog;
     }
 
-    public static void setBlogInfo(ReaderBlogInfo blog) {
-        if (blog == null)
+    public static void setBlogInfo(ReaderBlogInfo blogInfo) {
+        if (blogInfo == null) {
             return;
+        }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
                 + "   (blog_id, blog_url, name, description, is_private, is_jetpack, is_following, num_followers)"
                 + "   VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
-            stmt.bindLong  (1, blog.blogId);
-            stmt.bindString(2, UrlUtils.normalizeUrl(blog.getUrl()));
-            stmt.bindString(3, blog.getName());
-            stmt.bindString(4, blog.getDescription());
-            stmt.bindLong  (5, SqlUtils.boolToSql(blog.isPrivate));
-            stmt.bindLong  (6, SqlUtils.boolToSql(blog.isJetpack));
-            stmt.bindLong  (7, SqlUtils.boolToSql(blog.isFollowing));
-            stmt.bindLong  (8, blog.numSubscribers);
+            stmt.bindLong  (1, blogInfo.blogId);
+            stmt.bindString(2, UrlUtils.normalizeUrl(blogInfo.getUrl()));
+            stmt.bindString(3, blogInfo.getName());
+            stmt.bindString(4, blogInfo.getDescription());
+            stmt.bindLong  (5, SqlUtils.boolToSql(blogInfo.isPrivate));
+            stmt.bindLong  (6, SqlUtils.boolToSql(blogInfo.isJetpack));
+            stmt.bindLong  (7, SqlUtils.boolToSql(blogInfo.isFollowing));
+            stmt.bindLong  (8, blogInfo.numSubscribers);
             stmt.execute();
             stmt.clearBindings();
         } finally {
             SqlUtils.closeStatement(stmt);
         }
+
+        // update in list of followed urls
+        setIsFollowedBlogUrl(blogInfo.getUrl(), blogInfo.isFollowing, false);
     }
 
     public static void setFollowedBlogUrls(ReaderUrlList urls) {
@@ -108,14 +112,13 @@ public class ReaderBlogTable {
         SQLiteStatement stmtUrl = db.compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
         SQLiteStatement stmtInfo = db.compileStatement("UPDATE tbl_blog_info SET is_following=? WHERE blog_url=?");
         try {
-            long sqlTrue = SqlUtils.boolToSql(true);
-
             // first set all existing blogs to not followed
             db.execSQL("UPDATE tbl_followed_blogs SET is_following=0");
             db.execSQL("UPDATE tbl_blog_info SET is_following=0");
 
             // then set passed ones as followed
             if (urls != null && urls.size() > 0) {
+                long sqlTrue = SqlUtils.boolToSql(true);
                 for (String url : urls) {
                     String normUrl = UrlUtils.normalizeUrl(url);
 
@@ -158,41 +161,40 @@ public class ReaderBlogTable {
     }
 
     public static boolean isFollowedBlogUrl(String url) {
-        if (TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url)) {
             return false;
+        }
         String[] args = {UrlUtils.normalizeUrl(url)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT is_following FROM tbl_followed_blogs WHERE blog_url=?", args);
     }
 
     public static void setIsFollowedBlogUrl(String url, boolean isFollowed) {
-        if (TextUtils.isEmpty(url))
+        setIsFollowedBlogUrl(url, isFollowed, true);
+    }
+    private static void setIsFollowedBlogUrl(String url, boolean isFollowed, boolean updateBlogInfoTable) {
+        if (TextUtils.isEmpty(url)) {
             return;
-
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
-        try {
-            final String normUrl = UrlUtils.normalizeUrl(url);
-
-            // update in tbl_followed_blogs
-            SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
-            try {
-                stmt.bindString(1, normUrl);
-                stmt.bindLong(2, SqlUtils.boolToSql(isFollowed));
-                stmt.execute();
-            } finally {
-                SqlUtils.closeStatement(stmt);
-            }
-
-            // update in tbl_blog_info
-            ContentValues values = new ContentValues();
-            values.put("is_following", SqlUtils.boolToSql(isFollowed));
-            String[] args = {normUrl};
-            db.update("tbl_blog_info", values, "blog_url=?", args);
-
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
 
+        String normUrl = UrlUtils.normalizeUrl(url);
+        long sqlIsFollowed = SqlUtils.boolToSql(isFollowed);
+
+        // update in tbl_followed_blogs
+        SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
+        try {
+            stmt.bindString(1, normUrl);
+            stmt.bindLong(2, sqlIsFollowed);
+            stmt.execute();
+        } finally {
+            SqlUtils.closeStatement(stmt);
+        }
+
+        // update in tbl_blog_info
+        if (updateBlogInfoTable) {
+            ContentValues values = new ContentValues();
+            values.put("is_following", sqlIsFollowed);
+            String[] args = {normUrl};
+            ReaderDatabase.getWritableDb().update("tbl_blog_info", values, "blog_url=?", args);
+        }
     }
 }

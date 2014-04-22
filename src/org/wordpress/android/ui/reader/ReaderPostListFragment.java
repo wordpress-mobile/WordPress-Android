@@ -653,7 +653,7 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     private void updatePostsWithCurrentTag(RequestDataAction updateAction) {
         if (hasCurrentTag()) {
-            updatePostsWithTag(mCurrentTag, updateAction, RefreshType.MANUAL);
+            updatePostsWithTag(mCurrentTag, updateAction, RefreshType.AUTOMATIC);
         }
     }
     private void updatePostsWithTag(final String tagName,

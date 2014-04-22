@@ -99,6 +99,7 @@ public class ReaderPostActions {
 
     /**
      * follow/unfollow the blog the passed post is in
+     * TODO: this duplicates ReaderBlogActions.performFollowAction
      **/
     public static boolean performFollowAction(final ReaderPost post,
                                               final boolean isAskingToFollow) {

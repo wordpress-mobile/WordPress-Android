@@ -236,8 +236,6 @@ public class ReaderPost {
         if (excerpt.length() < maxLen)
             return excerpt.trim();
 
-        //return excerpt.substring(0, maxLen).trim() + "...";
-
         StringBuilder result = new StringBuilder();
         BreakIterator wordIterator = BreakIterator.getWordInstance();
         wordIterator.setText(excerpt);

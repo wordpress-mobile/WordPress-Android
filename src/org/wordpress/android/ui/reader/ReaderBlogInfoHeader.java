@@ -75,8 +75,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
             String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blogInfo.numSubscribers));
             txtFollowCnt.setText(numFollowers);
 
-            boolean isFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-            showBlogFollowStatus(txtFollowBtn, isFollowing);
+            showBlogFollowStatus(txtFollowBtn, blogInfo.isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
 
@@ -115,7 +114,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         if (!mHasBlogInfo) {
             showProgress();
         }
-        ReaderActions.RequestBlogInfoListener listener = new ReaderActions.RequestBlogInfoListener() {
+        ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlogInfo blogInfo) {
                 hideProgress();
@@ -134,12 +133,9 @@ public class ReaderBlogInfoHeader extends LinearLayout {
 
         AniUtils.zoomAction(txtFollow);
 
-        boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogInfo.getUrl());
-        boolean isAskingToFollow = !isCurrentlyFollowing;
-
+        boolean isAskingToFollow = !blogInfo.isFollowing;
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow)) {
-            boolean isNowFollowing = !isCurrentlyFollowing;
-            showBlogFollowStatus(txtFollow, isNowFollowing);
+            showBlogFollowStatus(txtFollow, isAskingToFollow);
         }
     }
 

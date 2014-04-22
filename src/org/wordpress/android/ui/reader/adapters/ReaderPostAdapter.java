@@ -221,8 +221,9 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     @SuppressLint("NewApi")
     private void loadPosts() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
+        }
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

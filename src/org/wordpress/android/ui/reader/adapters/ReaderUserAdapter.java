@@ -74,6 +74,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
+
             // tapping anywhere in the view shows the user's blog
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -19,42 +19,56 @@ import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogActions {
 
+    /*
+     * follow/unfollow the passed blog - make sure to passed the blogId when known since
+     * following solely by url causes the blog to be followed as a feed
+     */
     public static boolean performFollowAction(final long blogId,
                                               final String blogUrl,
                                               final boolean isAskingToFollow) {
-
-        if (TextUtils.isEmpty(blogUrl)) {
+        // either blogId or blogUrl are required
+        final boolean hasBlogId = (blogId != 0);
+        final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+        if (!hasBlogId && !hasBlogUrl) {
             return false;
         }
 
-        final boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
-        if (isCurrentlyFollowing == isAskingToFollow) {
-            return true;
+        if (hasBlogUrl) {
+            boolean isCurrentlyFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
+            if (isCurrentlyFollowing == isAskingToFollow) {
+                return true;
+            }
         }
 
         final String path;
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-        final String domain = UrlUtils.getDomainFromUrl(blogUrl);
 
         if (isAskingToFollow) {
             // if we know the blog's id, use /sites/$siteId/follows/new - this is important
             // because /read/following/mine/new?url= follows it as a feed rather than a
             // blog, so its posts show up without support for likes, comments, etc.
-            if (blogId != 0) {
+            if (hasBlogId) {
                 path = "/sites/" + blogId + "/follows/new";
             } else {
-                path = "/read/following/mine/new?url=" + domain;
+                path = "/read/following/mine/new?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                AppLog.w(T.READER, "following blog by url rather than id");
             }
         } else {
-            if (blogId != 0) {
+            if (hasBlogId) {
                 path = "/sites/" + blogId + "/follows/mine/delete";
             } else {
-                path = "/read/following/mine/delete?url=" + domain;
+                path = "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                AppLog.w(T.READER, "unfollowing blog by url rather than id");
             }
         }
 
-        ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isAskingToFollow);
-        ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
+        // update local db
+        if (hasBlogUrl) {
+            ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isAskingToFollow);
+        }
+        if (hasBlogId) {
+            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
+        }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -68,17 +82,22 @@ public class ReaderBlogActions {
                 AppLog.w(T.READER, "blog " + actionName + " failed");
                 AppLog.e(T.READER, volleyError);
                 // revert to original state
-                ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isCurrentlyFollowing);
-                ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isCurrentlyFollowing);
+                if (hasBlogUrl) {
+                    ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, !isAskingToFollow);
+                }
+                if (hasBlogId) {
+                    ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
+                }
             }
         };
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
+        // return before API call completes
         return true;
     }
 
     /*
-     * get the latest server info on blogs the current user is following
+     * request the list of blogs the current user is following
      */
     public static void updateFollowedBlogs() {
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -105,7 +124,7 @@ public class ReaderBlogActions {
             public void run() {
                 ReaderUrlList urls = new ReaderUrlList();
                 JSONArray jsonBlogs = jsonObject.optJSONArray("subscriptions");
-                if (jsonBlogs!=null) {
+                if (jsonBlogs != null) {
                     for (int i=0; i < jsonBlogs.length(); i++) {
                         urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
                     }
@@ -116,9 +135,9 @@ public class ReaderBlogActions {
     }
 
     /*
-     * requests info about a specific blog
+     * request info about a specific blog
      */
-    public static void updateBlogInfo(long blogId, final ReaderActions.RequestBlogInfoListener infoListener) {
+    public static void updateBlogInfo(long blogId, final ReaderActions.UpdateBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -137,7 +156,7 @@ public class ReaderBlogActions {
         WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
     }
 
-    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.RequestBlogInfoListener infoListener) {
+    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null) {
                 infoListener.onResult(null);
@@ -147,6 +166,7 @@ public class ReaderBlogActions {
 
         ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonObject);
         ReaderBlogTable.setBlogInfo(blogInfo);
+
         if (infoListener != null) {
             infoListener.onResult(blogInfo);
         }
