@@ -21,6 +21,7 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <!-- the tag below is used to check if the current displayed is a dual or single pane layout -->
     <FrameLayout
         android:id="@+id/layout_fragment_container"
         android:tag="@string/dual_pane_mode"
