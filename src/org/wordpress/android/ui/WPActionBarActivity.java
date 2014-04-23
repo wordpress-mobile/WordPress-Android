@@ -49,7 +49,6 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
-import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
