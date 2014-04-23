@@ -51,7 +51,6 @@ import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 
 import java.lang.ref.WeakReference;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
