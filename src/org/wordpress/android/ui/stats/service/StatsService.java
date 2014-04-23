@@ -90,14 +90,7 @@ public class StatsService extends Service {
 
     @Override
     public void onDestroy() {
-        for (Request<JSONObject> req : statsNetworkRequests) {
-            if (!req.hasHadResponseDelivered() && !req.isCanceled()) {
-                req.cancel();
-            }
-        }
-        if (orchestrator != null) {
-            orchestrator.interrupt();
-        }
+        stopRefresh();
         AppLog.i(T.STATS, "service destroyed");
         super.onDestroy();
     }
@@ -110,11 +103,37 @@ public class StatsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
-        this.mBlogId = blogId;
-        startTasks(blogId, startId);
+
+        if (mBlogId == null) {
+            startTasks(blogId, startId);
+        } else if (blogId.equals(mBlogId)) {
+            //already running on the same blogID
+            //Do nothing
+            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mBlogId);
+        } else {
+            //stats is running on a different blogID
+            stopRefresh();
+            startTasks(blogId, startId);
+        }
+        
+        this.mBlogId = blogId;       
         return START_NOT_STICKY;
     }
-
+    
+    private void stopRefresh() {
+        for (Request<JSONObject> req : statsNetworkRequests) {
+            if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
+                req.cancel();
+            }
+        }
+        statsNetworkRequests.clear();
+        if (orchestrator != null) {
+            orchestrator.interrupt();
+        }
+        orchestrator = null;
+        this.mBlogId = null;
+    }
+    
     private void startTasks(final String blogId, final int startId) {
 
         orchestrator = new Thread() {
@@ -125,7 +144,7 @@ public class StatsService extends Service {
                 final String today = StatUtils.getCurrentDate();
                 final String yesterday = StatUtils.getYesterdaysDate();
             
-                AppLog.i(T.STATS, "update started");
+                AppLog.i(T.STATS, "update started for blogID - " + blogId);
                 broadcastUpdate(true);
                 
                 // visitors and views
@@ -188,6 +207,7 @@ public class StatsService extends Service {
                 //Initiates an orderly shutdown in which previously submitted tasks are executed, but no new tasks will be accepted.
                 //At this point all Threads previously enqueued in updateUIExecutor already finished their execution.
                 updateUIExecutor.shutdown();
+                mBlogId = null;
 
                 broadcastUpdate(false);
                 stopSelf(startId);               
@@ -467,46 +487,48 @@ public class StatsService extends Service {
         @Override
         public void onResponse(final JSONObject response) {
             AppLog.d(T.STATS, this.getClass().getName() + " " + date + " responded OK");
-            updateUIExecutor.submit(
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            numberOfFinishedNetworkCalls++;
-                            if (response != null) {
-                                try {
-                                    parseResponse(response);
-                                } catch (JSONException e) {
-                                    AppLog.e(AppLog.T.STATS, e);
-                                } catch (RemoteException e) {
-                                    AppLog.e(AppLog.T.STATS, e);
-                                } catch (OperationApplicationException e) {
-                                    AppLog.e(AppLog.T.STATS, e);
+            if(!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
+                updateUIExecutor.submit(
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                numberOfFinishedNetworkCalls++;
+                                if (response != null) {
+                                    try {
+                                        parseResponse(response);
+                                    } catch (JSONException e) {
+                                        AppLog.e(AppLog.T.STATS, e);
+                                    } catch (RemoteException e) {
+                                        AppLog.e(AppLog.T.STATS, e);
+                                    } catch (OperationApplicationException e) {
+                                        AppLog.e(AppLog.T.STATS, e);
+                                    }
+                                }
+                                notifyResponseReceived();
+                                if (shouldUpdateFragments(getStatsContentProviderUpdateURI())) { //Update the 2 Fragments only when both network calls are finished
+                                    getContentResolver().notifyChange(getStatsContentProviderUpdateURI(), null);
                                 }
                             }
-                            notifyResponseReceived();
-                            if (shouldUpdateFragments(getStatsContentProviderUpdateURI())) { //Update the 2 Fragments only when both network calls are finished
-                                getContentResolver().notifyChange(getStatsContentProviderUpdateURI(), null);
-                            }
-                        }
-                    });
+                        });
         }
         
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             AppLog.d(T.STATS, this.getClass().getName() + " " + date + " responded with Error");
-            updateUIExecutor.submit(new Thread() {
-                @Override
-                public void run() {
-                    numberOfFinishedNetworkCalls++;
-                    if (volleyError != null) {
-                        AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
+            if(!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
+                updateUIExecutor.submit(new Thread() {
+                    @Override
+                    public void run() {
+                        numberOfFinishedNetworkCalls++;
+                        if (volleyError != null) {
+                            AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
+                        }
+                        notifyResponseReceived();
+                        if (shouldUpdateFragments(getStatsContentProviderUpdateURI())) { //Update the 2 Fragments only when both network calls are finished
+                            getContentResolver().notifyChange(getStatsContentProviderUpdateURI(), null);
+                        }
                     }
-                    notifyResponseReceived();
-                    if (shouldUpdateFragments(getStatsContentProviderUpdateURI())) { //Update the 2 Fragments only when both network calls are finished
-                        getContentResolver().notifyChange(getStatsContentProviderUpdateURI(), null);
-                    }
-                }
-            });
+                });
         }
     }
     
@@ -570,46 +592,48 @@ public class StatsService extends Service {
     RestRequest.Listener statsSummaryRestListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject jsonObject) {
-            updateUIExecutor.submit(new Thread() {
-                @Override
-                public void run() {
-                    AppLog.d(T.STATS, "Stats Summary Call responded");
-                    numberOfFinishedNetworkCalls++;
+            if(!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
+                updateUIExecutor.submit(new Thread() {
+                    @Override
+                    public void run() {
+                        AppLog.d(T.STATS, "Stats Summary Call responded");
+                        numberOfFinishedNetworkCalls++;
 
-                    try{
-                        if (jsonObject == null)
-                            return;
+                        try{
+                            if (jsonObject == null)
+                                return;
 
-                        // save summary, then send broadcast that they've changed
-                        StatUtils.saveSummary(mBlogId, jsonObject);
-                        StatsSummary stats = StatUtils.getSummary(mBlogId);
-                        if (stats != null) {
-                            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
-                            Intent intent = new Intent(StatsService.ACTION_STATS_SUMMARY_UPDATED);
-                            intent.putExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA, stats);
-                            lbm.sendBroadcast(intent);
+                            // save summary, then send broadcast that they've changed
+                            StatUtils.saveSummary(mBlogId, jsonObject);
+                            StatsSummary stats = StatUtils.getSummary(mBlogId);
+                            if (stats != null) {
+                                LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
+                                Intent intent = new Intent(StatsService.ACTION_STATS_SUMMARY_UPDATED);
+                                intent.putExtra(StatsService.STATS_SUMMARY_UPDATED_EXTRA, stats);
+                                lbm.sendBroadcast(intent);
+                            }
+                        } finally {
+                            notifyResponseReceived();
                         }
-                    } finally {
-                        notifyResponseReceived();
                     }
-                }
-            });
+                });
         }
     };
     
     RestRequest.ErrorListener statsSummaryErrListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            updateUIExecutor.submit(new Thread() {
-                @Override
-                public void run() {
-                    numberOfFinishedNetworkCalls++;
-                    if (volleyError != null) {
-                        AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
+            if(!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
+                updateUIExecutor.submit(new Thread() {
+                    @Override
+                    public void run() {
+                        numberOfFinishedNetworkCalls++;
+                        if (volleyError != null) {
+                            AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
+                        }
+                        notifyResponseReceived();
                     }
-                    notifyResponseReceived();
-                }
-            });
+                });
         }
     };
     
