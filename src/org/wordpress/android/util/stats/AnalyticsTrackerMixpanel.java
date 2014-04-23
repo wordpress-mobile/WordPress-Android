@@ -263,6 +263,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Editor - Updated Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_updated_post");
                 break;
+            case EDITOR_SCHEDULED_POST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Scheduled Post");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_scheduled_post");
+                break;
             case EDITOR_PUBLISHED_POST_WITH_PHOTO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(

@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPViewPager;
@@ -231,7 +232,11 @@ public class EditPostActivity extends SherlockFragmentActivity {
             if (mPost.isUploaded()) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+                if (mPost.getStatusEnum() == PostStatus.SCHEDULED) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+                }
             }
 
             savePost(false);
