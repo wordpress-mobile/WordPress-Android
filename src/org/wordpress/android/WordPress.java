@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.Utils;
@@ -509,11 +510,8 @@ public class WordPress extends Application {
     public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
         
         if (!alwaysUpdate && mStatsLastPingDate != null) {
-            Date now = new Date();
-            long nowInMilliseconds = now.getTime();
-            long lastPingDateInMilliseconds = mStatsLastPingDate.getTime();
-            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed < 30 * 60) { //30 minutes
+        	// check if the last stats refresh was done less than 30 minute ago
+            if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {
               return;
             }
         }
@@ -583,22 +581,19 @@ public class WordPress extends Application {
 
         private boolean canSynchWithWordPressDotComBackend() {
 
-            if (!NetworkUtils.isNetworkAvailable(mContext))
-                return false;
-            
             if (isInBackground == false) //The app wasn't in background. No need to ping the backend again.
                 return false;
 
             isInBackground = false; //The app moved from background -> foreground. Set this flag to false for security reason.
+            
+            if (!NetworkUtils.isNetworkAvailable(mContext))
+                return false;
 
             if (lastPingDate == null)
                 return false; //first startup
 
             Date now = new Date();
-            long nowInMilliseconds = now.getTime();
-            long lastPingDateInMilliseconds = lastPingDate.getTime();
-            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {
+            if (DateTimeUtils.secondsBetween(now,lastPingDate) >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
