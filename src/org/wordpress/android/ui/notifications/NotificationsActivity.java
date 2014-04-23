@@ -94,14 +94,11 @@ public class NotificationsActivity extends WPActionBarActivity
             } else {
                 loadNotes(true, noteId);
             }
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
         } else {
             loadNotes(true, UNSPECIFIED_NOTE_ID);
         }
         GCMIntentService.activeNotificationsMap.clear();
-
-        if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-        }
 
         if (mBroadcastReceiver == null) {
             createBroadcastReceiver();
