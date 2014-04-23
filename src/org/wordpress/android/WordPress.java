@@ -506,7 +506,11 @@ public class WordPress extends Application {
         return mUserAgent;
     }
 
-    
+    /*
+     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
+     *  too frequent refreshes.  
+     *  User is not notified in case of errors.
+     */
     public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
         
         if (!alwaysUpdate && mStatsLastPingDate != null) {
@@ -579,6 +583,10 @@ public class WordPress extends Application {
 
         }
 
+        /*
+         * Checks that the network connection is available, and that at least 2 minutes are passed
+         * since the last ping.
+         */
         private boolean canSynchWithWordPressDotComBackend() {
 
             if (isInBackground == false) //The app wasn't in background. No need to ping the backend again.
