@@ -138,12 +138,7 @@ public class StatsService extends Service {
         orchestrator = new Thread() {
             @Override
             public void run() {
-                updateUIExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1); // single
-                                                                                         // thread
-                                                                                         // otherwise
-                                                                                         // the UI
-                                                                                         // is
-                                                                                         // sluggish
+                updateUIExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1); // single thread otherwise the UI is sluggish
                 RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String today = StatUtils.getCurrentDate();
                 final String yesterday = StatUtils.getYesterdaysDate();
