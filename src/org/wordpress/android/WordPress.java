@@ -76,7 +76,6 @@ public class WordPress extends Application {
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
@@ -86,7 +85,7 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
-    public static Date statsLastPingDate; //last time stats were updated in background
+    private static Date mStatsLastPingDate; //last time stats were updated in background
     
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
@@ -142,13 +141,13 @@ public class WordPress extends Application {
             registerActivityLifecycleCallbacks(pnBackendMponitor);
         }
         
-        updateCurrentBlogStatsInBackground();
+        updateCurrentBlogStatsInBackground(false);
     }
 
     public static void setupVolleyQueue() {
         requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
+        VolleyLog.setTag(AppLog.TAG);
         // http://stackoverflow.com/a/17035814
         imageLoader.setBatchedResponseDelay(0);
     }
@@ -507,12 +506,12 @@ public class WordPress extends Application {
     }
 
     
-    public synchronized static void updateCurrentBlogStatsInBackground() {
+    public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
         
-        if (statsLastPingDate != null) {
+        if (!alwaysUpdate && mStatsLastPingDate != null) {
             Date now = new Date();
             long nowInMilliseconds = now.getTime();
-            long lastPingDateInMilliseconds = statsLastPingDate.getTime();
+            long lastPingDateInMilliseconds = mStatsLastPingDate.getTime();
             int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
             if (secondsPassed < 30 * 60) { //30 minutes
               return;
@@ -532,7 +531,7 @@ public class WordPress extends Application {
                 Intent intent = new Intent(mContext, StatsService.class);
                 intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
                 mContext.startService(intent);
-                statsLastPingDate = new Date(); //set the last ping time
+                mStatsLastPingDate = new Date(); //set the last ping time
             }
         }
     }
@@ -637,7 +636,7 @@ public class WordPress extends Application {
             }
             
             //Update Stats!
-            WordPress.updateCurrentBlogStatsInBackground();
+            WordPress.updateCurrentBlogStatsInBackground(false);
         }
         
         @Override

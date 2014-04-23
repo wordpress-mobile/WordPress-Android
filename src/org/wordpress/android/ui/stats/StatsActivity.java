@@ -559,7 +559,6 @@ public class StatsActivity extends WPActionBarActivity {
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         startService(intent);
-        WordPress.statsLastPingDate = new Date(); //set the last ping time
     }
 
     private void verifyCredentials(final String blogId) {
