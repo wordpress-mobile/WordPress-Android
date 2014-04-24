@@ -153,8 +153,8 @@ public class StatsService extends Service {
                 // bar charts
                 path = "batch/?urls%5B%5D=" 
                         + Uri.encode(getBarChartPath(StatsBarChartUnit.WEEK, 30)) 
-                        + "&urls%5B%5D=" +
-                        Uri.encode(getBarChartPath(StatsBarChartUnit.MONTH, 30));
+                        + "&urls%5B%5D=" 
+                        + Uri.encode(getBarChartPath(StatsBarChartUnit.MONTH, 30));
                 BarChartListener barChartRestListener = new BarChartListener(
                         getBarChartPath(StatsBarChartUnit.WEEK, 30), StatsBarChartUnit.WEEK,
                         getBarChartPath(StatsBarChartUnit.MONTH, 30), StatsBarChartUnit.MONTH);
@@ -162,9 +162,9 @@ public class StatsService extends Service {
 
                 // top posts and pages
                 path = "batch/?urls%5B%5D=" 
-                        + String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, today)
-                        + "&urls%5B%5D=" +
-                        String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, yesterday);
+                        + Uri.encode(String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, today))
+                        + "&urls%5B%5D=" 
+                        + Uri.encode(String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, yesterday));
                 TopPostAndPageListener topPostAndPageRestListener = new TopPostAndPageListener(
                         String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, today),
                         String.format("/sites/%s/stats/top-posts?date=%s", mBlogId, yesterday)
@@ -500,8 +500,7 @@ public class StatsService extends Service {
             long dateMs = StatUtils.toMs(date);
 
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-            // delete data with the same date, and data older than two days ago (keep yesterday's
-            // data)
+            // delete data with the same date, and data older than two days ago (keep yesterday's data)
             ContentProviderOperation delete_op = ContentProviderOperation
                     .newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)", new String[] {
