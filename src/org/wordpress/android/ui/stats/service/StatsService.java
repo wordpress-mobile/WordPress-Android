@@ -70,12 +70,12 @@ public class StatsService extends Service {
     public static final String ACTION_STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
     public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
 
-    protected static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+    private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private final Object mSyncObject = new Object();
 
     private String mBlogId;
-    private LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
+    private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = -1; // The number of networks calls made by Stats.
     private int numberOfFinishedNetworkCalls = 0;
     private ThreadPoolExecutor updateUIExecutor;
@@ -292,7 +292,7 @@ public class StatsService extends Service {
         }
 
         @Override
-        protected void parseResponse(final JSONObject response) throws JSONException, RemoteException,
+        void parseResponse(final JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
             super.parseResponse(response);
             getContentResolver().notifyChange(StatsContentProvider.STATS_CLICKS_URI, null);
@@ -366,7 +366,7 @@ public class StatsService extends Service {
         }
 
         @Override
-        protected void parseResponse(final JSONObject response) throws JSONException, RemoteException,
+        void parseResponse(final JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
             super.parseResponse(response);
             getContentResolver().notifyChange(StatsContentProvider.STATS_REFERRERS_URI, null);
@@ -528,8 +528,8 @@ public class StatsService extends Service {
     }
 
     private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        protected String mTodayAPICallPath;
-        protected String mYesterdayAPICallPath;
+        final String mTodayAPICallPath;
+        final String mYesterdayAPICallPath;
 
         protected abstract Uri getStatsContentProviderUpdateURI();
 
@@ -567,7 +567,7 @@ public class StatsService extends Service {
                         });
         }
 
-        protected void parseResponse(JSONObject response) throws JSONException, RemoteException,
+        void parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
             if (response.has(mTodayAPICallPath)) {
                 JSONObject todayJsonObject = response.getJSONObject(mTodayAPICallPath);
@@ -609,8 +609,8 @@ public class StatsService extends Service {
 
     private class BarChartListener extends AbsListener {
 
-        private StatsBarChartUnit mTodayBarChartUnit;
-        private StatsBarChartUnit mYesterdayBarChartUnit;
+        private final StatsBarChartUnit mTodayBarChartUnit;
+        private final StatsBarChartUnit mYesterdayBarChartUnit;
         private StatsBarChartUnit mCurrentBarChartUnit;
 
         BarChartListener(String todayAPICallPath, StatsBarChartUnit todayBarChartUnit, String yesterddayAPICallPath,
@@ -678,7 +678,7 @@ public class StatsService extends Service {
         }
     }
 
-    RestRequest.Listener statsSummaryRestListener = new RestRequest.Listener() {
+    private final RestRequest.Listener statsSummaryRestListener = new RestRequest.Listener() {
         @Override
         public void onResponse(final JSONObject jsonObject) {
             if (!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
@@ -709,7 +709,7 @@ public class StatsService extends Service {
         }
     };
 
-    RestRequest.ErrorListener statsSummaryErrListener = new RestRequest.ErrorListener() {
+    private final RestRequest.ErrorListener statsSummaryErrListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             if (!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
@@ -726,7 +726,7 @@ public class StatsService extends Service {
         }
     };
 
-    protected boolean isDone() {
+    boolean isDone() {
         return numberOfFinishedNetworkCalls == numberOfNetworkCalls;
     }
 
