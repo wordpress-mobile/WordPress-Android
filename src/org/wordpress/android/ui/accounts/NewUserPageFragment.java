@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,9 +39,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
-
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
+    private boolean mAutoCompleteUrl = true;
 
     public NewUserPageFragment() {
         mEmailChecker = new EmailChecker();
@@ -349,6 +350,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -359,7 +361,9 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // auto fill blog address
                 mSiteUrlTextField.setError(null);
-                mSiteUrlTextField.setText(EditTextUtils.getText(mUsernameTextField));
+                if (mAutoCompleteUrl) {
+                    mSiteUrlTextField.setText(EditTextUtils.getText(mUsernameTextField));
+                }
             }
 
             @Override
@@ -378,4 +382,12 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         initInfoButton(rootView);
         return rootView;
     }
+
+    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
+            return false;
+        }
+    };
 }
