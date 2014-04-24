@@ -68,8 +68,8 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
     protected abstract boolean isUserDataValid();
 
     protected boolean onDoneEvent(int actionId, KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN &&
-                                                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+        if (actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
+                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
             if (!isUserDataValid()) {
                 return true;
             }
@@ -278,8 +278,8 @@ public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
                 try {
                     JSONObject errorObj = new JSONObject(jsonString);
                     messageId = getErrorMessageForErrorCode((String) errorObj.get("error"));
-                    if (messageId == 0) { // Not one of our common errors. Show the error message
-                        // from the server.
+                    if (messageId == 0) {
+                        // Not one of our common errors. Show the error message from the server.
                         message = (String) errorObj.get("message");
                     }
                 } catch (JSONException e) {

@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
@@ -11,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -25,7 +25,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
@@ -36,6 +36,7 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     private WPTextView mCancelButton;
     private RelativeLayout mProgressBarSignIn;
     private boolean mSignoutOnCancelMode;
+    private boolean mAutoCompleteUrl = true;
 
     public NewBlogFragment() {
     }
@@ -83,8 +84,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     private boolean fieldsFilled() {
-        return mSiteUrlTextField.getText().toString().trim().length() > 0
-                && mSiteTitleTextField.getText().toString().trim().length() > 0;
+        return EditTextUtils.getText(mSiteUrlTextField).trim().length() > 0
+                && EditTextUtils.getText(mSiteTitleTextField).trim().length() > 0;
     }
 
     protected void startProgress(String message) {
@@ -132,8 +133,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     protected boolean isUserDataValid() {
-        final String siteTitle = mSiteTitleTextField.getText().toString().trim();
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
+        final String siteTitle = EditTextUtils.getText(mSiteTitleTextField).trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
         boolean retValue = true;
 
         if (siteTitle.equals("")) {
@@ -151,17 +152,17 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
     }
 
     private String titleToUrl(String siteUrl) {
-        return siteUrl.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
+        return siteUrl.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
-            AlertUtil.showAlert(getActivity(), R.string.no_network_title,
-                    R.string.no_network_message);
+            AlertUtil.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);
             return;
         }
-        if (!isUserDataValid())
+        if (!isUserDataValid()) {
             return;
+        }
 
         // prevent double tapping of the "done" btn in keyboard for those clients that don't dismiss the keyboard.
         // Samsung S4 for example
@@ -171,115 +172,123 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
 
         startProgress(getString(R.string.validating_site_data));
 
-        final String siteUrl = mSiteUrlTextField.getText().toString().trim();
-        final String siteName = mSiteTitleTextField.getText().toString().trim();
+        final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
+        final String siteName = EditTextUtils.getText(mSiteTitleTextField).trim();
         final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "",
-                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
-                new CreateUserAndBlog.Callback() {
-                    @Override
-                    public void onStepFinished(CreateUserAndBlog.Step step) {
-                        if (getActivity() != null) {
-                            updateProgress(getString(R.string.create_new_blog_wpcom));
-                        }
-                    }
+        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog("", "", "", siteUrl, siteName, language,
+                getRestClientUtils(), getActivity(), new ErrorListener(), new CreateUserAndBlog.Callback() {
+            @Override
+            public void onStepFinished(CreateUserAndBlog.Step step) {
+                if (getActivity() != null) {
+                    updateProgress(getString(R.string.create_new_blog_wpcom));
+                }
+            }
 
-                    @Override
-                    public void onSuccess(JSONObject createSiteResponse) {
-                        if (getActivity() == null) {
-                            return ;
-                        }
-                        endProgress();
-                        SetupBlog setupBlog = new SetupBlog();
-                        try {
-                            JSONObject details = createSiteResponse.getJSONObject("blog_details");
-                            String blogName = details.getString("blogname");
-                            String xmlRpcUrl = details.getString("xmlrpc");
-                            String homeUrl = details.getString("url");
-                            String blogId = details.getString("blogid");
-                            final SharedPreferences settings = PreferenceManager.
-                                    getDefaultSharedPreferences(getActivity());
-                            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            String password = WordPressDB.decryptPassword(settings.
-                                    getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-                            setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
-                        } catch (JSONException e) {
-                            AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
-                        }
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
-                    }
+            @Override
+            public void onSuccess(JSONObject createSiteResponse) {
+                if (getActivity() == null) {
+                    return;
+                }
+                endProgress();
+                SetupBlog setupBlog = new SetupBlog();
+                try {
+                    JSONObject details = createSiteResponse.getJSONObject("blog_details");
+                    String blogName = details.getString("blogname");
+                    String xmlRpcUrl = details.getString("xmlrpc");
+                    String homeUrl = details.getString("url");
+                    String blogId = details.getString("blogid");
+                    final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                    String password = WordPressDB.decryptPassword(settings.getString(
+                            WordPress.WPCOM_PASSWORD_PREFERENCE, null));
+                    setupBlog.addBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
+                } catch (JSONException e) {
+                    AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
+                }
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
+            }
 
-                    @Override
-                    public void onError(int messageId) {
-                        if (getActivity() == null) {
-                            return ;
-                        }
-                        endProgress();
-                        showError(getString(messageId));
-                    }
-                });
+            @Override
+            public void onError(int messageId) {
+                if (getActivity() == null) {
+                    return;
+                }
+                endProgress();
+                showError(getString(messageId));
+            }
+        });
         createUserAndBlog.startCreateBlogProcess();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.create_blog_fragment, container,
-                false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.create_blog_fragment, container, false);
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
-        mSignupButton.setOnClickListener(signupClickListener);
+        mSignupButton.setOnClickListener(mSignupClickListener);
         mSignupButton.setEnabled(false);
 
         mCancelButton = (WPTextView) rootView.findViewById(R.id.cancel_button);
-        mCancelButton.setOnClickListener(cancelClickListener);
+        mCancelButton.setOnClickListener(mCancelClickListener);
 
         mProgressTextSignIn = (WPTextView) rootView.findViewById(R.id.nux_sign_in_progress_text);
         mProgressBarSignIn = (RelativeLayout) rootView.findViewById(R.id.nux_sign_in_progress_bar);
 
-        mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
-
         mSiteUrlTextField.addTextChangedListener(this);
+        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
         mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+
+        mSiteTitleTextField = (EditText) rootView.findViewById(R.id.site_title);
         mSiteTitleTextField.addTextChangedListener(this);
-        mSiteTitleTextField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // auto fill blog address from title
-                mSiteUrlTextField.setText(titleToUrl(mSiteTitleTextField.getText().toString()));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+        mSiteTitleTextField.addTextChangedListener(mSiteTitleWatcher);
         return rootView;
     }
 
-    private OnClickListener signupClickListener = new OnClickListener() {
+    private final OnClickListener mSignupClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             validateAndCreateUserAndBlog();
         }
     };
 
-    private OnClickListener cancelClickListener = new OnClickListener() {
+    private final OnClickListener mCancelClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             signoutAndFinish();
         }
     };
 
-    private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
+    private final TextWatcher mSiteTitleWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            // auto fill blog address from title if user hasn't modified url
+            if (mAutoCompleteUrl) {
+                mSiteUrlTextField.setText(titleToUrl(EditTextUtils.getText(mSiteTitleTextField)));
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+        }
+    };
+
+    private final OnKeyListener mSiteUrlKeyListener = new OnKeyListener() {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            mAutoCompleteUrl = EditTextUtils.isEmpty(mSiteUrlTextField);
+            return false;
+        }
+    };
+
+    private final TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             return onDoneEvent(actionId, event);
