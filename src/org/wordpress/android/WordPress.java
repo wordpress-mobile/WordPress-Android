@@ -36,9 +36,13 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -73,7 +77,6 @@ public class WordPress extends Application {
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
-    public static final String TAG = "WordPress";
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
@@ -83,6 +86,8 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
+    private static Date mStatsLastPingDate; //last time stats were updated in background
+    
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
@@ -96,6 +101,7 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
+        ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
         if (!Utils.isDebugBuild()) {
@@ -131,16 +137,18 @@ public class WordPress extends Application {
         super.onCreate();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            PushNotificationsBackendMonitor pnBackendMponitor = new PushNotificationsBackendMonitor();
+            ApplicationLifecycleMonitor pnBackendMponitor = new ApplicationLifecycleMonitor();
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
         }
+        
+        updateCurrentBlogStatsInBackground(false);
     }
 
     public static void setupVolleyQueue() {
         requestQueue = Volley.newRequestQueue(mContext, VolleyUtils.getHTTPClientStack(mContext));
         imageLoader = new ImageLoader(requestQueue, getBitmapCache());
-        VolleyLog.setTag(TAG);
+        VolleyLog.setTag(AppLog.TAG);
         // http://stackoverflow.com/a/17035814
         imageLoader.setBatchedResponseDelay(0);
     }
@@ -230,7 +238,7 @@ public class WordPress extends Application {
                 GCMRegistrar.checkDevice(ctx);
                 GCMRegistrar.checkManifest(ctx);
                 token = GCMRegistrar.getRegistrationId(ctx);
-                String gcmId = Config.GCM_ID;
+                String gcmId = BuildConfig.GCM_ID;
                 if (gcmId != null && token.equals("")) {
                     GCMRegistrar.register(ctx, gcmId);
                 } else {
@@ -499,6 +507,38 @@ public class WordPress extends Application {
     }
 
     /*
+     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
+     *  too frequent refreshes.  
+     *  User is not notified in case of errors.
+     */
+    public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
+        
+        if (!alwaysUpdate && mStatsLastPingDate != null) {
+        	// check if the last stats refresh was done less than 30 minute ago
+            if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {
+              return;
+            }
+        }
+        
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog != null) {
+            String blogID = null;
+            if (currentBlog.isDotcomFlag()) {
+                blogID = String.valueOf(currentBlog.getRemoteBlogId());
+            } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
+                blogID = currentBlog.getApi_blogid(); // Can return null
+            } 
+            if (blogID != null) {
+                // start service to get stats
+                Intent intent = new Intent(mContext, StatsService.class);
+                intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
+                mContext.startService(intent);
+                mStatsLastPingDate = new Date(); //set the last ping time
+            }
+        }
+    }
+    
+    /*
      * Detect when the app goes to the background and come back to the foreground.
      *
      * Turns out that when your app has no more visible UI, a callback is triggered.
@@ -509,12 +549,12 @@ public class WordPress extends Application {
      *
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private class PushNotificationsBackendMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+    private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
         private Date lastPingDate;
 
-        boolean background = false;
+        boolean isInBackground = false;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -529,11 +569,11 @@ public class WordPress extends Application {
 
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
+                isInBackground = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED);
                 AnalyticsTracker.endSession();
-                background = true;
             } else {
-                background = false;
+                isInBackground = false;
             }
 
             //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
@@ -543,24 +583,25 @@ public class WordPress extends Application {
 
         }
 
-        private boolean mustPingPushNotificationsBackend() {
+        /*
+         * Checks that the network connection is available, and that at least 2 minutes are passed
+         * since the last ping.
+         */
+        private boolean canSynchWithWordPressDotComBackend() {
 
-            if (WordPress.hasValidWPComCredentials(mContext) == false)
+            if (isInBackground == false) //The app wasn't in background. No need to ping the backend again.
                 return false;
 
-            if (background == false)
+            isInBackground = false; //The app moved from background -> foreground. Set this flag to false for security reason.
+            
+            if (!NetworkUtils.isNetworkAvailable(mContext))
                 return false;
-
-            background = false;
 
             if (lastPingDate == null)
                 return false; //first startup
 
             Date now = new Date();
-            long nowInMilliseconds = now.getTime();
-            long lastPingDateInMilliseconds = lastPingDate.getTime();
-            int secondsPassed = (int) (nowInMilliseconds - lastPingDateInMilliseconds)/(1000);
-            if (secondsPassed >= DEFAULT_TIMEOUT) {
+            if (DateTimeUtils.secondsBetween(now,lastPingDate) >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
@@ -570,32 +611,37 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity arg0) {
-            if(mustPingPushNotificationsBackend()) {
-                //uhhh ohhh!
-
-                if (WordPress.hasValidWPComCredentials(mContext)) {
-                    String token = null;
-                    try {
-                        // Register for Google Cloud Messaging
-                        GCMRegistrar.checkDevice(mContext);
-                        GCMRegistrar.checkManifest(mContext);
-                        token = GCMRegistrar.getRegistrationId(mContext);
-                        String gcmId = Config.GCM_ID;
-                        if (gcmId == null || token == null || token.equals("") ) {
-                            AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
-                            return;
-                        } else {
-                            // Send the token to WP.com
-                            NotificationUtils.registerDeviceForPushNotifications(mContext, token);
-                        }
-                    } catch (Exception e) {
-                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
+            
+            if (!canSynchWithWordPressDotComBackend())
+                return;
+               
+            /* Note: The Code below is not called at startup */
+            
+            //Synch Push Notifications settings
+            if (WordPress.hasValidWPComCredentials(mContext)) {
+                String token = null;
+                try {
+                    // Register for Google Cloud Messaging
+                    GCMRegistrar.checkDevice(mContext);
+                    GCMRegistrar.checkManifest(mContext);
+                    token = GCMRegistrar.getRegistrationId(mContext);
+                    String gcmId = BuildConfig.GCM_ID;
+                    if (gcmId == null || token == null || token.equals("") ) {
+                        AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
+                        return;
+                    } else {
+                        // Send the token to WP.com
+                        NotificationUtils.registerDeviceForPushNotifications(mContext, token);
                     }
+                } catch (Exception e) {
+                    AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                 }
-
             }
+            
+            //Update Stats!
+            WordPress.updateCurrentBlogStatsInBackground(false);
         }
-
+        
         @Override
         public void onActivityCreated(Activity arg0, Bundle arg1) {
         }
