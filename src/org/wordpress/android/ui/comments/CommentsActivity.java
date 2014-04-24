@@ -22,15 +22,20 @@ import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
+import java.io.Serializable;
+
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
                    CommentActions.OnCommentChangeListener {
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
+    private static final String KEY_SELECTED_POST_ID = "selected_post_id";
     private boolean mDualPane;
     private long mSelectedCommentId;
     private boolean mCommentSelected;
+    private SelectedPost mSelectedPostId;
+    private SelectedPost mTmpSelectedPostId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,11 @@ public class CommentsActivity extends WPActionBarActivity
                 if (commentId != 0) {
                     onCommentSelected(commentId);
                 }
+            }
+            // restore the post detail fragment if one was selected
+            SelectedPost selectedPostId = (SelectedPost) savedInstanceState.get(KEY_SELECTED_POST_ID);
+            if (selectedPostId != null) {
+                showReaderFragment(selectedPostId.mRemoteBlogId, selectedPostId.mPostId);
             }
         }
     }
@@ -132,9 +142,22 @@ public class CommentsActivity extends WPActionBarActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                        mMenuDrawer.setDrawerIndicatorEnabled(true);
-                        mSelectedCommentId = 0;
+                    int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    switch (backStackEntryCount) {
+                        case 2:
+                            // This is ugly, but onBackStackChanged is not called just after a fragment commit.
+                            // In a 2 commits in a row case, onBackStackChanged is called twice but after the
+                            // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
+                            mSelectedPostId = mTmpSelectedPostId;
+                            break;
+                        case 1:
+                            mSelectedPostId = null;
+                            break;
+                        case 0:
+                            mMenuDrawer.setDrawerIndicatorEnabled(true);
+                            mSelectedCommentId = 0;
+                            mSelectedPostId = null;
+                            break;
                     }
                 }
             };
@@ -216,6 +239,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     void showReaderFragment(long remoteBlogId, long postId) {
+        mTmpSelectedPostId = new SelectedPost(remoteBlogId, postId);
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
@@ -320,6 +344,9 @@ public class CommentsActivity extends WPActionBarActivity
         if (mSelectedCommentId != 0) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
+        if (mSelectedPostId != null) {
+            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedPostId);
+        }
         if (hasListFragment()) {
             long commentId = getListFragment().getHighlightedCommentId();
             if (commentId != 0) {
@@ -335,5 +362,14 @@ public class CommentsActivity extends WPActionBarActivity
         if (dialog != null)
             return dialog;
         return super.onCreateDialog(id);
+    }
+
+    public class SelectedPost implements Serializable {
+        public long mPostId;
+        public long mRemoteBlogId;
+        public SelectedPost(long remotePostId, long postId) {
+            mPostId = postId;
+            mRemoteBlogId = remotePostId;
+        }
     }
 }
