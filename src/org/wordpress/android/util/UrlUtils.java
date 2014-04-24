@@ -36,7 +36,7 @@ public class UrlUtils {
         Uri uri = Uri.parse(urlString);
         return uri.getHost();
     }
-    
+
     // Convert IDN names to punycode if necessary
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
@@ -50,15 +50,15 @@ public class UrlUtils {
         }
         return url;
     }
-    
-    public static String addHttpProcolIfNeeded(String url, boolean isHTTPS) {
+
+    public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
         if (url == null) {
             return null;
         }
 
         if (!URLUtil.isValidUrl(url)) {
             if (!(url.toLowerCase().startsWith("http://")) && !(url.toLowerCase().startsWith("https://"))) {
-                url = ( isHTTPS ? "https" : "http" ) + "://" + url;   
+                url = (isHTTPS ? "https" : "http") + "://" + url;
             }
         }
 

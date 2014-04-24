@@ -93,6 +93,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     private void refreshPosts(PostsActivity postsActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null) {
+            ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
+                    Duration.LONG);
+            return;
+        }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);

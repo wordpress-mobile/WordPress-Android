@@ -47,7 +47,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected String[] getSenderIds(Context context) {
         String[] senderIds = new String[1];
-        senderIds[0] = Config.GCM_ID;
+        senderIds[0] = BuildConfig.GCM_ID;
         return senderIds;
     }
 

@@ -121,53 +121,10 @@ android {
     }
 } // end android
 
-// Generates the Config.java class using properties defined in gradle.properties
-// or by other means provided by Gradle
-task generateWPConfig(group: "generate", description: "Generate Config class") {
-    def dir = "${buildDir}/source/wordpress"
-    def file = new File(dir, "org/wordpress/android/Config.java")
-    android {
-        sourceSets {
-            main {
-                java {
-                    srcDir dir
-                }
-            }
-        }
-    }
-    outputs.file file
-    doLast {
-        file.getParentFile().mkdirs()
-        def properties = new Properties()
-        new File("${rootDir}/local.properties").withInputStream { stream ->
-            properties.load(stream)
-        }
-        def constants = [:]
-        properties.propertyNames().each { property ->
-            def keys = property.tokenize('.')
-            if (keys[0] == 'wp') {
-                def name = property.tokenize('.')[1..-1].collect { key -> key.toUpperCase() }.join('_')
-                constants[name] = properties.getProperty(property)
-            }
-        }
-        def writer = new FileWriter(file)
-        def config = constants.inject("") { consts, name, val ->
-            consts + "   public static final String ${name} = \"${val}\";\n"
-        }
-        writer.write("""/* auto-generated file do not modify */
-package org.wordpress.android;
-
-public final class Config {
-${config}
-}
-""")
-        writer.close()
-    }
-}
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/crashlytics.properties")
-    def inputFile = file("${rootDir}/local.properties")
+    def inputFile = file("${rootDir}/gradle.properties")
     outputs.file outputFile
     inputs.file inputFile
     doLast {
@@ -177,7 +134,7 @@ task generateCrashlyticsConfig(group: "generate", description: "Generate Crashly
         }
         def crashlyticsApiKey = properties.getProperty('crashlytics.apikey', '0')
         def writer = new FileWriter(outputFile)
-        writer.write("""// auto-generated file do not modify
+        writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
 apiKey=${crashlyticsApiKey}""")
         writer.close()
     }
@@ -185,11 +142,15 @@ apiKey=${crashlyticsApiKey}""")
 
 // Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
+    project.properties.any { property ->
+        if (property.key.toLowerCase().startsWith("wp.")) {
+            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+    }
     def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
-            task.dependsOn(generateWPConfig)
-            task.mustRunAfter(generateWPConfig)
             task.dependsOn(generateCrashlyticsConfig)
         }
     }

@@ -1,8 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.webkit.HttpAuthHandler;
@@ -12,6 +9,9 @@ import android.webkit.WebViewClient;
 
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * WebViewClient that is capable of handling HTTP authentication requests using the HTTP
@@ -38,7 +38,6 @@ public class WPWebViewClient extends WebViewClient {
 
     @Override
     public void onPageFinished(WebView view, String url) {
-
     }
 
     @Override
@@ -50,17 +49,19 @@ public class WPWebViewClient extends WebViewClient {
     @Override
     public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
         if (mBlog != null && mBlog.hasValidHTTPAuthCredentials()) {
-            //Check that the HTTP AUth protected domain is the same of the blog. Do not send current blog's HTTP AUTH credentials to external site.
-            //NOTE: There is still a small security hole here, since the realm is not considered when getting the password. 
-            //Unfortunately the real is not stored when setting up the blog, and we cannot compare it at this point.
-            String domainFromHttpAuthRequest = UrlUtils.getDomainFromUrl(UrlUtils.addHttpProcolIfNeeded(host, false));
+            // Check that the HTTP AUth protected domain is the same of the blog. Do not send current blog's HTTP
+            // AUTH credentials to external site.
+            // NOTE: There is still a small security hole here, since the realm is not considered when getting
+            // the password. Unfortunately the real is not stored when setting up the blog, and we cannot compare it
+            // at this point.
+            String domainFromHttpAuthRequest = UrlUtils.getDomainFromUrl(UrlUtils.addUrlSchemeIfNeeded(host, false));
             String currentBlogDomain = UrlUtils.getDomainFromUrl(mBlog.getUrl());
             if (domainFromHttpAuthRequest.equals(currentBlogDomain)) {
                 handler.proceed(mBlog.getHttpuser(), mBlog.getHttppassword());
                 return;
             }
         }
-        //TODO: If there is no match show the HTTP Auth dialog here. Like a normal browser usually does...
+        // TODO: If there is no match show the HTTP Auth dialog here. Like a normal browser usually does...
         super.onReceivedHttpAuthRequest(view, handler, host, realm);
     }
 
@@ -72,7 +73,9 @@ public class WPWebViewClient extends WebViewClient {
                 return;
             }
         } catch (GeneralSecurityException e) {
+            // Do nothing
         } catch (IOException e) {
+            // Do nothing
         }
 
         super.onReceivedSslError(view, handler, error);

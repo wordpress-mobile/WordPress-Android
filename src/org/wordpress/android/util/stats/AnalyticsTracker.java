@@ -47,6 +47,10 @@ public final class AnalyticsTracker {
         CREATED_ACCOUNT,
         CREATED_SITE,
         SHARED_ITEM,
+        ADDED_SELF_HOSTED_SITE,
+        SIGNED_INTO_JETPACK,
+        PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
+        STATS_SELECTED_INSTALL_JETPACK,
     };
 
     public interface Tracker {

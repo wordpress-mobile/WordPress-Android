@@ -7,19 +7,20 @@ read on.
 ## Build Instructions ##
 
 The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need to copy create the
-local.properties file, the easiest way is to copy our example:
+files you need to build the project. You first need to generate the
+local.properties file and create the gradle.properties file, the easiest
+way is to copy our example:
 
-    $ cp local.properties-example local.properties
+    $ android update project -p . --target android-14 # generate or update local.properties
+    $ cp gradle.properties-example gradle.properties
 
-Then edit the local.properties file to add your Android
-`sdk.dir`. After this step, you can invoke gradle to build, install
-and test the project:
+Note: generated `build.xml`, `proguard-project.txt` and `project.properties` are not used and can be deleted.
+After this step, you can invoke gradle to build, install and test the project:
 
     $ ./gradlew assembleDebug # assemble the debug .apk
     $ ./gradlew installDebug  # assemble and install the debug .apk if you
                               # have an emulator or an Android device connected
-    $ ./gradlew cIT           # assemble, install and run unit tests
+    $ ./gradlew cAT           # assemble, install and run unit tests
 
 Note: you can use the [Android Studio IDE][3], import the project as a
 Gradle project.
