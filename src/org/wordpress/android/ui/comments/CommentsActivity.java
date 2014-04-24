@@ -19,10 +19,9 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.notifications.NotificationsActivity.PostPairId;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
-
-import java.io.Serializable;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -34,8 +33,8 @@ public class CommentsActivity extends WPActionBarActivity
     private boolean mDualPane;
     private long mSelectedCommentId;
     private boolean mCommentSelected;
-    private SelectedPost mSelectedPostId;
-    private SelectedPost mTmpSelectedPostId;
+    private PostPairId mSelectedPostId;
+    private PostPairId mTmpSelectedPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,9 +71,9 @@ public class CommentsActivity extends WPActionBarActivity
                 }
             }
             // restore the post detail fragment if one was selected
-            SelectedPost selectedPostId = (SelectedPost) savedInstanceState.get(KEY_SELECTED_POST_ID);
+            PostPairId selectedPostId = (PostPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
             if (selectedPostId != null) {
-                showReaderFragment(selectedPostId.mRemoteBlogId, selectedPostId.mPostId);
+                showReaderFragment(selectedPostId.mRemoteBlogId, selectedPostId.mId);
             }
         }
     }
@@ -148,11 +147,11 @@ public class CommentsActivity extends WPActionBarActivity
                     // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
                     switch (backStackEntryCount) {
                         case 2:
-                            mSelectedPostId = mTmpSelectedPostId;
+                            mSelectedPostId = mTmpSelectedPost;
                             break;
                         case 1:
                             if (mDualPane) {
-                                mSelectedPostId = mTmpSelectedPostId;
+                                mSelectedPostId = mTmpSelectedPost;
                             } else {
                                 mSelectedPostId = null;
                             }
@@ -243,7 +242,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     void showReaderFragment(long remoteBlogId, long postId) {
-        mTmpSelectedPostId = new SelectedPost(remoteBlogId, postId);
+        mTmpSelectedPost = new PostPairId(remoteBlogId, postId);
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
@@ -366,14 +365,5 @@ public class CommentsActivity extends WPActionBarActivity
         if (dialog != null)
             return dialog;
         return super.onCreateDialog(id);
-    }
-
-    public class SelectedPost implements Serializable {
-        public long mPostId;
-        public long mRemoteBlogId;
-        public SelectedPost(long remotePostId, long postId) {
-            mPostId = postId;
-            mRemoteBlogId = remotePostId;
-        }
     }
 }
