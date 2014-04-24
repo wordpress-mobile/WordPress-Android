@@ -143,15 +143,19 @@ public class CommentsActivity extends WPActionBarActivity
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    // This is ugly, but onBackStackChanged is not called just after a fragment commit.
+                    // In a 2 commits in a row case, onBackStackChanged is called twice but after the
+                    // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
                     switch (backStackEntryCount) {
                         case 2:
-                            // This is ugly, but onBackStackChanged is not called just after a fragment commit.
-                            // In a 2 commits in a row case, onBackStackChanged is called twice but after the
-                            // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
                             mSelectedPostId = mTmpSelectedPostId;
                             break;
                         case 1:
-                            mSelectedPostId = null;
+                            if (mDualPane) {
+                                mSelectedPostId = mTmpSelectedPostId;
+                            } else {
+                                mSelectedPostId = null;
+                            }
                             break;
                         case 0:
                             mMenuDrawer.setDrawerIndicatorEnabled(true);

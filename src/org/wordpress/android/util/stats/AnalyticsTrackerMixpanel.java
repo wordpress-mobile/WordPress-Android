@@ -22,7 +22,8 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String SESSION_COUNT = "sessionCount";
     private static final String MIXPANEL_PLATFORM = "Android";
     private static final String MIXPANEL_SESSION_COUNT = "session_count";
-    private static final String MIXPANEL_CONNECTED_TO_DOTCOM = "connected_to_dotcom";
+    private static final String DOTCOM_USER = "dotcom_user";
+    private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
 
     public AnalyticsTrackerMixpanel() {
@@ -70,8 +71,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             incrementProperty(instructions.getPropertyToIncrement(), instructions.getStatToAttachProperty());
         }
 
-        if (instructions.getSuperPropertyToFlag() != null && !instructions.getSuperPropertyToFlag().isEmpty()) {
-            flagSuperProperty(instructions.getSuperPropertyToFlag());
+        if (instructions.getSuperPropertiesToFlag() != null && instructions.getSuperPropertiesToFlag().size() > 0) {
+            for (String superPropertyToFlag : instructions.getSuperPropertiesToFlag()) {
+                flagSuperProperty(superPropertyToFlag);
+            }
         }
     }
 
@@ -117,12 +120,14 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
         // Register super properties
         boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
+        boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
         try {
             JSONObject properties = new JSONObject();
             properties.put(MIXPANEL_PLATFORM, "Android");
             properties.put(MIXPANEL_SESSION_COUNT, sessionCount);
-            properties.put(MIXPANEL_CONNECTED_TO_DOTCOM, connected);
+            properties.put(DOTCOM_USER, connected);
+            properties.put(JETPACK_USER, jetpackUser);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
@@ -362,6 +367,24 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case SHARED_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_share");
+                break;
+            case ADDED_SELF_HOSTED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Added Self Hosted Site");
+                break;
+            case SIGNED_INTO_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Signed into Jetpack");
+                instructions.addSuperPropertyToFlag("jetpack_user");
+                instructions.addSuperPropertyToFlag("dotcom_user");
+                break;
+            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Signed into Jetpack from Stats Screen");
+                break;
+            case STATS_SELECTED_INSTALL_JETPACK:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Selected Install Jetpack");
                 break;
             default:
                 instructions = null;
