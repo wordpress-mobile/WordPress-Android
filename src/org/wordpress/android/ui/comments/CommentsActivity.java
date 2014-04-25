@@ -33,8 +33,8 @@ public class CommentsActivity extends WPActionBarActivity
     private boolean mDualPane;
     private long mSelectedCommentId;
     private boolean mCommentSelected;
-    private BlogPairId mSelectedPostId;
-    private BlogPairId mTmpSelectedPost;
+    private BlogPairId mSelectedReaderPost;
+    private BlogPairId mTmpSelectedReaderPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,22 +144,28 @@ public class CommentsActivity extends WPActionBarActivity
                     int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
                     // This is ugly, but onBackStackChanged is not called just after a fragment commit.
                     // In a 2 commits in a row case, onBackStackChanged is called twice but after the
-                    // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
+                    // 2 commits. That's why mSelectedReaderPost can't be affected correctly after the first commit.
                     switch (backStackEntryCount) {
                         case 2:
-                            mSelectedPostId = mTmpSelectedPost;
+                            // 2 entries means we're showing the associated post in the reader detail fragment
+                            // (can't happen in dual pane mode)
+                            mSelectedReaderPost = mTmpSelectedReaderPost;
                             break;
                         case 1:
+                            // In dual pane mode, 1 entry means:
+                            // we're showing the associated post in the reader detail fragment
+                            // In single pane mode, 1 entry means:
+                            // we're showing the comment fragment on top of comment list
                             if (mDualPane) {
-                                mSelectedPostId = mTmpSelectedPost;
+                                mSelectedReaderPost = mTmpSelectedReaderPost;
                             } else {
-                                mSelectedPostId = null;
+                                mSelectedReaderPost = null;
                             }
                             break;
                         case 0:
                             mMenuDrawer.setDrawerIndicatorEnabled(true);
                             mSelectedCommentId = 0;
-                            mSelectedPostId = null;
+                            mSelectedReaderPost = null;
                             break;
                     }
                 }
@@ -242,7 +248,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     void showReaderFragment(long remoteBlogId, long postId) {
-        mTmpSelectedPost = new BlogPairId(remoteBlogId, postId);
+        mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 
@@ -347,8 +353,8 @@ public class CommentsActivity extends WPActionBarActivity
         if (mSelectedCommentId != 0) {
             outState.putLong(KEY_SELECTED_COMMENT_ID, mSelectedCommentId);
         }
-        if (mSelectedPostId != null) {
-            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedPostId);
+        if (mSelectedReaderPost != null) {
+            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
         }
         if (hasListFragment()) {
             long commentId = getListFragment().getHighlightedCommentId();

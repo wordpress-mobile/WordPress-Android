@@ -68,9 +68,9 @@ public class NotificationsActivity extends WPActionBarActivity
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
     private BlogPairId mTmpSelectedComment;
-    private BlogPairId mTmpSelectedPost;
-    private BlogPairId mSelectedPost;
+    private BlogPairId mTmpSelectedReaderPost;
     private BlogPairId mSelectedComment;
+    private BlogPairId mSelectedReaderPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,23 +184,23 @@ public class NotificationsActivity extends WPActionBarActivity
                     // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
                     switch (backStackEntryCount) {
                         case 2:
-                            mSelectedPost = mTmpSelectedPost;
+                            mSelectedReaderPost = mTmpSelectedReaderPost;
                             mSelectedComment = mTmpSelectedComment;
-                            mTmpSelectedPost = null;
+                            mTmpSelectedReaderPost = null;
                             mTmpSelectedComment = null;
                             break;
                         case 1:
                             if (mDualPane) {
-                                mSelectedPost = mTmpSelectedPost;
+                                mSelectedReaderPost = mTmpSelectedReaderPost;
                                 mSelectedComment = mTmpSelectedComment;
                             } else {
-                                mSelectedPost = null;
+                                mSelectedReaderPost = null;
                                 mSelectedComment = null;
                              }
                             break;
                         case 0:
                             mMenuDrawer.setDrawerIndicatorEnabled(true);
-                            mSelectedPost = null;
+                            mSelectedReaderPost = null;
                             mSelectedComment = null;
                             break;
                     }
@@ -571,8 +571,8 @@ public class NotificationsActivity extends WPActionBarActivity
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
-        if (mSelectedPost != null) {
-            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedPost);
+        if (mSelectedReaderPost != null) {
+            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
         }
         if (mSelectedComment != null) {
             outState.putSerializable(KEY_SELECTED_COMMENT_ID, mSelectedComment);
@@ -615,7 +615,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(Note note, int remoteBlogId, int postId) {
-        mTmpSelectedPost = new BlogPairId(remoteBlogId, postId);
+        mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
