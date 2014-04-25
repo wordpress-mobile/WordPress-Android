@@ -426,8 +426,8 @@ public class ReaderPostActions {
      */
     public static void requestPostsForBlog(final long blogId,
                                            final ReaderActions.RequestDataAction updateAction,
-                                           final ReaderActions.ActionListener actionListener){
-        String path = "sites/" + blogId + "/posts/" + "/?meta=site,likes";
+                                           final ReaderActions.ActionListener actionListener) {
+        String path = "sites/" + blogId + "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == ReaderActions.RequestDataAction.LOAD_OLDER) {

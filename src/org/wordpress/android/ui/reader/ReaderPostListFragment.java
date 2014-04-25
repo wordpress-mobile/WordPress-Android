@@ -655,8 +655,10 @@ public class ReaderPostListFragment extends SherlockFragment
             AppLog.i(T.READER, "reader post list > network unavailable, canceled blog update");
             return;
         }
+
         setIsUpdating(true, updateAction);
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, new ReaderActions.ActionListener() {
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!hasActivity()) {
@@ -667,7 +669,8 @@ public class ReaderPostListFragment extends SherlockFragment
                     refreshPosts();
                 }
             }
-        });
+        };
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, listener);
     }
 
     /*

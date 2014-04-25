@@ -52,7 +52,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
 
     public void setBlogIdAndUrl(long blogId, String blogUrl, OnBlogInfoListener listener) {
         mListener = listener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
+        showBlogInfo(ReaderBlogTable.getBlogInfoById(blogId));
         requestBlogInfo(blogId, blogUrl);
     }
 
@@ -111,7 +111,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
     /*
     * request latest info for this blog
     */
-    private void requestBlogInfo(final long blogId, final String blogUrl) {
+    private void requestBlogInfo(long blogId, String blogUrl) {
         if (!mHasBlogInfo) {
             showProgress();
         }

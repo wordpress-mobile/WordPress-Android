@@ -48,8 +48,30 @@ public class ReaderBlogTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_followed_blogs");
     }
 
-    public static ReaderBlogInfo getBlogInfo(long blogId) {
+    /*
+     * get a blog's info by id
+     */
+    public static ReaderBlogInfo getBlogInfoById(long blogId) {
         String[] args = {Long.toString(blogId)};
+        String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (!c.moveToFirst())
+                return null;
+            return getBlogInfoFromCursor(c);
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    /*
+     * get a blog's info by url
+     */
+    public static ReaderBlogInfo getBlogInfoByUrl(String blogUrl) {
+        if (TextUtils.isEmpty(blogUrl)) {
+            return null;
+        }
+        String[] args = {UrlUtils.normalizeUrl(blogUrl)};
         String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {

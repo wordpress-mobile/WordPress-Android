@@ -144,7 +144,7 @@ public class ReaderBlogActions {
      * request info about a specific blog
      */
     public static void updateBlogInfo(long blogId,
-                                      final String blogUrl,
+                                      String blogUrl,
                                       final UpdateBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -162,13 +162,12 @@ public class ReaderBlogActions {
             }
         };
 
-        // use the domain if the blog's url is known, since that's more accurate (have seen some
-        // cases where passing the blogId failed, but passing the domain worked)
+
         final String path;
-        if (TextUtils.isEmpty(blogUrl)) {
-            path = "/sites/" + blogId;
-        } else {
+        if (blogId == 0 && !TextUtils.isEmpty(blogUrl)) {
             path = "/sites/" + UrlUtils.getDomainFromUrl(blogUrl);
+        } else {
+            path = "/sites/" + blogId;
         }
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }

@@ -29,7 +29,7 @@ public class ReaderUser {
         user.blogId = json.optLong("site_ID");
 
         user.userName = JSONUtil.getString(json, "username");
-        user.url = JSONUtil.getString(json, "URL");
+        user.url = JSONUtil.getString(json, "URL"); // <-- this isn't necessarily a wp blog
         user.profileUrl = JSONUtil.getString(json, "profile_URL");
         user.avatarUrl = JSONUtil.getString(json, "avatar_URL");
 
