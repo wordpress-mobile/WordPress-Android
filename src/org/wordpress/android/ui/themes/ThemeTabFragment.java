@@ -1,13 +1,8 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,15 +66,19 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
+    protected int mPage;
+    private boolean mShouldRefreshOnStart;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    public static ThemeTabFragment newInstance(ThemeSortType sort) {
-        ThemeTabFragment fragment = new ThemeTabFragment();
+    protected ThemeTabFragment(int page) {
+        mPage = page;
+    }
 
+    public static ThemeTabFragment newInstance(ThemeSortType sort, int page) {
+        ThemeTabFragment fragment = new ThemeTabFragment(page);
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -105,57 +104,36 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
         mGridView = (GridView) view.findViewById(R.id.theme_gridview);
         mGridView.setRecyclerListener(this);
 
-        // pull to refresh setup
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
-                new RefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        if (getActivity() instanceof ThemeBrowserActivity) {
-                            ((ThemeBrowserActivity) getActivity()).fetchThemes();
-                        }
+        // pull to refresh setup but not for the search view
+        if (!(this instanceof ThemeSearchFragment)) {
+            mPullToRefreshHelper = new PullToRefreshHelper(getActivity(), (PullToRefreshLayout) view.findViewById(
+                    R.id.ptr_layout), new RefreshListener() {
+                @Override
+                public void onRefreshStarted(View view) {
+                    if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
+                        mPullToRefreshHelper.setRefreshing(false);
+                        return;
                     }
-                });
-
+                    if (getActivity() instanceof ThemeBrowserActivity) {
+                        ((ThemeBrowserActivity) getActivity()).fetchThemes(mPage);
+                    }
+                }
+            });
+            mPullToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
+        }
         restoreState(savedInstanceState);
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
-        lbm.registerReceiver(mReceiver, new IntentFilter(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.unregisterReceiver(mReceiver);
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(ThemeBrowserActivity.THEME_REFRESH_INTENT_NOTIFICATION)) {
-                if (intent.getBooleanExtra(ThemeBrowserActivity.THEME_REFRESH_PARAM_REFRESHING, false)) {
-                    mPullToRefreshHelper.setRefreshing(true);
-                } else {
-                    mPullToRefreshHelper.setRefreshing(false);
-                    refresh();
-                }
+    public void setRefreshing(boolean refreshing) {
+        mShouldRefreshOnStart = refreshing;
+        if (mPullToRefreshHelper != null) {
+            mPullToRefreshHelper.setRefreshing(refreshing);
+            if (!refreshing) {
+                refreshView();
             }
         }
-    };
+    }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
@@ -210,7 +188,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
 
     }
 
-    private void refresh() {
+    private void refreshView() {
         Cursor cursor = fetchThemes(getThemeSortType());
         if (mAdapter == null) {
             mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
