@@ -95,12 +95,14 @@ public class StatsActivity extends WPActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
-
         if (WordPress.wpDB == null) {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);

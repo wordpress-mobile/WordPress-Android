@@ -51,7 +51,7 @@ public final class AnalyticsTracker {
         SIGNED_INTO_JETPACK,
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
-    };
+    }
 
     public interface Tracker {
         void track(Stat stat);

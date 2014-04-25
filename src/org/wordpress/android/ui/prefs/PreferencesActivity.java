@@ -76,10 +76,12 @@ public class PreferencesActivity extends SherlockPreferenceActivity {
     public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.OPENED_SETTINGS);
+        }
 
         overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
 

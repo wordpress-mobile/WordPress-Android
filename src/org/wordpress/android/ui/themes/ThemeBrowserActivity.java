@@ -72,6 +72,10 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             return;
         }
 
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
+        }
+
         setTitle(R.string.themes);
 
         createMenuDrawer(R.layout.theme_browser_activity);
@@ -108,8 +112,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
         mDetailsFragment = (ThemeDetailsFragment) fm.findFragmentByTag(ThemeDetailsFragment.TAG);
         mSearchFragment = (ThemeSearchFragment) fm.findFragmentByTag(ThemeSearchFragment.TAG);
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER);
     }
 
     private boolean areThemesAccessible() {
