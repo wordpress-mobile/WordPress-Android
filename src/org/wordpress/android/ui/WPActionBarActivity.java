@@ -722,8 +722,20 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             }
         }
+        
+        if (shouldUpdateCurrentBlogStatsInBackground()) {
+            WordPress.updateCurrentBlogStatsInBackground(true);
+        }
     }
 
+    /**
+     * this method is called when the user switch blog - descendants should override
+     * if want to stop refreshing of Stats when switching blog.
+     */
+    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
+        return true;
+    }
+    
     /**
      * this method is called when the user signs out of the app - descendants should override
      * this to perform activity-specific cleanup upon signout

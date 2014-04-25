@@ -1,38 +1,20 @@
 package org.wordpress.android.util;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
 import android.content.Context;
-import android.util.Base64;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpStack;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageRequest;
 
-import org.apache.http.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.networking.WPTrustManager;
-import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.networking.WPDelayedHurlStack;
 
 public class VolleyUtils {
 
@@ -131,52 +113,6 @@ public class VolleyUtils {
     }
     
     public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
-        SSLSocketFactory mSslSocketFactory = null;
-        try {
-            TrustManager[] trustAllowedCerts = new TrustManager[]{ new WPTrustManager(SelfSignedSSLCertsManager.getInstance(ctx).getLocalKeyStore()) };
-            SSLContext context = SSLContext.getInstance("SSL");
-            context.init(null, trustAllowedCerts, new SecureRandom());
-            mSslSocketFactory = context.getSocketFactory();
-        } catch (NoSuchAlgorithmException e) {
-            AppLog.e(T.API, e);
-        } catch (KeyManagementException e) {
-            AppLog.e(T.API, e);
-        } catch (GeneralSecurityException e) {
-            AppLog.e(T.API, e);
-        } catch (IOException e) {
-            AppLog.e(T.API, e);
-        }
-
-        HurlStack stack = new HurlStack(null, mSslSocketFactory) {
-            @Override
-            public HttpResponse performRequest(Request<?> request, Map<String, String> headers)
-                    throws IOException, AuthFailureError {
-                
-                if (request.getUrl() != null) {
-                    if (!StringUtils.getHost(request.getUrl()).endsWith("wordpress.com") && currentBlog != null && currentBlog.hasValidHTTPAuthCredentials()) {
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        String creds = String.format("%s:%s", currentBlog.getHttpuser(), currentBlog.getHttppassword());
-                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                        authParams.put("Authorization", auth);
-                        headers.putAll(authParams);
-                    }
-
-                    if (StringUtils.getHost(request.getUrl()).endsWith("files.wordpress.com") && ctx != null && WordPress.getWPComAuthToken(ctx) != null) {
-                        // Add the auth header to access private WP.com files
-                        HashMap<String, String> authParams = new HashMap<String, String>();
-                        authParams.put("Authorization", "Bearer " + WordPress.getWPComAuthToken(ctx));
-                        headers.putAll(authParams);
-                    }
-                }
-                
-                HashMap<String, String> defaultHeaders = new HashMap<String, String>();
-                defaultHeaders.put("User-Agent", WordPress.getUserAgent());
-                headers.putAll(defaultHeaders);
-
-                return super.performRequest(request, headers);
-            }
-        };
-
-        return stack;
+        return new WPDelayedHurlStack(ctx, currentBlog);
     }
 }

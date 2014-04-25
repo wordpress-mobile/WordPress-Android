@@ -435,7 +435,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
+
+        // the post this comment is on can only be requested if this is a .com blog or a
+        // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
+        boolean canRequestPost = isDotComOrJetpack && WordPress.hasValidWPComCredentials(getActivity());
 
         final String title;
         final boolean hasTitle;
@@ -452,14 +456,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(txtPostTitle, title, isDotComOrJetpack);
+            setPostTitle(txtPostTitle, title, canRequestPost);
         } else {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
         // if this is a .com or jetpack blog, tapping the title shows the associated post
         // in the reader
-        if (isDotComOrJetpack) {
+        if (canRequestPost) {
             // first make sure this post is available to the reader, and once it's retrieved set
             // the title if it wasn't set above
             if (!postExists) {

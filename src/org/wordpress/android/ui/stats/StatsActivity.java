@@ -395,6 +395,7 @@ public class StatsActivity extends WPActionBarActivity {
 
             if (getBlogId() == null) {
                 stopStatsService();
+                mPullToRefreshHelper.setRefreshing(false);
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
                 if (WordPress.getCurrentBlog().isAdmin()) {
@@ -425,6 +426,16 @@ public class StatsActivity extends WPActionBarActivity {
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            mPullToRefreshHelper.setRefreshing(false);
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
+                    || !statsActivityWeakRef.get().mIsInFront) {
+                return;
+            }
+            if (mSignInDialog != null && mSignInDialog.isShowing()) {
+                return;
+            }
+            stopStatsService();
+            Toast.makeText(statsActivityWeakRef.get(), R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -494,6 +505,15 @@ public class StatsActivity extends WPActionBarActivity {
         refreshStats();
     }
 
+    /**
+     * Do not refresh Stats in BG when user switch between blogs since the refresh 
+     * is already started in foreground at this point.
+     */
+    @Override
+    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
+        return false;
+    }
+    
     boolean dotComCredentialsMatch() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
