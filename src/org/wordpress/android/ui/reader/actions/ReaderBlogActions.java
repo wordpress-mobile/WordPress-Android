@@ -136,8 +136,19 @@ public class ReaderBlogActions {
      * request info about a specific blog
      */
     public static void updateBlogInfo(long blogId,
-                                      String blogUrl,
+                                      final String blogUrl,
                                       final UpdateBlogInfoListener infoListener) {
+        // must pass either a valid id or url
+        final boolean hasBlogId = (blogId != 0);
+        final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+        if (!hasBlogId && !hasBlogUrl) {
+            AppLog.w(T.READER, "cannot get blog info without either id or url");
+            if (infoListener != null) {
+                infoListener.onResult(null);
+            }
+            return;
+        }
+
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -147,21 +158,25 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (infoListener != null) {
-                    infoListener.onResult(null);
+                // if we failed to get the blog info using the id, trying again using just the domain
+                if (hasBlogId && hasBlogUrl) {
+                    AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
+                    updateBlogInfo(0, blogUrl, infoListener);
+                } else {
+                    AppLog.e(T.READER, volleyError);
+                    if (infoListener != null) {
+                        infoListener.onResult(null);
+                    }
                 }
             }
         };
 
-
-        final String path;
-        if (blogId == 0 && !TextUtils.isEmpty(blogUrl)) {
-            path = "/sites/" + UrlUtils.getDomainFromUrl(blogUrl);
+        if (hasBlogId) {
+            WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
         } else {
-            path = "/sites/" + blogId;
+            WordPress.getRestClientUtils().get("/sites/" + UrlUtils.getDomainFromUrl(blogUrl), listener, errorListener);
         }
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
