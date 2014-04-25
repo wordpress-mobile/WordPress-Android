@@ -128,8 +128,8 @@ public class NotificationsActivity extends WPActionBarActivity
                 // Not dual pane and a specified note, we want to open the note fragment and then load the list in
                 // background (the list is still needed when the user tap back)
                 Note note = WordPress.wpDB.getNoteById(noteId);
-                openNote(note);
-                loadNotes(false, UNSPECIFIED_NOTE_ID, notesLoadedCallback);
+                openNote(note, false);
+                loadNotes(false, noteId, notesLoadedCallback);
             } else {
                 loadNotes(true, noteId, notesLoadedCallback);
             }
@@ -149,7 +149,15 @@ public class NotificationsActivity extends WPActionBarActivity
                         refreshNotificationsListFragment(notes);
                         if (launchWithNoteId) {
                             launchWithNoteId(noteId);
+                        } else {
+                            if (noteId != UNSPECIFIED_NOTE_ID) {
+                                Note note = WordPress.wpDB.getNoteById(noteId);
+                                if (note != null) {
+                                    mNotesList.setNoteSelected(note, true);
+                                }
+                            }
                         }
+
                         if (callback != null) {
                             callback.notesLoaded();
                         }
@@ -220,7 +228,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (noteId != UNSPECIFIED_NOTE_ID) {
             Note note = WordPress.wpDB.getNoteById(noteId);
             if (note != null) {
-                openNote(note);
+                openNote(note, true);
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
@@ -230,7 +238,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     public void onNotes(List<Note> notes) {
                         // there should only be one note!
                         if (!notes.isEmpty()) {
-                            openNote(notes.get(0));
+                            openNote(notes.get(0), true);
                         }
                     }
                 };
@@ -239,7 +247,7 @@ public class NotificationsActivity extends WPActionBarActivity
         } else {
             // Dual pane and no note specified then open first note
             if (mDualPane && mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
-                openNote(mNotesList.getNotesAdapter().getItem(0));
+                openNote(mNotesList.getNotesAdapter().getItem(0), false);
             }
             mNotesList.animateRefresh(true);
             refreshNotes();
@@ -344,12 +352,12 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      *  Open a note fragment based on the type of note
      */
-    private void openNote(final Note note) {
+    private void openNote(final Note note, boolean scrollToNote) {
         if (note == null || isFinishing()) {
             return;
         }
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
-        mNotesList.setNoteSelected(note);
+        mNotesList.setNoteSelected(note, scrollToNote);
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
@@ -518,7 +526,7 @@ public class NotificationsActivity extends WPActionBarActivity
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
             Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
-            openNote(updatedNote != null ? updatedNote : note);
+            openNote(updatedNote != null ? updatedNote : note, false);
         }
     }
 
