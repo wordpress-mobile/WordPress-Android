@@ -82,6 +82,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private String mCurrentTag;
     private long mCurrentBlogId;
+    private String mCurrentBlogUrl;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -113,11 +114,12 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * show posts in a specific blog
      */
-    static ReaderPostListFragment newInstance(long blogId) {
+    static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
+        args.putString(ReaderActivity.ARG_BLOG_URL, blogUrl);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -134,6 +136,7 @@ public class ReaderPostListFragment extends SherlockFragment
         if (args != null) {
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+            mCurrentBlogUrl = args.getString(ReaderActivity.ARG_BLOG_URL);
         }
     }
 
@@ -148,6 +151,9 @@ public class ReaderPostListFragment extends SherlockFragment
             }
             if (savedInstanceState.containsKey(ReaderActivity.ARG_BLOG_ID)) {
                 mCurrentBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_BLOG_URL)) {
+                mCurrentBlogUrl = savedInstanceState.getString(ReaderActivity.ARG_BLOG_URL);
             }
             if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
                 mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
@@ -187,6 +193,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 break;
             case BLOG:
                 outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
+                outState.putString(ReaderActivity.ARG_BLOG_URL, mCurrentBlogUrl);
                 break;
         }
 
@@ -1019,6 +1026,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         };
-        mBlogInfoHeader.setBlogId(mCurrentBlogId, infoListener);
+        mBlogInfoHeader.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl, infoListener);
     }
 }

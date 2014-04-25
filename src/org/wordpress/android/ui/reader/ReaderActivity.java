@@ -49,6 +49,7 @@ public class ReaderActivity extends WPActionBarActivity
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
     protected static final String ARG_TAG_NAME = "tag_name";
     protected static final String ARG_BLOG_ID = "blog_id";
+    protected static final String ARG_BLOG_URL = "blog_url";
     protected static final String ARG_POST_ID = "post_id";
     protected static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
 
@@ -92,7 +93,8 @@ public class ReaderActivity extends WPActionBarActivity
                 case POST_LIST:
                     if (mIsBlogDetail) {
                         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-                        showListFragmentForBlog(blogId);
+                        String blogUrl = getIntent().getStringExtra(ReaderActivity.ARG_BLOG_URL);
+                        showListFragmentForBlog(blogId, blogUrl);
                     } else {
                         String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
                         if (TextUtils.isEmpty(tagName)) {
@@ -251,8 +253,8 @@ public class ReaderActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts in a specific blog
      */
-    private void showListFragmentForBlog(long blogId) {
-        Fragment fragment = ReaderPostListFragment.newInstance(blogId);
+    private void showListFragmentForBlog(long blogId, String blogUrl) {
+        Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))

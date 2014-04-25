@@ -80,7 +80,7 @@ public class ReaderUserAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (user.hasBlogId()) {
-                        ReaderActivityLauncher.showReaderBlogDetail(v.getContext(), user.blogId);
+                        ReaderActivityLauncher.showReaderBlogDetail(v.getContext(), user.blogId, user.getUrl());
                     }
                 }
             });

@@ -287,7 +287,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (!post.isExternal) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId);
+                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId, post.getBlogUrl());
                     }
                 }
             });

@@ -13,6 +13,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUrlList;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -142,7 +143,9 @@ public class ReaderBlogActions {
     /*
      * request info about a specific blog
      */
-    public static void updateBlogInfo(long blogId, final ReaderActions.UpdateBlogInfoListener infoListener) {
+    public static void updateBlogInfo(long blogId,
+                                      final String blogUrl,
+                                      final UpdateBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -158,9 +161,18 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
+
+        // use the domain if the blog's url is known, since that's more accurate (have seen some
+        // cases where passing the blogId failed, but passing the domain worked)
+        final String path;
+        if (TextUtils.isEmpty(blogUrl)) {
+            path = "/sites/" + blogId;
+        } else {
+            path = "/sites/" + UrlUtils.getDomainFromUrl(blogUrl);
+        }
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
-    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, ReaderActions.UpdateBlogInfoListener infoListener) {
+    private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null) {
                 infoListener.onResult(null);

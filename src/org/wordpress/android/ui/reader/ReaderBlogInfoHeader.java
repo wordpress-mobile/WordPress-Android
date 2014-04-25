@@ -50,10 +50,10 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         inflater.inflate(R.layout.reader_blog_info_header, this, true);
     }
 
-    public void setBlogId(long blogId, OnBlogInfoListener listener) {
+    public void setBlogIdAndUrl(long blogId, String blogUrl, OnBlogInfoListener listener) {
         mListener = listener;
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId));
-        requestBlogInfo(blogId);
+        requestBlogInfo(blogId, blogUrl);
     }
 
     /*
@@ -111,7 +111,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
     /*
     * request latest info for this blog
     */
-    private void requestBlogInfo(final long blogId) {
+    private void requestBlogInfo(final long blogId, final String blogUrl) {
         if (!mHasBlogInfo) {
             showProgress();
         }
@@ -126,7 +126,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
                 }
             }
         };
-        ReaderBlogActions.updateBlogInfo(blogId, listener);
+        ReaderBlogActions.updateBlogInfo(blogId, blogUrl, listener);
     }
 
     private void toggleBlogFollowStatus(TextView txtFollow, ReaderBlogInfo blogInfo) {
