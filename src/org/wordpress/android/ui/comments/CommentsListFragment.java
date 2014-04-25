@@ -343,6 +343,10 @@ public class CommentsListFragment extends Fragment {
     }
     void setHighlightedCommentId(long commentId) {
         getCommentAdapter().setHighlightedCommentId(commentId);
+        int position = getCommentAdapter().indexOfCommentId(commentId);
+        if (position != -1) {
+            getListView().setSelection(position);
+        }
     }
 
     private void setUpListView() {

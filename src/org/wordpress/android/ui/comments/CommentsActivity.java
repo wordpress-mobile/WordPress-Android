@@ -56,8 +56,8 @@ public class CommentsActivity extends WPActionBarActivity
             long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
             if (commentId != 0) {
                 if (hasListFragment()) {
-                    getListFragment().setHighlightedCommentId(commentId);
                     // on dual pane mode, the highlighted comment is also selected
+                    getListFragment().setHighlightedCommentId(commentId);
                 }
                 if (mDualPane) {
                     onCommentSelected(commentId);
@@ -86,6 +86,10 @@ public class CommentsActivity extends WPActionBarActivity
         if (mDualPane && !mCommentSelected && hasListFragment()) {
             long firstCommentId = getListFragment().getFirstCommentId();
             onCommentSelected(firstCommentId);
+        }
+        // used to scroll the list view after it has been created
+        if (mSelectedCommentId != 0 && hasListFragment()) {
+            getListFragment().setHighlightedCommentId(mSelectedCommentId);
         }
     }
 
