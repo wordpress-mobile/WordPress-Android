@@ -15,11 +15,11 @@ import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
-import org.wordpress.android.ui.notifications.NotificationsActivity.PostPairId;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
 
@@ -33,8 +33,8 @@ public class CommentsActivity extends WPActionBarActivity
     private boolean mDualPane;
     private long mSelectedCommentId;
     private boolean mCommentSelected;
-    private PostPairId mSelectedPostId;
-    private PostPairId mTmpSelectedPost;
+    private BlogPairId mSelectedPostId;
+    private BlogPairId mTmpSelectedPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class CommentsActivity extends WPActionBarActivity
                 }
             }
             // restore the post detail fragment if one was selected
-            PostPairId selectedPostId = (PostPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
+            BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
             if (selectedPostId != null) {
                 showReaderFragment(selectedPostId.mRemoteBlogId, selectedPostId.mId);
             }
@@ -242,7 +242,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     void showReaderFragment(long remoteBlogId, long postId) {
-        mTmpSelectedPost = new PostPairId(remoteBlogId, postId);
+        mTmpSelectedPost = new BlogPairId(remoteBlogId, postId);
         FragmentManager fm = getSupportFragmentManager();
         fm.executePendingTransactions();
 

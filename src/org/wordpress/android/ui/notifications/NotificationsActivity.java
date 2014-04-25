@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -38,7 +39,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,10 +67,10 @@ public class NotificationsActivity extends WPActionBarActivity
     private boolean mDualPane;
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
-    private PostPairId mTmpSelectedComment;
-    private PostPairId mTmpSelectedPost;
-    private PostPairId mSelectedPost;
-    private PostPairId mSelectedComment;
+    private BlogPairId mTmpSelectedComment;
+    private BlogPairId mTmpSelectedPost;
+    private BlogPairId mSelectedPost;
+    private BlogPairId mSelectedComment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,13 +111,13 @@ public class NotificationsActivity extends WPActionBarActivity
                 @Override
                 public void notesLoaded() {
                     // restore the post detail fragment if one was selected
-                    PostPairId selectedPostId = (PostPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
+                    BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
                     if (selectedPostId != null) {
                         onPostClicked(null, (int) selectedPostId.mRemoteBlogId, (int) selectedPostId.mId);
                     }
 
                     // restore the comment detail fragment if one was selected
-                    PostPairId selectedCommentId = (PostPairId) savedInstanceState.get(KEY_SELECTED_COMMENT_ID);
+                    BlogPairId selectedCommentId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_COMMENT_ID);
                     if (selectedCommentId != null) {
                         onCommentClicked(null, (int) selectedCommentId.mRemoteBlogId, selectedCommentId.mId);
                     }
@@ -615,7 +615,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(Note note, int remoteBlogId, int postId) {
-        mTmpSelectedPost = new PostPairId(remoteBlogId, postId);
+        mTmpSelectedPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -631,7 +631,7 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentClicked(Note note, int remoteBlogId, long commentId) {
-        mTmpSelectedComment = new PostPairId(remoteBlogId, commentId);
+        mTmpSelectedComment = new BlogPairId(remoteBlogId, commentId);
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -639,15 +639,6 @@ public class NotificationsActivity extends WPActionBarActivity
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
           .commit();
-    }
-
-    public static class PostPairId implements Serializable {
-        public long mId;
-        public long mRemoteBlogId;
-        public PostPairId(long remotePostId, long id) {
-            mId = id;
-            mRemoteBlogId = remotePostId;
-        }
     }
 
     private interface LoadNotesCallback {
