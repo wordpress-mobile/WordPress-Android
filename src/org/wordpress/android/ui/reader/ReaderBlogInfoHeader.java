@@ -67,14 +67,23 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         final View divider = findViewById(R.id.divider);
         final View spacer = findViewById(R.id.view_header_image_spacer);
 
-        mHasBlogInfo = (blogInfo != null);
+        // make sure the blog info is complete - it may have been set by the read/following/mine
+        // endpoint which doesn't include the name, description or follower count
+        mHasBlogInfo = (blogInfo != null && blogInfo.isComplete());
 
         if (mHasBlogInfo) {
             txtBlogName.setText(blogInfo.getName());
             txtDescription.setText(blogInfo.getDescription());
             txtDescription.setVisibility(blogInfo.hasDescription() ? View.VISIBLE : View.GONE);
-            String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blogInfo.numSubscribers));
-            txtFollowCnt.setText(numFollowers);
+
+            // only show the follower count if there are subscribers
+            if (blogInfo.numSubscribers > 0) {
+                String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blogInfo.numSubscribers));
+                txtFollowCnt.setText(numFollowers);
+                txtFollowCnt.setVisibility(View.VISIBLE);
+            } else {
+                txtFollowCnt.setVisibility(View.INVISIBLE);
+            }
 
             showBlogFollowStatus(txtFollowBtn, blogInfo.isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);

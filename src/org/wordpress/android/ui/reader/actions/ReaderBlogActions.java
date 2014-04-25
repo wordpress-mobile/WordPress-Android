@@ -5,18 +5,16 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderBlogActions {
@@ -60,7 +58,7 @@ public class ReaderBlogActions {
 
         // update local db
         if (hasBlogUrl) {
-            ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, isAskingToFollow);
+            ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, isAskingToFollow);
         }
         if (hasBlogId) {
             ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
@@ -79,7 +77,7 @@ public class ReaderBlogActions {
                 AppLog.e(T.READER, volleyError);
                 // revert to original state
                 if (hasBlogUrl) {
-                    ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, !isAskingToFollow);
+                    ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, !isAskingToFollow);
                 }
                 if (hasBlogId) {
                     ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
@@ -128,14 +126,8 @@ public class ReaderBlogActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderUrlList urls = new ReaderUrlList();
-                JSONArray jsonBlogs = jsonObject.optJSONArray("subscriptions");
-                if (jsonBlogs != null) {
-                    for (int i=0; i < jsonBlogs.length(); i++) {
-                        urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
-                    }
-                }
-                ReaderBlogTable.setFollowedBlogUrls(urls);
+                ReaderFollowedBlogList blogs = ReaderFollowedBlogList.fromJson(jsonObject);
+                ReaderBlogTable.setFollowedBlogs(blogs);
             }
         }.start();
     }

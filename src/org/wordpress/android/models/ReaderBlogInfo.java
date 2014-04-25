@@ -38,8 +38,9 @@ public class ReaderBlogInfo {
 
     public static ReaderBlogInfo fromJson(JSONObject json) {
         ReaderBlogInfo blog = new ReaderBlogInfo();
-        if (json == null)
+        if (json == null) {
             return blog;
+        }
 
         blog.blogId = json.optLong("ID");
 
@@ -53,6 +54,14 @@ public class ReaderBlogInfo {
         blog.numSubscribers = json.optInt("subscribers_count");
 
         return blog;
+    }
+
+    /*
+     * blog info may have been set by the /read/following/mine endpoint, which
+     * contains only the blogId & blogUrl
+     */
+    public boolean isComplete() {
+        return hasName() || hasDescription();
     }
 
     public String getName() {
@@ -74,6 +83,10 @@ public class ReaderBlogInfo {
     }
     public void setDescription(String description) {
         this.description = StringUtils.notNullStr(description);
+    }
+
+    public boolean hasName() {
+        return !TextUtils.isEmpty(name);
     }
 
     public boolean hasDescription() {

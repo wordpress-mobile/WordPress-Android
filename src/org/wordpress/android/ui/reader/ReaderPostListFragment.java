@@ -131,8 +131,6 @@ public class ReaderPostListFragment extends SherlockFragment
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        // note that setCurrentTag() should NOT be called here since it's automatically
-        // called from the actionbar navigation handler
         if (args != null) {
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
@@ -670,7 +668,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         };
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, updateAction, listener);
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
     }
 
     /*

@@ -1,30 +1,23 @@
 package org.wordpress.android.datasets;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderFollowedBlog;
+import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
 /**
- * ideally this would be a single table, but a separate table is necessary for
- * followed blogs since the the read/following/mine endpoint only contains the
- * blog id and url (no name, description, etc). so two tables are required:
- *
- *   (1) blog info for blogs shown in the reader (used by reader blog detail)
- *   (2) urls of blogs we know about and whether they're followed by the current user
- *
  * note that URLs are normalized for comparison
  */
 public class ReaderBlogTable {
 
     protected static void createTables(SQLiteDatabase db) {
-        // blog info
         db.execSQL("CREATE TABLE tbl_blog_info ("
                  + "    blog_id       INTEGER DEFAULT 0,"
                  + "	blog_url      TEXT NOT NULL COLLATE NOCASE,"
@@ -36,16 +29,10 @@ public class ReaderBlogTable {
                  + "    num_followers INTEGER DEFAULT 0,"
                  + "    PRIMARY KEY (blog_id))");
         db.execSQL("CREATE UNIQUE INDEX idx_blog_info_url ON tbl_blog_info(blog_url)");
-
-        // followed blog urls
-        db.execSQL("CREATE TABLE tbl_followed_blogs ("
-                + "	blog_url        TEXT NOT NULL COLLATE NOCASE PRIMARY KEY,"
-                + " is_following    INTEGER DEFAULT 0)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
-        db.execSQL("DROP TABLE IF EXISTS tbl_followed_blogs");
     }
 
     /*
@@ -56,27 +43,9 @@ public class ReaderBlogTable {
         String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
-            return getBlogInfoFromCursor(c);
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    /*
-     * get a blog's info by url
-     */
-    public static ReaderBlogInfo getBlogInfoByUrl(String blogUrl) {
-        if (TextUtils.isEmpty(blogUrl)) {
-            return null;
-        }
-        String[] args = {UrlUtils.normalizeUrl(blogUrl)};
-        String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
-        try {
-            if (!c.moveToFirst())
-                return null;
+            }
             return getBlogInfoFromCursor(c);
         } finally {
             SqlUtils.closeCursor(c);
@@ -123,38 +92,22 @@ public class ReaderBlogTable {
         } finally {
             SqlUtils.closeStatement(stmt);
         }
-
-        // update in list of followed urls
-        setIsFollowedBlogUrl(blogInfo.getUrl(), blogInfo.isFollowing, false);
     }
 
-    public static void setFollowedBlogUrls(ReaderUrlList urls) {
+    /*
+     * set followed blogs from the read/following/mine endpoint
+     */
+    public static void setFollowedBlogs(ReaderFollowedBlogList followedBlogs) {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
-        SQLiteStatement stmtUrl = db.compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
-        SQLiteStatement stmtInfo = db.compileStatement("UPDATE tbl_blog_info SET is_following=? WHERE blog_url=?");
         try {
             // first set all existing blogs to not followed
-            db.execSQL("UPDATE tbl_followed_blogs SET is_following=0");
             db.execSQL("UPDATE tbl_blog_info SET is_following=0");
 
             // then set passed ones as followed
-            if (urls != null && urls.size() > 0) {
-                long sqlTrue = SqlUtils.boolToSql(true);
-                for (String url : urls) {
-                    String normUrl = UrlUtils.normalizeUrl(url);
-
-                    // tbl_followed_blogs
-                    stmtUrl.bindString(1, normUrl);
-                    stmtUrl.bindLong(2, sqlTrue);
-                    stmtUrl.execute();
-                    stmtUrl.clearBindings();
-
-                    // tbl_blog_info
-                    stmtInfo.bindLong(1, sqlTrue);
-                    stmtInfo.bindString(2, normUrl);
-                    stmtInfo.execute();
-                    stmtInfo.clearBindings();
+            if (followedBlogs != null) {
+                for (ReaderFollowedBlog blog: followedBlogs) {
+                    setIsFollowedBlogUrl(blog.blogId, blog.getUrl(), true);
                 }
             }
 
@@ -162,13 +115,14 @@ public class ReaderBlogTable {
 
         } finally {
             db.endTransaction();
-            SqlUtils.closeStatement(stmtUrl);
-            SqlUtils.closeStatement(stmtInfo);
         }
     }
 
+    /*
+     * return list of URLs of followed blogs
+     */
     public static ReaderUrlList getFollowedBlogUrls() {
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT blog_url FROM tbl_followed_blogs WHERE is_following!=0", null);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT DISTINCT blog_url FROM tbl_blog_info WHERE is_following!=0", null);
         try {
             ReaderUrlList urls = new ReaderUrlList();
             if (c.moveToFirst()) {
@@ -182,41 +136,25 @@ public class ReaderBlogTable {
         }
     }
 
-    public static boolean isFollowedBlogUrl(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return false;
-        }
-        String[] args = {UrlUtils.normalizeUrl(url)};
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT is_following FROM tbl_followed_blogs WHERE blog_url=?", args);
-    }
-
-    public static void setIsFollowedBlogUrl(String url, boolean isFollowed) {
-        setIsFollowedBlogUrl(url, isFollowed, true);
-    }
-    private static void setIsFollowedBlogUrl(String url, boolean isFollowed, boolean updateBlogInfoTable) {
+    public static void setIsFollowedBlogUrl(long blogId, String url, boolean isFollowed) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
 
-        String normUrl = UrlUtils.normalizeUrl(url);
-        long sqlIsFollowed = SqlUtils.boolToSql(isFollowed);
+        // get existing info for this blog
+        ReaderBlogInfo blogInfo = getBlogInfoById(blogId);
 
-        // update in tbl_followed_blogs
-        SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement("INSERT OR REPLACE INTO tbl_followed_blogs (blog_url, is_following) VALUES (?1,?2)");
-        try {
-            stmt.bindString(1, normUrl);
-            stmt.bindLong(2, sqlIsFollowed);
-            stmt.execute();
-        } finally {
-            SqlUtils.closeStatement(stmt);
+        if (blogInfo == null) {
+            // blogInfo doesn't exist, create it with just the passed id & url
+            blogInfo = new ReaderBlogInfo();
+            blogInfo.blogId = blogId;
+            blogInfo.setUrl(UrlUtils.normalizeUrl(url));
+        } else if (blogInfo.isFollowing == isFollowed) {
+            // blogInfo already has passed following status, so nothing more to do
+            return;
         }
 
-        // update in tbl_blog_info
-        if (updateBlogInfoTable) {
-            ContentValues values = new ContentValues();
-            values.put("is_following", sqlIsFollowed);
-            String[] args = {normUrl};
-            ReaderDatabase.getWritableDb().update("tbl_blog_info", values, "blog_url=?", args);
-        }
+        blogInfo.isFollowing = isFollowed;
+        setBlogInfo(blogInfo);
     }
 }
