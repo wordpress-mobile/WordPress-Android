@@ -13,7 +13,17 @@ import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
 /**
- * note that URLs are normalized for comparison
+ * contains information about blogs viewed in the reader, and blogs the user is following.
+ * note that this table is populated from two endpoints:
+ *
+ *      1. sites/{$siteId}
+ *      2. read/following/mine
+ *
+ *  The first endpoint is called when the user views blog detail, and it returns all the fields
+ *  stored in this table. The second endpoint is called at startup to get the full list of
+ *  blogs the user is following, and it only returns blog_id and blog_url.
+ *
+ *  This means that many of the fields in this table will be empty.
  */
 public class ReaderBlogTable {
 
