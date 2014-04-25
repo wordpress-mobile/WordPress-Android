@@ -41,8 +41,10 @@ public class WebViewActivity extends WPActionBarActivity {
         ab.setDisplayShowTitleEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
 
+        // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
+        // here since it causes problems with the browser-sniffing that some sites rely on to
+        // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 

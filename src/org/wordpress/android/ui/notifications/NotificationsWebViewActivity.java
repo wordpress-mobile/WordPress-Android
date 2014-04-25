@@ -31,7 +31,6 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             mWebView.getSettings().setDisplayZoomControls(false);
         }
