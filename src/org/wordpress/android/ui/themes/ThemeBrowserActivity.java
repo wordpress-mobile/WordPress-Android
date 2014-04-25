@@ -50,9 +50,6 @@ import java.util.ArrayList;
 public class ThemeBrowserActivity extends WPActionBarActivity implements
         ThemeTabFragmentCallback, ThemeDetailsFragmentCallback, ThemePreviewFragmentCallback,
         TabListener {
-    public static final String THEME_REFRESH_INTENT_NOTIFICATION = "THEME_REFRESH_INTENT_NOTIFICATION";
-    public static final String THEME_REFRESH_PARAM_REFRESHING = "THEME_REFRESH_PARAM_REFRESHING";
-
     private HorizontalTabView mTabView;
     private ThemePagerAdapter mThemePagerAdapter;
     private ViewPager mViewPager;
@@ -164,7 +161,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     public class ThemePagerAdapter extends FragmentStatePagerAdapter {
-        ThemeTabFragment mTabFragment[] = new ThemeTabFragment[ThemeSortType.values().length];
+        ThemeTabFragment[] mTabFragment = new ThemeTabFragment[ThemeSortType.values().length];
 
         public ThemePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -310,12 +307,12 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         FragmentManager fm = getSupportFragmentManager();
 
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
-
             // show details as a fragment on top
             FragmentTransaction ft = fm.beginTransaction();
 
-            if (mSearchFragment != null && mSearchFragment.isVisible())
+            if (mSearchFragment != null && mSearchFragment.isVisible()) {
                 fm.popBackStack();
+            }
 
             setupBaseLayout();
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
