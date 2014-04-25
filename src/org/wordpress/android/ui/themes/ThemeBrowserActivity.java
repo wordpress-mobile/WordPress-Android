@@ -506,7 +506,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     }
 
     private void setRefreshing(boolean refreshing, int page) {
-        ThemeTabFragment currentFragment = mThemePagerAdapter.getItem(page);
-        currentFragment.setRefreshing(refreshing);
+        // We have to nofify all contiguous fragments since the ViewPager cache them
+        for (int i = Math.max(page - 1, 0); i <= Math.min(page + 1, mThemePagerAdapter.getCount() - 1); ++i) {
+            mThemePagerAdapter.getItem(i).setRefreshing(refreshing);
+        }
     }
 }
