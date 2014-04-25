@@ -73,7 +73,7 @@ public class CommentsActivity extends WPActionBarActivity
             // restore the post detail fragment if one was selected
             BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
             if (selectedPostId != null) {
-                showReaderFragment(selectedPostId.mRemoteBlogId, selectedPostId.mId);
+                showReaderFragment(selectedPostId.getRemoteBlogId(), selectedPostId.getId());
             }
         }
     }

@@ -113,13 +113,13 @@ public class NotificationsActivity extends WPActionBarActivity
                     // restore the post detail fragment if one was selected
                     BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
                     if (selectedPostId != null) {
-                        onPostClicked(null, (int) selectedPostId.mRemoteBlogId, (int) selectedPostId.mId);
+                        onPostClicked(null, (int) selectedPostId.getRemoteBlogId(), (int) selectedPostId.getId());
                     }
 
                     // restore the comment detail fragment if one was selected
                     BlogPairId selectedCommentId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_COMMENT_ID);
                     if (selectedCommentId != null) {
-                        onCommentClicked(null, (int) selectedCommentId.mRemoteBlogId, selectedCommentId.mId);
+                        onCommentClicked(null, (int) selectedCommentId.getRemoteBlogId(), selectedCommentId.getId());
                     }
                 }
             };
