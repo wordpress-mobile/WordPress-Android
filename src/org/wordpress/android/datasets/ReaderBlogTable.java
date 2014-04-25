@@ -27,8 +27,7 @@ public class ReaderBlogTable {
                  + "    is_jetpack    INTEGER DEFAULT 0,"
                  + "    is_following  INTEGER DEFAULT 0,"
                  + "    num_followers INTEGER DEFAULT 0,"
-                 + "    PRIMARY KEY (blog_id))");
-        db.execSQL("CREATE UNIQUE INDEX idx_blog_info_url ON tbl_blog_info(blog_url)");
+                 + "    PRIMARY KEY (blog_id, blog_url))");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -36,19 +35,28 @@ public class ReaderBlogTable {
     }
 
     /*
-     * get a blog's info by id
+     * get a blog's info by either id or url
      */
-    public static ReaderBlogInfo getBlogInfoById(long blogId) {
-        String[] args = {Long.toString(blogId)};
-        String sql = "SELECT * FROM tbl_blog_info WHERE blog_id=?";
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+    public static ReaderBlogInfo getBlogInfo(long blogId, String blogUrl) {
+        // search by id if it's passed (may be zero for feeds), otherwise search by url
+        final Cursor cursor;
+        if (blogId != 0) {
+            String[] args = {Long.toString(blogId)};
+            cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
+        } else if (!TextUtils.isEmpty(blogUrl)) {
+            String[] args = {UrlUtils.normalizeUrl(blogUrl)};
+            cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=?", args);
+        } else {
+            return null;
+        }
+
         try {
-            if (!c.moveToFirst()) {
+            if (!cursor.moveToFirst()) {
                 return null;
             }
-            return getBlogInfoFromCursor(c);
+            return getBlogInfoFromCursor(cursor);
         } finally {
-            SqlUtils.closeCursor(c);
+            SqlUtils.closeCursor(cursor);
         }
     }
 
@@ -142,7 +150,7 @@ public class ReaderBlogTable {
         }
 
         // get existing info for this blog
-        ReaderBlogInfo blogInfo = getBlogInfoById(blogId);
+        ReaderBlogInfo blogInfo = getBlogInfo(blogId, url);
 
         if (blogInfo == null) {
             // blogInfo doesn't exist, create it with just the passed id & url
