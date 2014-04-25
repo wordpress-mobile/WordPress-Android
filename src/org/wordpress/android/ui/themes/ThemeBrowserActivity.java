@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 
@@ -37,6 +36,7 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -324,15 +324,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             ft.addToBackStack(null);
             ft.commit();
         } else {
-
             // show details as a dialog
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
             mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
             getSupportFragmentManager().executePendingTransactions();
-            Display display = getWindowManager().getDefaultDisplay();
             int minWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int height = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_height);
-            int width = Math.max((int) (display.getWidth() * 0.6), minWidth);
+            int width = Math.max((int) (DisplayUtils.getDisplayPixelWidth(this) * 0.6), minWidth);
             mDetailsFragment.getDialog().getWindow().setLayout(width, height);
         }
     }
