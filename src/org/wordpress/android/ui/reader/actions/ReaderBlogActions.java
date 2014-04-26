@@ -7,6 +7,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderRecommendBlogList;
@@ -121,7 +122,9 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().get("/read/recommendations/mine", listener, errorListener);
+
+        String path = "/read/recommendations/mine/?source=mobile&number=" + Integer.toString(Constants.READER_MAX_RECOMMENDED_BLOGS);
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
     private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
                                                        final ReaderActions.UpdateResultListener resultListener) {

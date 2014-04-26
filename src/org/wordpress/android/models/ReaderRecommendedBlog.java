@@ -10,10 +10,13 @@ public class ReaderRecommendedBlog {
     public int score;
 
     private String title;
-    private String blogDomain;
+    private String blogUrl;
     private String imageUrl;
     private String reason;
 
+    /*
+     * populated by response from get/read/recommendations/mine/
+     */
     public static ReaderRecommendedBlog fromJson(JSONObject json) {
         if (json == null) {
             return null;
@@ -28,7 +31,7 @@ public class ReaderRecommendedBlog {
         blog.setTitle(JSONUtil.getString(json, "title"));
         blog.setImageUrl(JSONUtil.getString(json, "image"));
         blog.setReason(JSONUtil.getString(json, "reason"));
-        blog.setBlogDomain(JSONUtil.getString(json, "blog_domain"));
+        blog.setBlogUrl(JSONUtil.getString(json, "blog_domain"));
 
         return blog;
     }
@@ -47,21 +50,11 @@ public class ReaderRecommendedBlog {
         this.reason = StringUtils.notNullStr(reason);
     }
 
-    public String getBlogDomain() {
-        return StringUtils.notNullStr(blogDomain);
+    public String getBlogUrl() {
+        return StringUtils.notNullStr(blogUrl);
     }
-    public void setBlogDomain(String domain) {
-        if (domain == null) {
-            this.blogDomain = "";
-        } else {
-            // remove http:// from the domain (JSON response will have it)
-            int pos = domain.indexOf("://");
-            if (pos > 0) {
-                this.blogDomain = domain.substring(pos + 3);
-            } else {
-                this.blogDomain = StringUtils.notNullStr(domain);
-            }
-        }
+    public void setBlogUrl(String blogUrl) {
+        this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
     public String getImageUrl() {

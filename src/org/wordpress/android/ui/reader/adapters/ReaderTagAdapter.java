@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -30,22 +31,22 @@ public class ReaderTagAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderTagList mTags = new ReaderTagList();
     private final TagActionListener mTagListener;
-    private ReaderTag.ReaderTagType mTagType;
+    private ReaderTagType mTagType;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private final Drawable mDrawableAdd;
     private final Drawable mDrawableRemove;
 
-    public ReaderTagAdapter(Context context, TagActionListener tagListener) {
+    public ReaderTagAdapter(Context context, ReaderTagType tagType, TagActionListener tagListener) {
         super();
-
         mInflater = LayoutInflater.from(context);
         mTagListener = tagListener;
+        mTagType = tagType;
         mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_content_new);
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_content_remove);
     }
 
     @SuppressLint("NewApi")
-    public void refreshTags(ReaderActions.DataLoadedListener dataListener) {
+    public void refresh(ReaderActions.DataLoadedListener dataListener) {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
         }
@@ -58,13 +59,8 @@ public class ReaderTagAdapter extends BaseAdapter {
         }
     }
 
-    public void refreshTags() {
-        refreshTags(null);
-    }
-
-    public void setTagType(ReaderTag.ReaderTagType tagType) {
-        mTagType = (tagType!=null ? tagType : ReaderTag.ReaderTagType.DEFAULT);
-        refreshTags();
+    public void refresh() {
+        refresh(null);
     }
 
     public int indexOfTagName(String tagName) {

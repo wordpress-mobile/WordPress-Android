@@ -29,7 +29,7 @@ public class ReaderBlogTable {
                 + " follow_reco_id  INTEGER DEFAULT 0,"
                 + " score           INTEGER DEFAULT 0,"
                 + "	title           TEXT,"
-                + "	blog_domain     TEXT COLLATE NOCASE,"
+                + "	blog_url        TEXT COLLATE NOCASE,"
                 + "	image_url       TEXT,"
                 + "	reason          TEXT)");
     }
@@ -50,7 +50,7 @@ public class ReaderBlogTable {
                     blog.followRecoId = c.getLong(c.getColumnIndex("follow_reco_id"));
                     blog.score = c.getInt(c.getColumnIndex("score"));
                     blog.setTitle(c.getString(c.getColumnIndex("title")));
-                    blog.setBlogDomain(c.getString(c.getColumnIndex("blog_domain")));
+                    blog.setBlogUrl(c.getString(c.getColumnIndex("blog_url")));
                     blog.setImageUrl(c.getString(c.getColumnIndex("image_url")));
                     blog.setReason(c.getString(c.getColumnIndex("reason")));
                     blogs.add(blog);
@@ -66,7 +66,7 @@ public class ReaderBlogTable {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement(
                                   "INSERT INTO tbl_recommended_blogs"
-                                + " (blog_id, follow_reco_id, score, title, blog_domain, image_url, reason)"
+                                + " (blog_id, follow_reco_id, score, title, blog_url, image_url, reason)"
                                 + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)");
         db.beginTransaction();
         try {
@@ -81,7 +81,7 @@ public class ReaderBlogTable {
                         stmt.bindLong(2, blog.followRecoId);
                         stmt.bindLong(3, blog.score);
                         stmt.bindString(4, blog.getTitle());
-                        stmt.bindString(5, blog.getBlogDomain());
+                        stmt.bindString(5, blog.getBlogUrl());
                         stmt.bindString(6, blog.getImageUrl());
                         stmt.bindString(7, blog.getReason());
                         stmt.execute();

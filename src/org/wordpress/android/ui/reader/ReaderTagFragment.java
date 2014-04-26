@@ -54,12 +54,16 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             AppLog.d(AppLog.T.READER, "reader tag fragment > restoring instance state");
             restoreState(savedInstanceState);
         }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_list, container, false);
         mListView = (ListView) view.findViewById(android.R.id.list);
 
@@ -77,6 +81,12 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         mListView.setAdapter(getTagAdapter());
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getTagAdapter().refresh();
     }
 
     @Override
@@ -100,9 +110,9 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
                     scrollToTag(scrollToTagName);
                 }
             };
-            getTagAdapter().refreshTags(dataListener);
+            getTagAdapter().refresh(dataListener);
         } else {
-            getTagAdapter().refreshTags(null);
+            getTagAdapter().refresh(null);
         }
     }
 
@@ -112,8 +122,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
 
     private ReaderTagAdapter getTagAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderTagAdapter(getActivity(), this);
-            mAdapter.setTagType(getTagType());
+            mAdapter = new ReaderTagAdapter(getActivity(), getTagType(), this);
         }
         return mAdapter;
     }

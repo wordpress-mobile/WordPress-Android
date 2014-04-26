@@ -30,6 +30,7 @@ public class Constants {
     public static final int READER_MAX_COMMENTS_TO_REQUEST = READER_MAX_POSTS_TO_REQUEST; // max #comments to request when updating comments
     public static final int READER_MAX_USERS_TO_DISPLAY    = 500;                         // max #users to show in ReaderUserListActivity
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 15;                       // 15 minute delay between automatic updates
+    public static final int READER_MAX_RECOMMENDED_BLOGS    = 10;                         // max # of recommended blogs to request
 
     // intent IDs
     public static final int INTENT_READER_TAGS        = 1000;

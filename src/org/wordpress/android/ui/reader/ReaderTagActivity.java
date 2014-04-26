@@ -25,6 +25,8 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
@@ -51,7 +53,8 @@ public class ReaderTagActivity extends SherlockFragmentActivity
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
-    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
+    private static final int TAB_IDX_FOLLOWED_BLOGS = 2;
+    private static final int TAB_IDX_RECOMMENDED_BLOGS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,9 +104,15 @@ public class ReaderTagActivity extends SherlockFragmentActivity
     private TagPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<Fragment>();
+
+            // add tag fragments
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.SUBSCRIBED));
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
-            fragments.add(ReaderRecommendedBlogFragment.newInstance());
+
+            // add blog fragments
+            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
+            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
+
             mPageAdapter = new TagPageAdapter(getSupportFragmentManager(), fragments);
         }
         return mPageAdapter;
@@ -288,6 +297,8 @@ public class ReaderTagActivity extends SherlockFragmentActivity
                     return getString(R.string.reader_title_followed_tags);
                 case TAB_IDX_SUGGESTED_TAGS:
                     return getString(R.string.reader_title_popular_tags);
+                case TAB_IDX_FOLLOWED_BLOGS:
+                    return getString(R.string.reader_title_followed_blogs);
                 case TAB_IDX_RECOMMENDED_BLOGS:
                     return getString(R.string.reader_title_recommended_blogs);
                 default:
@@ -320,8 +331,8 @@ public class ReaderTagActivity extends SherlockFragmentActivity
         // refresh all blog fragments
         private void refreshBlogs() {
             for (Fragment fragment: mFragments) {
-                if (fragment instanceof ReaderRecommendedBlogFragment) {
-                    ((ReaderRecommendedBlogFragment)fragment).refreshBlogs();
+                if (fragment instanceof ReaderBlogFragment) {
+                    ((ReaderBlogFragment)fragment).refreshBlogs();
                 }
             }
         }
