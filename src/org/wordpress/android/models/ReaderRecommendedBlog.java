@@ -31,6 +31,8 @@ public class ReaderRecommendedBlog {
         blog.setTitle(JSONUtil.getString(json, "title"));
         blog.setImageUrl(JSONUtil.getString(json, "image"));
         blog.setReason(JSONUtil.getString(json, "reason"));
+
+        // the "url" field points to an API endpoint, "blog_domain" contains the actual url
         blog.setBlogUrl(JSONUtil.getString(json, "blog_domain"));
 
         return blog;

@@ -101,6 +101,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 blogUrl = blog.getBlogUrl();
                 isFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
                 holder.txtTitle.setText(blog.getTitle());
+                holder.txtDescription.setText(blog.getReason());
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
                 holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
                 break;
@@ -135,12 +136,14 @@ public class ReaderBlogAdapter extends BaseAdapter {
 
     private static class BlogViewHolder {
         private final TextView txtTitle;
+        private final TextView txtDescription;
         private final TextView txtUrl;
         private final TextView txtFollow;
         private final WPNetworkImageView imgBlog;
 
         BlogViewHolder(View view) {
             txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtDescription = (TextView) view.findViewById(R.id.text_description);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
