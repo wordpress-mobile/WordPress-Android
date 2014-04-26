@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
@@ -19,7 +20,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
@@ -40,14 +43,15 @@ public class ReaderTagActivity extends SherlockFragmentActivity
 
     private boolean mTagsChanged;
     private String mLastAddedTag;
-    private boolean mAlreadyUpdatedTagList;
+    private boolean mAlreadyUpdated;
 
     protected static final String KEY_TAGS_CHANGED   = "tags_changed";
     protected static final String KEY_LAST_ADDED_TAG = "last_added_tag";
-    private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
+    private static final String KEY_ALREADY_UPDATED = "is_updated";
 
-    private static final int TAB_IDX_FOLLOWED = 0;
-    private static final int TAB_IDX_SUGGESTED = 1;
+    private static final int TAB_IDX_FOLLOWED_TAGS = 0;
+    private static final int TAB_IDX_SUGGESTED_TAGS = 1;
+    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +62,7 @@ public class ReaderTagActivity extends SherlockFragmentActivity
         if (savedInstanceState != null) {
             mTagsChanged = savedInstanceState.getBoolean(KEY_TAGS_CHANGED);
             mLastAddedTag = savedInstanceState.getString(KEY_LAST_ADDED_TAG);
-            mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
+            mAlreadyUpdated = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
         }
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -86,18 +90,20 @@ public class ReaderTagActivity extends SherlockFragmentActivity
             }
         });
 
-        // update list of tags from the server
-        if (!mAlreadyUpdatedTagList) {
+        // update list of tags and recommended blogs from the server
+        if (!mAlreadyUpdated) {
             updateTagList();
-            mAlreadyUpdatedTagList = true;
+            updateRecommendedBlogs();
+            mAlreadyUpdated = true;
         }
     }
 
     private TagPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
-            List<ReaderTagFragment> fragments = new ArrayList<ReaderTagFragment>();
-            fragments.add(ReaderTagFragment.newInstance(ReaderTag.ReaderTagType.SUBSCRIBED));
-            fragments.add(ReaderTagFragment.newInstance(ReaderTag.ReaderTagType.RECOMMENDED));
+            List<Fragment> fragments = new ArrayList<Fragment>();
+            fragments.add(ReaderTagFragment.newInstance(ReaderTagType.SUBSCRIBED));
+            fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
+            fragments.add(ReaderRecommendedBlogFragment.newInstance());
             mPageAdapter = new TagPageAdapter(getSupportFragmentManager(), fragments);
         }
         return mPageAdapter;
@@ -113,7 +119,7 @@ public class ReaderTagActivity extends SherlockFragmentActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
-        outState.putBoolean(KEY_TAG_LIST_UPDATED, mAlreadyUpdatedTagList);
+        outState.putBoolean(KEY_ALREADY_UPDATED, mAlreadyUpdated);
         if (mLastAddedTag != null) {
             outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
         }
@@ -252,10 +258,25 @@ public class ReaderTagActivity extends SherlockFragmentActivity
         ReaderTagActions.updateTags(listener);
     }
 
-    private class TagPageAdapter extends FragmentPagerAdapter {
-        private final List<ReaderTagFragment> mFragments;
+    /*
+     * request latest recommended blogs
+     */
+    void updateRecommendedBlogs() {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (result == ReaderActions.UpdateResult.CHANGED) {
+                    getPageAdapter().refreshBlogs();
+                }
+            }
+        };
+        ReaderBlogActions.updateRecommendedBlogs(listener);
+    }
 
-        TagPageAdapter(FragmentManager fm, List<ReaderTagFragment> fragments) {
+    private class TagPageAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments;
+
+        TagPageAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             mFragments = fragments;
         }
@@ -263,17 +284,19 @@ public class ReaderTagActivity extends SherlockFragmentActivity
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case TAB_IDX_FOLLOWED:
+                case TAB_IDX_FOLLOWED_TAGS:
                     return getString(R.string.reader_title_followed_tags);
-                case TAB_IDX_SUGGESTED:
+                case TAB_IDX_SUGGESTED_TAGS:
                     return getString(R.string.reader_title_popular_tags);
+                case TAB_IDX_RECOMMENDED_BLOGS:
+                    return getString(R.string.reader_title_recommended_blogs);
                 default:
                     return super.getPageTitle(position);
             }
         }
 
         @Override
-        public ReaderTagFragment getItem(int position) {
+        public Fragment getItem(int position) {
             return mFragments.get(position);
         }
 
@@ -282,12 +305,24 @@ public class ReaderTagActivity extends SherlockFragmentActivity
             return mFragments.size();
         }
 
+        // refresh all tag fragments
         private void refreshTags() {
             refreshTags(null);
         }
         private void refreshTags(final String scrollToTagName) {
-            for (ReaderTagFragment fragment: mFragments) {
-                fragment.refreshTags(scrollToTagName);
+            for (Fragment fragment: mFragments) {
+                if (fragment instanceof ReaderTagFragment) {
+                    ((ReaderTagFragment)fragment).refreshTags(scrollToTagName);
+                }
+            }
+        }
+
+        // refresh all blog fragments
+        private void refreshBlogs() {
+            for (Fragment fragment: mFragments) {
+                if (fragment instanceof ReaderRecommendedBlogFragment) {
+                    ((ReaderRecommendedBlogFragment)fragment).refreshBlogs();
+                }
             }
         }
     }

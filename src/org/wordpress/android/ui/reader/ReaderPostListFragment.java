@@ -389,8 +389,9 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean hasPostAdapter () {
         return mPostAdapter!=null;
     }
+
     private boolean isPostAdapterEmpty() {
-        return (mPostAdapter==null || mPostAdapter.isEmpty());
+        return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final String tagName) {

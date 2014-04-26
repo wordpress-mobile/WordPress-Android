@@ -570,6 +570,7 @@
     <string name="reader_title_userlist_default">People</string>
     <string name="reader_title_followed_tags">Followed tags</string>
     <string name="reader_title_popular_tags">Popular tags</string>
+    <string name="reader_title_recommended_blogs">Recommended blogs</string>
     <string name="reader_title_reblog">Reblog</string>
 
     <!-- share dialog title when sharing a reader url -->
@@ -632,6 +633,7 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
+    <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>

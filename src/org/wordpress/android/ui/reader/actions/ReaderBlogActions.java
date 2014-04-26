@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -100,6 +101,46 @@ public class ReaderBlogActions {
                         urls.add(JSONUtil.getString(jsonBlogs.optJSONObject(i), "URL"));
                 }
                 ReaderBlogTable.setFollowedBlogUrls(urls);
+            }
+        }.start();
+    }
+
+    public static void updateRecommendedBlogs(final ReaderActions.UpdateResultListener resultListener) {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleRecommendedBlogsResponse(jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                }
+            }
+        };
+        WordPress.getRestClientUtils().get("/read/recommendations/mine", listener, errorListener);
+    }
+    private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
+                                                       final ReaderActions.UpdateResultListener resultListener) {
+        if (jsonObject == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
+            return;
+        }
+
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderRecommendBlogList blogs = ReaderRecommendBlogList.fromJson(jsonObject);
+                ReaderBlogTable.setRecommendedBlogs(blogs);
+                // TODO: check whether the list has actually changed
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+                }
             }
         }.start();
     }

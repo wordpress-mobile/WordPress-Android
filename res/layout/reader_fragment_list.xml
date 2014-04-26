@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--
+    simple list fragment used to show followed tags, popular tags and recommended blogs
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +15,7 @@
         android:layout_below="@+id/divider_title"
         android:paddingBottom="@dimen/margin_large"
         android:paddingTop="@dimen/margin_large"
-        android:text="@string/reader_empty_followed_tags"
+        android:text="@string/reader_empty_recommended_blogs"
         android:textColor="@color/grey_medium"
         android:visibility="gone" />
 
