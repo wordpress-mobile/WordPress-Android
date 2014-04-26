@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
+import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 
@@ -65,6 +66,13 @@ public class ReaderActions {
      */
     public interface RequestReblogListener {
         public void onRequestReblog(ReaderPost post);
+    }
+
+    /*
+     * used by blog detail when requesting latest info about a blog
+     */
+    public interface UpdateBlogInfoListener {
+        public void onResult(ReaderBlogInfo blogInfo);
     }
 
 }

@@ -573,6 +573,7 @@
     <string name="reader_title_followed_blogs">Followed blogs</string>
     <string name="reader_title_recommended_blogs">Recommended blogs</string>
     <string name="reader_title_reblog">Reblog</string>
+    <string name="reader_title_blog_detail">WordPress Blog</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -604,6 +605,7 @@
     <string name="reader_label_reply">Reply</string>
     <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_reblog_empty_link">Change blog visibility</string>
+    <string name="reader_label_followers">%s followers</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
@@ -628,6 +630,7 @@
     <string name="reader_toast_err_no_connection">Unable to connect</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
+    <string name="reader_toast_err_get_blog">Unable to retrieve this blog</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>

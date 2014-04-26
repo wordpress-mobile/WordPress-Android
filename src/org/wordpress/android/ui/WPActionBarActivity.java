@@ -662,6 +662,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (mMenuDrawer != null) {
                 mMenuDrawer.toggleMenu();
                 return true;
+            } else {
+                onBackPressed();
             }
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);

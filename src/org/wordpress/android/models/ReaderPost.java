@@ -20,6 +20,7 @@ public class ReaderPost {
     private String pseudoId;
     public long postId;
     public long blogId;
+    public long authorId;
 
     private String title;
     private String text;
@@ -81,14 +82,19 @@ public class ReaderPost {
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
         JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor!=null) {
+        if (jsonAuthor != null) {
             post.authorName = JSONUtil.getString(jsonAuthor, "name");
             post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
+            post.authorId = jsonAuthor.optLong("ID");
+            // site_URL doesn't exist for /sites/ endpoints, so get it from the author
+            if (TextUtils.isEmpty(post.blogUrl)) {
+                post.blogUrl = JSONUtil.getString(jsonAuthor, "URL");
+            }
         }
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
-        if (jsonEditorial!=null) {
+        if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
@@ -229,8 +235,6 @@ public class ReaderPost {
 
         if (excerpt.length() < maxLen)
             return excerpt.trim();
-
-        //return excerpt.substring(0, maxLen).trim() + "...";
 
         StringBuilder result = new StringBuilder();
         BreakIterator wordIterator = BreakIterator.getWordInstance();
