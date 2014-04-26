@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.EmptyList"
+        android:layout_below="@+id/divider_title"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:text="@string/reader_empty_followed_tags"
+        android:textColor="@color/grey_medium"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@id/android:list"
+        style="@style/ReaderListView.Topics"
+        android:layout_above="@+id/divider_list"
+        android:layout_below="@+id/divider_title"
+        tools:listitem="@layout/reader_listitem_tag" />
+
+</RelativeLayout>

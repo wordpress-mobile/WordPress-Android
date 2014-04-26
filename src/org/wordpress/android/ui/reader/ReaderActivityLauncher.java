@@ -33,10 +33,8 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderTagsForResult(Activity activity, String tagName) {
-        Intent intent = new Intent(activity, ReaderTagActivity.class);
-        if (!TextUtils.isEmpty(tagName))
-            intent.putExtra(ReaderTagActivity.ARG_TAG_NAME, tagName);
+    public static void showReaderTagsForResult(Activity activity) {
+        Intent intent = new Intent(activity, ReaderTagPagerActivity.class);
         activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 

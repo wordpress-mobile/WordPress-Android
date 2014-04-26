@@ -224,7 +224,7 @@ public class ReaderPostListFragment extends SherlockFragment
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
+                ReaderActivityLauncher.showReaderTagsForResult(getActivity());
                 return true;
             default :
                 return super.onOptionsItemSelected(item);
