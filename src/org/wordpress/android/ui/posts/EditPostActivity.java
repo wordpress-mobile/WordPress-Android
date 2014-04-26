@@ -232,11 +232,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
             if (mPost.isUploaded()) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
             } else {
-                if (mPost.getStatusEnum() == PostStatus.SCHEDULED) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
-                } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
-                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
             }
 
             savePost(false);
