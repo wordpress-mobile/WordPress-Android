@@ -31,7 +31,7 @@ public class ReaderTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final TagActionListener mTagListener;
     private ReaderTag.ReaderTagType mTagType;
-    private ReaderActions.DataLoadedListener mDataLoadadListener;
+    private ReaderActions.DataLoadedListener mDataLoadedListener;
     private final Drawable mDrawableAdd;
     private final Drawable mDrawableRemove;
 
@@ -46,9 +46,11 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     @SuppressLint("NewApi")
     public void refreshTags(ReaderActions.DataLoadedListener dataListener) {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
-        mDataLoadadListener = dataListener;
+        }
+
+        mDataLoadedListener = dataListener;
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
@@ -188,8 +190,9 @@ public class ReaderTagAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
             mIsTaskRunning = false;
-            if (mDataLoadadListener!=null)
-                mDataLoadadListener.onDataLoaded(isEmpty());
+            if (mDataLoadedListener != null) {
+                mDataLoadedListener.onDataLoaded(isEmpty());
+            }
         }
     }
 

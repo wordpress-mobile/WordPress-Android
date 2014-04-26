@@ -50,11 +50,11 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    protected ListView getListView() {
+    ListView getListView() {
         return mListView;
     }
 
-    protected void scrollToTag(String tagName) {
+    void scrollToTag(String tagName) {
         int index = getTagAdapter().indexOfTagName(tagName);
         if (index > -1) {
             getListView().smoothScrollToPosition(index);

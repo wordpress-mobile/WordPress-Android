@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pager_tab_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:textColor="@color/blue_dark"
-            android:background="@color/blue_extra_light"
+            android:textColor="@color/blue_extra_light"
+            android:background="@color/blue_new_kid"
             android:paddingTop="@dimen/margin_large"
             android:paddingBottom="@dimen/margin_large" />
 

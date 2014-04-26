@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -35,15 +36,14 @@ public class ReaderTagPagerActivity extends SherlockFragmentActivity
         implements ReaderTagAdapter.TagActionListener {
 
     private EditText mEditAddTag;
-    private ViewPager mViewPager;
     private TagPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
     private String mLastAddedTag;
     private boolean mAlreadyUpdatedTagList;
 
-    static final String KEY_TAGS_CHANGED   = "tags_changed";
-    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    private static final String KEY_TAGS_CHANGED   = "tags_changed";
+    private static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
 
     private static final int TAB_IDX_FOLLOWED = 0;
@@ -61,16 +61,19 @@ public class ReaderTagPagerActivity extends SherlockFragmentActivity
             mAlreadyUpdatedTagList = savedInstanceState.getBoolean(KEY_TAG_LIST_UPDATED);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setAdapter(getPageAdapter());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(getPageAdapter());
 
-        //ViewGroup mLayoutAddTag = (ViewGroup) findViewById(R.id.layout_add_topic);
+        PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);
+        pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
+
         mEditAddTag = (EditText) findViewById(R.id.edit_add);
         mEditAddTag.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE)
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     addCurrentTag();
+                }
                 return false;
             }
         });
@@ -137,11 +140,13 @@ public class ReaderTagPagerActivity extends SherlockFragmentActivity
      */
     private void addCurrentTag() {
         String tagName = EditTextUtils.getText(mEditAddTag);
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
-        if (!NetworkUtils.checkConnection(this))
+        if (!NetworkUtils.checkConnection(this)) {
             return;
+        }
 
         if (ReaderTagTable.tagExists(tagName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
@@ -248,7 +253,7 @@ public class ReaderTagPagerActivity extends SherlockFragmentActivity
     }
 
     private class TagPageAdapter extends FragmentPagerAdapter {
-        private List<ReaderTagFragment> mFragments;
+        private final List<ReaderTagFragment> mFragments;
 
         TagPageAdapter(FragmentManager fm, List<ReaderTagFragment> fragments) {
             super(fm);
