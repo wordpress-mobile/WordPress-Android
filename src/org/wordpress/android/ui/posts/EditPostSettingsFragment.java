@@ -46,6 +46,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
@@ -404,6 +405,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         }
