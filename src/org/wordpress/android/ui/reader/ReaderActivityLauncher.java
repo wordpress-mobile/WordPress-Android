@@ -34,7 +34,7 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderTagsForResult(Activity activity) {
-        Intent intent = new Intent(activity, ReaderTagPagerActivity.class);
+        Intent intent = new Intent(activity, ReaderTagActivity.class);
         activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 

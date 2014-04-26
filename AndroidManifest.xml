@@ -177,10 +177,6 @@
             android:theme="@style/ReaderTheme.Popup"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderTagPagerActivity"
-            android:theme="@style/ReaderTheme.Popup"
-            android:windowSoftInputMode="stateHidden" />
-        <activity
             android:name=".ui.reader.ReaderReblogActivity"
             android:theme="@style/ReaderTheme.Popup"
             android:configChanges="orientation|keyboardHidden|screenSize"

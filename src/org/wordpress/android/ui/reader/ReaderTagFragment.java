@@ -17,6 +17,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
 import org.wordpress.android.util.AppLog;
 
+/**
+ * fragment hosted by ReaderTagActivity which shows either followed or recommended tags
+ */
 public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdapter.TagActionListener {
     private ListView mListView;
     private ReaderTagAdapter mAdapter;
@@ -31,7 +34,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
             case SUBSCRIBED:
                 args.putBoolean(ARG_SHOW_FOLLOWED, true);
                 break;
-            default:
+            case RECOMMENDED:
                 args.putBoolean(ARG_SHOW_FOLLOWED, false);
                 break;
         }
@@ -61,9 +64,6 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    protected void refreshTags() {
-        refreshTags(null);
-    }
     protected void refreshTags(final String scrollToTagName) {
         if (!TextUtils.isEmpty(scrollToTagName)) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
