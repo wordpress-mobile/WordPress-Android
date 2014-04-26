@@ -350,7 +350,7 @@ public class ReaderActivity extends WPActionBarActivity
 
                 // update followed blogs
                 AppLog.i(T.READER, "reader activity > updating followed blogs");
-                ReaderBlogActions.updateFollowedBlogs();
+                ReaderBlogActions.updateFollowedBlogs(null);
 
                 // update cookies so that we can show authenticated images in WebViews
                 AppLog.i(T.READER, "reader activity > updating cookies");

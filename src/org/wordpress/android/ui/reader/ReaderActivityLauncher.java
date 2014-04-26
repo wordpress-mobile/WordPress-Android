@@ -34,8 +34,9 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return;
+        }
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);

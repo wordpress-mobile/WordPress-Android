@@ -6,12 +6,15 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
+import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderRecommendBlogList;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -103,23 +106,29 @@ public class ReaderBlogActions {
     /*
      * request the list of blogs the current user is following
      */
-    public static void updateFollowedBlogs() {
+    public static void updateFollowedBlogs(final UpdateResultListener resultListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleFollowedBlogsResponse(jsonObject);
+                handleFollowedBlogsResponse(jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                }
             }
         };
         WordPress.getRestClientUtils().get("/read/following/mine", listener, errorListener);
     }
-    private static void handleFollowedBlogsResponse(final JSONObject jsonObject) {
+    private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
         if (jsonObject == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
             return;
         }
 
@@ -128,6 +137,10 @@ public class ReaderBlogActions {
             public void run() {
                 ReaderFollowedBlogList blogs = ReaderFollowedBlogList.fromJson(jsonObject);
                 ReaderBlogTable.setFollowedBlogs(blogs);
+                // TODO: detect if followed blogs have changed
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+                }
             }
         }.start();
     }
@@ -193,5 +206,51 @@ public class ReaderBlogActions {
             infoListener.onResult(blogInfo);
         }
     }
+
+    /*
+     * request the latest recommended blogs, replaces all local ones
+     */
+    public static void updateRecommendedBlogs(final UpdateResultListener resultListener) {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleRecommendedBlogsResponse(jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                }
+            }
+        };
+
+        String path = "/read/recommendations/mine/?source=mobile&number=" + Integer.toString(Constants.READER_MAX_RECOMMENDED_BLOGS);
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
+    }
+    private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
+                                                       final UpdateResultListener resultListener) {
+        if (jsonObject == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
+            return;
+        }
+
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderRecommendBlogList blogs = ReaderRecommendBlogList.fromJson(jsonObject);
+                ReaderBlogTable.setRecommendedBlogs(blogs);
+                // TODO: check whether the list has actually changed
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+                }
+            }
+        }.start();
+    }
+
 
 }

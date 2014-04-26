@@ -25,7 +25,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
@@ -93,9 +92,10 @@ public class ReaderTagActivity extends SherlockFragmentActivity
             }
         });
 
-        // update list of tags and recommended blogs from the server
+        // update list of tags and blogs from the server
         if (!mAlreadyUpdated) {
             updateTagList();
+            updateFollowedBlogs();
             updateRecommendedBlogs();
             mAlreadyUpdated = true;
         }
@@ -280,6 +280,21 @@ public class ReaderTagActivity extends SherlockFragmentActivity
             }
         };
         ReaderBlogActions.updateRecommendedBlogs(listener);
+    }
+
+    /*
+     * request latest followed blogs
+     */
+    void updateFollowedBlogs() {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (result == ReaderActions.UpdateResult.CHANGED) {
+                    getPageAdapter().refreshBlogs();
+                }
+            }
+        };
+        ReaderBlogActions.updateFollowedBlogs(listener);
     }
 
     private class TagPageAdapter extends FragmentPagerAdapter {

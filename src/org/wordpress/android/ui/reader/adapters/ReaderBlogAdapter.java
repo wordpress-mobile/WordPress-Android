@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderBlogInfoList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlogAction;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SysUtils;
@@ -24,11 +26,11 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderBlogAdapter extends BaseAdapter {
-    // TODO: implement followed blogs
     public enum ReaderBlogType { RECOMMENDED, FOLLOWED }
 
     private final LayoutInflater mInflater;
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
+    private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
     private ReaderBlogType mBlogType;
 
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
@@ -59,6 +61,8 @@ public class ReaderBlogAdapter extends BaseAdapter {
         switch (getBlogType()) {
             case RECOMMENDED:
                 return mRecommendedBlogs.size();
+            case FOLLOWED:
+                return mFollowedBlogs.size();
             default:
                 return 0;
         }
@@ -70,6 +74,8 @@ public class ReaderBlogAdapter extends BaseAdapter {
         switch (getBlogType()) {
             case RECOMMENDED:
                 return mRecommendedBlogs.get(position);
+            case FOLLOWED:
+                return mFollowedBlogs.get(position);
             default:
                 return null;
         }
@@ -91,28 +97,48 @@ public class ReaderBlogAdapter extends BaseAdapter {
             holder = (BlogViewHolder) convertView.getTag();
         }
 
-        final boolean isFollowing;
         final long blogId;
         final String blogUrl;
+        final boolean isFollowing;
         switch (getBlogType()) {
             case RECOMMENDED:
-                final ReaderRecommendedBlog blog = (ReaderRecommendedBlog) getItem(position);
+                ReaderRecommendedBlog blog = (ReaderRecommendedBlog) getItem(position);
                 blogId = blog.blogId;
                 blogUrl = blog.getBlogUrl();
-                isFollowing = ReaderBlogTable.isFollowedBlogUrl(blogUrl);
+                isFollowing = ReaderBlogTable.isFollowedBlog(blogId, blogUrl);
                 holder.txtTitle.setText(blog.getTitle());
                 holder.txtDescription.setText(blog.getReason());
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
                 holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
                 break;
+            case FOLLOWED:
+                ReaderBlogInfo blogInfo = (ReaderBlogInfo) getItem(position);
+                blogId = blogInfo.blogId;
+                blogUrl = blogInfo.getUrl();
+                isFollowing = blogInfo.isFollowing;
+                if (blogInfo.hasName()) {
+                    holder.txtTitle.setText(blogInfo.getName());
+                    holder.txtTitle.setVisibility(View.VISIBLE);
+                } else {
+                    holder.txtTitle.setVisibility(View.GONE);
+                }
+                if (blogInfo.hasDescription()) {
+                    holder.txtDescription.setText(blogInfo.getDescription());
+                    holder.txtDescription.setVisibility(View.VISIBLE);
+                } else {
+                    holder.txtDescription.setVisibility(View.GONE);
+                }
+                holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
+                holder.imgBlog.setVisibility(View.GONE);
+                break;
             default:
-                isFollowing = false;
                 blogId = 0;
                 blogUrl = null;
+                isFollowing = false;
                 break;
         }
 
-        // TODO: rewrite following once blog detail PR is merged
+        // show the correct following status
         showFollowStatus(holder.txtFollow, isFollowing);
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,12 +147,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
             }
         });
 
-        // TODO: show blog detail rather than open url
+        // show blog detail when view is clicked
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(blogUrl)) {
-                    ReaderActivityLauncher.openUrl(parent.getContext(), blogUrl);
+                // make sure we have either the blog id or url
+                if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
+                    ReaderActivityLauncher.showReaderBlogDetail(parent.getContext(), blogId, blogUrl);
                 }
             }
         });
@@ -158,8 +185,8 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
-        BlogAction action = (isAskingToFollow ? BlogAction.FOLLOW : BlogAction.UNFOLLOW);
-        if (ReaderBlogActions.performBlogAction(action, blogUrl)) {
+        AniUtils.zoomAction(txtFollow);
+        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow)) {
             showFollowStatus(txtFollow, isAskingToFollow);
         }
     }
@@ -167,6 +194,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
+        ReaderBlogInfoList tmpFollowedBlogs;
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
@@ -181,6 +209,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 case RECOMMENDED:
                     tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
                     return (tmpRecommendedBlogs != null && tmpRecommendedBlogs.size() > 0);
+                case FOLLOWED:
+                    tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
+                    return (tmpFollowedBlogs != null && tmpFollowedBlogs.size() > 0);
                 default:
                     return false;
             }
@@ -192,9 +223,12 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 switch (getBlogType()) {
                     case RECOMMENDED:
                         mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
-                        notifyDataSetChanged();
+                        break;
+                    case FOLLOWED:
+                        mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
                         break;
                 }
+                notifyDataSetChanged();
             }
             mIsTaskRunning = false;
         }
