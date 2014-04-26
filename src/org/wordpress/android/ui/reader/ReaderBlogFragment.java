@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.util.AppLog;
 
 /**
- * fragment hosted by ReaderTagActivity which shows recommended blogs and followed blogs
+ * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends SherlockFragment {
     private ListView mListView;

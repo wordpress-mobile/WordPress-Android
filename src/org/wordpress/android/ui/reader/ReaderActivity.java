@@ -188,8 +188,8 @@ public class ReaderActivity extends WPActionBarActivity
             case Constants.INTENT_READER_TAGS :
                 if (isResultOK && listFragment != null && data != null) {
                     // reload tags if they were changed, and set the last tag added as the current one
-                    if (data.getBooleanExtra(ReaderTagActivity.KEY_TAGS_CHANGED, false)) {
-                        String lastAddedTag = data.getStringExtra(ReaderTagActivity.KEY_LAST_ADDED_TAG);
+                    if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG);
                         listFragment.doTagsChanged(lastAddedTag);
                     }
                 }

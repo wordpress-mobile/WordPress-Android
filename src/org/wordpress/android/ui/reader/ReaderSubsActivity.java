@@ -36,8 +36,13 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReaderTagActivity extends SherlockFragmentActivity
-        implements ReaderTagAdapter.TagActionListener {
+/**
+ * activity which shows the user's subscriptions and recommended subscriptions - includes
+ * followed tags, popular tags, followed blogs, and recommended blogs
+ */
+
+public class ReaderSubsActivity extends SherlockFragmentActivity
+                                implements ReaderTagAdapter.TagActionListener {
 
     private EditText mEditAddTag;
     private TagPageAdapter mPageAdapter;
@@ -59,7 +64,7 @@ public class ReaderTagActivity extends SherlockFragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.reader_activity_tags);
+        setContentView(R.layout.reader_activity_subs);
 
         if (savedInstanceState != null) {
             mTagsChanged = savedInstanceState.getBoolean(KEY_TAGS_CHANGED);
@@ -219,11 +224,11 @@ public class ReaderTagActivity extends SherlockFragmentActivity
                     getPageAdapter().refreshTags();
                     switch (action) {
                         case ADD:
-                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_add_tag);
+                            ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                             mLastAddedTag = null;
                             break;
                         case DELETE:
-                            ToastUtils.showToast(ReaderTagActivity.this, R.string.reader_toast_err_remove_tag);
+                            ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_remove_tag);
                             break;
                     }
                 }

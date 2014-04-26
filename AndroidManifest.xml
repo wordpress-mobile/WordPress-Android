@@ -171,7 +171,7 @@
             android:name=".ui.reader.ReaderUserListActivity"
             android:theme="@style/ReaderTheme.Popup" />
         <activity
-            android:name=".ui.reader.ReaderTagActivity"
+            android:name=".ui.reader.ReaderSubsActivity"
             android:theme="@style/ReaderTheme.Popup"
             android:windowSoftInputMode="stateHidden" />
         <activity

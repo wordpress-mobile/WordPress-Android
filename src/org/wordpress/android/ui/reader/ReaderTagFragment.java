@@ -19,7 +19,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListen
 import org.wordpress.android.util.AppLog;
 
 /**
- * fragment hosted by ReaderTagActivity which shows either followed or recommended tags
+ * fragment hosted by ReaderSubsActivity which shows either followed or recommended tags
  */
 public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdapter.TagActionListener {
     private ListView mListView;

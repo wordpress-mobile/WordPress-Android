@@ -43,24 +43,27 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderTagsForResult(Activity activity, String tagName) {
-        Intent intent = new Intent(activity, ReaderTagActivity.class);
-        if (!TextUtils.isEmpty(tagName))
+    public static void showReaderSubsForResult(Activity activity, String tagName) {
+        Intent intent = new Intent(activity, ReaderSubsActivity.class);
+        if (!TextUtils.isEmpty(tagName)) {
             intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
+        }
         activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
     }
 
     public static void showReaderPhotoViewer(Context context, String imageUrl) {
-        if (TextUtils.isEmpty(imageUrl))
+        if (TextUtils.isEmpty(imageUrl)) {
             return;
+        }
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderPhotoViewerActivity.ARG_IMAGE_URL, imageUrl);
         context.startActivity(intent);
     }
 
     public static void showReaderReblogForResult(Activity activity, ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return;
+        }
         Intent intent = new Intent(activity, ReaderReblogActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);
@@ -72,8 +75,9 @@ public class ReaderActivityLauncher {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url)) {
             return;
+        }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             NotificationsWebViewActivity.openUrl(context, url);
