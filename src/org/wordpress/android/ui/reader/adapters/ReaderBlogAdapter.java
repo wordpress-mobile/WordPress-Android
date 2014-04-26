@@ -111,6 +111,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
                 holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
                 break;
+
             case FOLLOWED:
                 ReaderBlogInfo blogInfo = (ReaderBlogInfo) getItem(position);
                 blogId = blogInfo.blogId;
@@ -126,6 +127,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.imgBlog.setVisibility(View.GONE);
                 holder.txtDescription.setVisibility(View.GONE);
                 break;
+
             default:
                 blogId = 0;
                 blogUrl = null;
@@ -203,10 +205,12 @@ public class ReaderBlogAdapter extends BaseAdapter {
             switch (getBlogType()) {
                 case RECOMMENDED:
                     tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
-                    return (tmpRecommendedBlogs != null && tmpRecommendedBlogs.size() > 0);
+                    return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
+
                 case FOLLOWED:
                     tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
-                    return (tmpFollowedBlogs != null && tmpFollowedBlogs.size() > 0);
+                    return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
+
                 default:
                     return false;
             }
@@ -215,28 +219,16 @@ public class ReaderBlogAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                final boolean hasChanged;
                 switch (getBlogType()) {
                     case RECOMMENDED:
-                        hasChanged = !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
-                        if (hasChanged) {
-                            mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
-                        }
+                        mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
                         break;
                     case FOLLOWED:
-                        hasChanged = !mFollowedBlogs.isSameList(tmpFollowedBlogs);
-                        if (hasChanged) {
-                            mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
-                        }
-                        break;
-                    default:
-                        hasChanged = false;
+                        mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
                         break;
                 }
 
-                if (hasChanged) {
-                    notifyDataSetChanged();
-                }
+                notifyDataSetChanged();
             }
 
             mIsTaskRunning = false;

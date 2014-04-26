@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -153,7 +152,7 @@ public class ReaderUserListActivity extends FragmentActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, Constants.READER_MAX_USERS_TO_DISPLAY);
+            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
             return true;
         }
         @Override

@@ -7,7 +7,6 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -15,6 +14,7 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
@@ -239,7 +239,7 @@ public class ReaderBlogActions {
             }
         };
 
-        String path = "/read/recommendations/mine/?source=mobile&number=" + Integer.toString(Constants.READER_MAX_RECOMMENDED_BLOGS);
+        String path = "/read/recommendations/mine/?source=mobile&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_BLOGS);
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
     private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,

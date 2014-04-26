@@ -31,7 +31,7 @@ public class ReaderTagAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderTagList mTags = new ReaderTagList();
     private final TagActionListener mTagListener;
-    private ReaderTagType mTagType;
+    private final ReaderTagType mTagType;
     private ReaderActions.DataLoadedListener mDataLoadedListener;
     private final Drawable mDrawableAdd;
     private final Drawable mDrawableRemove;
@@ -171,13 +171,11 @@ public class ReaderTagAdapter extends BaseAdapter {
                     break;
             }
 
-            if (tmpTags ==null)
+            if (tmpTags == null || mTags.isSameList(tmpTags)) {
                 return false;
+            }
 
-            if (mTags.isSameList(tmpTags))
-                return false;
-
-            return (tmpTags !=null);
+            return true;
         }
         @Override
         protected void onPostExecute(Boolean result) {

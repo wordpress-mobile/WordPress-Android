@@ -7,7 +7,6 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -17,6 +16,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserList;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -292,7 +292,7 @@ public class ReaderPostActions {
         StringBuilder sb = new StringBuilder(topic.getEndpoint());
 
         // append #posts to retrieve
-        sb.append("?number=").append(Constants.READER_MAX_POSTS_TO_REQUEST);
+        sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
 
         // return newest posts first (this is the default, but make it explicit since it's important)
         sb.append("&order=DESC");

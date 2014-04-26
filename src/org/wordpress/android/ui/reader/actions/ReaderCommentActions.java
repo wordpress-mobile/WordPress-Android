@@ -7,7 +7,6 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
-import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -15,6 +14,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -28,7 +28,7 @@ public class ReaderCommentActions {
      * get the latest comments for this post
      **/
     public static void updateCommentsForPost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/?number=" + Integer.toString(Constants.READER_MAX_COMMENTS_TO_REQUEST);
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST);
 
         // get older comments first - subsequent calls to this routine will get newer ones if they exist
         path += "&order=ASC";

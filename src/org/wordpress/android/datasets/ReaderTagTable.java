@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -285,7 +285,7 @@ public class ReaderTagTable {
         if (minutes == NEVER_UPDATED) {
             return true;
         }
-        return (minutes >= Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
+        return (minutes >= ReaderConstants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
     private static final int NEVER_UPDATED = -1;

@@ -22,7 +22,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -522,7 +521,7 @@ public class ReaderPostListFragment extends SherlockFragment
             switch (getPostListType()) {
                 case TAG:
                     // skip if we already have the max # of posts
-                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY) {
+                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
                         updatePostsWithCurrentTag(RequestDataAction.LOAD_OLDER);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
@@ -530,7 +529,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     break;
 
                 case BLOG:
-                    if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) < Constants.READER_MAX_POSTS_TO_DISPLAY) {
+                    if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         updatePostsInCurrentBlog(RequestDataAction.LOAD_OLDER);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
