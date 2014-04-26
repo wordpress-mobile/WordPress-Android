@@ -98,4 +98,23 @@ public class ReaderBlogInfo {
              + UrlUtils.urlEncode(getUrl())
              + "?w=" + Integer.toString(width);
     }
+
+    protected boolean isSameAs(ReaderBlogInfo blogInfo) {
+        if (blogInfo == null) {
+            return false;
+        }
+        if (this.numSubscribers != blogInfo.numSubscribers) {
+            return false;
+        }
+        if (this.isFollowing != blogInfo.isFollowing) {
+            return false;
+        }
+        if (!this.hasName() && blogInfo.hasName()) {
+            return false;
+        }
+        if (!this.hasDescription() && blogInfo.hasDescription()) {
+            return false;
+        }
+        return true;
+    }
 }

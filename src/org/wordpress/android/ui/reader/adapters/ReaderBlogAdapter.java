@@ -31,7 +31,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
-    private ReaderBlogType mBlogType;
+    private final ReaderBlogType mBlogType;
 
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
         super();
@@ -52,7 +52,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    public ReaderBlogType getBlogType() {
+    ReaderBlogType getBlogType() {
         return mBlogType;
     }
 
@@ -89,7 +89,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, final ViewGroup parent) {
         final BlogViewHolder holder;
-        if (convertView == null) {
+        if (convertView == null || !(convertView.getTag() instanceof BlogViewHolder)) {
             convertView = mInflater.inflate(R.layout.reader_listitem_blog, parent, false);
             holder = new BlogViewHolder(convertView);
             convertView.setTag(holder);
@@ -122,14 +122,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 } else {
                     holder.txtTitle.setVisibility(View.GONE);
                 }
-                if (blogInfo.hasDescription()) {
-                    holder.txtDescription.setText(blogInfo.getDescription());
-                    holder.txtDescription.setVisibility(View.VISIBLE);
-                } else {
-                    holder.txtDescription.setVisibility(View.GONE);
-                }
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
                 holder.imgBlog.setVisibility(View.GONE);
+                holder.txtDescription.setVisibility(View.GONE);
                 break;
             default:
                 blogId = 0;
@@ -220,19 +215,31 @@ public class ReaderBlogAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                final boolean hasChanged;
                 switch (getBlogType()) {
                     case RECOMMENDED:
-                        mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
+                        hasChanged = !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
+                        if (hasChanged) {
+                            mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
+                        }
                         break;
                     case FOLLOWED:
-                        mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
+                        hasChanged = !mFollowedBlogs.isSameList(tmpFollowedBlogs);
+                        if (hasChanged) {
+                            mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
+                        }
+                        break;
+                    default:
+                        hasChanged = false;
                         break;
                 }
-                notifyDataSetChanged();
+
+                if (hasChanged) {
+                    notifyDataSetChanged();
+                }
             }
+
             mIsTaskRunning = false;
         }
     }
-
-
 }

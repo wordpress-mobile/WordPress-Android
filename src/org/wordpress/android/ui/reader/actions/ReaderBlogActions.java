@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
@@ -14,8 +15,8 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -132,14 +133,25 @@ public class ReaderBlogActions {
             return;
         }
 
+        final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                ReaderFollowedBlogList blogs = ReaderFollowedBlogList.fromJson(jsonObject);
-                ReaderBlogTable.setFollowedBlogs(blogs);
-                // TODO: detect if followed blogs have changed
+                ReaderFollowedBlogList serverBlogs = ReaderFollowedBlogList.fromJson(jsonObject);
+                ReaderFollowedBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
+
+                final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
+                if (hasChanges) {
+                    ReaderBlogTable.setFollowedBlogs(serverBlogs);
+                }
+
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+                    handler.post(new Runnable() {
+                        public void run() {
+                            ReaderActions.UpdateResult result = (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
+                        }
+                    });
                 }
             }
         }.start();
@@ -239,14 +251,26 @@ public class ReaderBlogActions {
             return;
         }
 
+        final Handler handler = new Handler();
+
         new Thread() {
             @Override
             public void run() {
-                ReaderRecommendBlogList blogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderBlogTable.setRecommendedBlogs(blogs);
-                // TODO: check whether the list has actually changed
+                ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
+                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
+
+                final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
+                if (hasChanges) {
+                    ReaderBlogTable.setRecommendedBlogs(serverBlogs);
+                }
+
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+                    handler.post(new Runnable() {
+                        public void run() {
+                            ReaderActions.UpdateResult result = (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
+                        }
+                    });
                 }
             }
         }.start();

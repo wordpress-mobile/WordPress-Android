@@ -23,4 +23,26 @@ public class ReaderRecommendBlogList extends ArrayList<ReaderRecommendedBlog> {
         return blogs;
     }
 
+    private int indexOfBlogId(long blogId) {
+        for (int i = 0; i < size(); i++) {
+            if (this.get(i).blogId == blogId)
+                return i;
+        }
+        return -1;
+    }
+
+    public boolean isSameList(ReaderRecommendBlogList blogs) {
+        if (blogs == null || blogs.size() != this.size()) {
+            return false;
+        }
+
+        for (ReaderRecommendedBlog blog: blogs) {
+            if (indexOfBlogId(blog.blogId) == -1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

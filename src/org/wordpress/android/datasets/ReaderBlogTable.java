@@ -147,6 +147,22 @@ public class ReaderBlogTable {
             SqlUtils.closeCursor(c);
         }
     }
+
+    /*
+     * returns list of all followed blogs (id/url only)
+     */
+    public static ReaderFollowedBlogList getFollowedBlogs() {
+        ReaderFollowedBlogList followedBlogs = new ReaderFollowedBlogList();
+        ReaderBlogInfoList blogInfoList = getAllFollowedBlogInfo();
+        for (ReaderBlogInfo blogInfo: blogInfoList) {
+            ReaderFollowedBlog blog = new ReaderFollowedBlog();
+            blog.blogId = blogInfo.blogId;
+            blog.setUrl(blogInfo.getUrl());
+            followedBlogs.add(blog);
+        }
+        return followedBlogs;
+    }
+
     /*
      * set followed blogs from the read/following/mine endpoint
      */

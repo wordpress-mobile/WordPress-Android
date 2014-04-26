@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!---
-    listItem to show recommended blog
+    listItem which shows a recommended or followed blog
 -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_blog"
-        android:layout_width="@dimen/avatar_sz_small"
-        android:layout_height="@dimen/avatar_sz_small" />
+        android:layout_centerVertical="true"
+        android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_height="@dimen/avatar_sz_medium" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/layout_content"
         android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_toRightOf="@+id/image_blog">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
-            android:layout_width="wrap_content"
+            android:layout_toLeftOf="@+id/text_follow"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_medium"
             android:maxLines="1"
             android:ellipsize="end"
             tools:text="text_title"
@@ -37,8 +36,11 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_url"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_title"
+            android:layout_alignRight="@+id/text_title"
+            android:layout_below="@+id/text_title"
             android:background="@drawable/reader_transparent_selector"
             android:ellipsize="end"
             android:maxLines="1"
@@ -47,18 +49,22 @@
             android:textSize="@dimen/text_sz_small" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:ellipsize="end"
-            tools:text="text_description"
-            android:textColor="@color/grey_medium"
-            android:textSize="@dimen/text_sz_small" />
-
-    </LinearLayout>
+            android:id="@+id/text_follow"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/ReaderTextView.Follow" />
+    </RelativeLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_follow"
-        style="@style/ReaderTextView.Follow" />
-</LinearLayout>
+        android:id="@+id/text_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_content"
+        android:layout_alignLeft="@+id/layout_content"
+        android:layout_toRightOf="@+id/image_blog"
+        android:maxLines="2"
+        android:ellipsize="end"
+        tools:text="text_description"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/text_sz_small" />
+</RelativeLayout>
