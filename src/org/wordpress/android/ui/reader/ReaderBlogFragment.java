@@ -21,6 +21,7 @@ public class ReaderBlogFragment extends SherlockFragment {
     private ListView mListView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
+    private boolean mWasPaused;
     private static final String ARG_BLOG_TYPE = "blog_type";
 
     static ReaderBlogFragment newInstance(ReaderBlogType blogType) {
@@ -36,15 +37,6 @@ public class ReaderBlogFragment extends SherlockFragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         restoreState(args);
-    }
-
-    private void restoreState(Bundle args) {
-        if (args == null) {
-            return;
-        }
-        if (args.containsKey(ARG_BLOG_TYPE)) {
-            mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
-        }
     }
 
     @Override
@@ -72,8 +64,8 @@ public class ReaderBlogFragment extends SherlockFragment {
         }
 
         mListView.setEmptyView(emptyView);
-
         mListView.setAdapter(getBlogAdapter());
+
         return view;
     }
 
@@ -87,6 +79,36 @@ public class ReaderBlogFragment extends SherlockFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
+        outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
+    }
+
+    private void restoreState(Bundle args) {
+        if (args != null) {
+            mWasPaused = args.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
+            if (args.containsKey(ARG_BLOG_TYPE)) {
+                mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWasPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // if the fragment is resuming from a paused state, reload the adapter to make sure
+        // the follow status of all blogs is accurate - this is necessary in case the user
+        // returned from an activity where the follow status may have been changed
+        if (mWasPaused) {
+            mWasPaused = false;
+            if (hasBlogAdapter()) {
+                getBlogAdapter().reload();
+            }
+        }
     }
 
     private boolean hasBlogAdapter() {

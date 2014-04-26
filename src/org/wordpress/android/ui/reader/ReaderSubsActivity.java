@@ -141,10 +141,11 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     @Override
     public void onBackPressed() {
+        // let calling activity know if tags were added/removed
         if (mTagsChanged) {
             Bundle bundle = new Bundle();
             bundle.putBoolean(KEY_TAGS_CHANGED, true);
-            if (mLastAddedTag !=null && ReaderTagTable.tagExists(mLastAddedTag)) {
+            if (mLastAddedTag != null && ReaderTagTable.tagExists(mLastAddedTag)) {
                 bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
             }
             Intent intent = new Intent();
@@ -157,6 +158,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     /*
      * add the tag in the EditText to the user's followed tags
+     * TODO: enable following blogs by URL
      */
     private void addCurrentTag() {
         String tagName = EditTextUtils.getText(mEditAddTag);
@@ -185,7 +187,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * triggered by active fragment's adapter when user chooses to add/remove a tag, or
+     * triggered by a tag fragment's adapter when user chooses to add/remove a tag, or
      * from this activity when user chooses to add a tag
      */
     @Override

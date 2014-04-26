@@ -52,6 +52,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
+
+    public void reload() {
+        mFollowedBlogs.clear();
+        mRecommendedBlogs.clear();
+        refresh();
+    }
+
     ReaderBlogType getBlogType() {
         return mBlogType;
     }
