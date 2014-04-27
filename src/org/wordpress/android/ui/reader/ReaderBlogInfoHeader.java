@@ -146,7 +146,7 @@ public class ReaderBlogInfoHeader extends LinearLayout {
         AniUtils.zoomAction(txtFollow);
 
         boolean isAskingToFollow = !blogInfo.isFollowing;
-        if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow)) {
+        if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {
             showBlogFollowStatus(txtFollow, isAskingToFollow);
         }
     }

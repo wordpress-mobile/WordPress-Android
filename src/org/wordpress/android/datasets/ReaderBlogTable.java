@@ -64,16 +64,21 @@ public class ReaderBlogTable {
      * get a blog's info by either id or url
      */
     public static ReaderBlogInfo getBlogInfo(long blogId, String blogUrl) {
+        boolean hasBlogId = (blogId != 0);
+        boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+
+        if (!hasBlogId && !hasBlogUrl) {
+            return null;
+        }
+
         // search by id if it's passed (may be zero for feeds), otherwise search by url
         final Cursor cursor;
-        if (blogId != 0) {
+        if (hasBlogId) {
             String[] args = {Long.toString(blogId)};
             cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
-        } else if (!TextUtils.isEmpty(blogUrl)) {
+        } else {
             String[] args = {UrlUtils.normalizeUrl(blogUrl)};
             cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=?", args);
-        } else {
-            return null;
         }
 
         try {
@@ -84,6 +89,11 @@ public class ReaderBlogTable {
         } finally {
             SqlUtils.closeCursor(cursor);
         }
+    }
+
+    public static long getBlogIdFromUrl(String blogUrl) {
+        ReaderBlogInfo blogInfo = getBlogInfo(0, blogUrl);
+        return (blogInfo != null ? blogInfo.blogId : 0);
     }
 
     private static ReaderBlogInfo getBlogInfoFromCursor(Cursor c) {

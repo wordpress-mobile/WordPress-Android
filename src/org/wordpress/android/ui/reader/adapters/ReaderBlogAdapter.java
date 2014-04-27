@@ -210,7 +210,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
-        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow)) {
+        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, null)) {
             showFollowStatus(txtFollow, isAskingToFollow);
             if (mChangeListener != null) {
                 mChangeListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);

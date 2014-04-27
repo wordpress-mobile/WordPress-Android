@@ -115,7 +115,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         }
 
         boolean isAskingToFollow = !user.isFollowed;
-        if (!ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow)) {
+        if (!ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
             return;
         }
 

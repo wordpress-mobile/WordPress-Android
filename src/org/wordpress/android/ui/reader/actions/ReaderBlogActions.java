@@ -27,18 +27,21 @@ import org.wordpress.android.util.UrlUtils;
 public class ReaderBlogActions {
 
     /*
-     * follow/unfollow a blog - make sure to pass the blogId when known
-     * since following solely by url causes the blog to be followed as a feed
+     * follow/unfollow a blog - make sure to pass the blogId when known since following
+     * following solely by url may cause the blog to be followed as a feed if the
+     * blogInfo for the passed url can't be retrieved
      */
-    public static boolean performFollowAction(final long blogId,
-                                              final String blogUrl,
-                                              final boolean isAskingToFollow) {
-        return performFollowAction(blogId, blogUrl, isAskingToFollow, null);
-    }
     public static boolean performFollowAction(final long blogId,
                                               final String blogUrl,
                                               final boolean isAskingToFollow,
                                               final ReaderActions.ActionListener actionListener) {
+        return performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener, true);
+    }
+    private static boolean performFollowAction(final long blogId,
+                                               final String blogUrl,
+                                               final boolean isAskingToFollow,
+                                               final ReaderActions.ActionListener actionListener,
+                                               boolean canLookupBlogInfo) {
         // either blogId or blogUrl are required
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
@@ -48,6 +51,32 @@ public class ReaderBlogActions {
                 actionListener.onActionResult(false);
             }
             return false;
+        }
+
+        // update local db
+        if (hasBlogUrl) {
+            ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, isAskingToFollow);
+        }
+        if (hasBlogId) {
+            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
+        }
+
+        // if we have the url but not the id, lookup the blogInfo to get the id then try again
+        if (!hasBlogId && hasBlogUrl && canLookupBlogInfo) {
+            ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
+                @Override
+                public void onResult(ReaderBlogInfo blogInfo) {
+                    if (blogInfo != null) {
+                        // we have blogInfo, so follow using id & url from info
+                        performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
+                    } else {
+                        // blogInfo lookup failed, follow using passed url only
+                        performFollowAction(0, blogUrl, isAskingToFollow, actionListener, false);
+                    }
+                }
+            };
+            ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
+            return true;
         }
 
         final String path;
@@ -70,14 +99,6 @@ public class ReaderBlogActions {
                 path = "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
                 AppLog.w(T.READER, "unfollowing blog by url rather than id");
             }
-        }
-
-        // update local db
-        if (hasBlogUrl) {
-            ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, isAskingToFollow);
-        }
-        if (hasBlogId) {
-            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -302,7 +323,8 @@ public class ReaderBlogActions {
     }
 
     /*
-     * tests whether the passed url can be reached - does NOT use authentication
+     * tests whether the passed url can be reached - does NOT use authentication, and does not
+     * account for 404 replacement pages used by ISPs such as Charter
      */
     public static void testBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
         // ActionListener is required
