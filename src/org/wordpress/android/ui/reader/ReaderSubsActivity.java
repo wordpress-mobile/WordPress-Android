@@ -39,9 +39,9 @@ import java.util.List;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, popular tags, and recommended blogs
+ * followed tags, popular tags, and recommended blogs - can also show followed blogs, but
+ * that has been disabled as of 26-Apr-2014 because the API doesn't return enough info
  */
-
 public class ReaderSubsActivity extends SherlockFragmentActivity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener {
@@ -68,13 +68,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_subs);
-
-        if (savedInstanceState != null) {
-            mTagsChanged = savedInstanceState.getBoolean(KEY_TAGS_CHANGED);
-            mBlogsChanged = savedInstanceState.getBoolean(KEY_BLOGS_CHANGED);
-            mLastAddedTag = savedInstanceState.getString(KEY_LAST_ADDED_TAG);
-            mAlreadyUpdated = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
-        }
+        restoreState(savedInstanceState);
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPager.setAdapter(getPageAdapter());
@@ -107,6 +101,15 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             updateFollowedBlogs();
             updateRecommendedBlogs();
             mAlreadyUpdated = true;
+        }
+    }
+
+    private void restoreState(Bundle state) {
+        if (state != null) {
+            mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
+            mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
+            mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
+            mAlreadyUpdated = state.getBoolean(KEY_ALREADY_UPDATED);
         }
     }
 
@@ -174,11 +177,9 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
-
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-
         if (ReaderTagTable.tagExists(tagName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
@@ -220,7 +221,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
-
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }

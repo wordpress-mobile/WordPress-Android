@@ -25,6 +25,9 @@ import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+/*
+ * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
+ */
 public class ReaderBlogAdapter extends BaseAdapter {
     public enum ReaderBlogType { RECOMMENDED, FOLLOWED }
     public interface BlogFollowChangeListener {
@@ -32,10 +35,11 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     private final LayoutInflater mInflater;
-    private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
-    private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
     private final ReaderBlogType mBlogType;
     private final BlogFollowChangeListener mChangeListener;
+
+    private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
+    private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
 
     public ReaderBlogAdapter(Context context, ReaderBlogType blogType, BlogFollowChangeListener changeListener) {
         super();
@@ -56,7 +60,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
             new LoadBlogsTask().execute();
         }
     }
-
 
     /*
      * make sure the follow status of all blogs is accurate

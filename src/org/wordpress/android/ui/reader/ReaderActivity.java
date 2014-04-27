@@ -193,7 +193,7 @@ public class ReaderActivity extends WPActionBarActivity
                         String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG);
                         listFragment.doTagsChanged(lastAddedTag);
                     } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
-                        // update posts if blog follow status was changed and user is viewing "Blogs I Follow"
+                        // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
                         if (listFragment.getPostListType() == ReaderPostListType.TAG
                                 && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTag())) {
                             listFragment.updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
