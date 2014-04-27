@@ -606,6 +606,8 @@
     <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_reblog_empty_link">Change blog visibility</string>
     <string name="reader_label_followers">%s followers</string>
+    <string name="reader_label_followed_blog">Blog followed</string>
+    <string name="reader_label_unfollowed_blog">Blog unfollowed</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>

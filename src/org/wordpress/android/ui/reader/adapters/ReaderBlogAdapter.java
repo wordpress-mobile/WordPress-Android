@@ -27,16 +27,21 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderBlogAdapter extends BaseAdapter {
     public enum ReaderBlogType { RECOMMENDED, FOLLOWED }
+    public interface BlogFollowChangeListener {
+        public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed);
+    }
 
     private final LayoutInflater mInflater;
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
     private final ReaderBlogType mBlogType;
+    private final BlogFollowChangeListener mChangeListener;
 
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType) {
+    public ReaderBlogAdapter(Context context, ReaderBlogType blogType, BlogFollowChangeListener changeListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
+        mChangeListener = changeListener;
     }
 
     @SuppressLint("NewApi")
@@ -204,6 +209,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow)) {
             showFollowStatus(txtFollow, isAskingToFollow);
+            if (mChangeListener != null) {
+                mChangeListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);
+            }
         }
     }
 

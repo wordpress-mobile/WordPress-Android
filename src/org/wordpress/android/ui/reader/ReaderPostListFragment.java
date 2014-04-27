@@ -578,7 +578,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    private String getCurrentTag() {
+    protected String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 

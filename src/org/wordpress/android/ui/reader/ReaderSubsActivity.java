@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
+import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
@@ -42,16 +43,19 @@ import java.util.List;
  */
 
 public class ReaderSubsActivity extends SherlockFragmentActivity
-                                implements ReaderTagAdapter.TagActionListener {
+                                implements ReaderTagAdapter.TagActionListener,
+                                           ReaderBlogAdapter.BlogFollowChangeListener {
 
     private EditText mEditAdd;
     private TagPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
+    private boolean mBlogsChanged;
     private String mLastAddedTag;
     private boolean mAlreadyUpdated;
 
     protected static final String KEY_TAGS_CHANGED   = "tags_changed";
+    protected static final String KEY_BLOGS_CHANGED  = "blogs_changed";
     protected static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_ALREADY_UPDATED = "is_updated";
 
@@ -67,6 +71,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         if (savedInstanceState != null) {
             mTagsChanged = savedInstanceState.getBoolean(KEY_TAGS_CHANGED);
+            mBlogsChanged = savedInstanceState.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTag = savedInstanceState.getString(KEY_LAST_ADDED_TAG);
             mAlreadyUpdated = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
         }
@@ -132,6 +137,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
+        outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(KEY_ALREADY_UPDATED, mAlreadyUpdated);
         if (mLastAddedTag != null) {
             outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
@@ -140,12 +146,17 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     @Override
     public void onBackPressed() {
-        // let calling activity know if tags were added/removed
-        if (mTagsChanged) {
+        // let calling activity know if tags/blogs were added/removed
+        if (mTagsChanged || mBlogsChanged) {
             Bundle bundle = new Bundle();
-            bundle.putBoolean(KEY_TAGS_CHANGED, true);
-            if (mLastAddedTag != null && ReaderTagTable.tagExists(mLastAddedTag)) {
-                bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+            if (mTagsChanged) {
+                bundle.putBoolean(KEY_TAGS_CHANGED, true);
+                if (mLastAddedTag != null && ReaderTagTable.tagExists(mLastAddedTag)) {
+                    bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+                }
+            }
+            if (mBlogsChanged) {
+                bundle.putBoolean(KEY_BLOGS_CHANGED, true);
             }
             Intent intent = new Intent();
             intent.putExtras(bundle);
@@ -180,6 +191,24 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         mEditAdd.setText(null);
         EditTextUtils.hideSoftInput(mEditAdd);
         onTagAction(TagAction.ADD, tagName);
+    }
+
+    /*
+     * called from ReaderBlogFragment when a blog is followed or unfollowed from the adapter
+     */
+    @Override
+    public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
+        mBlogsChanged = true;
+        final String messageBarText;
+        final MessageBarUtils.MessageBarType messageBarType;
+        if (isFollowed) {
+            messageBarText = getString(R.string.reader_label_followed_blog);
+            messageBarType = MessageBarUtils.MessageBarType.INFO;
+        } else {
+            messageBarText = getString(R.string.reader_label_unfollowed_blog);
+            messageBarType = MessageBarUtils.MessageBarType.ALERT;
+        }
+        MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
     }
 
     /*
@@ -315,10 +344,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                     return getString(R.string.reader_title_followed_tags);
                 case TAB_IDX_SUGGESTED_TAGS:
                     return getString(R.string.reader_title_popular_tags);
-                //case TAB_IDX_FOLLOWED_BLOGS:
-                //    return getString(R.string.reader_title_followed_blogs);
                 case TAB_IDX_RECOMMENDED_BLOGS:
                     return getString(R.string.reader_title_recommended_blogs);
+                //case TAB_IDX_FOLLOWED_BLOGS:
+                //    return getString(R.string.reader_title_followed_blogs);
                 default:
                     return super.getPageTitle(position);
             }
@@ -341,7 +370,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         private void refreshTags(final String scrollToTagName) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
-                    ((ReaderTagFragment)fragment).refreshTags(scrollToTagName);
+                    ((ReaderTagFragment)fragment).refresh(scrollToTagName);
                 }
             }
         }
@@ -350,7 +379,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         private void refreshBlogs() {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
-                    ((ReaderBlogFragment)fragment).refreshBlogs();
+                    ((ReaderBlogFragment)fragment).refresh();
                 }
             }
         }

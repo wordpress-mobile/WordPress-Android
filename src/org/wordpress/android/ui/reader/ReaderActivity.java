@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostListType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -179,7 +180,7 @@ public class ReaderActivity extends WPActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        boolean isResultOK = (resultCode==Activity.RESULT_OK);
+        boolean isResultOK = (resultCode == Activity.RESULT_OK);
         final ReaderPostListFragment listFragment = getListFragment();
         final ReaderPostDetailFragment detailFragment = getDetailFragment();
 
@@ -187,10 +188,16 @@ public class ReaderActivity extends WPActionBarActivity
             // user just returned from the tag editor
             case Constants.INTENT_READER_TAGS :
                 if (isResultOK && listFragment != null && data != null) {
-                    // reload tags if they were changed, and set the last tag added as the current one
                     if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
+                        // reload tags if they were changed, and set the last tag added as the current one
                         String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG);
                         listFragment.doTagsChanged(lastAddedTag);
+                    } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
+                        // update posts if blog follow status was changed and user is viewing "Blogs I Follow"
+                        if (listFragment.getPostListType() == ReaderPostListType.TAG
+                                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTag())) {
+                            listFragment.updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                        }
                     }
                 }
                 break;

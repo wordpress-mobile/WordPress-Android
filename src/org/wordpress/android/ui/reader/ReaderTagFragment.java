@@ -102,7 +102,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    protected void refreshTags(final String scrollToTagName) {
+    protected void refresh(final String scrollToTagName) {
         if (!TextUtils.isEmpty(scrollToTagName)) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
