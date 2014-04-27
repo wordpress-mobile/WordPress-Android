@@ -106,7 +106,7 @@ public class ReaderBlogFragment extends SherlockFragment {
         if (mWasPaused) {
             mWasPaused = false;
             if (hasBlogAdapter()) {
-                getBlogAdapter().reload();
+                getBlogAdapter().checkFollowStatus();
             }
         }
     }

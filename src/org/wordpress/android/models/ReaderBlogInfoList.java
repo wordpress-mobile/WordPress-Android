@@ -19,11 +19,7 @@ public class ReaderBlogInfoList extends ArrayList<ReaderBlogInfo> {
 
         for (ReaderBlogInfo blogInfo: blogs) {
             int index = indexOfBlogId(blogInfo.blogId);
-            if (index == -1) {
-                return false;
-            }
-
-            if (!this.get(index).isSameAs(blogInfo)) {
+            if (index == -1 || !this.get(index).isSameAs(blogInfo)) {
                 return false;
             }
         }

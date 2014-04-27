@@ -53,13 +53,25 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
 
-    public void reload() {
-        mFollowedBlogs.clear();
-        mRecommendedBlogs.clear();
-        refresh();
+    /*
+     * make sure the follow status of all blogs is accurate
+     */
+    public void checkFollowStatus() {
+        switch (getBlogType()) {
+            case FOLLOWED:
+                // followed blogs store their follow status in the local db, so refreshing from
+                // the local db will ensure the correct follow status is shown
+                refresh();
+                break;
+            case RECOMMENDED:
+                // recommended blogs check their follow status in getView(), so notifyDataSetChanged()
+                // will ensure the correct follow status is shown
+                notifyDataSetChanged();
+                break;
+        }
     }
 
-    ReaderBlogType getBlogType() {
+    private ReaderBlogType getBlogType() {
         return mBlogType;
     }
 

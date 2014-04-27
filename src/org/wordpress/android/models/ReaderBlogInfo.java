@@ -103,10 +103,10 @@ public class ReaderBlogInfo {
         if (blogInfo == null) {
             return false;
         }
-        if (this.numSubscribers != blogInfo.numSubscribers) {
+        if (this.isFollowing != blogInfo.isFollowing) {
             return false;
         }
-        if (this.isFollowing != blogInfo.isFollowing) {
+        if (this.numSubscribers != blogInfo.numSubscribers) {
             return false;
         }
         if (!this.hasName() && blogInfo.hasName()) {

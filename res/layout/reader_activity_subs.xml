@@ -33,13 +33,13 @@
     <View
         android:id="@+id/divider_list"
         android:layout_width="match_parent"
-        android:layout_above="@+id/layout_add_topic"
+        android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
         android:layout_height="1dp"
         android:background="@color/reader_divider_blue" />
 
     <RelativeLayout
-        android:id="@+id/layout_add_topic"
+        android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

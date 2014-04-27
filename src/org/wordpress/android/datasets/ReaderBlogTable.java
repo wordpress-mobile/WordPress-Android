@@ -133,7 +133,7 @@ public class ReaderBlogTable {
      * just be id & url)
      */
     public static ReaderBlogInfoList getAllFollowedBlogInfo() {
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE is_following!=0 ORDER BY name, blog_url", null);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE is_following!=0 ORDER BY blog_url", null);
         try {
             ReaderBlogInfoList blogs = new ReaderBlogInfoList();
             if (c.moveToFirst()) {
