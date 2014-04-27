@@ -152,7 +152,7 @@
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
-        <item name="android:inputType">text|textCapWords</item>
+        <item name="android:inputType">text|textUri</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/reader_max_length_topic_name</item>

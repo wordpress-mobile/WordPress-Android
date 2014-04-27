@@ -238,6 +238,13 @@ public class ReaderBlogActions {
     }
 
     /*
+     * request blogInfo by url only
+     */
+    public static void updateBlogInfoByUrl(final String blogUrl, final UpdateBlogInfoListener infoListener) {
+        updateBlogInfo(0, blogUrl, infoListener);
+    }
+
+    /*
      * request the latest recommended blogs, replaces all local ones
      */
     public static void updateRecommendedBlogs(final UpdateResultListener resultListener) {

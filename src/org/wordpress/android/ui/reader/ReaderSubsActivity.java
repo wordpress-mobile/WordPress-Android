@@ -21,6 +21,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -66,6 +67,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
+    private static final int TAB_IDX_FOLLOWED_BLOGS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +128,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
 
             // add blog fragments
-            //fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
+            //fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
 
             mPageAdapter = new TagPageAdapter(getSupportFragmentManager(), fragments);
         }
@@ -209,8 +211,11 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * follow by url - note that this will add the blog as a feed
-     * TODO: investigate looking up the blog via the url to get its id, then follow using id
+     * follow by url - here were first normalize the url and check whether it's already followed,
+     * then start a multi-step process:
+     *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
+     *    2. lookup blogInfo for the url to get its blogId (API will follow as a feed otherwise)
+     *    3. perform the actual follow
      */
     private void addAsUrl(final String url) {
         if (TextUtils.isEmpty(url)) {
@@ -233,8 +238,63 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         showAddUrlProgress();
 
-        // listener for following the url
-        final ReaderActions.ActionListener followActionListener = new ReaderActions.ActionListener() {
+        // we made it this far, so proceed to first step
+        addAsUrlTestReachable(normUrl);
+    }
+
+    /*
+     * first step of adding a blog by url - tests whether the url is reachable
+     */
+    private void addAsUrlTestReachable(final String blogUrl) {
+        // listener for checking if the url is reachable (done first to avoid bogus follow)
+        ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) {
+                    return;
+                }
+
+                if (succeeded) {
+                    // url is reachable, go to step two - get the blog info so we can follow
+                    // by blogId if possible
+                    addAsUrlGetBlogInfo(blogUrl);
+                } else {
+                    // url is unreachable
+                    hideAddUrlProgress();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                }
+            }
+        };
+        ReaderBlogActions.testBlogUrlReachable(blogUrl, urlActionListener);
+    }
+
+    /*
+     * second step of adding a blog by url - looks up blogInfo for the url
+     */
+    private void addAsUrlGetBlogInfo(final String blogUrl) {
+        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlogInfo blogInfo) {
+                if (isFinishing()) {
+                    return;
+                }
+                if (blogInfo != null) {
+                    // we have blogInfo, so follow using id & url from info
+                    addAsUrlDoFollow(blogInfo.blogId, blogInfo.getUrl());
+                } else {
+                    // blogInfo lookup failed, follow using passed url only
+                    addAsUrlDoFollow(0, blogUrl);
+                }
+            }
+        };
+        ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
+    }
+
+    /*
+     * last step of adding a blog by url - do the actual follow
+     */
+    private void addAsUrlDoFollow(final long blogId, final String blogUrl) {
+        final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (isFinishing()) {
@@ -246,36 +306,17 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 if (succeeded) {
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    onFollowBlogChanged(0, normUrl, true);
+                    onFollowBlogChanged(blogId, blogUrl, true);
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
                 }
             }
         };
-
-        // listener for checking if the url is reachable (done first to avoid bogus follow)
-        ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) {
-                    return;
-                }
-
-                if (succeeded) {
-                    // url is reachable, we can follow
-                    ReaderBlogActions.performFollowAction(0, normUrl, true, followActionListener);
-                } else {
-                    // url is unreachable
-                    hideAddUrlProgress();
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
-                }
-            }
-        };
-        ReaderBlogActions.testBlogUrlReachable(normUrl, urlActionListener);
+        ReaderBlogActions.performFollowAction(blogId, blogUrl, true, actionListener);
     }
 
     /*
-     * called prior to following a url to show progress and disable editor
+     * called prior to following a url to show progress and disable controls
      */
     private void showAddUrlProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
@@ -285,7 +326,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * called after following a url to hide progress and re-enable editor
+     * called after following a url to hide progress and re-enable controls
      */
     private void hideAddUrlProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
@@ -452,8 +493,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                     return getString(R.string.reader_title_popular_tags);
                 case TAB_IDX_RECOMMENDED_BLOGS:
                     return getString(R.string.reader_title_recommended_blogs);
-                //case TAB_IDX_FOLLOWED_BLOGS:
-                //    return getString(R.string.reader_title_followed_blogs);
+                case TAB_IDX_FOLLOWED_BLOGS:
+                    return getString(R.string.reader_title_followed_blogs);
                 default:
                     return super.getPageTitle(position);
             }
