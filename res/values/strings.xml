@@ -594,7 +594,7 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag">Enter a tag</string>
-    <string name="reader_hint_add_tag_or_url">Type a tag or url</string>
+    <string name="reader_hint_add_tag_or_url">Enter a tag or URL</string>
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->

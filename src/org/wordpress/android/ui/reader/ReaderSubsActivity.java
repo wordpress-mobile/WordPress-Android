@@ -210,6 +210,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     /*
      * follow by url - note that this will add the blog as a feed
+     * TODO: investigate looking up the blog via the url to get its id, then follow using id
      */
     private void addAsUrl(final String url) {
         if (TextUtils.isEmpty(url)) {
@@ -230,21 +231,17 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             return;
         }
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
-        progress.setVisibility(View.VISIBLE);
-        mEditAdd.setEnabled(false);
-        mBtnAdd.setEnabled(false);
+        showAddUrlProgress();
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+        // listener for following the url
+        final ReaderActions.ActionListener followActionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (isFinishing()) {
                     return;
                 }
 
-                progress.setVisibility(View.GONE);
-                mEditAdd.setEnabled(true);
-                mBtnAdd.setEnabled(true);
+                hideAddUrlProgress();
 
                 if (succeeded) {
                     mEditAdd.setText(null);
@@ -255,7 +252,46 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 }
             }
         };
-        ReaderBlogActions.performFollowAction(0, normUrl, true, actionListener);
+
+        // listener for checking if the url is reachable (done first to avoid bogus follow)
+        ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) {
+                    return;
+                }
+
+                if (succeeded) {
+                    // url is reachable, we can follow
+                    ReaderBlogActions.performFollowAction(0, normUrl, true, followActionListener);
+                } else {
+                    // url is unreachable
+                    hideAddUrlProgress();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                }
+            }
+        };
+        ReaderBlogActions.testBlogUrlReachable(normUrl, urlActionListener);
+    }
+
+    /*
+     * called prior to following a url to show progress and disable editor
+     */
+    private void showAddUrlProgress() {
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
+        progress.setVisibility(View.VISIBLE);
+        mEditAdd.setEnabled(false);
+        mBtnAdd.setEnabled(false);
+    }
+
+    /*
+     * called after following a url to hide progress and re-enable editor
+     */
+    private void hideAddUrlProgress() {
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
+        progress.setVisibility(View.GONE);
+        mEditAdd.setEnabled(true);
+        mBtnAdd.setEnabled(true);
     }
 
     /*

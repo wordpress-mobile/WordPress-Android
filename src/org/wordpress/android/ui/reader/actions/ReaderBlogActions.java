@@ -3,7 +3,10 @@ package org.wordpress.android.ui.reader.actions;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -291,5 +294,40 @@ public class ReaderBlogActions {
         }.start();
     }
 
+    /*
+     * tests whether the passed url can be reached - does NOT use authentication
+     */
+    public static void testBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
+        // ActionListener is required
+        if (actionListener == null) {
+            return;
+        }
+        if (TextUtils.isEmpty(blogUrl)) {
+            actionListener.onActionResult(false);
+            return;
+        }
+
+        Response.Listener<String> listener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                actionListener.onActionResult(true);
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                actionListener.onActionResult(false);
+            }
+        };
+
+        // TODO: this should be a HEAD rather than GET request, but Volley doesn't support HEAD
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                blogUrl,
+                listener,
+                errorListener);
+        WordPress.requestQueue.add(request);
+    }
 
 }
