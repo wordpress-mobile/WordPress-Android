@@ -159,6 +159,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AniUtils.zoomAction(holder.txtFollow);
                 changeFollowStatus(holder.txtFollow, blogId, blogUrl, !isFollowing);
             }
         });
@@ -201,7 +202,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
-        AniUtils.zoomAction(txtFollow);
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow)) {
             showFollowStatus(txtFollow, isAskingToFollow);
         }

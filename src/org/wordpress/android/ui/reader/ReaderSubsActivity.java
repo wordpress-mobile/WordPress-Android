@@ -38,13 +38,13 @@ import java.util.List;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, popular tags, followed blogs, and recommended blogs
+ * followed tags, popular tags, and recommended blogs
  */
 
 public class ReaderSubsActivity extends SherlockFragmentActivity
                                 implements ReaderTagAdapter.TagActionListener {
 
-    private EditText mEditAddTag;
+    private EditText mEditAdd;
     private TagPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -57,8 +57,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
-    private static final int TAB_IDX_FOLLOWED_BLOGS = 2;
-    private static final int TAB_IDX_RECOMMENDED_BLOGS = 3;
+    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +77,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
 
-        mEditAddTag = (EditText) findViewById(R.id.edit_add);
-        mEditAddTag.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mEditAdd = (EditText) findViewById(R.id.edit_add);
+        mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -115,7 +114,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
 
             // add blog fragments
-            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
+            //fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
             mPageAdapter = new TagPageAdapter(getSupportFragmentManager(), fragments);
@@ -157,11 +156,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * add the tag in the EditText to the user's followed tags
-     * TODO: enable following blogs by URL
+     * follow the tag the user typed into the EditText
      */
     private void addCurrentTag() {
-        String tagName = EditTextUtils.getText(mEditAddTag);
+        String tagName = EditTextUtils.getText(mEditAdd);
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
@@ -174,15 +172,13 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
         }
-
         if (!ReaderTag.isValidTagName(tagName)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid, ToastUtils.Duration.LONG);
             return;
         }
 
-        mEditAddTag.setText(null);
-        EditTextUtils.hideSoftInput(mEditAddTag);
-
+        mEditAdd.setText(null);
+        EditTextUtils.hideSoftInput(mEditAdd);
         onTagAction(TagAction.ADD, tagName);
     }
 
@@ -319,8 +315,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                     return getString(R.string.reader_title_followed_tags);
                 case TAB_IDX_SUGGESTED_TAGS:
                     return getString(R.string.reader_title_popular_tags);
-                case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_title_followed_blogs);
+                //case TAB_IDX_FOLLOWED_BLOGS:
+                //    return getString(R.string.reader_title_followed_blogs);
                 case TAB_IDX_RECOMMENDED_BLOGS:
                     return getString(R.string.reader_title_recommended_blogs);
                 default:
