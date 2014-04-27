@@ -13,11 +13,13 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
@@ -32,6 +34,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
@@ -47,6 +50,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                                            ReaderBlogAdapter.BlogFollowChangeListener {
 
     private EditText mEditAdd;
+    private ImageButton mBtnAdd;
     private TagPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
@@ -81,17 +85,17 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    addCurrentTag();
+                    addCurrentEntry();
                 }
                 return false;
             }
         });
 
-        final ImageButton btnAddTag = (ImageButton) findViewById(R.id.btn_add);
-        btnAddTag.setOnClickListener(new View.OnClickListener() {
+        mBtnAdd = (ImageButton) findViewById(R.id.btn_add);
+        mBtnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addCurrentTag();
+                addCurrentEntry();
             }
         });
 
@@ -170,36 +174,98 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * follow the tag the user typed into the EditText
+     * follow the tag or url the user typed into the EditText
      */
-    private void addCurrentTag() {
-        String tagName = EditTextUtils.getText(mEditAdd);
-        if (TextUtils.isEmpty(tagName)) {
+    private void addCurrentEntry() {
+        String entry = EditTextUtils.getText(mEditAdd);
+        if (TextUtils.isEmpty(entry)) {
             return;
         }
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (ReaderTagTable.tagExists(tagName)) {
+
+        // is it a url?
+        boolean isUrl = (entry.contains(".") && !entry.contains(" "));
+        if (isUrl) {
+            addAsUrl(entry);
+            return;
+        }
+
+        // nope, it must be a tag - so make sure it doesn't already exist and is valid
+        if (ReaderTagTable.tagExists(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
             return;
         }
-        if (!ReaderTag.isValidTagName(tagName)) {
+        if (!ReaderTag.isValidTagName(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid, ToastUtils.Duration.LONG);
             return;
         }
 
+        // it's valid, add it
         mEditAdd.setText(null);
         EditTextUtils.hideSoftInput(mEditAdd);
-        onTagAction(TagAction.ADD, tagName);
+        onTagAction(TagAction.ADD, entry);
     }
 
     /*
-     * called from ReaderBlogFragment when a blog is followed or unfollowed from the adapter
+     * follow by url - note that this will add the blog as a feed
+     */
+    private void addAsUrl(final String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
+        // normalize the url, and prepend protocol if not supplied
+        final String normUrl;
+        if (!url.contains("://")) {
+            normUrl = UrlUtils.normalizeUrl("http://" + url);
+        } else {
+            normUrl = UrlUtils.normalizeUrl(url);
+        }
+
+        // make sure it isn't already followed
+        if (ReaderBlogTable.isFollowedBlogUrl(normUrl)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
+            return;
+        }
+
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_follow);
+        progress.setVisibility(View.VISIBLE);
+        mEditAdd.setEnabled(false);
+        mBtnAdd.setEnabled(false);
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) {
+                    return;
+                }
+
+                progress.setVisibility(View.GONE);
+                mEditAdd.setEnabled(true);
+                mBtnAdd.setEnabled(true);
+
+                if (succeeded) {
+                    mEditAdd.setText(null);
+                    EditTextUtils.hideSoftInput(mEditAdd);
+                    onFollowBlogChanged(0, normUrl, true);
+                } else {
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                }
+            }
+        };
+        ReaderBlogActions.performFollowAction(0, normUrl, true, actionListener);
+    }
+
+    /*
+     * called from ReaderBlogFragment and this activity when a blog is successfully
+     * followed or unfollowed
      */
     @Override
     public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
         mBlogsChanged = true;
+
         final String messageBarText;
         final MessageBarUtils.MessageBarType messageBarType;
         if (isFollowed) {
@@ -210,6 +276,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             messageBarType = MessageBarUtils.MessageBarType.ALERT;
         }
         MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
+
+        // update followed & recommended blogs since they may have changed
+        updateFollowedBlogs();
+        updateRecommendedBlogs();
     }
 
     /*

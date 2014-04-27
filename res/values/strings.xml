@@ -594,6 +594,7 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag">Enter a tag</string>
+    <string name="reader_hint_add_tag_or_url">Type a tag or url</string>
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
@@ -633,6 +634,8 @@
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
     <string name="reader_toast_err_get_blog">Unable to retrieve this blog</string>
+    <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
+    <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>

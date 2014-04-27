@@ -227,9 +227,17 @@ public class ReaderBlogTable {
         setBlogInfo(blogInfo);
     }
 
+    public static boolean isFollowedBlogUrl(String blogUrl) {
+        return isFollowedBlog(0, blogUrl);
+    }
+
     public static boolean isFollowedBlog(long blogId, String blogUrl) {
         boolean hasBlogId = (blogId != 0);
         boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+
+        if (!hasBlogId && !hasBlogUrl) {
+            return false;
+        }
 
         if (hasBlogId && hasBlogUrl) {
             // both id and url were passed, match on either
@@ -241,14 +249,22 @@ public class ReaderBlogTable {
             String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
             String[] args = {Long.toString(blogId)};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        } else if (hasBlogUrl) {
+        } else {
             // only url passed, match on url
             String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
             String[] args = {UrlUtils.normalizeUrl(blogUrl)};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
-        } else {
-            // neither id nor url passed
-            return false;
+            if (SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args)) {
+                return true;
+            }
+            // match on url failed, try again with/without www.
+            final String blogUrl2;
+            if (blogUrl.contains("://www.")) {
+                blogUrl2 = blogUrl.replace("://www.", "://");
+            } else {
+                blogUrl2 = blogUrl.replace("://", "://www.");
+            }
+            String[] args2 = {UrlUtils.normalizeUrl(blogUrl2)};
+            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args2);
         }
     }
 

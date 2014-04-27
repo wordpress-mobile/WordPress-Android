@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/btn_add"
-            android:hint="@string/reader_hint_add_tag" />
+            android:hint="@string/reader_hint_add_tag_or_url" />
 
         <ImageButton
             android:id="@+id/btn_add"
@@ -67,5 +67,13 @@
             android:src="@drawable/ic_content_new" />
 
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_follow"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

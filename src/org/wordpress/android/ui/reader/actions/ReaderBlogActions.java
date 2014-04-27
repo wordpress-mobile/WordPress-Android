@@ -30,11 +30,20 @@ public class ReaderBlogActions {
     public static boolean performFollowAction(final long blogId,
                                               final String blogUrl,
                                               final boolean isAskingToFollow) {
+        return performFollowAction(blogId, blogUrl, isAskingToFollow, null);
+    }
+    public static boolean performFollowAction(final long blogId,
+                                              final String blogUrl,
+                                              final boolean isAskingToFollow,
+                                              final ReaderActions.ActionListener actionListener) {
         // either blogId or blogUrl are required
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
         if (!hasBlogId && !hasBlogUrl) {
             AppLog.w(T.READER, "follow action performed without blogId or blogUrl");
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
             return false;
         }
 
@@ -72,6 +81,9 @@ public class ReaderBlogActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, "blog " + actionName + " succeeded");
+                if (actionListener != null) {
+                    actionListener.onActionResult(true);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -85,6 +97,9 @@ public class ReaderBlogActions {
                 }
                 if (hasBlogId) {
                     ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
+                }
+                if (actionListener != null) {
+                    actionListener.onActionResult(false);
                 }
             }
         };
@@ -101,7 +116,7 @@ public class ReaderBlogActions {
         if (post == null) {
             return false;
         }
-        return performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow);
+        return performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow, null);
     }
 
     /*
