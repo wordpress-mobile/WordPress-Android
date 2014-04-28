@@ -16,8 +16,8 @@ import com.simperium.client.Bucket;
 import com.simperium.client.Query;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -115,7 +115,7 @@ class NotesAdapter extends CursorAdapter {
 
         int imageId = mContext.getResources().getIdentifier("note_icon_" + noteType, "drawable", mContext.getPackageName());
         if (imageId == 0) {
-            Log.w(WordPress.TAG, "unknown note type - " + noteType);
+            Log.w(AppLog.TAG, "unknown note type - " + noteType);
             return null;
         }
 
