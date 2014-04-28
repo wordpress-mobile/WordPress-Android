@@ -635,11 +635,12 @@
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
 
-    <!-- fragment tags - do not translate -->
+    <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
