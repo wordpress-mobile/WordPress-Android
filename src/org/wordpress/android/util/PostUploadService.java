@@ -140,7 +140,7 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(post.getRemotePostId());
+                WordPress.postUploaded(post.getLocalTableBlogId(), post.getRemotePostId(), post.isPage());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {

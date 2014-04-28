@@ -57,8 +57,8 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.7.3"
-        versionCode 105
+        versionName "2.8-beta-1"
+        versionCode 106
         minSdkVersion 9
         targetSdkVersion 19
     }
@@ -171,7 +171,7 @@ ${config}
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/crashlytics.properties")
-    def inputFile = file("${rootDir}/local.properties")
+    def inputFile = file("${rootDir}/gradle.properties")
     outputs.file outputFile
     inputs.file inputFile
     doLast {
@@ -181,7 +181,7 @@ task generateCrashlyticsConfig(group: "generate", description: "Generate Crashly
         }
         def crashlyticsApiKey = properties.getProperty('crashlytics.apikey', '0')
         def writer = new FileWriter(outputFile)
-        writer.write("""// auto-generated file do not modify
+        writer.write("""// auto-generated file from ${rootDir}/gradle.properties do not modify
 apiKey=${crashlyticsApiKey}""")
         writer.close()
     }
@@ -189,11 +189,15 @@ apiKey=${crashlyticsApiKey}""")
 
 // Add the generateWPConfig task to every buildType's compile tasks
 android.buildTypes.all { buildType ->
+    project.properties.any { property ->
+        if (property.key.toLowerCase().startsWith("wp.")) {
+            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+    }
     def name = "generate${buildType.name.capitalize()}BuildConfig"
     tasks.whenTaskAdded { task ->
         if (task.name == name) {
-            task.dependsOn(generateWPConfig)
-            task.mustRunAfter(generateWPConfig)
             task.dependsOn(generateCrashlyticsConfig)
         }
     }

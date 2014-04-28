@@ -25,6 +25,7 @@ public final class AnalyticsTracker {
         EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_UPDATED_POST,
+        EDITOR_SCHEDULED_POST,
         EDITOR_PUBLISHED_POST,
         EDITOR_PUBLISHED_POST_WITH_PHOTO,
         EDITOR_PUBLISHED_POST_WITH_VIDEO,
@@ -47,6 +48,10 @@ public final class AnalyticsTracker {
         CREATED_ACCOUNT,
         CREATED_SITE,
         SHARED_ITEM,
+        ADDED_SELF_HOSTED_SITE,
+        SIGNED_INTO_JETPACK,
+        PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
+        STATS_SELECTED_INSTALL_JETPACK,
     };
 
     public interface Tracker {

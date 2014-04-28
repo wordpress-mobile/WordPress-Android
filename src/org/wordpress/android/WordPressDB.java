@@ -139,7 +139,7 @@ public class WordPressDB {
    
     private SQLiteDatabase db;
 
-    protected static final String PASSWORD_SECRET = Config.DB_SECRET;
+    protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
     private Context context;
 
@@ -1737,4 +1737,7 @@ public class WordPressDB {
         }
     }
 
+    public boolean hasAnyJetpackBlogs() {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
+    }
 }

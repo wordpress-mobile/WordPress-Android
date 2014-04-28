@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 
@@ -547,6 +548,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
                 signInError();
                 return;
+            }
+
+            if (mSelfHosted) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
             }
 
             // Update wp.com credentials

@@ -93,6 +93,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
     private void refreshPosts(PostsActivity postsActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null) {
+            ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
+                    Duration.LONG);
+            return;
+        }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
@@ -341,9 +346,16 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     @Override
-    public void OnPostUploaded(String postId) {
-        if (!hasActivity())
+    public void OnPostUploaded(int localBlogId, String postId, boolean isPage) {
+        if (!hasActivity()) {
             return;
+        }
+
+        // If the user switched to a different blog while uploading his post, don't reload posts and refresh the view
+        boolean sameBlogId = true;
+        if (WordPress.getCurrentBlog() == null || WordPress.getCurrentBlog().getLocalTableBlogId() != localBlogId) {
+            sameBlogId = false;
+        }
 
         if (!NetworkUtils.checkConnection(getActivity())) {
             mPullToRefreshHelper.setRefreshing(false);
@@ -352,17 +364,19 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
 
         // Fetch the newly uploaded post
         if (!TextUtils.isEmpty(postId)) {
+            final boolean reloadPosts = sameBlogId;
             List<Object> apiArgs = new Vector<Object>();
-            apiArgs.add(WordPress.getCurrentBlog());
+            apiArgs.add(WordPress.wpDB.instantiateBlogByLocalId(localBlogId));
             apiArgs.add(postId);
-            apiArgs.add(mIsPage);
+            apiArgs.add(isPage);
 
-            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(new ApiHelper.FetchSinglePostTask.Callback() {
+            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
+                    new ApiHelper.FetchSinglePostTask.Callback() {
                 @Override
                 public void onSuccess() {
                     mCurrentFetchSinglePostTask = null;
                     mIsFetchingPosts = false;
-                    if (!hasActivity()) {
+                    if (!hasActivity() || !reloadPosts) {
                         return;
                     }
                     mPullToRefreshHelper.setRefreshing(false);
@@ -374,7 +388,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     mCurrentFetchSinglePostTask = null;
                     mIsFetchingPosts = false;
-                    if (!hasActivity()) {
+                    if (!hasActivity() || !reloadPosts) {
                         return;
                     }
                     if (errorType != ErrorType.TASK_CANCELLED) {

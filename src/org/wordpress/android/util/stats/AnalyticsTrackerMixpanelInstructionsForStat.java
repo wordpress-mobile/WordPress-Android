@@ -1,9 +1,12 @@
 package org.wordpress.android.util.stats;
 
+import java.util.ArrayList;
+
 public class AnalyticsTrackerMixpanelInstructionsForStat {
     private String mMixpanelEventName;
     private String mSuperPropertyToIncrement;
     private String mPeoplePropertyToIncrement;
+    private ArrayList<String> mSuperPropertiesToFlag;
     private String mSuperPropertyToFlag;
     private AnalyticsTracker.Stat mStatToAttachProperty;
     private AnalyticsTracker.Stat mStat;
@@ -92,11 +95,13 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
         this.mStat = stat;
     }
 
-    public String getSuperPropertyToFlag() {
-        return mSuperPropertyToFlag;
+    public ArrayList<String> getSuperPropertiesToFlag() {
+        return mSuperPropertiesToFlag;
     }
 
-    public void setSuperPropertyToFlag(String superPropertyToFlag) {
-        this.mSuperPropertyToFlag = superPropertyToFlag;
+    public void addSuperPropertyToFlag(String superPropertyToFlag) {
+        if (!mSuperPropertiesToFlag.contains(superPropertyToFlag)) {
+            mSuperPropertiesToFlag.add(superPropertyToFlag);
+        }
     }
 }

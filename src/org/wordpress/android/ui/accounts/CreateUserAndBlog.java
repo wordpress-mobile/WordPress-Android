@@ -10,11 +10,11 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -118,8 +118,8 @@ public class CreateUserAndBlog {
         params.put("password", mPassword);
         params.put("email", mEmail);
         params.put("validate", "1");
-        params.put("client_id", Config.OAUTH_APP_ID);
-        params.put("client_secret", Config.OAUTH_APP_SECRET);
+        params.put("client_id", BuildConfig.OAUTH_APP_ID);
+        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
@@ -132,8 +132,8 @@ public class CreateUserAndBlog {
         params.put("lang_id", mLanguage);
         params.put("public", String.valueOf(WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC));
         params.put("validate", "1");
-        params.put("client_id", Config.OAUTH_APP_ID);
-        params.put("client_secret", Config.OAUTH_APP_SECRET);
+        params.put("client_id", BuildConfig.OAUTH_APP_ID);
+        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.VALIDATE_SITE);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
@@ -145,8 +145,8 @@ public class CreateUserAndBlog {
         params.put("password", mPassword);
         params.put("email", mEmail);
         params.put("validate", "0");
-        params.put("client_id", Config.OAUTH_APP_ID);
-        params.put("client_secret", Config.OAUTH_APP_SECRET);
+        params.put("client_id", BuildConfig.OAUTH_APP_ID);
+        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_USER);
         mRestClient.post(path, params, null, mResponseHandler, mErrorListener);
     }
@@ -170,8 +170,8 @@ public class CreateUserAndBlog {
         params.put("lang_id", mLanguage);
         params.put("public", String.valueOf(WORDPRESS_COM_API_BLOG_VISIBILITY_PUBLIC));
         params.put("validate", "0");
-        params.put("client_id", Config.OAUTH_APP_ID);
-        params.put("client_secret", Config.OAUTH_APP_SECRET);
+        params.put("client_id", BuildConfig.OAUTH_APP_ID);
+        params.put("client_secret", BuildConfig.OAUTH_APP_SECRET);
         mResponseHandler.setStep(Step.CREATE_SITE);
         WordPress.getRestClientUtils().post(path, params, null, mResponseHandler, mErrorListener);
     }

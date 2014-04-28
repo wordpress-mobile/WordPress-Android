@@ -185,6 +185,10 @@ class CommentAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public int indexOfCommentId(long commentId) {
+        return mComments.indexOfCommentId(commentId);
+    }
+
     private boolean isPositionValid(int position) {
         return (position >= 0 && position < mComments.size());
     }

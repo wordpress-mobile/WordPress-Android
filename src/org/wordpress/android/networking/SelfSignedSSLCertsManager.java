@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.http.SslCertificate;
 import android.os.Bundle;
 
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
@@ -125,7 +125,7 @@ public class SelfSignedSSLCertsManager {
         KeyStore localTrustStore = KeyStore.getInstance("BKS");
         InputStream in = new FileInputStream(mLocalTrustStoreFile);
         try {
-            localTrustStore.load(in, Config.DB_SECRET.toCharArray());
+            localTrustStore.load(in, BuildConfig.DB_SECRET.toCharArray());
         } finally {
             in.close();
         }
@@ -136,7 +136,7 @@ public class SelfSignedSSLCertsManager {
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(mLocalTrustStoreFile);
-            mLocalKeyStore.store(out, Config.DB_SECRET.toCharArray());
+            mLocalKeyStore.store(out, BuildConfig.DB_SECRET.toCharArray());
         } finally {
             if (out!=null){
                 try {
@@ -155,8 +155,8 @@ public class SelfSignedSSLCertsManager {
             try {
                 out = new FileOutputStream(mLocalTrustStoreFile);
                 KeyStore localTrustStore = KeyStore.getInstance("BKS");
-                localTrustStore.load(null, Config.DB_SECRET.toCharArray());
-                localTrustStore.store(out, Config.DB_SECRET.toCharArray());
+                localTrustStore.load(null, BuildConfig.DB_SECRET.toCharArray());
+                localTrustStore.store(out, BuildConfig.DB_SECRET.toCharArray());
             } finally {
                 if (out!=null){
                     try {
