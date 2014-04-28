@@ -154,7 +154,7 @@ public class ReaderBlogFragment extends SherlockFragment
         return mAdapter;
     }
 
-    private ReaderBlogType getBlogType() {
+    public ReaderBlogType getBlogType() {
         return mBlogType;
     }
 

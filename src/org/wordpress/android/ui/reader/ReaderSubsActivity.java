@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -51,7 +53,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
-    private TagPageAdapter mPageAdapter;
+    private ViewPager mViewPager;
+    private SubsPageAdapter mPageAdapter;
 
     private boolean mTagsChanged;
     private boolean mBlogsChanged;
@@ -75,8 +78,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(getPageAdapter());
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setAdapter(getPageAdapter());
 
         PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);
         pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
@@ -100,13 +103,27 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             }
         });
 
-        // update list of tags and blogs from the server
-        if (!mAlreadyUpdated) {
-            updateTagList();
-            updateFollowedBlogs();
-            updateRecommendedBlogs();
-            mAlreadyUpdated = true;
+        if (savedInstanceState == null) {
+            // return to the page the user was on the last time they viewed this activity
+            restorePreviousPage();
+
+            // update list of tags and blogs from the server
+            if (!mAlreadyUpdated) {
+                updateTagList();
+                updateFollowedBlogs();
+                updateRecommendedBlogs();
+                mAlreadyUpdated = true;
+            }
         }
+
+        // remember which page the user last viewed
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                String pageTitle = (String) getPageAdapter().getPageTitle(position);
+                UserPrefs.setReaderSubsPageTitle(pageTitle);
+            }
+        });
     }
 
     private void restoreState(Bundle state) {
@@ -118,7 +135,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         }
     }
 
-    private TagPageAdapter getPageAdapter() {
+    private SubsPageAdapter getPageAdapter() {
         if (mPageAdapter == null) {
             List<Fragment> fragments = new ArrayList<Fragment>();
 
@@ -130,9 +147,13 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
             //fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
 
-            mPageAdapter = new TagPageAdapter(getSupportFragmentManager(), fragments);
+            mPageAdapter = new SubsPageAdapter(getSupportFragmentManager(), fragments);
         }
         return mPageAdapter;
+    }
+
+    private boolean hasPageAdapter() {
+        return mPageAdapter != null;
     }
 
     @Override
@@ -413,7 +434,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogs();
+                    getPageAdapter().refreshBlogs(ReaderBlogType.RECOMMENDED);
                 }
             }
         };
@@ -428,17 +449,39 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogs();
+                    getPageAdapter().refreshBlogs(ReaderBlogType.FOLLOWED);
                 }
             }
         };
         ReaderBlogActions.updateFollowedBlogs(listener);
     }
 
-    private class TagPageAdapter extends FragmentPagerAdapter {
+    /*
+     * return to the previously selected page in the viewPager
+     */
+    private void restorePreviousPage() {
+        if (mViewPager == null || !hasPageAdapter()) {
+            return;
+        }
+
+        String pageTitle = UserPrefs.getReaderSubsPageTitle();
+        if (TextUtils.isEmpty(pageTitle)) {
+            return;
+        }
+
+        PagerAdapter adapter = getPageAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (pageTitle.equals(adapter.getPageTitle(i))) {
+                mViewPager.setCurrentItem(i);
+                return;
+            }
+        }
+    }
+
+    private class SubsPageAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments;
 
-        TagPageAdapter(FragmentManager fm, List<Fragment> fragments) {
+        SubsPageAdapter(FragmentManager fm, List<Fragment> fragments) {
             super(fm);
             mFragments = fragments;
         }
@@ -481,11 +524,14 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             }
         }
 
-        // refresh all blog fragments
-        private void refreshBlogs() {
+        // refresh all blog fragments matching the passed blogType
+        private void refreshBlogs(ReaderBlogType blogType) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
-                    ((ReaderBlogFragment)fragment).refresh();
+                    ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;
+                    if (blogType == null || blogType.equals(blogFragment.getBlogType())) {
+                        blogFragment.refresh();
+                    }
                 }
             }
         }

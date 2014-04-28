@@ -7,8 +7,11 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 
 public class UserPrefs {
-    private static final String PREFKEY_USER_ID    = "wp_userid";     // id of the current user
-    private static final String PREFKEY_READER_TAG = "reader_tag";    // last selected tag in the reader
+    private static final String PREFKEY_USER_ID         = "wp_userid";        // id of the current user
+    private static final String PREFKEY_READER_TAG      = "reader_tag";       // last selected tag in the reader
+
+    // title of the last active page in ReaderSubsActivity
+    private static final String PREFKEY_READER_SUBS_PAGE_TITLE = "reader_subs_page_title";
 
     // offset when showing recommended blogs
     private static final String PREFKEY_READER_RECOMMENDED_OFFSET = "reader_recommended_offset";
@@ -91,10 +94,28 @@ public class UserPrefs {
         setString(PREFKEY_READER_TAG, tagName);
     }
 
+    /*
+     * offset used along with a SQL LIMIT to enable user to page through recommended blogs
+     */
     public static int getReaderRecommendedBlogOffset() {
         return getInt(PREFKEY_READER_RECOMMENDED_OFFSET);
     }
     public static void setReaderRecommendedBlogOffset(int offset) {
-        setInt(PREFKEY_READER_RECOMMENDED_OFFSET, offset);
+        if (offset == 0) {
+            remove(PREFKEY_READER_RECOMMENDED_OFFSET);
+        } else {
+            setInt(PREFKEY_READER_RECOMMENDED_OFFSET, offset);
+        }
+    }
+
+    /*
+     * title of the last active page in ReaderSubsActivity - this is stored rather than
+     * the index of the page so we can re-order pages without affecting this value
+     */
+    public static String getReaderSubsPageTitle() {
+        return getString(PREFKEY_READER_SUBS_PAGE_TITLE);
+    }
+    public static void setReaderSubsPageTitle(String pageTitle) {
+        setString(PREFKEY_READER_SUBS_PAGE_TITLE, pageTitle);
     }
 }
