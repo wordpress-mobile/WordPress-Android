@@ -59,7 +59,8 @@ public class ReaderBlogActions {
             ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
         }
 
-        // if we have the url but not the id, lookup the blogInfo to get the id then try again
+        // if we have the url but not the id, and a lookup hasn't already been performed,
+        // lookup the blogInfo to get the id then try again
         if (!hasBlogId && canLookupBlogInfo) {
             lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
             return true;

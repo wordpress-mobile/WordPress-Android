@@ -108,6 +108,9 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         refresh(null);
     }
     void refresh(final String scrollToTagName) {
+        if (!hasTagAdapter()) {
+            return;
+        }
         if (!TextUtils.isEmpty(scrollToTagName)) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -130,6 +133,10 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
             mTagAdapter = new ReaderTagAdapter(getActivity(), getTagType(), this);
         }
         return mTagAdapter;
+    }
+
+    private boolean hasTagAdapter() {
+        return (mTagAdapter != null);
     }
 
     /*
