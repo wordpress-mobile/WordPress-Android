@@ -18,17 +18,17 @@ import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
 /**
- * contains information about blogs viewed in the reader, and blogs the user is following.
- * Note that this table is populated from two endpoints:
+ * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
+ * user is following. Note that this table is populated from two endpoints:
  *
  *      1. sites/{$siteId}
  *      2. read/following/mine
  *
  *  The first endpoint is called when the user views blog detail, and it returns all the fields
- *  stored in this table. The second endpoint is called at startup to get the full list of
+ *  stored in tbl_blog_info. The second endpoint is called at startup to get the full list of
  *  blogs the user is following, and it only returns blog_id and blog_url.
  *
- *  This means that many of the fields in this table will be empty. Note also that blog_id
+ *  This means that many of the fields in tbl_blog_info will be empty. Note also that blog_id
  *  may be zero if the blog is actually a feed.
  */
 public class ReaderBlogTable {
@@ -47,13 +47,14 @@ public class ReaderBlogTable {
                  + ")");
 
         db.execSQL("CREATE TABLE tbl_recommended_blogs ("
-                + " blog_id         INTEGER DEFAULT 0 PRIMARY KEY,"
-                + " follow_reco_id  INTEGER DEFAULT 0,"
-                + " score           INTEGER DEFAULT 0,"
-                + "	title           TEXT,"
-                + "	blog_url        TEXT COLLATE NOCASE,"
-                + "	image_url       TEXT,"
-                + "	reason          TEXT"
+                + "     blog_id         INTEGER DEFAULT 0,"
+                + "     follow_reco_id  INTEGER DEFAULT 0,"
+                + "     score           INTEGER DEFAULT 0,"
+                + "	    title           TEXT COLLATE NOCASE,"
+                + "	    blog_url        TEXT COLLATE NOCASE,"
+                + "	    image_url       TEXT,"
+                + "	    reason          TEXT,"
+                + "     PRIMARY KEY (blog_id)"
                 + ")");
     }
 
@@ -75,12 +76,14 @@ public class ReaderBlogTable {
 
         // search by id if it's passed (may be zero for feeds), otherwise search by url
         final Cursor cursor;
+        SQLiteDatabase db = ReaderDatabase.getReadableDb();
         if (hasBlogId) {
             String[] args = {Long.toString(blogId)};
-            cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
+            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
         } else {
-            String[] args = {UrlUtils.normalizeUrl(blogUrl)};
-            cursor = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=?", args);
+            String normUrl = UrlUtils.normalizeUrl(blogUrl);
+            String[] args = {normUrl, reverseWww(normUrl)};
+            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=? OR blog_url=?", args);
         }
 
         try {
@@ -251,32 +254,26 @@ public class ReaderBlogTable {
             return false;
         }
 
+        // when matching on url, try with both the passed url and the passed url with www. reversed
+        String normUrl = UrlUtils.normalizeUrl(blogUrl);
+        String reverseUrl = reverseWww(normUrl);
+
+        String sql;
         if (hasBlogId && hasBlogUrl) {
             // both id and url were passed, match on either
-            String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_id=? OR blog_url=?)";
-            String[] args = {Long.toString(blogId), UrlUtils.normalizeUrl(blogUrl)};
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_id=? OR blog_url=? OR blog_url=?)";
+            String[] args = {Long.toString(blogId), normUrl, reverseUrl};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         } else if (hasBlogId) {
             // only id passed, match on id
-            String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_id=?";
             String[] args = {Long.toString(blogId)};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         } else {
             // only url passed, match on url
-            String sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
-            String[] args = {UrlUtils.normalizeUrl(blogUrl)};
-            if (SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args)) {
-                return true;
-            }
-            // match on url failed, try again with/without www.
-            final String blogUrl2;
-            if (blogUrl.contains("://www.")) {
-                blogUrl2 = blogUrl.replace("://www.", "://");
-            } else {
-                blogUrl2 = blogUrl.replace("://", "://www.");
-            }
-            String[] args2 = {UrlUtils.normalizeUrl(blogUrl2)};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args2);
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_url=? OR blog_url=?)";
+            String[] args = {normUrl, reverseUrl};
+            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         }
     }
 
@@ -284,7 +281,7 @@ public class ReaderBlogTable {
         return getRecommendedBlogs(0, 0);
     }
     public static ReaderRecommendBlogList getRecommendedBlogs(int limit, int offset) {
-        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY score DESC, title";
+        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
 
         if (limit > 0) {
             sql += " LIMIT " + Integer.toString(limit);
@@ -313,10 +310,6 @@ public class ReaderBlogTable {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-
-    public static long getNumRecommendedBlogs() {
-        return SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_recommended_blogs");
     }
 
     public static void setRecommendedBlogs(ReaderRecommendBlogList blogs) {
@@ -356,4 +349,18 @@ public class ReaderBlogTable {
         }
     }
 
+    /*
+     * returns the passed url without "www." if it contains it, otherwise returns the
+     * passed url with "www." - used when matching on stored url
+     */
+    private static String reverseWww(String blogUrl) {
+        if (blogUrl == null) {
+            return null;
+        }
+        if (blogUrl.contains("://www.")) {
+            return blogUrl.replace("://www.", "://");
+        } else {
+            return blogUrl.replace("://", "://www.");
+        }
+    }
 }

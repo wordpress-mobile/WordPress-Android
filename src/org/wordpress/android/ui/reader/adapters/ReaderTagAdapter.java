@@ -81,7 +81,12 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return mTags.get(position).getTagName().hashCode();
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
     }
 
     @Override

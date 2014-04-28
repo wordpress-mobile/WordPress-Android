@@ -103,16 +103,22 @@ public class ReaderBlogInfo {
         if (blogInfo == null) {
             return false;
         }
+        if (this.blogId != blogInfo.blogId) {
+            return false;
+        }
         if (this.isFollowing != blogInfo.isFollowing) {
             return false;
         }
         if (this.numSubscribers != blogInfo.numSubscribers) {
             return false;
         }
-        if (!this.hasName() && blogInfo.hasName()) {
+        if (!this.getName().equals(blogInfo.getName())) {
             return false;
         }
-        if (!this.hasDescription() && blogInfo.hasDescription()) {
+        if (!this.getDescription().equals(blogInfo.getDescription())) {
+            return false;
+        }
+        if (!this.getUrl().equals(blogInfo.getUrl())) {
             return false;
         }
         return true;

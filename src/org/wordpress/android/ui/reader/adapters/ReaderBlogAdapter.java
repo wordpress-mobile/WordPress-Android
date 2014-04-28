@@ -39,6 +39,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
 
     private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
+    private final boolean mCanUseStableIds;
     private final BlogFollowChangeListener mChangeListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
@@ -51,6 +52,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
         mChangeListener = changeListener;
+
+        // recommended blogs all have a unique blogId, but followed blogs may have multiple
+        // blogs with a blogId of zero
+        mCanUseStableIds = (getBlogType() == ReaderBlogType.RECOMMENDED);
     }
 
     @SuppressLint("NewApi")
@@ -113,8 +118,17 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     @Override
+    public boolean hasStableIds() {
+        return mCanUseStableIds;
+    }
+
+    @Override
     public long getItemId(int position) {
-        return position;
+        if (mCanUseStableIds && getBlogType() == ReaderBlogType.RECOMMENDED) {
+            return mRecommendedBlogs.get(position).blogId;
+        } else {
+            return position;
+        }
     }
 
     @Override

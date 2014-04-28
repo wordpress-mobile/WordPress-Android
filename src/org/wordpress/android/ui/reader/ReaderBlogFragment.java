@@ -130,11 +130,20 @@ public class ReaderBlogFragment extends SherlockFragment
      * recommendations from local db and refresh the adapter
      */
     private void loadMoreRecommendations() {
-        int offset = UserPrefs.getReaderRecommendedBlogOffset();
-        UserPrefs.setReaderRecommendedBlogOffset(offset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY);
-        if (hasBlogAdapter()) {
-            getBlogAdapter().refresh();
+        if (!hasBlogAdapter() || getBlogAdapter().isEmpty()) {
+            return;
         }
+
+        int currentOffset = UserPrefs.getReaderRecommendedBlogOffset();
+        int newOffset = currentOffset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
+
+        // start over if we've reached the max
+        if (newOffset >= ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST) {
+            newOffset = 0;
+        }
+
+        UserPrefs.setReaderRecommendedBlogOffset(newOffset);
+        getBlogAdapter().refresh();
     }
 
     private boolean hasBlogAdapter() {
