@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -13,9 +14,10 @@ import com.actionbarsherlock.app.SherlockFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 /**
@@ -23,7 +25,7 @@ import org.wordpress.android.util.AppLog;
  */
 public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdapter.TagActionListener {
     private ListView mListView;
-    private ReaderTagAdapter mAdapter;
+    private ReaderTagAdapter mTagAdapter;
     private ReaderTagType mTagType;
     private static final String ARG_TAG_TYPE = "tag_type";
 
@@ -102,7 +104,10 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    protected void refresh(final String scrollToTagName) {
+    void refresh() {
+        refresh(null);
+    }
+    void refresh(final String scrollToTagName) {
         if (!TextUtils.isEmpty(scrollToTagName)) {
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
@@ -116,19 +121,55 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    private ReaderTagType getTagType() {
+    protected ReaderTagType getTagType() {
         return mTagType;
     }
 
     private ReaderTagAdapter getTagAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new ReaderTagAdapter(getActivity(), getTagType(), this);
+        if (mTagAdapter == null) {
+            mTagAdapter = new ReaderTagAdapter(getActivity(), getTagType(), this);
         }
-        return mAdapter;
+        return mTagAdapter;
     }
 
+    /*
+     * called from adapter when user adds/removes a tag - note that the network request
+     * has been made by the time this is called
+     */
     @Override
-    public void onTagAction(ReaderTagActions.TagAction action, String tagName) {
+    public void onTagAction(TagAction action, final String tagName) {
+        final boolean animateRemoval;
+        switch (action) {
+            case ADD:
+                animateRemoval = (getTagType() == ReaderTagType.RECOMMENDED);
+                break;
+            case DELETE:
+                animateRemoval = (getTagType() == ReaderTagType.SUBSCRIBED);
+                break;
+            default:
+                animateRemoval = false;
+                break;
+        }
+
+        int index = getTagAdapter().indexOfTagName(tagName);
+        if (animateRemoval && index > -1) {
+            Animation.AnimationListener aniListener = new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) { }
+                @Override
+                public void onAnimationRepeat(Animation animation) { }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    refresh();
+                }
+            };
+            int aniResId = (action == TagAction.ADD ? R.anim.reader_tag_add : R.anim.reader_tag_delete);
+            AniUtils.removeListItem(mListView, index, aniListener, aniResId);
+        } else {
+            refresh();
+        }
+
+        // let the host activity know about the change
         if (getActivity() instanceof TagActionListener) {
             ((TagActionListener) getActivity()).onTagAction(action, tagName);
         }

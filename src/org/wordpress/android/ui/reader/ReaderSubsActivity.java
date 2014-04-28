@@ -227,7 +227,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         // it's valid, add it
         mEditAdd.setText(null);
         EditTextUtils.hideSoftInput(mEditAdd);
-        onTagAction(TagAction.ADD, entry);
+        performAddTag(entry);
     }
 
     /*
@@ -336,72 +336,74 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * triggered by a tag fragment's adapter when user chooses to add/remove a tag, or
-     * from this activity when user chooses to add a tag
+     * called when user manually enters a tag - adds the tag to their followed tags
      */
-    @Override
-    public void onTagAction(final TagAction action, final String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
-            return;
-        }
+    private void performAddTag(final String tagName) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && !isFinishing()) {
+                    getPageAdapter().refreshTagFragments();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
+                    mLastAddedTag = null;
+                }
+            }
+        };
+
+        if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
+            getPageAdapter().refreshTagFragments(null, tagName);
+            onTagAction(TagAction.ADD, tagName);
+        }
+    }
+
+    /*
+     * triggered by a tag fragment's adapter after user adds/removes a tag, or from this activity
+     * after user adds a tag - note that network request has been made by the time this is called
+     */
+    @Override
+    public void onTagAction(TagAction action, String tagName) {
+        mTagsChanged = true;
+
         final String messageBarText;
         final MessageBarUtils.MessageBarType messageBarType;
+
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
                 messageBarText = getString(R.string.reader_label_added_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.INFO;
+                mLastAddedTag = tagName;
                 break;
+
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
                 messageBarText = getString(R.string.reader_label_removed_tag, tagName);
                 messageBarType = MessageBarUtils.MessageBarType.ALERT;
+                if (mLastAddedTag != null && mLastAddedTag.equals(tagName)) {
+                    mLastAddedTag = null;
+                }
                 break;
+
             default :
                 return;
         }
+
         MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
 
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                // handle failure when adding/removing tags below
-                if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshTags();
-                    switch (action) {
-                        case ADD:
-                            ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
-                            mLastAddedTag = null;
-                            break;
-                        case DELETE:
-                            ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_remove_tag);
-                            break;
-                    }
-                }
-            }
-        };
-
+        // when this is called from a tag fragment, we need to make sure other tag fragments
+        // reflect the change
         switch (action) {
             case ADD:
-                if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
-                    getPageAdapter().refreshTags(tagName);
-                    mTagsChanged = true;
-                    mLastAddedTag = tagName;
-                }
+                // user added from recommended tags, make sure addition is reflected on followed tags
+                getPageAdapter().refreshTagFragments(ReaderTagType.SUBSCRIBED);
                 break;
-
             case DELETE:
-                if (ReaderTagActions.performTagAction(TagAction.DELETE, tagName, actionListener)) {
-                    getPageAdapter().refreshTags();
-                    if (mLastAddedTag !=null && mLastAddedTag.equals(tagName)) {
-                        mLastAddedTag = null;
-                    }
-                    mTagsChanged = true;
-                }
+                // user deleted from followed tags, make sure deletion is reflected on recommended tags
+                getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
                 break;
         }
     }
@@ -415,7 +417,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     mTagsChanged = true;
-                    getPageAdapter().refreshTags();
+                    getPageAdapter().refreshTagFragments();
                 }
             }
         };
@@ -423,14 +425,14 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     /*
-     * request latest recommended blogs, excluding those the user has chosen to ignore
+     * request latest recommended blogs
      */
     void updateRecommendedBlogs() {
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogs(ReaderBlogType.RECOMMENDED);
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
                 }
             }
         };
@@ -445,7 +447,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogs(ReaderBlogType.FOLLOWED);
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 }
             }
         };
@@ -508,20 +510,24 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             return mFragments.size();
         }
 
-        // refresh all tag fragments
-        private void refreshTags() {
-            refreshTags(null);
+        private void refreshTagFragments() {
+            refreshTagFragments(null, null);
         }
-        private void refreshTags(final String scrollToTagName) {
+        private void refreshTagFragments(ReaderTagType tagType) {
+            refreshTagFragments(tagType, null);
+        }
+        private void refreshTagFragments(ReaderTagType tagType, String scrollToTagName) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderTagFragment) {
-                    ((ReaderTagFragment)fragment).refresh(scrollToTagName);
+                    ReaderTagFragment tagFragment = (ReaderTagFragment) fragment;
+                    if (tagType == null || tagType.equals(tagFragment.getTagType())) {
+                        tagFragment.refresh(scrollToTagName);
+                    }
                 }
             }
         }
 
-        // refresh all blog fragments matching the passed blogType
-        private void refreshBlogs(ReaderBlogType blogType) {
+        private void refreshBlogFragments(ReaderBlogType blogType) {
             for (Fragment fragment: mFragments) {
                 if (fragment instanceof ReaderBlogFragment) {
                     ReaderBlogFragment blogFragment = (ReaderBlogFragment) fragment;

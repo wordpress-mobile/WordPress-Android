@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    used when adding a tag to the reader
+ -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:duration="@android:integer/config_shortAnimTime">
+
+    <scale
+        android:fromXScale="1.0"
+        android:toXScale="1.25"
+        android:fromYScale="1.0"
+        android:toYScale="1.25"
+        android:pivotX="50%"
+        android:pivotY="50%" />
+
+    <alpha
+        android:fromAlpha="1"
+        android:toAlpha="0" />
+</set>
