@@ -61,44 +61,12 @@ public class ReaderBlogActions {
 
         // if we have the url but not the id, lookup the blogInfo to get the id then try again
         if (!hasBlogId && hasBlogUrl && canLookupBlogInfo) {
-            ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
-                @Override
-                public void onResult(ReaderBlogInfo blogInfo) {
-                    if (blogInfo != null) {
-                        // we have blogInfo, so follow using id & url from info
-                        performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
-                    } else {
-                        // blogInfo lookup failed, follow using passed url only
-                        performFollowAction(0, blogUrl, isAskingToFollow, actionListener, false);
-                    }
-                }
-            };
-            AppLog.d(T.READER, "looking up blogId for follow by url");
-            ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
+            lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
             return true;
         }
 
-        final String path;
+        final String path = getFollowEndpoint(blogId, blogUrl, isAskingToFollow);
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
-
-        if (isAskingToFollow) {
-            // if we have a blogId, use /sites/$siteId/follows/new - this is important
-            // because /read/following/mine/new follows it as a feed rather than a blog,
-            // so its posts show up without support for likes, comments, etc.
-            if (hasBlogId) {
-                path = "/sites/" + blogId + "/follows/new";
-            } else {
-                path = "/read/following/mine/new?url=" + UrlUtils.getDomainFromUrl(blogUrl);
-                AppLog.w(T.READER, "following blog by url rather than id");
-            }
-        } else {
-            if (hasBlogId) {
-                path = "/sites/" + blogId + "/follows/mine/delete";
-            } else {
-                path = "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
-                AppLog.w(T.READER, "unfollowing blog by url rather than id");
-            }
-        }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -138,6 +106,53 @@ public class ReaderBlogActions {
             return false;
         }
         return performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow, null);
+    }
+
+    /*
+     * returns the endpoint path to use when following/unfollowing a blog
+     */
+    private static String getFollowEndpoint(long blogId, String blogUrl, boolean isAskingToFollow) {
+        if (isAskingToFollow) {
+            // if we have a blogId, use /sites/$siteId/follows/new - this is important
+            // because /read/following/mine/new follows it as a feed rather than a blog,
+            // so its posts show up without support for likes, comments, etc.
+            if (blogId != 0) {
+                return "/sites/" + blogId + "/follows/new";
+            } else {
+                AppLog.w(T.READER, "following blog by url rather than id");
+                return "/read/following/mine/new?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+            }
+        } else {
+            if (blogId != 0) {
+                return "/sites/" + blogId + "/follows/mine/delete";
+            } else {
+                AppLog.w(T.READER, "unfollowing blog by url rather than id");
+                return "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+            }
+        }
+    }
+
+    /*
+     * used when following/unfollowing when the blogId isn't known to attempt to look it up
+     * using the blogUrl, then retries following/unfollowing
+     */
+    private static void lookupBlogIdAndRetryFollow(final String blogUrl,
+                                                   final boolean isAskingToFollow,
+                                                   final ReaderActions.ActionListener actionListener) {
+        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlogInfo blogInfo) {
+                if (blogInfo != null) {
+                    // we have blogInfo, so follow using id & url from info
+                    performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
+                } else {
+                    // blogInfo lookup failed, follow using passed url only
+                    performFollowAction(0, blogUrl, isAskingToFollow, actionListener, false);
+                }
+            }
+        };
+        AppLog.d(T.READER, "looking up blogId for follow by url");
+        ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
     }
 
     /*
