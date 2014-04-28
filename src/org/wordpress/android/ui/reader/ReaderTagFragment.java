@@ -80,7 +80,6 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
 
         mListView.setEmptyView(view.findViewById(R.id.text_empty));
-        mListView.setAdapter(getTagAdapter());
 
         return view;
     }
@@ -88,6 +87,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mListView.setAdapter(getTagAdapter());
         getTagAdapter().refresh();
     }
 

@@ -4,8 +4,8 @@
     used when adding a tag to the reader
  -->
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:interpolator="@android:anim/accelerate_interpolator"
-    android:duration="@android:integer/config_shortAnimTime">
+    android:interpolator="@android:anim/linear_interpolator"
+    android:duration="100">
 
     <scale
         android:fromXScale="1.0"
@@ -13,9 +13,7 @@
         android:fromYScale="1.0"
         android:toYScale="1.25"
         android:pivotX="50%"
-        android:pivotY="50%" />
-
-    <alpha
-        android:fromAlpha="1"
-        android:toAlpha="0" />
+        android:pivotY="50%"
+        android:repeatCount="1"
+        android:repeatMode="reverse"/>
 </set>

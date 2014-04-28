@@ -78,7 +78,6 @@ public class ReaderBlogFragment extends SherlockFragment
         }
 
         mListView.setEmptyView(emptyView);
-        mListView.setAdapter(getBlogAdapter());
 
         return view;
     }
@@ -86,6 +85,7 @@ public class ReaderBlogFragment extends SherlockFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mListView.setAdapter(getBlogAdapter());
         getBlogAdapter().refresh();
     }
 

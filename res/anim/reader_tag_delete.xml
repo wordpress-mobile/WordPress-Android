@@ -5,6 +5,6 @@
  -->
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@android:integer/config_shortAnimTime"
-    android:interpolator="@android:anim/accelerate_interpolator"
+    android:interpolator="@android:anim/linear_interpolator"
     android:fromXDelta="0"
     android:toXDelta="-100%p" />

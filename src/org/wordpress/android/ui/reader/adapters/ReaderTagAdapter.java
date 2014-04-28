@@ -44,12 +44,12 @@ public class ReaderTagAdapter extends BaseAdapter {
 
     public ReaderTagAdapter(Context context, ReaderTagType tagType, TagActionListener tagListener) {
         super();
-        mWeakContext = new WeakReference<Context>(context);
         mInflater = LayoutInflater.from(context);
         mTagListener = tagListener;
         mTagType = tagType;
         mDrawableAdd = context.getResources().getDrawable(R.drawable.ic_content_new);
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_content_remove);
+        mWeakContext = new WeakReference<Context>(context);
     }
 
     private boolean hasContext() {

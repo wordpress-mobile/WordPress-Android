@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.MessageBarUtils;
+import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -266,6 +267,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                         // clear the edit text and hide the soft keyboard
                         mEditAdd.setText(null);
                         EditTextUtils.hideSoftInput(mEditAdd);
+                        String msgText = getString(R.string.reader_label_followed_blog);
+                        MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO, null);
                         // we may have the blogId now that the blog was followed
                         long blogId = ReaderBlogTable.getBlogIdFromUrl(normUrl);
                         onFollowBlogChanged(blogId, normUrl, true);
@@ -322,17 +325,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     @Override
     public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
         mBlogsChanged = true;
-
-        final String messageBarText;
-        final MessageBarUtils.MessageBarType messageBarType;
-        if (isFollowed) {
-            messageBarText = getString(R.string.reader_label_followed_blog);
-            messageBarType = MessageBarUtils.MessageBarType.INFO;
-        } else {
-            messageBarText = getString(R.string.reader_label_unfollowed_blog);
-            messageBarType = MessageBarUtils.MessageBarType.ALERT;
-        }
-        MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
     }
 
     /*
@@ -353,11 +345,14 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 }
             }
         };
-
-        if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
-            getPageAdapter().refreshTagFragments(null, tagName);
-            onTagAction(TagAction.ADD, tagName);
+        if (!ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
+            return;
         }
+
+        String msgText = getString(R.string.reader_label_added_tag, tagName);
+        MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO, null);
+        getPageAdapter().refreshTagFragments(null, tagName);
+        onTagAction(TagAction.ADD, tagName);
     }
 
     /*
@@ -368,21 +363,14 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     public void onTagAction(TagAction action, String tagName) {
         mTagsChanged = true;
 
-        final String messageBarText;
-        final MessageBarUtils.MessageBarType messageBarType;
-
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-                messageBarText = getString(R.string.reader_label_added_tag, tagName);
-                messageBarType = MessageBarUtils.MessageBarType.INFO;
                 mLastAddedTag = tagName;
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
-                messageBarText = getString(R.string.reader_label_removed_tag, tagName);
-                messageBarType = MessageBarUtils.MessageBarType.ALERT;
                 if (mLastAddedTag != null && mLastAddedTag.equals(tagName)) {
                     mLastAddedTag = null;
                 }
@@ -391,8 +379,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             default :
                 return;
         }
-
-        MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
 
         // when this is called from a tag fragment, we need to make sure other tag fragments
         // reflect the change
