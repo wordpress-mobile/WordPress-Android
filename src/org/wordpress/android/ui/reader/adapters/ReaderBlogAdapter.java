@@ -35,18 +35,27 @@ public class ReaderBlogAdapter extends BaseAdapter {
         public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed);
     }
 
+    public interface BlogRecommendationIgnoredListener {
+        public void onRecommendationIgnored(long blogId);
+    }
+
     private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
     private final BlogFollowChangeListener mChangeListener;
+    private final BlogRecommendationIgnoredListener mRecommendationListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
 
-    public ReaderBlogAdapter(Context context, ReaderBlogType blogType, BlogFollowChangeListener changeListener) {
+    public ReaderBlogAdapter(Context context,
+                             ReaderBlogType blogType,
+                             BlogFollowChangeListener changeListener,
+                             BlogRecommendationIgnoredListener recommendationListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
         mChangeListener = changeListener;
+        mRecommendationListener = recommendationListener;
     }
 
     @SuppressLint("NewApi")
@@ -240,6 +249,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private void ignoreRecommendation(TextView txtIgnore, long blogId) {
         AniUtils.zoomAction(txtIgnore);
         ReaderBlogTable.addIgnoredRecommendation(blogId);
+        if (mRecommendationListener != null) {
+            mRecommendationListener.onRecommendationIgnored(blogId);
+        }
     }
 
     private boolean mIsTaskRunning = false;

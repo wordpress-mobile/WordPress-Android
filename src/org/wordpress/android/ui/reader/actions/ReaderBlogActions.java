@@ -24,6 +24,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
+
 public class ReaderBlogActions {
 
     /*
@@ -257,7 +259,6 @@ public class ReaderBlogActions {
             infoListener.onResult(blogInfo);
         }
     }
-
     /*
      * request blogInfo by url only
      */
@@ -268,7 +269,8 @@ public class ReaderBlogActions {
     /*
      * request the latest recommended blogs, replaces all local ones
      */
-    public static void updateRecommendedBlogs(final UpdateResultListener resultListener) {
+    public static void updateRecommendedBlogs(final UpdateResultListener resultListener,
+                                              final ArrayList<Long> ignoredBlogIds) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -285,8 +287,19 @@ public class ReaderBlogActions {
             }
         };
 
-        String path = "/read/recommendations/mine/?source=mobile&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_BLOGS);
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        StringBuilder sb = new StringBuilder();
+        sb.append("/read/recommendations/mine/")
+          .append("?source=mobile")
+          .append("&number=").append(ReaderConstants.READER_MAX_RECOMMENDED_BLOGS);
+
+        // exclude recommendations the user has chosen to ignore
+        if (ignoredBlogIds != null && ignoredBlogIds.size() > 0) {
+            for (long blogId: ignoredBlogIds) {
+                sb.append("&exclude=").append(blogId);
+            }
+        }
+
+        WordPress.getRestClientUtils().get(sb.toString(), listener, errorListener);
     }
     private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
                                                        final UpdateResultListener resultListener) {

@@ -18,6 +18,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
+
 /**
  * contains information about blogs viewed in the reader, and blogs the user is following.
  * Note that this table is populated from two endpoints:
@@ -287,7 +289,11 @@ public class ReaderBlogTable {
     }
 
     public static ReaderRecommendBlogList getRecommendedBlogs() {
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_recommended_blogs ORDER BY title", null);
+        String sql = " SELECT * FROM tbl_recommended_blogs"
+                   + " WHERE blog_id NOT IN (SELECT blog_id FROM tbl_ignored_recommendations)"
+                   + " ORDER BY title";
+
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, null);
         try {
             ReaderRecommendBlogList blogs = new ReaderRecommendBlogList();
             if (c.moveToFirst()) {
@@ -364,6 +370,24 @@ public class ReaderBlogTable {
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
+        }
+    }
+
+    /*
+     * returns a list of blogIds for recommendations the user has chosen to ignore
+     */
+    public static ArrayList<Long> getIgnoredRecommendations() {
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT blog_id FROM tbl_ignored_recommendations", null);
+        try {
+            ArrayList<Long> blogIds = new ArrayList<Long>();
+            if (c.moveToFirst()) {
+                do {
+                    blogIds.add(c.getLong(0));
+                } while (c.moveToNext());
+            }
+            return blogIds;
+        } finally {
+            SqlUtils.closeCursor(c);
         }
     }
 
