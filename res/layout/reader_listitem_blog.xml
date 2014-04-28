@@ -72,13 +72,8 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_ignore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_small"
-            android:background="@drawable/reader_transparent_selector"
-            android:text="@string/reader_label_ignore_recommendation" />
+            style="@style/ReaderTextView.Ignore" />
     </LinearLayout>
 
 

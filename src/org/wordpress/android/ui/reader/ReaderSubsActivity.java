@@ -441,7 +441,9 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
      */
     @Override
     public void onRecommendationIgnored(long blogId) {
+        // refresh blogs from local cache so ignored one is removed
         mPageAdapter.refreshBlogs();
+        // update again from server
         updateRecommendedBlogs();
     }
 

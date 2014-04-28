@@ -294,8 +294,14 @@ public class ReaderBlogActions {
 
         // exclude recommendations the user has chosen to ignore
         if (ignoredBlogIds != null && ignoredBlogIds.size() > 0) {
+            boolean isFirst = true;
             for (long blogId: ignoredBlogIds) {
-                sb.append("&exclude=").append(blogId);
+                if (isFirst) {
+                    isFirst = false;
+                    sb.append("&exclude=").append(blogId);
+                } else {
+                    sb.append(UrlUtils.urlEncode("&exclude=")).append(blogId);
+                }
             }
         }
 
