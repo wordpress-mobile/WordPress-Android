@@ -67,8 +67,7 @@ function checkNewLanguages() {
 }
 
 function checkVersions() {
-	gradle_version=$(grep -E 'versionName' build.gradle \
-		             | grep -Eo "[0-9.]+")
+	gradle_version=$(grep -E 'versionName' build.gradle | sed s/versionName// | grep -Eo "[a-zA-Z0-9.-]+" )
 	tag=$(git for-each-ref --sort=taggerdate --format '%(tag)' refs/tags|tail -1)
 	if [[ $gradle_version != $tag ]]; then
 		/bin/echo -n "build.gradle version and git tag version mismatch..."
