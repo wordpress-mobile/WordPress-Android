@@ -54,9 +54,7 @@ public class ReaderBlogActions {
         }
 
         // update local db
-        if (hasBlogUrl) {
-            ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, isAskingToFollow);
-        }
+        ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, isAskingToFollow);
         if (hasBlogId) {
             ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
         }
@@ -75,6 +73,7 @@ public class ReaderBlogActions {
                     }
                 }
             };
+            AppLog.d(T.READER, "looking up blogId for follow by url");
             ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
             return true;
         }
@@ -116,9 +115,7 @@ public class ReaderBlogActions {
                 AppLog.w(T.READER, "blog " + actionName + " failed");
                 AppLog.e(T.READER, volleyError);
                 // revert to original state
-                if (hasBlogUrl) {
-                    ReaderBlogTable.setIsFollowedBlogUrl(blogId, blogUrl, !isAskingToFollow);
-                }
+                ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, !isAskingToFollow);
                 if (hasBlogId) {
                     ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
                 }
@@ -238,9 +235,9 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtils().get("/sites/" + UrlUtils.getDomainFromUrl(blogUrl), listener, errorListener);
+            String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(blogUrl));
+            WordPress.getRestClientUtils().get("/sites/" + domain, listener, errorListener);
         }
-
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {

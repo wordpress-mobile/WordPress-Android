@@ -40,18 +40,18 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
     private final boolean mCanUseStableIds;
-    private final BlogFollowChangeListener mChangeListener;
+    private final BlogFollowChangeListener mFollowListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
 
     public ReaderBlogAdapter(Context context,
                              ReaderBlogType blogType,
-                             BlogFollowChangeListener changeListener) {
+                             BlogFollowChangeListener followListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
-        mChangeListener = changeListener;
+        mFollowListener = followListener;
 
         // recommended blogs all have a unique blogId, but followed blogs may have multiple
         // blogs with a blogId of zero
@@ -239,8 +239,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, null)) {
             showFollowStatus(txtFollow, isAskingToFollow);
-            if (mChangeListener != null) {
-                mChangeListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);
+            notifyDataSetChanged(); // <-- required for getView() to know correct follow status
+            if (mFollowListener != null) {
+                mFollowListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);
             }
         }
     }

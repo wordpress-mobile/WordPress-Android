@@ -191,7 +191,7 @@ public class ReaderBlogTable {
             // then set passed ones as followed
             if (followedBlogs != null) {
                 for (ReaderFollowedBlog blog: followedBlogs) {
-                    setIsFollowedBlogUrl(blog.blogId, blog.getUrl(), true);
+                    setIsFollowedBlog(blog.blogId, blog.getUrl(), true);
                 }
             }
 
@@ -220,7 +220,7 @@ public class ReaderBlogTable {
         }
     }
 
-    public static void setIsFollowedBlogUrl(long blogId, String url, boolean isFollowed) {
+    public static void setIsFollowedBlog(long blogId, String url, boolean isFollowed) {
         if (TextUtils.isEmpty(url)) {
             return;
         }

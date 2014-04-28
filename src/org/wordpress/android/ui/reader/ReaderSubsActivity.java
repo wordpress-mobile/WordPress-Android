@@ -333,10 +333,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             messageBarType = MessageBarUtils.MessageBarType.ALERT;
         }
         MessageBarUtils.showMessageBar(this, messageBarText, messageBarType, null);
-
-        // update followed & recommended blogs since they may have changed
-        updateFollowedBlogs();
-        updateRecommendedBlogs();
     }
 
     /*
@@ -448,7 +444,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
                     getPageAdapter().refreshBlogs(ReaderBlogType.FOLLOWED);
                 }
             }
