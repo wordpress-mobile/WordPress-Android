@@ -60,7 +60,7 @@ public class ReaderBlogActions {
         }
 
         // if we have the url but not the id, lookup the blogInfo to get the id then try again
-        if (!hasBlogId && hasBlogUrl && canLookupBlogInfo) {
+        if (!hasBlogId && canLookupBlogInfo) {
             lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
             return true;
         }
@@ -269,10 +269,11 @@ public class ReaderBlogActions {
             infoListener.onResult(blogInfo);
         }
     }
+
     /*
      * request blogInfo by url only
      */
-    public static void updateBlogInfoByUrl(final String blogUrl, final UpdateBlogInfoListener infoListener) {
+    private static void updateBlogInfoByUrl(final String blogUrl, final UpdateBlogInfoListener infoListener) {
         updateBlogInfo(0, blogUrl, infoListener);
     }
 
@@ -296,12 +297,10 @@ public class ReaderBlogActions {
             }
         };
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("/read/recommendations/mine/")
-          .append("?source=mobile")
-          .append("&number=").append(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-
-        WordPress.getRestClientUtils().get(sb.toString(), listener, errorListener);
+        String path = "/read/recommendations/mine/"
+                    + "?source=mobile"
+                    + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
     private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
                                                        final UpdateResultListener resultListener) {
