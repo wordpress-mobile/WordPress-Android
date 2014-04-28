@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderBlogInfoList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -42,8 +43,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
-
-    private int mRecommendedOffset;
 
     public ReaderBlogAdapter(Context context,
                              ReaderBlogType blogType,
@@ -252,11 +251,12 @@ public class ReaderBlogAdapter extends BaseAdapter {
             switch (getBlogType()) {
                 case RECOMMENDED:
                     int limit = ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
-                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, mRecommendedOffset);
+                    int offset = UserPrefs.getReaderRecommendedBlogOffset();
+                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, offset);
                     // if there aren't any with this offset, start over with no offset
-                    if (tmpRecommendedBlogs.size() == 0 && mRecommendedOffset > 0) {
-                        mRecommendedOffset = 0;
-                        tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, mRecommendedOffset);
+                    if (tmpRecommendedBlogs.size() == 0 && offset > 0) {
+                        UserPrefs.setReaderRecommendedBlogOffset(0);
+                        tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, 0);
                     }
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
                 case FOLLOWED:

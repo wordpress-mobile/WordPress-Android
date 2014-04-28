@@ -315,6 +315,10 @@ public class ReaderBlogTable {
         }
     }
 
+    public static long getNumRecommendedBlogs() {
+        return SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_recommended_blogs");
+    }
+
     public static void setRecommendedBlogs(ReaderRecommendBlogList blogs) {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement(

@@ -7,8 +7,11 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 
 public class UserPrefs {
-    private static final String PREFKEY_USER_ID    = "wp_userid";       // id of the current user
+    private static final String PREFKEY_USER_ID    = "wp_userid";     // id of the current user
     private static final String PREFKEY_READER_TAG = "reader_tag";    // last selected tag in the reader
+
+    // offset when showing recommended blogs
+    private static final String PREFKEY_READER_RECOMMENDED_OFFSET = "reader_recommended_offset";
 
     private static SharedPreferences prefs() {
         return PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
@@ -18,10 +21,11 @@ public class UserPrefs {
      * remove all reader-related preferences
      */
     public static void reset() {
-        SharedPreferences.Editor editor = prefs().edit();
-        editor.remove(PREFKEY_USER_ID);
-        editor.remove(PREFKEY_READER_TAG);
-        editor.commit();
+        prefs().edit()
+               .remove(PREFKEY_USER_ID)
+               .remove(PREFKEY_READER_TAG)
+               .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
+               .commit();
     }
 
 
@@ -41,30 +45,43 @@ public class UserPrefs {
         editor.commit();
     }
 
-    private static void remove(String key) {
-        prefs().edit().remove(key).commit();
-    }
-
-    public static long getCurrentUserId() {
+    private static long getLong(String key) {
         try {
-            String value = getString(PREFKEY_USER_ID);
+            String value = getString(key);
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
             return 0;
         }
     }
-    public static void setCurrentUserId(long userId) {
-        if (userId==0) {
-            remove(PREFKEY_USER_ID);
-        } else {
-            setString(PREFKEY_USER_ID, Long.toString(userId));
+    private static void setLong(String key, long value) {
+        setString(key, Long.toString(value));
+    }
+
+    private static int getInt(String key) {
+        try {
+            String value = getString(key);
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return 0;
         }
     }
-    public static void clearCurrentUserId() {
-        remove(PREFKEY_USER_ID);
+    private static void setInt(String key, int value) {
+        setString(key, Integer.toString(value));
     }
-    public static boolean hasCurrentUserId() {
-        return (getCurrentUserId() != 0);
+
+    private static void remove(String key) {
+        prefs().edit().remove(key).commit();
+    }
+
+    public static long getCurrentUserId() {
+        return getLong(PREFKEY_USER_ID);
+    }
+    public static void setCurrentUserId(long userId) {
+        if (userId == 0) {
+            remove(PREFKEY_USER_ID);
+        } else {
+            setLong(PREFKEY_USER_ID, userId);
+        }
     }
 
     public static String getReaderTag() {
@@ -72,5 +89,12 @@ public class UserPrefs {
     }
     public static void setReaderTag(String tagName) {
         setString(PREFKEY_READER_TAG, tagName);
+    }
+
+    public static int getReaderRecommendedBlogOffset() {
+        return getInt(PREFKEY_READER_RECOMMENDED_OFFSET);
+    }
+    public static void setReaderRecommendedBlogOffset(int offset) {
+        setInt(PREFKEY_READER_RECOMMENDED_OFFSET, offset);
     }
 }

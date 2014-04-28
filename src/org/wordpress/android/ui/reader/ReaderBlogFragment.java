@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
@@ -21,6 +22,7 @@ import org.wordpress.android.util.AppLog;
 public class ReaderBlogFragment extends SherlockFragment
                                 implements BlogFollowChangeListener {
     private ListView mListView;
+    private ViewGroup mFooterLoadMore;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
     private boolean mWasPaused;
@@ -59,7 +61,17 @@ public class ReaderBlogFragment extends SherlockFragment
         switch (getBlogType()) {
             case RECOMMENDED:
                 emptyView.setText(R.string.reader_empty_recommended_blogs);
+                // add footer to load more recommendations
+                mFooterLoadMore = (ViewGroup) inflater.inflate(R.layout.reader_footer_recommendations, null);
+                mListView.addFooterView(mFooterLoadMore);
+                mFooterLoadMore.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadMoreRecommendations();
+                    }
+                });
                 break;
+
             case FOLLOWED:
                 emptyView.setText(R.string.reader_empty_followed_blogs_title);
                 break;
@@ -110,6 +122,18 @@ public class ReaderBlogFragment extends SherlockFragment
             if (hasBlogAdapter()) {
                 getBlogAdapter().checkFollowStatus();
             }
+        }
+    }
+
+    /*
+     * user tapped to view more recommended blogs - increase the offset when requesting
+     * recommendations from local db and refresh the adapter
+     */
+    private void loadMoreRecommendations() {
+        int offset = UserPrefs.getReaderRecommendedBlogOffset();
+        UserPrefs.setReaderRecommendedBlogOffset(offset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY);
+        if (hasBlogAdapter()) {
+            getBlogAdapter().refresh();
         }
     }
 
