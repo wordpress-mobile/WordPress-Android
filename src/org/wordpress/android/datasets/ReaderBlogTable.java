@@ -1,6 +1,5 @@
 package org.wordpress.android.datasets;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,8 +16,6 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
-
-import java.util.ArrayList;
 
 /**
  * contains information about blogs viewed in the reader, and blogs the user is following.
@@ -58,16 +55,11 @@ public class ReaderBlogTable {
                 + "	image_url       TEXT,"
                 + "	reason          TEXT"
                 + ")");
-
-        db.execSQL("CREATE TABLE tbl_ignored_recommendations ("
-                + " blog_id         INTEGER DEFAULT 0 PRIMARY KEY"
-                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
         db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs");
-        db.execSQL("DROP TABLE IF EXISTS tbl_ignored_recommendations");
     }
 
     /*
@@ -288,10 +280,18 @@ public class ReaderBlogTable {
         }
     }
 
-    public static ReaderRecommendBlogList getRecommendedBlogs() {
-        String sql = " SELECT * FROM tbl_recommended_blogs"
-                   + " WHERE blog_id NOT IN (SELECT blog_id FROM tbl_ignored_recommendations)"
-                   + " ORDER BY title";
+    public static ReaderRecommendBlogList getAllRecommendedBlogs() {
+        return getRecommendedBlogs(0, 0);
+    }
+    public static ReaderRecommendBlogList getRecommendedBlogs(int limit, int offset) {
+        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
+
+        if (limit > 0) {
+            sql += " LIMIT " + Integer.toString(limit);
+            if (offset > 0) {
+                sql += " OFFSET " + Integer.toString(offset);
+            }
+        }
 
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, null);
         try {
@@ -350,52 +350,6 @@ public class ReaderBlogTable {
             SqlUtils.closeStatement(stmt);
             db.endTransaction();
         }
-    }
-
-    /*
-     * add a blog to the ignored recommendations table
-     */
-    public static void addIgnoredRecommendation(long blogId) {
-        SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
-        try {
-            // first remove from tbl_recommended_blogs
-            db.delete("tbl_recommended_blogs", "blog_id=?", new String[]{Long.toString(blogId)});
-
-            // then add to tbl_ignored_recommendations
-            ContentValues values = new ContentValues();
-            values.put("blog_id", blogId);
-            db.insert("tbl_ignored_recommendations", null, values);
-
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    /*
-     * returns a list of blogIds for recommendations the user has chosen to ignore
-     */
-    public static ArrayList<Long> getIgnoredRecommendations() {
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT blog_id FROM tbl_ignored_recommendations", null);
-        try {
-            ArrayList<Long> blogIds = new ArrayList<Long>();
-            if (c.moveToFirst()) {
-                do {
-                    blogIds.add(c.getLong(0));
-                } while (c.moveToNext());
-            }
-            return blogIds;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    /*
-     * clear the ignored recommendations table
-     */
-    public static void clearIgnoredRecommendations() {
-        SqlUtils.deleteAllRowsInTable(ReaderDatabase.getWritableDb(), "tbl_ignored_recommendations");
     }
 
 }

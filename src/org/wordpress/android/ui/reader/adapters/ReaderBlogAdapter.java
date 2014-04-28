@@ -17,6 +17,7 @@ import org.wordpress.android.models.ReaderBlogInfoList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -35,27 +36,22 @@ public class ReaderBlogAdapter extends BaseAdapter {
         public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed);
     }
 
-    public interface BlogRecommendationIgnoredListener {
-        public void onRecommendationIgnored(long blogId);
-    }
-
     private final LayoutInflater mInflater;
     private final ReaderBlogType mBlogType;
     private final BlogFollowChangeListener mChangeListener;
-    private final BlogRecommendationIgnoredListener mRecommendationListener;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
 
+    private int mRecommendedOffset;
+
     public ReaderBlogAdapter(Context context,
                              ReaderBlogType blogType,
-                             BlogFollowChangeListener changeListener,
-                             BlogRecommendationIgnoredListener recommendationListener) {
+                             BlogFollowChangeListener changeListener) {
         super();
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
         mChangeListener = changeListener;
-        mRecommendationListener = recommendationListener;
     }
 
     @SuppressLint("NewApi")
@@ -146,12 +142,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.txtDescription.setText(blog.getReason());
                 holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
                 holder.imgBlog.setImageUrl(blog.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
-                holder.txtIgnore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ignoreRecommendation(holder.txtIgnore, blog.blogId);
-                    }
-                });
                 break;
 
             case FOLLOWED:
@@ -204,7 +194,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
         private final TextView txtDescription;
         private final TextView txtUrl;
         private final TextView txtFollow;
-        private final TextView txtIgnore;
         private final WPNetworkImageView imgBlog;
 
         BlogViewHolder(View view) {
@@ -212,17 +201,14 @@ public class ReaderBlogAdapter extends BaseAdapter {
             txtDescription = (TextView) view.findViewById(R.id.text_description);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
-            txtIgnore = (TextView) view.findViewById(R.id.text_ignore);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
 
             switch (getBlogType()) {
                 case FOLLOWED:
-                    txtIgnore.setVisibility(View.GONE);
                     txtDescription.setVisibility(View.GONE);
                     imgBlog.setVisibility(View.GONE);
                     break;
                 case RECOMMENDED:
-                    txtIgnore.setVisibility(View.VISIBLE);
                     txtDescription.setVisibility(View.VISIBLE);
                     imgBlog.setVisibility(View.VISIBLE);
                     break;
@@ -246,14 +232,6 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    private void ignoreRecommendation(TextView txtIgnore, long blogId) {
-        AniUtils.zoomAction(txtIgnore);
-        ReaderBlogTable.addIgnoredRecommendation(blogId);
-        if (mRecommendationListener != null) {
-            mRecommendationListener.onRecommendationIgnored(blogId);
-        }
-    }
-
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
@@ -273,7 +251,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... params) {
             switch (getBlogType()) {
                 case RECOMMENDED:
-                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs();
+                    int limit = ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
+                    tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, mRecommendedOffset);
+                    // if there aren't any with this offset, start over with no offset
+                    if (tmpRecommendedBlogs.size() == 0 && mRecommendedOffset > 0) {
+                        mRecommendedOffset = 0;
+                        tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, mRecommendedOffset);
+                    }
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
                 case FOLLOWED:
                     tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();

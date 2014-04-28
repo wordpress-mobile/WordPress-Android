@@ -24,8 +24,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 
-import java.util.ArrayList;
-
 public class ReaderBlogActions {
 
     /*
@@ -269,8 +267,7 @@ public class ReaderBlogActions {
     /*
      * request the latest recommended blogs, replaces all local ones
      */
-    public static void updateRecommendedBlogs(final UpdateResultListener resultListener,
-                                              final ArrayList<Long> ignoredBlogIds) {
+    public static void updateRecommendedBlogs(final UpdateResultListener resultListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -290,20 +287,7 @@ public class ReaderBlogActions {
         StringBuilder sb = new StringBuilder();
         sb.append("/read/recommendations/mine/")
           .append("?source=mobile")
-          .append("&number=").append(ReaderConstants.READER_MAX_RECOMMENDED_BLOGS);
-
-        // exclude recommendations the user has chosen to ignore
-        if (ignoredBlogIds != null && ignoredBlogIds.size() > 0) {
-            boolean isFirst = true;
-            for (long blogId: ignoredBlogIds) {
-                if (isFirst) {
-                    isFirst = false;
-                    sb.append("&exclude=").append(blogId);
-                } else {
-                    sb.append(UrlUtils.urlEncode("&exclude=")).append(blogId);
-                }
-            }
-        }
+          .append("&number=").append(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
 
         WordPress.getRestClientUtils().get(sb.toString(), listener, errorListener);
     }
@@ -322,7 +306,7 @@ public class ReaderBlogActions {
             @Override
             public void run() {
                 ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getRecommendedBlogs();
+                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getAllRecommendedBlogs();
 
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {

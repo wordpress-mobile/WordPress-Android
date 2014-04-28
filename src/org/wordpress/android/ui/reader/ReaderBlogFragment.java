@@ -12,7 +12,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
-import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogRecommendationIgnoredListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.util.AppLog;
 
@@ -20,7 +19,7 @@ import org.wordpress.android.util.AppLog;
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends SherlockFragment
-                                implements BlogFollowChangeListener, BlogRecommendationIgnoredListener {
+                                implements BlogFollowChangeListener {
     private ListView mListView;
     private ReaderBlogAdapter mAdapter;
     private ReaderBlogType mBlogType;
@@ -126,7 +125,7 @@ public class ReaderBlogFragment extends SherlockFragment
 
     private ReaderBlogAdapter getBlogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), this, this);
+            mAdapter = new ReaderBlogAdapter(getActivity(), getBlogType(), this);
         }
         return mAdapter;
     }
@@ -141,16 +140,6 @@ public class ReaderBlogFragment extends SherlockFragment
     public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
         if (getActivity() instanceof BlogFollowChangeListener) {
             ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged(blogId, blogUrl, isFollowed);
-        }
-    }
-
-    /*
-     * called from the adapter when a blog recommendation is ignored
-     */
-    @Override
-    public void onRecommendationIgnored(long blogId) {
-        if (getActivity() instanceof BlogRecommendationIgnoredListener) {
-            ((BlogRecommendationIgnoredListener) getActivity()).onRecommendationIgnored(blogId);
         }
     }
 }

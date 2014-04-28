@@ -47,8 +47,7 @@ import java.util.List;
  */
 public class ReaderSubsActivity extends SherlockFragmentActivity
                                 implements ReaderTagAdapter.TagActionListener,
-                                           ReaderBlogAdapter.BlogFollowChangeListener,
-                                           ReaderBlogAdapter.BlogRecommendationIgnoredListener {
+                                           ReaderBlogAdapter.BlogFollowChangeListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -418,7 +417,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 }
             }
         };
-        ReaderBlogActions.updateRecommendedBlogs(listener, ReaderBlogTable.getIgnoredRecommendations());
+        ReaderBlogActions.updateRecommendedBlogs(listener);
     }
 
     /*
@@ -434,17 +433,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             }
         };
         ReaderBlogActions.updateFollowedBlogs(listener);
-    }
-
-    /*
-     * user chose to ignore a recommendation in a blog adapter
-     */
-    @Override
-    public void onRecommendationIgnored(long blogId) {
-        // refresh blogs from local cache so ignored one is removed
-        mPageAdapter.refreshBlogs();
-        // update again from server
-        updateRecommendedBlogs();
     }
 
     private class TagPageAdapter extends FragmentPagerAdapter {
