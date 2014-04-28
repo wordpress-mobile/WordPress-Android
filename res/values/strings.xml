@@ -610,7 +610,7 @@
     <string name="reader_label_followers">%s followers</string>
     <string name="reader_label_followed_blog">Blog followed</string>
     <string name="reader_label_unfollowed_blog">Blog unfollowed</string>
-    <string name="reader_label_more_recommendations">More recommended blogs</string>
+    <string name="reader_label_more_recommendations">More recommendations</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>

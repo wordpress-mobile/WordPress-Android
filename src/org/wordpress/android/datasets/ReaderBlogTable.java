@@ -284,7 +284,7 @@ public class ReaderBlogTable {
         return getRecommendedBlogs(0, 0);
     }
     public static ReaderRecommendBlogList getRecommendedBlogs(int limit, int offset) {
-        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY title";
+        String sql = " SELECT * FROM tbl_recommended_blogs ORDER BY score, title";
 
         if (limit > 0) {
             sql += " LIMIT " + Integer.toString(limit);
