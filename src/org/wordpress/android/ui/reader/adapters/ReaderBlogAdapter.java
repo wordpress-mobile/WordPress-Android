@@ -140,7 +140,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 holder.txtIgnore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ignoreRecommendation(blog.blogId);
+                        ignoreRecommendation(holder.txtIgnore, blog.blogId);
                     }
                 });
                 break;
@@ -237,8 +237,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    private void ignoreRecommendation(long blogId) {
-
+    private void ignoreRecommendation(TextView txtIgnore, long blogId) {
+        AniUtils.zoomAction(txtIgnore);
+        ReaderBlogTable.addIgnoredRecommendation(blogId);
     }
 
     private boolean mIsTaskRunning = false;

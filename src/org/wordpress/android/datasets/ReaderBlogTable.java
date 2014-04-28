@@ -1,5 +1,6 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,7 +44,8 @@ public class ReaderBlogTable {
                  + "    is_jetpack    INTEGER DEFAULT 0,"
                  + "    is_following  INTEGER DEFAULT 0,"
                  + "    num_followers INTEGER DEFAULT 0,"
-                 + "    PRIMARY KEY (blog_id, blog_url))");
+                 + "    PRIMARY KEY (blog_id, blog_url)"
+                 + ")");
 
         db.execSQL("CREATE TABLE tbl_recommended_blogs ("
                 + " blog_id         INTEGER DEFAULT 0 PRIMARY KEY,"
@@ -52,12 +54,18 @@ public class ReaderBlogTable {
                 + "	title           TEXT,"
                 + "	blog_url        TEXT COLLATE NOCASE,"
                 + "	image_url       TEXT,"
-                + "	reason          TEXT)");
+                + "	reason          TEXT"
+                + ")");
+
+        db.execSQL("CREATE TABLE tbl_ignored_recommendations ("
+                + " blog_id         INTEGER DEFAULT 0 PRIMARY KEY"
+                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_blog_info");
         db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs");
+        db.execSQL("DROP TABLE IF EXISTS tbl_ignored_recommendations");
     }
 
     /*
@@ -311,7 +319,7 @@ public class ReaderBlogTable {
         try {
             try {
                 // first delete all recommended blogs
-                db.execSQL("DELETE FROM tbl_recommended_blogs");
+                SqlUtils.deleteAllRowsInTable(db, "tbl_recommended_blogs");
 
                 // then insert the passed ones
                 if (blogs != null && blogs.size() > 0) {
@@ -336,6 +344,34 @@ public class ReaderBlogTable {
             SqlUtils.closeStatement(stmt);
             db.endTransaction();
         }
+    }
+
+    /*
+     * add a blog to the ignored recommendations table
+     */
+    public static void addIgnoredRecommendation(long blogId) {
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            // first remove from tbl_recommended_blogs
+            db.delete("tbl_recommended_blogs", "blog_id=?", new String[]{Long.toString(blogId)});
+
+            // then add to tbl_ignored_recommendations
+            ContentValues values = new ContentValues();
+            values.put("blog_id", blogId);
+            db.insert("tbl_ignored_recommendations", null, values);
+
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    /*
+     * clear the ignored recommendations table
+     */
+    public static void clearIgnoredRecommendations() {
+        SqlUtils.deleteAllRowsInTable(ReaderDatabase.getWritableDb(), "tbl_ignored_recommendations");
     }
 
 }
