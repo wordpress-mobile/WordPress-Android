@@ -374,7 +374,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         updateStatusViews();
 
-        // navigate to author's home page when avatar or name clicked
+        // navigate to author's blog when avatar or name clicked
         if (mComment.hasAuthorUrl()) {
             View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override

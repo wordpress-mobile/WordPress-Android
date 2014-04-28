@@ -160,12 +160,10 @@
             </intent-filter>
         </activity>
 
-        <!-- Native Reader Activities -->
+        <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:theme="@style/WordPress.Theme.NoBackground"
-            android:label="@string/reader">
-        </activity>
+            android:label="@string/reader" />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />

@@ -37,8 +37,6 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
     private boolean mIsShowingFollowedTags = true;
     private boolean mAlreadyUpdatedTagList;
 
-    static final String ARG_TAG_NAME       = "tag_name";
-
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_TAG_LIST_UPDATED = "tags_updated";
@@ -106,9 +104,9 @@ public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdap
         getTagAdapter().setTagType(mIsShowingFollowedTags ? ReaderTag.ReaderTagType.SUBSCRIBED : ReaderTag.ReaderTagType.RECOMMENDED);
 
         // if a tag was passed in the intent, display it in the edit field
-        final String tagName = getIntent().getStringExtra(ARG_TAG_NAME);
+        final String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
         if (!TextUtils.isEmpty(tagName)) {
-            getIntent().removeExtra(ARG_TAG_NAME);
+            getIntent().removeExtra(ReaderActivity.ARG_TAG_NAME);
             mEditAddTag.setText(tagName);
         }
 

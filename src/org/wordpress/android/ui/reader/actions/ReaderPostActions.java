@@ -9,7 +9,6 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -31,103 +30,67 @@ import java.util.Map;
 
 public class ReaderPostActions {
 
-    public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
-
     private ReaderPostActions() {
         throw new AssertionError();
     }
 
     /**
-     * perform the passed action on the passed post both locally and via API - this is
-     * optimistic in that changes to the passed post are made locally before calling API.
-     * this routines is also non-blocking - it returns before the API call completes, so
-     * callers that want to be alerted when the API call completes should pass a listener
-     **/
-    public static boolean performPostAction(final PostAction action,
-                                            final ReaderPost post,
-                                            final ReaderActions.ActionListener actionListener) {
+     * like/unlike the passed post
+     */
+    public static boolean performLikeAction(final ReaderPost post,
+                                            final boolean isAskingToLike) {
         // get post BEFORE we make changes so we can revert on error
         final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
 
-        // change local post and determine API endpoint
-        String path;
-        switch (action) {
-            case TOGGLE_LIKE:
-                boolean isLiking = !post.isLikedByCurrentUser;
-                post.isLikedByCurrentUser = isLiking;
-                if (isLiking) {
-                    post.numLikes++;
-                } else if (!isLiking && post.numLikes > 0) {
-                    post.numLikes--;
-                }
-                ReaderPostTable.addOrUpdatePost(post);
-                ReaderLikeTable.setCurrentUserLikesPost(post, isLiking);
-                path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
-                if (isLiking) {
-                    path += "new";
-                } else {
-                    path += "mine/delete";
-                }
-                break;
-
-            case TOGGLE_FOLLOW :
-                boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-                post.isFollowedByCurrentUser = isAskingToFollow;
-                ReaderPostTable.addOrUpdatePost(post);
-                ReaderPostTable.setBlogPostsFollowStatus(post.blogId, isAskingToFollow);
-                path = "sites/" + post.blogId + "/follows/";
-                if (isAskingToFollow) {
-                    path += "new";
-                } else {
-                    path += "mine/delete";
-                }
-                if (post.hasBlogUrl())
-                    ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), isAskingToFollow);
-                break;
-
-            default :
-                if (actionListener != null)
-                    actionListener.onActionResult(false);
-                return false;
+        // do nothing and return true if post's like state is same as passed
+        if (originalPost != null && originalPost.isLikedByCurrentUser == isAskingToLike) {
+            return true;
         }
 
-        // make API call, and revert to the original post on error
+        // update post in local db
+        post.isLikedByCurrentUser = isAskingToLike;
+        if (isAskingToLike) {
+            post.numLikes++;
+        } else if (!isAskingToLike && post.numLikes > 0) {
+            post.numLikes--;
+        }
+        ReaderPostTable.addOrUpdatePost(post);
+        ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
+
+        final String actionName = isAskingToLike ? "like" : "unlike";
+        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
+        if (isAskingToLike) {
+            path += "new";
+        } else {
+            path += "mine/delete";
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, "post action " + action.name() + " succeeded");
-                if (actionListener != null)
-                    actionListener.onActionResult(true);
+                AppLog.d(T.READER, String.format("post %s succeeded", actionName));
             }
         };
+
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 String error = VolleyUtils.errStringFromVolleyError(volleyError);
                 if (TextUtils.isEmpty(error)) {
-                    AppLog.w(T.READER, String.format("post action %s failed", action.name()));
+                    AppLog.w(T.READER, String.format("post %s failed", actionName));
                 } else {
-                    AppLog.w(T.READER, String.format("post action %s failed (%s)", action.name(), error));
+                    AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
+
                 // revert to original post
-                if (originalPost!=null) {
+                if (originalPost != null) {
                     ReaderPostTable.addOrUpdatePost(originalPost);
-                    switch (action) {
-                        case TOGGLE_LIKE:
-                            ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
-                            break;
-                        case TOGGLE_FOLLOW :
-                            ReaderPostTable.setBlogPostsFollowStatus(originalPost.blogId, originalPost.isFollowedByCurrentUser);
-                            if (originalPost.hasBlogUrl())
-                                ReaderBlogTable.setIsFollowedBlogUrl(post.getBlogUrl(), originalPost.isFollowedByCurrentUser);
-                           break;
-                    }
+                    ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
                 }
-                if (actionListener != null)
-                    actionListener.onActionResult(false);
             }
         };
+
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
@@ -149,8 +112,9 @@ public class ReaderPostActions {
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("destination_site_id", Long.toString(destinationBlogId));
-        if (!TextUtils.isEmpty(optionalComment))
+        if (!TextUtils.isEmpty(optionalComment)) {
             params.put("note", optionalComment);
+        }
 
         StringBuilder sb = new StringBuilder("/sites/")
                 .append(post.blogId)
@@ -318,7 +282,6 @@ public class ReaderPostActions {
     public static void updatePostsWithTag(final String tagName,
                                           final ReaderActions.RequestDataAction updateAction,
                                           final ReaderActions.UpdateResultAndCountListener resultListener) {
-//Debug.startMethodTracing("WordPress");
         final ReaderTag topic = ReaderTagTable.getTag(tagName);
         if (topic == null) {
             if (resultListener != null)
@@ -400,8 +363,9 @@ public class ReaderPostActions {
 
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
-                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER)
+                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
+                }
 
                 // json "date_range" tells the the range of dates in the response, which we want to
                 // store for use the next time we request newer/older if this response contained any
@@ -453,8 +417,64 @@ public class ReaderPostActions {
                         }
                     });
                 }
-//Debug.stopMethodTracing();
             }
         }.start();
     }
+
+    /*
+     * get the latest posts in the passed blog
+     */
+    public static void requestPostsForBlog(final long blogId,
+                                           final String blogUrl,
+                                           final ReaderActions.RequestDataAction updateAction,
+                                           final ReaderActions.ActionListener actionListener) {
+        String path;
+        if (blogId == 0) {
+            path = "sites/" + UrlUtils.getDomainFromUrl(blogUrl);
+        } else {
+            path = "sites/" + blogId;
+        }
+        path += "/posts/?meta=site,likes";
+
+        // append the date of the oldest cached post in this blog when requesting older posts
+        if (updateAction == ReaderActions.RequestDataAction.LOAD_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                path += "&before=" + UrlUtils.urlEncode(dateOldest);
+            }
+        }
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleGetPostsResponse(jsonObject, actionListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+
+            }
+        };
+        AppLog.d(T.READER, "updating posts in blog " + blogId);
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+    }
+
+    private static void handleGetPostsResponse(JSONObject jsonObject, final ReaderActions.ActionListener actionListener) {
+        if (jsonObject==null) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        ReaderPostList posts = ReaderPostList.fromJson(jsonObject);
+        ReaderPostTable.addOrUpdatePosts(null, posts);
+
+        if (actionListener != null) {
+            actionListener.onActionResult(posts.size() > 0 ? true : false);
+        }
+    }
+
 }

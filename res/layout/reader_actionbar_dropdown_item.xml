@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_item"
     style="?android:attr/spinnerDropDownItemStyle"
     android:layout_width="match_parent"
@@ -18,7 +19,7 @@
         android:maxWidth="175dp"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
-        android:text="text_name"
+        tools:text="text_name"
         android:textColor="@color/reader_actionbar_text" />
 
 </RelativeLayout>

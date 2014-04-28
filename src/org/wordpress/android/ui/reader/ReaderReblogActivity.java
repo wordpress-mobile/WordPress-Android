@@ -36,9 +36,6 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
  * don't want the activity re-created while the reblog is being submitted
  */
 public class ReaderReblogActivity extends FragmentActivity {
-    static final String ARG_BLOG_ID = "blog_id";
-    static final String ARG_POST_ID = "post_id";
-
     private long mBlogId;
     private long mPostId;
     private ReaderPost mPost;
@@ -61,8 +58,8 @@ public class ReaderReblogActivity extends FragmentActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_reblog);
 
-        mBlogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
-        mPostId = getIntent().getLongExtra(ARG_POST_ID, 0);
+        mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+        mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
 
         mSpinner = (Spinner) findViewById(R.id.spinner_reblog);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -205,8 +202,8 @@ public class ReaderReblogActivity extends FragmentActivity {
             @Override
             public void run() {
                 Intent data = new Intent();
-                data.putExtra(ARG_BLOG_ID, mBlogId);
-                data.putExtra(ARG_POST_ID, mPostId);
+                data.putExtra(ReaderActivity.ARG_BLOG_ID, mBlogId);
+                data.putExtra(ReaderActivity.ARG_POST_ID, mPostId);
                 setResult(RESULT_OK, data);
                 finish();
             }

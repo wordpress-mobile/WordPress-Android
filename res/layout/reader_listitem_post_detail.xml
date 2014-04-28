@@ -4,6 +4,7 @@
     post for PostDetailActivity, inserted as ListView header
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -39,7 +40,7 @@
                 android:background="@drawable/reader_transparent_selector"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="text_author_name"
+                tools:text="text_author_name"
                 android:textSize="@dimen/text_sz_medium" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -50,7 +51,7 @@
                 android:background="@drawable/reader_transparent_selector"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="text_blog_name"
+                tools:text="text_blog_name"
                 android:textColor="@color/reader_hyperlink"
                 android:textSize="@dimen/text_sz_medium" />
 
@@ -59,7 +60,7 @@
                 style="@style/ReaderTextView.Date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="text_date" />
+                tools:text="text_date" />
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -77,7 +78,7 @@
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
         android:background="@drawable/reader_transparent_selector"
-        android:text="text_title" />
+        tools:text="text_title" />
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
@@ -116,7 +117,7 @@
             android:textColor="@color/reader_hyperlink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="text_like_count" />
+            tools:text="text_like_count" />
 
         <!-- liking avatars are inserted into this LinearLayout at runtime -->
         <LinearLayout
