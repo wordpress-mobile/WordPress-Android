@@ -336,7 +336,7 @@ public class ImageHelper {
      * @return resized bitmap
      */
     public Bitmap getThumbnailForWPImageSpan(Context context, String filePath, int targetWidth) {
-        if (filePath == null) {
+        if (filePath == null || context == null) {
             return null;
         }
         int width = getThumbnailWidth(context, targetWidth);
