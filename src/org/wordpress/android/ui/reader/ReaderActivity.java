@@ -62,9 +62,9 @@ public class ReaderActivity extends WPActionBarActivity
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
-
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
