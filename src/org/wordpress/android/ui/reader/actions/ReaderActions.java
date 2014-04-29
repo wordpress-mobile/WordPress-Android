@@ -84,4 +84,10 @@ public class ReaderActions {
         public void onResult(ReaderBlogInfo blogInfo);
     }
 
+    /*
+     * listener when updating posts and then backfilling them
+     */
+    public interface PostBackfillListener {
+        public void onPostsBackfilled(int numNewPosts);
+    }
 }

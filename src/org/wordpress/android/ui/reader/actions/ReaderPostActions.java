@@ -477,4 +477,85 @@ public class ReaderPostActions {
         }
     }
 
+    /*
+     * "backfill" posts with a specific tag - used to fill in gaps between syncs, ex: sync the
+     * reader, come back the next day and sync again, with a popular tag there may be posts
+     * missing between the posts retrieved the previous day and the posts just retrieved
+     */
+    private static final int BACKFILL_MAX_RECURSION = 3;
+    private static void backfillPostsWithTag(final String tagName,
+                                             final Date dateBefore,
+                                             final int recursionCounter,
+                                             final ReaderActions.PostBackfillListener backfillListener) {
+        final ReaderTag topic = ReaderTagTable.getTag(tagName);
+        if (topic == null) {
+            return;
+        }
+
+        String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
+
+        StringBuilder sb = new StringBuilder(topic.getEndpoint())
+                .append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST)
+                .append("&order=DESC")
+                .append("&before=").append(UrlUtils.urlEncode(strDateBefore));
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleBackfillResponse(jsonObject, tagName, recursionCounter, backfillListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+            }
+        };
+
+        AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tagName, recursionCounter));
+        WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
+    }
+    private static void handleBackfillResponse(final JSONObject jsonObject,
+                                               final String tagName,
+                                               final int recursionCounter,
+                                               final ReaderActions.PostBackfillListener backfillListener) {
+        if (jsonObject == null) {
+            return;
+        }
+
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                final ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
+                final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
+                if (numNewPosts == 0) {
+                    return;
+                }
+
+                AppLog.i(T.READER, String.format("backfilling tag %s found %d new posts", tagName, numNewPosts));
+                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
+
+                handler.post(new Runnable() {
+                    public void run() {
+                        if (backfillListener != null) {
+                            backfillListener.onPostsBackfilled(numNewPosts);
+                        }
+
+                        // backfill again if all posts were new, but enforce a max on recursion
+                        // so we don't backfill forever
+                        boolean areAllPostsNew = (numNewPosts == ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
+                        if (areAllPostsNew && recursionCounter < BACKFILL_MAX_RECURSION) {
+                            backfillPostsWithTag(tagName,
+                                    serverPosts.getOldestPubDate(),
+                                    recursionCounter + 1,
+                                    backfillListener);
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
 }
