@@ -623,7 +623,6 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
-    <string name="reader_toast_err_no_connection">Unable to connect</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
@@ -651,7 +650,6 @@
     <string name="creating_your_account">Creating your account</string>
     <string name="creating_your_site">Creating your site</string>
     <string name="required_field">Required field</string>
-    <string name="username_password_required">Fill in all of the fields before submitting</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="invalid_password_message">Password must contain at least 4 characters</string>
     <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
@@ -700,7 +698,7 @@
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
+    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new&#160;ones</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
     <string name="ssl_certificate_trust">Trust</string>
