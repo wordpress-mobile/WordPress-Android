@@ -124,7 +124,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         }
     }
 
-    protected ReaderTagType getTagType() {
+    ReaderTagType getTagType() {
         return mTagType;
     }
 

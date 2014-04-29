@@ -62,9 +62,9 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     private String mLastAddedTag;
     private boolean mAlreadyUpdated;
 
-    protected static final String KEY_TAGS_CHANGED   = "tags_changed";
-    protected static final String KEY_BLOGS_CHANGED  = "blogs_changed";
-    protected static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    static final String KEY_TAGS_CHANGED   = "tags_changed";
+    static final String KEY_BLOGS_CHANGED  = "blogs_changed";
+    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
     private static final String KEY_ALREADY_UPDATED = "is_updated";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;

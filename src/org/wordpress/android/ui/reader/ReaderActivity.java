@@ -48,14 +48,14 @@ public class ReaderActivity extends WPActionBarActivity
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
-    protected static final String ARG_TAG_NAME = "tag_name";
-    protected static final String ARG_BLOG_ID = "blog_id";
-    protected static final String ARG_BLOG_URL = "blog_url";
-    protected static final String ARG_POST_ID = "post_id";
-    protected static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
+    static final String ARG_TAG_NAME = "tag_name";
+    static final String ARG_BLOG_ID = "blog_id";
+    static final String ARG_BLOG_URL = "blog_url";
+    static final String ARG_POST_ID = "post_id";
+    static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
 
-    protected static final String KEY_LIST_STATE = "list_state";
-    protected static final String KEY_WAS_PAUSED = "was_paused";
+    static final String KEY_LIST_STATE = "list_state";
+    static final String KEY_WAS_PAUSED = "was_paused";
 
     private static boolean mHasPerformedInitialUpdate = false;
     private static boolean mHasPerformedPurge = false;

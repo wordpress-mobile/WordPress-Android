@@ -38,7 +38,7 @@
         android:layout_height="1dp"
         android:background="@color/reader_divider_blue" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,27 +46,26 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:paddingTop="@dimen/margin_small">
 
         <EditText
             android:id="@+id/edit_add"
             style="@style/ReaderEditText.Topic"
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/btn_add"
             android:hint="@string/reader_hint_add_tag_or_url" />
 
         <ImageButton
             android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:background="@drawable/reader_transparent_selector"
             android:src="@drawable/ic_content_new" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_follow"

@@ -117,12 +117,6 @@ public class ReaderPostActions {
             params.put("note", optionalComment);
         }
 
-        StringBuilder sb = new StringBuilder("/sites/")
-                .append(post.blogId)
-                .append("/posts/")
-                .append(post.postId)
-                .append("/reblogs/new");
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -146,7 +140,10 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().post(sb.toString(), params, null, listener, errorListener);
+        String path = "/sites/" + post.blogId
+                    + "/posts/" + post.postId
+                    + "/reblogs/new";
+        WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
     }
 
     /*
@@ -540,13 +537,6 @@ public class ReaderPostActions {
             return;
         }
 
-        String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
-
-        StringBuilder sb = new StringBuilder(topic.getEndpoint())
-                .append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST)
-                .append("&order=DESC")
-                .append("&before=").append(UrlUtils.urlEncode(strDateBefore));
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -560,8 +550,12 @@ public class ReaderPostActions {
             }
         };
 
+        String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
+        String path = topic.getEndpoint() + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
+                                          + "&order=DESC"
+                                          + "&before=" + UrlUtils.urlEncode(strDateBefore);
         AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tagName, recursionCounter));
-        WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
     private static void handleBackfillResponse(final JSONObject jsonObject,
                                                final String tagName,

@@ -566,7 +566,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mPostAdapter != null);
     }
 
-    protected boolean isPostAdapterEmpty() {
+    boolean isPostAdapterEmpty() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
@@ -577,7 +577,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    protected String getCurrentTag() {
+    String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
@@ -677,9 +677,9 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * get latest posts for this tag from the server
      */
-    protected void updatePostsWithTag(final String tagName,
-                                      final RequestDataAction updateAction,
-                                      final RefreshType refreshType) {
+    void updatePostsWithTag(final String tagName,
+                            final RequestDataAction updateAction,
+                            final RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
@@ -764,7 +764,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mPullToRefreshHelper != null);
     }
 
-    public void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
+    void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
         }

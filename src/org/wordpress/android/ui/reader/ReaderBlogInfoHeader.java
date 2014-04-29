@@ -23,10 +23,10 @@ import org.wordpress.android.util.ToastUtils;
  * header view showing blog name, description, follower count & follow button
  * designed for use on ReaderPostListFragment, which shows an mshot of the blog
  */
-public class ReaderBlogInfoHeader extends LinearLayout {
+class ReaderBlogInfoHeader extends LinearLayout {
     private boolean mHasBlogInfo;
 
-    protected interface OnBlogInfoListener {
+    interface OnBlogInfoListener {
         void onBlogInfoShown(ReaderBlogInfo blogInfo);
     }
     private OnBlogInfoListener mListener;
