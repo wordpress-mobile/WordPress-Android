@@ -17,6 +17,9 @@ import org.wordpress.android.models.ReaderPost;
  *  3. caller can access local state change without waiting for the network request
  *  4. if the network request fails, the method restores the previous state of the local data
  *  5. if caller passes a listener, it can be alerted to the actual success/failure of the request
+ *
+ *  note that all methods MUST be called from the UI thread in order to guarantee that listeners
+ *  are alerted on the UI thread
  */
 public class ReaderActions {
 

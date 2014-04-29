@@ -105,8 +105,9 @@ public class ReaderPostActions {
                                   final String optionalComment,
                                   final ReaderActions.ActionListener actionListener) {
         if (post == null) {
-            if (actionListener != null)
+            if (actionListener != null) {
                 actionListener.onActionResult(false);
+            }
             return;
         }
 
@@ -126,19 +127,21 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 boolean isReblogged = (jsonObject!=null ? JSONUtil.getBool(jsonObject, "is_reblogged") : false);
-                //boolean success = (jsonObject!=null ? JSONUtil.getBool(jsonObject, "success") : false);
-                if (isReblogged)
+                if (isReblogged) {
                     ReaderPostTable.setPostReblogged(post, true);
-                if (actionListener != null)
+                }
+                if (actionListener != null) {
                     actionListener.onActionResult(isReblogged);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
+                }
 
             }
         };
@@ -163,9 +166,9 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (resultListener!=null)
+                if (resultListener != null) {
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-
+                }
             }
         };
         AppLog.d(T.READER, "updating post");
@@ -176,8 +179,9 @@ public class ReaderPostActions {
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
-            if (resultListener != null)
+            if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
             return;
         }
 
@@ -231,12 +235,14 @@ public class ReaderPostActions {
      * using the /sites/ endpoint with ?meta=likes
      */
     private static void handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
-        if (post == null || jsonPost == null)
+        if (post == null || jsonPost == null) {
             return;
+        }
 
         JSONObject jsonLikes = JSONUtil.getJSONChild(jsonPost, "meta/data/likes");
-        if (jsonLikes == null)
+        if (jsonLikes == null) {
             return;
+        }
 
         ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
         ReaderUserTable.addOrUpdateUsers(likingUsers);
@@ -258,17 +264,18 @@ public class ReaderPostActions {
                 post.blogId = blogId;
                 ReaderPostTable.addOrUpdatePost(post);
                 handlePostLikes(post, jsonObject);
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
-
+                }
             }
         };
         AppLog.d(T.READER, "requesting post");
@@ -278,7 +285,8 @@ public class ReaderPostActions {
     /*
      * get the latest posts in the passed topic - note that this uses an UpdateResultAndCountListener
      * so the caller can be told how many new posts were added - use the second method which accepts
-     * a backfillListener to request new posts and backfill missing posts
+     * a backfillListener to request new posts and backfill missing posts - note that a backfill
+     * will NOT occur unless a backfillListener is passed
      */
     public static void updatePostsInTag(final String tagName,
                                         final ReaderActions.RequestDataAction updateAction,
@@ -296,8 +304,9 @@ public class ReaderPostActions {
                                          final ReaderActions.PostBackfillListener backfillListener) {
         final ReaderTag topic = ReaderTagTable.getTag(tagName);
         if (topic == null) {
-            if (resultListener != null)
+            if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+            }
             return;
         }
 
@@ -325,8 +334,9 @@ public class ReaderPostActions {
                     String dateOldest = ReaderTagTable.getTagOldestDate(tagName);
                     // if oldest date isn't stored, it means we haven't requested older posts until
                     // now, so use the date of the oldest stored post
-                    if (TextUtils.isEmpty(dateOldest))
+                    if (TextUtils.isEmpty(dateOldest)) {
                         dateOldest = ReaderPostTable.getOldestPubDateWithTag(tagName);
+                    }
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
                         AppLog.d(T.READER, String.format("requesting older posts in topic %s (%s)", tagName, dateOldest));
@@ -349,8 +359,9 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (resultListener!=null)
+                if (resultListener != null) {
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+                }
             }
         };
 
@@ -363,8 +374,9 @@ public class ReaderPostActions {
                                                          final ReaderActions.UpdateResultAndCountListener resultListener,
                                                          final ReaderActions.PostBackfillListener backfillListener) {
         if (jsonObject == null) {
-            if (resultListener != null)
+            if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+            }
             return;
         }
         final Handler handler = new Handler();
@@ -402,13 +414,15 @@ public class ReaderPostActions {
                     switch (updateAction) {
                         case LOAD_NEWER:
                             String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
-                            if (!TextUtils.isEmpty(newest))
+                            if (!TextUtils.isEmpty(newest)) {
                                 ReaderTagTable.setTagNewestDate(tagName, newest);
+                            }
                             break;
                         case LOAD_OLDER:
                             String oldest = jsonDateRange.has("after") ? JSONUtil.getString(jsonDateRange, "after") : JSONUtil.getString(jsonDateRange, "oldest");
-                            if (!TextUtils.isEmpty(oldest))
+                            if (!TextUtils.isEmpty(oldest)) {
                                 ReaderTagTable.setTagOldestDate(tagName, oldest);
+                            }
                             break;
                     }
                 }
@@ -429,7 +443,6 @@ public class ReaderPostActions {
                 ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
 
                 AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in topic %s", serverPosts.size(), numNewPosts, tagName));
-
 
                 handler.post(new Runnable() {
                     public void run() {
@@ -487,9 +500,9 @@ public class ReaderPostActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
-
+                }
             }
         };
         AppLog.d(T.READER, "updating posts in blog " + blogId);
@@ -498,8 +511,9 @@ public class ReaderPostActions {
 
     private static void handleGetPostsResponse(JSONObject jsonObject, final ReaderActions.ActionListener actionListener) {
         if (jsonObject==null) {
-            if (actionListener != null)
+            if (actionListener != null) {
                 actionListener.onActionResult(false);
+            }
             return;
         }
 
