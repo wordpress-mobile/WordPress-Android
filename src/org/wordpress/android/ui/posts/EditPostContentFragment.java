@@ -883,6 +883,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
+                if (!hasActivity()) {
+                    return;
+                }
+
                 Bitmap downloadedBitmap = container.getBitmap();
                 if (downloadedBitmap == null) {
                     //no bitmap downloaded from the server.
