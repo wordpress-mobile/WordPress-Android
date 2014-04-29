@@ -125,14 +125,19 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     // used when the list type is ReaderPostListType.TAG
     public void setCurrentTag(String tagName) {
-        mCurrentTag = StringUtils.notNullStr(tagName);
-        reload(false);
+        tagName = StringUtils.notNullStr(tagName);
+        if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
+            mCurrentTag = tagName;
+            reload(false);
+        }
     }
 
     // used when the list type is ReaderPostListType.BLOG
     public void setCurrentBlog(long blogId) {
-        mCurrentBlogId = blogId;
-        reload(false);
+        if (blogId != mCurrentBlogId) {
+            mCurrentBlogId = blogId;
+            reload(false);
+        }
     }
 
     private void clear() {

@@ -71,6 +71,7 @@ public class ReaderActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
+        // no menu drawer if this is blog detail
         mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
         if (mIsBlogDetail) {
             setContentView(R.layout.reader_activity_main);
@@ -82,7 +83,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-            // determine which fragment to show, default to post list
+            // determine which fragment to show (post list or detail), default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
                 fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
@@ -127,13 +128,16 @@ public class ReaderActivity extends WPActionBarActivity
         super.onStart();
 
         // at startup, purge the database of older data and perform an initial update - note
-        // that these booleans are static
-        if (!mHasPerformedPurge) {
-            mHasPerformedPurge = true;
-            ReaderDatabase.purgeAsync();
-        }
-        if (!mHasPerformedInitialUpdate) {
-            performInitialUpdate();
+        // that these booleans are static - skipped for blog detail since posts with tag
+        // are currently always shown before posts in blog
+        if (!mIsBlogDetail) {
+            if (!mHasPerformedPurge) {
+                mHasPerformedPurge = true;
+                ReaderDatabase.purgeAsync();
+            }
+            if (!mHasPerformedInitialUpdate) {
+                performInitialUpdate();
+            }
         }
     }
 

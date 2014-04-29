@@ -307,8 +307,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
         );
 
-        mListView.setAdapter(getPostAdapter());
-
         return view;
     }
 
@@ -331,6 +329,28 @@ public class ReaderPostListFragment extends SherlockFragment
 
         setHasOptionsMenu(true);
         checkActionBar();
+
+        // assign the post list adapter
+        boolean adapterAlreadyExists = hasPostAdapter();
+        mListView.setAdapter(getPostAdapter());
+
+        // if adapter didn't already exist, populate it now then update the tag/blog - this
+        // check is important since without it the adapter would be reset and posts would
+        // be updated every time the user moves between fragments
+        if (!adapterAlreadyExists) {
+            switch (getPostListType()) {
+                case TAG:
+                    getPostAdapter().setCurrentTag(mCurrentTag);
+                    if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+                    }
+                    break;
+                case BLOG:
+                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -515,7 +535,6 @@ public class ReaderPostListFragment extends SherlockFragment
                     }
                     break;
             }
-
         }
     };
 
@@ -548,7 +567,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     protected boolean isPostAdapterEmpty() {
-        return (mPostAdapter==null || mPostAdapter.isEmpty());
+        return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final String tagName) {
@@ -567,8 +586,9 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setCurrentTag(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         // skip if this is already the current tag and the post adapter is already showing it - this
         // will happen when the list fragment is restored and the current tag is re-selected in the
@@ -576,7 +596,9 @@ public class ReaderPostListFragment extends SherlockFragment
         if (isCurrentTag(tagName)
                 && hasPostAdapter()
                 && tagName.equals(getPostAdapter().getCurrentTag()))
+        {
             return;
+        }
 
         mCurrentTag = tagName;
         UserPrefs.setReaderTag(tagName);
@@ -594,7 +616,9 @@ public class ReaderPostListFragment extends SherlockFragment
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
-        getPostAdapter().refresh();
+        if (hasPostAdapter()) {
+            getPostAdapter().refresh();
+        }
     }
 
     /*
@@ -602,9 +626,9 @@ public class ReaderPostListFragment extends SherlockFragment
      * post may have been changed (either by the user, or because it updated)
      */
     void reloadPost(ReaderPost post) {
-        if (post == null)
-            return;
-        getPostAdapter().reloadPost(post);
+        if (post != null) {
+            getPostAdapter().reloadPost(post);
+        }
     }
 
     /*
@@ -654,8 +678,8 @@ public class ReaderPostListFragment extends SherlockFragment
      * get latest posts for this tag from the server
      */
     protected void updatePostsWithTag(final String tagName,
-                                    final RequestDataAction updateAction,
-                                    final RefreshType refreshType) {
+                                      final RequestDataAction updateAction,
+                                      final RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
@@ -708,8 +732,8 @@ public class ReaderPostListFragment extends SherlockFragment
 
         // if this is an automatic request for newer posts, assign a backfill listener to
         // ensure there aren't any gaps between this update and the previous one
-        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER
-                && refreshType == RefreshType.AUTOMATIC);
+        boolean allowBackfill =
+                (updateAction == RequestDataAction.LOAD_NEWER && refreshType == RefreshType.AUTOMATIC);
         if (allowBackfill) {
             ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
                 @Override
@@ -720,7 +744,6 @@ public class ReaderPostListFragment extends SherlockFragment
                     }
                     if (!isCurrentTag(tagName)) {
                         AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
-
                     } else if (isPostAdapterEmpty()) {
                         // show the new posts right away if this is the current tag and there aren't
                         // any posts showing, otherwise just let them be shown on the next refresh
@@ -733,7 +756,6 @@ public class ReaderPostListFragment extends SherlockFragment
             ReaderPostActions.updatePostsInTag(tagName, updateAction, resultListener);
         }
     }
-
 
     boolean isUpdating() {
         return mIsUpdating;
