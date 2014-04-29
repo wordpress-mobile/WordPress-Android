@@ -33,6 +33,15 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderTagPreview(Context context, String tagName) {
+        Intent intent = new Intent(context, ReaderActivity.class);
+        intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
+        intent.putExtra(ReaderActivity.ARG_IS_TAG_PREVIEW, true);
+        intent.putExtra(ReaderActivity.ARG_IS_BLOG_DETAIL, false);
+        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_LIST);
+        context.startActivity(intent);
+    }
+
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
         if (post == null) {
             return;

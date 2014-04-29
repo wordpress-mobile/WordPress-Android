@@ -160,6 +160,14 @@ public class ReaderTagTable {
         }
     }
 
+    public static String getEndpointForTag(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return null;
+        }
+        String[] args = {tagName};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT endpoint FROM tbl_tags WHERE tag_name=?", args);
+    }
+
     public static ReaderTagList getDefaultTags() {
         String[] args = {Integer.toString(ReaderTag.ReaderTagType.DEFAULT.toInt())};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE topic_type=? ORDER BY tag_name", args);

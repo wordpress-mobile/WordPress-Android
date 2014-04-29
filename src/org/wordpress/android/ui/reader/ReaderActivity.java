@@ -21,6 +21,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -41,6 +42,7 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
+                                       OnTagSelectedListener,
                                        FragmentManager.OnBackStackChangedListener,
                                        ReaderPostDetailFragment.PostChangeListener,
                                        ReaderFullScreenUtils.FullScreenListener {
@@ -53,14 +55,17 @@ public class ReaderActivity extends WPActionBarActivity
     static final String ARG_BLOG_URL = "blog_url";
     static final String ARG_POST_ID = "post_id";
     static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
+    static final String ARG_IS_TAG_PREVIEW = "is_tag_preview";
 
     static final String KEY_LIST_STATE = "list_state";
     static final String KEY_WAS_PAUSED = "was_paused";
 
-    private static boolean mHasPerformedInitialUpdate = false;
-    private static boolean mHasPerformedPurge = false;
-    private boolean mIsFullScreen = false;
+    private static boolean mHasPerformedInitialUpdate;
+    private static boolean mHasPerformedPurge;
+
+    private boolean mIsFullScreen;
     private boolean mIsBlogDetail;
+    private boolean mIsTagPreview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,15 +76,20 @@ public class ReaderActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        // no menu drawer if this is blog detail
         mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
-        if (mIsBlogDetail) {
+        mIsTagPreview = getIntent().getBooleanExtra(ARG_IS_TAG_PREVIEW, false);
+
+        // no menu drawer if this is blog detail or tag preview
+        if (mIsBlogDetail || mIsTagPreview) {
             setContentView(R.layout.reader_activity_main);
-            // this sets the title to "Loading..." - fragment will change it to the name
-            // of the blog once it's loaded
-            setTitle(R.string.reader_title_blog_detail);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);
+        }
+
+        if (mIsBlogDetail) {
+            // this sets "Loading..." as the title, fragment will change it to the name
+            // of the blog once it's loaded
+            setTitle(R.string.reader_title_blog_detail);
         }
 
         if (savedInstanceState == null) {
@@ -104,12 +114,13 @@ public class ReaderActivity extends WPActionBarActivity
                         if (TextUtils.isEmpty(tagName)) {
                             tagName = UserPrefs.getReaderTag();
                         }
-                        if (TextUtils.isEmpty(tagName) || !ReaderTagTable.tagExists(tagName)) {
+                        if (!mIsTagPreview && !ReaderTagTable.tagExists(tagName)) {
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
                         showListFragmentForTag(tagName);
                     }
                     break;
+
                 case POST_DETAIL:
                     long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
                     long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
@@ -259,7 +270,7 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing list of latest posts for a specific tag
      */
     private void showListFragmentForTag(final String tagName) {
-        Fragment fragment = ReaderPostListFragment.newInstance(tagName);
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName, mIsTagPreview);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
@@ -380,6 +391,14 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     public void onPostSelected(long blogId, long postId) {
         showDetailFragment(blogId, postId);
+    }
+
+    /*
+     * user tapped a tag in the post list fragment
+     */
+    @Override
+    public void onTagSelected(String tagName) {
+        ReaderActivityLauncher.showReaderTagPreview(this, tagName);
     }
 
     /*

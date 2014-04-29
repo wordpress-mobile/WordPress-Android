@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -66,6 +69,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final String mFollowing;
     private final String mFollow;
 
+    private OnTagSelectedListener mOnTagSelectedListener;
     private final ReaderActions.RequestReblogListener mReblogListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -113,6 +117,10 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private Context getContext() {
         return mContext;
+    }
+
+    public void setOnTagSelectedListener(OnTagSelectedListener listener) {
+        mOnTagSelectedListener = listener;
     }
 
     ReaderPostListType getPostListType() {
@@ -316,21 +324,23 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        /*final String firstTag = post.getFirstTag();
+        // get the first tag on this post, excluding the current tag
+        final String firstTag = post.getFirstTag(getCurrentTag());
         if (!TextUtils.isEmpty(firstTag)) {
             holder.txtTag.setVisibility(View.VISIBLE);
             holder.txtTag.setText(firstTag);
             holder.txtTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mTagListener != null)
-                        mTagListener.onTagClick(firstTag);
+                    if (mOnTagSelectedListener != null) {
+                        mOnTagSelectedListener.onTagSelected(firstTag);
+                    }
                 }
             });
         } else {
             holder.txtTag.setVisibility(View.GONE);
             holder.txtTag.setOnClickListener(null);
-        }*/
+        }
 
         // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
@@ -443,6 +453,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final TextView txtBlogName;
         private final TextView txtDate;
         private final TextView txtFollow;
+        private final TextView txtTag;
 
         private final TextView txtLikeCount;
         private final TextView txtCommentCount;
@@ -460,6 +471,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
             txtDate = (TextView) view.findViewById(R.id.text_date);
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
+            txtTag = (TextView) view.findViewById(R.id.text_tag);
 
             txtCommentCount = (TextView) view.findViewById(R.id.text_comment_count);
             txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);

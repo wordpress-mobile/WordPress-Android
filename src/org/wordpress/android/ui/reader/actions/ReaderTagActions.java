@@ -29,7 +29,7 @@ public class ReaderTagActions {
         throw new AssertionError();
     }
 
-    public static String getReadEndpointForTag(final String tagName) {
+    protected static String getReadEndpointForTag(final String tagName) {
         return String.format("/read/tags/%s/posts", sanitizeTitle(tagName));
     }
 
@@ -49,8 +49,6 @@ public class ReaderTagActions {
         switch (action) {
             case DELETE:
                 originalTopic = ReaderTagTable.getTag(tagName);
-                if (originalTopic==null)
-                    return false;
                 // delete tag & all related posts
                 ReaderTagTable.deleteTag(tagName);
                 ReaderPostTable.deletePostsWithTag(tagName);
@@ -101,7 +99,9 @@ public class ReaderTagActions {
                 switch (action) {
                     case DELETE:
                         // add back original topic
-                        ReaderTagTable.addOrUpdateTag(originalTopic);
+                        if (originalTopic != null) {
+                            ReaderTagTable.addOrUpdateTag(originalTopic);
+                        }
                         break;
                     case ADD:
                         // remove new topic
@@ -118,12 +118,11 @@ public class ReaderTagActions {
         return true;
     }
 
-
     /*
      * returns the passed tagName formatted for use with our API
      * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
      */
-    private static String sanitizeTitle(final String tagName) {
+    protected static String sanitizeTitle(final String tagName) {
         if (tagName==null)
             return "";
 

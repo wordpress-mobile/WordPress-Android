@@ -583,11 +583,19 @@ public class ReaderPost {
     }
 
     private transient String firstTag;
-    public String getFirstTag() {
+    public String getFirstTag(String exceptForThisTag) {
         if (firstTag == null) {
             List<String> tags = getTagList();
             if (tags != null && tags.size() > 0) {
                 firstTag = tags.get(0);
+                // exclude the passed tag
+                if (exceptForThisTag != null && firstTag.equals(exceptForThisTag)) {
+                    if (tags.size() > 1) {
+                        firstTag = tags.get(1);
+                    } else {
+                        firstTag = "";
+                    }
+                }
             } else {
                 firstTag = "";
             }

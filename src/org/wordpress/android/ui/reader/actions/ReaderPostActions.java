@@ -14,7 +14,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
@@ -299,15 +298,8 @@ public class ReaderPostActions {
                                          final ReaderActions.RequestDataAction updateAction,
                                          final ReaderActions.UpdateResultAndCountListener resultListener,
                                          final ReaderActions.PostBackfillListener backfillListener) {
-        final ReaderTag topic = ReaderTagTable.getTag(tagName);
-        if (topic == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
-            }
-            return;
-        }
 
-        StringBuilder sb = new StringBuilder(topic.getEndpoint());
+        StringBuilder sb = new StringBuilder(getEndpointForTag(tagName));
 
         // append #posts to retrieve
         sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
@@ -344,8 +336,6 @@ public class ReaderPostActions {
             AppLog.d(T.READER, String.format("requesting posts in empty topic %s", tagName));
         }
 
-        String endpoint = sb.toString();
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -362,7 +352,7 @@ public class ReaderPostActions {
             }
         };
 
-        WordPress.getRestClientUtils().get(endpoint, null, null, listener, errorListener);
+        WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostsWithTagResponse(final String tagName,
@@ -523,6 +513,19 @@ public class ReaderPostActions {
     }
 
     /*
+     * returns the endpoint to use for the passed tag - first gets it from local db, if not
+     * there it generates it "by hand"
+     */
+    private static String getEndpointForTag(String tagName) {
+        String endpoint = ReaderTagTable.getEndpointForTag(tagName);
+        if (TextUtils.isEmpty(endpoint)) {
+            return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tagName));
+        } else {
+            return endpoint;
+        }
+    }
+
+    /*
      * "backfill" posts with a specific tag - used to fill in gaps between syncs, ex: sync the
      * reader, come back the next day and sync again, with a popular tag there may be posts
      * missing between the posts retrieved the previous day and the posts just retrieved
@@ -532,11 +535,6 @@ public class ReaderPostActions {
                                              final Date dateBefore,
                                              final int recursionCounter,
                                              final ReaderActions.PostBackfillListener backfillListener) {
-        final ReaderTag topic = ReaderTagTable.getTag(tagName);
-        if (topic == null) {
-            return;
-        }
-
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -551,9 +549,10 @@ public class ReaderPostActions {
         };
 
         String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
-        String path = topic.getEndpoint() + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
-                                          + "&order=DESC"
-                                          + "&before=" + UrlUtils.urlEncode(strDateBefore);
+        String path = getEndpointForTag(tagName)
+                    + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
+                    + "&order=DESC"
+                    + "&before=" + UrlUtils.urlEncode(strDateBefore);
         AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tagName, recursionCounter));
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
