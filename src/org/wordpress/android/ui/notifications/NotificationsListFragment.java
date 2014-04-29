@@ -80,10 +80,16 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onPause() {
         // unregister the listener and close the cursor
         mBucket.removeListener(this);
-        mNotesAdapter.closeCursor();
 
         unregisterReceiver();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mNotesAdapter.closeCursor();
+
+        super.onDestroy();
     }
 
     @Override

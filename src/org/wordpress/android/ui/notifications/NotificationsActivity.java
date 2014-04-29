@@ -46,8 +46,6 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final int UNSPECIFIED_NOTE_ID = -1;
 
     private NotificationsListFragment mNotesList;
-    private boolean mLoadingMore = false;
-    private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
     private boolean mDualPane;
     private int mSelectedNoteId;
@@ -355,9 +353,5 @@ public class NotificationsActivity extends WPActionBarActivity
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
           .commit();
-    }
-
-    private interface LoadNotesCallback {
-        void notesLoaded();
     }
 }
