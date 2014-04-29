@@ -118,11 +118,12 @@ public class ReaderActivity extends WPActionBarActivity
                         if (TextUtils.isEmpty(tagName)) {
                             tagName = UserPrefs.getReaderTag();
                         }
-                        // if we're previewing a tag change the activity title, otherwise
-                        // this is a followed tag so revert to default if it doesn't exist
+
                         if (mIsTagPreview) {
-                            setTitle(getString(R.string.reader_title_tag_preview));
+                            // if we're previewing a tag set it as the activity title
+                            setTitle(tagName);
                         } else if (!ReaderTagTable.tagExists(tagName)) {
+                            // this is a followed tag so revert to default if it doesn't exist
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
                         showListFragmentForTag(tagName);

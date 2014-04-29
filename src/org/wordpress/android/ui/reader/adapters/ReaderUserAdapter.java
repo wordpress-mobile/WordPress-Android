@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
@@ -87,7 +88,7 @@ public class ReaderUserAdapter extends BaseAdapter {
 
             // enable following/unfollowing the user's blog
             if (holder.txtFollow.isSelected() != user.isFollowed) {
-                showFollowStatus(holder.txtFollow, user.isFollowed);
+                ReaderUtils.showFollowStatus(holder.txtFollow, user.isFollowed);
             }
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,14 +121,7 @@ public class ReaderUserAdapter extends BaseAdapter {
         }
 
         user.isFollowed = isAskingToFollow;
-        showFollowStatus(txtFollow, isAskingToFollow);
-    }
-
-    private void showFollowStatus(TextView txtFollow, boolean isFollowing) {
-        txtFollow.setText(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        int drawableId = (isFollowing ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-        txtFollow.setSelected(isFollowing);
+        ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
     }
 
     private static class UserViewHolder {

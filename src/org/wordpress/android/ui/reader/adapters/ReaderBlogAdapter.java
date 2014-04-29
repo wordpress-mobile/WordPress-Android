@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -179,7 +180,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
 
         // show the correct following status
-        showFollowStatus(holder.txtFollow, isFollowing);
+        ReaderUtils.showFollowStatus(holder.txtFollow, isFollowing);
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,16 +230,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    private void showFollowStatus(TextView txtFollow, boolean isFollowing) {
-        txtFollow.setText(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        int drawableId = (isFollowing ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-        txtFollow.setSelected(isFollowing);
-    }
-
     private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, null)) {
-            showFollowStatus(txtFollow, isAskingToFollow);
+            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             notifyDataSetChanged(); // <-- required for getView() to know correct follow status
             if (mFollowListener != null) {
                 mFollowListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);

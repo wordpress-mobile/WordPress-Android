@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -665,8 +667,14 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        TextView txtTagName = (TextView) mTagPreviewHeader.findViewById(R.id.text_tag_name);
-        txtTagName.setText(getCurrentTag());
+        final TextView txtTagName = (TextView) mTagPreviewHeader.findViewById(R.id.text_tag_name);
+        String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.grey_extra_dark);
+        String htmlTag = "<font color=" + color + ">" + getCurrentTag() + "</font>";
+        String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
+        txtTagName.setText(Html.fromHtml(htmlLabel));
+
+        final TextView txtFollow = (TextView) mTagPreviewHeader.findViewById(R.id.text_follow_blog);
+        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.tagExists(getCurrentTag()));
     }
 
     /*

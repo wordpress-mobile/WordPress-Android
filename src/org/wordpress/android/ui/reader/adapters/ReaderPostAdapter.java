@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.TagListType;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -301,7 +302,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             }
 
             // follow/following - supported by both wp and non-wp (rss) posts
-            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+            ReaderUtils.showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -555,21 +556,10 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
-        showFollowStatus(holder.txtFollow, isAskingToFollow);
+        ReaderUtils.showFollowStatus(holder.txtFollow, isAskingToFollow);
         
         // update follow status of all other posts in the same blog
         updateFollowStatusOnPostsForBlog(post.blogId, isAskingToFollow);
-    }
-
-    private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
-        if (isFollowed == txtFollow.isSelected()) {
-            return;
-        }
-
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setText(isFollowed ? mFollowing : mFollow);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
     private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {

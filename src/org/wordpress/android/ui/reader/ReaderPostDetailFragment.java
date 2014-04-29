@@ -989,25 +989,11 @@ public class ReaderPostDetailFragment extends SherlockFragment
     private void refreshFollowed() {
         if (!hasActivity())
             return;
+
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
-        showFollowedStatus(txtFollow, isFollowed);
-    }
 
-    private void showFollowedStatus(final TextView txtFollow, boolean isFollowed) {
-        if (txtFollow == null)
-            return;
-        final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
-        txtFollow.setText(followText);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                togglePostFollowed(mPost, txtFollow);
-            }
-        });
+        ReaderUtils.showFollowStatus(txtFollow, isFollowed);
     }
 
     /*
@@ -1332,7 +1318,14 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
             txtTitle.setText(postTitle);
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
-            showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
+
+            ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
+            txtFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    togglePostFollowed(mPost, txtFollow);
+                }
+            });
 
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now

@@ -92,7 +92,7 @@ class ReaderBlogInfoHeader extends LinearLayout {
                 txtFollowCnt.setVisibility(View.INVISIBLE);
             }
 
-            showBlogFollowStatus(txtFollowBtn, blogInfo.isFollowing);
+            ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
 
@@ -156,22 +156,8 @@ class ReaderBlogInfoHeader extends LinearLayout {
 
         boolean isAskingToFollow = !blogInfo.isFollowing;
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {
-            showBlogFollowStatus(txtFollow, isAskingToFollow);
+            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
-    }
-
-    /*
-     * updates the follow button in the blog header to match whether the current
-     * user is following this blog
-     */
-    private void showBlogFollowStatus(TextView txtFollow, boolean isFollowed) {
-        String following = getContext().getString(R.string.reader_btn_unfollow).toUpperCase();
-        String follow = getContext().getString(R.string.reader_btn_follow).toUpperCase();
-
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setText(isFollowed ? following : follow);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 
     private void showProgress() {
