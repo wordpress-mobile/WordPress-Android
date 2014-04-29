@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -1039,13 +1041,40 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        // listener will fire every time the blog info is displayed, use it to set the
-        // mshot url if it hasn't already been set
+        // listener will fire every time the blog info is displayed - may happen twice:
+        //  (1) when info is shown from local db
+        //  (2) when info is updated from server
         ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
             @Override
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
-                if (hasActivity() && TextUtils.isEmpty(mHeaderImage.getUrl())) {
-                    loadHeaderImage(blogInfo);
+                if (hasActivity() && blogInfo != null) {
+                    // set the activity title to the name of the blog (activity title will
+                    // be "Loading..." until this point
+                    if (blogInfo.hasName()) {
+                        getActivity().setTitle(blogInfo.getName());
+                    } else {
+                        getActivity().setTitle(R.string.reader_untitled_post);
+                    }
+                    // set the mshot url if it hasn't already been set
+                    if (TextUtils.isEmpty(mHeaderImage.getUrl())) {
+                        loadHeaderImage(blogInfo);
+                    }
+                }
+            }
+            @Override
+            public void onBlogInfoFailed() {
+                if (hasActivity()) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog);
+                    // close the fragment after a second - otherwise user will be left looking
+                    // at an empty screen
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (hasActivity()) {
+                                getActivity().onBackPressed();
+                            }
+                        }
+                    }, 1000);
                 }
             }
         };

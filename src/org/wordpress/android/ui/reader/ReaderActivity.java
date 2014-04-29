@@ -75,6 +75,8 @@ public class ReaderActivity extends WPActionBarActivity
         mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
         if (mIsBlogDetail) {
             setContentView(R.layout.reader_activity_main);
+            // this sets the title to "Loading..." - fragment will change it to the name
+            // of the blog once it's loaded
             setTitle(R.string.reader_title_blog_detail);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);

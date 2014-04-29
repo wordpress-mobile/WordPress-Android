@@ -17,7 +17,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.ToastUtils;
 
 /*
  * header view showing blog name, description, follower count & follow button
@@ -28,8 +27,9 @@ class ReaderBlogInfoHeader extends LinearLayout {
 
     interface OnBlogInfoListener {
         void onBlogInfoShown(ReaderBlogInfo blogInfo);
+        void onBlogInfoFailed();
     }
-    private OnBlogInfoListener mListener;
+    private OnBlogInfoListener mInfoListener;
 
     public ReaderBlogInfoHeader(Context context){
         super(context);
@@ -51,7 +51,7 @@ class ReaderBlogInfoHeader extends LinearLayout {
     }
 
     public void setBlogIdAndUrl(long blogId, String blogUrl, OnBlogInfoListener listener) {
-        mListener = listener;
+        mInfoListener = listener;
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl));
         requestBlogInfo(blogId, blogUrl);
     }
@@ -67,14 +67,21 @@ class ReaderBlogInfoHeader extends LinearLayout {
         final View divider = findViewById(R.id.divider);
         final View spacer = findViewById(R.id.view_header_image_spacer);
 
-        // make sure the blog info is complete - it may have been set by the read/following/mine
-        // endpoint which doesn't include the name, description or follower count
-        mHasBlogInfo = (blogInfo != null && blogInfo.isComplete());
+        mHasBlogInfo = (blogInfo != null);
 
         if (mHasBlogInfo) {
-            txtBlogName.setText(blogInfo.getName());
-            txtDescription.setText(blogInfo.getDescription());
-            txtDescription.setVisibility(blogInfo.hasDescription() ? View.VISIBLE : View.GONE);
+            if (blogInfo.hasName()) {
+                txtBlogName.setText(blogInfo.getName());
+            } else {
+                txtBlogName.setText(R.string.reader_untitled_post);
+            }
+
+            if (blogInfo.hasDescription()) {
+                txtDescription.setText(blogInfo.getDescription());
+                txtDescription.setVisibility(View.VISIBLE);
+            } else {
+                txtDescription.setVisibility(View.GONE);
+            }
 
             // only show the follower count if there are subscribers
             if (blogInfo.numSubscribers > 0) {
@@ -108,8 +115,8 @@ class ReaderBlogInfoHeader extends LinearLayout {
                 }
             });
 
-            if (mListener != null) {
-                mListener.onBlogInfoShown(blogInfo);
+            if (mInfoListener != null) {
+                mInfoListener.onBlogInfoShown(blogInfo);
             }
         } else {
             txtFollowBtn.setVisibility(View.INVISIBLE);
@@ -130,8 +137,10 @@ class ReaderBlogInfoHeader extends LinearLayout {
                 hideProgress();
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
-                } else if (!mHasBlogInfo) {
-                    ToastUtils.showToast(getContext(), R.string.reader_toast_err_get_blog);
+                } else if (!mHasBlogInfo && mInfoListener != null) {
+                    // if request failed and we don't already have the blogInfo, alert
+                    // caller to failure
+                    mInfoListener.onBlogInfoFailed();
                 }
             }
         };

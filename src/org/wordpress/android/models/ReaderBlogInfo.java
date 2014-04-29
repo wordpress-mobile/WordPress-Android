@@ -56,19 +56,18 @@ public class ReaderBlogInfo {
         return blog;
     }
 
-    /*
-     * blog info may have been set by the /read/following/mine endpoint, which
-     * contains only the blogId & blogUrl
-     */
-    public boolean isComplete() {
-        return hasName() || hasDescription();
-    }
-
     public String getName() {
         return StringUtils.notNullStr(name);
     }
     public void setName(String blogName) {
-        this.name = StringUtils.notNullStr(blogName);
+        this.name = StringUtils.notNullStr(blogName).trim();
+    }
+
+    public String getDescription() {
+        return StringUtils.notNullStr(description);
+    }
+    public void setDescription(String description) {
+        this.description = StringUtils.notNullStr(description).trim();
     }
 
     public String getUrl() {
@@ -76,13 +75,6 @@ public class ReaderBlogInfo {
     }
     public void setUrl(String url) {
         this.url = StringUtils.notNullStr(url);
-    }
-
-    public String getDescription() {
-        return StringUtils.notNullStr(description);
-    }
-    public void setDescription(String description) {
-        this.description = StringUtils.notNullStr(description);
     }
 
     public boolean hasName() {
