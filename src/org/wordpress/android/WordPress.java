@@ -87,7 +87,7 @@ public class WordPress extends Application {
     private static BitmapLruCache mBitmapCache;
 
     private static Date mStatsLastPingDate; //last time stats were updated in background
-    
+
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
             // The cache size will be measured in kilobytes rather than
@@ -141,7 +141,7 @@ public class WordPress extends Application {
             registerComponentCallbacks(pnBackendMponitor);
             registerActivityLifecycleCallbacks(pnBackendMponitor);
         }
-        
+
         updateCurrentBlogStatsInBackground(false);
     }
 
@@ -253,7 +253,7 @@ public class WordPress extends Application {
     }
 
     public interface OnPostUploadedListener {
-        public abstract void OnPostUploaded(String postId);
+        public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
     }
 
     public static String getVersionName(Context context) {
@@ -270,10 +270,10 @@ public class WordPress extends Application {
         onPostUploadedListener = listener;
     }
 
-    public static void postUploaded(String postId) {
+    public static void postUploaded(int localBlogId, String postId, boolean isPage) {
         if (onPostUploadedListener != null) {
             try {
-                onPostUploadedListener.OnPostUploaded(postId);
+                onPostUploadedListener.OnPostUploaded(localBlogId, postId, isPage);
             } catch (Exception e) {
                 postsShouldRefresh = true;
             }
@@ -508,18 +508,18 @@ public class WordPress extends Application {
 
     /*
      *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
-     *  too frequent refreshes.  
+     *  too frequent refreshes.
      *  User is not notified in case of errors.
      */
     public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
-        
+
         if (!alwaysUpdate && mStatsLastPingDate != null) {
         	// check if the last stats refresh was done less than 30 minute ago
             if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {
               return;
             }
         }
-        
+
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog != null) {
             String blogID = null;
@@ -527,7 +527,7 @@ public class WordPress extends Application {
                 blogID = String.valueOf(currentBlog.getRemoteBlogId());
             } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
                 blogID = currentBlog.getApi_blogid(); // Can return null
-            } 
+            }
             if (blogID != null) {
                 // start service to get stats
                 Intent intent = new Intent(mContext, StatsService.class);
@@ -537,7 +537,7 @@ public class WordPress extends Application {
             }
         }
     }
-    
+
     /*
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -593,7 +593,7 @@ public class WordPress extends Application {
                 return false;
 
             isInBackground = false; //The app moved from background -> foreground. Set this flag to false for security reason.
-            
+
             if (!NetworkUtils.isNetworkAvailable(mContext))
                 return false;
 
@@ -611,12 +611,12 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity arg0) {
-            
+
             if (!canSynchWithWordPressDotComBackend())
                 return;
-               
+
             /* Note: The Code below is not called at startup */
-            
+
             //Synch Push Notifications settings
             if (WordPress.hasValidWPComCredentials(mContext)) {
                 String token = null;
@@ -637,11 +637,11 @@ public class WordPress extends Application {
                     AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                 }
             }
-            
+
             //Update Stats!
             WordPress.updateCurrentBlogStatsInBackground(false);
         }
-        
+
         @Override
         public void onActivityCreated(Activity arg0, Bundle arg1) {
         }
