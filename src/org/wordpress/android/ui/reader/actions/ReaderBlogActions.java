@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.wordpress.rest.RestRequest;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListene
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.VolleyUtils;
 
 public class ReaderBlogActions {
 
@@ -235,8 +237,12 @@ public class ReaderBlogActions {
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                // if we failed to get the blog info using the id, trying again using just the domain
-                if (hasBlogId && hasBlogUrl) {
+                // authentication error may indicate that API access has been disabled for this blog
+                int statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
+                boolean isAuthErr = (statusCode == HttpStatus.SC_FORBIDDEN);
+                // if we failed to get the blog info using the id and this isn't an authentication
+                // error, try again using just the domain
+                if (!isAuthErr && hasBlogId && hasBlogUrl) {
                     AppLog.w(T.READER, "failed to get blog info by id, retrying with url");
                     updateBlogInfo(0, blogUrl, infoListener);
                 } else {
