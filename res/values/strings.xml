@@ -574,6 +574,7 @@
     <string name="reader_title_recommended_blogs">Recommended blogs</string>
     <string name="reader_title_reblog">Reblog</string>
     <string name="reader_title_blog_detail">Loading blog…</string>
+    <string name="reader_title_tag_preview">Tag</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>

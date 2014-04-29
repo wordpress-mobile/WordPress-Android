@@ -72,6 +72,8 @@ public class ReaderPostListFragment extends SherlockFragment
         public void onTagSelected(String tagName);
     }
 
+    public static enum TagListType { FOLLOWED, PREVIEW };
+
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
@@ -82,6 +84,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
+    private ViewGroup mTagPreviewHeader;
 
     private WPNetworkImageView mHeaderImage;
     private ReaderBlogInfoHeader mBlogInfoHeader;
@@ -93,7 +96,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private boolean mIsUpdating;
     private boolean mIsFlinging;
     private boolean mWasPaused;
-    private boolean mIsTagPreview;
+    private TagListType mTagListType;
 
     private Parcelable mListState = null;
 
@@ -106,12 +109,12 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * show posts with a specific tag
      */
-    static ReaderPostListFragment newInstance(final String tagName, boolean isTagPreview) {
+    static ReaderPostListFragment newInstance(String tagName, TagListType tagListType) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
         args.putString(ReaderActivity.ARG_TAG_NAME, tagName);
-        args.putBoolean(ReaderActivity.ARG_IS_TAG_PREVIEW, isTagPreview);
+        args.putSerializable(ReaderActivity.ARG_TAG_LIST_TYPE, tagListType);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -143,7 +146,9 @@ public class ReaderPostListFragment extends SherlockFragment
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderActivity.ARG_BLOG_URL);
-            mIsTagPreview = args.getBoolean(ReaderActivity.ARG_IS_TAG_PREVIEW, false);
+            if (args.containsKey(ReaderActivity.ARG_TAG_LIST_TYPE)) {
+                mTagListType = (TagListType)args.getSerializable(ReaderActivity.ARG_TAG_LIST_TYPE);
+            }
         }
     }
 
@@ -165,8 +170,10 @@ public class ReaderPostListFragment extends SherlockFragment
             if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
                 mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
             }
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_TAG_LIST_TYPE)) {
+                mTagListType = (TagListType)savedInstanceState.getSerializable(ReaderActivity.ARG_TAG_LIST_TYPE);
+            }
             mWasPaused = savedInstanceState.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
-            mIsTagPreview = savedInstanceState.getBoolean(ReaderActivity.ARG_IS_TAG_PREVIEW);
         }
     }
 
@@ -198,6 +205,9 @@ public class ReaderPostListFragment extends SherlockFragment
         switch (getPostListType()) {
             case TAG:
                 outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
+                if (mTagListType != null) {
+                    outState.putSerializable(ReaderActivity.ARG_TAG_LIST_TYPE, mTagListType);
+                }
                 break;
             case BLOG:
                 outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
@@ -206,7 +216,6 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
-        outState.putBoolean(ReaderActivity.ARG_IS_TAG_PREVIEW, mIsTagPreview);
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
@@ -269,6 +278,11 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
                 }
+                if (isTagPreview()) {
+                    mTagPreviewHeader = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, null);
+                    mListView.addHeaderView(mTagPreviewHeader);
+                }
+
                 break;
         }
 
@@ -366,6 +380,8 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         }
 
+        updateTagPreviewHeader();
+
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
     }
 
@@ -374,8 +390,12 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onCreateOptionsMenu(menu, inflater);
         switch (getPostListType()) {
             case TAG:
-                inflater.inflate(R.menu.reader_native, menu);
-                checkActionBar();
+                if (isTagPreview()) {
+                    inflater.inflate(R.menu.basic_menu, menu);
+                } else {
+                    inflater.inflate(R.menu.reader_native, menu);
+                    checkActionBar();
+                }
                 break;
             case BLOG:
                 inflater.inflate(R.menu.basic_menu, menu);
@@ -410,6 +430,12 @@ public class ReaderPostListFragment extends SherlockFragment
         }
     }
 
+    private boolean isTagPreview() {
+        return (getPostListType() == ReaderPostListType.TAG
+             && mTagListType != null
+             && mTagListType.equals(TagListType.PREVIEW));
+    }
+
     /*
      * ensures that the ActionBar is correctly configured based on the type of list
      */
@@ -419,7 +445,7 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        if (getPostListType() == ReaderPostListType.TAG && !mIsTagPreview) {
+        if (getPostListType() == ReaderPostListType.TAG && !isTagPreview()) {
             // only change if we're not in list navigation mode, since that means the actionBar
             // is already correctly configured
             if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
@@ -566,11 +592,16 @@ public class ReaderPostListFragment extends SherlockFragment
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
+
             mPostAdapter = new ReaderPostAdapter(getActivity(),
                     getPostListType(),
                     mReblogListener,
                     mDataLoadedListener,
                     mDataRequestedListener);
+
+            if (getPostListType() == ReaderPostListType.TAG) {
+                mPostAdapter.setTagListType(mTagListType);
+            }
         }
         return mPostAdapter;
     }
@@ -618,11 +649,24 @@ public class ReaderPostListFragment extends SherlockFragment
 
         getPostAdapter().setCurrentTag(tagName);
         hideNewPostsBar();
+        updateTagPreviewHeader();
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
             updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
         }
+    }
+
+    /*
+     * if we're previewing a tag, show the current tag name in the header
+     */
+    private void updateTagPreviewHeader() {
+        if (!isTagPreview() || mTagPreviewHeader == null) {
+            return;
+        }
+
+        TextView txtTagName = (TextView) mTagPreviewHeader.findViewById(R.id.text_tag_name);
+        txtTagName.setText(getCurrentTag());
     }
 
     /*
@@ -840,7 +884,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * make sure current tag still exists, reset to default if it doesn't
      */
     private void checkCurrentTag() {
-        if (hasCurrentTag() && !mIsTagPreview && !ReaderTagTable.tagExists(getCurrentTag())) {
+        if (hasCurrentTag() && !isTagPreview() && !ReaderTagTable.tagExists(getCurrentTag())) {
             mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
         }
     }

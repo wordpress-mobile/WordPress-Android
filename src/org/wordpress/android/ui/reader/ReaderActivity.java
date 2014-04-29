@@ -22,6 +22,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.TagListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -51,11 +52,13 @@ public class ReaderActivity extends WPActionBarActivity
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
     static final String ARG_TAG_NAME = "tag_name";
+    static final String ARG_TAG_LIST_TYPE = "tag_list_type";
+    static final String ARG_IS_TAG_PREVIEW = "is_tag_preview";
+
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_BLOG_URL = "blog_url";
     static final String ARG_POST_ID = "post_id";
     static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
-    static final String ARG_IS_TAG_PREVIEW = "is_tag_preview";
 
     static final String KEY_LIST_STATE = "list_state";
     static final String KEY_WAS_PAUSED = "was_paused";
@@ -110,11 +113,16 @@ public class ReaderActivity extends WPActionBarActivity
                         String blogUrl = getIntent().getStringExtra(ReaderActivity.ARG_BLOG_URL);
                         showListFragmentForBlog(blogId, blogUrl);
                     } else {
+                        // get the tag name from the intent, if not there get it from prefs
                         String tagName = getIntent().getStringExtra(ReaderActivity.ARG_TAG_NAME);
                         if (TextUtils.isEmpty(tagName)) {
                             tagName = UserPrefs.getReaderTag();
                         }
-                        if (!mIsTagPreview && !ReaderTagTable.tagExists(tagName)) {
+                        // if we're previewing a tag change the activity title, otherwise
+                        // this is a followed tag so revert to default if it doesn't exist
+                        if (mIsTagPreview) {
+                            setTitle(getString(R.string.reader_title_tag_preview));
+                        } else if (!ReaderTagTable.tagExists(tagName)) {
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
                         showListFragmentForTag(tagName);
@@ -270,7 +278,8 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing list of latest posts for a specific tag
      */
     private void showListFragmentForTag(final String tagName) {
-        Fragment fragment = ReaderPostListFragment.newInstance(tagName, mIsTagPreview);
+        TagListType tagListType = (mIsTagPreview ? TagListType.PREVIEW : TagListType.FOLLOWED);
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName, tagListType);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))

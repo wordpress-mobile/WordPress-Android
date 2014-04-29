@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    header used by reader post list when previewing posts with a specific tag
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large"
+        android:orientation="horizontal">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_tag_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_toLeftOf="@+id/text_follow_blog"
+            tools:text="text_tag_name"
+            android:textColor="@color/grey_medium_dark"
+            android:textSize="@dimen/text_sz_extra_large" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_follow_blog"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/ReaderTextView.Follow" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider_tag_preview"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_height="1dp"
+        android:background="@color/reader_divider_blue" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        tools:text="text_tag_description"
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/text_sz_medium" />
+
+</LinearLayout>

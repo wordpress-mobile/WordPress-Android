@@ -589,7 +589,7 @@ public class ReaderPost {
             if (tags != null && tags.size() > 0) {
                 firstTag = tags.get(0);
                 // exclude the passed tag
-                if (exceptForThisTag != null && firstTag.equals(exceptForThisTag)) {
+                if (exceptForThisTag != null && firstTag.equalsIgnoreCase(exceptForThisTag)) {
                     if (tags.size() > 1) {
                         firstTag = tags.get(1);
                     } else {

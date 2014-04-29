@@ -26,8 +26,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.TagListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -77,6 +77,8 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
+
+    private TagListType mTagListType;
 
     public ReaderPostAdapter(Context context,
                              ReaderPostListType postListType,
@@ -146,6 +148,18 @@ public class ReaderPostAdapter extends BaseAdapter {
             mCurrentBlogId = blogId;
             reload(false);
         }
+    }
+
+    // type of tag we're listing posts for when the list type is ReaderPostListType.TAG
+    public void setTagListType(TagListType tagListType) {
+        mTagListType = tagListType;
+    }
+
+
+    private boolean isTagPreview() {
+        return (getPostListType() == ReaderPostListType.TAG
+                && mTagListType != null
+                && mTagListType.equals(TagListType.PREVIEW));
     }
 
     private void clear() {
@@ -324,22 +338,27 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // get the first tag on this post, excluding the current tag
-        final String firstTag = post.getFirstTag(getCurrentTag());
-        if (!TextUtils.isEmpty(firstTag)) {
-            holder.txtTag.setVisibility(View.VISIBLE);
-            holder.txtTag.setText(firstTag);
-            holder.txtTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnTagSelectedListener != null) {
-                        mOnTagSelectedListener.onTagSelected(firstTag);
-                    }
-                }
-            });
-        } else {
+        // don't show tags for tag preview
+        if (isTagPreview()) {
             holder.txtTag.setVisibility(View.GONE);
-            holder.txtTag.setOnClickListener(null);
+        } else {
+            // get the first tag on this post, excluding the current tag
+            final String firstTag = post.getFirstTag(getCurrentTag());
+            if (!TextUtils.isEmpty(firstTag)) {
+                holder.txtTag.setVisibility(View.VISIBLE);
+                holder.txtTag.setText(firstTag);
+                holder.txtTag.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnTagSelectedListener != null) {
+                            mOnTagSelectedListener.onTagSelected(firstTag);
+                        }
+                    }
+                });
+            } else {
+                holder.txtTag.setVisibility(View.GONE);
+                holder.txtTag.setOnClickListener(null);
+            }
         }
 
         // likes, comments & reblogging - supported by wp posts only
