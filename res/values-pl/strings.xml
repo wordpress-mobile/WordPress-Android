@@ -36,7 +36,7 @@
 	<string name="pick_video">Wybierz wideo</string>
 	<string name="validating_user_data">Sprawdzanie danych użytkownika</string>
 	<string name="validating_site_data">Sprawdzanie danych strony</string>
-	<string name="stats_empty_top_posts">&lt;b>Nie znaleziono na razie popularnych wpisów ani stron.&lt;/b> Ten ekran pokazuje twoje najpopularniejsze wpisy i strony.</string>
+	<string name="stats_empty_top_posts">Nie znaleziono na razie popularnych wpisów ani stron. Ten ekran pokazuje twoje najpopularniejsze wpisy i strony.</string>
 	<string name="password_invalid">Potrzebujesz bardziej bezpiecznego hasła. Upewnij się, że użyłeś 7 lub więcej znaków, wielkich i małych liter, liczb albo znaków specjalnych.</string>
 	<string name="nux_tap_continue">Kontynuuj</string>
 	<string name="nux_welcome_create_account">Utwórz konto</string>
@@ -151,9 +151,9 @@
 	<string name="theme_auth_error_title">Nie udało się pobrać motywów.</string>
 	<string name="stats_comments_summary_label_most_active_day">Najbardziej aktywni dzisiaj</string>
 	<string name="stats_video_summary_label_impressions">Osiągnięcia</string>
-	<string name="stats_empty_referrers">&lt;b>Brak poleceń.&lt;/b> "Polecenia" to zbiór kliknięć z innych stron, prowadzących do Twojej strony.</string>
-	<string name="stats_empty_clicks">&lt;b>Brak kliknięć.&lt;/b> "Kliknięcia" to zbiór kliknięć na Twojej stronie, prowadzących do innych witryn.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Nic nie znaleziono.&lt;/b> Frazy i słowa kluczowe, które użytkownicy mogą znaleźć poprzez wyszukiwarkę.</string>
+	<string name="stats_empty_referrers">Brak poleceń. "Polecenia" to zbiór kliknięć z innych stron, prowadzących do Twojej strony.</string>
+	<string name="stats_empty_clicks">Brak kliknięć. "Kliknięcia" to zbiór kliknięć na Twojej stronie, prowadzących do innych witryn.</string>
+	<string name="stats_empty_search_engine_terms">Nic nie znaleziono. Frazy i słowa kluczowe, które użytkownicy mogą znaleźć poprzez wyszukiwarkę.</string>
 	<string name="images">Obrazy</string>
 	<string name="custom_date">Własna data</string>
 	<string name="media_add_popup_capture_photo">Wykonaj zdjęcie</string>

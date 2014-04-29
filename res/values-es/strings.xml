@@ -249,7 +249,7 @@
 	<string name="account_two_step_auth_enabled">Esta cuenta tiene activado el proceso de autentificación en dos pasos. Visita los ajustes de seguridad de WordPress.com y genera una contraseña específica para la aplicación.</string>
 	<string name="select_time">Elige tiempo</string>
 	<string name="nux_welcome_create_account">Crear cuenta</string>
-	<string name="stats_empty_top_posts">&lt;b>No se encontró ningún top de página o entradas.&lt;/b> Esta vista muestra las entradas y páginas más visitadas.</string>
+	<string name="stats_empty_top_posts">No se encontró ningún top de página o entradas. Esta vista muestra las entradas y páginas más visitadas.</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 o más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_add_selfhosted_blog">Añade un sitio autoalojado</string>
@@ -349,9 +349,9 @@
 	<string name="stats_video_summary_label_impressions">Impresiones</string>
 	<string name="stats_video_summary_label_bandwidth">Ancho de banda</string>
 	<string name="stats_video_summary_header">Estadísticas combinadas para %s</string>
-	<string name="stats_empty_referrers">&lt;b>Sin referidos.&lt;/b> Un referido es un click desde otro sitio que enlaza al tuyo.</string>
-	<string name="stats_empty_clicks">&lt;b>No hay clics registrados.&lt;/b> Los "Clics" son visitantes cliqueando desde enlaces externos a tu sitio.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>No hay términos de búsqueda.&lt;/b> Los términos de búsqueda son palabras o frases que los usuarios encuentran cuando buscan.</string>
+	<string name="stats_empty_referrers">Sin referidos. Un referido es un click desde otro sitio que enlaza al tuyo.</string>
+	<string name="stats_empty_clicks">No hay clics registrados. Los "Clics" son visitantes cliqueando desde enlaces externos a tu sitio.</string>
+	<string name="stats_empty_search_engine_terms">No hay términos de búsqueda. Los términos de búsqueda son palabras o frases que los usuarios encuentran cuando buscan.</string>
 	<string name="menu_search">Buscar</string>
 	<string name="passcode_manage">Administrar el PIN de bloqueo</string>
 	<string name="passcode_enter_passcode">Introduce tu PIN</string>

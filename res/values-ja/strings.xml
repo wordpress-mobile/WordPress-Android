@@ -273,7 +273,7 @@
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com にログイン</string>
 	<string name="nux_tap_continue">次へ</string>
 	<string name="nux_welcome_create_account">アカウントを作成</string>
-	<string name="stats_empty_top_posts">&lt;b>まだ人気の投稿またはページがありません。&lt;/b>この画面にはサイト内で最も頻繁に閲覧された投稿とページが表示されます。</string>
+	<string name="stats_empty_top_posts">まだ人気の投稿またはページがありません。この画面にはサイト内で最も頻繁に閲覧された投稿とページが表示されます。</string>
 	<string name="password_invalid">セキュリティ強度の高いパスワードが必要です。7文字以上の大文字・小文字・数字・記号を含むものにすることをおすすめします。</string>
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
@@ -407,9 +407,9 @@
 	<string name="theme_auth_error_title">テーマ情報の取得に失敗しました</string>
 	<string name="confirm_delete_multi_media">本当にこの項目を削除しますか ?</string>
 	<string name="media_no_video_message">動画をアップロードするには VideoPress アップグレードを追加してください。</string>
-	<string name="stats_empty_referrers">&lt;b>リファラが見つかりません。&lt;/b>リファラとは、あなたのサイトへのリンクがクリックされたサイトの情報です。</string>
-	<string name="stats_empty_clicks">&lt;b>記録されたクリックがありません。&lt;/b>「クリック」とは、あなたのサイト上で訪問者がクリックした外部リンクの情報です。</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>検索キーワードが見つかりません。&lt;/b>検索キーワードとは、ユーザーがあなたのサイトを訪問する際に検索エンジンで使ったキーワードのことです。</string>
+	<string name="stats_empty_referrers">リファラが見つかりません。リファラとは、あなたのサイトへのリンクがクリックされたサイトの情報です。</string>
+	<string name="stats_empty_clicks">記録されたクリックがありません。「クリック」とは、あなたのサイト上で訪問者がクリックした外部リンクの情報です。</string>
+	<string name="stats_empty_search_engine_terms">検索キーワードが見つかりません。検索キーワードとは、ユーザーがあなたのサイトを訪問する際に検索エンジンで使ったキーワードのことです。</string>
 	<string name="custom_date">カスタム日付</string>
 	<string name="remote_changes">まだアップロードしていない投稿に変更を加えました。再読み込みしてローカルでの変更を上書きしますか ?</string>
 	<string name="upload">アップロード</string>

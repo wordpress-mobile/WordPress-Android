@@ -269,7 +269,7 @@
 	<string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
 	<string name="validating_user_data">Memeriksa keabsahan data pengguna</string>
 	<string name="validating_site_data">Memeriksa keabsahan data situs</string>
-	<string name="stats_empty_top_posts">&lt;b>Belum ada pos atau laman terpopuler.&lt;/b> Laman ini menampilkan pos dan laman Anda yang paling sering dikunjungi.</string>
+	<string name="stats_empty_top_posts">Belum ada pos atau laman terpopuler. Laman ini menampilkan pos dan laman Anda yang paling sering dikunjungi.</string>
 	<string name="password_invalid">Anda butuh password yang lebih aman. Pastikan menggunakan 7 atau lebih karakter, kombinasikan huruf kapital dan kecil, angka atau tanda baca.</string>
 	<string name="nux_tap_continue">Lanjutkan</string>
 	<string name="nux_welcome_create_account">Buat akun</string>
@@ -403,9 +403,9 @@
 	<string name="passcode_preference_title">Kunci PIN</string>
 	<string name="passcode_turn_off">Matikan kunci PIN</string>
 	<string name="passcode_turn_on">Nyalakan kunci PIN</string>
-	<string name="stats_empty_referrers">&lt;b>Tidak ada pengacu.&lt;/b> Pengacu adalah klik dari situs lain yang terhubung dengan situs Anda.</string>
-	<string name="stats_empty_clicks">&lt;b>Tidak ada klik dalam catatan.&lt;/b> "Klik" adalah pengunjung mengklik tautan ke luar dari situs Anda.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Tidak ada istilah pencarian.&lt;/b> Istilah pencarian adalah kata atau frase yang digunakan pengguna untuk menemukan Anda dalam pencariannya.</string>
+	<string name="stats_empty_referrers">Tidak ada pengacu. Pengacu adalah klik dari situs lain yang terhubung dengan situs Anda.</string>
+	<string name="stats_empty_clicks">Tidak ada klik dalam catatan. "Klik" adalah pengunjung mengklik tautan ke luar dari situs Anda.</string>
+	<string name="stats_empty_search_engine_terms">Tidak ada istilah pencarian. Istilah pencarian adalah kata atau frase yang digunakan pengguna untuk menemukan Anda dalam pencariannya.</string>
 	<string name="passcode_manage">Atur kunci PIN</string>
 	<string name="passcode_enter_passcode">Masukkan PIN Anda</string>
 	<string name="passcode_enter_old_passcode">Masukkan PIN lama Anda</string>

@@ -273,7 +273,7 @@
 	<string name="nux_welcome_create_account">Create account</string>
 	<string name="nux_add_selfhosted_blog">Add self-hosted site</string>
 	<string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
-	<string name="stats_empty_top_posts">&lt;b>No top posts or pages found yet.&lt;/b> This view shows your most viewed posts and pages.</string>
+	<string name="stats_empty_top_posts">No top posts or pages found yet. This view shows your most viewed posts and pages.</string>
 	<string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="media_add_new_media_gallery">Create gallery</string>
@@ -398,9 +398,9 @@
 	<string name="stats">Stats</string>
 	<string name="view_stats_full_site">View full site</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
-	<string name="stats_empty_referrers">&lt;b>No referrers.&lt;/b> A referrer is a click from another site that links to yours.</string>
-	<string name="stats_empty_clicks">&lt;b>No clicks recorded.&lt;/b> "Clicks" are viewers clicking outbound links on your site.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>No search terms.&lt;/b> Search terms are words or phrases users find you with when they search.</string>
+	<string name="stats_empty_referrers">No referrers. A referrer is a click from another site that links to yours.</string>
+	<string name="stats_empty_clicks">No clicks recorded. "Clicks" are viewers clicking outbound links on your site.</string>
+	<string name="stats_empty_search_engine_terms">No search terms. Search terms are words or phrases users find you with when they search.</string>
 	<string name="menu_search">Search</string>
 	<string name="passcode_manage">Manage PIN lock</string>
 	<string name="passcode_enter_passcode">Enter your PIN</string>

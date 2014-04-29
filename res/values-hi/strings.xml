@@ -273,7 +273,7 @@
 	<string name="nux_welcome_create_account">खाता बनाएं</string>
 	<string name="nux_oops_not_selfhosted_blog">वर्डप्रेस डॉट कॉम पर साइन इन करे</string>
 	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
-	<string name="stats_empty_top_posts">&lt;b>कोई शीर्ष पोस्ट या पृष्ठ अभी तक नहीं मिला.&lt;/b> यह आकड़ा आपको सबसे ज्यादा देखी गयी पोस्ट और पृष्ठों को दिखाता है.</string>
+	<string name="stats_empty_top_posts">कोई शीर्ष पोस्ट या पृष्ठ अभी तक नहीं मिला. यह आकड़ा आपको सबसे ज्यादा देखी गयी पोस्ट और पृष्ठों को दिखाता है.</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
 	<string name="reader_hint_add_tag">टैग दर्ज करें</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
@@ -408,9 +408,9 @@
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
 	<string name="passcode_preference_title">पिन लॉक</string>
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
-	<string name="stats_empty_search_engine_terms">&lt;b> कोई खोज शब्द नहीं.&lt;/b> खोज शब्द वे शब्द या वाक्यांश है जिसके द्वारा उपयोगकर्ता जब खोजते है तो आपको पाते है.</string>
-	<string name="stats_empty_clicks">&lt;b>क्लिक दर्ज नहीं की गई.&lt;/b> "क्लिक" वे दर्शक है जो बाहर जाने वाली कड़ी पर क्लिक कर रहे हैं.</string>
-	<string name="stats_empty_referrers">&lt;b>कोई रेफ़रर नहीं.&lt;/b> एक  रेफ़रर दुसरे साईट से क्लिक है जो आपके साईट से जुड़ा हुआ है.</string>
+	<string name="stats_empty_search_engine_terms"> कोई खोज शब्द नहीं. खोज शब्द वे शब्द या वाक्यांश है जिसके द्वारा उपयोगकर्ता जब खोजते है तो आपको पाते है.</string>
+	<string name="stats_empty_clicks">क्लिक दर्ज नहीं की गई. "क्लिक" वे दर्शक है जो बाहर जाने वाली कड़ी पर क्लिक कर रहे हैं.</string>
+	<string name="stats_empty_referrers">कोई रेफ़रर नहीं. एक  रेफ़रर दुसरे साईट से क्लिक है जो आपके साईट से जुड़ा हुआ है.</string>
 	<string name="remote_changes">आपने जिस पोस्ट में परिवर्तन किया है वह अभी अपलोड नहीं किया गया है.रिफ्रेश करे और स्थानीय परिवर्तन को अधिलेखित करें</string>
 	<string name="upload">अपलोड</string>
 	<string name="manage">प्रबंधन</string>

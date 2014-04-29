@@ -88,7 +88,7 @@
 	<string name="account_two_step_auth_enabled">Bu hesab iki məhələli təsdiqləməyə sahibdir. Посетите настройки безопасности на WordPress.com-da təhlükəsizlik parametrlərini ziyarət edin və konkret proqram üçün parol hazırlayın.</string>
 	<string name="nux_tap_continue">Davam et</string>
 	<string name="nux_welcome_create_account">Hesab yarat</string>
-	<string name="stats_empty_top_posts">&lt;b>Heç bir populyar yazı və ya səhifə yoxdur.&lt;/b> Bu ekran ən çox izlənən yazılarınızı və səhifələrinizi göstərir.</string>
+	<string name="stats_empty_top_posts">Heç bir populyar yazı və ya səhifə yoxdur. Bu ekran ən çox izlənən yazılarınızı və səhifələrinizi göstərir.</string>
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>
 	<string name="nux_add_selfhosted_blog">Öz-xostinq saytını əlavə et</string>
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com ilə daxil ol</string>
@@ -221,13 +221,13 @@
 	<string name="media_no_video_message">Video yükləmək üçün, VideoPress yenilənmələrini əldə edin!</string>
 	<string name="media_edit_title_text">Başlıq</string>
 	<string name="stats_comments_summary_label_most_active_time">Günün ən aktiv zamanı</string>
-	<string name="stats_empty_referrers">&lt;b>Yönləndirmə yoxdur.&lt;/b>  başqa bir saytdan bir tıklama olduğu zaman sizin üçün yönləndirmə bağlantıları.</string>
-	<string name="stats_empty_clicks">&lt;b>Yazılmış tıklamalar yoxdur.&lt;/b> Sizin saytdan çıxan bağlantılara ziyarətçiləriniz tərəfindən edilən "Tıklamalar".</string>
+	<string name="stats_empty_referrers">Yönləndirmə yoxdur.  başqa bir saytdan bir tıklama olduğu zaman sizin üçün yönləndirmə bağlantıları.</string>
+	<string name="stats_empty_clicks">Yazılmış tıklamalar yoxdur. Sizin saytdan çıxan bağlantılara ziyarətçiləriniz tərəfindən edilən "Tıklamalar".</string>
 	<string name="passcode_re_enter_passcode">PIN kodunu təkrar daxil et</string>
 	<string name="passcode_enter_passcode">PIN kodunu daxil et</string>
 	<string name="passcode_enter_old_passcode">Əvvəlki PIN kodunu daxil et</string>
 	<string name="passcode_manage">PIN bloklamasının idarəetməsi</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Axtarış terminləri yoxdur.&lt;/b> İstifadəçiləri axtardığınız zaman kəlmə və frazalardan istifadə edərək axtarış terminləri ilə onları tapa bilərsiniz.</string>
+	<string name="stats_empty_search_engine_terms">Axtarış terminləri yoxdur. İstifadəçiləri axtardığınız zaman kəlmə və frazalardan istifadə edərək axtarış terminləri ilə onları tapa bilərsiniz.</string>
 	<string name="remote_changes">Hələ ki sayta yükləmədiyiniz bir yazıda dəyişikliklər etdiniz. Yeniləmə ilə davam edib lokal dəyişikliklərin üzərinə yazılsınmı?</string>
 	<string name="upload">Yüklə</string>
 	<string name="manage">İdarəetmə</string>

@@ -84,9 +84,9 @@
 	<string name="stats_video_summary_label_plays">Visninger</string>
 	<string name="stats_video_summary_label_impressions">Sammendrag</string>
 	<string name="stats_video_summary_header">Statistikk for %s</string>
-	<string name="stats_empty_clicks">&lt;b>Ingen klikk.&lt;/b> "Klikk" er klikk fra visninger utenfor ditt eget nettsted.</string>
-	<string name="stats_empty_referrers">&lt;b>Ingen henvisninger.&lt;/b> En henvisning er klikk fra et nettsted som lenker til ditt..</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Ingen søkeord.&lt;/b> Søkeord er ord og fraser som bruker finner nettstedet ditt når de søker.</string>
+	<string name="stats_empty_clicks">Ingen klikk. "Klikk" er klikk fra visninger utenfor ditt eget nettsted.</string>
+	<string name="stats_empty_referrers">Ingen henvisninger. En henvisning er klikk fra et nettsted som lenker til ditt..</string>
+	<string name="stats_empty_search_engine_terms">Ingen søkeord. Søkeord er ord og fraser som bruker finner nettstedet ditt når de søker.</string>
 	<string name="passcode_manage">Håndter PIN kode</string>
 	<string name="passcode_enter_passcode">Skriv inn PIN</string>
 	<string name="passcode_enter_old_passcode">Skriv inn gammel PIN</string>

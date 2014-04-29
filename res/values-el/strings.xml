@@ -51,7 +51,7 @@
 	<string name="validating_user_data">Επικύρωση των στοιχείων του χρήστη.</string>
 	<string name="validating_site_data">Επικύρωση στοιχείων του ιστότοπου</string>
 	<string name="nux_welcome_create_account">Δημιουργία λογαριασμού</string>
-	<string name="stats_empty_top_posts">&lt;b>Κανένα άρθρο ή σελίδα δεν βρέθηκε.&lt;/b> Αυτός ο τρόπος προβολής δείχνει τα άρθρα και τις σελίδες με τις πιο πολλές εμφανίσεις.</string>
+	<string name="stats_empty_top_posts">Κανένα άρθρο ή σελίδα δεν βρέθηκε. Αυτός ο τρόπος προβολής δείχνει τα άρθρα και τις σελίδες με τις πιο πολλές εμφανίσεις.</string>
 	<string name="password_invalid">Χρειάζεστε έναν πιο ασφαλή κωδικό πρόσβασης. Χρησιμοποιήστε 7 ή περισσότερους χαρακτήρες, μέσα στους οποίους υπάρχουν κεφαλαία και μικρά γράμματα, αριθμοί ή ειδικοί χαρακτήρες.</string>
 	<string name="nux_tap_continue">Συνέχεια</string>
 	<string name="nux_oops_not_selfhosted_blog">Είσοδος στο WordPress.com</string>
@@ -177,9 +177,9 @@
 	<string name="stats_video_summary_label_impressions">Εμφανίσεις</string>
 	<string name="stats_video_summary_label_bandwidth">Όγκος Δεδομένων</string>
 	<string name="stats_video_summary_header">Συνολικά στατιστικά για το %s</string>
-	<string name="stats_empty_referrers">&lt;b>Καθόλου ιστότοποι που σας αναφέρουν.&lt;/b> Είναι οι ιστότοποι που θέτουν συνδέσμους προς το δικό σας.</string>
-	<string name="stats_empty_clicks">&lt;b>Κανένα κλικ δεν έχει καταγραφεί.&lt;/b> Είναι τα κλικ που γίνονται πάνω σε συνδέσμους που βρίσκονται στον ιστότοπό σας προς άλλους.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Κανένας όρος αναζήτησης.&lt;/b> Είναι οι λέξεις ή οι φράσεις μέσω των οποίων οι χρήστες σας βρήκαν στις αναζητήσεις τους.</string>
+	<string name="stats_empty_referrers">Καθόλου ιστότοποι που σας αναφέρουν. Είναι οι ιστότοποι που θέτουν συνδέσμους προς το δικό σας.</string>
+	<string name="stats_empty_clicks">Κανένα κλικ δεν έχει καταγραφεί. Είναι τα κλικ που γίνονται πάνω σε συνδέσμους που βρίσκονται στον ιστότοπό σας προς άλλους.</string>
+	<string name="stats_empty_search_engine_terms">Κανένας όρος αναζήτησης. Είναι οι λέξεις ή οι φράσεις μέσω των οποίων οι χρήστες σας βρήκαν στις αναζητήσεις τους.</string>
 	<string name="menu_search">Αναζήτηση</string>
 	<string name="passcode_manage">Διαχείριση κλειδώματος PIN</string>
 	<string name="passcode_enter_passcode">Πληκτρολογήστε το PIN σας</string>

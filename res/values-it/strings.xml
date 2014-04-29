@@ -39,7 +39,7 @@
 	<string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>
 	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="validating_site_data">Convalida dati sito in corso</string>
-	<string name="stats_empty_top_posts">&lt;b>Nessuna pagina o post più popolare trovata.&lt;/b> In questa visualizzazione sono riportati i post e le pagine più visualizzati.</string>
+	<string name="stats_empty_top_posts">Nessuna pagina o post più popolare trovata. In questa visualizzazione sono riportati i post e le pagine più visualizzati.</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>
 	<string name="nux_tap_continue">Continua</string>
 	<string name="nux_welcome_create_account">Crea account</string>
@@ -172,15 +172,15 @@
 	<string name="stats_video_summary_label_bandwidth">Larghezza di banda</string>
 	<string name="media_edit_success">Aggiornato</string>
 	<string name="unattached">Non allegato</string>
-	<string name="stats_empty_referrers">&lt;b>Nessun referrer.&lt;/b> Un referrer è un click verso il tuo sito proveniente da un altro.</string>
-	<string name="stats_empty_clicks">&lt;b>Nessun click registrato.&lt;/b> I "Click" sono visitatori che cliccano su link diretti verso altri siti.</string>
+	<string name="stats_empty_referrers">Nessun referrer. Un referrer è un click verso il tuo sito proveniente da un altro.</string>
+	<string name="stats_empty_clicks">Nessun click registrato. I "Click" sono visitatori che cliccano su link diretti verso altri siti.</string>
 	<string name="stats_comments_summary_label_most_active_time">Periodo più attivo della giornata</string>
 	<string name="stats_comments_summary_label_most_active_day">Giorno con più attività</string>
 	<string name="stats_view_visitors_and_views">Visitatori e visite</string>
 	<string name="stats_comments_summary_label_most_commented">Articolo più commentato</string>
 	<string name="stats_totals_followers_shares_header_followers">Sottoscrittori</string>
 	<string name="stats_video_summary_label_impressions">Visualizzazioni</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Nessun termine di ricerca.&lt;/b> I termini di ricerca sono parole o frasi che gli utenti hanno usato quando sono arrivati sul tuo sito da un motore di ricerca.</string>
+	<string name="stats_empty_search_engine_terms">Nessun termine di ricerca. I termini di ricerca sono parole o frasi che gli utenti hanno usato quando sono arrivati sul tuo sito da un motore di ricerca.</string>
 	<string name="remote_changes">Alcune modifiche a questo articolo non sono state salvate. Aggiornare e sovrascrivere le modifiche locali?</string>
 	<string name="upload">Caricamento</string>
 	<string name="manage">Gestisci</string>

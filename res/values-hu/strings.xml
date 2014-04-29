@@ -64,7 +64,7 @@
 	<string name="stats_video_summary_label_bandwidth">Szávszélesség</string>
 	<string name="stats_comments_summary_label_most_commented">A legtöbb hozzászólásos bejegyzés</string>
 	<string name="stats_comments_summary_footer">* a legutóbbi 1000 hozzászólás alapján</string>
-	<string name="stats_empty_referrers">&lt;b>Nincsenek hivatkozók.&lt;/b> A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
+	<string name="stats_empty_referrers">Nincsenek hivatkozók. A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
 	<string name="passcode_manage">Azonosító kód kezelése</string>
 	<string name="passcode_enter_passcode">Azonosító kód megadása</string>
 	<string name="passcode_enter_old_passcode">Régi azonosító kód megadása</string>
@@ -73,8 +73,8 @@
 	<string name="passcode_set">Azonosító kód megadva</string>
 	<string name="passcode_turn_off">Azonosító kódos védelem kikapcsolása</string>
 	<string name="passcode_turn_on">Azonosító kódos védelem bekapcsolása</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Nincsenek keresési kifejezések.&lt;/b> A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
-	<string name="stats_empty_clicks">&lt;b>Nincsenek kattintások.&lt;/b> A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
+	<string name="stats_empty_search_engine_terms">Nincsenek keresési kifejezések. A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
+	<string name="stats_empty_clicks">Nincsenek kattintások. A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
 	<string name="stats_entry_posts_and_pages">Fejléc</string>
 	<string name="media_gallery_type_slideshow">Diavetítés</string>
 	<string name="media_gallery_type_tiled">Mozaik</string>

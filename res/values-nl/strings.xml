@@ -40,7 +40,7 @@
 	<string name="reader_toast_err_no_connection">Niet mogelijk om te verbinden</string>
 	<string name="select_date">Selecteer datum</string>
 	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
-	<string name="stats_empty_top_posts">&lt;b>Geen top berichten of pagina\'s gevonden&lt;/b> Deze weergave laat je de meest bekeken berichten en pagina\'s zien.</string>
+	<string name="stats_empty_top_posts">Geen top berichten of pagina\'s gevonden Deze weergave laat je de meest bekeken berichten en pagina\'s zien.</string>
 	<string name="password_invalid">Je hebt een veiliger wachtwoord nodig. Let erop dat je 7 of meer karakters gebruikt, gebruik hoofd- en kleine letters, nummers of speciale karakters.</string>
 	<string name="nux_tap_continue">Ga door</string>
 	<string name="nux_welcome_create_account">Maak account aan</string>
@@ -138,12 +138,12 @@
 	<string name="stats_video_summary_label_impressions">Impressies</string>
 	<string name="stats_video_summary_label_bandwidth">Bandbreedte</string>
 	<string name="stats_video_summary_header">Geaggregeerde statistieken voor %s</string>
-	<string name="stats_empty_referrers">&lt;b>Geen referrers.&lt;/b> Een referrer is een klik van een andere site die naar jouw site linkt.</string>
-	<string name="stats_empty_clicks">&lt;b>Geen kliks geregistreerd.&lt;/b> Kliks zijn lezers die op uitgaande links op je site klikken.</string>
+	<string name="stats_empty_referrers">Geen referrers. Een referrer is een klik van een andere site die naar jouw site linkt.</string>
+	<string name="stats_empty_clicks">Geen kliks geregistreerd. Kliks zijn lezers die op uitgaande links op je site klikken.</string>
 	<string name="passcode_preference_title">PIN slot</string>
 	<string name="passcode_turn_off">Zet PIN slot uit</string>
 	<string name="passcode_turn_on">Zet PIN slot uit</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Geen zoektermen.&lt;/b> Zoektermen zijn woorden of zinnen waarmee gebruikers je vinden wanneer ze zoeken.</string>
+	<string name="stats_empty_search_engine_terms">Geen zoektermen. Zoektermen zijn woorden of zinnen waarmee gebruikers je vinden wanneer ze zoeken.</string>
 	<string name="menu_search">Zoeken</string>
 	<string name="passcode_manage">Beheer PIN slot</string>
 	<string name="passcode_enter_passcode">Voer je PIN in</string>

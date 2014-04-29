@@ -274,7 +274,7 @@
 	<string name="nux_welcome_create_account">创建账户</string>
 	<string name="nux_add_selfhosted_blog">添加一个自己的站点</string>
 	<string name="nux_oops_not_selfhosted_blog">登录到 WordPress.com</string>
-	<string name="stats_empty_top_posts">&lt;b>没有发现置顶的文章或网页。&lt;/b>这里显示您的最受欢迎的文章和网页。</string>
+	<string name="stats_empty_top_posts">没有发现置顶的文章或网页。这里显示您的最受欢迎的文章和网页。</string>
 	<string name="select_from_media_library">从媒体库选择</string>
 	<string name="jetpack_message">统计需要Jetpack插件，您希望安装Jetpack吗？</string>
 	<string name="jetpack_not_found">没有找到Jetpack插件</string>
@@ -408,9 +408,9 @@
 	<string name="stats_video_summary_label_impressions">印象</string>
 	<string name="stats_video_summary_label_bandwidth">带宽</string>
 	<string name="stats_video_summary_header">汇总的 %s 统计信息</string>
-	<string name="stats_empty_referrers">&lt;b>没有推荐.&lt;/b>推荐是指从其他网站链接到你网址的点击。</string>
-	<string name="stats_empty_clicks">&lt;b>没有点击记录.&lt;/b> “点击”是观众点击你的网站的出站链接.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>没有搜索项.&lt;/b> 搜索词是用户使用搜索找到你使用的的词或短语</string>
+	<string name="stats_empty_referrers">没有推荐.推荐是指从其他网站链接到你网址的点击。</string>
+	<string name="stats_empty_clicks">没有点击记录. “点击”是观众点击你的网站的出站链接.</string>
+	<string name="stats_empty_search_engine_terms">没有搜索项. 搜索词是用户使用搜索找到你使用的的词或短语</string>
 	<string name="remote_changes">您所修改的博文尚未上传。是否继续刷新操作，并覆盖本地改动?</string>
 	<string name="upload">上传</string>
 	<string name="manage">管理</string>

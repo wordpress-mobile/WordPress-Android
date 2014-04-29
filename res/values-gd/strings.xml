@@ -32,7 +32,7 @@
 	<string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
 	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
 	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
-	<string name="stats_empty_top_posts">&lt;b>Cha do lorg sinn gràinne-mhullaich phost no dhuilleagan fhathast.&lt;/b> Chì thu na puist is duilleagan air an deach coimhead as trice an-seo.</string>
+	<string name="stats_empty_top_posts">Cha do lorg sinn gràinne-mhullaich phost no dhuilleagan fhathast. Chì thu na puist is duilleagan air an deach coimhead as trice an-seo.</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>
 	<string name="nux_tap_continue">Air adhart</string>
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
@@ -163,9 +163,9 @@
 	<string name="passcode_enter_passcode">Cuir a-steach am PIN agad</string>
 	<string name="passcode_re_enter_passcode">Cuir a-steach am PIN agad a-rithist</string>
 	<string name="passcode_change_passcode">Atharraich am PIN</string>
-	<string name="stats_empty_referrers">&lt;b>Cha robh ath-threòrachadh ann.&lt;/b> Canar ath-threòrachadh ri cuideigin a bhriog air ceangal air làrach eile \'s a ràinig an làrach agad-sa air an dòigh sin.</string>
-	<string name="stats_empty_clicks">&lt;b>Cha deach briogadh a chlàradh.&lt;/b> Canar "briogadh" ri daoine a bhriogas air ceangal a tha a dol a-mach on làrach agad.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Chan eil briathar-luirg ann.&lt;/b> \'S e na briathran-luirg na faclan no abairtean air an lorg daoine thu nuair a nì iad lorg.</string>
+	<string name="stats_empty_referrers">Cha robh ath-threòrachadh ann. Canar ath-threòrachadh ri cuideigin a bhriog air ceangal air làrach eile \'s a ràinig an làrach agad-sa air an dòigh sin.</string>
+	<string name="stats_empty_clicks">Cha deach briogadh a chlàradh. Canar "briogadh" ri daoine a bhriogas air ceangal a tha a dol a-mach on làrach agad.</string>
+	<string name="stats_empty_search_engine_terms">Chan eil briathar-luirg ann. \'S e na briathran-luirg na faclan no abairtean air an lorg daoine thu nuair a nì iad lorg.</string>
 	<string name="passcode_manage">Stiùirich glas a\' PIN</string>
 	<string name="passcode_enter_old_passcode">Cuir a-steach an seann PIN agad</string>
 	<string name="passcode_set">Chaidh am PIN a shuidheachadh</string>

@@ -273,7 +273,7 @@
 	<string name="password_invalid">Daha güvenli bir paraloya ihtiyacınız var. 7 veya daha fazla karakter kullandığınızdan emin olun, büyük ve küçük harfleri, numaraları ve özel karakterleri harmanlayın.</string>
 	<string name="nux_tap_continue">Devam</string>
 	<string name="nux_welcome_create_account">Hesap oluştur</string>
-	<string name="stats_empty_top_posts">&lt;b>Hiçbir popüler mesaj ya da sayfa bulunamadı.&lt;/b> Bu görünüm en çok görüntülenen yazıları ve sayfaları gösterir.</string>
+	<string name="stats_empty_top_posts">Hiçbir popüler mesaj ya da sayfa bulunamadı. Bu görünüm en çok görüntülenen yazıları ve sayfaları gösterir.</string>
 	<string name="nux_add_selfhosted_blog">Kendi sunucumda bulunan siteyi ekle</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
 	<string name="media_add_new_media_gallery">Galeri oluştur</string>
@@ -401,9 +401,9 @@
 	<string name="media_gallery_type_tiled">Döşeme</string>
 	<string name="media_gallery_type_circles">Çember</string>
 	<string name="media_gallery_type_slideshow">Slayt gösterisi</string>
-	<string name="stats_empty_referrers">&lt;b>Gönderen yok.&lt;/b> Bir gönderen başka bir siteden sitenize bağlantı bulunduranlardır.</string>
-	<string name="stats_empty_clicks">&lt;b>Tık kaydedilmedi.&lt;/b> "Tıklar" ziyaretçilerin sitenizden dışarı giden bağlantılara tıklamalarıdır.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Arama krtiteri yok.&lt;/b> Arama kriterleri kullanıcıların içeriğinizi bulmak için kullandıkları kelime ya da kelime öbekleridir.</string>
+	<string name="stats_empty_referrers">Gönderen yok. Bir gönderen başka bir siteden sitenize bağlantı bulunduranlardır.</string>
+	<string name="stats_empty_clicks">Tık kaydedilmedi. "Tıklar" ziyaretçilerin sitenizden dışarı giden bağlantılara tıklamalarıdır.</string>
+	<string name="stats_empty_search_engine_terms">Arama krtiteri yok. Arama kriterleri kullanıcıların içeriğinizi bulmak için kullandıkları kelime ya da kelime öbekleridir.</string>
 	<string name="media_gallery_type">Tip</string>
 	<string name="stats_view_visitors_and_views">Ziyaretçiler ve görüntülemeler</string>
 	<string name="stats_view_referrers">Gönderenler</string>

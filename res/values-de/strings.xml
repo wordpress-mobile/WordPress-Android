@@ -274,7 +274,7 @@
 	<string name="nux_add_selfhosted_blog">Selbs-gehostete Webseite hinzufügen</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
-	<string name="stats_empty_top_posts">&lt;b>Bisher keine Top-Beiträge oder -Seiten gefunden.&lt;/b> Diese Anzeige zeigt deine meist-besuchten Beiträge und Seiten.</string>
+	<string name="stats_empty_top_posts">Bisher keine Top-Beiträge oder -Seiten gefunden. Diese Anzeige zeigt deine meist-besuchten Beiträge und Seiten.</string>
 	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
 	<string name="reader_label_added_tag">%s hinzugefügt</string>
 	<string name="reader_label_removed_tag">%s entfernt</string>
@@ -400,9 +400,9 @@
 	<string name="stats_video_summary_label_plays">Abgespielt</string>
 	<string name="stats_video_summary_header">Aggregierte Statistik für %s</string>
 	<string name="stats_video_summary_label_impressions">Aufrufe</string>
-	<string name="stats_empty_referrers">&lt;b>Keine Referrer.&lt;/b> Ein Referrer ist ein Klick von einer anderen Seite, die auf deine verlinkt. </string>
-	<string name="stats_empty_clicks">&lt;b>Keine Klicks aufgezeichnet.&lt;/b> "Klicks" sind Besucher, die auf externe Links auf deiner Seite klicken.</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Keine Suchbegriffe.&lt;/b> Suchbegriffe sind Wörter oder Ausdrücke, mit denen Benutzer dich bei eine Suche finden.</string>
+	<string name="stats_empty_referrers">Keine Referrer. Ein Referrer ist ein Klick von einer anderen Seite, die auf deine verlinkt. </string>
+	<string name="stats_empty_clicks">Keine Klicks aufgezeichnet. "Klicks" sind Besucher, die auf externe Links auf deiner Seite klicken.</string>
+	<string name="stats_empty_search_engine_terms">Keine Suchbegriffe. Suchbegriffe sind Wörter oder Ausdrücke, mit denen Benutzer dich bei eine Suche finden.</string>
 	<string name="passcode_re_enter_passcode">PIN erneut eingeben</string>
 	<string name="passcode_set">PIN gesetzt</string>
 	<string name="passcode_preference_title">PIN-Sperre</string>

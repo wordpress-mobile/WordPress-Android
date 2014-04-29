@@ -140,7 +140,7 @@
 	<string name="nux_tap_continue">ดำเนินการต่อ</string>
 	<string name="nux_welcome_create_account">สร้างบัญชี</string>
 	<string name="nux_add_selfhosted_blog">เพิ่มเว็บที่ติดตั้งบนโฮสท์ของคุณ</string>
-	<string name="stats_empty_top_posts">&lt;b>ไม่พบเรื่องหรือหน้าใดเลย&lt;/b> การดูนี้จะแสดงเรื่องและหน้าที่คุณดูมากที่สุด</string>
+	<string name="stats_empty_top_posts">ไม่พบเรื่องหรือหน้าใดเลย การดูนี้จะแสดงเรื่องและหน้าที่คุณดูมากที่สุด</string>
 	<string name="nux_tutorial_get_started_title">เริ่มใช้งาน</string>
 	<string name="username_invalid">ชื่อผู้ใช้ไม่ถูกต้อง</string>
 	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>
@@ -255,8 +255,8 @@
 	<string name="media_gallery_image_order_reverse">ย้อนกลับ</string>
 	<string name="media_gallery_type">ประเภท</string>
 	<string name="media_gallery_type_squares">เรียงแบบสี่เหลี่ยม</string>
-	<string name="stats_empty_clicks">&lt;b>ไม่มีบันทึกการกด&lt;/b> "การกด" คือลิงก์ออกที่ผู้เยี่ยมชมกดบนเว็บไซต์ของคุณ</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>ไม่มีเงื่อนไขการค้นหา&lt;/b> เงื่อไขการค้นหาคือคำหรือวลีที่ผู้ใช้ ใช้ค้นหาจนมาเจอเว็บคุณ</string>
+	<string name="stats_empty_clicks">ไม่มีบันทึกการกด "การกด" คือลิงก์ออกที่ผู้เยี่ยมชมกดบนเว็บไซต์ของคุณ</string>
+	<string name="stats_empty_search_engine_terms">ไม่มีเงื่อนไขการค้นหา เงื่อไขการค้นหาคือคำหรือวลีที่ผู้ใช้ ใช้ค้นหาจนมาเจอเว็บคุณ</string>
 	<string name="menu_search">ค้นหา</string>
 	<string name="passcode_manage">จัดการ PIN lock</string>
 	<string name="passcode_enter_passcode">ใส่ PIN ของคุณ</string>
@@ -270,7 +270,7 @@
 	<string name="stats_video_summary_label_plays">จำนวนที่เล่น</string>
 	<string name="stats_video_summary_label_impressions">จำนวนที่แสดง</string>
 	<string name="stats_video_summary_header">สถิติที่รวบรวมสำหรับ %s</string>
-	<string name="stats_empty_referrers">&lt;b>ไม่มีลิงก์อ้างอิง&lt;/b> ลิงก์อ้างอิงคือการกดลิงก์บนเว็บอื่นที่ลิงก์มาหาเว็บคุณ</string>
+	<string name="stats_empty_referrers">ไม่มีลิงก์อ้างอิง ลิงก์อ้างอิงคือการกดลิงก์บนเว็บอื่นที่ลิงก์มาหาเว็บคุณ</string>
 	<string name="theme_auth_error_title">ล้มเหลวในการรับ theme </string>
 	<string name="post_excerpt">คำย่อเรื่อง</string>
 	<string name="stats_entry_referrers">ลิงก์อ้างอิง</string>
