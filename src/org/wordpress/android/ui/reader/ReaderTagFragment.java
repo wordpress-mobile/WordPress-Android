@@ -148,9 +148,11 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
         final boolean animateRemoval;
         switch (action) {
             case ADD:
+                // animate tag's removal if added from recommended tags
                 animateRemoval = (getTagType() == ReaderTagType.RECOMMENDED);
                 break;
             case DELETE:
+                // animate tag's removal if deleted from followed tags
                 animateRemoval = (getTagType() == ReaderTagType.SUBSCRIBED);
                 break;
             default:

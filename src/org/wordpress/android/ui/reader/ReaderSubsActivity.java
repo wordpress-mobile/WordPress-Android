@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.URLUtil;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -204,54 +205,106 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         if (TextUtils.isEmpty(entry)) {
             return;
         }
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
 
-        // is it a url?
-        boolean isUrl = (entry.contains(".") && !entry.contains(" "));
+        // is it a url or a tag?
+        boolean isUrl = !entry.contains(" ") && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
+        } else {
+            addAsTag(entry);
+        }
+    }
+
+    /*
+     * follow editText entry as a tag
+     */
+    private void addAsTag(final String entry) {
+        if (TextUtils.isEmpty(entry)) {
             return;
         }
 
-        // nope, it must be a tag - so make sure it doesn't already exist and is valid
         if (ReaderTagTable.tagExists(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists, ToastUtils.Duration.LONG);
-            return;
-        }
-        if (!ReaderTag.isValidTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid, ToastUtils.Duration.LONG);
+            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
 
-        // it's valid, add it
+        if (!ReaderTag.isValidTagName(entry)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
+            return;
+        }
+
+        // tag is valid, follow it
         mEditAdd.setText(null);
         EditTextUtils.hideSoftInput(mEditAdd);
         performAddTag(entry);
     }
 
     /*
-     * follow by url - first check whether it's already followed, then start a two-step process:
-     *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. perform the actual follow
+     * follow editText entry as a url
      */
-    private void addAsUrl(final String url) {
-        if (TextUtils.isEmpty(url)) {
+    private void addAsUrl(final String entry) {
+        if (TextUtils.isEmpty(entry)) {
             return;
         }
 
         // normalize the url and prepend protocol if not supplied
         final String normUrl;
-        if (!url.contains("://")) {
-            normUrl = UrlUtils.normalizeUrl("http://" + url);
+        if (!entry.contains("://")) {
+            normUrl = UrlUtils.normalizeUrl("http://" + entry);
         } else {
-            normUrl = UrlUtils.normalizeUrl(url);
+            normUrl = UrlUtils.normalizeUrl(entry);
+        }
+
+        // if this isn't a valid URL, add original entry as a tag
+        if (!URLUtil.isNetworkUrl(normUrl)) {
+            addAsTag(entry);
+            return;
         }
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
+            return;
+        }
+
+        // URL is valid, so follow it
+        performAddUrl(normUrl);
+    }
+
+    /*
+     * called when user manually enters a tag - passed tag is assumed to be validated
+     */
+    private void performAddTag(final String tagName) {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && !isFinishing()) {
+                    getPageAdapter().refreshTagFragments();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
+                    mLastAddedTag = null;
+                }
+            }
+        };
+
+        if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
+            String msgText = getString(R.string.reader_label_added_tag, tagName);
+            MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO, null);
+            getPageAdapter().refreshTagFragments(null, tagName);
+            onTagAction(TagAction.ADD, tagName);        }
+    }
+
+    /*
+     * start a two-step process to follow a blog by url:
+     *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
+     *    2. perform the actual follow
+     * note that the passed URL is assumed to be normalized and validated
+     */
+    private void performAddUrl(final String normUrl) {
+        if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
@@ -325,34 +378,6 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     @Override
     public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
         mBlogsChanged = true;
-    }
-
-    /*
-     * called when user manually enters a tag - adds the tag to their followed tags
-     */
-    private void performAddTag(final String tagName) {
-        if (!NetworkUtils.checkConnection(this)) {
-            return;
-        }
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!succeeded && !isFinishing()) {
-                    getPageAdapter().refreshTagFragments();
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
-                    mLastAddedTag = null;
-                }
-            }
-        };
-        if (!ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
-            return;
-        }
-
-        String msgText = getString(R.string.reader_label_added_tag, tagName);
-        MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO, null);
-        getPageAdapter().refreshTagFragments(null, tagName);
-        onTagAction(TagAction.ADD, tagName);
     }
 
     /*

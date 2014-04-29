@@ -145,14 +145,14 @@ public class ReaderBlogFragment extends SherlockFragment
         getBlogAdapter().refresh();
     }
 
-    private boolean hasBlogAdapter() {
-        return (mAdapter != null);
-    }
-
     void refresh() {
         if (hasBlogAdapter()) {
             getBlogAdapter().refresh();
         }
+    }
+
+    private boolean hasBlogAdapter() {
+        return (mAdapter != null);
     }
 
     private ReaderBlogAdapter getBlogAdapter() {
