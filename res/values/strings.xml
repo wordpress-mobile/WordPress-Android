@@ -599,8 +599,7 @@
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="reader_label_new_posts_one">One new post</string>
-    <string name="reader_label_new_posts_multi">%d new posts</string>
+    <string name="reader_label_new_posts">Tap to show new posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>

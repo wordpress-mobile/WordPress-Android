@@ -196,7 +196,10 @@ public class ReaderActivity extends WPActionBarActivity
                         // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
                         if (listFragment.getPostListType() == ReaderPostListType.TAG
                                 && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTag())) {
-                            listFragment.updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                            listFragment.updatePostsWithTag(
+                                    listFragment.getCurrentTag(),
+                                    RequestDataAction.LOAD_NEWER,
+                                    ReaderPostListFragment.RefreshType.AUTOMATIC);
                         }
                     }
                 }
@@ -279,11 +282,6 @@ public class ReaderActivity extends WPActionBarActivity
         return (getListFragment() != null);
     }
 
-    private boolean isListFragmentEmpty() {
-        ReaderPostListFragment fragment = getListFragment();
-        return (fragment != null && !fragment.isEmpty());
-    }
-
     /*
      * show fragment containing detail for passed post
      */
@@ -344,7 +342,10 @@ public class ReaderActivity extends WPActionBarActivity
                         // if the tag table was empty and we have no posts (first run), tell the
                         // list fragment to get posts with the current tag now that we have tags
                         if (isTagTableEmpty && ReaderPostTable.isEmpty()) {
-                            listFragment.updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                            listFragment.updatePostsWithTag(
+                                    listFragment.getCurrentTag(),
+                                    RequestDataAction.LOAD_NEWER,
+                                    ReaderPostListFragment.RefreshType.AUTOMATIC);
                         }
                     }
                 }

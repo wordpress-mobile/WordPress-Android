@@ -297,7 +297,7 @@ public class ReaderPostListFragment extends SherlockFragment
                         }
                         switch (getPostListType()) {
                             case TAG:
-                                updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
+                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                                 break;
                             case BLOG:
                                 updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
@@ -306,6 +306,8 @@ public class ReaderPostListFragment extends SherlockFragment
                     }
                 }
         );
+
+        mListView.setAdapter(getPostAdapter());
 
         return view;
     }
@@ -329,28 +331,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
         setHasOptionsMenu(true);
         checkActionBar();
-
-        // assign the post list adapter
-        boolean adapterAlreadyExists = hasPostAdapter();
-        mListView.setAdapter(getPostAdapter());
-
-        // if adapter didn't already exist, populate it now then update the tag/blog - this
-        // check is important since without it the adapter would be reset and posts would
-        // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists) {
-            switch (getPostListType()) {
-                case TAG:
-                    getPostAdapter().setCurrentTag(mCurrentTag);
-                    if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                        updatePostsWithCurrentTag(RequestDataAction.LOAD_NEWER);
-                    }
-                    break;
-                case BLOG:
-                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
-                    break;
-            }
-        }
     }
 
     @Override
@@ -523,7 +503,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
-                        updatePostsWithCurrentTag(RequestDataAction.LOAD_OLDER);
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
                     }
                     break;
@@ -567,8 +547,8 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mPostAdapter != null);
     }
 
-    protected boolean isEmpty() {
-        return (mPostAdapter == null || mPostAdapter.isEmpty());
+    protected boolean isPostAdapterEmpty() {
+        return (mPostAdapter==null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final String tagName) {
@@ -673,27 +653,15 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * get latest posts for this tag from the server
      */
-    protected void updatePostsWithCurrentTag(RequestDataAction updateAction) {
-        if (hasCurrentTag()) {
-            updatePostsWithTag(mCurrentTag, updateAction, RefreshType.AUTOMATIC);
-        }
-    }
-    private void updatePostsWithTag(final String tagName,
+    protected void updatePostsWithTag(final String tagName,
                                     final RequestDataAction updateAction,
-                                    RefreshType refreshType) {
+                                    final RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
-            return;
-        }
-
-        // can't update when the tag table is empty - this may happen during first run, in which
-        // case ReaderActivity will re-issue the update once tags are populated
-        if (ReaderTagTable.isEmpty()) {
-            AppLog.w(T.READER, "reader post list > tag table is empty, canceled tag update");
             return;
         }
 
@@ -707,21 +675,27 @@ public class ReaderPostListFragment extends SherlockFragment
                 refreshPosts();
         }
 
-        ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
+        ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
-                    AppLog.w(T.READER, "reader post list > volley response when fragment has no activity");
+                    AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
                     return;
                 }
 
                 setIsUpdating(false, updateAction);
 
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
+                // make sure this is still the current tag (user may have switched tags during the update)
+                if (!isCurrentTag(tagName)) {
+                    AppLog.i(T.READER, "reader post list > new posts in inactive tag");
+                    return;
+                }
+
+                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
-                    if (!isEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
-                        showNewPostsBar(numNewPosts);
+                    if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
+                        showNewPostsBar();
                     } else {
                         refreshPosts();
                     }
@@ -730,8 +704,36 @@ public class ReaderPostListFragment extends SherlockFragment
                     setEmptyTitleAndDescriptionForCurrentTag();
                 }
             }
-        });
+        };
+
+        // if this is an automatic request for newer posts, assign a backfill listener to
+        // ensure there aren't any gaps between this update and the previous one
+        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER
+                && refreshType == RefreshType.AUTOMATIC);
+        if (allowBackfill) {
+            ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
+                @Override
+                public void onPostsBackfilled(int numNewPosts) {
+                    if (!hasActivity()) {
+                        AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
+                        return;
+                    }
+                    if (!isCurrentTag(tagName)) {
+                        AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
+
+                    } else if (isPostAdapterEmpty()) {
+                        // show the new posts right away if this is the current tag and there aren't
+                        // any posts showing, otherwise just let them be shown on the next refresh
+                        showNewPostsBar();
+                    }
+                }
+            };
+            ReaderPostActions.updatePostsInTagWithBackfill(tagName, resultListener, backfillListener);
+        } else {
+            ReaderPostActions.updatePostsInTag(tagName, updateAction, resultListener);
+        }
     }
+
 
     boolean isUpdating() {
         return mIsUpdating;
@@ -766,24 +768,26 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * bar that appears at the top when new posts have been retrieved
      */
-    private void showNewPostsBar(int numNewPosts) {
-        if (mNewPostsBar==null || mNewPostsBar.getVisibility()==View.VISIBLE)
+    private boolean isNewPostsBarShowing() {
+        return (mNewPostsBar != null && mNewPostsBar.getVisibility() == View.VISIBLE);
+    }
+
+    private void showNewPostsBar() {
+        if (!hasActivity() || isNewPostsBarShowing()) {
             return;
-        if (numNewPosts==1) {
-            mNewPostsBar.setText(R.string.reader_label_new_posts_one);
-        } else {
-            mNewPostsBar.setText(getString(R.string.reader_label_new_posts_multi, numNewPosts));
         }
+
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-        if (hasPullToRefresh()) {
-            mPullToRefreshHelper.hideTipTemporarily(true);
-        }
+
+        mPullToRefreshHelper.hideTipTemporarily(true);
     }
 
     private void hideNewPostsBar() {
-        if (mNewPostsBar==null || mNewPostsBar.getVisibility()!=View.VISIBLE)
+        if (!hasActivity() || !isNewPostsBarShowing()) {
             return;
+        }
+
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -795,9 +799,7 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onAnimationRepeat(Animation animation) { }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
-        if (hasPullToRefresh()) {
-            mPullToRefreshHelper.showTip(true);
-        }
+        mPullToRefreshHelper.showTip(true);
     }
 
     /*

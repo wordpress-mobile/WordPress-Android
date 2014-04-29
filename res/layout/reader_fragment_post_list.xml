@@ -37,7 +37,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
-        tools:text="@string/reader_label_new_posts_one"
+        android:text="@string/reader_label_new_posts"
         android:visibility="gone" />
 
     <ProgressBar
