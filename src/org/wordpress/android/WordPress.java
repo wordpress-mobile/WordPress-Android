@@ -1,7 +1,6 @@
 package org.wordpress.android;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
@@ -136,11 +135,9 @@ public class WordPress extends Application {
 
         super.onCreate();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            ApplicationLifecycleMonitor pnBackendMponitor = new ApplicationLifecycleMonitor();
-            registerComponentCallbacks(pnBackendMponitor);
-            registerActivityLifecycleCallbacks(pnBackendMponitor);
-        }
+        ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
+        registerComponentCallbacks(pnBackendMonitor);
+        registerActivityLifecycleCallbacks(pnBackendMonitor);
 
         updateCurrentBlogStatsInBackground(false);
     }
@@ -548,7 +545,6 @@ public class WordPress extends Application {
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
      *
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
         private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
