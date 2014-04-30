@@ -14,8 +14,8 @@ buildscript {
 repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
-    maven { url 'http://simperium.github.io/simperium-android' }
     maven { url 'http://download.crashlytics.com/maven' }
+    maven { url "http://simperium.github.io/simperium-android" }
 }
 
 apply plugin: 'android'
@@ -92,8 +92,8 @@ android {
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
-        // Howdy Simperium
-        compile 'com.simperium:simperium-android:0.4.4'
+        // Simperium
+        compile 'com.simperium:simperium-android:0.4.5'
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')
@@ -124,50 +124,6 @@ android {
     }
 } // end android
 
-// Generates the Config.java class using properties defined in gradle.properties
-// or by other means provided by Gradle
-task generateWPConfig(group: "generate", description: "Generate Config class") {
-    def dir = "${buildDir}/source/wordpress"
-    File file = new File(dir, "org/wordpress/android/Config.java")
-    File localProperties = new File(rootDir, "local.properties")
-
-    android.sourceSets.main.java.srcDir dir
-
-    inputs.file localProperties
-    outputs.file file
-
-    doLast {
-        file.getParentFile().mkdirs()
-        def properties = new Properties()
-        def constants = [:]
-        try {
-            localProperties.withInputStream { stream ->
-                properties.load(stream)
-            }
-            properties.propertyNames().each { property ->
-                def keys = property.tokenize('.')
-                if (keys[0] == 'wp') {
-                    def name = keys[1..-1].collect { key -> key.toUpperCase()}.join('_')
-                    constants[name] = properties.getProperty(property)
-                }
-            }
-        } catch (java.io.FileNotFoundException e) {
-            logger.warn('Missing local.properties')
-        }
-        def writer = new FileWriter(file)
-        def config = constants.inject("") { consts, name, val ->
-            consts + "   public static final String ${name} = \"${val}\";\n"
-        }
-        writer.write("""/* auto-generated file do not modify */
-package org.wordpress.android;
-
-public final class Config {
-${config}
-}
-""")
-        writer.close()
-    }
-}
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/crashlytics.properties")

@@ -9,7 +9,7 @@ import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
 import com.simperium.client.User;
 
-import org.wordpress.android.Config;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 
@@ -19,8 +19,8 @@ public class SimperiumUtils {
 
     public static Simperium configureSimperium(final Context context, String token) {
 
-        Simperium simperium = Simperium.newClient(Config.SIMPERIUM_APP_NAME,
-            Config.SIMPERIUM_APP_SECRET, context);
+        Simperium simperium = Simperium.newClient(BuildConfig.SIMPERIUM_APP_NAME,
+                BuildConfig.SIMPERIUM_APP_SECRET, context);
 
 
         try {
@@ -73,7 +73,7 @@ public class SimperiumUtils {
 
         User user = simperium.getUser();
 
-        String wpccToken = String.format(TOKEN_FORMAT, Config.SIMPERIUM_APP_SECRET, token);
+        String wpccToken = String.format(TOKEN_FORMAT, BuildConfig.SIMPERIUM_APP_SECRET, token);
 
         user.setAccessToken(wpccToken);
 
