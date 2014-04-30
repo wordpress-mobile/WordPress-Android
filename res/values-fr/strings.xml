@@ -98,7 +98,6 @@
 	<string name="mnu_comment_trash">Supprimer</string>
 	<string name="xmlrpc_error">Connexion impossible. Entrer le chemin complet vers xmlrpc.php de votre site et essayez à nouveau.</string>
 	<string name="please_sign_in">Reconnectez-vous.</string>
-	<string name="visit_security_settings">Verifiez les paramètres de sécurité</string>
 	<string name="select_categories">Sélectionner les catégories</string>
 	<string name="account_details">Détails du compte</string>
 	<string name="show_and_hide_blogs">Montrer/cacher les blogs WordPress.com</string>
@@ -230,6 +229,7 @@
 	<string name="dlg_spamming_comments">Marquage comme indésirable</string>
 	<string name="dlg_approving_comments">Approbation</string>
 	<string name="dlg_unapproving_comments">Désapprobation</string>
+	<string name="visit_security_settings">Visitez la page sécurité</string>
 	<string name="refreshing_categories">Actualisation des catégories</string>
 	<string name="cat_adding_category">Ajout de catégorie</string>
 	<string name="deleting_page">Suppression de la page</string>
@@ -274,7 +274,7 @@
 	<string name="nux_oops_not_selfhosted_blog">Se connecter à WordPress.com</string>
 	<string name="nux_tap_continue">Continuer</string>
 	<string name="password_invalid">Il vous faut un mot de passe plus sûr. Faites en sorte qu\'il comprenne au moins 7 caractères, mélangez les lettres capitales et bas-de-casse, les chiffres ou les caractères spéciaux.</string>
-	<string name="stats_empty_top_posts">&lt;b>Aucun article ou page populaires trouvés pour le moment.&lt;/b> Cette vue affiche vos articles et pages les plus vus.</string>
+	<string name="stats_empty_top_posts">Aucun article ou page populaires trouvés pour le moment. Cette vue affiche vos articles et pages les plus vus.</string>
 	<string name="media_add_popup_title">Ajouter à la bibliothèque média</string>
 	<string name="empty_list_default">Cette liste est vide</string>
 	<string name="select_from_media_library">Sélectionner depuis la bibliothèque média</string>
@@ -403,12 +403,12 @@
 	<string name="share_action_title">Ajouter à ...</string>
 	<string name="share_action">Partager</string>
 	<string name="stats">Stats</string>
-	<string name="stats_empty_referrers">&lt;b>Pas de référants.&lt;/b> Un référant est un click sur un lien d\'un site externe qui pointe vers le votre.</string>
-	<string name="stats_empty_clicks">&lt;b>Aucun click enregistré.&lt;/b> Un "Click" correspond à un lecteur cliquant sur un lien extérieur à votre site.</string>
+	<string name="stats_empty_referrers">Pas de référants. Un référant est un click sur un lien d\'un site externe qui pointe vers le votre.</string>
+	<string name="stats_empty_clicks">Aucun click enregistré. Un "Click" correspond à un lecteur cliquant sur un lien extérieur à votre site.</string>
 	<string name="media_edit_failure">Échec de mise à jour</string>
 	<string name="theme_set_success">Le thème a bien été sélectionné !</string>
 	<string name="passcode_turn_off">Désactiver le code PIN</string>
-	<string name="stats_empty_search_engine_terms">&lt;b>Aucun mot clé de recherche.&lt;/b>Ce sont les mots clés utilisés par les internautes pour trouver votre site sur les moteurs de recherche.</string>
+	<string name="stats_empty_search_engine_terms">Aucun mot clé de recherche.Ce sont les mots clés utilisés par les internautes pour trouver votre site sur les moteurs de recherche.</string>
 	<string name="confirm_delete_multi_media">Êtes-vous sur de vouloir supprimer ces médias ?</string>
 	<string name="confirm_delete_media">Êtes-vous sur de vouloir supprimer ce média ?</string>
 	<string name="remote_changes">Vous avez modifié un article mais il n\'a pas encore été mis en ligne. Voulez-vous rafraîchir la page et écraser les modifications locales ?</string>

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,10 +42,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
 
-    private static final int UNSPECIFIED_NOTE_ID = -1;
-
     private NotificationsListFragment mNotesList;
-    private BroadcastReceiver mBroadcastReceiver;
     private boolean mDualPane;
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
@@ -60,7 +56,10 @@ public class NotificationsActivity extends WPActionBarActivity
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        // savedInstanceState will be non-null if activity is being re-created
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        }
 
         createMenuDrawer(R.layout.notifications);
         View fragmentContainer = findViewById(R.id.layout_fragment_container);
