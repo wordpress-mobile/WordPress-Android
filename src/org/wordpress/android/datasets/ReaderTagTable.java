@@ -132,6 +132,16 @@ public class ReaderTagTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_tags WHERE tag_name=?1", new String[]{tagName});
     }
 
+    public static boolean followedTagExists(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return false;
+        }
+        String[] args = {tagName, Integer.toString(ReaderTagType.FOLLOWED.toInt())};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND topic_type=?2",
+                args);
+    }
+
     private static ReaderTag getTagFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("null topic cursor");

@@ -42,7 +42,8 @@ public class ReaderPostTable {
           + "is_external,"          // 23
           + "is_private,"           // 24
           + "is_videopress,"        // 25
-          + "tag_list";             // 26
+          + "tag_list,"             // 26
+          + "primary_tag";          // 27
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -73,6 +74,7 @@ public class ReaderPostTable {
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
                 + " tag_list            TEXT,"
+                + " primary_tag         TEXT,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
@@ -339,7 +341,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
@@ -373,6 +375,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
                 stmtPosts.bindString(26, post.getTags());
+                stmtPosts.bindString(27, post.getPrimaryTag());
                 stmtPosts.execute();
                 stmtPosts.clearBindings();
             }
@@ -509,6 +512,7 @@ public class ReaderPostTable {
         private final int idx_is_videopress;
 
         private final int idx_tag_list;
+        private final int idx_primary_tag;
 
         private PostColumnIndexes(Cursor c) {
             if (c == null)
@@ -546,6 +550,7 @@ public class ReaderPostTable {
             idx_is_videopress = c.getColumnIndex("is_videopress");
 
             idx_tag_list = c.getColumnIndex("tag_list");
+            idx_primary_tag = c.getColumnIndex("primary_tag");
         }
     }
 
@@ -591,6 +596,7 @@ public class ReaderPostTable {
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(cols.idx_is_videopress));
 
         post.setTags(c.getString(cols.idx_tag_list));
+        post.setPrimaryTag(c.getString(cols.idx_primary_tag));
 
         return post;
     }

@@ -320,27 +320,20 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // don't show tags for tag preview or private blogs
-        if (isTagPreview() || post.isPrivate) {
+        // show primary tag unless this is tag preview or a private blog
+        if (isTagPreview() || post.isPrivate || !post.hasPrimaryTag()) {
             holder.txtTag.setVisibility(View.GONE);
         } else {
-            // show the first tag on this post
-            final String firstTag = post.getFirstTag();
-            if (!TextUtils.isEmpty(firstTag)) {
-                holder.txtTag.setVisibility(View.VISIBLE);
-                holder.txtTag.setText(firstTag);
-                holder.txtTag.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnTagSelectedListener != null) {
-                            mOnTagSelectedListener.onTagSelected(firstTag);
-                        }
+            holder.txtTag.setText(post.getPrimaryTag());
+            holder.txtTag.setVisibility(View.VISIBLE);
+            holder.txtTag.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnTagSelectedListener != null) {
+                        mOnTagSelectedListener.onTagSelected(post.getPrimaryTag());
                     }
-                });
-            } else {
-                holder.txtTag.setVisibility(View.GONE);
-                holder.txtTag.setOnClickListener(null);
-            }
+                }
+            });
         }
 
         // likes, comments & reblogging - supported by wp posts only
@@ -590,13 +583,13 @@ public class ReaderPostAdapter extends BaseAdapter {
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
-            // values are all cached by the post after the first time they're computed, so calling
-            // these getters ensures the values are immediately available when accessed from getView
+            // pre-calc avatar URLs, featured image URLs, and pubDates in each post - these
+            // values are all cached by the post after the first time they're computed, so
+            // calling these getters ensures the values are immediately available when
+            // accessed from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                post.getFirstTag();
                 post.getDatePublished();
             }
 

@@ -29,7 +29,9 @@ public class ReaderPost {
     private String blogName;
     private String blogUrl;
     private String postAvatar;
+
     private String tags;          // comma-separated list of tags
+    private String primaryTag;    // most popular tag on this post based on usage in blog
 
     public long timestamp;        // used for sorting
     private String published;
@@ -98,6 +100,7 @@ public class ReaderPost {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
+            post.primaryTag = JSONUtil.getString(jsonEditorial, "highlight_topic"); // highlight_topic_title ?
             // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
             post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
         } else {
@@ -190,25 +193,12 @@ public class ReaderPost {
         }
 
         // if the post is untitled, make up a title from the excerpt
-        if (!post.hasTitle() && post.hasExcerpt())
+        if (!post.hasTitle() && post.hasExcerpt()) {
             post.title = extractTitle(post.excerpt, 50);
-
-        // extract comma-separated list of tags
-        JSONObject jsonTags = json.optJSONObject("tags");
-        if (jsonTags != null) {
-            StringBuilder sbTags = new StringBuilder();
-            Iterator<String> it = jsonTags.keys();
-            boolean isFirst = true;
-            while (it.hasNext()) {
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    sbTags.append(",");
-                }
-                sbTags.append(it.next());
-            }
-            post.setTags(sbTags.toString());
         }
+
+        // assign tags to this post
+        assignTagsFromJson(post, json.optJSONObject("tags"));
 
         // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
         // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
@@ -224,6 +214,49 @@ public class ReaderPost {
         }
 
         return post;
+    }
+
+    private static void assignTagsFromJson(ReaderPost post, JSONObject jsonTags) {
+        if (jsonTags == null) {
+            return;
+        }
+
+        // list of all tags
+        StringBuilder sbAllTags = new StringBuilder();
+
+        // most popular tag, based on usage count on this blog
+        String mostPopularTag = null;
+        int popularCount = 0;
+
+        Iterator<String> it = jsonTags.keys();
+        boolean isFirst = true;
+        while (it.hasNext()) {
+            JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
+            String tagName = JSONUtil.getString(jsonThisTag, "name");
+
+            // if this tag has more posts than the previous one, make it the popular tag so far
+            int postCount = jsonThisTag.optInt("post_count");
+            if (postCount > popularCount) {
+                mostPopularTag = tagName;
+                popularCount = postCount;
+            }
+
+            // add to list of all tags
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sbAllTags.append(",");
+            }
+            sbAllTags.append(tagName);
+        }
+
+        // don't set primary tag if one is already set (may have been set from the editorial
+        // section if this is a Freshly Pressed post)
+        if (!post.hasPrimaryTag()) {
+            post.setPrimaryTag(mostPopularTag);
+        }
+
+        post.setTags(sbAllTags.toString());
     }
 
     /*
@@ -485,6 +518,16 @@ public class ReaderPost {
         return Arrays.asList(getTags().split(","));
     }
 
+    public String getPrimaryTag() {
+        return StringUtils.notNullStr(primaryTag);
+    }
+    public void setPrimaryTag(String tagName) {
+        this.primaryTag = StringUtils.notNullStr(tagName);
+    }
+    public boolean hasPrimaryTag() {
+        return !TextUtils.isEmpty(primaryTag);
+    }
+
     // --------------------------------------------------------------------------------------------
 
     public boolean hasText() {
@@ -583,22 +626,4 @@ public class ReaderPost {
         }
         return dtPublished;
     }
-
-    /*
-     * returns just the first tag on this post (if any)
-     */
-    private transient String firstTag;
-    public String getFirstTag() {
-        if (firstTag == null) {
-            String allTags = getTags();
-            int pos = allTags.indexOf(",");
-            if (pos > 0) {
-                firstTag = allTags.substring(0, pos);
-            } else {
-                firstTag = allTags;
-            }
-        }
-        return firstTag;
-    }
-
 }

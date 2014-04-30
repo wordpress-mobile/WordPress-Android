@@ -182,7 +182,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             Bundle bundle = new Bundle();
             if (mTagsChanged) {
                 bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTag != null && ReaderTagTable.tagExists(mLastAddedTag)) {
+                if (mLastAddedTag != null && ReaderTagTable.followedTagExists(mLastAddedTag)) {
                     bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
                 }
             }
