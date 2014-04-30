@@ -3,16 +3,8 @@
                 android:id="@+id/dotcomLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/margin_medium"
-                android:background="@color/grey_extra_light">
-
-    <TextView
-        android:id="@+id/dotcomTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:textSize="@dimen/text_sz_large"
-        android:text="@string/wpcom_signin_dialog_title"/>
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium">
 
     <EditText
         android:id="@+id/dotcomUsername"
@@ -20,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:hint="@string/username"
-        android:layout_below="@id/dotcomTitle"
         android:singleLine="true"/>
 
     <EditText
