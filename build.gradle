@@ -58,7 +58,7 @@ android {
         packageName "org.wordpress.android"
         versionName "2.8-beta-2"
         versionCode 107
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 19
     }
 
