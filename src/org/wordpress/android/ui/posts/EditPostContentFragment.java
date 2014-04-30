@@ -12,7 +12,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -73,17 +72,17 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPUnderlineSpan;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -148,14 +147,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             }
         });
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.GINGERBREAD_MR1) {
-            mContentEditText.setBackgroundResource(android.R.drawable.editbox_background_normal);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mContentEditText.getLayoutParams();
-            int sideMargin = mActivity.getResources().getDimensionPixelSize(
-                    R.dimen.post_editor_content_side_margin_gingerbread);
-            layoutParams.setMargins(sideMargin, layoutParams.topMargin, sideMargin, layoutParams.bottomMargin);
-            mContentEditText.setLayoutParams(layoutParams);
-        }
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
         Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
