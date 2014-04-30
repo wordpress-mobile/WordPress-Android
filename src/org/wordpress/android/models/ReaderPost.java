@@ -52,8 +52,9 @@ public class ReaderPost {
     public boolean isVideoPress;
 
     public static ReaderPost fromJson(JSONObject json) {
-        if (json==null)
+        if (json == null) {
             throw new IllegalArgumentException("null json post");
+        }
 
         ReaderPost post = new ReaderPost();
 
@@ -83,16 +84,8 @@ public class ReaderPost {
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
-        JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor != null) {
-            post.authorName = JSONUtil.getString(jsonAuthor, "name");
-            post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
-            post.authorId = jsonAuthor.optLong("ID");
-            // site_URL doesn't exist for /sites/ endpoints, so get it from the author
-            if (TextUtils.isEmpty(post.blogUrl)) {
-                post.blogUrl = JSONUtil.getString(jsonAuthor, "URL");
-            }
-        }
+        // parse the author section
+        assignAuthorFromJson(post, json.optJSONObject("author"));
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
@@ -119,53 +112,8 @@ public class ReaderPost {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
-        // parse attachments to get the VideoPress thumbnail & url
-        /*"attachments": {
-				"321": {
-					"ID": 321,
-					"URL": "http://dissolvingbuildings.files.wordpress.com/2013/08/webcam-video-from-25-august-2013-18-33.mp4",
-					"guid": "http://dissolvingbuildings.files.wordpress.com/2013/08/webcam-video-from-25-august-2013-18-33.mp4",
-					"mime_type": "video/mp4",
-					"width": 640,
-					"height": 360,
-					"duration": 21,
-					"videopress_files": {
-						"dvd": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_dvd.mp4",
-							"mime_type": "video/mp4"
-						},
-						"std": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_std.mp4",
-							"mime_type": "video/mp4"
-						},
-						"ogg": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_fmt1.ogv",
-							"mime_type": "video/ogg"
-						}
-					},
-					"videopress_thumbnail": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_dvd.original.jpg"
-				}
-			}, */
-        JSONObject jsonAttachments = json.optJSONObject("attachments");
-        if (jsonAttachments != null) {
-            Iterator<String> it = jsonAttachments.keys();
-            if (it != null && it.hasNext()) {
-                JSONObject jsonFirstAttachment = jsonAttachments.optJSONObject(it.next());
-                if (jsonFirstAttachment != null) {
-                    String thumbnail = JSONUtil.getString(jsonFirstAttachment, "videopress_thumbnail");
-                    if (!TextUtils.isEmpty(thumbnail))
-                        post.featuredImage = thumbnail;
-                    JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
-                    if (jsonVideoPress != null) {
-                        JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
-                        if (jsonStdVideo != null) {
-                            post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
-                            post.isVideoPress = true;
-                        }
-                    }
-                }
-            }
-        }
+        // parse the attachments section
+        assignAttachmentsFromJson(post, json.optJSONObject("attachments"));
 
         // if there's no featured thumbnail, check if featured media has been set - this is sometimes
         // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
@@ -188,8 +136,9 @@ public class ReaderPost {
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image - this is done since featured_media seems to miss
             // some images that would work well as featured images on mobile
-            if (!post.hasFeaturedImage())
+            if (!post.hasFeaturedImage()) {
                 post.featuredImage = findFeaturedImage(post.text);
+            }
         }
 
         // if the post is untitled, make up a title from the excerpt
@@ -197,7 +146,7 @@ public class ReaderPost {
             post.title = extractTitle(post.excerpt, 50);
         }
 
-        // assign tags to this post
+        // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
         // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
@@ -216,6 +165,26 @@ public class ReaderPost {
         return post;
     }
 
+     /*
+      * assigns author-related info to the passed post from the passed JSON "author" object
+      */
+    private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
+        if (jsonAuthor == null) {
+            return;
+        }
+        post.authorName = JSONUtil.getString(jsonAuthor, "name");
+        post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
+        post.authorId = jsonAuthor.optLong("ID");
+
+        // site_URL doesn't exist for /sites/ endpoints, so get it from the author
+        if (TextUtils.isEmpty(post.blogUrl)) {
+            post.blogUrl = JSONUtil.getString(jsonAuthor, "URL");
+        }
+    }
+
+    /*
+     * assigns tag-related info to the passed post from the passed JSON "tags" object
+     */
     private static void assignTagsFromJson(ReaderPost post, JSONObject jsonTags) {
         if (jsonTags == null) {
             return;
@@ -258,6 +227,35 @@ public class ReaderPost {
 
         post.setTags(sbAllTags.toString());
     }
+
+    /*
+     * assigns attachment-related info to the passed post from the passed JSON "attachments" object
+     */
+    private static void assignAttachmentsFromJson(ReaderPost post, JSONObject jsonAttachments) {
+        if (jsonAttachments == null) {
+            return;
+        }
+
+        Iterator<String> it = jsonAttachments.keys();
+        if (it != null && it.hasNext()) {
+            JSONObject jsonFirstAttachment = jsonAttachments.optJSONObject(it.next());
+            if (jsonFirstAttachment != null) {
+                String thumbnail = JSONUtil.getString(jsonFirstAttachment, "videopress_thumbnail");
+                if (!TextUtils.isEmpty(thumbnail)) {
+                    post.featuredImage = thumbnail;
+                }
+                JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
+                if (jsonVideoPress != null) {
+                    JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
+                    if (jsonStdVideo != null) {
+                        post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
+                        post.isVideoPress = true;
+                    }
+                }
+            }
+        }
+    }
+
 
     /*
      * extracts a title from a post's excerpt
