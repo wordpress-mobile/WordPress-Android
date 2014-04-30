@@ -34,12 +34,12 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderTagPreview(Context context, String tagName) {
-        Intent intent = new Intent(context, ReaderActivity.class);
+    public static void showReaderTagPreviewForResult(Activity activity, String tagName) {
+        Intent intent = new Intent(activity, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
         intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent, Constants.INTENT_READER_TAG_PREVIEW);
     }
 
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
@@ -57,7 +57,7 @@ public class ReaderActivityLauncher {
         if (!TextUtils.isEmpty(tagName)) {
             intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
         }
-        activity.startActivityForResult(intent, Constants.INTENT_READER_TAGS);
+        activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS);
     }
 
     public static void showReaderPhotoViewer(Context context, String imageUrl) {

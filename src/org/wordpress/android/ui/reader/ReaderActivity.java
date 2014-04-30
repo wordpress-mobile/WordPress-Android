@@ -220,7 +220,7 @@ public class ReaderActivity extends WPActionBarActivity
 
         switch (requestCode) {
             // user just returned from the tag editor
-            case Constants.INTENT_READER_TAGS :
+            case Constants.INTENT_READER_SUBS :
                 if (isResultOK && listFragment != null && data != null) {
                     if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
                         // reload tags if they were changed, and set the last tag added as the current one
@@ -249,6 +249,14 @@ public class ReaderActivity extends WPActionBarActivity
                         listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
                     if (detailFragment != null)
                         detailFragment.reloadPost();
+                }
+                break;
+
+            // user just returned from previewing tagged posts, make sure the ActionBar adapter
+            // reflects changes to followed tags
+            case Constants.INTENT_READER_TAG_PREVIEW:
+                if (hasListFragment() && getListFragment().getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                    getListFragment().refreshTags();
                 }
                 break;
         }
@@ -416,7 +424,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onTagSelected(String tagName) {
-        ReaderActivityLauncher.showReaderTagPreview(this, tagName);
+        ReaderActivityLauncher.showReaderTagPreviewForResult(this, tagName);
     }
 
     /*

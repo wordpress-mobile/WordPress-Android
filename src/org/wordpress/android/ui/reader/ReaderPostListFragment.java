@@ -901,7 +901,9 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
         checkCurrentTag();
-        getActionBarAdapter().refreshTags();
+        if (hasActionBarAdapter()) {
+            getActionBarAdapter().refreshTags();
+        }
     }
 
     /*
@@ -967,6 +969,10 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         return mActionBarAdapter;
+    }
+
+    private boolean hasActionBarAdapter() {
+        return (mActionBarAdapter != null);
     }
 
     /*
