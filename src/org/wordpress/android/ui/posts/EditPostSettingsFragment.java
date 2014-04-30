@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -41,11 +40,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
@@ -340,9 +339,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
 
         final DatePicker datePicker = new DatePicker(getActivity());
         datePicker.init(mYear, mMonth, mDay, null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setCalendarViewShown(false);
-        }
+        datePicker.setCalendarViewShown(false);
 
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_date)

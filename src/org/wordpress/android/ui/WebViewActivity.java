@@ -1,8 +1,6 @@
 
 package org.wordpress.android.ui;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -12,7 +10,6 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 
 
 /**
@@ -26,7 +23,7 @@ public class WebViewActivity extends WPActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         requestWindowFeature(Window.FEATURE_PROGRESS);
-        
+
         super.onCreate(savedInstanceState);
 
         // clear title text so there's no title until actual web page title can be shown
@@ -68,21 +65,21 @@ public class WebViewActivity extends WPActionBarActivity {
         resumeWebView();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void pauseWebView() {
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        if (mWebView != null) {
             mWebView.onPause();
+        }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void resumeWebView() {
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        if (mWebView != null) {
             mWebView.onResume();
+        }
     }
 
     /**
      * Load the specified URL in the webview.
-     * 
+     *
      * @param url URL to load in the webview.
      */
     protected void loadUrl(String url) {
@@ -97,7 +94,7 @@ public class WebViewActivity extends WPActionBarActivity {
         else
             super.onBackPressed();
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

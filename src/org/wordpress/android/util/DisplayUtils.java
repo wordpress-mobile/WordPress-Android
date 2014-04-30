@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -79,10 +78,7 @@ public class DisplayUtils {
         if (context == null)
             return 0;
         TypedValue tv = new TypedValue();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-                return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-        } else if (context.getTheme().resolveAttribute(com.actionbarsherlock.R.attr.actionBarSize, tv, true)) {
+        if (context.getTheme() != null && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 
@@ -92,15 +88,10 @@ public class DisplayUtils {
     }
 
     /**
-     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
-     * API 11 since hasFeature() requires API 11
+     * detect when FEATURE_ACTION_BAR_OVERLAY has been set
      */
     @SuppressLint("NewApi")
     public static boolean hasActionBarOverlay(Window window) {
-        if (window != null && Build.VERSION.SDK_INT >= 11) {
-            return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        } else {
-            return false;
-        }
+        return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 }

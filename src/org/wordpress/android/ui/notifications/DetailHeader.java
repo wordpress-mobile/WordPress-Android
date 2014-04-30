@@ -3,9 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -25,7 +23,6 @@ public class DetailHeader extends LinearLayout {
     public DetailHeader(Context context, AttributeSet attributes){
         super(context, attributes);
     }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public DetailHeader(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
     }
