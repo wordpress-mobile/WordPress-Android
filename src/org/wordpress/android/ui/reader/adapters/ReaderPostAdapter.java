@@ -116,11 +116,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     ReaderPostListType getPostListType() {
-        if (mPostListType != null) {
-            return mPostListType;
-        } else {
-            return ReaderPostListType.getDefaultType();
-        }
+        return (mPostListType != null ? mPostListType : ReaderPostListType.getDefaultType());
     }
 
     public String getCurrentTag() {
@@ -143,6 +139,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             reload(false);
         }
     }
+
     private boolean isTagPreview() {
         return (getPostListType() == ReaderPostListType.TAG_PREVIEW);
     }
@@ -323,12 +320,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // don't show tags for tag preview
-        if (isTagPreview()) {
+        // don't show tags for tag preview or private blogs
+        if (isTagPreview() || post.isPrivate) {
             holder.txtTag.setVisibility(View.GONE);
         } else {
-            // get the first tag on this post, excluding the current tag
-            final String firstTag = post.getFirstTag(getCurrentTag());
+            // show the first tag on this post
+            final String firstTag = post.getFirstTag();
             if (!TextUtils.isEmpty(firstTag)) {
                 holder.txtTag.setVisibility(View.VISIBLE);
                 holder.txtTag.setText(firstTag);
@@ -494,7 +491,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 imgAvatar.setVisibility(View.GONE);
                 txtFollow.setVisibility(View.GONE);
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imgFeatured.getLayoutParams();
-                params.topMargin = 0;
+                  params.topMargin = 0;
             }
         }
     }
@@ -595,11 +592,11 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
             // values are all cached by the post after the first time they're computed, so calling
-            // these getters ensures the values are immediately available when called from getView
+            // these getters ensures the values are immediately available when accessed from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-                //post.getFirstTag();
+                post.getFirstTag();
                 post.getDatePublished();
             }
 
@@ -640,7 +637,6 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void preloadPostImages(final int position) {
         if (position >= mPosts.size() || position < 0) {
-            AppLog.w(T.READER, "invalid preload position > " + Integer.toString(position));
             return;
         }
 

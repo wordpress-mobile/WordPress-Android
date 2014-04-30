@@ -71,7 +71,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
 
         final TextView emptyView = (TextView)view.findViewById(R.id.text_empty);
         switch (getTagType()) {
-            case SUBSCRIBED:
+            case FOLLOWED:
                 emptyView.setText(R.string.reader_empty_followed_tags);
                 break;
             case RECOMMENDED:
@@ -153,7 +153,7 @@ public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdap
                 break;
             case DELETE:
                 // animate tag's removal if deleted from followed tags
-                animateRemoval = (getTagType() == ReaderTagType.SUBSCRIBED);
+                animateRemoval = (getTagType() == ReaderTagType.FOLLOWED);
                 break;
             default:
                 animateRemoval = false;

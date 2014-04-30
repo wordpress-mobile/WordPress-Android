@@ -184,8 +184,8 @@ public class ReaderTagTable {
         }
     }
 
-    public static ReaderTagList getSubscribedTags() {
-        String[] args = {Integer.toString(ReaderTag.ReaderTagType.SUBSCRIBED.toInt())};
+    public static ReaderTagList getFollowedTags() {
+        String[] args = {Integer.toString(ReaderTag.ReaderTagType.FOLLOWED.toInt())};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE topic_type=? ORDER BY tag_name", args);
         try {
             ReaderTagList topics = new ReaderTagList();

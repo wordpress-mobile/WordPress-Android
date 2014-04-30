@@ -142,7 +142,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             List<Fragment> fragments = new ArrayList<Fragment>();
 
             // add tag fragments
-            fragments.add(ReaderTagFragment.newInstance(ReaderTagType.SUBSCRIBED));
+            fragments.add(ReaderTagFragment.newInstance(ReaderTagType.FOLLOWED));
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
 
             // add blog fragments
@@ -410,7 +410,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         switch (action) {
             case ADD:
                 // user added from recommended tags, make sure addition is reflected on followed tags
-                getPageAdapter().refreshTagFragments(ReaderTagType.SUBSCRIBED);
+                getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
                 break;
             case DELETE:
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags

@@ -149,7 +149,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         @Override
         protected Boolean doInBackground(Void... voids) {
             tmpTags.addAll(ReaderTagTable.getDefaultTags());
-            tmpTags.addAll(ReaderTagTable.getSubscribedTags());
+            tmpTags.addAll(ReaderTagTable.getFollowedTags());
             return !mTags.isSameList(tmpTags);
         }
         @Override

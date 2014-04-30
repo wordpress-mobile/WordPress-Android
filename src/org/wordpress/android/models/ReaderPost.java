@@ -564,9 +564,10 @@ public class ReaderPost {
      */
     private transient String avatarForDisplay;
     public String getPostAvatarForDisplay(int avatarSize) {
-        if (avatarForDisplay==null) {
-            if (!hasPostAvatar())
+        if (avatarForDisplay == null) {
+            if (!hasPostAvatar()) {
                 return "";
+            }
             avatarForDisplay = PhotonUtils.fixAvatar(postAvatar, avatarSize);
         }
         return avatarForDisplay;
@@ -577,27 +578,24 @@ public class ReaderPost {
      */
     private transient java.util.Date dtPublished;
     public java.util.Date getDatePublished() {
-        if (dtPublished==null)
+        if (dtPublished == null) {
             dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+        }
         return dtPublished;
     }
 
+    /*
+     * returns just the first tag on this post (if any)
+     */
     private transient String firstTag;
-    public String getFirstTag(String exceptForThisTag) {
+    public String getFirstTag() {
         if (firstTag == null) {
-            List<String> tags = getTagList();
-            if (tags != null && tags.size() > 0) {
-                firstTag = tags.get(0);
-                // exclude the passed tag
-                if (exceptForThisTag != null && firstTag.equalsIgnoreCase(exceptForThisTag)) {
-                    if (tags.size() > 1) {
-                        firstTag = tags.get(1);
-                    } else {
-                        firstTag = "";
-                    }
-                }
+            String allTags = getTags();
+            int pos = allTags.indexOf(",");
+            if (pos > 0) {
+                firstTag = allTags.substring(0, pos);
             } else {
-                firstTag = "";
+                firstTag = allTags;
             }
         }
         return firstTag;

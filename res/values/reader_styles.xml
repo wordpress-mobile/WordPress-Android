@@ -4,7 +4,8 @@
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
     see also reader_styles in values-v14 for holo versions of some of these
 -->
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <!-- activity themes -->
     <style name="ReaderTheme" />
     <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
@@ -74,6 +75,17 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">4</item>
         <item name="android:ellipsize">end</item>
+    </style>
+    <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:background">@drawable/reader_transparent_selector</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableLeft">@drawable/note_icon_tag</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>

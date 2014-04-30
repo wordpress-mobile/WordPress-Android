@@ -272,6 +272,8 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
                 }
+
+                // add the tag preview header to the listView if we're previewing a tag
                 if (isTagPreview()) {
                     mTagPreviewHeader = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, null);
                     mListView.addHeaderView(mTagPreviewHeader);
@@ -777,9 +779,12 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
 
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
-                    // if we loaded new posts and posts are already displayed, show the "new posts"
-                    // bar rather than immediately refreshing the list
-                    if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
+                    // if we loaded new posts for a followed tag and posts are already displayed,
+                    // show the "new posts" bar rather than immediately refreshing the list
+                    if (!isPostAdapterEmpty()
+                            && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                            && updateAction == RequestDataAction.LOAD_NEWER)
+                    {
                         showNewPostsBar();
                     } else {
                         refreshPosts();
@@ -917,14 +922,11 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * are we showing all posts with a specific tag, or all posts in a specific blog?
+     * are we showing all posts with a specific tag (followed or previewed), or all
+     * posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        if (mPostListType != null) {
-            return mPostListType;
-        } else {
-            return ReaderPostListType.getDefaultType();
-        }
+        return (mPostListType != null ? mPostListType : ReaderPostListType.getDefaultType());
     }
 
     /*

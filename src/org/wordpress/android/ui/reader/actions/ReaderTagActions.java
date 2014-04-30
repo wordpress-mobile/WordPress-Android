@@ -58,7 +58,7 @@ public class ReaderTagActions {
             case ADD :
                 originalTopic = null; // prevent compiler warning
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.SUBSCRIBED);
+                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
@@ -175,15 +175,15 @@ public class ReaderTagActions {
         new Thread() {
             @Override
             public void run() {
-                // get server topics, both default & subscribed
+                // get server topics, both default & followed
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.SUBSCRIBED));
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.FOLLOWED));
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
-                localTopics.addAll(ReaderTagTable.getSubscribedTags());
+                localTopics.addAll(ReaderTagTable.getFollowedTags());
                 final boolean hasChanges = !localTopics.isSameList(serverTopics);
 
                 if (hasChanges) {

@@ -65,19 +65,13 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/ReaderTextView.Post.Tag"
         android:layout_marginLeft="@dimen/margin_large"
         android:paddingTop="@dimen/margin_medium"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_large"
-        android:drawableLeft="@drawable/note_icon_tag"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/reader_hyperlink"
-        android:background="@drawable/reader_transparent_selector"
-        android:gravity="center_vertical"
         android:layout_below="@+id/text_excerpt"
-        tools:text="tag"/>
+        tools:text="text_tag" />
 
     <View
         android:id="@+id/divider"

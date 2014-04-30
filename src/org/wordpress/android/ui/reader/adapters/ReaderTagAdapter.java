@@ -121,8 +121,8 @@ public class ReaderTagAdapter extends BaseAdapter {
         holder.txtTagName.setText(tag.getCapitalizedTagName());
 
         switch (tag.tagType) {
-            case SUBSCRIBED:
-                // only subscribed tags can be deleted
+            case FOLLOWED:
+                // only followed tags can be deleted
                 holder.btnAddRemove.setImageDrawable(mDrawableRemove);
                 holder.btnAddRemove.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -220,8 +220,8 @@ public class ReaderTagAdapter extends BaseAdapter {
                 case RECOMMENDED:
                     tmpTags = ReaderTagTable.getRecommendedTags(true);
                     break;
-                case SUBSCRIBED:
-                    tmpTags = ReaderTagTable.getSubscribedTags();
+                case FOLLOWED:
+                    tmpTags = ReaderTagTable.getFollowedTags();
                     break;
                 default :
                     tmpTags = ReaderTagTable.getDefaultTags();
