@@ -24,10 +24,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.TagListType;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -47,8 +47,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
-    public static enum ReaderPostListType { TAG, BLOG }
-
     private String mCurrentTag;
     private long mCurrentBlogId;
 
@@ -67,9 +65,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final ReaderPostListType mPostListType;
     private ReaderPostList mPosts = new ReaderPostList();
 
-    private final String mFollowing;
-    private final String mFollow;
-
     private OnTagSelectedListener mOnTagSelectedListener;
     private final ReaderActions.RequestReblogListener mReblogListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
@@ -78,8 +73,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
-
-    private TagListType mTagListType;
 
     public ReaderPostAdapter(Context context,
                              ReaderPostListType postListType,
@@ -109,10 +102,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
-        // text for follow button
-        mFollowing = context.getString(R.string.reader_btn_unfollow).toUpperCase();
-        mFollow = context.getString(R.string.reader_btn_follow).toUpperCase();
-
         // enable preloading of images on Android 4 or later (earlier devices tend not to have
         // enough memory/heap to make this worthwhile)
         mEnableImagePreload = SysUtils.isGteAndroid4();
@@ -127,14 +116,18 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     ReaderPostListType getPostListType() {
-        return mPostListType;
+        if (mPostListType != null) {
+            return mPostListType;
+        } else {
+            return ReaderPostListType.getDefaultType();
+        }
     }
 
     public String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
-    // used when the list type is ReaderPostListType.TAG
+    // used when the viewing tagged posts
     public void setCurrentTag(String tagName) {
         tagName = StringUtils.notNullStr(tagName);
         if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
@@ -150,17 +143,8 @@ public class ReaderPostAdapter extends BaseAdapter {
             reload(false);
         }
     }
-
-    // type of tag we're listing posts for when the list type is ReaderPostListType.TAG
-    public void setTagListType(TagListType tagListType) {
-        mTagListType = tagListType;
-    }
-
-
     private boolean isTagPreview() {
-        return (getPostListType() == ReaderPostListType.TAG
-                && mTagListType != null
-                && mTagListType.equals(TagListType.PREVIEW));
+        return (getPostListType() == ReaderPostListType.TAG_PREVIEW);
     }
 
     private void clear() {
@@ -291,7 +275,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         // avatar, blog name and follow button only appear when showing tagged posts
-        if (getPostListType() == ReaderPostListType.TAG) {
+        if (getPostListType().isTagType()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
                 holder.txtBlogName.setText(post.getBlogName());
@@ -589,7 +573,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... params) {
             final int numExisting;
             switch (getPostListType()) {
-                case TAG:
+                 case TAG_PREVIEW: case TAG_FOLLOWED:
                     tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;

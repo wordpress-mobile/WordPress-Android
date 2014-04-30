@@ -122,7 +122,7 @@ public class ReaderTagActions {
      * returns the passed tagName formatted for use with our API
      * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
      */
-    protected static String sanitizeTitle(final String tagName) {
+    static String sanitizeTitle(final String tagName) {
         if (tagName == null) {
             return "";
         }

@@ -22,7 +22,6 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.TagListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
@@ -30,7 +29,6 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostListType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -50,15 +48,26 @@ public class ReaderActivity extends WPActionBarActivity
 
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
-    public static final String ARG_READER_FRAGMENT = "reader_fragment";
-    static final String ARG_TAG_NAME = "tag_name";
-    static final String ARG_TAG_LIST_TYPE = "tag_list_type";
-    static final String ARG_IS_TAG_PREVIEW = "is_tag_preview";
+    public static enum ReaderPostListType {
+            TAG_FOLLOWED,
+            TAG_PREVIEW,
+            BLOG;
 
+            public boolean isTagType() {
+                return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
+            }
+
+            public static ReaderPostListType getDefaultType() {
+                return TAG_FOLLOWED;
+            }
+    }
+
+    public static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
+    static final String ARG_TAG_NAME = "tag_name";
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_BLOG_URL = "blog_url";
     static final String ARG_POST_ID = "post_id";
-    static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
+    static final String ARG_POST_LIST_TYPE = "post_list_type";
 
     static final String KEY_LIST_STATE = "list_state";
     static final String KEY_WAS_PAUSED = "was_paused";
@@ -67,8 +76,7 @@ public class ReaderActivity extends WPActionBarActivity
     private static boolean mHasPerformedPurge;
 
     private boolean mIsFullScreen;
-    private boolean mIsBlogDetail;
-    private boolean mIsTagPreview;
+    private ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,17 +87,20 @@ public class ReaderActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
-        mIsBlogDetail = getIntent().getBooleanExtra(ARG_IS_BLOG_DETAIL, false);
-        mIsTagPreview = getIntent().getBooleanExtra(ARG_IS_TAG_PREVIEW, false);
+        if (getIntent().hasExtra(ARG_POST_LIST_TYPE)) {
+            mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ARG_POST_LIST_TYPE);
+        } else {
+            mPostListType = ReaderPostListType.getDefaultType();
+        }
 
         // no menu drawer if this is blog detail or tag preview
-        if (mIsBlogDetail || mIsTagPreview) {
+        if (mPostListType == ReaderPostListType.BLOG || mPostListType == ReaderPostListType.TAG_PREVIEW) {
             setContentView(R.layout.reader_activity_main);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);
         }
 
-        if (mIsBlogDetail) {
+        if (mPostListType == ReaderPostListType.BLOG) {
             // this sets "Loading..." as the title, fragment will change it to the name
             // of the blog once it's loaded
             setTitle(R.string.reader_title_blog_detail);
@@ -100,15 +111,15 @@ public class ReaderActivity extends WPActionBarActivity
 
             // determine which fragment to show (post list or detail), default to post list
             final ReaderFragmentType fragmentType;
-            if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
-                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT);
+            if (getIntent().hasExtra(ARG_READER_FRAGMENT_TYPE)) {
+                fragmentType = (ReaderFragmentType) getIntent().getSerializableExtra(ARG_READER_FRAGMENT_TYPE);
             } else {
                 fragmentType = ReaderFragmentType.POST_LIST;
             }
 
             switch (fragmentType) {
                 case POST_LIST:
-                    if (mIsBlogDetail) {
+                    if (mPostListType == ReaderPostListType.BLOG) {
                         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
                         String blogUrl = getIntent().getStringExtra(ReaderActivity.ARG_BLOG_URL);
                         showListFragmentForBlog(blogId, blogUrl);
@@ -119,14 +130,14 @@ public class ReaderActivity extends WPActionBarActivity
                             tagName = UserPrefs.getReaderTag();
                         }
 
-                        if (mIsTagPreview) {
+                        if (mPostListType == ReaderPostListType.TAG_PREVIEW) {
                             // if we're previewing a tag set it as the activity title
                             setTitle(tagName);
                         } else if (!ReaderTagTable.tagExists(tagName)) {
                             // this is a followed tag so revert to default if it doesn't exist
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
-                        showListFragmentForTag(tagName);
+                        showListFragmentForTag(tagName, mPostListType);
                     }
                     break;
 
@@ -149,17 +160,14 @@ public class ReaderActivity extends WPActionBarActivity
     protected void onStart() {
         super.onStart();
 
-        // at startup, purge the database of older data and perform an initial update - note
-        // that these booleans are static - skipped for blog detail since posts with tag
-        // are currently always shown before posts in blog
-        if (!mIsBlogDetail) {
-            if (!mHasPerformedPurge) {
-                mHasPerformedPurge = true;
-                ReaderDatabase.purgeAsync();
-            }
-            if (!mHasPerformedInitialUpdate) {
-                performInitialUpdate();
-            }
+        // at startup, purge the database of older data and perform an initial update - note that
+        // these booleans are static
+        if (!mHasPerformedPurge) {
+            mHasPerformedPurge = true;
+            ReaderDatabase.purgeAsync();
+        }
+        if (!mHasPerformedInitialUpdate) {
+            performInitialUpdate();
         }
     }
 
@@ -220,7 +228,7 @@ public class ReaderActivity extends WPActionBarActivity
                         listFragment.doTagsChanged(lastAddedTag);
                     } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
                         // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
-                        if (listFragment.getPostListType() == ReaderPostListType.TAG
+                        if (listFragment.getPostListType().isTagType()
                                 && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTag())) {
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
@@ -278,9 +286,8 @@ public class ReaderActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final String tagName) {
-        TagListType tagListType = (mIsTagPreview ? TagListType.PREVIEW : TagListType.FOLLOWED);
-        Fragment fragment = ReaderPostListFragment.newInstance(tagName, tagListType);
+    private void showListFragmentForTag(final String tagName, ReaderPostListType listType) {
+        Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
@@ -316,7 +323,8 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, mIsBlogDetail);
+        boolean isBlogDetail = (mPostListType == ReaderPostListType.BLOG);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, isBlogDetail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 

@@ -34,12 +34,14 @@ import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostListType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -74,8 +76,6 @@ public class ReaderPostListFragment extends SherlockFragment
         public void onTagSelected(String tagName);
     }
 
-    public static enum TagListType { FOLLOWED, PREVIEW };
-
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
@@ -94,11 +94,11 @@ public class ReaderPostListFragment extends SherlockFragment
     private String mCurrentTag;
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
+    private ReaderPostListType mPostListType;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
     private boolean mWasPaused;
-    private TagListType mTagListType;
 
     private Parcelable mListState = null;
 
@@ -111,12 +111,12 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * show posts with a specific tag
      */
-    static ReaderPostListFragment newInstance(String tagName, TagListType tagListType) {
+    static ReaderPostListFragment newInstance(String tagName, ReaderActivity.ReaderPostListType listType) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
         args.putString(ReaderActivity.ARG_TAG_NAME, tagName);
-        args.putSerializable(ReaderActivity.ARG_TAG_LIST_TYPE, tagListType);
+        args.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, listType);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -133,6 +133,7 @@ public class ReaderPostListFragment extends SherlockFragment
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
         args.putString(ReaderActivity.ARG_BLOG_URL, blogUrl);
+        args.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, ReaderActivity.ReaderPostListType.BLOG);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -148,8 +149,8 @@ public class ReaderPostListFragment extends SherlockFragment
             mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderActivity.ARG_BLOG_URL);
-            if (args.containsKey(ReaderActivity.ARG_TAG_LIST_TYPE)) {
-                mTagListType = (TagListType)args.getSerializable(ReaderActivity.ARG_TAG_LIST_TYPE);
+            if (args.containsKey(ReaderActivity.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) args.getSerializable(ReaderActivity.ARG_POST_LIST_TYPE);
             }
         }
     }
@@ -172,8 +173,8 @@ public class ReaderPostListFragment extends SherlockFragment
             if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
                 mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
             }
-            if (savedInstanceState.containsKey(ReaderActivity.ARG_TAG_LIST_TYPE)) {
-                mTagListType = (TagListType)savedInstanceState.getSerializable(ReaderActivity.ARG_TAG_LIST_TYPE);
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderActivity.ARG_POST_LIST_TYPE);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
         }
@@ -204,20 +205,11 @@ public class ReaderPostListFragment extends SherlockFragment
         super.onSaveInstanceState(outState);
         AppLog.d(T.READER, "reader post list > saving instance state");
 
-        switch (getPostListType()) {
-            case TAG:
-                outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
-                if (mTagListType != null) {
-                    outState.putSerializable(ReaderActivity.ARG_TAG_LIST_TYPE, mTagListType);
-                }
-                break;
-            case BLOG:
-                outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
-                outState.putString(ReaderActivity.ARG_BLOG_URL, mCurrentBlogUrl);
-                break;
-        }
-
+        outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
+        outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
+        outState.putString(ReaderActivity.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
+        outState.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, getPostListType());
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
@@ -275,7 +267,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 mListView.setOnScrollChangedListener(this);
                 break;
 
-            case TAG:
+            case TAG_FOLLOWED: case TAG_PREVIEW:
                 mHeaderImage.setVisibility(View.GONE);
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
@@ -324,7 +316,7 @@ public class ReaderPostListFragment extends SherlockFragment
                             return;
                         }
                         switch (getPostListType()) {
-                            case TAG:
+                            case TAG_FOLLOWED: case TAG_PREVIEW:
                                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                                 break;
                             case BLOG:
@@ -369,7 +361,7 @@ public class ReaderPostListFragment extends SherlockFragment
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists) {
             switch (getPostListType()) {
-                case TAG:
+                case TAG_FOLLOWED: case TAG_PREVIEW:
                     getPostAdapter().setCurrentTag(mCurrentTag);
                     if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
@@ -391,19 +383,17 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         switch (getPostListType()) {
-            case TAG:
-                if (isTagPreview()) {
-                    inflater.inflate(R.menu.basic_menu, menu);
-                } else {
-                    inflater.inflate(R.menu.reader_native, menu);
-                    checkActionBar();
-                }
+            case TAG_FOLLOWED:
+                inflater.inflate(R.menu.reader_native, menu);
+                checkActionBar();
+                break;
+            case TAG_PREVIEW:
+                inflater.inflate(R.menu.basic_menu, menu);
                 break;
             case BLOG:
                 inflater.inflate(R.menu.basic_menu, menu);
                 break;
         }
-
     }
 
     @Override
@@ -433,9 +423,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private boolean isTagPreview() {
-        return (getPostListType() == ReaderPostListType.TAG
-             && mTagListType != null
-             && mTagListType.equals(TagListType.PREVIEW));
+        return (getPostListType() == ReaderPostListType.TAG_PREVIEW);
     }
 
     /*
@@ -447,7 +435,7 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        if (getPostListType() == ReaderPostListType.TAG && !isTagPreview()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             // only change if we're not in list navigation mode, since that means the actionBar
             // is already correctly configured
             if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
@@ -533,7 +521,7 @@ public class ReaderPostListFragment extends SherlockFragment
             if (!hasActivity())
                 return;
             // empty text/animation is only show when displaying posts with a specific tag
-            if (isEmpty && getPostListType() == ReaderPostListType.TAG) {
+            if (isEmpty && getPostListType().isTagType()) {
                 startBoxAndPagesAnimation();
                 setEmptyTitleAndDescriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
@@ -560,7 +548,7 @@ public class ReaderPostListFragment extends SherlockFragment
             }
 
             switch (getPostListType()) {
-                case TAG:
+                case TAG_FOLLOWED: case TAG_PREVIEW:
                     // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
@@ -600,10 +588,6 @@ public class ReaderPostListFragment extends SherlockFragment
                     mReblogListener,
                     mDataLoadedListener,
                     mDataRequestedListener);
-
-            if (getPostListType() == ReaderPostListType.TAG) {
-                mPostAdapter.setTagListType(mTagListType);
-            }
         }
         return mPostAdapter;
     }
@@ -660,7 +644,8 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * if we're previewing a tag, show the current tag name in the header
+     * if we're previewing a tag, show the current tag name in the header and update the
+     * follow button to show the correct follow state for the tag
      */
     private void updateTagPreviewHeader() {
         if (!isTagPreview() || mTagPreviewHeader == null) {
@@ -675,6 +660,17 @@ public class ReaderPostListFragment extends SherlockFragment
 
         final TextView txtFollow = (TextView) mTagPreviewHeader.findViewById(R.id.text_follow_blog);
         ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.tagExists(getCurrentTag()));
+
+        txtFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AniUtils.zoomAction(txtFollow);
+                boolean isAskingToFollow = !ReaderTagTable.tagExists(getCurrentTag());
+                TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
+                ReaderTagActions.performTagAction(action, getCurrentTag(), null);
+                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+            }
+        });
     }
 
     /*
@@ -922,10 +918,10 @@ public class ReaderPostListFragment extends SherlockFragment
      * are we showing all posts with a specific tag, or all posts in a specific blog?
      */
     ReaderPostListType getPostListType() {
-        if (hasCurrentTag()) {
-            return ReaderPostListType.TAG;
+        if (mPostListType != null) {
+            return mPostListType;
         } else {
-            return ReaderPostListType.BLOG;
+            return ReaderPostListType.getDefaultType();
         }
     }
 

@@ -75,6 +75,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
+    private static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
@@ -118,7 +119,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
         args.putLong(ReaderActivity.ARG_POST_ID, postId);
-        args.putBoolean(ReaderActivity.ARG_IS_BLOG_DETAIL, isBlogDetail);
+        args.putBoolean(ARG_IS_BLOG_DETAIL, isBlogDetail);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -189,7 +190,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         if (args != null) {
             mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
-            mIsBlogDetail = args.getBoolean(ReaderActivity.ARG_IS_BLOG_DETAIL);
+            mIsBlogDetail = args.getBoolean(ARG_IS_BLOG_DETAIL);
         }
     }
 

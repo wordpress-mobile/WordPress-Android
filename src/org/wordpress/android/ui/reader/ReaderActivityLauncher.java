@@ -12,15 +12,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderFragmentType;
+import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
 
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
         Intent intent = new Intent(context, ReaderActivity.class);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_DETAIL);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, postId);
+        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_DETAIL);
         context.startActivity(intent);
     }
 
@@ -28,17 +29,16 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderActivity.ARG_BLOG_URL, blogUrl);
-        intent.putExtra(ReaderActivity.ARG_IS_BLOG_DETAIL, true);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_LIST);
+        intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG);
+        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }
 
     public static void showReaderTagPreview(Context context, String tagName) {
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
-        intent.putExtra(ReaderActivity.ARG_IS_TAG_PREVIEW, true);
-        intent.putExtra(ReaderActivity.ARG_IS_BLOG_DETAIL, false);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT, ReaderFragmentType.POST_LIST);
+        intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
+        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }
 
