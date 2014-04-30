@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="text_name"
+            tools:text="text_name"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium" />
 
@@ -37,7 +38,7 @@
             android:background="@drawable/reader_transparent_selector"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="text_url"
+            tools:text="text_url"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_small" />
 
@@ -45,6 +46,5 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_follow"
-        style="@style/ReaderTextView.Follow"
-        android:text="@string/reader_btn_follow" />
+        style="@style/ReaderTextView.Follow" />
 </LinearLayout>

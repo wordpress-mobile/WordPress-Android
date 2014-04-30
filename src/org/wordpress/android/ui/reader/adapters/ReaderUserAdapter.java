@@ -74,17 +74,21 @@ public class ReaderUserAdapter extends BaseAdapter {
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
-            // tapping anywhere in the view shows the user's blog
+
+            // tapping anywhere in the view shows the user's blog (requires knowing the blog id)
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(v.getContext(), user.getUrl());
+                    if (user.hasBlogId()) {
+                        ReaderActivityLauncher.showReaderBlogDetail(v.getContext(), user.blogId, user.getUrl());
+                    }
                 }
             });
 
-            // since the user has a blog url, enable following/unfollowing it
-            if (holder.txtFollow.isSelected() != user.isFollowed)
+            // enable following/unfollowing the user's blog
+            if (holder.txtFollow.isSelected() != user.isFollowed) {
                 showFollowStatus(holder.txtFollow, user.isFollowed);
+            }
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -106,14 +110,14 @@ public class ReaderUserAdapter extends BaseAdapter {
     }
 
     private void toggleFollowUser(ReaderUser user, TextView txtFollow) {
-        if (user==null || !user.hasUrl())
+        if (user == null) {
             return;
+        }
 
         boolean isAskingToFollow = !user.isFollowed;
-        ReaderBlogActions.BlogAction action = (isAskingToFollow ? ReaderBlogActions.BlogAction.FOLLOW : ReaderBlogActions.BlogAction.UNFOLLOW);
-
-        if (!ReaderBlogActions.performBlogAction(action, user.getUrl()))
+        if (!ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
             return;
+        }
 
         user.isFollowed = isAskingToFollow;
         showFollowStatus(txtFollow, isAskingToFollow);

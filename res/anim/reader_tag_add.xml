@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    used when adding a tag to the reader
+ -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:duration="100">
+
+    <scale
+        android:fromXScale="1.0"
+        android:toXScale="1.25"
+        android:fromYScale="1.0"
+        android:toYScale="1.25"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:repeatCount="1"
+        android:repeatMode="reverse"/>
+</set>

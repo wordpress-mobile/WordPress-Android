@@ -88,25 +88,51 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-        ReaderTag tag = mTags.get(position);
-        view = mInflater.inflate(R.layout.reader_actionbar_item, null);
-        TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(tag.getCapitalizedTagName());
-        if (mIsStaticMenuDrawer)
-            txtName.setPadding(mPaddingForStaticDrawer, 0, 0, 0);
-        return view;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ReaderTag tag = mTags.get(position);
+        final TagHolder holder;
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
+            holder = new TagHolder(convertView, false);
+            convertView.setTag(holder);
+        } else {
+            holder = (TagHolder) convertView.getTag();
+        }
+
+        holder.textView.setText(tag.getCapitalizedTagName());
+        return convertView;
     }
 
     @Override
-    public View getDropDownView(int position, View view, ViewGroup parent) {
-        ReaderTag tag = mTags.get(position);
-        view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, null);
-        TextView txtName = (TextView) view.findViewById(R.id.text);
-        txtName.setText(tag.getCapitalizedTagName());
-        if (mIsStaticMenuDrawer)
-            txtName.setGravity(Gravity.RIGHT);
-        return view;
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        final ReaderTag tag = mTags.get(position);
+        final TagHolder holder;
+
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
+            holder = new TagHolder(convertView, true);
+            convertView.setTag(holder);
+        } else {
+            holder = (TagHolder) convertView.getTag();
+        }
+
+        holder.textView.setText(tag.getCapitalizedTagName());
+        return convertView;
+    }
+
+    private class TagHolder {
+        private final TextView textView;
+        TagHolder(View view, boolean isDropDownView) {
+            textView = (TextView) view.findViewById(R.id.text);
+            if (mIsStaticMenuDrawer) {
+                if (isDropDownView) {
+                    textView.setGravity(Gravity.RIGHT);
+                } else {
+                    textView.setPadding(mPaddingForStaticDrawer, 0, 0, 0);
+                }
+            }
+        }
     }
 
     private boolean mIsTaskRunning = false;
@@ -124,9 +150,7 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... voids) {
             tmpTags.addAll(ReaderTagTable.getDefaultTags());
             tmpTags.addAll(ReaderTagTable.getSubscribedTags());
-            if (mTags.isSameList(tmpTags))
-                return false;
-            return true;
+            return !mTags.isSameList(tmpTags);
         }
         @Override
         protected void onPostExecute(Boolean result) {

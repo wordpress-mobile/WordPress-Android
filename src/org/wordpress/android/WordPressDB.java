@@ -1806,7 +1806,7 @@ public class WordPressDB {
     }
 
     /*
-     * nbradbury - used during development to copy database to SD card so we can access it via DDMS
+     * used during development to copy database to SD card so we can access it via DDMS
      */
     protected void copyDatabase() {
         String copyFrom = db.getPath();

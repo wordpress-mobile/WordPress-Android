@@ -7,10 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -68,8 +68,9 @@ public class ReaderTagTable {
      * replaces all tags with the passed list
      */
     public static void replaceTags(ReaderTagList tags) {
-        if (tags==null || tags.size()==0)
+        if (tags == null || tags.size() == 0) {
             return;
+        }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
@@ -92,16 +93,18 @@ public class ReaderTagTable {
     }
 
     public static void addOrUpdateTag(ReaderTag tag) {
-        if (tag==null)
+        if (tag == null) {
             return;
+        }
         ReaderTagList tags = new ReaderTagList();
         tags.add(tag);
         addOrUpdateTags(tags);
     }
 
     public static void addOrUpdateTags(ReaderTagList tags) {
-        if (tags==null || tags.size()==0)
+        if (tags == null || tags.size() == 0) {
             return;
+        }
         SQLiteStatement stmt = null;
         try {
             stmt = ReaderDatabase.getWritableDb().compileStatement(
@@ -123,14 +126,16 @@ public class ReaderTagTable {
     }
 
     public static boolean tagExists(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return false;
+        }
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_tags WHERE tag_name=?1", new String[]{tagName});
     }
 
     private static ReaderTag getTagFromCursor(Cursor c) {
-        if (c == null)
+        if (c == null) {
             throw new IllegalArgumentException("null topic cursor");
+        }
 
         String tagName = c.getString(c.getColumnIndex("tag_name"));
         String endpoint = c.getString(c.getColumnIndex("endpoint"));
@@ -140,13 +145,15 @@ public class ReaderTagTable {
     }
 
     public static ReaderTag getTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return null;
+        }
 
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_name=? LIMIT 1", new String[]{tagName});
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
+            }
             return getTagFromCursor(c);
         } finally {
             SqlUtils.closeCursor(c);
@@ -186,8 +193,9 @@ public class ReaderTagTable {
     }
 
     public static void deleteTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
         String[] args = {tagName};
         ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_name=?", args);
         ReaderDatabase.getWritableDb().delete("tbl_tag_updates", "tag_name=?", args);
@@ -197,13 +205,15 @@ public class ReaderTagTable {
      * tbl_tag_updates routines
      **/
     public static String getTagNewestDate(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return "";
+        }
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_newest FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
     }
     public static void setTagNewestDate(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         ContentValues values = new ContentValues();
         values.put("tag_name", tagName);
@@ -216,13 +226,15 @@ public class ReaderTagTable {
     }
 
     public static String getTagOldestDate(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return "";
+        }
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_oldest FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
     }
     public static void setTagOldestDate(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         ContentValues values = new ContentValues();
         values.put("tag_name", tagName);
@@ -244,13 +256,16 @@ public class ReaderTagTable {
     }
 
     public static String getTagLastUpdated(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return "";
+        }
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_updated FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
     }
+
     public static void setTagLastUpdated(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         ContentValues values = new ContentValues();
         values.put("tag_name", tagName);
@@ -267,23 +282,27 @@ public class ReaderTagTable {
      */
     public static boolean shouldAutoUpdateTag(String tagName) {
         int minutes = minutesSinceLastUpdate(tagName);
-        if (minutes==NEVER_UPDATED)
+        if (minutes == NEVER_UPDATED) {
             return true;
-        return (minutes >= Constants.READER_AUTO_UPDATE_DELAY_MINUTES);
+        }
+        return (minutes >= ReaderConstants.READER_AUTO_UPDATE_DELAY_MINUTES);
     }
 
     private static final int NEVER_UPDATED = -1;
     private static int minutesSinceLastUpdate(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return 0;
+        }
 
         String updated = getTagLastUpdated(tagName);
-        if (TextUtils.isEmpty(updated))
+        if (TextUtils.isEmpty(updated)) {
             return NEVER_UPDATED;
+        }
 
         Date dtUpdated = DateTimeUtils.iso8601ToJavaDate(updated);
-        if (dtUpdated==null)
+        if (dtUpdated == null) {
             return 0;
+        }
 
         Date dtNow = new Date();
         return DateTimeUtils.minutesBetween(dtUpdated, dtNow);
@@ -313,8 +332,9 @@ public class ReaderTagTable {
     }
 
     public static void setRecommendedTags(ReaderTagList topics) {
-        if (topics==null)
+        if (topics == null) {
             return;
+        }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_recommended_tags (" + COLUMN_NAMES + ") VALUES (?1,?2,?3)");

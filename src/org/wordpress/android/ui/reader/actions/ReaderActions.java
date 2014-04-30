@@ -1,12 +1,25 @@
 package org.wordpress.android.ui.reader.actions;
 
+import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 
 /**
  * classes in this package serve as a middleman between local data and server data - used by
- * reader activities/fragments/adapters that wish to perform actions on posts & topics,
- * or wish to get the latest data from the server
+ * reader activities/fragments/adapters that wish to perform actions on posts, blogs & topics,
+ * or wish to get the latest data from the server.
+ *
+ * methods in this package which change state (like, follow, etc.) are generally optimistic
+ * and work like this:
+ *
+ *  1. caller asks method to send a network request which changes state
+ *  2. method changes state in local data and returns to caller *before* network request completes
+ *  3. caller can access local state change without waiting for the network request
+ *  4. if the network request fails, the method restores the previous state of the local data
+ *  5. if caller passes a listener, it can be alerted to the actual success/failure of the request
+ *
+ *  note that all methods MUST be called from the UI thread in order to guarantee that listeners
+ *  are alerted on the UI thread
  */
 public class ReaderActions {
 
@@ -67,4 +80,17 @@ public class ReaderActions {
         public void onRequestReblog(ReaderPost post);
     }
 
+    /*
+     * used by blog detail when requesting latest info about a blog
+     */
+    public interface UpdateBlogInfoListener {
+        public void onResult(ReaderBlogInfo blogInfo);
+    }
+
+    /*
+     * listener when updating posts and then backfilling them
+     */
+    public interface PostBackfillListener {
+        public void onPostsBackfilled(int numNewPosts);
+    }
 }

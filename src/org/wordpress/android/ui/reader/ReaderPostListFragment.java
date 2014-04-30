@@ -2,30 +2,31 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -33,16 +34,21 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
+import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter.ReaderPostListType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPListView;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,10 +56,12 @@ import java.util.Map;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
- * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
+ * Fragment hosted by ReaderActivity to show posts with a specific tag
+ * or by ReaderBlogDetailActivity to show posts in a specific blog
  */
 public class ReaderPostListFragment extends SherlockFragment
                                     implements AbsListView.OnScrollListener,
+                                               ViewTreeObserver.OnScrollChangedListener,
                                                ActionBar.OnNavigationListener {
 
     static interface OnPostSelectedListener {
@@ -65,27 +73,54 @@ public class ReaderPostListFragment extends SherlockFragment
     private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
-    private ListView mListView;
+    private WPListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
 
-    private String mCurrentTag;
-    private boolean mIsUpdating = false;
-    private boolean mIsFlinging = false;
+    private WPNetworkImageView mHeaderImage;
+    private ReaderBlogInfoHeader mBlogInfoHeader;
 
-    static final String KEY_TAG_NAME = "tag_name";
-    private static final String KEY_LIST_STATE = "list_state";
+    private String mCurrentTag;
+    private long mCurrentBlogId;
+    private String mCurrentBlogUrl;
+
+    private boolean mIsUpdating;
+    private boolean mIsFlinging;
+    private boolean mWasPaused;
+
     private Parcelable mListState = null;
 
-    protected static enum RefreshType {AUTOMATIC, MANUAL}
+    private boolean mHasLoadedHeaderImage;
+    private int mHeaderImageWidth;
+    private float mPreviousHeaderImageScale;
 
+    protected static enum RefreshType { AUTOMATIC, MANUAL }
+
+    /*
+     * show posts with a specific tag
+     */
     static ReaderPostListFragment newInstance(final String tagName) {
-        AppLog.d(T.READER, "reader post list > newInstance");
+        AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
-        if (!TextUtils.isEmpty(tagName))
-            args.putString(KEY_TAG_NAME, tagName);
+        args.putString(ReaderActivity.ARG_TAG_NAME, tagName);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    /*
+     * show posts in a specific blog
+     */
+    static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
+        AppLog.d(T.READER, "reader post list > newInstance (blog)");
+
+        Bundle args = new Bundle();
+        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
+        args.putString(ReaderActivity.ARG_BLOG_URL, blogUrl);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -97,16 +132,88 @@ public class ReaderPostListFragment extends SherlockFragment
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        // note that setCurrentTag() should NOT be called here since it's automatically
-        // called from the actionbar navigation handler
-        if (args != null && args.containsKey(KEY_TAG_NAME))
-            mCurrentTag = args.getString(KEY_TAG_NAME);
+        if (args != null) {
+            mCurrentTag = args.getString(ReaderActivity.ARG_TAG_NAME);
+            mCurrentBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+            mCurrentBlogUrl = args.getString(ReaderActivity.ARG_BLOG_URL);
+        }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            AppLog.d(T.READER, "reader post list > restoring instance state");
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_TAG_NAME)) {
+                mCurrentTag = savedInstanceState.getString(ReaderActivity.ARG_TAG_NAME);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_BLOG_ID)) {
+                mCurrentBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.ARG_BLOG_URL)) {
+                mCurrentBlogUrl = savedInstanceState.getString(ReaderActivity.ARG_BLOG_URL);
+            }
+            if (savedInstanceState.containsKey(ReaderActivity.KEY_LIST_STATE)) {
+                mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
+            }
+            mWasPaused = savedInstanceState.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mWasPaused = true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // if the fragment is resuming from a paused state, refresh the adapter to make sure
+        // the follow status of all posts is accurate - this is necessary in case the user
+        // returned from an activity where the follow status may have been changed
+        if (mWasPaused) {
+            mWasPaused = false;
+            if (hasPostAdapter()) {
+                getPostAdapter().checkFollowStatusForAllPosts();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        AppLog.d(T.READER, "reader post list > saving instance state");
+
+        switch (getPostListType()) {
+            case TAG:
+                outState.putString(ReaderActivity.ARG_TAG_NAME, mCurrentTag);
+                break;
+            case BLOG:
+                outState.putLong(ReaderActivity.ARG_BLOG_ID, mCurrentBlogId);
+                outState.putString(ReaderActivity.ARG_BLOG_URL, mCurrentBlogUrl);
+                break;
+        }
+
+        outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
+
+        // retain list state so we can return to this position
+        // http://stackoverflow.com/a/5694441/1673548
+        if (mListView != null && mListView.getFirstVisiblePosition() > 0) {
+            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListView.onSaveInstanceState());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final Context context = container.getContext();
         final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+
+        boolean hasTransparentActionBar = isFullScreenSupported();
+
+        mListView = (WPListView) view.findViewById(android.R.id.list);
+        mHeaderImage = (WPNetworkImageView) view.findViewById(R.id.image_header);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -119,14 +226,40 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
-        // add a header to the listView and margin to new posts bar that's the same height as
-        // the ActionBar when fullscreen mode is supported
-        if (isFullScreenSupported()) {
-            Context context = container.getContext();
-            ReaderFullScreenUtils.addListViewHeader(context, mListView);
-            final int actionbarHeight = DisplayUtils.getActionBarHeight(context);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mNewPostsBar.getLayoutParams();
-            params.topMargin = actionbarHeight;
+        // move new posts bar down to accommodate transparent ActionBar
+        if (hasTransparentActionBar) {
+            ReaderFullScreenUtils.addTopMargin(context, mNewPostsBar);
+        }
+
+        switch (getPostListType()) {
+            case BLOG:
+                // show mshot for posts in a specific blog
+                if (hasTransparentActionBar) {
+                    ReaderFullScreenUtils.addTopMargin(context, mHeaderImage);
+                }
+                mHeaderImage.setImageType(WPNetworkImageView.ImageType.MSHOT);
+                mHeaderImage.setVisibility(View.VISIBLE);
+
+                // determine the width of the mshot
+                int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+                mHeaderImageWidth = displayWidth - (marginWidth * 2);
+
+                // add the blog info header then populate it
+                mBlogInfoHeader = new ReaderBlogInfoHeader(context);
+                mListView.addHeaderView(mBlogInfoHeader);
+                getBlogInfo();
+
+                // listen for scroll changes so we can scale the header image
+                mListView.setOnScrollChangedListener(this);
+                break;
+
+            case TAG:
+                mHeaderImage.setVisibility(View.GONE);
+                if (hasTransparentActionBar) {
+                    ReaderFullScreenUtils.addListViewHeader(context, mListView);
+                }
+                break;
         }
 
         // textView that appears when current tag has no posts
@@ -139,11 +272,14 @@ public class ReaderPostListFragment extends SherlockFragment
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                // take header into account
+                // take headers into account
                 position -= mListView.getHeaderViewsCount();
-                ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
-                if (post != null && mPostSelectedListener != null)
-                    mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                if (position >= 0 && mPostSelectedListener != null) {
+                    ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
+                    if (post != null) {
+                        mPostSelectedListener.onPostSelected(post.blogId, post.postId);
+                    }
+                }
             }
         });
 
@@ -161,70 +297,84 @@ public class ReaderPostListFragment extends SherlockFragment
                             mPullToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                        switch (getPostListType()) {
+                            case TAG:
+                                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
+                                break;
+                            case BLOG:
+                                updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                                break;
+                        }
                     }
-                });
-        mListView.setAdapter(getPostAdapter());
+                }
+        );
+
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            AppLog.d(T.READER, "reader post list > restoring instance state");
-            mCurrentTag = savedInstanceState.getString(KEY_TAG_NAME);
-            mListState = savedInstanceState.getParcelable(KEY_LIST_STATE);
-        }
-
-        setHasOptionsMenu(true);
-        checkActionBar();
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-
-        if (activity instanceof OnPostSelectedListener)
+        if (activity instanceof OnPostSelectedListener) {
             mPostSelectedListener = (OnPostSelectedListener) activity;
+        }
+
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        AppLog.d(T.READER, "reader post list > saving instance state");
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        if (hasCurrentTag())
-            outState.putString(KEY_TAG_NAME, mCurrentTag);
+        setHasOptionsMenu(true);
+        checkActionBar();
 
-        // retain list state so we can return to this position
-        // http://stackoverflow.com/a/5694441/1673548
-        if (mListView != null && mListView.getFirstVisiblePosition() > 0)
-            outState.putParcelable(KEY_LIST_STATE, mListView.onSaveInstanceState());
-    }
+        // assign the post list adapter
+        boolean adapterAlreadyExists = hasPostAdapter();
+        mListView.setAdapter(getPostAdapter());
 
-    @Override
-    public void onPause() {
-        super.onPause();
+        // if adapter didn't already exist, populate it now then update the tag/blog - this
+        // check is important since without it the adapter would be reset and posts would
+        // be updated every time the user moves between fragments
+        if (!adapterAlreadyExists) {
+            switch (getPostListType()) {
+                case TAG:
+                    getPostAdapter().setCurrentTag(mCurrentTag);
+                    if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+                    }
+                    break;
+                case BLOG:
+                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                    break;
+            }
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.reader_native, menu);
-        checkActionBar();
+        switch (getPostListType()) {
+            case TAG:
+                inflater.inflate(R.menu.reader_native, menu);
+                checkActionBar();
+                break;
+            case BLOG:
+                inflater.inflate(R.menu.basic_menu, menu);
+                break;
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags :
-                ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
+                ReaderActivityLauncher.showReaderSubsForResult(getActivity(), null);
                 return true;
             default :
                 return super.onOptionsItemSelected(item);
@@ -247,22 +397,32 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     /*
-     * ensures that the ActionBar is correctly set to list navigation mode using the tag adapter
+     * ensures that the ActionBar is correctly configured based on the type of list
      */
     private void checkActionBar() {
-        // skip out if we're in list navigation mode, since that means the actionBar is
-        // already correctly configured
         final ActionBar actionBar = getActionBar();
-        if (actionBar == null || actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_LIST)
+        if (actionBar == null)
             return;
 
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+        switch (getPostListType()) {
+            case TAG:
+                // skip out if we're in list navigation mode, since that means the actionBar is
+                // already correctly configured
+                if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+                    actionBar.setDisplayShowTitleEnabled(false);
+                    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+                    actionBar.setListNavigationCallbacks(getActionBarAdapter(), this);
+                    selectTagInActionBar(getCurrentTag());
+                }
+                break;
 
-        selectTagInActionBar(getCurrentTag());
+            default :
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+                break;
+        }
     }
-
 
     private void startBoxAndPagesAnimation() {
         if (!hasActivity())
@@ -285,12 +445,11 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!isPostAdapterEmpty())
-            return;
-        if (!hasActivity())
+        if (!hasActivity() || getActionBarAdapter() == null)
             return;
 
-        int title, description = -1;
+        int title;
+        int description = -1;
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
         } else {
@@ -314,6 +473,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         }
+
         TextView titleView = (TextView) getView().findViewById(R.id.title_empty);
         TextView descriptionView = (TextView) getView().findViewById(R.id.description_empty);
         titleView.setText(getString(title));
@@ -333,7 +493,8 @@ public class ReaderPostListFragment extends SherlockFragment
         public void onDataLoaded(boolean isEmpty) {
             if (!hasActivity())
                 return;
-            if (isEmpty) {
+            // empty text/animation is only show when displaying posts with a specific tag
+            if (isEmpty && getPostListType() == ReaderPostListType.TAG) {
                 startBoxAndPagesAnimation();
                 setEmptyTitleAndDescriptionForCurrentTag();
                 mEmptyView.setVisibility(View.VISIBLE);
@@ -353,16 +514,29 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
         @Override
-        public void onRequestData(ReaderActions.RequestDataAction action) {
+        public void onRequestData(RequestDataAction action) {
             // skip if update is already in progress
-            if (isUpdating())
+            if (isUpdating()) {
                 return;
-            // skip if we already have the max # of posts
-            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) >= Constants.READER_MAX_POSTS_TO_DISPLAY)
-                return;
-            // request older posts
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-            updatePostsWithCurrentTag(ReaderActions.RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
+            }
+
+            switch (getPostListType()) {
+                case TAG:
+                    // skip if we already have the max # of posts
+                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                        // request older posts
+                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_OLDER, RefreshType.MANUAL);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                    }
+                    break;
+
+                case BLOG:
+                    if (ReaderPostTable.getNumPostsInBlog(mCurrentBlogId) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                        updatePostsInCurrentBlog(RequestDataAction.LOAD_OLDER);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                    }
+                    break;
+            }
         }
     };
 
@@ -372,34 +546,40 @@ public class ReaderPostListFragment extends SherlockFragment
     private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post) {
-            if (hasActivity())
+            if (hasActivity()) {
                 ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+            }
         }
     };
 
     private ReaderPostAdapter getPostAdapter() {
-        if (mPostAdapter==null)
+        if (mPostAdapter == null) {
+            AppLog.d(T.READER, "reader post list > creating post adapter");
             mPostAdapter = new ReaderPostAdapter(getActivity(),
-                                                 mReblogListener,
-                                                 mDataLoadedListener,
-                                                 mDataRequestedListener);
+                    getPostListType(),
+                    mReblogListener,
+                    mDataLoadedListener,
+                    mDataRequestedListener);
+        }
         return mPostAdapter;
     }
 
     private boolean hasPostAdapter () {
-        return mPostAdapter!=null;
+        return (mPostAdapter != null);
     }
-    private boolean isPostAdapterEmpty() {
-        return (mPostAdapter==null || mPostAdapter.isEmpty());
+
+    boolean isPostAdapterEmpty() {
+        return (mPostAdapter == null || mPostAdapter.isEmpty());
     }
 
     private boolean isCurrentTag(final String tagName) {
-        if (!hasCurrentTag() || TextUtils.isEmpty(tagName))
+        if (!hasCurrentTag() || TextUtils.isEmpty(tagName)) {
             return false;
+        }
         return (mCurrentTag.equalsIgnoreCase(tagName));
     }
 
-    private String getCurrentTag() {
+    String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
@@ -408,8 +588,9 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private void setCurrentTag(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return;
+        }
 
         // skip if this is already the current tag and the post adapter is already showing it - this
         // will happen when the list fragment is restored and the current tag is re-selected in the
@@ -417,7 +598,9 @@ public class ReaderPostListFragment extends SherlockFragment
         if (isCurrentTag(tagName)
                 && hasPostAdapter()
                 && tagName.equals(getPostAdapter().getCurrentTag()))
+        {
             return;
+        }
 
         mCurrentTag = tagName;
         UserPrefs.setReaderTag(tagName);
@@ -426,15 +609,18 @@ public class ReaderPostListFragment extends SherlockFragment
         hideNewPostsBar();
 
         // update posts in this tag if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(tagName))
-            updatePostsWithTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+        if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
+            updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
+        }
     }
 
     /*
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
-        getPostAdapter().refresh();
+        if (hasPostAdapter()) {
+            getPostAdapter().refresh();
+        }
     }
 
     /*
@@ -442,13 +628,13 @@ public class ReaderPostListFragment extends SherlockFragment
      * post may have been changed (either by the user, or because it updated)
      */
     void reloadPost(ReaderPost post) {
-        if (post == null)
-            return;
-        getPostAdapter().reloadPost(post);
+        if (post != null) {
+            getPostAdapter().reloadPost(post);
+        }
     }
 
     /*
-     * reload current tag
+     * reload the list of posts
      */
     private void reloadPosts(boolean animateRows) {
         getPostAdapter().reload(animateRows);
@@ -459,20 +645,43 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
-        if (hasPostAdapter())
+        if (hasPostAdapter()) {
             getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
+        }
+    }
+
+    /*
+     * get posts for the current blog from the server
+     */
+    void updatePostsInCurrentBlog(final RequestDataAction updateAction) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            AppLog.i(T.READER, "reader post list > network unavailable, canceled blog update");
+            return;
+        }
+
+        setIsUpdating(true, updateAction);
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!hasActivity()) {
+                    return;
+                }
+                setIsUpdating(false, updateAction);
+                if (succeeded) {
+                    refreshPosts();
+                }
+            }
+        };
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
     }
 
     /*
      * get latest posts for this tag from the server
      */
-    private void updatePostsWithCurrentTag(ReaderActions.RequestDataAction updateAction, RefreshType refreshType) {
-        if (hasCurrentTag())
-            updatePostsWithTag(mCurrentTag, updateAction, refreshType);
-    }
-
-    private void updatePostsWithTag(final String tagName, final ReaderActions.RequestDataAction updateAction,
-                                    RefreshType refreshType) {
+    void updatePostsWithTag(final String tagName,
+                            final RequestDataAction updateAction,
+                            final RefreshType refreshType) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
@@ -492,21 +701,27 @@ public class ReaderPostListFragment extends SherlockFragment
                 refreshPosts();
         }
 
-        ReaderPostActions.updatePostsWithTag(tagName, updateAction, new ReaderActions.UpdateResultAndCountListener() {
+        ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
                 if (!hasActivity()) {
-                    AppLog.w(T.READER, "reader post list > volley response when fragment has no activity");
+                    AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
                     return;
                 }
 
                 setIsUpdating(false, updateAction);
 
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0 && isCurrentTag(tagName)) {
+                // make sure this is still the current tag (user may have switched tags during the update)
+                if (!isCurrentTag(tagName)) {
+                    AppLog.i(T.READER, "reader post list > new posts in inactive tag");
+                    return;
+                }
+
+                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
                     // if we loaded new posts and posts are already displayed, show the "new posts"
                     // bar rather than immediately refreshing the list
-                    if (!isPostAdapterEmpty() && updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
-                        showNewPostsBar(numNewPosts);
+                    if (!isPostAdapterEmpty() && updateAction == RequestDataAction.LOAD_NEWER) {
+                        showNewPostsBar();
                     } else {
                         refreshPosts();
                     }
@@ -515,14 +730,43 @@ public class ReaderPostListFragment extends SherlockFragment
                     setEmptyTitleAndDescriptionForCurrentTag();
                 }
             }
-        });
+        };
+
+        // if this is a request for newer posts, assign a backfill listener to
+        // ensure there aren't any gaps between this update and the previous one
+        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER);
+        if (allowBackfill) {
+            ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
+                @Override
+                public void onPostsBackfilled(int numNewPosts) {
+                    if (!hasActivity()) {
+                        AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
+                        return;
+                    }
+                    if (!isCurrentTag(tagName)) {
+                        AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
+                    } else if (isPostAdapterEmpty()) {
+                        // show the new posts right away if this is the current tag and there aren't
+                        // any posts showing, otherwise just let them be shown on the next refresh
+                        showNewPostsBar();
+                    }
+                }
+            };
+            ReaderPostActions.updatePostsInTagWithBackfill(tagName, resultListener, backfillListener);
+        } else {
+            ReaderPostActions.updatePostsInTag(tagName, updateAction, resultListener);
+        }
     }
 
-    public boolean isUpdating() {
+    boolean isUpdating() {
         return mIsUpdating;
     }
 
-    public void setIsUpdating(boolean isUpdating, ReaderActions.RequestDataAction updateAction) {
+    private boolean hasPullToRefresh() {
+        return (mPullToRefreshHelper != null);
+    }
+
+    void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
         if (!hasActivity() || mIsUpdating == isUpdating) {
             return;
         }
@@ -536,7 +780,9 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
                 break;
             default:
-                mPullToRefreshHelper.setRefreshing(isUpdating);
+                if (hasPullToRefresh()) {
+                    mPullToRefreshHelper.setRefreshing(isUpdating);
+                }
                 break;
         }
         mIsUpdating = isUpdating;
@@ -545,22 +791,26 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * bar that appears at the top when new posts have been retrieved
      */
-    private void showNewPostsBar(int numNewPosts) {
-        if (mNewPostsBar==null || mNewPostsBar.getVisibility()==View.VISIBLE)
+    private boolean isNewPostsBarShowing() {
+        return (mNewPostsBar != null && mNewPostsBar.getVisibility() == View.VISIBLE);
+    }
+
+    private void showNewPostsBar() {
+        if (!hasActivity() || isNewPostsBarShowing()) {
             return;
-        if (numNewPosts==1) {
-            mNewPostsBar.setText(R.string.reader_label_new_posts_one);
-        } else {
-            mNewPostsBar.setText(getString(R.string.reader_label_new_posts_multi, numNewPosts));
         }
+
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
+
         mPullToRefreshHelper.hideTipTemporarily(true);
     }
 
     private void hideNewPostsBar() {
-        if (mNewPostsBar==null || mNewPostsBar.getVisibility()!=View.VISIBLE)
+        if (!hasActivity() || !isNewPostsBarShowing()) {
             return;
+        }
+
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -579,8 +829,9 @@ public class ReaderPostListFragment extends SherlockFragment
      * make sure current tag still exists, reset to default if it doesn't
      */
     private void checkCurrentTag() {
-        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTag()))
+        if (hasCurrentTag() && !ReaderTagTable.tagExists(getCurrentTag())) {
             mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
+        }
     }
 
     /*
@@ -603,6 +854,21 @@ public class ReaderPostListFragment extends SherlockFragment
             setCurrentTag(newCurrentTag);
     }
 
+    /*
+     * are we showing all posts with a specific tag, or all posts in a specific blog?
+     */
+    ReaderPostListType getPostListType() {
+        if (hasCurrentTag()) {
+            return ReaderPostListType.TAG;
+        } else {
+            return ReaderPostListType.BLOG;
+        }
+    }
+
+    /*
+     * let the post adapter know when we're in a fling - this way the adapter can
+     * skip pre-loading images during a fling
+     */
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
         boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
@@ -618,16 +884,13 @@ public class ReaderPostListFragment extends SherlockFragment
         // nop
     }
 
-    private boolean isFullScreenSupported() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
-    }
-
     /*
      * ActionBar tag dropdown adapter
      */
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
+            AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
@@ -637,17 +900,21 @@ public class ReaderPostListFragment extends SherlockFragment
                     selectTagInActionBar(getCurrentTag());
                 }
             };
-
-            boolean isStaticMenuDrawer;
-            if (getActivity() instanceof WPActionBarActivity) {
-                isStaticMenuDrawer = ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
-            } else {
-                isStaticMenuDrawer = false;
-            }
-            mActionBarAdapter = new ReaderActionBarTagAdapter(getActivity(), isStaticMenuDrawer, dataListener);
+            mActionBarAdapter = new ReaderActionBarTagAdapter(
+                                    getActivity(),
+                                    hasStaticMenuDrawer(),
+                                    dataListener);
         }
 
         return mActionBarAdapter;
+    }
+
+    /*
+     * does the host activity have a static menu drawer?
+     */
+    private boolean hasStaticMenuDrawer() {
+        return (getActivity() instanceof WPActionBarActivity)
+            && ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
     }
 
     private ActionBar getActionBar() {
@@ -667,12 +934,14 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
 
         ActionBar actionBar = getActionBar();
-        if (actionBar == null)
+        if (actionBar == null) {
             return;
+        }
 
         int position = getActionBarAdapter().getIndexOfTagName(tagName);
-        if (position == -1 || position == actionBar.getSelectedNavigationIndex())
+        if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
             return;
+        }
 
         if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
             AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
@@ -688,20 +957,127 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         final ReaderTag tag = (ReaderTag) getActionBarAdapter().getItem(itemPosition);
-        if (tag == null)
+        if (tag == null) {
             return false;
+        }
 
-        Map<String, String> properties = new HashMap<String, String>();
-        properties.put("tag", tag.getTagName());
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
-
-        if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
+        if (!isCurrentTag(tag.getTagName())) {
+            Map<String, String> properties = new HashMap<String, String>();
+            properties.put("tag", tag.getTagName());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
+            if (tag.getTagName().equals(ReaderTag.TAG_NAME_FRESHLY_PRESSED)) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_FRESHLY_PRESSED);
+            }
         }
 
         setCurrentTag(tag.getTagName());
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
         return true;
+    }
+
+    private boolean isFullScreenSupported() {
+        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
+    }
+
+    private void loadHeaderImage(final ReaderBlogInfo blogInfo) {
+        // can't get mshot for private blogs
+        if (blogInfo == null || blogInfo.isPrivate) {
+            return;
+        }
+
+        WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
+            @Override
+            public void onImageLoaded(boolean succeeded) {
+                // image should be scaled immediately after loading in case user scrolled
+                if (succeeded && hasActivity()) {
+                    scaleHeaderImage();
+                    mHasLoadedHeaderImage = true;
+                }
+            }
+        };
+        final String imageUrl = blogInfo.getMshotsUrl(mHeaderImageWidth);
+        mHeaderImage.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
+    }
+
+    @Override
+    public void onScrollChanged() {
+        if (mHasLoadedHeaderImage && getPostListType() == ReaderPostListType.BLOG) {
+            scaleHeaderImage();
+        }
+    }
+
+    /*
+     * scale the mshot image based on the current scroll position
+     */
+    private void scaleHeaderImage() {
+        if (!hasActivity() || mHeaderImage == null) {
+            return;
+        }
+
+        // get the top position of the blog info header
+        int top = mListView.getFirstChildTop();
+
+        // calculate the scale based on the top position
+        float scale = 0.9f + (top * 0.0005f);
+        if (scale <= 0 || scale == mPreviousHeaderImageScale) {
+            return;
+        }
+
+        // remember the scale so we can avoid unnecessary scaling the next time
+        mPreviousHeaderImageScale = scale;
+
+        float centerX = mHeaderImageWidth * 0.5f;
+        Matrix matrix = new Matrix();
+        matrix.setScale(scale, scale, centerX, 0);
+        mHeaderImage.setImageMatrix(matrix);
+    }
+
+    /*
+     * show info about the current blog in the blog header
+     */
+    private void getBlogInfo() {
+        if (mBlogInfoHeader == null) {
+            return;
+        }
+
+        // listener will fire every time the blog info is displayed - may happen twice:
+        //  (1) when info is shown from local db
+        //  (2) when info is updated from server
+        ReaderBlogInfoHeader.OnBlogInfoListener infoListener = new ReaderBlogInfoHeader.OnBlogInfoListener() {
+            @Override
+            public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
+                if (hasActivity() && blogInfo != null) {
+                    // set the activity title to the name of the blog (activity title will
+                    // be "Loading..." until this point
+                    if (blogInfo.hasName()) {
+                        getActivity().setTitle(blogInfo.getName());
+                    } else {
+                        getActivity().setTitle(R.string.reader_untitled_post);
+                    }
+                    // set the mshot url if it hasn't already been set
+                    if (TextUtils.isEmpty(mHeaderImage.getUrl())) {
+                        loadHeaderImage(blogInfo);
+                    }
+                }
+            }
+            @Override
+            public void onBlogInfoFailed() {
+                if (hasActivity()) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog);
+                    // close the fragment after a second - otherwise user will be left looking
+                    // at an empty screen
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (hasActivity()) {
+                                getActivity().onBackPressed();
+                            }
+                        }
+                    }, 1000);
+                }
+            }
+        };
+        mBlogInfoHeader.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl, infoListener);
     }
 }

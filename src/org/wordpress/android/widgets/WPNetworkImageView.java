@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -22,24 +23,33 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.VolleyUtils;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
  *  (1) fading in downloaded images
  *  (2) manipulating images before display
  *  (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
- *  (4) adding a listener to determine when image has completed downloading (or failed)
+ *  (4) adding a listener to determine when image request has completed or failed
+ *  (5) automatically retrying mshot requests that return a 307
  */
 public class WPNetworkImageView extends ImageView {
     public static enum ImageType {PHOTO,
                                   PHOTO_FULL,
+                                  MSHOT,
                                   VIDEO,
                                   AVATAR}
+
     private ImageType mImageType = ImageType.PHOTO;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
+
+    private int mRetryCnt;
+    private static final int MAX_RETRIES = 3;
+    private static final long RETRY_DELAY = 2000;
 
     public interface ImageListener {
         public void onImageLoaded(boolean succeeded);
@@ -56,6 +66,10 @@ public class WPNetworkImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
+    public String getUrl() {
+        return mUrl;
+    }
+
     public void setImageUrl(String url, ImageType imageType) {
         setImageUrl(url, imageType, null);
     }
@@ -63,6 +77,7 @@ public class WPNetworkImageView extends ImageView {
         mUrl = url;
         mImageType = imageType;
         mImageListener = imageListener;
+        mRetryCnt = 0;
 
         if (TextUtils.isEmpty(mUrl)) {
             showErrorImage(mImageType);
@@ -70,6 +85,10 @@ public class WPNetworkImageView extends ImageView {
             // The URL has potentially changed. See if we need to load it.
             loadImageIfNecessary(false);
         }
+    }
+
+    public void setImageType(ImageType imageType) {
+        mImageType = imageType;
     }
 
     /*
@@ -104,6 +123,23 @@ public class WPNetworkImageView extends ImageView {
                 }
             });
         }
+    }
+
+    /*
+     * retry the current image request after a brief delay
+     */
+    private void retry(final boolean isInLayoutPass) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AppLog.d(AppLog.T.READER, String.format("retrying image request (%d)", mRetryCnt));
+                if (mImageContainer != null) {
+                    mImageContainer.cancelRequest();
+                    mImageContainer = null;
+                }
+                loadImageIfNecessary(isInLayoutPass);
+            }
+        }, RETRY_DELAY);
     }
 
     /**
@@ -152,9 +188,21 @@ public class WPNetworkImageView extends ImageView {
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        showErrorImage(mImageType);
-                        if (mImageListener != null)
-                            mImageListener.onImageLoaded(false);
+                        // mshot requests return a 307 if the mshot has never been requested,
+                        // handle this by retrying request after a short delay to give time
+                        // for server to generate the image
+                        if (mImageType == ImageType.MSHOT
+                                && mRetryCnt < MAX_RETRIES
+                                && VolleyUtils.statusCodeFromVolleyError(error) == 307)
+                        {
+                            mRetryCnt++;
+                            retry(isInLayoutPass);
+                        } else {
+                            showErrorImage(mImageType);
+                            if (mImageListener != null) {
+                                mImageListener.onImageLoaded(false);
+                            }
+                        }
                     }
 
                     @Override
@@ -181,6 +229,12 @@ public class WPNetworkImageView extends ImageView {
         mImageContainer = newContainer;
     }
 
+    private static boolean canFadeInImageType(ImageType imageType) {
+        return imageType == ImageType.PHOTO
+            || imageType == ImageType.VIDEO
+            || imageType == ImageType.MSHOT;
+    }
+
     private void handleResponse(ImageLoader.ImageContainer response,
                                 boolean isCached,
                                 boolean allowFadeIn) {
@@ -188,11 +242,12 @@ public class WPNetworkImageView extends ImageView {
             setImageBitmap(response.getBitmap());
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
-            if (!isCached && allowFadeIn && (mImageType == ImageType.PHOTO || mImageType == ImageType.VIDEO))
+            if (!isCached && allowFadeIn && canFadeInImageType(mImageType))
                 fadeIn();
 
-            if (mImageListener!=null)
+            if (mImageListener != null) {
                 mImageListener.onImageLoaded(true);
+            }
         } else {
             showDefaultImage(mImageType);
         }
@@ -201,7 +256,14 @@ public class WPNetworkImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        loadImageIfNecessary(true);
+        if (isInEditMode()) {
+            // draw light blue box during design-time
+            if (getDrawable() == null) {
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.blue_extra_light)));
+            }
+        } else {
+            loadImageIfNecessary(true);
+        }
     }
 
     @Override
@@ -237,6 +299,10 @@ public class WPNetworkImageView extends ImageView {
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);
                 break;
+            case MSHOT:
+                // light grey box for mshots
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
+                break;
             default :
                 // medium grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
@@ -259,13 +325,15 @@ public class WPNetworkImageView extends ImageView {
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (mImageType == ImageType.VIDEO)
+        if (mImageType == ImageType.VIDEO) {
             drawVideoOverlay(canvas);
+        }
     }
 
     private void drawVideoOverlay(Canvas canvas) {
-        if (canvas==null)
+        if (canvas == null) {
             return;
+        }
 
         Bitmap overlay = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_reader_video_overlay, null);
         int overlaySize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size);
@@ -275,8 +343,9 @@ public class WPNetworkImageView extends ImageView {
         int srcHeight = this.getHeight();
 
         // skip if overlay is larger than source image
-        if (overlaySize > srcWidth || overlaySize > srcHeight)
+        if (overlaySize > srcWidth || overlaySize > srcHeight) {
             return;
+        }
 
         final int left = (srcWidth / 2) - (overlaySize / 2);
         final int top = (srcHeight / 2) - (overlaySize / 2);

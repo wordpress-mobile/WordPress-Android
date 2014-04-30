@@ -12,6 +12,11 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
+    <style name="ReaderTheme.Subs" parent="@style/WordPress">
+        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 
     <!-- window animations -->
     <style name="ReaderAnimation" />
@@ -123,7 +128,7 @@
         <item name="android:minWidth">90dp</item>
         <item name="android:gravity">center</item>
         <item name="android:drawableLeft">@drawable/note_icon_follow</item>
-        <item name="android:background">@drawable/reader_follow_background</item>
+        <item name="android:background">@drawable/reader_button_follow</item>
         <item name="android:textColor">@color/reader_follow_text</item>
         <item name="android:paddingLeft">@dimen/margin_small</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
@@ -132,7 +137,6 @@
         <item name="android:drawablePadding">0dp</item>
         <item name="android:text">@string/reader_btn_follow</item>
     </style>
-
     <style name="ReaderTextView.MessageBar" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -152,7 +156,7 @@
     <style name="ReaderEditText.Topic" parent="ReaderEditText">
         <item name="android:background">@color/transparent</item>
         <item name="android:padding">@dimen/margin_medium</item>
-        <item name="android:inputType">text|textCapWords</item>
+        <item name="android:inputType">text</item>
         <item name="android:singleLine">true</item>
         <item name="android:imeOptions">actionDone</item>
         <item name="android:maxLength">@integer/reader_max_length_topic_name</item>

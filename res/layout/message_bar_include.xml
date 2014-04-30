@@ -7,8 +7,9 @@
 
 <org.wordpress.android.widgets.WPTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/ReaderTextView.MessageBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="text set at runtime"
+    tools:text="text set at runtime"
     android:visibility="gone" />

@@ -17,7 +17,7 @@ public class SqlUtils {
     }
 
     /*
-     * SQlite doesn't have a boolean datatype, so booleans are stored as 0=false, 1=true
+     * SQLite doesn't have a boolean datatype, so booleans are stored as 0=false, 1=true
      */
     public static long boolToSql(boolean value) {
         return (value ? 1 : 0);
@@ -27,13 +27,15 @@ public class SqlUtils {
     }
 
     public static void closeStatement(SQLiteStatement stmt) {
-        if (stmt!=null)
+        if (stmt != null) {
             stmt.close();
+        }
     }
 
     public static void closeCursor(Cursor c) {
-        if (c!=null && !c.isClosed())
+        if (c != null && !c.isClosed()) {
             c.close();
+        }
     }
 
     /*
@@ -76,11 +78,21 @@ public class SqlUtils {
     }
 
     /*
-     * drop all tables from the passed SQLiteDatabase
+     * removes all rows from the passed table
+     */
+    public static void deleteAllRowsInTable(SQLiteDatabase db, String tableName) {
+        db.delete(tableName, null, null);
+    }
+
+    /*
+     * drop all tables from the passed SQLiteDatabase - make sure to pass a
+     * writable database
      */
     public static boolean dropAllTables(SQLiteDatabase db) throws SQLiteException {
-        if (db == null)
+        if (db == null) {
             return false;
+        }
+
         if (db.isReadOnly()) {
             throw new SQLiteException("can't drop tables from a read-only database");
         }
@@ -90,8 +102,9 @@ public class SqlUtils {
         if (cursor.moveToFirst()) {
             do {
                 String tableName = cursor.getString(0);
-                if (!tableName.equals("android_metadata") && !tableName.equals("sqlite_sequence"))
+                if (!tableName.equals("android_metadata") && !tableName.equals("sqlite_sequence")) {
                     tableNames.add(tableName);
+                }
             } while (cursor.moveToNext());
         }
 

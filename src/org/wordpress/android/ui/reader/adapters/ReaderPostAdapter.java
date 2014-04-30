@@ -12,18 +12,21 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -40,7 +43,10 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
+    public static enum ReaderPostListType { TAG, BLOG }
+
     private String mCurrentTag;
+    private long mCurrentBlogId;
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
@@ -53,6 +59,8 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mIsFlinging = false;
 
     private final LayoutInflater mInflater;
+    private final Context mContext;
+    private final ReaderPostListType mPostListType;
     private ReaderPostList mPosts = new ReaderPostList();
 
     private final String mFollowing;
@@ -67,13 +75,16 @@ public class ReaderPostAdapter extends BaseAdapter {
     private static final int PRELOAD_OFFSET = 2;
 
     public ReaderPostAdapter(Context context,
+                             ReaderPostListType postListType,
                              ReaderActions.RequestReblogListener reblogListener,
                              ReaderActions.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
+        mContext = context;
         mInflater = LayoutInflater.from(context);
 
+        mPostListType = postListType;
         mReblogListener = reblogListener;
         mDataLoadedListener = dataLoadedListener;
         mDataRequestedListener = dataRequestedListener;
@@ -100,13 +111,33 @@ public class ReaderPostAdapter extends BaseAdapter {
         mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
+    private Context getContext() {
+        return mContext;
+    }
+
+    ReaderPostListType getPostListType() {
+        return mPostListType;
+    }
+
     public String getCurrentTag() {
         return StringUtils.notNullStr(mCurrentTag);
     }
 
+    // used when the list type is ReaderPostListType.TAG
     public void setCurrentTag(String tagName) {
-        mCurrentTag = StringUtils.notNullStr(tagName);
-        reload(false);
+        tagName = StringUtils.notNullStr(tagName);
+        if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
+            mCurrentTag = tagName;
+            reload(false);
+        }
+    }
+
+    // used when the list type is ReaderPostListType.BLOG
+    public void setCurrentBlog(long blogId) {
+        if (blogId != mCurrentBlogId) {
+            mCurrentBlogId = blogId;
+            reload(false);
+        }
     }
 
     private void clear() {
@@ -157,24 +188,41 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPosts.set(index, updatedPost);
         notifyDataSetChanged();
     }
-    
+
+    /*
+     * ensures that the follow status of each post in the list reflects what is currently
+     * stored in the reader post table
+     */
+    public void checkFollowStatusForAllPosts() {
+        if (ReaderPostTable.checkFollowStatusOnPosts(mPosts)) {
+            notifyDataSetChanged();
+        }
+    }
+
+    /*
+     * sets the follow status of each post in the passed blog
+     */
     public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+        if (isEmpty()) {
+            return;
+        }
         boolean isChanged = false;
-        for (ReaderPost readerPost: mPosts) {
-            if (readerPost.blogId == blogId) {
-                readerPost.isFollowedByCurrentUser = followStatus;
+        for (ReaderPost post: mPosts) {
+            if (post.blogId == blogId) {
+                post.isFollowedByCurrentUser = followStatus;
                 isChanged = true;
             }
         }
-        if (isChanged)
-         notifyDataSetChanged();
+        if (isChanged) {
+            notifyDataSetChanged();
+        }
     }
-    
-    
+
     @SuppressLint("NewApi")
     private void loadPosts() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
+        }
 
         if (SysUtils.canUseExecuteOnExecutor()) {
             new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -208,26 +256,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
 
-        if (convertView==null) {
+        if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
-            holder = new PostViewHolder();
-
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.text_title);
-            holder.txtText = (TextView) convertView.findViewById(R.id.text_excerpt);
-            holder.txtBlogName = (TextView) convertView.findViewById(R.id.text_blog_name);
-            holder.txtDate = (TextView) convertView.findViewById(R.id.text_date);
-            holder.txtFollow = (TextView) convertView.findViewById(R.id.text_follow);
-
-            holder.txtCommentCount = (TextView) convertView.findViewById(R.id.text_comment_count);
-            holder.txtLikeCount = (TextView) convertView.findViewById(R.id.text_like_count);
-
-            holder.imgFeatured = (WPNetworkImageView) convertView.findViewById(R.id.image_featured);
-            holder.imgAvatar = (WPNetworkImageView) convertView.findViewById(R.id.image_avatar);
-
-            holder.imgBtnLike = (ImageView) convertView.findViewById(R.id.image_like_btn);
-            holder.imgBtnComment = (ImageView) convertView.findViewById(R.id.image_comment_btn);
-            holder.imgBtnReblog = (ImageView) convertView.findViewById(R.id.image_reblog_btn);
-
+            holder = new PostViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
@@ -235,14 +266,36 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
-        holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
 
-        if (post.hasBlogName()) {
-            holder.txtBlogName.setText(post.getBlogName());
-        } else if (post.hasAuthorName()) {
-            holder.txtBlogName.setText(post.getAuthorName());
-        } else {
-            holder.txtBlogName.setText(null);
+        // avatar, blog name and follow button only appear when showing tagged posts
+        if (getPostListType() == ReaderPostListType.TAG) {
+            holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            if (post.hasBlogName()) {
+                holder.txtBlogName.setText(post.getBlogName());
+            } else if (post.hasAuthorName()) {
+                holder.txtBlogName.setText(post.getAuthorName());
+            } else {
+                holder.txtBlogName.setText(null);
+            }
+
+            // follow/following - supported by both wp and non-wp (rss) posts
+            showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
+            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleFollow(holder, position, post);
+                }
+            });
+
+            // tapping avatar shows blog detail unless this post is from an external feed
+            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!post.isExternal) {
+                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId, post.getBlogUrl());
+                    }
+                }
+            });
         }
 
         if (post.hasExcerpt()) {
@@ -278,15 +331,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtTag.setVisibility(View.GONE);
             holder.txtTag.setOnClickListener(null);
         }*/
-
-        // follow/following - supported by both wp and non-wp (rss) posts
-        showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
-        holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollow(holder, position, post);
-            }
-        });
 
         // likes, comments & reblogging - supported by wp posts only
         if (post.isWP()) {
@@ -326,25 +370,29 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
             holder.imgBtnReblog.setVisibility(View.VISIBLE);
+            showCounts(holder, post);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.txtCommentCount.setVisibility(View.GONE);
         }
 
-        showCounts(holder, post);
-
         // animate the appearance of this row while new posts are being loaded
-        if (mAnimateRows)
+        if (mAnimateRows) {
             animateRow(convertView);
+        }
 
         // if we're nearing the end of the posts, fire request to load more
-        if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
+        if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
+        }
 
         // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one
-        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET))
+        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET)) {
             preloadPostImages(position + PRELOAD_OFFSET);
+        }
 
         return convertView;
     }
@@ -389,22 +437,50 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    private static class PostViewHolder {
-        TextView txtTitle;
-        TextView txtText;
-        TextView txtBlogName;
-        TextView txtDate;
-        TextView txtFollow;
+    private class PostViewHolder {
+        private final TextView txtTitle;
+        private final TextView txtText;
+        private final TextView txtBlogName;
+        private final TextView txtDate;
+        private final TextView txtFollow;
 
-        TextView txtLikeCount;
-        TextView txtCommentCount;
+        private final TextView txtLikeCount;
+        private final TextView txtCommentCount;
 
-        ImageView imgBtnLike;
-        ImageView imgBtnComment;
-        ImageView imgBtnReblog;
+        private final ImageView imgBtnLike;
+        private final ImageView imgBtnComment;
+        private final ImageView imgBtnReblog;
 
-        WPNetworkImageView imgFeatured;
-        WPNetworkImageView imgAvatar;
+        private final WPNetworkImageView imgFeatured;
+        private final WPNetworkImageView imgAvatar;
+
+        PostViewHolder(View view) {
+            txtTitle = (TextView) view.findViewById(R.id.text_title);
+            txtText = (TextView) view.findViewById(R.id.text_excerpt);
+            txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
+            txtDate = (TextView) view.findViewById(R.id.text_date);
+            txtFollow = (TextView) view.findViewById(R.id.text_follow);
+
+            txtCommentCount = (TextView) view.findViewById(R.id.text_comment_count);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
+
+            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+
+            imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
+            imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
+            imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
+
+            // if we're showing posts in a specific blog, hide avatar, blog name & follow button,
+            // and remove the top margin from the featured image
+            if (getPostListType() == ReaderPostListType.BLOG) {
+                txtBlogName.setVisibility(View.GONE);
+                imgAvatar.setVisibility(View.GONE);
+                txtFollow.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imgFeatured.getLayoutParams();
+                params.topMargin = 0;
+            }
+        }
     }
 
     /*
@@ -414,12 +490,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         // start animation immediately so user knows they did something
         AniUtils.zoomAction(holder.imgBtnLike);
 
-        if (!post.isLikedByCurrentUser) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+        boolean isAskingToLike = !post.isLikedByCurrentUser;
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+            return;
         }
 
-        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_LIKE, post, null))
-            return;
+        if (isAskingToLike) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+        }
 
         // update post in array and on screen
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
@@ -433,35 +511,43 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnLike.setSelected(isLikedByCurrentUser);
     }
 
-    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
-        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected())
-            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
-        if (isRebloggedByCurrentUser)
-            imgBtnReblog.setOnClickListener(null);
-    }
-
+    /*
+     * triggered when user taps the follow button
+     */
     private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
         AniUtils.zoomAction(holder.txtFollow);
 
-        if (!ReaderPostActions.performPostAction(ReaderPostActions.PostAction.TOGGLE_FOLLOW, post, null))
+        boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow)) {
             return;
+        }
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
-        showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
+        showFollowStatus(holder.txtFollow, isAskingToFollow);
         
-        //Update 'following' status on all other posts in the same blog.
-        updateFollowStatusOnPostsForBlog(post.blogId, updatedPost.isFollowedByCurrentUser);
+        // update follow status of all other posts in the same blog
+        updateFollowStatusOnPostsForBlog(post.blogId, isAskingToFollow);
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {
-        if (isFollowed == txtFollow.isSelected())
+        if (isFollowed == txtFollow.isSelected()) {
             return;
+        }
 
         txtFollow.setSelected(isFollowed);
         txtFollow.setText(isFollowed ? mFollowing : mFollow);
         int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
+    }
+
+    private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
+        if (isRebloggedByCurrentUser != imgBtnReblog.isSelected()) {
+            imgBtnReblog.setSelected(isRebloggedByCurrentUser);
+        }
+        if (isRebloggedByCurrentUser) {
+            imgBtnReblog.setOnClickListener(null);
+        }
     }
 
     /*
@@ -480,13 +566,27 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, Constants.READER_MAX_POSTS_TO_DISPLAY);
-            if (mPosts.isSameList(tmpPosts))
+            final int numExisting;
+            switch (getPostListType()) {
+                case TAG:
+                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+                    numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
+                    break;
+                case BLOG:
+                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+                    numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
+                    break;
+                default:
+                    return false;
+            }
+
+            if (mPosts.isSameList(tmpPosts)) {
                 return false;
+            }
 
             // if we're not already displaying the max # posts, enable requesting more when
             // the user scrolls to the end of the list
-            mCanRequestMorePosts = (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < Constants.READER_MAX_POSTS_TO_DISPLAY);
+            mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             // pre-calc avatar URLs, featured image URLs, tags and pubDates in each post - these
             // values are all cached by the post after the first time they're computed, so calling
@@ -507,14 +607,17 @@ public class ReaderPostAdapter extends BaseAdapter {
 
                 // preload images in the first few posts
                 if (mEnableImagePreload && mPosts.size() >= PRELOAD_OFFSET) {
-                    for (int i = 0; i <= PRELOAD_OFFSET; i++)
+                    for (int i = 0; i <= PRELOAD_OFFSET; i++) {
                         preloadPostImages(i);
+                    }
                 }
+
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener!=null)
+            if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
+            }
 
             mIsTaskRunning = false;
         }
@@ -539,14 +642,17 @@ public class ReaderPostAdapter extends BaseAdapter {
         mLastPreloadPos = position;
 
         // skip if listview is in a fling (note that we still set mLastPreloadPos above)
-        if (mIsFlinging)
+        if (mIsFlinging) {
             return;
+        }
 
-        ReaderPost post = mPosts.get(position);
-        if (post.hasFeaturedImage())
+        final ReaderPost post = mPosts.get(position);
+        if (post.hasFeaturedImage()) {
             preloadImage(post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight));
-        if (post.hasPostAvatar())
+        }
+        if (post.hasPostAvatar()) {
             preloadImage(post.getPostAvatarForDisplay(mAvatarSz));
+        }
     }
 
     /*
@@ -554,13 +660,16 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void preloadImage(final String imageUrl) {
         // skip if image is already in the LRU memory cache
-        if (WordPress.imageLoader.isCached(imageUrl, 0, 0))
+        if (WordPress.imageLoader.isCached(imageUrl, 0, 0)) {
             return;
+        }
 
         // skip if image is already in the disk cache
-        if (WordPress.requestQueue.getCache().get(imageUrl) != null)
+        if (WordPress.requestQueue.getCache().get(imageUrl) != null) {
             return;
+        }
 
+        // note that mImagePreloadListener doesn't do anything, but it's required by volley
         WordPress.imageLoader.get(imageUrl, mImagePreloadListener);
     }
 

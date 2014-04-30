@@ -5,31 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- blog mshot when showing posts in a specific blog -->
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_header_image_height"
+        android:scaleType="matrix"
+        android:visibility="gone"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin" />
+
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <org.wordpress.android.widgets.WPListView
             android:id="@android:id/list"
             style="@style/ReaderListView.PostList"
             android:paddingLeft="@dimen/reader_list_margin"
             android:paddingRight="@dimen/reader_list_margin"
             android:divider="@color/reader_divider_grey"
             android:dividerHeight="@dimen/margin_large"
-            tools:listitem="@layout/reader_listitem_post_excerpt"/>
+            tools:listitem="@layout/reader_listitem_post_excerpt" />
 
         <include
             android:id="@+id/empty_view"
-            layout="@layout/reader_empty_view"/>
+            layout="@layout/reader_empty_view" />
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
-        android:text="@string/reader_label_new_posts_one"
-        android:visibility="gone"/>
+        android:text="@string/reader_label_new_posts"
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/progress_footer"
@@ -38,5 +47,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_large"/>
+        android:layout_marginLeft="@dimen/margin_large" />
 </RelativeLayout>

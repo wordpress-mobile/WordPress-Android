@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -24,9 +23,6 @@ import org.wordpress.android.util.SysUtils;
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends FragmentActivity {
-    static final String ARG_BLOG_ID = "blog_id";
-    static final String ARG_POST_ID = "post_id";
-
     private ListView mListView;
     private TextView mTxtTitle;
     private ReaderPost mPost;
@@ -71,8 +67,8 @@ public class ReaderUserListActivity extends FragmentActivity {
         mTxtTitle.setVisibility(View.INVISIBLE);
 
         // for now this activity only supports showing users who like a specific post
-        long blogId = getIntent().getLongExtra(ARG_BLOG_ID, 0);
-        long postId = getIntent().getLongExtra(ARG_POST_ID, 0);
+        long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
+        long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
         mPost = ReaderPostTable.getPost(blogId, postId);
 
         if (savedInstanceState != null)
@@ -156,7 +152,7 @@ public class ReaderUserListActivity extends FragmentActivity {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, Constants.READER_MAX_USERS_TO_DISPLAY);
+            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
             return true;
         }
         @Override
