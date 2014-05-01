@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
@@ -321,12 +319,17 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // show primary tag unless this is tag preview or a private blog
-        if (isTagPreview() || post.isPrivate || !post.hasPrimaryTag()) {
-            holder.txtTag.setVisibility(View.GONE);
+        // show primary tag unless this is tag preview or a private blog, or the primary tag
+        // is the same as the one currently showing
+        final boolean showPrimaryTag;
+        if (isTagPreview() || post.isPrivate) {
+            showPrimaryTag = false;
         } else {
+            showPrimaryTag = post.hasPrimaryTag() && !post.getPrimaryTag().equalsIgnoreCase(getCurrentTag());
+        }
+        holder.txtTag.setVisibility(showPrimaryTag ? View.VISIBLE : View.GONE);
+        if (showPrimaryTag) {
             holder.txtTag.setText(post.getPrimaryTag());
-            holder.txtTag.setVisibility(View.VISIBLE);
             holder.txtTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
