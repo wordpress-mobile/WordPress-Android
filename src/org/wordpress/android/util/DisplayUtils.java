@@ -26,17 +26,12 @@ public class DisplayUtils {
         return isLandscape(context) && isTablet(context);
     }
 
-    @SuppressLint("NewApi")
     public static Point getDisplayPixelSize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        if (SysUtils.isGteAndroid4()) {
-            Point size = new Point();
-            display.getSize(size);
-            return size;
-        } else {
-            return new Point(display.getWidth(), display.getHeight());
-        }
+        Point size = new Point();
+        display.getSize(size);
+        return size;
     }
 
     public static int getDisplayPixelWidth(Context context) {

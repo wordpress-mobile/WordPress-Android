@@ -31,7 +31,6 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /*
@@ -353,12 +352,11 @@ public class ReaderActivity extends WPActionBarActivity
         return mIsFullScreen;
     }
 
-    /*
-     * auto-hiding the ActionBar is jittery/buggy on Gingerbread (and probably other
-     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
+    /**
+     * full screen supported if the menu drawer is not static (XLarge screen landscape for instance)
      */
     public boolean isFullScreenSupported() {
-        return (SysUtils.isGteAndroid4()) && !isStaticMenuDrawer();
+        return !isStaticMenuDrawer();
     }
 
     /*
