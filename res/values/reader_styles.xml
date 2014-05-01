@@ -85,7 +85,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:drawableLeft">@drawable/note_icon_tag</item>
+        <item name="android:drawableLeft">@drawable/stats_icon_tags</item>
+        <item name="android:drawablePadding">@dimen/margin_small</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>

@@ -138,7 +138,7 @@ public class ReaderTagTable {
     /*
      * returns true if the passed tag exists and it has the passed type
      */
-    public static boolean tagExistsOfType(String tagName, ReaderTagType tagType) {
+    private static boolean tagExistsOfType(String tagName, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
             return false;
         }
