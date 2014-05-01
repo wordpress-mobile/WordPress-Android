@@ -24,7 +24,7 @@ import org.wordpress.android.util.UrlUtils;
  *      1. sites/{$siteId}
  *      2. read/following/mine
  *
- *  The first endpoint is called when the user views blog detail, and it returns all the fields
+ *  The first endpoint is called when the user views blog preview, and it returns all the fields
  *  stored in tbl_blog_info. The second endpoint is called at startup to get the full list of
  *  blogs the user is following, and it only returns blog_id and blog_url.
  *

@@ -189,13 +189,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
             }
         });
 
-        // show blog detail when view is clicked
+        // show blog preview when view is clicked
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // make sure we have either the blog id or url
                 if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
-                    ReaderActivityLauncher.showReaderBlogDetail(parent.getContext(), blogId, blogUrl);
+                    ReaderActivityLauncher.showReaderBlogPreview(parent.getContext(), blogId, blogUrl);
                 }
             }
         });

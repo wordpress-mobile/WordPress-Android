@@ -25,11 +25,11 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderBlogDetail(Context context, long blogId, String blogUrl) {
+    public static void showReaderBlogPreview(Context context, long blogId, String blogUrl) {
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderActivity.ARG_BLOG_URL, blogUrl);
-        intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG);
+        intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }

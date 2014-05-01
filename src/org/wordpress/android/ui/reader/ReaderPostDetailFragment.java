@@ -75,7 +75,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    private static final String ARG_IS_BLOG_DETAIL = "is_blog_detail";
+    private static final String ARG_IS_BLOG_PREVIEW = "is_blog_preview";
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
@@ -99,7 +99,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
     private boolean mWebViewIsPaused;
-    private boolean mIsBlogDetail;
+    private boolean mIsBlogPreview;
 
     private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
@@ -113,13 +113,13 @@ public class ReaderPostDetailFragment extends SherlockFragment
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, false);
     }
-    public static ReaderPostDetailFragment newInstance(long blogId, long postId, boolean isBlogDetail) {
+    public static ReaderPostDetailFragment newInstance(long blogId, long postId, boolean isBlogPreview) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
         args.putLong(ReaderActivity.ARG_POST_ID, postId);
-        args.putBoolean(ARG_IS_BLOG_DETAIL, isBlogDetail);
+        args.putBoolean(ARG_IS_BLOG_PREVIEW, isBlogPreview);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -190,7 +190,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         if (args != null) {
             mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
-            mIsBlogDetail = args.getBoolean(ARG_IS_BLOG_DETAIL);
+            mIsBlogPreview = args.getBoolean(ARG_IS_BLOG_PREVIEW);
         }
     }
 
@@ -1314,8 +1314,9 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
             // set the activity title to the post's title if this is being shown in the reader
             final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
-            if (hostIsReaderActivity())
+            if (hostIsReaderActivity()) {
                 setTitle(postTitle);
+            }
 
             txtTitle.setText(postTitle);
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
@@ -1402,13 +1403,13 @@ public class ReaderPostDetailFragment extends SherlockFragment
                 }
             });
 
-            // show blog detail when avatar, blog or author name is tapped unless this fragment
-            // was shown from blog detail, or this is a post from an external feed
-            if (!mIsBlogDetail && !mPost.isExternal) {
+            // show blog preview when avatar, blog or author name is tapped unless this fragment
+            // was shown from blog preview, or this is a post from an external feed
+            if (!mIsBlogPreview && !mPost.isExternal) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getActivity(), mPost.blogId, mPost.getBlogUrl());
+                        ReaderActivityLauncher.showReaderBlogPreview(getActivity(), mPost.blogId, mPost.getBlogUrl());
                     }
                 };
                 txtBlogName.setOnClickListener(clickListener);
@@ -1514,17 +1515,18 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
     private void setTitle(CharSequence title) {
         ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-        actionBar.setTitle(title);
+        if (actionBar != null) {
+            actionBar.setTitle(title);
+        }
     }
 
     /*
      * called when user taps a link in the webView
      */
     private void openUrl(String url) {
-        if (!hasActivity() || TextUtils.isEmpty(url))
+        if (!hasActivity() || TextUtils.isEmpty(url)) {
             return;
+        }
 
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity

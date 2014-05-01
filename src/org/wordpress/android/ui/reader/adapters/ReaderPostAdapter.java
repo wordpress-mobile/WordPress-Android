@@ -131,16 +131,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    // used when the list type is ReaderPostListType.BLOG
+    // used when the list type is ReaderPostListType.BLOG_PREVIEW
     public void setCurrentBlog(long blogId) {
         if (blogId != mCurrentBlogId) {
             mCurrentBlogId = blogId;
             reload(false);
         }
-    }
-
-    private boolean isTagPreview() {
-        return (getPostListType() == ReaderPostListType.TAG_PREVIEW);
     }
 
     private void clear() {
@@ -290,12 +286,12 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
 
-            // tapping avatar shows blog detail unless this post is from an external feed
+            // tapping avatar shows blog preview unless this post is from an external feed
             holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!post.isExternal) {
-                        ReaderActivityLauncher.showReaderBlogDetail(getContext(), post.blogId, post.getBlogUrl());
+                        ReaderActivityLauncher.showReaderBlogPreview(getContext(), post.blogId, post.getBlogUrl());
                     }
                 }
             });
@@ -322,7 +318,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         // show primary tag unless this is tag preview or a private blog, or the primary tag
         // is the same as the one currently showing
         final boolean showPrimaryTag;
-        if (isTagPreview() || post.isPrivate) {
+        if (post.isPrivate) { // isTagPreview() ||
             showPrimaryTag = false;
         } else {
             showPrimaryTag = post.hasPrimaryTag() && !post.getPrimaryTag().equalsIgnoreCase(getCurrentTag());
@@ -483,7 +479,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             // if we're showing posts in a specific blog, hide avatar, blog name & follow button,
             // and remove the top margin from the featured image
-            if (getPostListType() == ReaderPostListType.BLOG) {
+            if (getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
                 txtBlogName.setVisibility(View.GONE);
                 imgAvatar.setVisibility(View.GONE);
                 txtFollow.setVisibility(View.GONE);
@@ -571,7 +567,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                     tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
-                case BLOG:
+                case BLOG_PREVIEW:
                     tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;

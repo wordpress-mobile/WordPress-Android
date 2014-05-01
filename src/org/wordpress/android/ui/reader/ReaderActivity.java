@@ -51,7 +51,7 @@ public class ReaderActivity extends WPActionBarActivity
     public static enum ReaderPostListType {
             TAG_FOLLOWED,
             TAG_PREVIEW,
-            BLOG;
+            BLOG_PREVIEW;
 
             public boolean isTagType() {
                 return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
@@ -93,17 +93,22 @@ public class ReaderActivity extends WPActionBarActivity
             mPostListType = ReaderPostListType.getDefaultType();
         }
 
-        // no menu drawer if this is blog detail or tag preview
-        if (mPostListType == ReaderPostListType.BLOG || mPostListType == ReaderPostListType.TAG_PREVIEW) {
+        // no menu drawer if this is blog preview or tag preview
+        if (mPostListType == ReaderPostListType.BLOG_PREVIEW || mPostListType == ReaderPostListType.TAG_PREVIEW) {
             setContentView(R.layout.reader_activity_main);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);
         }
 
-        if (mPostListType == ReaderPostListType.BLOG) {
-            // this sets "Loading..." as the title, fragment will change it to the name
-            // of the blog once it's loaded
-            setTitle(R.string.reader_title_blog_detail);
+        switch (mPostListType) {
+            case TAG_PREVIEW:
+                setTitle(R.string.reader_title_tag_preview);
+                break;
+            case BLOG_PREVIEW:
+                setTitle(R.string.reader_title_blog_preview);
+                break;
+            default:
+                break;
         }
 
         if (savedInstanceState == null) {
@@ -119,7 +124,7 @@ public class ReaderActivity extends WPActionBarActivity
 
             switch (fragmentType) {
                 case POST_LIST:
-                    if (mPostListType == ReaderPostListType.BLOG) {
+                    if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
                         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
                         String blogUrl = getIntent().getStringExtra(ReaderActivity.ARG_BLOG_URL);
                         showListFragmentForBlog(blogId, blogUrl);
@@ -129,14 +134,11 @@ public class ReaderActivity extends WPActionBarActivity
                         if (TextUtils.isEmpty(tagName)) {
                             tagName = UserPrefs.getReaderTag();
                         }
-
-                        if (mPostListType == ReaderPostListType.TAG_PREVIEW) {
-                            // if we're previewing a tag set it as the activity title
-                            setTitle(tagName);
-                        } else if (!ReaderTagTable.tagExists(tagName)) {
-                            // this is a followed tag so revert to default if it doesn't exist
+                        // if this is a followed tag and it doesn't exist, revert to default tag
+                        if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
+
                         showListFragmentForTag(tagName, mPostListType);
                     }
                     break;
@@ -255,8 +257,8 @@ public class ReaderActivity extends WPActionBarActivity
             // user just returned from previewing tagged posts, make sure the ActionBar adapter
             // reflects changes to followed tags
             case Constants.INTENT_READER_TAG_PREVIEW:
-                if (hasListFragment() && getListFragment().getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-                    getListFragment().refreshTags();
+                if (listFragment != null && listFragment.getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+                    listFragment.refreshTags();
                 }
                 break;
         }
@@ -331,8 +333,8 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        boolean isBlogDetail = (mPostListType == ReaderPostListType.BLOG);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, isBlogDetail);
+        boolean isBlogPreview = (mPostListType == ReaderPostListType.BLOG_PREVIEW);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, isBlogPreview);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
@@ -424,7 +426,13 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onTagSelected(String tagName) {
-        ReaderActivityLauncher.showReaderTagPreviewForResult(this, tagName);
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
+            // user is already previewing a tag, so change current tag in existing preview
+            getListFragment().setCurrentTag(tagName);
+        } else {
+            // user isn't previewing a tag, so open in tag preview
+            ReaderActivityLauncher.showReaderTagPreviewForResult(this, tagName);
+        }
     }
 
     /*

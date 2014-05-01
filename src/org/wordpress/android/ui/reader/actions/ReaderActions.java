@@ -81,7 +81,7 @@ public class ReaderActions {
     }
 
     /*
-     * used by blog detail when requesting latest info about a blog
+     * used by blog preview when requesting latest info about a blog
      */
     public interface UpdateBlogInfoListener {
         public void onResult(ReaderBlogInfo blogInfo);
