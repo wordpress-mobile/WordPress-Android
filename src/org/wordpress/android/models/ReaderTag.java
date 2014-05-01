@@ -131,4 +131,16 @@ public class ReaderTag {
 
         return endpoint.substring(start, end);
     }
+
+    /*
+     * is the passed tag name one of the default tags?
+     */
+    public static boolean isDefaultTagName(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return false;
+        }
+        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
+             || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
+             || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+    }
 }

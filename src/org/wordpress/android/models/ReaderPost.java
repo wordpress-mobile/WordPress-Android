@@ -508,9 +508,6 @@ public class ReaderPost {
     public void setTags(String tags) {
         this.tags = StringUtils.notNullStr(tags);
     }
-    public boolean hasTags() {
-        return !TextUtils.isEmpty(tags);
-    }
 
     List<String> getTagList() {
         return Arrays.asList(getTags().split(","));
@@ -520,7 +517,11 @@ public class ReaderPost {
         return StringUtils.notNullStr(primaryTag);
     }
     public void setPrimaryTag(String tagName) {
-        this.primaryTag = StringUtils.notNullStr(tagName);
+        // this is a bit of a hack to avoid setting the primary tag to one of the default
+        // tag names ("Freshly Pressed", etc.)
+        if (!ReaderTag.isDefaultTagName(tagName)) {
+            this.primaryTag = StringUtils.notNullStr(tagName);
+        }
     }
     public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);

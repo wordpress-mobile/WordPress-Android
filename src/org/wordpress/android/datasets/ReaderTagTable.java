@@ -125,6 +125,9 @@ public class ReaderTagTable {
         }
     }
 
+    /*
+     * returns true if the passed tag exists, regardless of type
+     */
     public static boolean tagExists(String tagName) {
         if (TextUtils.isEmpty(tagName)) {
             return false;
@@ -132,14 +135,29 @@ public class ReaderTagTable {
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_tags WHERE tag_name=?1", new String[]{tagName});
     }
 
-    public static boolean followedTagExists(String tagName) {
+    /*
+     * returns true if the passed tag exists and it has the passed type
+     */
+    public static boolean tagExistsOfType(String tagName, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
             return false;
         }
-        String[] args = {tagName, Integer.toString(ReaderTagType.FOLLOWED.toInt())};
+        // look for any tag with this name if tagType isn't passed
+        if (tagType == null) {
+            return tagExists(tagName);
+        }
+        String[] args = {tagName, Integer.toString(tagType.toInt())};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND topic_type=?2",
                 args);
+    }
+
+    public static boolean isFollowedTag(String tagName) {
+        return tagExistsOfType(tagName, ReaderTagType.FOLLOWED);
+    }
+
+    public static boolean isDefaultTag(String tagName) {
+        return tagExistsOfType(tagName, ReaderTagType.DEFAULT);
     }
 
     private static ReaderTag getTagFromCursor(Cursor c) {
@@ -154,12 +172,13 @@ public class ReaderTagTable {
         return new ReaderTag(tagName, endpoint, tagType);
     }
 
-    public static ReaderTag getTag(String tagName) {
+    public static ReaderTag getTag(String tagName, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
             return null;
         }
 
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_name=? LIMIT 1", new String[]{tagName});
+        String[] args = {tagName, Integer.toString(tagType.toInt())};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_name=? AND topic_type=? LIMIT 1", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -179,23 +198,15 @@ public class ReaderTagTable {
     }
 
     public static ReaderTagList getDefaultTags() {
-        String[] args = {Integer.toString(ReaderTag.ReaderTagType.DEFAULT.toInt())};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE topic_type=? ORDER BY tag_name", args);
-        try {
-            ReaderTagList topics = new ReaderTagList();
-            if (c.moveToFirst()) {
-                do {
-                    topics.add(getTagFromCursor(c));
-                } while (c.moveToNext());
-            }
-            return topics;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
+        return getTagsOfType(ReaderTagType.DEFAULT);
     }
 
     public static ReaderTagList getFollowedTags() {
-        String[] args = {Integer.toString(ReaderTag.ReaderTagType.FOLLOWED.toInt())};
+        return getTagsOfType(ReaderTagType.FOLLOWED);
+    }
+
+    private static ReaderTagList getTagsOfType(ReaderTagType tagType) {
+        String[] args = {Integer.toString(tagType.toInt())};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE topic_type=? ORDER BY tag_name", args);
         try {
             ReaderTagList topics = new ReaderTagList();

@@ -661,16 +661,17 @@ public class ReaderPostListFragment extends SherlockFragment
         txtTagName.setText(Html.fromHtml(htmlLabel));
 
         final TextView txtFollow = (TextView) mTagPreviewHeader.findViewById(R.id.text_follow_blog);
-        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.followedTagExists(getCurrentTag()));
+        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTag(getCurrentTag()));
 
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AniUtils.zoomAction(txtFollow);
-                boolean isAskingToFollow = !ReaderTagTable.followedTagExists(getCurrentTag());
+                boolean isAskingToFollow = !ReaderTagTable.isFollowedTag(getCurrentTag());
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                ReaderTagActions.performTagAction(action, getCurrentTag(), null);
-                ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+                if (ReaderTagActions.performTagAction(action, getCurrentTag(), null)) {
+                    ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+                }
             }
         });
     }

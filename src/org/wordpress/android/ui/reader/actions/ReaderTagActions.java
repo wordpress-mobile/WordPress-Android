@@ -39,8 +39,17 @@ public class ReaderTagActions {
     public static boolean performTagAction(final TagAction action,
                                            final String tagName,
                                            final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return false;
+        }
+
+        // don't allow actions on default tags
+        if (ReaderTagTable.isDefaultTag(tagName)) {
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
 
         final ReaderTag originalTopic;
         final String path;
@@ -48,7 +57,7 @@ public class ReaderTagActions {
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTagTable.getTag(tagName);
+                originalTopic = ReaderTagTable.getTag(tagName, ReaderTagType.FOLLOWED);
                 // delete tag & all related posts
                 ReaderTagTable.deleteTag(tagName);
                 ReaderPostTable.deletePostsWithTag(tagName);
@@ -71,8 +80,9 @@ public class ReaderTagActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.i(T.READER, "tag action " + action.name() + " succeeded");
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -87,8 +97,9 @@ public class ReaderTagActions {
                                  || (action== TagAction.DELETE && error.equals("not_subscribed"));
                 if (isSuccess) {
                     AppLog.w(T.READER, "tag action " + action.name() + " succeeded with error " + error);
-                    if (actionListener!=null)
+                    if (actionListener != null) {
                         actionListener.onActionResult(true);
+                    }
                     return;
                 }
 
@@ -109,8 +120,9 @@ public class ReaderTagActions {
                         break;
                 }
 
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
+                }
             }
         };
         WordPress.getRestClientUtils().post(path, listener, errorListener);

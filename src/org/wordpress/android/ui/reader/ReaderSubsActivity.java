@@ -182,7 +182,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             Bundle bundle = new Bundle();
             if (mTagsChanged) {
                 bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTag != null && ReaderTagTable.followedTagExists(mLastAddedTag)) {
+                if (mLastAddedTag != null && ReaderTagTable.isFollowedTag(mLastAddedTag)) {
                     bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
                 }
             }
@@ -223,7 +223,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             return;
         }
 
-        if (ReaderTagTable.tagExists(entry)) {
+        if (ReaderTagTable.isFollowedTag(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
