@@ -227,6 +227,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         mListView = (WPListView) view.findViewById(android.R.id.list);
         mHeaderImage = (WPNetworkImageView) view.findViewById(R.id.image_header);
+        mTagPreviewHeader = (ViewGroup) view.findViewById(R.id.layout_tag_preview_header);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -267,8 +268,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 mListView.setOnScrollChangedListener(this);
                 break;
 
-            case TAG_FOLLOWED: case TAG_PREVIEW:
-                mHeaderImage.setVisibility(View.GONE);
+            case TAG_FOLLOWED:
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
                 }
@@ -279,6 +279,14 @@ public class ReaderPostListFragment extends SherlockFragment
                     mListView.addHeaderView(mTagPreviewHeader);
                 }
 
+                break;
+
+            case TAG_PREVIEW:
+                // show tag preview header
+                if (hasTransparentActionBar) {
+                    ReaderFullScreenUtils.addTopMargin(context, mTagPreviewHeader);
+                }
+                mTagPreviewHeader.setVisibility(View.VISIBLE);
                 break;
         }
 

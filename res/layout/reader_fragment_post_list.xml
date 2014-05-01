@@ -15,8 +15,16 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin" />
 
+    <!-- header when previewing posts with a specific tag -->
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_tag_preview_header"
+        layout="@layout/reader_tag_preview_header" />
+
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
         android:id="@+id/ptr_layout"
+        android:layout_below="@+id/layout_tag_preview_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -48,4 +56,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/margin_large" />
+
 </RelativeLayout>
