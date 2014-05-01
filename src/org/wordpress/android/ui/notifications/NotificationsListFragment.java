@@ -28,7 +28,6 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     private View mProgressFooterView;
     private boolean mAllNotesLoaded;
     private PullToRefreshHelper mPullToRefreshHelper;
-    private ListView mListView;
 
     /**
      * For responding to tapping of notes
@@ -61,16 +60,16 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
         mProgressFooterView.setVisibility(View.GONE);
 
-        mListView = getListView();
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListView.setOnScrollListener(new ListScrollListener());
-        mListView.setDivider(getResources().getDrawable(R.drawable.list_divider));
-        mListView.setDividerHeight(1);
-        mListView.addFooterView(mProgressFooterView, null, false);
+        ListView listView = getListView();
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setOnScrollListener(new ListScrollListener());
+        listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
+        listView.setDividerHeight(1);
+        listView.addFooterView(mProgressFooterView, null, false);
         setListAdapter(getNotesAdapter());
 
         // Set empty text if no notifications
-        TextView textview = (TextView) mListView.getEmptyView();
+        TextView textview = (TextView) listView.getEmptyView();
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
@@ -119,10 +118,10 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
             return;
         }
         int position = getNotesAdapter().indexOfNote(note);
-        if (position >= 0 && mListView != null) {
-            mListView.setItemChecked(position, true);
+        if (position >= 0) {
+            getListView().setItemChecked(position, true);
             if (scrollToNote) {
-                mListView.setSelection(position);
+                getListView().setSelection(position);
             }
         }
     }
