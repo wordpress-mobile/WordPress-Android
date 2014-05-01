@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -37,15 +36,11 @@ public class DisplayUtils {
     public static int getDisplayPixelWidth(Context context) {
         Point size = getDisplayPixelSize(context);
         return (size.x);
-        //DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        //return metrics.widthPixels;
     }
 
     public static int getDisplayPixelHeight(Context context) {
         Point size = getDisplayPixelSize(context);
         return (size.y);
-        //DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        //return metrics.heightPixels;
     }
 
     public static int dpToPx(Context context, int dp) {
@@ -85,7 +80,6 @@ public class DisplayUtils {
     /**
      * detect when FEATURE_ACTION_BAR_OVERLAY has been set
      */
-    @SuppressLint("NewApi")
     public static boolean hasActionBarOverlay(Window window) {
         return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }

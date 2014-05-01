@@ -1,6 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
@@ -196,14 +195,15 @@ public class WordPress extends Application {
         return mRestClientUtils;
     }
 
-    /*
+    /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
-    @SuppressLint("NewApi")
     private static void enableStrictMode() {
-        // strict mode requires API level 9 or later
-        if (Build.VERSION.SDK_INT < 9)
+        // return if the build is not a debug build
+        if (!BuildConfig.DEBUG) {
+            AppLog.e(T.UTILS, "You should not call enableStrictMode() on a non debug build");
             return;
+        }
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
