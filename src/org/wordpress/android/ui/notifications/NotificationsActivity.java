@@ -150,6 +150,9 @@ public class NotificationsActivity extends WPActionBarActivity
                 NotificationsActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (isFinishing()) {
+                            return;
+                        }
                         refreshNotificationsListFragment(notes);
                         if (launchWithNoteId) {
                             launchWithNoteId(noteId);

@@ -849,7 +849,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final int maxPictureWidthForContentEditor = 400;
+        final int widthOfContentEditor = DisplayUtils.isLandscape(mActivity) ? mContentEditText.getHeight() : mContentEditText.getWidth();
+        final int maxPictureWidthForContentEditor = 400 > (widthOfContentEditor - 50) ? widthOfContentEditor - 50 : 400;
         final int minPictureWidthForContentEditor = 200;
 
         MediaFile mediaFile = imageSpan.getMediaFile();
@@ -882,6 +883,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
+                if (!hasActivity()) {
+                    return;
+                }
+
                 Bitmap downloadedBitmap = container.getBitmap();
                 if (downloadedBitmap == null) {
                     //no bitmap downloaded from the server.
@@ -899,7 +904,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     resizedBitmap = downloadedBitmap;
                 } else {
                     //resize the downloaded bitmap
-                    int targetWidth = 400;
+                    int targetWidth = maxPictureWidthForContentEditor;
                     try {
                         ImageHelper ih = new ImageHelper();
                         resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);

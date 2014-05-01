@@ -605,24 +605,14 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             case SETTINGS_REQUEST:
                 // user returned from settings - skip if user signed out
                 if (mMenuDrawer != null && resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
-                    updateMenuDrawer();
-                    String[] blogNames = getBlogNames();
                     // If we need to add or remove the blog spinner, init the drawer again
-                    if ((blogNames.length > 1 && mListView.getHeaderViewsCount() == 0)
-                            || (blogNames.length == 1 && mListView.getHeaderViewsCount() > 0)
-                            || blogNames.length == 0) {
-                        initMenuDrawer();
-                    } else if (blogNames.length > 1 && mBlogSpinner != null) {
-                        populateBlogSpinner(blogNames);
-                    }
+                    initMenuDrawer();
 
+                    String[] blogNames = getBlogNames();
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
-                        onBlogChanged();
-                    } else {
-                        // user has hidden all blogs
-                        onBlogChanged();
                     }
+                    onBlogChanged();
                     WordPress.registerForCloudMessaging(this);
                 }
 
@@ -722,7 +712,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 break;
             }
         }
-        
+
         if (shouldUpdateCurrentBlogStatsInBackground()) {
             WordPress.updateCurrentBlogStatsInBackground(true);
         }
@@ -735,7 +725,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean shouldUpdateCurrentBlogStatsInBackground() {
         return true;
     }
-    
+
     /**
      * this method is called when the user signs out of the app - descendants should override
      * this to perform activity-specific cleanup upon signout
