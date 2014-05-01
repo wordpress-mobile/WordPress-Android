@@ -8,9 +8,9 @@ import android.text.TextUtils;
 import android.text.style.QuoteSpan;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
 public class HtmlUtils {
 
@@ -100,14 +100,8 @@ public class HtmlUtils {
             // In case our tag handler fails
             html = (SpannableStringBuilder) Html.fromHtml(source, null, null);
             // Log the exception and text that produces the error
-            try {
-                JSONObject additionalData = new JSONObject();
-                additionalData.put("input_text", source);
-                WPMobileStatsUtil.trackException(runtimeException, WPMobileStatsUtil.StatsPropertyExceptionNoteParsing,
-                        additionalData);
-            } catch (JSONException jsonException) {
-                AppLog.e(T.UTILS, jsonException);
-            }
+            CrashlyticsUtils.setString(ExtraKey.NOTE_HTMLDATA, source);
+            CrashlyticsUtils.logException(runtimeException, ExceptionType.SPECIFIC, T.NOTIFS);
         }
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);

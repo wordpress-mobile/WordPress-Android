@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /**
  * displayed when user taps to reblog a post in the Reader
@@ -185,6 +186,7 @@ public class ReaderReblogActivity extends FragmentActivity {
             public void onActionResult(boolean succeeded) {
                 setIsSubmittingReblog(false);
                 if (succeeded) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_REBLOGGED_ARTICLE);
                     reblogSucceeded();
                 } else {
                     ToastUtils.showToast(ReaderReblogActivity.this, R.string.reader_toast_err_reblog_failed);

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -36,6 +37,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,23 +50,40 @@ public class NotificationsActivity extends WPActionBarActivity
                                    implements CommentActions.OnCommentChangeListener,
                                               NotificationFragment.OnPostClickListener,
                                               NotificationFragment.OnCommentClickListener {
-
-    public static final String NOTIFICATION_ACTION      = "org.wordpress.android.NOTIFICATION";
-    public static final String NOTE_ID_EXTRA            = "noteId";
-    public static final String FROM_NOTIFICATION_EXTRA  = "fromNotification";
+    public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
+    public static final String NOTE_ID_EXTRA = "noteId";
+    public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-
     private static final String KEY_INITIAL_UPDATE = "initial_update";
+    private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
+    private static final String KEY_SELECTED_POST_ID = "selected_post_id";
+
+    private static final int UNSPECIFIED_NOTE_ID = -1;
 
     private NotificationsListFragment mNotesList;
     private boolean mLoadingMore = false;
     private boolean mFirstLoadComplete = false;
     private BroadcastReceiver mBroadcastReceiver;
+    private boolean mDualPane;
+    private int mSelectedNoteId;
+    private boolean mHasPerformedInitialUpdate;
+    private BlogPairId mTmpSelectedComment;
+    private BlogPairId mTmpSelectedReaderPost;
+    private BlogPairId mSelectedComment;
+    private BlogPairId mSelectedReaderPost;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
+
+        // savedInstanceState will be non-null if activity is being re-created
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        }
+
         createMenuDrawer(R.layout.notifications);
+        View fragmentContainer = findViewById(R.id.layout_fragment_container);
+        mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -76,20 +95,8 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList.setNoteProvider(new NoteProvider());
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        // load notes, and automatically show the note passed in the intent (if any) if
-        // activity isn't being restored
-        boolean launchWithNoteId = (savedInstanceState == null);
-        loadNotes(launchWithNoteId);
-
+        restoreSavedInstance(savedInstanceState);
         GCMIntentService.activeNotificationsMap.clear();
-
-        if (savedInstanceState != null) {
-            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
-        }
-
-        if (savedInstanceState != null) {
-            popNoteDetail();
-        }
 
         if (mBroadcastReceiver == null) {
             createBroadcastReceiver();
@@ -99,7 +106,43 @@ public class NotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
-    private void loadNotes(final boolean launchWithNoteId) {
+    private void restoreSavedInstance(final Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+            int noteId = savedInstanceState.getInt(NOTE_ID_EXTRA, UNSPECIFIED_NOTE_ID);
+
+            LoadNotesCallback notesLoadedCallback = new LoadNotesCallback() {
+                @Override
+                public void notesLoaded() {
+                    // restore the post detail fragment if one was selected
+                    BlogPairId selectedPostId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_POST_ID);
+                    if (selectedPostId != null) {
+                        onPostClicked(null, (int) selectedPostId.getRemoteBlogId(), (int) selectedPostId.getId());
+                    }
+
+                    // restore the comment detail fragment if one was selected
+                    BlogPairId selectedCommentId = (BlogPairId) savedInstanceState.get(KEY_SELECTED_COMMENT_ID);
+                    if (selectedCommentId != null) {
+                        onCommentClicked(null, (int) selectedCommentId.getRemoteBlogId(), selectedCommentId.getId());
+                    }
+                }
+            };
+
+            if (!mDualPane && noteId != UNSPECIFIED_NOTE_ID) {
+                // Not dual pane and a specified note, we want to open the note fragment and then load the list in
+                // background (the list is still needed when the user tap back)
+                Note note = WordPress.wpDB.getNoteById(noteId);
+                openNote(note, false);
+                loadNotes(false, noteId, notesLoadedCallback);
+            } else {
+                loadNotes(true, noteId, notesLoadedCallback);
+            }
+        } else {
+            loadNotes(true, UNSPECIFIED_NOTE_ID, null);
+        }
+    }
+
+    private void loadNotes(final boolean launchWithNoteId, final int noteId, final LoadNotesCallback callback) {
         new Thread() {
             @Override
             public void run() {
@@ -107,9 +150,24 @@ public class NotificationsActivity extends WPActionBarActivity
                 NotificationsActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (isFinishing()) {
+                            return;
+                        }
                         refreshNotificationsListFragment(notes);
-                        if (launchWithNoteId)
-                            launchWithNoteId();
+                        if (launchWithNoteId) {
+                            launchWithNoteId(noteId);
+                        } else {
+                            if (noteId != UNSPECIFIED_NOTE_ID) {
+                                Note note = WordPress.wpDB.getNoteById(noteId);
+                                if (note != null) {
+                                    mNotesList.setNoteSelected(note, true);
+                                }
+                            }
+                        }
+
+                        if (callback != null) {
+                            callback.notesLoaded();
+                        }
                     }
                 });
             }
@@ -120,7 +178,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                loadNotes(false);
+                loadNotes(true, UNSPECIFIED_NOTE_ID, null);
             }
         };
     }
@@ -128,52 +186,75 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
         GCMIntentService.activeNotificationsMap.clear();
-
-        launchWithNoteId();
+        launchWithNoteId(UNSPECIFIED_NOTE_ID);
     }
 
-    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
-        public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-        }
-    };
-    private boolean mHasPerformedInitialUpdate;
+    private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    // This is ugly, but onBackStackChanged is not called just after a fragment commit.
+                    // In a 2 commits in a row case, onBackStackChanged is called twice but after the
+                    // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
+                    switch (backStackEntryCount) {
+                        case 2:
+                            mSelectedReaderPost = mTmpSelectedReaderPost;
+                            mSelectedComment = mTmpSelectedComment;
+                            mTmpSelectedReaderPost = null;
+                            mTmpSelectedComment = null;
+                            break;
+                        case 1:
+                            if (mDualPane) {
+                                mSelectedReaderPost = mTmpSelectedReaderPost;
+                                mSelectedComment = mTmpSelectedComment;
+                            } else {
+                                mSelectedReaderPost = null;
+                                mSelectedComment = null;
+                             }
+                            break;
+                        case 0:
+                            mMenuDrawer.setDrawerIndicatorEnabled(true);
+                            mSelectedReaderPost = null;
+                            mSelectedComment = null;
+                            break;
+                    }
+                }
+            };
 
     /**
      * Detect if Intent has a noteId extra and display that specific note detail fragment
      */
-    private void launchWithNoteId(){
+    private void launchWithNoteId(int noteId) {
         final Intent intent = getIntent();
-        if (intent.hasExtra(NOTE_ID_EXTRA)) {
-            int noteID = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
-            Note note = WordPress.wpDB.getNoteById(noteID);
+        if (noteId == UNSPECIFIED_NOTE_ID) {
+            if (intent.hasExtra(NOTE_ID_EXTRA)) {
+                noteId = Integer.valueOf(intent.getStringExtra(NOTE_ID_EXTRA));
+            }
+        }
+        if (noteId != UNSPECIFIED_NOTE_ID) {
+            Note note = WordPress.wpDB.getNoteById(noteId);
             if (note != null) {
-                openNote(note);
+                openNote(note, true);
             } else {
                 // find it/load it etc
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("ids", intent.getStringExtra(NOTE_ID_EXTRA));
-                NotesResponseHandler handler = new NotesResponseHandler(){
+                params.put("ids", Integer.toString(noteId));
+                NotesResponseHandler handler = new NotesResponseHandler() {
                     @Override
-                    public void onNotes(List<Note> notes){
+                    public void onNotes(List<Note> notes) {
                         // there should only be one note!
                         if (!notes.isEmpty()) {
-                            openNote(notes.get(0));
+                            openNote(notes.get(0), true);
                         }
                     }
                 };
                 getRestClientUtils().getNotifications(params, handler, handler);
             }
         } else {
-            // on a tablet: open first note if none selected
-            String fragmentTag = mNotesList.getTag();
-            if (fragmentTag != null && fragmentTag.equals("tablet-view")) {
-                if (mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
-                    openNote(mNotesList.getNotesAdapter().getItem(0));
-                }
+            // Dual pane and no note specified then open first note
+            if (mDualPane && mNotesList.hasAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
+                openNote(mNotesList.getNotesAdapter().getItem(0), false);
             }
             mNotesList.animateRefresh(true);
             refreshNotes();
@@ -184,7 +265,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (isLargeOrXLarge()) {
+                if (mDualPane) {
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
@@ -278,19 +359,21 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      *  Open a note fragment based on the type of note
      */
-    private void openNote(final Note note){
-        if (note == null || isFinishing())
+    private void openNote(final Note note, boolean scrollToNote) {
+        if (note == null || isFinishing()) {
             return;
+        }
+        mSelectedNoteId = StringUtils.stringToInt(note.getId());
+        mNotesList.setNoteSelected(note, scrollToNote);
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
             markNoteAsRead(note);
         }
-
         FragmentManager fm = getSupportFragmentManager();
 
         // remove the note detail if it's already on there
-        if (fm.getBackStackEntryCount() > 0){
+        if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
         }
 
@@ -301,14 +384,6 @@ public class NotificationsActivity extends WPActionBarActivity
             return;
         }
 
-        // set arguments from activity if called from a notification
-        /*Intent intent = getIntent();
-        if (intent.hasExtra(NOTE_ID_EXTRA) && intent.getStringExtra(NOTE_ID_EXTRA).equals(note.getId())) {
-            if (intent.hasExtra(NOTE_REPLY_EXTRA) || intent.hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
-                detailFragment.setArguments(intent.getExtras());
-            }
-        }*/
-
         // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
         // fragment used here that is not a NotificationFragment)
         if (detailFragment instanceof NotificationFragment) {
@@ -317,18 +392,19 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, detailFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(
+                FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
         // only add to backstack if we're removing the list view from the fragment container
         View container = findViewById(R.id.layout_fragment_container);
         if (container.findViewById(R.id.fragment_notes_list) != null) {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
             ft.addToBackStack(null);
-            if (mNotesList != null)
+            if (mNotesList != null) {
                 ft.hide(mNotesList);
+            }
         }
-
         ft.commitAllowingStateLoss();
     }
 
@@ -457,7 +533,7 @@ public class NotificationsActivity extends WPActionBarActivity
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
             Note updatedNote = WordPress.wpDB.getNoteById(StringUtils.stringToInt(note.getId()));
-            openNote(updatedNote != null ? updatedNote : note);
+            openNote(updatedNote != null ? updatedNote : note, false);
         }
     }
 
@@ -509,7 +585,13 @@ public class NotificationsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.remove(NOTE_ID_EXTRA);
+        outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
+        if (mSelectedReaderPost != null) {
+            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
+        }
+        if (mSelectedComment != null) {
+            outState.putSerializable(KEY_SELECTED_COMMENT_ID, mSelectedComment);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -542,12 +624,13 @@ public class NotificationsActivity extends WPActionBarActivity
         return super.onCreateDialog(id);
     }
 
-    /*
+    /**
      * called from fragment when a link to a post is tapped - shows the post in a reader
      * detail fragment
      */
     @Override
     public void onPostClicked(Note note, int remoteBlogId, int postId) {
+        mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -556,12 +639,14 @@ public class NotificationsActivity extends WPActionBarActivity
           .addToBackStack(tagForFragment)
           .commit();
     }
-    /*
+
+    /**
      * called from fragment when a link to a comment is tapped - shows the comment in the comment
      * detail fragment
      */
     @Override
     public void onCommentClicked(Note note, int remoteBlogId, long commentId) {
+        mTmpSelectedComment = new BlogPairId(remoteBlogId, commentId);
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -571,4 +656,7 @@ public class NotificationsActivity extends WPActionBarActivity
           .commit();
     }
 
+    private interface LoadNotesCallback {
+        void notesLoaded();
+    }
 }

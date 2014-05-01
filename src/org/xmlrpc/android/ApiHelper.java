@@ -53,7 +53,7 @@ public class ApiHelper {
         NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
         INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED}
 
-    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();;
+    public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
 
     static {
         blogOptionsXMLRPCParameters.put("software_version", "software_version");
@@ -63,6 +63,7 @@ public class ApiHelper {
         blogOptionsXMLRPCParameters.put("home_url", "home_url");
         blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
         blogOptionsXMLRPCParameters.put("login_url", "login_url");
+        blogOptionsXMLRPCParameters.put("blog_title", "blog_title");
     }
 
     public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
@@ -141,6 +142,7 @@ public class ApiHelper {
         if (blogOptionsJson != null) {
             isModified |= currentBlog.bsetBlogOptions(blogOptionsJson);
         }
+
         // Software version
         if (!currentBlog.isDotcomFlag()) {
             Map<?, ?> sv = (HashMap<?, ?>) blogOptions.get("software_version");
@@ -149,6 +151,7 @@ public class ApiHelper {
                 isModified |= currentBlog.bsetWpVersion(wpVersion);
             }
         }
+
         // Featured image support
         Map<?, ?> featuredImageHash = (HashMap<?, ?>) blogOptions.get("post_thumbnail");
         if (featuredImageHash != null) {
@@ -157,6 +160,17 @@ public class ApiHelper {
         } else {
             isModified |= currentBlog.bsetFeaturedImageCapable(false);
         }
+
+        // Blog name
+        Map<?, ?> blogNameHash = (HashMap<?, ?>) blogOptions.get("blog_title");
+        if (blogNameHash != null) {
+            String blogName = MapUtils.getMapStr(blogNameHash, "value");
+            if (blogName != null && !blogName.equals(currentBlog.getBlogName())) {
+                currentBlog.setBlogName(blogName);
+                isModified = true;
+            }
+        }
+
         if (isModified) {
             WordPress.wpDB.saveBlog(currentBlog);
         }
@@ -222,8 +236,10 @@ public class ApiHelper {
                 // check the WP number if self-hosted
                 Map<String, String> hPost = ApiHelper.blogOptionsXMLRPCParameters;
 
-                Object[] vParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
-                        mBlog.getPassword(), hPost};
+                Object[] vParams = {mBlog.getRemoteBlogId(),
+                                    mBlog.getUsername(),
+                                    mBlog.getPassword(),
+                                    hPost};
                 Object versionResult = null;
                 try {
                     versionResult = client.call("wp.getOptions", vParams);

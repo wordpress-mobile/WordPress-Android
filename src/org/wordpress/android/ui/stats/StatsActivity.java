@@ -37,6 +37,7 @@ import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +45,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
@@ -97,6 +99,10 @@ public class StatsActivity extends WPActionBarActivity {
             Toast.makeText(this, R.string.fatal_db_error, Toast.LENGTH_LONG).show();
             finish();
             return;
+        }
+
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_ACCESSED);
         }
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
@@ -223,6 +229,9 @@ public class StatsActivity extends WPActionBarActivity {
                             if (result != null && ( result instanceof HashMap )) {
                                 Map<?, ?> blogOptions = (HashMap<?, ?>) result;
                                 ApiHelper.updateBlogOptions(currentBlog, blogOptions);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK);
+                                AnalyticsTracker.track(
+                                        AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
                                     refreshStats();
@@ -388,6 +397,7 @@ public class StatsActivity extends WPActionBarActivity {
 
             if (getBlogId() == null) {
                 stopStatsService();
+                mPullToRefreshHelper.setRefreshing(false);
                 // Blog has not returned a jetpack_client_id
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.statsActivityWeakRef.get());
                 if (WordPress.getCurrentBlog().isAdmin()) {
@@ -399,6 +409,7 @@ public class StatsActivity extends WPActionBarActivity {
                             jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL, WordPress.getCurrentBlog().getAdminUrl()
                                     + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com&plugin-search-input=Search+Plugins");
                             startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                         }
                     });
                     builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -417,6 +428,16 @@ public class StatsActivity extends WPActionBarActivity {
 
         @Override
         public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
+            mPullToRefreshHelper.setRefreshing(false);
+            if (statsActivityWeakRef.get() == null || statsActivityWeakRef.get().isFinishing()
+                    || !statsActivityWeakRef.get().mIsInFront) {
+                return;
+            }
+            if (mSignInDialog != null && mSignInDialog.isShowing()) {
+                return;
+            }
+            stopStatsService();
+            Toast.makeText(statsActivityWeakRef.get(), R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -486,6 +507,15 @@ public class StatsActivity extends WPActionBarActivity {
         refreshStats();
     }
 
+    /**
+     * Do not refresh Stats in BG when user switch between blogs since the refresh 
+     * is already started in foreground at this point.
+     */
+    @Override
+    protected boolean shouldUpdateCurrentBlogStatsInBackground() {
+        return false;
+    }
+    
     boolean dotComCredentialsMatch() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
@@ -552,9 +582,12 @@ public class StatsActivity extends WPActionBarActivity {
 
                         if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                             // This site has the wrong WP.com credentials
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(StatsActivity.this);
+                            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                            
                             AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
                             builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
-                                    .setMessage(getString(R.string.jetpack_stats_switch_user));
+                                    .setMessage(getString(R.string.jetpack_stats_switch_user, username));
                             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     startWPComLoginActivity();

@@ -25,7 +25,7 @@
         <item name="activatedBackgroundIndicator">@drawable/list_bg_selector</item>
     </style>
 
-    <style name="WordPress.Dialog" parent="@android:style/Theme.Holo.Light.Dialog"></style>
+    <style name="WordPress.Dialog" parent="@android:style/Theme.Holo.Light.Dialog"/>
 
     <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="android:icon">@drawable/ab_icon_wp</item>

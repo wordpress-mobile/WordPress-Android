@@ -31,6 +31,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -139,7 +140,7 @@ public class PostUploadService extends Service {
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(post.getRemotePostId());
+                WordPress.postUploaded(post.getLocalTableBlogId(), post.getRemotePostId(), post.isPage());
                 nm.cancel(notificationID);
                 WordPress.wpDB.deleteMediaFilesForPost(post);
             } else {
@@ -209,10 +210,27 @@ public class PostUploadService extends Service {
                 return false;
             }
 
+            boolean isFirstTimePublishing = false;
             if (TextUtils.isEmpty(post.getPostStatus())) {
                 post.setPostStatus("publish");
             }
+
+            if (post.hasChangedFromLocalDraftToPublished()) {
+                isFirstTimePublishing = true;
+            }
+
+            if (!post.isUploaded() && post.getPostStatus().equals("publish")) {
+                isFirstTimePublishing = true;
+            }
+
             Boolean publishThis = false;
+
+            // These are used for stats purposes
+            Boolean hasImage = false;
+            Boolean hasVideo = false;
+            Boolean hasCategory = false;
+            Boolean hasTag = !post.getKeywords().equals("");
+
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
@@ -250,6 +268,12 @@ public class PostUploadService extends Service {
                         if (!imgPath.equals("")) {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
 
+                            if (mf.isVideo()) {
+                                hasVideo = true;
+                            } else {
+                                hasImage = true;
+                            }
+
                             if (mf != null) {
                                 String imgHTML = uploadMediaFile(mf, blog);
                                 if (imgHTML != null) {
@@ -278,6 +302,10 @@ public class PostUploadService extends Service {
             JSONArray categoriesJsonArray = post.getJSONCategories();
             String[] postCategories = null;
             if (categoriesJsonArray != null) {
+                if (categoriesJsonArray.length() > 0) {
+                    hasCategory = true;
+                }
+
                 postCategories = new String[categoriesJsonArray.length()];
                 for (int i = 0; i < categoriesJsonArray.length(); i++) {
                     try {
@@ -402,6 +430,22 @@ public class PostUploadService extends Service {
                 post.setUploaded(true);
                 post.setLocalChange(false);
                 WordPress.wpDB.updatePost(post);
+
+                if (isFirstTimePublishing) {
+                    if (hasImage) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
+                    }
+                    if (hasVideo) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
+                    }
+                    if (hasCategory) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
+                    }
+                    if (hasTag) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
+                    }
+                }
+
                 return true;
             } catch (final XMLRPCException e) {
                 setUploadPostErrorMessage(e);

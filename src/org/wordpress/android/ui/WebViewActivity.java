@@ -28,7 +28,12 @@ public class WebViewActivity extends WPActionBarActivity {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         
         super.onCreate(savedInstanceState);
-        
+
+        // clear title text so there's no title until actual web page title can be shown
+        // this is done here rather than in the manifest to automatically handle descendants
+        // such as AuthenticatedWebViewActivity
+        setTitle("");
+
         setContentView(R.layout.webview);
 
         ActionBar ab = getSupportActionBar();
@@ -36,8 +41,10 @@ public class WebViewActivity extends WPActionBarActivity {
         ab.setDisplayShowTitleEnabled(true);
         ab.setDisplayHomeAsUpEnabled(true);
 
+        // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
+        // here since it causes problems with the browser-sniffing that some sites rely on to
+        // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 

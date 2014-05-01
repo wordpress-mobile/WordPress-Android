@@ -70,6 +70,9 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
+import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
@@ -79,7 +82,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPUnderlineSpan;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
@@ -336,6 +339,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     }
                     break;
                 case MediaGalleryPickerActivity.REQUEST_CODE:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY);
                     if (resultCode == Activity.RESULT_OK) {
                         handleMediaGalleryPickerResult(data);
                     }
@@ -343,6 +347,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY:
                     Uri imageUri = data.getData();
                     fetchMedia(imageUri);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                     break;
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
@@ -353,6 +358,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         } catch (OutOfMemoryError e) {
@@ -843,7 +849,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final int maxPictureWidthForContentEditor = 400;
+        final int widthOfContentEditor = DisplayUtils.isLandscape(mActivity) ? mContentEditText.getHeight() : mContentEditText.getWidth();
+        final int maxPictureWidthForContentEditor = 400 > (widthOfContentEditor - 50) ? widthOfContentEditor - 50 : 400;
         final int minPictureWidthForContentEditor = 200;
 
         MediaFile mediaFile = imageSpan.getMediaFile();
@@ -876,6 +883,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
+                if (!hasActivity()) {
+                    return;
+                }
+
                 Bitmap downloadedBitmap = container.getBitmap();
                 if (downloadedBitmap == null) {
                     //no bitmap downloaded from the server.
@@ -893,11 +904,16 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                     resizedBitmap = downloadedBitmap;
                 } else {
                     //resize the downloaded bitmap
+                    int targetWidth = maxPictureWidthForContentEditor;
                     try {
                         ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, 400);
+                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
                     } catch (OutOfMemoryError er) {
-                        WPMobileStatsUtil.trackEventForSelfHostedAndWPCom(WPMobileStatsUtil.StatsEventMediaOutOfMemory);
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                        CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                                ((float) targetWidth) / downloadedBitmap.getWidth());
+                        CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
                         return;
                     }
                 }
@@ -1104,19 +1120,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             int id = v.getId();
             if (id == R.id.bold) {
                 onFormatButtonClick(mBoldToggleButton, TAG_FORMAT_BAR_BUTTON_STRONG);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBoldButton);
             } else if (id == R.id.em) {
                 onFormatButtonClick(mEmToggleButton, TAG_FORMAT_BAR_BUTTON_EM);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarItalicButton);
             } else if (id == R.id.underline) {
                 onFormatButtonClick(mUnderlineToggleButton, TAG_FORMAT_BAR_BUTTON_UNDERLINE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarUnderlineButton);
             } else if (id == R.id.strike) {
                 onFormatButtonClick(mStrikeToggleButton, TAG_FORMAT_BAR_BUTTON_STRIKE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarDelButton);
             } else if (id == R.id.bquote) {
                 onFormatButtonClick(mBquoteToggleButton, TAG_FORMAT_BAR_BUTTON_QUOTE);
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarBlockquoteButton);
             } else if (id == R.id.more) {
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
@@ -1125,7 +1136,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         mSelectionEnd = str.length();
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarMoreButton);
             } else if (id == R.id.link) {
                 mSelectionStart = mContentEditText.getSelectionStart();
                 mStyleStart = mSelectionStart;
@@ -1142,18 +1152,12 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         i.putExtra("selectedText", selectedText);
                     }
                 }
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarLinkButton);
                 startActivityForResult(i, ACTIVITY_REQUEST_CODE_CREATE_LINK);
             } else if (id == R.id.addPictureButton) {
                 mAddPictureButton.performLongClick();
-                trackFormatButtonClick(WPMobileStatsUtil.StatsPropertyPostDetailClickedKeyboardToolbarPictureButton);
             }
         }
     };
-
-    public void trackFormatButtonClick(String statPropertyName) {
-        WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), statPropertyName);
-    }
 
     /**
      * Applies formatting to selected text, or marks the entry for a new text style

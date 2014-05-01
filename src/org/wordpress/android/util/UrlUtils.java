@@ -52,7 +52,7 @@ public class UrlUtils {
         return url;
     }
 
-    public static String addHttpProcolIfNeeded(String url, boolean isHTTPS) {
+    public static String addUrlSchemeIfNeeded(String url, boolean isHTTPS) {
         if (url == null) {
             return null;
         }

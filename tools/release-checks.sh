@@ -1,5 +1,7 @@
 #!/bin/sh
 
+LANG_FILE=tools/exported-language-codes.csv
+
 function checkDeviceToTest() {
 	lines=$(adb devices -l|wc -l)
 	if [ $lines -le 2 ]; then
@@ -44,9 +46,28 @@ function checkENStrings() {
 	fi
 }
 
+function checkNewLanguages() {
+	/bin/echo -n "Check for potential new languages..."
+	langs=`curl http://translate.wordpress.org/projects/android/dev 2> /dev/null \
+   		| grep -B 1 morethan90|grep "android/dev/" \
+   		| sed "s+.*android/dev/\([a-zA-Z-]*\)/default.*+\1+"`
+	nerrors=''
+	for lang in $langs; do
+		grep "^$lang," $LANG_FILE > /dev/null
+		if [ $? -ne 0 ]; then
+			nerrors=$nerrors"language code $lang has reached 90% translation threshold and hasn't been found in $LANG_FILE\n"
+		fi
+	done
+	if [ "x$nerrors" = x ]; then
+		pOk
+	else
+		pFail
+		echo $nerrors
+	fi
+}
+
 function checkVersions() {
-	gradle_version=$(grep -E 'versionName' build.gradle \
-		             | grep -Eo "[0-9.]+")
+	gradle_version=$(grep -E 'versionName' build.gradle | sed s/versionName// | grep -Eo "[a-zA-Z0-9.-]+" )
 	tag=$(git for-each-ref --sort=taggerdate --format '%(tag)' refs/tags|tail -1)
 	if [[ $gradle_version != $tag ]]; then
 		/bin/echo -n "build.gradle version and git tag version mismatch..."
@@ -56,12 +77,8 @@ function checkVersions() {
 	echo "last git tag version is $tag"
 }
 
-
-# Check strings
+checkNewLanguages
 checkENStrings
-
-# Run tests
+checkVersions
 # checkDeviceToTest
 # runConnectedTests
-
-checkVersions

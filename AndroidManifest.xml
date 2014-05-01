@@ -111,6 +111,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -200,7 +201,9 @@
         </activity>
 
 
-        <activity android:name=".ui.stats.WPComLoginActivity" android:theme="@style/FloatingActivityTheme">
+        <activity
+            android:name=".ui.accounts.WPComLoginActivity"
+            android:theme="@style/WordPress.Dialog">
         </activity>
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
@@ -223,8 +226,7 @@
 
         <!-- Notifications activities -->
         <activity
-            android:name=".ui.notifications.NotificationsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:name=".ui.notifications.NotificationsActivity"/>
 
         <activity
             android:name=".ui.notifications.NotificationsWebViewActivity"
@@ -267,6 +269,7 @@
             android:label="Stats Update Service"
             android:exported="false" />
 
+        <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
+        <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
     </application>
-
 </manifest>

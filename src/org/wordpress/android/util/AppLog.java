@@ -6,7 +6,10 @@ import android.util.Log;
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -16,9 +19,11 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS}
-    public static final String TAG = WordPress.TAG;
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING}
+    public static final String TAG = "WordPress";
+
     private static boolean mEnableRecording = false;
+    private static boolean mEnableCrashlytics = false;
 
     private AppLog() {
         throw new AssertionError();
@@ -29,6 +34,16 @@ public class AppLog {
      */
     public static void enableRecording(boolean enable) {
         mEnableRecording = enable;
+    }
+
+    public static void enableCrashlytics(boolean enable) {
+        mEnableCrashlytics = enable;
+    }
+
+    public static void crashlyticsLog(T tag, Throwable throwable, String message) {
+        if (mEnableCrashlytics) {
+            CrashlyticsUtils.logException(throwable, ExceptionType.USUAL, tag, message);
+        }
     }
 
     public static void v(T tag, String message) {
@@ -59,26 +74,32 @@ public class AppLog {
     public static void e(T tag, String message, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), message, tr);
         addEntry(tag, LogLevel.e, message + " - exception: " + tr.getMessage());
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        crashlyticsLog(tag, tr, message);
     }
 
     public static void e(T tag, Throwable tr) {
         Log.e(TAG + "-" + tag.toString(), tr.getMessage(), tr);
         addEntry(tag, LogLevel.e, tr.getMessage());
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(tr));
+        crashlyticsLog(tag, tr, null);
     }
 
     public static void e(T tag, VolleyError volleyError) {
-        if (volleyError==null)
+        if (volleyError == null) {
             return;
+        }
         String logText;
-        if (volleyError.networkResponse==null) {
+        if (volleyError.networkResponse == null) {
             logText = volleyError.getMessage();
         } else {
-            logText = volleyError.getMessage() + ", status "
-                    + volleyError.networkResponse.statusCode
-                    + " - " + volleyError.networkResponse.toString();
+            logText = volleyError.getMessage() + ", status " + volleyError.networkResponse.statusCode + " - " +
+                      volleyError.networkResponse.toString();
         }
         Log.e(TAG + "-" + tag.toString(), logText, volleyError);
         addEntry(tag, LogLevel.w, logText);
+        addEntry(tag, LogLevel.e, "StackTrace: " + getHTMLStringStackTrace(volleyError));
+        crashlyticsLog(tag, volleyError, logText);
     }
 
     // --------------------------------------------------------------------------------------------------------
@@ -156,6 +177,16 @@ public class AppLog {
         mLogEntries.addEntry(entry);
     }
 
+    private static String getStringStackTrace(Throwable throwable) {
+        StringWriter errors = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(errors));
+        return errors.toString();
+    }
+
+    private static String getHTMLStringStackTrace(Throwable throwable) {
+        return getStringStackTrace(throwable).replace("\n", "<br/>");
+    }
+
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
      */
@@ -178,8 +209,8 @@ public class AppLog {
         }
         return sb.toString();
     }
-    
-    
+
+
     /*
      * returns entire log as plain text
      */

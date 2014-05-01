@@ -46,7 +46,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
-import org.wordpress.android.util.WPMobileStatsUtil;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
@@ -182,7 +182,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
-                            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedPostFormat);
                             return false;
                         }
                     }
@@ -203,7 +202,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                     new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
-                            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedStatus);
                             return false;
                         }
                     }
@@ -306,7 +304,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.pubDateButton) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedScheduleFor);
             showPostDateSelectionDialog();
         } else if (id == R.id.selectCategories) {
             Bundle bundle = new Bundle();
@@ -318,7 +315,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             categoriesIntent.putExtras(bundle);
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailClickedShowCategories);
             onCategoryButtonClick(v);
         } else if (id == R.id.viewMap) {
             Double latitude = 0.0;
@@ -328,17 +324,14 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 AppLog.e(T.POSTS, e);
             }
             if (latitude != 0.0) {
-                WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedAddLocation);
                 String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
                 startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
             } else {
                 Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
             }
         } else if (id == R.id.updateLocation) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedUpdateLocation);
             getLocation();
         } else if (id == R.id.removeLocation) {
-            WPMobileStatsUtil.flagProperty(mActivity.getStatEventEditorClosed(), WPMobileStatsUtil.StatsPropertyPostDetailSettingsClickedRemoveLocation);
             removeLocation();
         }
     }
@@ -412,6 +405,7 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
                         }
@@ -474,6 +468,13 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
             case 3:
                 status = PostStatus.toString(PostStatus.PRIVATE);
                 break;
+        }
+
+        // We want to flag this post as having changed statuses from draft to published so that we
+        // propertly track stats we care about for when users first publish posts.
+        if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
+                && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
+            post.setChangedFromLocalDraftToPublished(true);
         }
 
         double latitude = 0.0;

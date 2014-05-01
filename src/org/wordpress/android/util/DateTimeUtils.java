@@ -114,6 +114,13 @@ public class DateTimeUtils {
             return 0;
         return (int)(msDiff / 60000);
     }
+    public static int secondsBetween(Date dt1, Date dt2) {
+    	long msDiff = millisecondsBetween(dt1, dt2);
+    	if (msDiff == 0) {
+    		return 0;
+    	}
+    	return (int)(msDiff / 1000);
+    }
     public static long millisecondsBetween(Date dt1, Date dt2) {
         if (dt1==null || dt2==null)
             return 0;
@@ -139,5 +146,4 @@ public class DateTimeUtils {
         Date dtGmt = timestampToDate(timeStamp);
         return javaDateToTimeSpan(dtGmt);
     }
-
 }

@@ -15,11 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest.ErrorListener;
-import com.wordpress.rest.RestRequest.Listener;
 
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsVideosTable;
@@ -189,7 +185,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
             final String blogId = String.valueOf(WordPress.getCurrentBlog());
                         
-            WordPress.getRestClientUtils().getStatsVideoSummary(blogId, 
+        /*    WordPress.getRestClientUtils().getStatsVideoSummary(blogId, 
                     new Listener() {
                         
                         @Override
@@ -227,7 +223,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                             // TODO Auto-generated method stub
                             
                         }
-                    });
+                    });*/
         }
         
         void refreshSummaryViews(StatsVideoSummary result) {

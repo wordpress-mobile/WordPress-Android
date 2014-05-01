@@ -140,15 +140,15 @@ public class WordPressDB {
 
     // create table to store notifications
     private static final String NOTES_TABLE = "notes";
-    private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, " +
-            "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
+    private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, "
+            + "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
    
     private SQLiteDatabase db;
 
-    protected static final String PASSWORD_SECRET = Config.DB_SECRET;
+    protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
 
     private Context context;
 
@@ -1827,5 +1827,9 @@ public class WordPressDB {
         } catch (IOException e) {
             AppLog.e(T.DB, "failed to copy database", e);
         }
+    }
+
+    public boolean hasAnyJetpackBlogs() {
+        return SqlUtils.boolForQuery(db, "SELECT 1 FROM " + SETTINGS_TABLE + " WHERE api_blogid != 0 LIMIT 1", null);
     }
 }

@@ -53,6 +53,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -434,7 +435,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
         boolean postExists = ReaderPostTable.postExists(blogId, postId);
+
+        // the post this comment is on can only be requested if this is a .com blog or a
+        // jetpack-enabled self-hosted blog, and we have valid .com credentials
         boolean isDotComOrJetpack = WordPress.wpDB.isRemoteBlogIdDotComOrJetpack(mRemoteBlogId);
+        boolean canRequestPost = isDotComOrJetpack && WordPress.hasValidWPComCredentials(getActivity());
 
         final String title;
         final boolean hasTitle;
@@ -451,14 +456,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(txtPostTitle, title, isDotComOrJetpack);
+            setPostTitle(txtPostTitle, title, canRequestPost);
         } else {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
         // if this is a .com or jetpack blog, tapping the title shows the associated post
         // in the reader
-        if (isDotComOrJetpack) {
+        if (canRequestPost) {
             // first make sure this post is available to the reader, and once it's retrieved set
             // the title if it wasn't set above
             if (!postExists) {
@@ -541,19 +546,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (newStatus) {
             case APPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
                 break;
             case UNAPPROVED:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
                 break;
             case SPAM:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
                 break;
             case TRASH:
                 dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_TRASHED);
                 break;
             default :
                 return;
         }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
         getActivity().showDialog(dlgId);
 
         // disable buttons during request
@@ -653,6 +662,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mIsSubmittingReply = true;
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
         if (mNote != null) {
             CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
         } else {

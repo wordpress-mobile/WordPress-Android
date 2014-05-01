@@ -3,33 +3,27 @@
  */
 package org.wordpress.android.networking;
 
-import android.os.AsyncTask;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request.Method;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
+import com.android.volley.toolbox.RequestFuture;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.stats.StatsBarChartUnit;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class RestClientUtils {
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
@@ -204,96 +198,6 @@ public class RestClientUtils {
     }
 
     /**
-     * Get a site's stats for clicks
-     */
-    public void getStatsClicks(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/clicks?date=%s", siteId, date);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for geoviews (views by country)
-     */
-    public void getStatsGeoviews(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/country-views?date=%s", siteId, date);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for most commented posts
-     */
-    public void getStatsMostCommented(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/most_commented";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for top commenters
-     */
-    public void getStatsTopCommenters(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/top_commenters";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for referrers
-     */
-    public void getStatsReferrers(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/referrers?date=%s", siteId, date);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for search engine terms
-     */
-    public void getStatsSearchEngineTerms(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/search-terms?date=%s", siteId, date);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for tags and categories
-     */
-    public void getStatsTagsAndCategories(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/tags_and_categories";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for top authors
-     */
-    public void getStatsTopAuthors(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/top_authors";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for top posts and pages
-     */
-    public void getStatsTopPosts(String siteId, String date, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/top-posts?date=%s", siteId, date);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get a site's stats for video plays
-     */
-    public void getStatsVideoPlays(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/video_plays";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
      * Get a site's stats summary
      */
     public void getStatsSummary(String siteId, Listener listener, ErrorListener errorListener) {
@@ -301,99 +205,18 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
-    /**
-     * Get a site's stats summary for videos
-     */
-    public void getStatsVideoSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = "stats/video_summary";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("blog", siteId);
-        getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's views and visitors stats for days, weeks, and months
-     * Use -1 to get a default value for quantity
-     * Use empty string for unit to get default value
-     */
-    public void getStatsBarChartData(String siteId, StatsBarChartUnit statsBarChartUnit, int quantity,
-                                     Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/visits", siteId);
-
-        String unit = statsBarChartUnit.name().toLowerCase(Locale.ENGLISH);
-        path += String.format("?unit=%s", unit);
-
-        if (quantity > 0) {
-            path += String.format("&quantity=%d", quantity);
-        }
-
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * This method is for simulating stats APIs using the XL Studio API simulator. It should be removed once the other APIs are implemented.
-     */
-    public void getXL(String path, Map<String, String> params, final Listener listener,
-                      final ErrorListener errorListener) {
-
-        path = "https://simulator.xlstudio.com/apis/32/" + path;
-
-        final String url_path = path;
-
-        new AsyncTask<Void, Void, JSONObject>() {
-
-            @Override
-            protected JSONObject doInBackground(Void... params) {
-
-                URL url;
-                HttpURLConnection conn;
-                BufferedReader rd;
-                String line;
-                String result = "";
-
-                try {
-                    url = new URL(url_path);
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.addRequestProperty("X-SIMULATOR-ACCESS-KEY", "bc88864498a705657486edb636196e31");
-                    rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    while ((line = rd.readLine()) != null) {
-                        result += line;
-                    }
-                    rd.close();
-
-                    return new JSONObject(result);
-                } catch (JSONException e) {
-                    AppLog.e(T.UTILS, e);
-                } catch (Exception e) {
-                    AppLog.e(T.UTILS, e);
-                }
-                return null;
-            }
-
-            protected void onPostExecute(JSONObject result) {
-                if (result != null) {
-                    listener.onResponse(result);
-                } else {
-                    errorListener.onErrorResponse(new VolleyError("JSONObject null"));
-                }
-            }
-
-            ;
-        }.execute();
-    }
 
     /**
      * Make GET request
      */
-    public void get(String path, Listener listener, ErrorListener errorListener) {
-        get(path, null, null, listener, errorListener);
+    public Request<JSONObject> get(String path, Listener listener, ErrorListener errorListener) {
+        return get(path, null, null, listener, errorListener);
     }
 
     /**
      * Make GET request with params
      */
-    public void get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
+    public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                     ErrorListener errorListener) {
         // turn params into querystring
 
@@ -405,6 +228,42 @@ public class RestClientUtils {
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
         authCheck.send();
+        return request;
+    }
+
+    /**
+     * Make Synchronous GET request
+     * 
+     * @throws TimeoutException 
+     * @throws ExecutionException 
+     * @throws InterruptedException 
+     */
+    public JSONObject getSynchronous(String path) throws InterruptedException, ExecutionException, TimeoutException {
+        return getSynchronous(path, null, null);
+    }
+    
+    /**
+     * Make Synchronous GET request with params
+     * 
+     * @throws TimeoutException 
+     * @throws ExecutionException 
+     * @throws InterruptedException 
+     */
+    public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy) 
+            throws InterruptedException, ExecutionException, TimeoutException {
+
+        RequestFuture<JSONObject> future = RequestFuture.newFuture();
+        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, future, future);
+
+        if (retryPolicy == null) {
+            retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
+        }
+        request.setRetryPolicy(retryPolicy);
+
+        AuthenticatorRequest authCheck = new AuthenticatorRequest(request, null, mRestClient, mAuthenticator);
+        authCheck.send(); //this insert the request into the queue. //TODO: Verify that everything is OK on REST calls without a valid token
+        JSONObject response = future.get();
+        return response;
     }
 
     /**

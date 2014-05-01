@@ -1,4 +1,3 @@
-sdk.dir=/YOUR/ANDROID/SDK/DIRECTORY
 wp.oauth.app_id = wordpress
 wp.oauth.app_secret = wordpress
 wp.oauth.redirect_uri = http://android.wordpress.org/

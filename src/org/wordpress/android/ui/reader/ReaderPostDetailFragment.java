@@ -62,6 +62,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -332,11 +333,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_browse :
+            case R.id.menu_browse:
                 if (hasPost())
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
                 return true;
-            case R.id.menu_share :
+            case R.id.menu_share:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
                 sharePage();
                 return true;
             default :
@@ -525,7 +527,12 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         // fire listener so host knows about the change
         switch (action) {
             case TOGGLE_LIKE:
-                doPostChanged(mPost.isLikedByCurrentUser ? PostChangeType.LIKED : PostChangeType.UNLIKED);
+                if (mPost.isLikedByCurrentUser) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+                    doPostChanged(PostChangeType.LIKED);
+                } else {
+                    doPostChanged(PostChangeType.UNLIKED);
+                }
                 break;
             case TOGGLE_FOLLOW:
                 doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
@@ -858,6 +865,7 @@ public class ReaderPostDetailFragment extends SherlockFragment {
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
                 submitComment(replyToCommentId);
             }
         });

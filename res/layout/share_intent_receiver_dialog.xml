@@ -8,7 +8,7 @@
     android:layout_marginRight="16dp"
     android:layout_marginTop="8dp"
     android:background="@drawable/dialog_full_holo_dark"
-    android:minWidth="@dimen/share_action_dialog_width"
+    android:minWidth="@dimen/default_dialog_width"
     android:orientation="vertical" >
 
     <LinearLayout

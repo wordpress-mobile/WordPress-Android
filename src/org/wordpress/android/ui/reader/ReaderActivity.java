@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /*
  * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
@@ -62,6 +63,8 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+
             // determine which fragment to show, default to post list
             final ReaderFragmentType fragmentType;
             if (getIntent().hasExtra(ARG_READER_FRAGMENT)) {
@@ -237,6 +240,7 @@ public class ReaderActivity extends WPActionBarActivity
      * show fragment containing detail for passed post
      */
     private void showDetailFragment(long blogId, long postId) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

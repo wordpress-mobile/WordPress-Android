@@ -62,7 +62,7 @@
     <string name="upload_scaled_image">Upload and link to scaled image</string>
     <string name="scaled_image_error">Enter a valid scaled width value</string>
     <string name="scaled_image">Scaled image width</string>
-    <string name="load_settings">Load settings now?</string>
+    <string name="load_settings">You can visit settings and change your username and password there.</string>
     <string name="immediately">Immediately</string>
     <string name="uploading">Uploading</string>
     <string name="gallery_error">The media item couldn\'t be retrieved</string>
@@ -314,11 +314,12 @@
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
 
+    <!-- wpcom sign in dialog -->
+    <string name="need_help_signin_wpcom">Need help?</string>
+    <string name="wpcom_signin_dialog_title">WordPress.com sign in</string>
+
     <!-- stats -->
     <string name="stats">Stats</string>
-    <string name="help_stats">Need help?</string>
-    <string name="stats_username">Username</string>
-    <string name="stats_password">Password</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
 
@@ -550,7 +551,7 @@
     <string name="jetpack_message_not_admin">The Jetpack plugin is required for stats. Contact the site administrator.</string>
     <string name="jetpack_not_found">Jetpack plugin not found</string>
     <string name="jetpack_stats_unauthorized">Can\'t access stats</string>
-    <string name="jetpack_stats_switch_user">This WordPress.com account doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
+    <string name="jetpack_stats_switch_user">The current WordPress.com account (%s) doesn\'t have access to the stats for this blog. Would you like to sign in to a different account?</string>
 
     <!--
        ****
@@ -622,7 +623,6 @@
     <string name="reader_toast_err_share_intent">Unable to share</string>
     <string name="reader_toast_err_view_image">Unable to view image</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
-    <string name="reader_toast_err_no_connection">Unable to connect</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
 
@@ -635,11 +635,12 @@
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
 
-    <!-- fragment tags - do not translate -->
+    <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
@@ -649,7 +650,6 @@
     <string name="creating_your_account">Creating your account</string>
     <string name="creating_your_site">Creating your site</string>
     <string name="required_field">Required field</string>
-    <string name="username_password_required">Fill in all of the fields before submitting</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
     <string name="invalid_password_message">Password must contain at least 4 characters</string>
     <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
@@ -689,6 +689,7 @@
     <string name="username_invalid">Invalid username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
+    <string name="username_or_password_incorrect_selfhosted_hint">The username or password you entered is incorrect. Have a self-hosted site? Tap \"%s\" and add the URL.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_cannot_log_in">We can\'t log you in</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
@@ -697,7 +698,7 @@
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions. or visit the forums to ask new&#160;ones.</string>
+    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new&#160;ones</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
     <string name="ssl_certificate_trust">Trust</string>

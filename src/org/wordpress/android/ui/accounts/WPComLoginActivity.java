@@ -1,16 +1,21 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +31,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-
+import org.wordpress.android.util.EditTextUtils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -42,54 +47,107 @@ import java.net.URISyntaxException;
  * An activity to let the user specify their WordPress.com credentials.
  * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
  */
-public class WPComLoginActivity extends SherlockFragmentActivity {
-
+public class WPComLoginActivity extends SherlockFragmentActivity implements TextWatcher {
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
+    private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";
     private String mUsername;
     private String mPassword;
     private Button mSignInButton;
     private boolean mIsJetpackAuthRequest;
-    private boolean mIsWpcomAccountWith2FA = false;
+    private boolean mIsWpcomAccountWith2FA;
+    private boolean mIsInvalidUsernameOrPassword;
+    private EditText mUsernameEditText;
+    private EditText mPasswordEditText;
+    private boolean mPasswordVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
-        getSupportActionBar().hide();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setTitle(getString(R.string.wpcom_signin_dialog_title));
+        } else {
+            getSupportActionBar().hide();
+        }
 
-        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST))
+        if (getIntent().hasExtra(JETPACK_AUTH_REQUEST)) {
             mIsJetpackAuthRequest = true;
+        }
 
         mSignInButton = (Button) findViewById(R.id.saveDotcom);
         mSignInButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
-                EditText dotcomUsername = (EditText) findViewById(R.id.dotcomUsername);
-                EditText dotcomPassword = (EditText) findViewById(R.id.dotcomPassword);
-
-                mUsername = dotcomUsername.getText().toString();
-                mPassword = dotcomPassword.getText().toString();
-
-                if (mUsername.equals("") || mPassword.equals("")) {
-                    dotcomUsername.setError(getString(R.string.username_password_required));
-                    dotcomPassword.setError(getString(R.string.username_password_required));
-                } else {
-                    new SignInTask().execute();
-                }
+                signIn();
             }
         });
 
         TextView wpcomHelp = (TextView) findViewById(R.id.wpcomHelp);
         wpcomHelp.setOnClickListener(new TextView.OnClickListener() {
             public void onClick(View v) {
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://android.wordpress.org/faq"));
+                intent.setData(Uri.parse(NEED_HELP_URL));
                 startActivity(intent);
-
             }
         });
+
+        mUsernameEditText = (EditText) findViewById(R.id.dotcomUsername);
+        mUsernameEditText.addTextChangedListener(this);
+        mPasswordEditText = (EditText) findViewById(R.id.dotcomPassword);
+        mPasswordEditText.addTextChangedListener(this);
+        initPasswordVisibilityButton((ImageView) findViewById(R.id.password_visibility), mPasswordEditText);
+    }
+
+    private void signIn() {
+        mUsername = EditTextUtils.getText(mUsernameEditText);
+        mPassword = EditTextUtils.getText(mPasswordEditText);
+        boolean validUsernameAndPassword = true;
+
+        if (mUsername.equals("")) {
+            mUsernameEditText.setError(getString(R.string.required_field));
+            mUsernameEditText.requestFocus();
+            validUsernameAndPassword = false;
+        }
+        if (mPassword.equals("")) {
+            mPasswordEditText.setError(getString(R.string.required_field));
+            mPasswordEditText.requestFocus();
+            validUsernameAndPassword = false;
+        }
+        if (validUsernameAndPassword) {
+            new SignInTask().execute();
+        }
+    }
+
+    protected void initPasswordVisibilityButton(final ImageView passwordVisibilityToggleView,
+                                                final EditText passwordEditText) {
+        passwordVisibilityToggleView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordVisible = !mPasswordVisible;
+                if (mPasswordVisible) {
+                    passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordEditText.setTransformationMethod(null);
+                } else {
+                    passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+                passwordEditText.setSelection(passwordEditText.length());
+            }
+        });
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        mPasswordEditText.setError(null);
+        mUsernameEditText.setError(null);
     }
 
     @Override
@@ -98,12 +156,19 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
         setResult(Activity.RESULT_CANCELED);
     }
 
-    private class SignInTask extends AsyncTask<Void, Void, Boolean> {
+    private void setEditTextAndButtonEnabled(boolean enable) {
+        mUsernameEditText.setEnabled(enable);
+        mPasswordEditText.setEnabled(enable);
+        mSignInButton.setEnabled(enable);
+    }
 
+    private class SignInTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
             mSignInButton.setText(getString(R.string.attempting_configure));
-            mSignInButton.setEnabled(false);
+            setEditTextAndButtonEnabled(false);
+            mIsWpcomAccountWith2FA = false;
+            mIsInvalidUsernameOrPassword = false;
         }
 
         @Override
@@ -116,7 +181,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                 return false;
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, "", "");
-            Object[] signInParams = { mUsername, mPassword };
+            Object[] signInParams = {mUsername, mPassword};
             try {
                 client.call("wp.getUsersBlogs", signInParams);
                 Blog blog = WordPress.getCurrentBlog();
@@ -127,7 +192,8 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
 
                 // Don't change global WP.com settings if this is Jetpack auth request from stats
                 if (!mIsJetpackAuthRequest) {
-                    //New wpcom credetials inserted here. Reset the app state: there is the possibility a different username/password is inserted here
+                    // New wpcom credetials inserted here. Reset the app state: there is the possibility a different
+                    // username/password is inserted here
                     WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
 
                     Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
@@ -135,7 +201,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     settings.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(mPassword));
                     settings.commit();
 
-                    //Make sure to update credentials for .wpcom blog even if currentBlog is null
+                    // Make sure to update credentials for .wpcom blog even if currentBlog is null
                     WordPress.wpDB.updateWPComCredentials(mUsername, mPassword);
 
                     // Update regular blog credentials for WP.com auth requests
@@ -148,9 +214,11 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     WordPress.wpDB.saveBlog(blog);
                 }
                 return true;
-            }
-            catch (XMLRPCFault xmlRpcFault) {
+            } catch (XMLRPCFault xmlRpcFault) {
                 AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+                if (xmlRpcFault.getFaultCode() == 403) {
+                    mIsInvalidUsernameOrPassword = true;
+                }
                 if (xmlRpcFault.getFaultCode() == 425) {
                     mIsWpcomAccountWith2FA = true;
                     return false;
@@ -162,7 +230,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
             } catch (XmlPullParserException e) {
                 AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             }
-            
+
             mIsWpcomAccountWith2FA = false;
             return false;
         }
@@ -175,7 +243,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             WPComLoginActivity.this.setResult(RESULT_OK);
-                            //Register the device again for Push Notifications
+                            // Register the device again for Push Notifications
                             WordPress.registerForCloudMessaging(WPComLoginActivity.this);
                             ReaderUserActions.setCurrentUser(jsonObject);
                             finish();
@@ -186,9 +254,15 @@ public class WPComLoginActivity extends SherlockFragmentActivity {
                     finish();
                 }
             } else {
-                String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled) : getString(R.string.nux_cannot_log_in);
-                Toast.makeText(getBaseContext(),errorMessage, Toast.LENGTH_LONG).show();
-                mSignInButton.setEnabled(true);
+                if (mIsInvalidUsernameOrPassword) {
+                    mUsernameEditText.setError(getString(R.string.username_or_password_incorrect));
+                    mPasswordEditText.setError(getString(R.string.username_or_password_incorrect));
+                } else {
+                    String errorMessage = mIsWpcomAccountWith2FA ? getString(R.string.account_two_step_auth_enabled)
+                            : getString(R.string.nux_cannot_log_in);
+                    Toast.makeText(getBaseContext(), errorMessage, Toast.LENGTH_LONG).show();
+                }
+                setEditTextAndButtonEnabled(true);
                 mSignInButton.setText(R.string.sign_in);
             }
         }

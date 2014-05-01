@@ -33,7 +33,6 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
-
     private String mUsername;
     private String mPassword;
     private String mHttpUsername = "";
@@ -46,7 +45,6 @@ public class SetupBlog {
 
     private boolean mHttpAuthRequired;
     private boolean mErroneousSslCertificate;
-    private boolean mCurrentSslCertificatesForcedTrusted;
 
     public SetupBlog() {
     }
@@ -59,12 +57,12 @@ public class SetupBlog {
         return mXmlrpcUrl;
     }
 
-    public void setUsername(String mUsername) {
-        this.mUsername = mUsername;
+    public void setUsername(String username) {
+        mUsername = username;
     }
 
-    public void setPassword(String mPassword) {
-        this.mPassword = mPassword;
+    public void setPassword(String password) {
+        mPassword = password;
     }
 
     public String getPassword() {
@@ -75,20 +73,20 @@ public class SetupBlog {
         return mUsername;
     }
 
-    public void setHttpUsername(String mHttpUsername) {
-        this.mHttpUsername = mHttpUsername;
+    public void setHttpUsername(String httpUsername) {
+        mHttpUsername = httpUsername;
     }
 
-    public void setHttpPassword(String mHttpPassword) {
-        this.mHttpPassword = mHttpPassword;
+    public void setHttpPassword(String httpPassword) {
+        mHttpPassword = httpPassword;
     }
 
-    public void setSelfHostedURL(String mSelfHostedURL) {
-        this.mSelfHostedURL = mSelfHostedURL;
+    public void setSelfHostedURL(String selfHostedURL) {
+        mSelfHostedURL = selfHostedURL;
     }
 
-    public void setHttpAuthRequired(boolean mHttpAuthRequired) {
-        this.mHttpAuthRequired = mHttpAuthRequired;
+    public void setHttpAuthRequired(boolean httpAuthRequired) {
+        mHttpAuthRequired = httpAuthRequired;
     }
 
     public boolean isHttpAuthRequired() {
@@ -97,6 +95,64 @@ public class SetupBlog {
 
     public boolean isErroneousSslCertificates() {
         return mErroneousSslCertificate;
+    }
+
+    private void handleXmlRpcFault(XMLRPCFault xmlRpcFault) {
+        AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
+        switch (xmlRpcFault.getFaultCode()) {
+            case 403:
+                mErrorMsgId = R.string.username_or_password_incorrect;
+                break;
+            case 404:
+                mErrorMsgId = R.string.xmlrpc_error;
+                break;
+            case 425:
+                mErrorMsgId = R.string.account_two_step_auth_enabled;
+                break;
+            default:
+                mErrorMsgId = R.string.no_site_error;
+                break;
+        }
+    }
+
+    private List<Map<String, Object>> getUsersBlogsRequest(URI uri) {
+        XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
+        Object[] params = {mUsername, mPassword};
+        try {
+            Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
+            if (userBlogs == null) {
+                // Could happen if the returned server response is truncated
+                mErrorMsgId = R.string.xmlrpc_error;
+                return null;
+            }
+            Arrays.sort(userBlogs, Utils.BlogNameComparator);
+            List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
+            for (Object blog : userBlogs) {
+                try {
+                    userBlogList.add((Map<String, Object>) blog);
+                } catch (ClassCastException e) {
+                    AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
+                }
+            }
+            return userBlogList;
+        } catch (XmlPullParserException parserException) {
+            mErrorMsgId = R.string.xmlrpc_error;
+            AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
+        } catch (XMLRPCFault xmlRpcFault) {
+            handleXmlRpcFault(xmlRpcFault);
+        } catch (XMLRPCException xmlRpcException) {
+            AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
+            mErrorMsgId = R.string.no_site_error;
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(mXmlrpcUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+        } catch (IOException e) {
+            AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
+            mErrorMsgId = R.string.no_site_error;
+        }
+        return null;
     }
 
     public List<Map<String, Object>> getBlogList() {
@@ -118,64 +174,11 @@ public class SetupBlog {
         URI uri;
         try {
             uri = URI.create(mXmlrpcUrl);
-        } catch (Exception e1) {
+            return getUsersBlogsRequest(uri);
+        } catch (Exception e) {
             mErrorMsgId = R.string.no_site_error;
             return null;
         }
-
-        XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
-        Object[] params = {mUsername, mPassword};
-        try {
-            Object[] userBlogs = (Object[]) client.call("wp.getUsersBlogs", params);
-            if (userBlogs == null) { // Could happen if the returned server response is truncated
-                mErrorMsgId = R.string.xmlrpc_error;;
-                return null;
-            }
-            Arrays.sort(userBlogs, Utils.BlogNameComparator);
-            List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
-            for (Object blog : userBlogs) {
-                try {
-                    userBlogList.add((Map<String, Object>) blog);
-                } catch (ClassCastException e) {
-                    AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs");
-                }
-            }
-            return userBlogList;
-        }
-        catch (XmlPullParserException parserException) {
-            mErrorMsgId = R.string.xmlrpc_error;
-            AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
-        }
-        catch (XMLRPCFault xmlRpcFault) {
-            AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
-            switch (xmlRpcFault.getFaultCode()) {
-                case 403:
-                    mErrorMsgId = R.string.username_or_password_incorrect;
-                    break;
-                case 404:
-                    mErrorMsgId = R.string.xmlrpc_error;
-                    break;
-                case 425:
-                    mErrorMsgId = R.string.account_two_step_auth_enabled;
-                    break;
-                default:
-                    mErrorMsgId = R.string.no_site_error;
-                    break;
-            }
-        }
-        catch (XMLRPCException xmlRpcException) {
-            AppLog.e(T.NUX, "XMLRPCException received from XMLRPC call wp.getUsersBlogs", xmlRpcException);
-            mErrorMsgId = R.string.no_site_error;
-        } catch (SSLHandshakeException e) {
-            if (!UrlUtils.getDomainFromUrl(mXmlrpcUrl).endsWith("wordpress.com")) {
-                mErroneousSslCertificate = true;
-            }
-            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
-        } catch (IOException e) {
-            AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
-            mErrorMsgId = R.string.no_site_error;
-        }
-        return null;
     }
 
     private String getRsdUrl(String baseUrl) throws SSLHandshakeException {
@@ -254,13 +257,13 @@ public class SetupBlog {
     // 2: Take whatever URL the user entered to see if that returns a correct response
     // 3: Finally, just guess as to what the xmlrpc url should be
     private String getSelfHostedXmlrpcUrl(String url) {
-        String xmlrpcUrl = null;
+        String xmlrpcUrl;
 
         // Convert IDN names to punycode if necessary
         url = UrlUtils.convertUrlToPunycodeIfNeeded(url);
 
         // Add http to the beginning of the URL if needed
-        url = UrlUtils.addHttpProcolIfNeeded(url, mCurrentSslCertificatesForcedTrusted);
+        url = UrlUtils.addUrlSchemeIfNeeded(url, false);
 
         if (!URLUtil.isValidUrl(url)) {
             mErrorMsgId = R.string.invalid_url_message;
@@ -308,13 +311,16 @@ public class SetupBlog {
             blog.setHttpuser(mHttpUsername);
             blog.setHttppassword(mHttpPassword);
             blog.setBlogName(blogName);
-            blog.setImagePlacement(""); //deprecated
+            // deprecated
+            blog.setImagePlacement("");
             blog.setFullSizeImage(false);
             blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
-            blog.setMaxImageWidthId(0); //deprecated
+            // deprecated
+            blog.setMaxImageWidthId(0);
             blog.setRemoteBlogId(Integer.parseInt(blogId));
             blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
-            blog.setWpVersion(""); // assigned later in getOptions call
+            // assigned later in getOptions call
+            blog.setWpVersion("");
             blog.setAdmin(isAdmin);
             WordPress.wpDB.saveBlog(blog);
         } else {
