@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_extra_large"
+    android:padding="@dimen/margin_large"
     android:gravity="center_vertical"
     android:visibility="gone"
     tools:visibility="visible">
