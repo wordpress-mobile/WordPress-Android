@@ -1,7 +1,6 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
@@ -15,7 +14,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
     private PullToRefreshHeaderTransformer mHeaderTransformer;
     private PullToRefreshLayout mPullToRefreshLayout;
     private RefreshListener mRefreshListener;
-    private Context mContext;
 
     public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
         init(activity, pullToRefreshLayout, listener, null);
@@ -28,7 +26,6 @@ public class PullToRefreshHelper implements OnRefreshListener {
 
     public void init(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener,
                      java.lang.Class<?> viewClass) {
-        mContext = activity;
         mRefreshListener = listener;
         mPullToRefreshLayout = pullToRefreshLayout;
         mHeaderTransformer = new PullToRefreshHeaderTransformer();
