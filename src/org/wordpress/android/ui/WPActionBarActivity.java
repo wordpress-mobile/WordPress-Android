@@ -678,6 +678,8 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             dialogBuilder.setCancelable(true);
             if (!isFinishing())
                 dialogBuilder.create().show();
+        } else if (item.getItemId()  == R.id.menu_refresh) {
+            mPostList.refreshAction();
         }
         return super.onOptionsItemSelected(item);
     }
