@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -315,17 +316,21 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // show primary tag unless this is tag preview or a private blog, or the primary tag
-        // is the same as the one currently showing
-        final boolean showPrimaryTag;
-        if (post.isPrivate) { // isTagPreview() ||
-            showPrimaryTag = false;
+        // determine which tag to display for this post
+        //  * no tag if this is a private blog or there is no primary tag for this post
+        //  * primary tag, unless it's the same as the currently selected tag
+        //  * secondary tag if primary tag is the same as the currently selected tag
+        final String tagToDisplay;
+        if (post.isPrivate || !post.hasPrimaryTag()) {
+            tagToDisplay = null;
+        } else if (!post.getPrimaryTag().equalsIgnoreCase(getCurrentTag())) {
+            tagToDisplay = post.getPrimaryTag();
         } else {
-            showPrimaryTag = post.hasPrimaryTag() && !post.getPrimaryTag().equalsIgnoreCase(getCurrentTag());
+            tagToDisplay = post.getSecondaryTag(); // may not exist
         }
-        holder.txtTag.setVisibility(showPrimaryTag ? View.VISIBLE : View.GONE);
-        if (showPrimaryTag) {
-            holder.txtTag.setText(post.getPrimaryTag());
+        if (!TextUtils.isEmpty(tagToDisplay)) {
+            holder.txtTag.setText(tagToDisplay);
+            holder.txtTag.setVisibility(View.VISIBLE);
             holder.txtTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -334,6 +339,8 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 }
             });
+        } else {
+            holder.txtTag.setVisibility(View.GONE);
         }
 
         // likes, comments & reblogging - supported by wp posts only

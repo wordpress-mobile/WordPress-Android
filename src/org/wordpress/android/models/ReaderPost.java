@@ -12,9 +12,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 public class ReaderPost {
     private String pseudoId;
@@ -32,6 +30,7 @@ public class ReaderPost {
 
     private String tags;          // comma-separated list of tags
     private String primaryTag;    // most popular tag on this post based on usage in blog
+    private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
     public long timestamp;        // used for sorting
     private String published;
@@ -193,19 +192,27 @@ public class ReaderPost {
         // list of all tags
         StringBuilder sbAllTags = new StringBuilder();
 
-        // most popular tag, based on usage count on this blog
+        // most popular tag & second most popular tag, based on usage count on this blog
         String mostPopularTag = null;
+        String nextMostPopularTag = null;
         int popularCount = 0;
 
         Iterator<String> it = jsonTags.keys();
+        if (!it.hasNext()) {
+            return;
+        }
+
         boolean isFirst = true;
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
             String tagName = JSONUtil.getString(jsonThisTag, "name");
 
-            // if this tag has more posts than the previous one, make it the popular tag so far
+            // if the number of posts on this blog that use this tag is higher than previous,
+            // set this as the most popular tag, and set the second most popular tag to
+            // the current most popular tag
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
+                nextMostPopularTag = mostPopularTag;
                 mostPopularTag = tagName;
                 popularCount = postCount;
             }
@@ -224,6 +231,7 @@ public class ReaderPost {
         if (!post.hasPrimaryTag()) {
             post.setPrimaryTag(mostPopularTag);
         }
+        post.setSecondaryTag(nextMostPopularTag);
 
         post.setTags(sbAllTags.toString());
     }
@@ -509,10 +517,6 @@ public class ReaderPost {
         this.tags = StringUtils.notNullStr(tags);
     }
 
-    List<String> getTagList() {
-        return Arrays.asList(getTags().split(","));
-    }
-
     public String getPrimaryTag() {
         return StringUtils.notNullStr(primaryTag);
     }
@@ -525,6 +529,15 @@ public class ReaderPost {
     }
     public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
+    }
+
+    public String getSecondaryTag() {
+        return StringUtils.notNullStr(secondaryTag);
+    }
+    public void setSecondaryTag(String tagName) {
+        if (!ReaderTag.isDefaultTagName(tagName)) {
+            this.secondaryTag = StringUtils.notNullStr(tagName);
+        }
     }
 
     // --------------------------------------------------------------------------------------------
