@@ -113,6 +113,10 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     public void setNoteSelected(Note note, boolean scrollToNote) {
+        if (!hasActivity() || getView() == null) {
+            AppLog.w(T.NOTIFS, "notifications list, note selected when fragment is invalid");
+            return;
+        }
         int position = getNotesAdapter().indexOfNote(note);
         if (position >= 0) {
             getListView().setItemChecked(position, true);
