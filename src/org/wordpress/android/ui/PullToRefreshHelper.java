@@ -64,4 +64,9 @@ public class PullToRefreshHelper implements OnRefreshListener {
     public void setEnabled(boolean enabled) {
         mPullToRefreshLayout.setEnabled(enabled);
     }
+
+    public void refreshAction() {
+        mRefreshListener.onRefreshStarted(mPullToRefreshLayout);
+        // TODO: show a toast if 5/10/20/50 action triggered
+    }
 }

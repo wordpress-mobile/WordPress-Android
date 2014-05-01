@@ -314,7 +314,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean n(final MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_new_post) {
             newPost();
@@ -325,6 +325,8 @@ public class PostsActivity extends WPActionBarActivity
                 popPostDetail();
                 return true;
             }
+        } else if (itemId == R.id.menu_refresh) {
+            mPostList.refreshAction();
         }
 
         return super.onOptionsItemSelected(item);

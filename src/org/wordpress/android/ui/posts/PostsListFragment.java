@@ -75,6 +75,13 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         return inflater.inflate(R.layout.post_listview, container, false);
     }
 
+    /**
+     * Simulate a PTR refresh action
+     */
+    public void refreshAction() {
+        mPullToRefreshHelper.refreshAction();
+    }
+
     private void initPullToRefreshHelper() {
         mPullToRefreshHelper = new PullToRefreshHelper(
                 getActivity(),
