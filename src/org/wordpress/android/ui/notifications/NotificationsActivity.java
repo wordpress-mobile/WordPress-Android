@@ -634,7 +634,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
-          .commitAllowingStateLoss();
+          .commit();
     }
 
     /**
@@ -650,7 +650,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
-          .commitAllowingStateLoss();
+          .commit();
     }
 
     private interface LoadNotesCallback {
