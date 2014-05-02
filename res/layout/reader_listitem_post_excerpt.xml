@@ -49,13 +49,13 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_featured"
         style="@style/ReaderImageView.Featured"
-        android:layout_marginBottom="@dimen/margin_large"
         android:layout_below="@+id/layout_post_header" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
         style="@style/ReaderTextView.Post.Title"
         android:layout_below="@+id/image_featured"
+        android:layout_marginTop="@dimen/margin_large"
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
         tools:text="text_title" />

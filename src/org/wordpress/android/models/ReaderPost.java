@@ -638,4 +638,26 @@ public class ReaderPost {
         }
         return dtPublished;
     }
+
+    /*
+     * determine which tag to display for this post
+     *  - no tag if this is a private blog or there is no primary tag for this post
+     *  - primary tag, unless it's the same as the currently selected tag
+     *  - secondary tag if primary tag is the same as the currently selected tag
+     */
+    private transient String tagForDisplay;
+    public String getTagForDisplay(final String currentTag) {
+        if (tagForDisplay == null) {
+            if (!isPrivate && hasPrimaryTag()) {
+                if (getPrimaryTag().equalsIgnoreCase(currentTag)) {
+                    tagForDisplay = getSecondaryTag();
+                } else {
+                    tagForDisplay = getPrimaryTag();
+                }
+            } else {
+                tagForDisplay = "";
+            }
+        }
+        return tagForDisplay;
+    }
 }

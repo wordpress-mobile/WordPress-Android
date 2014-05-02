@@ -323,16 +323,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         //  * no tag if this is a private blog or there is no primary tag for this post
         //  * primary tag, unless it's the same as the currently selected tag
         //  * secondary tag if primary tag is the same as the currently selected tag
-        final String tagToDisplay;
-        if (!post.isPrivate && post.hasPrimaryTag()) {
-            if (post.getPrimaryTag().equalsIgnoreCase(getCurrentTag())) {
-                tagToDisplay = post.getSecondaryTag();
-            } else {
-                tagToDisplay = post.getPrimaryTag();
-            }
-        } else {
-            tagToDisplay = null;
-        }
+        final String tagToDisplay = post.getTagForDisplay(mCurrentTag);
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(tagToDisplay);
             holder.txtTag.setVisibility(View.VISIBLE);
@@ -377,8 +368,9 @@ public class ReaderPostAdapter extends BaseAdapter {
                     @Override
                     public void onClick(View v) {
                         AniUtils.zoomAction(holder.imgBtnReblog);
-                        if (mReblogListener!=null)
+                        if (mReblogListener != null) {
                             mReblogListener.onRequestReblog(post);
+                        }
                     }
                 });
             }
@@ -595,14 +587,15 @@ public class ReaderPostAdapter extends BaseAdapter {
             // the user scrolls to the end of the list
             mCanRequestMorePosts = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
-            // pre-calc avatar URLs, featured image URLs, and pubDates in each post - these
-            // values are all cached by the post after the first time they're computed, so
-            // calling these getters ensures the values are immediately available when
-            // accessed from getView
+            // pre-calc avatar URLs, featured image URLs, display tag, and pubDates in each
+            // post - these values are all cached by the post after the first time they're
+            // computed, so calling these getters ensures the values are immediately available
+            // when accessed from getView
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
                 post.getDatePublished();
+                post.getTagForDisplay(mCurrentTag);
             }
 
             return true;

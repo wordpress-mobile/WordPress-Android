@@ -70,9 +70,11 @@ class ReaderBlogInfoHeader extends LinearLayout {
         if (mHasBlogInfo) {
             if (blogInfo.hasName()) {
                 txtBlogName.setText(blogInfo.getName());
+                txtBlogName.setVisibility(View.VISIBLE);
             } else {
-                txtBlogName.setText(R.string.reader_untitled_post);
+                txtBlogName.setVisibility(View.INVISIBLE);
             }
+            txtBlogName.setVisibility(View.VISIBLE);
 
             if (blogInfo.hasDescription()) {
                 txtDescription.setText(blogInfo.getDescription());
