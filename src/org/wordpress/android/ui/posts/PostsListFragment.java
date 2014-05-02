@@ -222,8 +222,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
     public void onResume() {
         super.onResume();
+        mPullToRefreshHelper.registerReceiver(getActivity());
         if (WordPress.getCurrentBlog() != null) {
             if (getListView().getAdapter() == null) {
                 getListView().setAdapter(getPostListAdapter());

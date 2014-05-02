@@ -143,6 +143,7 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
 
         // register to receive broadcasts when StatsService starts/stops updating
@@ -181,6 +182,7 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        mPullToRefreshHelper.unregisterReceiver(this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -508,14 +510,14 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     /**
-     * Do not refresh Stats in BG when user switch between blogs since the refresh 
+     * Do not refresh Stats in BG when user switch between blogs since the refresh
      * is already started in foreground at this point.
      */
     @Override
     protected boolean shouldUpdateCurrentBlogStatsInBackground() {
         return false;
     }
-    
+
     boolean dotComCredentialsMatch() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
@@ -584,7 +586,7 @@ public class StatsActivity extends WPActionBarActivity {
                             // This site has the wrong WP.com credentials
                             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(StatsActivity.this);
                             String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
                             builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
                                     .setMessage(getString(R.string.jetpack_stats_switch_user, username));

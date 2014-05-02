@@ -227,4 +227,16 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         }
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
 }

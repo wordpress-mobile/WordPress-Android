@@ -210,6 +210,13 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onPause() {
         super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
