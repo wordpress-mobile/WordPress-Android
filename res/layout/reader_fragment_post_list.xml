@@ -13,11 +13,6 @@
         <!-- the tag preview or blog preview header is inserted into this layout -->
     </RelativeLayout>
 
-    <!-- mshot which appears when showing posts in a specific blog -->
-    <include
-        android:id="@+id/layout_mshot_container"
-        layout="@layout/reader_mshot_image" />
-
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_below="@+id/layout_header"

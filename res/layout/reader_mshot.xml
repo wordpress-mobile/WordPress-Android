@@ -2,13 +2,9 @@
 
 <!-- blog mshot shown in reader post list fragment when viewing posts in a specific blog -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_mshot_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/layout_header"
-    android:visibility="gone"
-    tools:visibility="visible">
+    android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_mshot"

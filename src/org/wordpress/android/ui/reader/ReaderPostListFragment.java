@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -104,6 +105,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private boolean mHasLoadedMshot;
     private int mMshotWidth;
+    private int mMshotHeight;
     private float mPreviousMshotScale;
 
     protected static enum RefreshType {AUTOMATIC, MANUAL}
@@ -270,27 +272,24 @@ public class ReaderPostListFragment extends SherlockFragment
                 int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
                 int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
                 mMshotWidth = displayWidth - (marginWidth * 2);
+                mMshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
 
-                // add a blank header to the listView that's the same height as the mshot
-                int mshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-                ReaderFullScreenUtils.addListViewHeader(context, mListView, mshotHeight);
-
-                // show the blog mshot below the header (ie: below the blogInfo)
-                ViewGroup mshotContainer = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
-                mshotContainer.setVisibility(View.VISIBLE);
+                // inflate the mshot container below the header
+                ViewGroup mshotContainer = (ViewGroup) inflater.inflate(R.layout.reader_mshot, container, false);
                 mImageMshot = (WPNetworkImageView) mshotContainer.findViewById(R.id.image_mshot);
-                mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
-                /*mImageMshot = (WPNetworkImageView) inflater.inflate(R.layout.reader_mshot_image, container, false);
                 mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,
-                        mMshotHeight);
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
                 params.addRule(RelativeLayout.BELOW, R.id.layout_header);
-                mImageMshot.setLayoutParams(params);
-                view.addView(mImageMshot);
+                mshotContainer.setLayoutParams(params);
+                view.addView(mshotContainer);
 
-                // make sure the listView is in front of the mshot
-                ((ViewGroup)mListView.getParent()).bringToFront();*/
+                // add a blank header to the listView that's the same height as the mshot, and make
+                // sure the listView is in front - this way it will appear to scroll over the mshot
+                ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
+                mListView.setHeaderDividersEnabled(false);
+                ((ViewGroup)mListView.getParent()).bringToFront();
 
                 // listen for scroll changes so we can scale the mshot as the user scrolls
                 mListView.setOnScrollChangedListener(this);
@@ -1117,18 +1116,17 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        // get the top position of the blog info header
-        int listTop = -mListView.getVerticalScrollOffset();
-
-        // calculate the scale based on the top position
-        float scale = Math.max(0f, 0.9f + (listTop * 0.005f));
+        // calculate the scale based on the listView's scroll position
+        int scrollPos = -mListView.getVerticalScrollOffset();
+        float scale = Math.max(0f, 0.9f + (scrollPos * 0.002f));
         if (scale == mPreviousMshotScale) {
             return;
         }
 
         float centerX = mMshotWidth * 0.5f;
+        float centerY = mMshotHeight * 0.5f;
         Matrix matrix = new Matrix();
-        matrix.setScale(scale, scale, centerX, 0);
+        matrix.setScale(scale, scale, centerX, centerY);
         mImageMshot.setImageMatrix(matrix);
 
         // remember the scale so we can avoid unnecessary scaling the next time
