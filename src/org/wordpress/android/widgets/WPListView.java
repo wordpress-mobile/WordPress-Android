@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ListView;
 
@@ -39,21 +38,19 @@ public class WPListView extends ListView {
         super(context, attrs, defStyle);
     }
 
+    /*
+     * returns the vertical scroll position
+     */
+    public int getVerticalScrollOffset() {
+        return super.computeVerticalScrollOffset();
+    }
+
     public void setOnScrollDirectionListener(OnScrollDirectionListener listener) {
         mOnScrollDirectionListener = listener;
     }
 
     public void setOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener listener) {
         mScrollChangedListener = listener;
-    }
-
-    /*
-     * return the top position of the first child - this can be used to determine how far the
-     * listView has been scrolled
-     */
-    public int getFirstChildTop() {
-        final View firstChild = getChildAt(0);
-        return (firstChild != null ? firstChild.getTop() : 0);
     }
 
     @Override
@@ -96,9 +93,9 @@ public class WPListView extends ListView {
     }
 
     /*
-     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
-     * because canScrollVertically() requires API 14
-     */
+         * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
+         * because canScrollVertically() requires API 14
+         */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean canScrollUp() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)

@@ -12,9 +12,7 @@
     android:paddingTop="@dimen/margin_large"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_small"
-    android:visibility="gone"
-    tools:visibility="visible">
+    android:paddingRight="@dimen/margin_small">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_tag_name"

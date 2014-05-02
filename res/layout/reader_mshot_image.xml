@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- blog mshot shown in reader post list fragment when viewing posts in a specific blog -->
+<org.wordpress.android.widgets.WPNetworkImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/image_mshot"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/reader_mshot_image_height"
+    android:scaleType="matrix"
+    android:layout_marginLeft="@dimen/reader_list_margin"
+    android:layout_marginRight="@dimen/reader_list_margin" />

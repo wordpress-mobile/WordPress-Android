@@ -18,6 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -88,8 +89,8 @@ public class ReaderPostListFragment extends SherlockFragment
     private ProgressBar mProgress;
     private ViewGroup mTagPreviewHeader;
 
-    private WPNetworkImageView mHeaderImage;
-    private ReaderBlogInfoHeader mBlogInfoHeader;
+    private WPNetworkImageView mImageMshot;
+    private ReaderBlogInfoHeader mBlogInfoView;
 
     private String mCurrentTag;
     private long mCurrentBlogId;
@@ -102,9 +103,10 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private Parcelable mListState = null;
 
-    private boolean mHasLoadedHeaderImage;
-    private int mHeaderImageWidth;
-    private float mPreviousHeaderImageScale;
+    private boolean mHasLoadedMshot;
+    private int mMshotWidth;
+    private int mMshotHeight;
+    private float mPreviousMshotScale;
 
     protected static enum RefreshType { AUTOMATIC, MANUAL }
 
@@ -221,13 +223,14 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
-        final View view = inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+        final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
 
         boolean hasTransparentActionBar = isFullScreenSupported();
 
         mListView = (WPListView) view.findViewById(android.R.id.list);
-        mHeaderImage = (WPNetworkImageView) view.findViewById(R.id.image_header);
-        mTagPreviewHeader = (ViewGroup) view.findViewById(R.id.layout_tag_preview_header);
+
+        // this is the view that contains the blogInfo & mshot, or the tag preview
+        final ViewGroup layoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -240,53 +243,59 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
-        // move new posts bar down to accommodate transparent ActionBar
+        // move header and new posts bar down to accommodate transparent ActionBar
         if (hasTransparentActionBar) {
+            ReaderFullScreenUtils.addTopMargin(context, layoutHeader);
             ReaderFullScreenUtils.addTopMargin(context, mNewPostsBar);
         }
 
         switch (getPostListType()) {
-            case BLOG_PREVIEW:
-                // show mshot for posts in a specific blog
-                if (hasTransparentActionBar) {
-                    ReaderFullScreenUtils.addTopMargin(context, mHeaderImage);
-                }
-                mHeaderImage.setImageType(WPNetworkImageView.ImageType.MSHOT);
-                mHeaderImage.setVisibility(View.VISIBLE);
-
-                // determine the width of the mshot
-                int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
-                mHeaderImageWidth = displayWidth - (marginWidth * 2);
-
-                // add the blog info header then populate it
-                mBlogInfoHeader = new ReaderBlogInfoHeader(context);
-                mListView.addHeaderView(mBlogInfoHeader);
-                getBlogInfo();
-
-                // listen for scroll changes so we can scale the header image
-                mListView.setOnScrollChangedListener(this);
-                break;
-
             case TAG_FOLLOWED:
                 if (hasTransparentActionBar) {
                     ReaderFullScreenUtils.addListViewHeader(context, mListView);
                 }
-
-                // add the tag preview header to the listView if we're previewing a tag
-                if (getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
-                    mTagPreviewHeader = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, null);
-                    mListView.addHeaderView(mTagPreviewHeader);
-                }
-
                 break;
 
             case TAG_PREVIEW:
                 // show tag preview header
-                if (hasTransparentActionBar) {
-                    ReaderFullScreenUtils.addTopMargin(context, mTagPreviewHeader);
-                }
-                mTagPreviewHeader.setVisibility(View.VISIBLE);
+                mTagPreviewHeader = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, container, false);
+                layoutHeader.addView(mTagPreviewHeader);
+                layoutHeader.setVisibility(View.VISIBLE);
+                break;
+
+            case BLOG_PREVIEW:
+                // add the blog info view to the header
+                mBlogInfoView = new ReaderBlogInfoHeader(context);
+                layoutHeader.addView(mBlogInfoView);
+
+                // determine the size of the mshot
+                int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+                int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+                mMshotWidth = displayWidth - (marginWidth * 2);
+                mMshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+
+                // add a blank header to the listView that's the same height as the mshot
+                ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
+
+                // add the blog mshot below the header (ie: below the blogInfo)
+                mImageMshot = (WPNetworkImageView) inflater.inflate(R.layout.reader_mshot_image, container, false);
+                mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        mMshotHeight);
+                params.addRule(RelativeLayout.BELOW, R.id.layout_header);
+                mImageMshot.setLayoutParams(params);
+                view.addView(mImageMshot);
+
+                // make sure the listView is in front of the mshot
+                ((ViewGroup)mListView.getParent()).bringToFront();
+
+                // listen for scroll changes so we can scale the mshot as the user scrolls
+                mListView.setOnScrollChangedListener(this);
+
+                // show the header and populate blog info
+                layoutHeader.setVisibility(View.VISIBLE);
+                getBlogInfo();
                 break;
         }
 
@@ -1060,9 +1069,9 @@ public class ReaderPostListFragment extends SherlockFragment
         return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
-    private void loadHeaderImage(final ReaderBlogInfo blogInfo) {
+    private void loadMshotImage(final ReaderBlogInfo blogInfo) {
         // can't get mshot for private blogs
-        if (blogInfo == null || blogInfo.isPrivate) {
+        if (blogInfo == null || blogInfo.isPrivate || mImageMshot == null) {
             return;
         }
 
@@ -1071,53 +1080,62 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onImageLoaded(boolean succeeded) {
                 // image should be scaled immediately after loading in case user scrolled
                 if (succeeded && hasActivity()) {
-                    scaleHeaderImage();
-                    mHasLoadedHeaderImage = true;
+                    scaleMshotImage();
+                    mHasLoadedMshot = true;
                 }
             }
         };
-        final String imageUrl = blogInfo.getMshotsUrl(mHeaderImageWidth);
-        mHeaderImage.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
+        final String imageUrl = blogInfo.getMshotsUrl(mMshotWidth);
+        mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
     }
 
     @Override
     public void onScrollChanged() {
-        if (mHasLoadedHeaderImage && getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
-            scaleHeaderImage();
+        if (mHasLoadedMshot && getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
+            scaleMshotImage();
         }
     }
 
     /*
      * scale the mshot image based on the current scroll position
      */
-    private void scaleHeaderImage() {
-        if (!hasActivity() || mHeaderImage == null) {
+    private void scaleMshotImage() {
+        if (!hasActivity() || mImageMshot == null) {
             return;
         }
 
         // get the top position of the blog info header
-        int top = mListView.getFirstChildTop();
+        //int listTop = mListView.getFirstChildTop();
+        int listTop = -mListView.getVerticalScrollOffset();
 
         // calculate the scale based on the top position
-        float scale = 0.9f + (top * 0.0005f);
-        if (scale <= 0 || scale == mPreviousHeaderImageScale) {
+        float scale = Math.min(0.9f + (listTop * 0.005f), 1.0f);
+        if (scale == mPreviousMshotScale) {
             return;
         }
 
-        // remember the scale so we can avoid unnecessary scaling the next time
-        mPreviousHeaderImageScale = scale;
+        if (scale <= 0) {
+            scale = 0;
+            mImageMshot.setVisibility(View.GONE);
+        } else {
+            mImageMshot.setVisibility(View.VISIBLE);
+            float centerX = mMshotWidth * 0.5f;
+            Matrix matrix = new Matrix();
+            matrix.setScale(scale, scale, centerX, 0);
+            mImageMshot.setImageMatrix(matrix);
+        }
 
-        float centerX = mHeaderImageWidth * 0.5f;
-        Matrix matrix = new Matrix();
-        matrix.setScale(scale, scale, centerX, 0);
-        mHeaderImage.setImageMatrix(matrix);
+        // remember the scale so we can avoid unnecessary scaling the next time
+        mPreviousMshotScale = scale;
+
+        //AppLog.w(T.READER, String.format("listTop=%d, scale=%f", listTop, scale));
     }
 
     /*
      * show info about the current blog in the blog header
      */
     private void getBlogInfo() {
-        if (mBlogInfoHeader == null) {
+        if (mBlogInfoView == null) {
             return;
         }
 
@@ -1129,8 +1147,8 @@ public class ReaderPostListFragment extends SherlockFragment
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
                 if (hasActivity() && blogInfo != null) {
                     // set the mshot url if it hasn't already been set
-                    if (TextUtils.isEmpty(mHeaderImage.getUrl())) {
-                        loadHeaderImage(blogInfo);
+                    if (TextUtils.isEmpty(mImageMshot.getUrl())) {
+                        loadMshotImage(blogInfo);
                     }
                 }
             }
@@ -1151,6 +1169,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             }
         };
-        mBlogInfoHeader.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl, infoListener);
+        mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl, infoListener);
     }
 }

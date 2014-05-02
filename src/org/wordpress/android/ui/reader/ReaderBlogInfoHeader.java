@@ -65,7 +65,6 @@ class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final View divider = findViewById(R.id.divider);
-        final View spacer = findViewById(R.id.view_header_image_spacer);
 
         mHasBlogInfo = (blogInfo != null);
 
@@ -96,17 +95,13 @@ class ReaderBlogInfoHeader extends LinearLayout {
             txtFollowBtn.setVisibility(View.VISIBLE);
             divider.setVisibility(View.VISIBLE);
 
-            View.OnClickListener urlListener = new View.OnClickListener() {
+            // tapping the blog name opens the blog in the browser
+            txtBlogName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
                 }
-            };
-
-            // tapping the spacer opens the blog in the browser - will appear to the user
-            // that they tapped the mshot image on ReaderPostListFragment
-            spacer.setOnClickListener(urlListener);
-            txtBlogName.setOnClickListener(urlListener);
+            });
 
             txtFollowBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

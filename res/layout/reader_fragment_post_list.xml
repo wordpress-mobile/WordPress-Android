@@ -5,28 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- blog mshot when showing posts in a specific blog -->
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_header"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_header_image_height"
-        android:scaleType="matrix"
-        android:visibility="gone"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin" />
-
-    <!-- header when previewing posts with a specific tag -->
-    <include
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
-        android:id="@+id/layout_tag_preview_header"
-        layout="@layout/reader_tag_preview_header" />
+        android:id="@+id/layout_header"
+        android:visibility="gone">
+        <!-- the tag preview or blog preview header is inserted into this layout -->
+    </RelativeLayout>
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
         android:id="@+id/ptr_layout"
-        android:layout_below="@+id/layout_tag_preview_header"
+        android:layout_below="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -48,7 +37,8 @@
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
         android:text="@string/reader_label_new_posts"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/progress_footer"

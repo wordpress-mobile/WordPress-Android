@@ -321,12 +321,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         //  * primary tag, unless it's the same as the currently selected tag
         //  * secondary tag if primary tag is the same as the currently selected tag
         final String tagToDisplay;
-        if (post.isPrivate || !post.hasPrimaryTag()) {
-            tagToDisplay = null;
-        } else if (!post.getPrimaryTag().equalsIgnoreCase(getCurrentTag())) {
-            tagToDisplay = post.getPrimaryTag();
+        if (!post.isPrivate && post.hasPrimaryTag()) {
+            if (post.getPrimaryTag().equalsIgnoreCase(getCurrentTag())) {
+                tagToDisplay = post.getSecondaryTag();
+            } else {
+                tagToDisplay = post.getPrimaryTag();
+            }
         } else {
-            tagToDisplay = post.getSecondaryTag(); // may not exist
+            tagToDisplay = null;
         }
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(tagToDisplay);

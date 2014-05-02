@@ -31,9 +31,14 @@ class ReaderFullScreenUtils {
      * mode is supported, should be called before adding any other listView headers
      */
     static void addListViewHeader(Context context, ListView listView) {
+        addListViewHeader(context, listView, DisplayUtils.getActionBarHeight(context));
+    }
+
+    static void addListViewHeader(Context context, ListView listView, int height) {
         RelativeLayout headerFake = new RelativeLayout(context);
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
-                                                                DisplayUtils.getActionBarHeight(context)));
+        headerFake.setLayoutParams(new AbsListView.LayoutParams(
+                AbsListView.LayoutParams.MATCH_PARENT,
+                height));
         listView.addHeaderView(headerFake, null, false);
     }
 
