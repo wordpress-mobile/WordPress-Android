@@ -13,7 +13,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -258,7 +257,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
-            holder = new PostViewHolder(convertView);
+            holder = new PostViewHolder(convertView, getPostListType());
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
@@ -287,15 +286,19 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
 
-            // tapping avatar shows blog preview unless this post is from an external feed
-            holder.imgAvatar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!post.isExternal) {
+            // tapping header shows blog preview unless this post is from an external feed
+            if (!post.isExternal) {
+                holder.layoutPostHeader.setEnabled(true);
+                holder.layoutPostHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         ReaderActivityLauncher.showReaderBlogPreview(getContext(), post.blogId, post.getBlogUrl());
                     }
-                }
-            });
+                });
+            } else {
+                holder.layoutPostHeader.setOnClickListener(null);
+                holder.layoutPostHeader.setEnabled(false);
+            }
         }
 
         if (post.hasExcerpt()) {
@@ -450,7 +453,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    private class PostViewHolder {
+    private static class PostViewHolder {
         private final TextView txtTitle;
         private final TextView txtText;
         private final TextView txtBlogName;
@@ -468,7 +471,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
 
-        PostViewHolder(View view) {
+        private final ViewGroup layoutPostHeader;
+
+        PostViewHolder(View view, ReaderPostListType postListType) {
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtText = (TextView) view.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
@@ -486,14 +491,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
 
-            // if we're showing posts in a specific blog, hide avatar, blog name & follow button,
-            // and remove the top margin from the featured image
-            if (getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
-                txtBlogName.setVisibility(View.GONE);
-                imgAvatar.setVisibility(View.GONE);
-                txtFollow.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imgFeatured.getLayoutParams();
-                  params.topMargin = 0;
+            layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
+
+            // hide the post header (avatar, blog name & follow button) if we're showing posts
+            // in a specific blog
+            if (postListType.equals(ReaderPostListType.BLOG_PREVIEW)) {
+                layoutPostHeader.setVisibility(View.GONE);
             }
         }
     }

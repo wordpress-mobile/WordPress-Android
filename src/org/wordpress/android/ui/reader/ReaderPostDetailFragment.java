@@ -1405,7 +1405,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
             // show blog preview when avatar, blog or author name is tapped unless this fragment
             // was shown from blog preview, or this is a post from an external feed
-            if (!mIsBlogPreview && !mPost.isExternal) {
+            /*if (!mIsBlogPreview && !mPost.isExternal) {
                 View.OnClickListener clickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1415,7 +1415,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
                 txtBlogName.setOnClickListener(clickListener);
                 txtAuthorName.setOnClickListener(clickListener);
                 imgAvatar.setOnClickListener(clickListener);
-            }
+            }*/
 
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work
