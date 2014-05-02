@@ -5,9 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.view.View;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
+
+import java.util.Arrays;
+import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -17,9 +26,12 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 public class PullToRefreshHelper implements OnRefreshListener {
+    private static final String REFRESH_BUTTON_HIT_COUNT = "REFRESH_BUTTON_HIT_COUNT";
+    private static final List<Integer> toastFrequency = Arrays.asList(1, 5, 10, 20, 40, 80, 160, 320, 640);
     private PullToRefreshHeaderTransformer mHeaderTransformer;
     private PullToRefreshLayout mPullToRefreshLayout;
     private RefreshListener mRefreshListener;
+    private Activity mActivity;
 
     public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
         init(activity, pullToRefreshLayout, listener, null);
@@ -32,6 +44,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
 
     public void init(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener,
                      java.lang.Class<?> viewClass) {
+        mActivity = activity;
         mRefreshListener = listener;
         mPullToRefreshLayout = pullToRefreshLayout;
         mHeaderTransformer = new PullToRefreshHeaderTransformer();
@@ -74,7 +87,15 @@ public class PullToRefreshHelper implements OnRefreshListener {
     public void refreshAction() {
         setRefreshing(true);
         mRefreshListener.onRefreshStarted(mPullToRefreshLayout);
-        // TODO: show a toast if 5/10/20/50 action triggered
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        int refreshHits = preferences.getInt(REFRESH_BUTTON_HIT_COUNT, 0);
+        refreshHits += 1;
+        if (toastFrequency.contains(refreshHits)) {
+            ToastUtils.showToast(mActivity, R.string.ptr_tip_message, Duration.LONG);
+        }
+        Editor editor = preferences.edit();
+        editor.putInt(REFRESH_BUTTON_HIT_COUNT, refreshHits);
+        editor.commit();
     }
 
     public void registerReceiver(Context context) {
