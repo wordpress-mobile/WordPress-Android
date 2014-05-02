@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -266,7 +267,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         holder.txtTitle.setText(post.getTitle());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
-        // avatar, blog name and follow button only appear when showing tagged posts
+        // post header (avatar, blog name and follow button) only appears when showing tagged posts
         if (getPostListType().isTagType()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
@@ -319,10 +320,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgFeatured.setVisibility(View.GONE);
         }
 
-        // determine which tag to display for this post
-        //  * no tag if this is a private blog or there is no primary tag for this post
-        //  * primary tag, unless it's the same as the currently selected tag
-        //  * secondary tag if primary tag is the same as the currently selected tag
+        // show the best tag for this post
         final String tagToDisplay = post.getTagForDisplay(mCurrentTag);
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(tagToDisplay);
@@ -486,9 +484,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
-            // in a specific blog
+            // in a specific blog, and remove the top margin from the featured image since
+            // that's used to put space between it and the header
             if (postListType.equals(ReaderPostListType.BLOG_PREVIEW)) {
                 layoutPostHeader.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imgFeatured.getLayoutParams();
+                params.topMargin = 0;
             }
         }
     }

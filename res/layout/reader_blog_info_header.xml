@@ -22,6 +22,7 @@
         android:maxLines="2"
         tools:text="text_blog_name"
         android:textColor="@color/reader_hyperlink"
+        android:background="@drawable/reader_transparent_selector"
         android:textSize="@dimen/text_sz_extra_large" />
 
     <org.wordpress.android.widgets.WPTextView

@@ -37,7 +37,8 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_follow_blog"
-            style="@style/ReaderTextView.Follow" />
+            style="@style/ReaderTextView.Follow"
+            android:layout_marginRight="@dimen/margin_small" />
 
     </LinearLayout>
 </LinearLayout>

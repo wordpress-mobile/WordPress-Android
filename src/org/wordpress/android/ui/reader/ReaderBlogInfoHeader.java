@@ -63,7 +63,6 @@ class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
-        final View divider = findViewById(R.id.divider);
 
         mHasBlogInfo = (blogInfo != null);
 
@@ -71,6 +70,13 @@ class ReaderBlogInfoHeader extends LinearLayout {
             if (blogInfo.hasName()) {
                 txtBlogName.setText(blogInfo.getName());
                 txtBlogName.setVisibility(View.VISIBLE);
+                // tapping the blog name opens the blog in the browser
+                txtBlogName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
+                    }
+                });
             } else {
                 txtBlogName.setVisibility(View.INVISIBLE);
             }
@@ -94,16 +100,6 @@ class ReaderBlogInfoHeader extends LinearLayout {
 
             ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
             txtFollowBtn.setVisibility(View.VISIBLE);
-            divider.setVisibility(View.VISIBLE);
-
-            // tapping the blog name opens the blog in the browser
-            txtBlogName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
-                }
-            });
-
             txtFollowBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,7 +112,6 @@ class ReaderBlogInfoHeader extends LinearLayout {
             }
         } else {
             txtFollowBtn.setVisibility(View.INVISIBLE);
-            divider.setVisibility(View.INVISIBLE);
         }
     }
 
