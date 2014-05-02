@@ -335,7 +335,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnTagSelectedListener != null) {
-                        mOnTagSelectedListener.onTagSelected(post.getPrimaryTag());
+                        mOnTagSelectedListener.onTagSelected(tagToDisplay);
                     }
                 }
             });
