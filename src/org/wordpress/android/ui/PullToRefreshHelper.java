@@ -1,7 +1,13 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.View;
+
+import org.wordpress.android.WordPress;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -66,7 +72,40 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     public void refreshAction() {
+        setRefreshing(true);
         mRefreshListener.onRefreshStarted(mPullToRefreshLayout);
         // TODO: show a toast if 5/10/20/50 action triggered
     }
+
+    public void registerReceiver(Context context) {
+        if (context == null) {
+            return;
+        }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+        context.registerReceiver(mReceiver, filter);
+    }
+
+    public void unregisterReceiver(Context context) {
+        if (context == null) {
+            return;
+        }
+        try {
+            context.unregisterReceiver(mReceiver);
+        } catch (IllegalArgumentException e) {
+            // exception occurs if receiver already unregistered (safe to ignore)
+        }
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent == null || intent.getAction() == null) {
+                return;
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED)) {
+                refreshAction();
+            }
+        }
+    };
 }

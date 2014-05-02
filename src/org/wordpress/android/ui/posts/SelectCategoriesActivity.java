@@ -336,6 +336,12 @@ public class SelectCategoriesActivity extends SherlockListActivity {
         } else if (itemId == android.R.id.home) {
             saveAndFinish();
             return true;
+        } else if (item.getItemId()  == R.id.menu_refresh) {
+            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
+            Intent intent = new Intent();
+            intent.setAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            sendBroadcast(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -386,6 +392,18 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPullToRefreshHelper.registerReceiver(this);
     }
 
     private void updateSelectedCategoryList() {

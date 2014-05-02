@@ -679,9 +679,16 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             if (!isFinishing())
                 dialogBuilder.create().show();
         } else if (item.getItemId()  == R.id.menu_refresh) {
-            mPostList.refreshAction();
+            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
+            broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        sendBroadcast(intent);
     }
 
     /**
