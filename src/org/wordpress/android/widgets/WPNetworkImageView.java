@@ -300,8 +300,8 @@ public class WPNetworkImageView extends ImageView {
                 setImageResource(R.drawable.placeholder);
                 break;
             case MSHOT:
-                // light grey box for mshots
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
+                // null for mshots
+                setImageDrawable(null);
                 break;
             default :
                 // medium grey box for all others
@@ -314,6 +314,10 @@ public class WPNetworkImageView extends ImageView {
         switch (imageType) {
             case PHOTO_FULL:
                 // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            case MSHOT:
+                // null for mshots
                 setImageDrawable(null);
                 break;
             default :

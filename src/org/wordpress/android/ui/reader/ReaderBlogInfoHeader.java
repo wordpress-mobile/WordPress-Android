@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -123,13 +122,9 @@ class ReaderBlogInfoHeader extends LinearLayout {
     * request latest info for this blog
     */
     private void requestBlogInfo(long blogId, String blogUrl) {
-        if (!mHasBlogInfo) {
-            showProgress();
-        }
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
             public void onResult(ReaderBlogInfo blogInfo) {
-                hideProgress();
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
                 } else if (!mHasBlogInfo && mInfoListener != null) {
@@ -153,15 +148,5 @@ class ReaderBlogInfoHeader extends LinearLayout {
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {
             ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
-    }
-
-    private void showProgress() {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_blog_info);
-        progress.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_blog_info);
-        progress.setVisibility(View.GONE);
     }
 }

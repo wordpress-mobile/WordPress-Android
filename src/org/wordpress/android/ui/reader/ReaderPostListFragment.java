@@ -18,7 +18,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -65,9 +64,9 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefresh
  * or by ReaderBlogDetailActivity to show posts in a specific blog
  */
 public class ReaderPostListFragment extends SherlockFragment
-                                    implements AbsListView.OnScrollListener,
-                                               ViewTreeObserver.OnScrollChangedListener,
-                                               ActionBar.OnNavigationListener {
+        implements AbsListView.OnScrollListener,
+        ViewTreeObserver.OnScrollChangedListener,
+        ActionBar.OnNavigationListener {
 
     static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
@@ -105,10 +104,9 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private boolean mHasLoadedMshot;
     private int mMshotWidth;
-    private int mMshotHeight;
     private float mPreviousMshotScale;
 
-    protected static enum RefreshType { AUTOMATIC, MANUAL }
+    protected static enum RefreshType {AUTOMATIC, MANUAL}
 
     /*
      * show posts with a specific tag
@@ -272,13 +270,17 @@ public class ReaderPostListFragment extends SherlockFragment
                 int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
                 int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
                 mMshotWidth = displayWidth - (marginWidth * 2);
-                mMshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
 
                 // add a blank header to the listView that's the same height as the mshot
-                ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
+                int mshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+                ReaderFullScreenUtils.addListViewHeader(context, mListView, mshotHeight);
 
-                // add the blog mshot below the header (ie: below the blogInfo)
-                mImageMshot = (WPNetworkImageView) inflater.inflate(R.layout.reader_mshot_image, container, false);
+                // show the blog mshot below the header (ie: below the blogInfo)
+                ViewGroup mshotContainer = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
+                mshotContainer.setVisibility(View.VISIBLE);
+                mImageMshot = (WPNetworkImageView) mshotContainer.findViewById(R.id.image_mshot);
+                mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
+                /*mImageMshot = (WPNetworkImageView) inflater.inflate(R.layout.reader_mshot_image, container, false);
                 mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -288,7 +290,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 view.addView(mImageMshot);
 
                 // make sure the listView is in front of the mshot
-                ((ViewGroup)mListView.getParent()).bringToFront();
+                ((ViewGroup)mListView.getParent()).bringToFront();*/
 
                 // listen for scroll changes so we can scale the mshot as the user scrolls
                 mListView.setOnScrollChangedListener(this);
@@ -335,7 +337,8 @@ public class ReaderPostListFragment extends SherlockFragment
                             return;
                         }
                         switch (getPostListType()) {
-                            case TAG_FOLLOWED: case TAG_PREVIEW:
+                            case TAG_FOLLOWED:
+                            case TAG_PREVIEW:
                                 updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.MANUAL);
                                 break;
                             case BLOG_PREVIEW:
@@ -380,7 +383,8 @@ public class ReaderPostListFragment extends SherlockFragment
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists) {
             switch (getPostListType()) {
-                case TAG_FOLLOWED: case TAG_PREVIEW:
+                case TAG_FOLLOWED:
+                case TAG_PREVIEW:
                     getPostAdapter().setCurrentTag(mCurrentTag);
                     if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
@@ -418,10 +422,10 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_tags :
+            case R.id.menu_tags:
                 ReaderActivityLauncher.showReaderSubsForResult(getActivity(), null);
                 return true;
-            default :
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
@@ -563,7 +567,8 @@ public class ReaderPostListFragment extends SherlockFragment
             }
 
             switch (getPostListType()) {
-                case TAG_FOLLOWED: case TAG_PREVIEW:
+                case TAG_FOLLOWED:
+                case TAG_PREVIEW:
                     // skip if we already have the max # of posts
                     if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
                         // request older posts
@@ -607,7 +612,7 @@ public class ReaderPostListFragment extends SherlockFragment
         return mPostAdapter;
     }
 
-    private boolean hasPostAdapter () {
+    private boolean hasPostAdapter() {
         return (mPostAdapter != null);
     }
 
@@ -640,8 +645,7 @@ public class ReaderPostListFragment extends SherlockFragment
         // actionBar dropdown
         if (isCurrentTag(tagName)
                 && hasPostAdapter()
-                && tagName.equals(getPostAdapter().getCurrentTag()))
-        {
+                && tagName.equals(getPostAdapter().getCurrentTag())) {
             return;
         }
 
@@ -801,8 +805,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     // show the "new posts" bar rather than immediately refreshing the list
                     if (!isPostAdapterEmpty()
                             && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                            && updateAction == RequestDataAction.LOAD_NEWER)
-                    {
+                            && updateAction == RequestDataAction.LOAD_NEWER) {
                         showNewPostsBar();
                     } else {
                         refreshPosts();
@@ -895,13 +898,17 @@ public class ReaderPostListFragment extends SherlockFragment
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) { }
+            public void onAnimationStart(Animation animation) {
+            }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 mNewPostsBar.setVisibility(View.GONE);
             }
+
             @Override
-            public void onAnimationRepeat(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) {
+            }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
         mPullToRefreshHelper.showTip(true);
@@ -913,8 +920,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private void checkCurrentTag() {
         if (hasCurrentTag()
                 && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                && !ReaderTagTable.tagExists(getCurrentTag()))
-        {
+                && !ReaderTagTable.tagExists(getCurrentTag())) {
             mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
         }
     }
@@ -973,6 +979,7 @@ public class ReaderPostListFragment extends SherlockFragment
      * ActionBar tag dropdown adapter
      */
     private ReaderActionBarTagAdapter mActionBarAdapter;
+
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
@@ -986,9 +993,9 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
             };
             mActionBarAdapter = new ReaderActionBarTagAdapter(
-                                    getActivity(),
-                                    hasStaticMenuDrawer(),
-                                    dataListener);
+                    getActivity(),
+                    hasStaticMenuDrawer(),
+                    dataListener);
         }
 
         return mActionBarAdapter;
@@ -1003,12 +1010,12 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     private boolean hasStaticMenuDrawer() {
         return (getActivity() instanceof WPActionBarActivity)
-            && ((WPActionBarActivity)getActivity()).isStaticMenuDrawer();
+                && ((WPActionBarActivity) getActivity()).isStaticMenuDrawer();
     }
 
     private ActionBar getActionBar() {
         if (getActivity() instanceof SherlockFragmentActivity) {
-            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+            return ((SherlockFragmentActivity) getActivity()).getSupportActionBar();
         } else {
             AppLog.w(T.READER, "reader post list > null ActionBar");
             return null;
@@ -1078,8 +1085,14 @@ public class ReaderPostListFragment extends SherlockFragment
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
+                if (!hasActivity()) {
+                    return;
+                }
+                // hide the progress bar that appears on the mshot
+                final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_mshot);
+                progress.setVisibility(View.GONE);
                 // image should be scaled immediately after loading in case user scrolled
-                if (succeeded && hasActivity()) {
+                if (succeeded) {
                     scaleMshotImage();
                     mHasLoadedMshot = true;
                 }
@@ -1105,30 +1118,21 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         // get the top position of the blog info header
-        //int listTop = mListView.getFirstChildTop();
         int listTop = -mListView.getVerticalScrollOffset();
 
         // calculate the scale based on the top position
-        float scale = Math.min(0.9f + (listTop * 0.005f), 1.0f);
+        float scale = Math.max(0f, 0.9f + (listTop * 0.005f));
         if (scale == mPreviousMshotScale) {
             return;
         }
 
-        if (scale <= 0) {
-            scale = 0;
-            mImageMshot.setVisibility(View.GONE);
-        } else {
-            mImageMshot.setVisibility(View.VISIBLE);
-            float centerX = mMshotWidth * 0.5f;
-            Matrix matrix = new Matrix();
-            matrix.setScale(scale, scale, centerX, 0);
-            mImageMshot.setImageMatrix(matrix);
-        }
+        float centerX = mMshotWidth * 0.5f;
+        Matrix matrix = new Matrix();
+        matrix.setScale(scale, scale, centerX, 0);
+        mImageMshot.setImageMatrix(matrix);
 
         // remember the scale so we can avoid unnecessary scaling the next time
         mPreviousMshotScale = scale;
-
-        //AppLog.w(T.READER, String.format("listTop=%d, scale=%f", listTop, scale));
     }
 
     /*
@@ -1152,6 +1156,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     }
                 }
             }
+
             @Override
             public void onBlogInfoFailed() {
                 if (hasActivity()) {
