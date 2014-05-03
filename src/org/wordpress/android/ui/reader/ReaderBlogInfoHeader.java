@@ -69,7 +69,6 @@ class ReaderBlogInfoHeader extends LinearLayout {
         if (mHasBlogInfo) {
             if (blogInfo.hasName()) {
                 txtBlogName.setText(blogInfo.getName());
-                txtBlogName.setVisibility(View.VISIBLE);
                 // tapping the blog name opens the blog in the browser
                 txtBlogName.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -77,10 +76,7 @@ class ReaderBlogInfoHeader extends LinearLayout {
                         ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
                     }
                 });
-            } else {
-                txtBlogName.setVisibility(View.INVISIBLE);
             }
-            txtBlogName.setVisibility(View.VISIBLE);
 
             if (blogInfo.hasDescription()) {
                 txtDescription.setText(blogInfo.getDescription());

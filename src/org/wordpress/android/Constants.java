@@ -25,7 +25,6 @@ public class Constants {
     // intent IDs
     public static final int INTENT_READER_SUBS        = 1000;
     public static final int INTENT_READER_REBLOG      = 1001;
-    public static final int INTENT_READER_TAG_PREVIEW = 1002;
     public static final int INTENT_COMMENT_EDITOR     = 1010;
 
 }

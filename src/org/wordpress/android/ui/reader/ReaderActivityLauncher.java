@@ -5,6 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
 
 import org.wordpress.android.Constants;
@@ -31,15 +33,42 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_BLOG_URL, blogUrl);
         intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
-        context.startActivity(intent);
+        showReaderPreviewIntent(context, intent);
     }
 
-    public static void showReaderTagPreviewForResult(Activity activity, String tagName) {
-        Intent intent = new Intent(activity, ReaderActivity.class);
+    public static void showReaderTagPreview(Context context, String tagName) {
+        Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
         intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
-        activity.startActivityForResult(intent, Constants.INTENT_READER_TAG_PREVIEW);
+        showReaderPreviewIntent(context, intent);
+    }
+
+    /*
+     * called when launching a ReaderActivity intent that shows either a blog preview
+     * or a tag preview to provide the desired enter animation - note that the exit
+     * animation will be provided by ReaderPreviewActivity.finish()
+     */
+    private static void showReaderPreviewIntent(Context context, Intent intent) {
+        boolean isContextReaderPreview = (context instanceof ReaderActivity)
+                && ((ReaderActivity) context).getPostListType().isPreviewType();
+
+        if (isContextReaderPreview) {
+            // disable animation if the calling context is another reader preview activity
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.putExtra(ReaderActivity.ARG_NO_EXIT_ANIM, true);
+            context.startActivity(intent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            // calling context isn't another reader preview, so use our enter animation
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    context,
+                    R.anim.reader_preview_enter,
+                    R.anim.do_nothing);
+            context.startActivity(intent, options.toBundle());
+        } else {
+            // fallback to default behavior for pre-Jellybean
+            context.startActivity(intent);
+        }
     }
 
     public static void showReaderLikingUsers(Context context, ReaderPost post) {

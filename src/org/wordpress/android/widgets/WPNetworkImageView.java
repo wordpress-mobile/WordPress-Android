@@ -289,6 +289,23 @@ public class WPNetworkImageView extends ImageView {
         return getContext().getResources().getColor(resId);
     }
 
+    private void showDefaultImage(ImageType imageType) {
+        switch (imageType) {
+            case PHOTO_FULL:
+                // null default for full-screen photos
+                setImageDrawable(null);
+                break;
+            case MSHOT:
+                // null default for mshots
+                setImageDrawable(null);
+                break;
+            default :
+                // light grey box for all others
+                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
+                break;
+        }
+    }
+
     private void showErrorImage(ImageType imageType) {
         switch (imageType) {
             case PHOTO_FULL:
@@ -300,29 +317,12 @@ public class WPNetworkImageView extends ImageView {
                 setImageResource(R.drawable.placeholder);
                 break;
             case MSHOT:
-                // null for mshots
+                // null default for mshots
                 setImageDrawable(null);
                 break;
             default :
                 // medium grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
-                break;
-        }
-    }
-
-    private void showDefaultImage(ImageType imageType) {
-        switch (imageType) {
-            case PHOTO_FULL:
-                // null default for full-screen photos
-                setImageDrawable(null);
-                break;
-            case MSHOT:
-                // null for mshots
-                setImageDrawable(null);
-                break;
-            default :
-                // light grey box for all others
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
                 break;
         }
     }

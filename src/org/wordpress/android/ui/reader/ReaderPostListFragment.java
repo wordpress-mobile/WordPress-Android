@@ -195,10 +195,13 @@ public class ReaderPostListFragment extends SherlockFragment
         // the follow status of all posts is accurate - this is necessary in case the user
         // returned from an activity where the follow status may have been changed
         if (mWasPaused) {
+            AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
             if (hasPostAdapter()) {
                 getPostAdapter().checkFollowStatusForAllPosts();
             }
+            // likewise for tags
+            refreshTags();
         }
     }
 
