@@ -173,6 +173,7 @@
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:theme="@style/ReaderTheme.Subs"
+            android:label="@string/reader_title_subs"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"

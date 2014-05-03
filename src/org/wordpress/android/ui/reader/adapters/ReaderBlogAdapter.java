@@ -269,7 +269,11 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     }
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
                 case FOLLOWED:
+                    // get all followed blogs, then remove those we don't have complete info for
+                    // TODO: we can stop removing incomplete info once the read/following/mine
+                    // endpoint returns full blog info
                     tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
+                    tmpFollowedBlogs.removeIncomplete();
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
                 default:
                     return false;

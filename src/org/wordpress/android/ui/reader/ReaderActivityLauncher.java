@@ -50,6 +50,7 @@ public class ReaderActivityLauncher {
      * animation will be provided by ReaderPreviewActivity.finish()
      */
     private static void showReaderPreviewIntent(Context context, Intent intent) {
+        // is the intent being opened from a reader preview context?
         boolean isContextReaderPreview =
                 (context instanceof ReaderActivity)
                 && ((ReaderActivity) context).getPostListType().isPreviewType();

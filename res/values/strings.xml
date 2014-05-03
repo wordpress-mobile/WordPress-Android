@@ -565,7 +565,7 @@
     <!-- title shown for untitled posts -->
     <string name="reader_untitled_post">(Untitled)</string>
 
-    <!-- activity titles -->
+    <!-- activity and page titles -->
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_userlist_default">People</string>
     <string name="reader_title_followed_tags">Followed tags</string>
@@ -573,8 +573,9 @@
     <string name="reader_title_followed_blogs">Followed blogs</string>
     <string name="reader_title_recommended_blogs">Recommended blogs</string>
     <string name="reader_title_reblog">Reblog</string>
-    <string name="reader_title_blog_preview">Preview Blog</string>
-    <string name="reader_title_tag_preview">Preview Tag</string>
+    <string name="reader_title_blog_preview">Preview blog</string>
+    <string name="reader_title_tag_preview">Preview tag</string>
+    <string name="reader_title_subs">Tags &amp; blogs</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>

@@ -472,8 +472,9 @@ public class ReaderActivity extends WPActionBarActivity
             return false;
 
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
+        if (actionBar == null) {
             return false;
+        }
 
         if (enableFullScreen) {
             actionBar.hide();

@@ -56,6 +56,15 @@ public class ReaderBlogInfo {
         return blog;
     }
 
+    /*
+     * info is considered incomplete if it has no blog id, or it's missing both the name and
+     * description - used by ReaderBlogAction.updateIncompleteBlogInfo() to fill in incomplete
+     * blogInfo, and by ReaderBlogInfoList.removeIncomplete()
+     */
+    public boolean isIncomplete() {
+        return (!hasBlogId() || (!hasName() && !hasDescription()));
+    }
+
     public String getName() {
         return StringUtils.notNullStr(name);
     }
@@ -81,6 +90,9 @@ public class ReaderBlogInfo {
         return !TextUtils.isEmpty(name);
     }
 
+    public boolean hasBlogId() {
+        return (blogId != 0);
+    }
     public boolean hasDescription() {
         return !TextUtils.isEmpty(description);
     }

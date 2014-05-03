@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderBlogInfoList;
 import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
@@ -197,6 +198,8 @@ public class ReaderBlogActions {
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
+                    // fill in missing blog information
+                    updateIncompleteBlogInfo();
                 }
 
                 if (resultListener != null) {
@@ -209,6 +212,25 @@ public class ReaderBlogActions {
                 }
             }
         }.start();
+    }
+
+    /*
+     * fills in information about followed blogs
+     */
+    private static final int MAX_INCOMPLETE = 25;
+    private static void updateIncompleteBlogInfo() {
+        int numMissing = 0;
+        ReaderBlogInfoList followedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
+        for (ReaderBlogInfo info: followedBlogs) {
+            if (info.isIncomplete()) {
+                updateBlogInfo(info.blogId, info.getUrl(), null);
+                numMissing++;
+                if (numMissing >= MAX_INCOMPLETE) {
+                    break;
+                }
+            }
+        }
+        AppLog.d(T.READER, String.format("filling info for %d missing blogs", numMissing));
     }
 
     /*

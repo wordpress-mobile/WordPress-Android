@@ -1081,6 +1081,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private void loadMshotImage(final ReaderBlogInfo blogInfo) {
         // can't get mshot for private blogs
         if (blogInfo == null || blogInfo.isPrivate || mImageMshot == null) {
+            hideMshotProgress();
             return;
         }
 
@@ -1090,9 +1091,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 if (!hasActivity()) {
                     return;
                 }
-                // hide the progress bar that appears on the mshot
-                final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_mshot);
-                progress.setVisibility(View.GONE);
+                hideMshotProgress();
                 // image should be scaled immediately after loading in case user scrolled
                 if (succeeded) {
                     scaleMshotImage();
@@ -1102,6 +1101,19 @@ public class ReaderPostListFragment extends SherlockFragment
         };
         final String imageUrl = blogInfo.getMshotsUrl(mMshotWidth);
         mImageMshot.setImageUrl(imageUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
+    }
+
+    /*
+     * hide the progress bar that appears on the mshot - note that it's set to visible at
+     * design time, so it'll stay visible until this is called
+     */
+    private void hideMshotProgress() {
+        if (getView() == null) {
+            return;
+        }
+
+        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_mshot);
+        progress.setVisibility(View.GONE);
     }
 
     @Override

@@ -18,7 +18,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -70,8 +72,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
-    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
-    private static final int TAB_IDX_FOLLOWED_BLOGS = 3;
+    private static final int TAB_IDX_FOLLOWED_BLOGS = 2;
+    private static final int TAB_IDX_RECOMMENDED_BLOGS = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,12 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
@@ -146,8 +154,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             fragments.add(ReaderTagFragment.newInstance(ReaderTagType.RECOMMENDED));
 
             // add blog fragments
+            fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
-            //fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
 
             mPageAdapter = new SubsPageAdapter(getSupportFragmentManager(), fragments);
         }
@@ -195,6 +203,17 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         }
 
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /*
@@ -457,8 +476,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                if (!isFinishing()) {
+                    if (result == ReaderActions.UpdateResult.CHANGED) {
+                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                    }
                 }
             }
         };
