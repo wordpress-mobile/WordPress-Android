@@ -33,7 +33,7 @@
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginRight="@dimen/margin_extra_large"
         android:ellipsize="end"
-        android:maxLines="4"
+        android:maxLines="3"
         tools:text="text_blog_description" />
 
     <View

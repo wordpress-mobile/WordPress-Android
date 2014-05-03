@@ -50,20 +50,21 @@ public class ReaderActivity extends WPActionBarActivity
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static enum ReaderPostListType {
-            TAG_FOLLOWED,   // list posts in a followed tag (default)
-            TAG_PREVIEW,    // list posts in a specific tag
-            BLOG_PREVIEW;   // list posts in a specific blog
+        TAG_FOLLOWED,   // list posts in a followed tag (default)
+        TAG_PREVIEW,    // list posts in a specific tag
+        BLOG_PREVIEW;   // list posts in a specific blog
 
-            public boolean isTagType() {
-                return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
-            }
+        public boolean isTagType() {
+            return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
+        }
+
         public boolean isPreviewType() {
             return this.equals(TAG_PREVIEW) || this.equals(BLOG_PREVIEW);
         }
 
-            public static ReaderPostListType getDefaultType() {
-                return TAG_FOLLOWED;
-            }
+        public static ReaderPostListType getDefaultType() {
+            return TAG_FOLLOWED;
+        }
     }
 
     public static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
@@ -453,7 +454,13 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onTagSelected(String tagName) {
-        ReaderActivityLauncher.showReaderTagPreview(this, tagName);
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
+            // user is already previewing a tag, so change current tag in existing preview
+            getListFragment().setCurrentTag(tagName);
+        } else {
+            // user isn't previewing a tag, so open in tag preview
+            ReaderActivityLauncher.showReaderTagPreview(this, tagName);
+        }
     }
 
     /*

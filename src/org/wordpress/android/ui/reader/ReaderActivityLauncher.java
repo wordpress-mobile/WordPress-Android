@@ -50,7 +50,8 @@ public class ReaderActivityLauncher {
      * animation will be provided by ReaderPreviewActivity.finish()
      */
     private static void showReaderPreviewIntent(Context context, Intent intent) {
-        boolean isContextReaderPreview = (context instanceof ReaderActivity)
+        boolean isContextReaderPreview =
+                (context instanceof ReaderActivity)
                 && ((ReaderActivity) context).getPostListType().isPreviewType();
 
         if (isContextReaderPreview) {
@@ -64,7 +65,7 @@ public class ReaderActivityLauncher {
                     context,
                     R.anim.reader_preview_enter,
                     R.anim.do_nothing);
-            context.startActivity(intent, options.toBundle());
+            context.startActivity(intent, options.toBundle()); // <-- SDK 16+
         } else {
             // fallback to default behavior for pre-Jellybean
             context.startActivity(intent);
