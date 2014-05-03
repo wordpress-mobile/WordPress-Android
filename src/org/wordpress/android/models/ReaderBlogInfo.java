@@ -26,6 +26,7 @@ public class ReaderBlogInfo {
     "jetpack": false,
     "subscribers_count": 9222924,
     "is_private": false,
+    "is_following": false,
     "meta": {
         "links": {
             "self": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/3584907",
@@ -86,12 +87,14 @@ public class ReaderBlogInfo {
         this.url = StringUtils.notNullStr(url);
     }
 
-    public boolean hasName() {
-        return !TextUtils.isEmpty(name);
-    }
-
     public boolean hasBlogId() {
         return (blogId != 0);
+    }
+    public boolean hasUrl() {
+        return !TextUtils.isEmpty(url);
+    }
+    public boolean hasName() {
+        return !TextUtils.isEmpty(name);
     }
     public boolean hasDescription() {
         return !TextUtils.isEmpty(description);

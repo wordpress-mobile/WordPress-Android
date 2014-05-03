@@ -819,9 +819,9 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         };
 
-        // if this is a request for newer posts, assign a backfill listener to
-        // ensure there aren't any gaps between this update and the previous one
-        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER);
+        // if this is a request for newer posts and posts with this tag already exist, assign
+        // a backfill listener to ensure there aren't any gaps between this update and the previous one
+        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER && !isPostAdapterEmpty());
         if (allowBackfill) {
             ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
                 @Override
