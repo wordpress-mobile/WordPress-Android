@@ -344,6 +344,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                         // we may have the blogId now that the blog was followed
                         long blogId = ReaderBlogTable.getBlogIdFromUrl(normUrl);
                         onFollowBlogChanged(blogId, normUrl, true);
+                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     } else {
                         ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
                     }

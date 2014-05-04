@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:textColor="@color/blue_extra_light"
-            android:background="@color/blue_dark"
+            android:background="@color/blue_medium"
             android:paddingTop="@dimen/margin_large"
             android:paddingBottom="@dimen/margin_large" />
 

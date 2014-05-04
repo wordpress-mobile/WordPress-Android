@@ -114,7 +114,9 @@ public class ReaderBlogActions {
         if (post == null) {
             return false;
         }
-        return performFollowAction(post.blogId, post.getBlogUrl(), isAskingToFollow, null);
+        // don't use the blogId if this is an external feed
+        long blogId = (post.isExternal ? 0 : post.blogId);
+        return performFollowAction(blogId, post.getBlogUrl(), isAskingToFollow, null);
     }
 
     /*
@@ -203,8 +205,8 @@ public class ReaderBlogActions {
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                    // fill in missing blog information
-                    updateIncompleteBlogInfo(null);
+                    // followed blogs have changed, make sure we have complete info about new blogs
+                    updateIncompleteBlogInfo();
                 }
 
                 if (resultListener != null) {
@@ -389,49 +391,38 @@ public class ReaderBlogActions {
     }
 
     /*
-     * fills in information about followed blogs - this will request missing info in batches
-     * of 25 and fire the listener with the results of each batch
+     * fills in information about followed blogs - requests missing info in batches of 25
      */
     private static final int MAX_BATCH_URLS = 25;
-    private static void updateIncompleteBlogInfo(final UpdateResultListener resultListener) {
+    private static void updateIncompleteBlogInfo() {
         // get list of all blogInfos that are incomplete
         ReaderBlogInfoList incompleteBlogs = ReaderBlogTable.getAllFollowedBlogInfo().getIncompleteList();
         if (incompleteBlogs.size() == 0) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
-            }
             return;
         }
 
         // lookup full info in batches
         ReaderUrlList requestUrls = new ReaderUrlList();
         for (ReaderBlogInfo info: incompleteBlogs) {
+            // don't bother looking it up if the blogId is missing, since call will fail
             if (info.hasBlogId()) {
                 requestUrls.add("/sites/" + info.blogId);
-            } else if (info.hasUrl()) {
-                String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(info.getUrl()));
-                requestUrls.add("/sites/" + domain);
-            }
-
-            // perform the batch request if we've reached the max batch size
-            if (requestUrls.size() >= MAX_BATCH_URLS) {
-                batchUpdateIncompleteBlogInfo(requestUrls, resultListener);
-                requestUrls.clear();
+                // perform the batch request if we've reached the max batch size
+                if (requestUrls.size() >= MAX_BATCH_URLS) {
+                    batchUpdateIncompleteBlogInfo(requestUrls);
+                    requestUrls.clear();
+                }
             }
         }
 
         // perform the remaining requests
         if (requestUrls.size() > 0) {
-            batchUpdateIncompleteBlogInfo(requestUrls, resultListener);
+            batchUpdateIncompleteBlogInfo(requestUrls);
         }
     }
 
-    private static void batchUpdateIncompleteBlogInfo(final ReaderUrlList requestUrls,
-                                                      final UpdateResultListener resultListener) {
+    private static void batchUpdateIncompleteBlogInfo(final ReaderUrlList requestUrls) {
         if (requestUrls == null || requestUrls.size() == 0) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
-            }
             return;
         }
 
@@ -439,11 +430,9 @@ public class ReaderBlogActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 if (jsonObject == null) {
-                    if (resultListener != null) {
-                        resultListener.onUpdateResult(UpdateResult.FAILED);
-                    }
                     return;
                 }
+
                 SQLiteDatabase db = ReaderDatabase.getWritableDb();
                 db.beginTransaction();
                 try {
@@ -462,11 +451,6 @@ public class ReaderBlogActions {
                     AppLog.d(T.READER, String.format("updated info for %d incomplete blogs", numUpdated));
                     db.setTransactionSuccessful();
 
-                    if (resultListener != null) {
-                        UpdateResult result = (numUpdated > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
-                        resultListener.onUpdateResult(result);
-                    }
-
                 } finally {
                     db.endTransaction();
                 }
@@ -477,9 +461,6 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
             }
         };
 

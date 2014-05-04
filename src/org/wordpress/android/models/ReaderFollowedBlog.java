@@ -5,10 +5,11 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
 public class ReaderFollowedBlog {
+    public long id;
     public long blogId;
     private String url;
 
-    /* set by the response to the read/following/mine endpoint
+    /* read/following/mine
     {
 			"ID": "146313067",
 			"blog_ID": "52451191",
@@ -23,6 +24,7 @@ public class ReaderFollowedBlog {
             return blog;
         }
 
+        blog.id = json.optLong("ID"); // TODO: what is this - is this the feed id?
         blog.blogId = json.optLong("blog_ID");
         blog.setUrl(JSONUtil.getString(json, "URL"));
 
