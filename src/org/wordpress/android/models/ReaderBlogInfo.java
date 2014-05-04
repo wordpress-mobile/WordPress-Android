@@ -58,12 +58,13 @@ public class ReaderBlogInfo {
     }
 
     /*
-     * info is considered incomplete if it has no blog id, or it's missing both the name and
-     * description - used by ReaderBlogAction.updateIncompleteBlogInfo() to fill in incomplete
-     * blogInfo, and by ReaderBlogInfoList.removeIncomplete()
+     * info is considered incomplete if it's missing both the blog id and url, or it's missing
+     * both the name and description - used by ReaderBlogAction.updateIncompleteBlogInfo() to
+     * fill in incomplete blogInfo, and by ReaderBlogInfoList.removeIncomplete()
      */
     public boolean isIncomplete() {
-        return (!hasBlogId() || (!hasName() && !hasDescription()));
+        return (!hasBlogId() && !hasUrl())
+            || (!hasName() && !hasDescription());
     }
 
     public String getName() {

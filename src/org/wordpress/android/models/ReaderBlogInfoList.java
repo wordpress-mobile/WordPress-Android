@@ -28,15 +28,23 @@ public class ReaderBlogInfoList extends ArrayList<ReaderBlogInfo> {
     }
 
     /*
-     * remove information about incomplete blogs
+     * returns list of incomplete blogInfos in this list
      */
-    public void removeIncomplete() {
+    public ReaderBlogInfoList getIncompleteList() {
         ReaderBlogInfoList incompleteList = new ReaderBlogInfoList();
         for (ReaderBlogInfo info: this) {
             if (info.isIncomplete()) {
                 incompleteList.add(info);
             }
         }
+        return incompleteList;
+    }
+
+    /*
+     * remove information about incomplete blogs
+     */
+    public void removeIncomplete() {
+        ReaderBlogInfoList incompleteList = getIncompleteList();
         if (incompleteList.size() > 0) {
             this.removeAll(incompleteList);
         }

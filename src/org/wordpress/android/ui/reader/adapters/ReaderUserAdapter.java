@@ -87,9 +87,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             });
 
             // enable following/unfollowing the user's blog
-            if (holder.txtFollow.isSelected() != user.isFollowed) {
-                ReaderUtils.showFollowStatus(holder.txtFollow, user.isFollowed);
-            }
+            ReaderUtils.showFollowStatus(holder.txtFollow, user.isFollowed);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -116,12 +114,11 @@ public class ReaderUserAdapter extends BaseAdapter {
         }
 
         boolean isAskingToFollow = !user.isFollowed;
-        if (!ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
+        if (ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
+            user.isFollowed = isAskingToFollow;
+            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             return;
         }
-
-        user.isFollowed = isAskingToFollow;
-        ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
     }
 
     private static class UserViewHolder {

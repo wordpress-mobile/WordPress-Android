@@ -311,13 +311,19 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            // skip loading image if the imageView is already tagged with this url
+            if (!ReaderUtils.viewHasTag(holder.imgFeatured, imageUrl)) {
+                holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                holder.imgFeatured.setTag(imageUrl);
+            }
             holder.imgFeatured.setVisibility(View.VISIBLE);
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             holder.imgFeatured.setVisibility(View.VISIBLE);
+            holder.imgFeatured.setTag(null);
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
+            holder.imgFeatured.setTag(null);
         }
 
         // show the best tag for this post

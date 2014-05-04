@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -24,7 +23,9 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -178,7 +179,7 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
                 }
             }
         };
@@ -187,7 +188,7 @@ public class ReaderBlogActions {
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -203,89 +204,19 @@ public class ReaderBlogActions {
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
                     // fill in missing blog information
-                    updateIncompleteBlogInfo();
+                    updateIncompleteBlogInfo(null);
                 }
 
                 if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            ReaderActions.UpdateResult result = (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                             resultListener.onUpdateResult(result);
                         }
                     });
                 }
             }
         }.start();
-    }
-
-    /*
-     * fills in information about followed blogs
-     */
-    private static final int MAX_INCOMPLETE = 25;
-    private static void updateIncompleteBlogInfo() {
-        final ReaderUrlList urls = new ReaderUrlList();
-        final ReaderBlogInfoList followedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
-        for (ReaderBlogInfo info: followedBlogs) {
-            if (info.isIncomplete()) {
-                if (info.hasBlogId()) {
-                    urls.add("/sites/" + info.blogId);
-                } else if (info.hasUrl()) {
-                    String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(info.getUrl()));
-                    urls.add("/sites/" + domain);
-                }
-                if (urls.size() >= MAX_INCOMPLETE) {
-                    break;
-                }
-            }
-        }
-        if (urls.size() == 0) {
-            return;
-        }
-
-        // create the path for the /batch/ endpoint to update all these blogInfos in one call
-        StringBuilder sbBatch = new StringBuilder("/batch/");
-        boolean isFirst = true;
-        for (String url: urls) {
-            if (isFirst) {
-                isFirst = false;
-                sbBatch.append("?");
-            } else {
-                sbBatch.append("&");
-            }
-            sbBatch.append("urls%5B%5D=").append(Uri.encode(url));
-        }
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (jsonObject != null) {
-                    SQLiteDatabase db = ReaderDatabase.getWritableDb();
-                    db.beginTransaction();
-                    try {
-                        // the /batch/ endpoint identifies each response by the requested url
-                        for (String url : urls) {
-                            JSONObject jsonSite = jsonObject.optJSONObject(url);
-                            if (jsonSite != null) {
-                                ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonSite);
-                                ReaderBlogTable.setBlogInfo(blogInfo);
-                            }
-                        }
-                        db.setTransactionSuccessful();
-                    } finally {
-                        db.endTransaction();
-                    }
-                }
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-            }
-        };
-
-        AppLog.d(T.READER, String.format("updating info for %d incomplete blogs", urls.size()));
-        WordPress.getRestClientUtils().get(sbBatch.toString(), listener, errorListener);
     }
 
     /*
@@ -376,7 +307,7 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
                 }
             }
         };
@@ -390,7 +321,7 @@ public class ReaderBlogActions {
                                                        final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -411,7 +342,7 @@ public class ReaderBlogActions {
                 if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            ReaderActions.UpdateResult result = (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                             resultListener.onUpdateResult(result);
                         }
                     });
@@ -457,4 +388,103 @@ public class ReaderBlogActions {
         WordPress.requestQueue.add(request);
     }
 
+    /*
+     * fills in information about followed blogs - this will request missing info in batches
+     * of 25 and fire the listener with the results of each batch
+     */
+    private static final int MAX_BATCH_URLS = 25;
+    private static void updateIncompleteBlogInfo(final UpdateResultListener resultListener) {
+        // get list of all blogInfos that are incomplete
+        ReaderBlogInfoList incompleteBlogs = ReaderBlogTable.getAllFollowedBlogInfo().getIncompleteList();
+        if (incompleteBlogs.size() == 0) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
+            }
+            return;
+        }
+
+        // lookup full info in batches
+        ReaderUrlList requestUrls = new ReaderUrlList();
+        for (ReaderBlogInfo info: incompleteBlogs) {
+            if (info.hasBlogId()) {
+                requestUrls.add("/sites/" + info.blogId);
+            } else if (info.hasUrl()) {
+                String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(info.getUrl()));
+                requestUrls.add("/sites/" + domain);
+            }
+
+            // perform the batch request if we've reached the max batch size
+            if (requestUrls.size() >= MAX_BATCH_URLS) {
+                batchUpdateIncompleteBlogInfo(requestUrls, resultListener);
+                requestUrls.clear();
+            }
+        }
+
+        // perform the remaining requests
+        if (requestUrls.size() > 0) {
+            batchUpdateIncompleteBlogInfo(requestUrls, resultListener);
+        }
+    }
+
+    private static void batchUpdateIncompleteBlogInfo(final ReaderUrlList requestUrls,
+                                                      final UpdateResultListener resultListener) {
+        if (requestUrls == null || requestUrls.size() == 0) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
+            }
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (jsonObject == null) {
+                    if (resultListener != null) {
+                        resultListener.onUpdateResult(UpdateResult.FAILED);
+                    }
+                    return;
+                }
+                SQLiteDatabase db = ReaderDatabase.getWritableDb();
+                db.beginTransaction();
+                try {
+                    int numUpdated = 0;
+                    for (String url : requestUrls) {
+                        // the /batch/ endpoint identifies each response by the requested url
+                        JSONObject jsonSite = jsonObject.optJSONObject(url);
+                        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonSite);
+                        // make sure blogInfo isn't still incomplete before saving it
+                        if (!blogInfo.isIncomplete()) {
+                            ReaderBlogTable.setBlogInfo(blogInfo);
+                            numUpdated++;
+                        }
+                    }
+
+                    AppLog.d(T.READER, String.format("updated info for %d incomplete blogs", numUpdated));
+                    db.setTransactionSuccessful();
+
+                    if (resultListener != null) {
+                        UpdateResult result = (numUpdated > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
+                        resultListener.onUpdateResult(result);
+                    }
+
+                } finally {
+                    db.endTransaction();
+                }
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
+                }
+            }
+        };
+
+        AppLog.d(T.READER, String.format("requesting info for %d incomplete blogs", requestUrls.size()));
+        String path = ReaderUtils.getBatchEndpointForRequests(requestUrls);
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
+    }
 }
