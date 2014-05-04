@@ -280,10 +280,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
             }
         };
         if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             if (getBlogType() == ReaderBlogType.FOLLOWED) {
                 mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
             }
+            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             notifyDataSetChanged(); // <-- required for getView() to know correct follow status
             if (mFollowListener != null) {
                 mFollowListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);

@@ -46,9 +46,13 @@ class ReaderFullScreenUtils {
      * add a top margin to the passed view that's the same height as the ActionBar
      */
     static void addTopMargin(Context context, View view) {
-        if (view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+        addTopMargin(view, DisplayUtils.getActionBarHeight(context));
+    }
+
+    static void addTopMargin(View view, int height) {
+        if (view != null && view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-            params.topMargin = DisplayUtils.getActionBarHeight(context);
+            params.topMargin = height;
         }
     }
 }
