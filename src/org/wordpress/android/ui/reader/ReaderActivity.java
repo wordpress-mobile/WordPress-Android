@@ -510,15 +510,20 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment == null)
             return;
 
+        final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
+        if (updatedPost == null) {
+            return;
+        }
+
         switch (changeType) {
             case FOLLOWED:
             case UNFOLLOWED:
                 // if follow status has changed, update the follow status on other posts in this blog
-                listFragment.updateFollowStatusOnPostsForBlog(blogId, changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                boolean followStatus = (changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.getBlogUrl(), followStatus);
                 break;
             default:
                 // otherwise, reload the updated post so that changes are reflected
-                final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
                 listFragment.reloadPost(updatedPost);
         }
     }

@@ -117,7 +117,6 @@ public class ReaderUserAdapter extends BaseAdapter {
         if (ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
             user.isFollowed = isAskingToFollow;
             ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-            return;
         }
     }
 

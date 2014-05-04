@@ -62,9 +62,7 @@ public class ReaderBlogActions {
 
         // update local db
         ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, isAskingToFollow);
-        if (hasBlogId) {
-            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
-        }
+        ReaderPostTable.setFollowStatusForPostsInBlog(blogId, blogUrl, isAskingToFollow);
 
         // if we have the url but not the id, and a lookup hasn't already been performed,
         // lookup the blogInfo to get the id then try again
@@ -130,9 +128,7 @@ public class ReaderBlogActions {
             return;
         }
         ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, !isAskingToFollow);
-        if (blogId != 0) {
-            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
-        }
+        ReaderPostTable.setFollowStatusForPostsInBlog(blogId, blogUrl, !isAskingToFollow);
     }
 
     /*

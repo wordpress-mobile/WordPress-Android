@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * tbl_posts contains all reader posts
@@ -315,19 +316,32 @@ public class ReaderPostTable {
     /*
      * sets the following status for all posts in the passed blog
      */
-    public static void setFollowStatusForPostsInBlog(long blogId, boolean isFollowed) {
+    public static void setFollowStatusForPostsInBlog(long blogId, String blogUrl, boolean isFollowed) {
+        if (blogId == 0 && TextUtils.isEmpty(blogUrl)) {
+            return;
+        }
+
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
-            // change is_followed in tbl_posts for this blog
-            String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                       + " WHERE blog_id=?";
-            db.execSQL(sql, new String[]{Long.toString(blogId)});
+            // change is_followed in tbl_posts for this blog - use blogId if we have it,
+            // otherwise use url
+            if (blogId != 0) {
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_id=?";
+                db.execSQL(sql, new String[]{Long.toString(blogId)});
+            } else {
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_url=?";
+                db.execSQL(sql, new String[]{blogUrl});
+            }
 
-            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in tbl_post_tags
-            if (!isFollowed)
+            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in
+            // tbl_post_tags - note that this requires the blogId
+            if (!isFollowed && blogId != 0) {
                 db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
                         new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+            }
 
             db.setTransactionSuccessful();
         } finally {

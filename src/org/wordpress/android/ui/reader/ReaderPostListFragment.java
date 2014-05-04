@@ -729,9 +729,9 @@ public class ReaderPostListFragment extends SherlockFragment
         return (getActivity() != null && !isRemoving());
     }
 
-    void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+    void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
         if (hasPostAdapter()) {
-            getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, followStatus);
+            getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, blogUrl, followStatus);
         }
     }
 

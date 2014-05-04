@@ -171,6 +171,7 @@ public class ReaderPost {
         if (jsonAuthor == null) {
             return;
         }
+
         post.authorName = JSONUtil.getString(jsonAuthor, "name");
         post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
         post.authorId = jsonAuthor.optLong("ID");
@@ -189,20 +190,19 @@ public class ReaderPost {
             return;
         }
 
-        // list of all tags
-        StringBuilder sbAllTags = new StringBuilder();
+        Iterator<String> it = jsonTags.keys();
+        if (!it.hasNext()) {
+            return;
+        }
 
         // most popular tag & second most popular tag, based on usage count on this blog
         String mostPopularTag = null;
         String nextMostPopularTag = null;
         int popularCount = 0;
 
-        Iterator<String> it = jsonTags.keys();
-        if (!it.hasNext()) {
-            return;
-        }
-
+        StringBuilder sbAllTags = new StringBuilder();
         boolean isFirst = true;
+
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
             String tagName = JSONUtil.getString(jsonThisTag, "name");

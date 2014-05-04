@@ -8,5 +8,5 @@ public class ReaderConstants {
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10;     // 10 minute delay between automatic updates
 
     public static final int  READER_MAX_RECOMMENDED_TO_REQUEST = 40;     // max # of recommended blogs to request
-    public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 4;      // max # of recommended blogs to display
+    public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 5;      // max # of recommended blogs to display
 }

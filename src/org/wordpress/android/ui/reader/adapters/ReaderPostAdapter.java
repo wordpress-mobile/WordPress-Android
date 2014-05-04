@@ -205,13 +205,21 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * sets the follow status of each post in the passed blog
      */
-    public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
+    public void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
         if (isEmpty()) {
             return;
         }
+
+        boolean hasBlogId = (blogId != 0);
+        boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
+        if (!hasBlogId && !hasBlogUrl) {
+            return;
+        }
+
         boolean isChanged = false;
         for (ReaderPost post: mPosts) {
-            if (post.blogId == blogId) {
+            boolean isMatched = (hasBlogId ? (blogId == post.blogId) : blogUrl.equals(post.getBlogUrl()));
+            if (isMatched) {
                 post.isFollowedByCurrentUser = followStatus;
                 isChanged = true;
             }
@@ -554,11 +562,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
-        mPosts.set(position, updatedPost);
+        if (updatedPost != null) {
+            mPosts.set(position, updatedPost);
+        }
+
         ReaderUtils.showFollowStatus(holder.txtFollow, isAskingToFollow);
-        
-        // update follow status of all other posts in the same blog
-        updateFollowStatusOnPostsForBlog(post.blogId, isAskingToFollow);
+        updateFollowStatusOnPostsForBlog(post.blogId, post.getBlogUrl(), isAskingToFollow);
     }
 
     private void showReblogStatus(ImageView imgBtnReblog, boolean isRebloggedByCurrentUser) {
