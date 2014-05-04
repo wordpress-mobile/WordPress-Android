@@ -36,8 +36,7 @@ public class ReaderBlogActions {
 
     /*
      * follow/unfollow a blog - make sure to pass the blogId when known since following
-     * following solely by url may cause the blog to be followed as a feed if the
-     * blogInfo for the passed url can't be retrieved
+     * solely by url may cause the blog to be followed as a feed
      */
     public static boolean performFollowAction(final long blogId,
                                               final String blogUrl,
@@ -80,9 +79,15 @@ public class ReaderBlogActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, "blog " + actionName + " succeeded");
+                boolean success = isFollowActionSuccessful(jsonObject, isAskingToFollow);
+                if (success) {
+                    AppLog.d(T.READER, "blog " + actionName + " succeeded");
+                } else {
+                    AppLog.w(T.READER, "blog " + actionName + " failed");
+                    localRevertFollowAction(blogId, blogUrl, isAskingToFollow);
+                }
                 if (actionListener != null) {
-                    actionListener.onActionResult(true);
+                    actionListener.onActionResult(success);
                 }
             }
         };
@@ -91,11 +96,7 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "blog " + actionName + " failed");
                 AppLog.e(T.READER, volleyError);
-                // revert to original state
-                ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, !isAskingToFollow);
-                if (hasBlogId) {
-                    ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
-                }
+                localRevertFollowAction(blogId, blogUrl, isAskingToFollow);
                 if (actionListener != null) {
                     actionListener.onActionResult(false);
                 }
@@ -110,13 +111,54 @@ public class ReaderBlogActions {
     /*
      * helper routine when following a blog from a post view
      */
-    public static boolean performFollowAction(ReaderPost post, boolean isAskingToFollow) {
+    public static boolean performFollowAction(ReaderPost post,
+                                              boolean isAskingToFollow,
+                                              ReaderActions.ActionListener actionListener) {
         if (post == null) {
             return false;
         }
         // don't use the blogId if this is an external feed
         long blogId = (post.isExternal ? 0 : post.blogId);
-        return performFollowAction(blogId, post.getBlogUrl(), isAskingToFollow, null);
+        return performFollowAction(blogId, post.getBlogUrl(), isAskingToFollow, actionListener);
+    }
+
+    /*
+     * called when a follow/unfollow fails, restores local data to previous state
+     */
+    private static void localRevertFollowAction(long blogId, String blogUrl, boolean isAskingToFollow) {
+        if (blogId == 0 && TextUtils.isEmpty(blogUrl)) {
+            return;
+        }
+        ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, !isAskingToFollow);
+        if (blogId != 0) {
+            ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
+        }
+    }
+
+    /*
+     * returns whether a follow/unfollow was successful based on the response to:
+     *      read/follows/new
+     *      read/follows/delete
+     *      site/$site/follows/new
+     *      site/$site/follows/mine/delete
+     */
+    private static boolean isFollowActionSuccessful(JSONObject json, boolean isAskingToFollow) {
+        if (json == null) {
+            return false;
+        }
+
+        final boolean isSubscribed;
+        if (json.has("subscribed")) {
+            // read/follows/
+            isSubscribed = json.optBoolean("subscribed", false);
+        } else if (json.has("is_following")) {
+            // site/$site/follows/
+            isSubscribed = json.optBoolean("is_following", false);
+        } else {
+            isSubscribed = false;
+        }
+
+        return (isSubscribed == isAskingToFollow);
     }
 
     /*

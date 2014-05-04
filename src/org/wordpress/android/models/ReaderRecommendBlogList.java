@@ -16,7 +16,7 @@ public class ReaderRecommendBlogList extends ArrayList<ReaderRecommendedBlog> {
 
         JSONArray jsonBlogs = json.optJSONArray("blogs");
         if (jsonBlogs != null) {
-            for (int i=0; i < jsonBlogs.length(); i++)
+            for (int i = 0; i < jsonBlogs.length(); i++)
                 blogs.add(ReaderRecommendedBlog.fromJson(jsonBlogs.optJSONObject(i)));
         }
 
@@ -37,7 +37,8 @@ public class ReaderRecommendBlogList extends ArrayList<ReaderRecommendedBlog> {
         }
 
         for (ReaderRecommendedBlog blog: blogs) {
-            if (indexOfBlogId(blog.blogId) == -1) {
+            int index = indexOfBlogId(blog.blogId);
+            if (index == -1 || !this.get(index).isSameAs(blog)) {
                 return false;
             }
         }

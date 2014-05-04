@@ -20,13 +20,17 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.lang.ref.WeakReference;
 
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
@@ -42,6 +46,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private final ReaderBlogType mBlogType;
     private final boolean mCanUseStableIds;
     private final BlogFollowChangeListener mFollowListener;
+    private final WeakReference<Context> mWeakContext;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
     private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
@@ -50,6 +55,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                              ReaderBlogType blogType,
                              BlogFollowChangeListener followListener) {
         super();
+        mWeakContext = new WeakReference<Context>(context);
         mInflater = LayoutInflater.from(context);
         mBlogType = blogType;
         mFollowListener = followListener;
@@ -57,6 +63,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
         // recommended blogs all have a unique blogId, but followed blogs may have multiple
         // blogs with a blogId of zero
         mCanUseStableIds = (getBlogType() == ReaderBlogType.RECOMMENDED);
+    }
+
+    private Context getContext() {
+        return mWeakContext.get();
     }
 
     @SuppressLint("NewApi")
@@ -118,6 +128,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
+    private boolean isPositionValid(int position) {
+        return (position >= 0 && position < getCount());
+    }
+
     @Override
     public boolean hasStableIds() {
         return mCanUseStableIds;
@@ -133,7 +147,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         final BlogViewHolder holder;
         if (convertView == null || !(convertView.getTag() instanceof BlogViewHolder)) {
             convertView = mInflater.inflate(R.layout.reader_listitem_blog, parent, false);
@@ -185,7 +199,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 AniUtils.zoomAction(holder.txtFollow);
-                changeFollowStatus(holder.txtFollow, blogId, blogUrl, !isFollowing);
+                changeFollowStatus(holder.txtFollow, position, !isFollowing);
             }
         });
 
@@ -195,7 +209,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
             public void onClick(View v) {
                 // make sure we have either the blog id or url
                 if (blogId != 0 || !TextUtils.isEmpty(blogUrl)) {
-                    ReaderActivityLauncher.showReaderBlogPreview(parent.getContext(), blogId, blogUrl);
+                    ReaderActivityLauncher.showReaderBlogPreview(getContext(), blogId, blogUrl);
                 }
             }
         });
@@ -230,9 +244,46 @@ public class ReaderBlogAdapter extends BaseAdapter {
         }
     }
 
-    private void changeFollowStatus(TextView txtFollow, long blogId, String blogUrl, boolean isAskingToFollow) {
-        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, null)) {
+    private void changeFollowStatus(final TextView txtFollow,
+                                    final int position,
+                                    final boolean isAskingToFollow) {
+        if (!isPositionValid(position)) {
+            return;
+        }
+
+        final long blogId;
+        final String blogUrl;
+        switch (getBlogType()) {
+            case RECOMMENDED:
+                ReaderRecommendedBlog blog = mRecommendedBlogs.get(position);
+                blogId = blog.blogId;
+                blogUrl = blog.getBlogUrl();
+                break;
+            case FOLLOWED:
+                ReaderBlogInfo info = mFollowedBlogs.get(position);
+                blogId = info.blogId;
+                blogUrl = info.getUrl();
+                break;
+            default:
+                return;
+        }
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && getContext() != null) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getContext(), resId);
+                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                    checkFollowStatus();
+                }
+            }
+        };
+        if (ReaderBlogActions.performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener)) {
             ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
+            if (getBlogType() == ReaderBlogType.FOLLOWED) {
+                mFollowedBlogs.get(position).isFollowing = isAskingToFollow;
+            }
             notifyDataSetChanged(); // <-- required for getView() to know correct follow status
             if (mFollowListener != null) {
                 mFollowListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);
@@ -268,6 +319,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                         tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, 0);
                     }
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
+
                 case FOLLOWED:
                     // get all followed blogs, then remove those we don't have complete info for
                     // TODO: we can stop removing incomplete info once the read/following/mine
@@ -275,6 +327,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
                     tmpFollowedBlogs.removeIncomplete();
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
+
                 default:
                     return false;
             }

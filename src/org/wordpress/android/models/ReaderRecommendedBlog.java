@@ -66,7 +66,14 @@ public class ReaderRecommendedBlog {
         this.imageUrl = StringUtils.notNullStr(imageUrl);
     }
 
-
+    protected boolean isSameAs(ReaderRecommendedBlog blog) {
+        if (blog == null) {
+            return false;
+        }
+        return (blog.blogId == this.blogId
+             && blog.score == this.score
+             && blog.followRecoId == this.followRecoId);
+    }
 
 
 }

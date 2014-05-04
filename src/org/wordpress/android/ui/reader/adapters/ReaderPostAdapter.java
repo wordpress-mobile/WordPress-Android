@@ -40,8 +40,11 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SysUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.lang.ref.WeakReference;
 
 /**
  * adapter for list of posts in a specific tag
@@ -61,7 +64,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private boolean mIsFlinging = false;
 
     private final LayoutInflater mInflater;
-    private final Context mContext;
+    private final WeakReference<Context> mWeakContext;
     private final ReaderPostListType mPostListType;
     private ReaderPostList mPosts = new ReaderPostList();
 
@@ -81,7 +84,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
-        mContext = context;
+        mWeakContext = new WeakReference<Context>(context);
         mInflater = LayoutInflater.from(context);
 
         mPostListType = postListType;
@@ -108,7 +111,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     private Context getContext() {
-        return mContext;
+        return mWeakContext.get();
     }
 
     public void setOnTagSelectedListener(OnTagSelectedListener listener) {
@@ -531,11 +534,22 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the follow button
      */
-    private void toggleFollow(PostViewHolder holder, int position, ReaderPost post) {
+    private void toggleFollow(final PostViewHolder holder, int position, ReaderPost post) {
         AniUtils.zoomAction(holder.txtFollow);
+        final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
 
-        boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow)) {
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && getContext() != null) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getContext(), resId);
+                    ReaderUtils.showFollowStatus(holder.txtFollow, !isAskingToFollow);
+                }
+            }
+        };
+
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
             return;
         }
 

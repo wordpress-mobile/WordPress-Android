@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -56,13 +57,15 @@ public class ReaderUtils {
         if (requestUrls != null) {
             boolean isFirst = true;
             for (String url : requestUrls) {
-                if (isFirst) {
-                    isFirst = false;
-                    sbBatch.append("?");
-                } else {
-                    sbBatch.append("&");
+                if (!TextUtils.isEmpty(url)) {
+                    if (isFirst) {
+                        isFirst = false;
+                        sbBatch.append("?");
+                    } else {
+                        sbBatch.append("&");
+                    }
+                    sbBatch.append("urls%5B%5D=").append(Uri.encode(url));
                 }
-                sbBatch.append("urls%5B%5D=").append(Uri.encode(url));
             }
         }
         return sbBatch.toString();

@@ -529,8 +529,17 @@ public class ReaderPostDetailFragment extends SherlockFragment
         followButton.setSelected(!isSelected);
         AniUtils.zoomAction(followButton);
 
-        boolean isAskingToFollow = !post.isFollowedByCurrentUser;
-        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow)) {
+        final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && hasActivity()) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getActivity(), resId);
+                }
+            }
+        };
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
             followButton.setSelected(isSelected);
             return;
         }
