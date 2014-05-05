@@ -32,6 +32,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReaderBlogActions {
 
     /*
@@ -444,7 +447,7 @@ public class ReaderBlogActions {
         }
 
         // lookup full info in batches
-        ReaderUrlList requestUrls = new ReaderUrlList();
+        List<String> requestUrls = new ArrayList<String>();
         for (ReaderBlogInfo info: incompleteBlogs) {
             requestUrls.add("/sites/" + info.blogId);
             if (requestUrls.size() >= MAX_BATCH_URLS) {
@@ -459,7 +462,7 @@ public class ReaderBlogActions {
         }
     }
 
-    private static void batchUpdateIncompleteBlogInfo(final ReaderUrlList requestUrls) {
+    private static void batchUpdateIncompleteBlogInfo(final List<String> requestUrls) {
         if (requestUrls == null || requestUrls.size() == 0) {
             return;
         }

@@ -6,7 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderUrlList;
+
+import java.util.List;
 
 /**
  * Created by nbradbury on 4/29/14.
@@ -52,7 +53,7 @@ public class ReaderUtils {
      * return the path to use for the /batch/ endpoint from the list of request urls
      * https://developer.wordpress.com/docs/api/1/get/batch/
      */
-    public static String getBatchEndpointForRequests(ReaderUrlList requestUrls) {
+    public static String getBatchEndpointForRequests(List<String> requestUrls) {
         StringBuilder sbBatch = new StringBuilder("/batch/");
         if (requestUrls != null) {
             boolean isFirst = true;
