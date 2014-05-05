@@ -21,7 +21,6 @@ import org.wordpress.android.models.ReaderBlogInfoList;
 import org.wordpress.android.models.ReaderFollowedBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
-import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
@@ -246,11 +245,10 @@ public class ReaderBlogActions {
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
+                    // followed blogs have changed, fill in incomplete blogInfos to make sure we have
+                    // full info about new blogs
+                    updateIncompleteBlogInfo();
                 }
-
-                // fill in incomplete blogInfos to make sure we have correct info about all
-                // followed blogs
-                updateIncompleteBlogInfo();
 
                 if (resultListener != null) {
                     handler.post(new Runnable() {
@@ -447,7 +445,7 @@ public class ReaderBlogActions {
         }
 
         // lookup full info in batches
-        List<String> requestUrls = new ArrayList<String>();
+        ArrayList<String> requestUrls = new ArrayList<String>();
         for (ReaderBlogInfo info: incompleteBlogs) {
             requestUrls.add("/sites/" + info.blogId);
             if (requestUrls.size() >= MAX_BATCH_URLS) {
@@ -462,10 +460,13 @@ public class ReaderBlogActions {
         }
     }
 
-    private static void batchUpdateIncompleteBlogInfo(final List<String> requestUrls) {
+    private static void batchUpdateIncompleteBlogInfo(ArrayList<String> requestUrls) {
         if (requestUrls == null || requestUrls.size() == 0) {
             return;
         }
+
+        // work with a clone of the passed list so changes to it don't impact us
+        final ArrayList<String> copyOfUrls = (ArrayList<String>) requestUrls.clone();
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -478,7 +479,7 @@ public class ReaderBlogActions {
                 db.beginTransaction();
                 try {
                     int numUpdated = 0;
-                    for (String url : requestUrls) {
+                    for (String url : copyOfUrls) {
                         // the /batch/ endpoint identifies each response by the requested url
                         JSONObject jsonSite = jsonObject.optJSONObject(url);
                         ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonSite);
@@ -505,8 +506,8 @@ public class ReaderBlogActions {
             }
         };
 
-        AppLog.d(T.READER, String.format("requesting info for %d incomplete blogs", requestUrls.size()));
-        String path = ReaderUtils.getBatchEndpointForRequests(requestUrls);
+        AppLog.d(T.READER, String.format("requesting info for %d incomplete blogs", copyOfUrls.size()));
+        String path = ReaderUtils.getBatchEndpointForRequests(copyOfUrls);
         WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 }
