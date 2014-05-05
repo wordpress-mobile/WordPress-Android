@@ -48,8 +48,7 @@ import java.util.List;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
- * followed tags, popular tags, and recommended blogs - can also show followed blogs, but
- * that has been disabled as of 26-Apr-2014 because the API doesn't return enough info
+ * followed tags, popular tags, followed blogs, and recommended blogs
  */
 public class ReaderSubsActivity extends SherlockFragmentActivity
                                 implements ReaderTagAdapter.TagActionListener,

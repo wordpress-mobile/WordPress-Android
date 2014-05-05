@@ -28,6 +28,7 @@ public class UserPrefs {
                .remove(PREFKEY_USER_ID)
                .remove(PREFKEY_READER_TAG)
                .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
+               .remove(PREFKEY_READER_SUBS_PAGE_TITLE)
                .commit();
     }
 

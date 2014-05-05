@@ -112,7 +112,7 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         // no menu drawer if this is blog preview or tag preview
-        if (mPostListType == ReaderPostListType.BLOG_PREVIEW || mPostListType == ReaderPostListType.TAG_PREVIEW) {
+        if (mPostListType.isPreviewType()) {
             setContentView(R.layout.reader_activity_main);
         } else {
             createMenuDrawer(R.layout.reader_activity_main);
