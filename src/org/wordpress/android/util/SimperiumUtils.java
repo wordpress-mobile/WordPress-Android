@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
@@ -69,7 +70,7 @@ public class SimperiumUtils {
 
     public static void authorizeUser(Simperium simperium, String token){
 
-        if (token == null) return;
+        if (TextUtils.isEmpty(token)) return;
 
         User user = simperium.getUser();
 
