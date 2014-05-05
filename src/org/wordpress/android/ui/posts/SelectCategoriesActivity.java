@@ -44,7 +44,6 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefresh
 
 public class SelectCategoriesActivity extends SherlockListActivity {
     String finalResult = "";
-    public String categoryErrorMsg = "";
     private final Handler mHandler = new Handler();
     private Blog blog;
     private ListView mListView;
