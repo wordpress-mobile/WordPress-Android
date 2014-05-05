@@ -27,13 +27,9 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.simperium.Simperium;
-import com.simperium.client.Bucket;
-import com.simperium.client.BucketObject;
 
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
@@ -45,10 +41,10 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -94,9 +90,6 @@ public class WordPress extends Application {
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
-    public static Simperium simperium;
-    public static Bucket<Note> notesBucket;
-    public static Bucket<BucketObject> metaBucket;
     private static Date mStatsLastPingDate; //last time stats were updated in background
 
     public static BitmapLruCache getBitmapCache() {
@@ -467,8 +460,8 @@ public class WordPress extends Application {
         UserPrefs.reset();
         ReaderDatabase.reset();
 
-        notesBucket.reset();
-        metaBucket.reset();
+        SimperiumUtils.getNotesBucket().reset();
+        SimperiumUtils.getMetaBucket().reset();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants

@@ -19,6 +19,7 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.SimperiumUtils;
 
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private NotesAdapter mNotesAdapter;
@@ -44,9 +45,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         super.onActivityCreated(bundle);
 
         // setup the initial notes adapter, starts listening to the bucket
-        mBucket = WordPress.notesBucket;
+        mBucket = SimperiumUtils.getNotesBucket();
 
-        mNotesAdapter = new NotesAdapter(getActivity(), WordPress.notesBucket);
+        mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
 
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -110,7 +111,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0) {
                 Note newestNote = mNotesAdapter.getNote(0);
-                BucketObject meta = WordPress.metaBucket.get("meta");
+                BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
                 meta.setProperty("last_seen", newestNote.getTimestamp());
                 meta.save();
             }
@@ -208,7 +209,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
                 // Get the new bucket instance and start listening again
                 mBucket.removeListener(NotificationsListFragment.this);
-                mBucket = WordPress.notesBucket;
+                mBucket = SimperiumUtils.getNotesBucket();
                 mBucket.addListener(NotificationsListFragment.this);
             } else if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
                 getActivity().setProgressBarIndeterminateVisibility(false);

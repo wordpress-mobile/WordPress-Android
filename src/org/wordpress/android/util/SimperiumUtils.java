@@ -1,3 +1,7 @@
+/**
+ * Simperium integration with WordPress.com
+ * Currently used with Notifications
+ */
 package org.wordpress.android.util;
 
 import android.content.Context;
@@ -16,7 +20,34 @@ import org.wordpress.android.models.Note;
 
 public class SimperiumUtils {
 
-    private static String TOKEN_FORMAT="WPCC/%s/%s";
+    private static com.simperium.Simperium mSimperium;
+    private static Bucket<Note> mNotesBucket;
+
+    public static com.simperium.Simperium getSimperium() {
+        return mSimperium;
+    }
+
+    public static void setSimperium(com.simperium.Simperium simperium) {
+        mSimperium = simperium;
+    }
+
+    public static Bucket<Note> getNotesBucket() {
+        return mNotesBucket;
+    }
+
+    public static void setNotesBucket(Bucket<Note> notesBucket) {
+        mNotesBucket = notesBucket;
+    }
+
+    private static Bucket<BucketObject> mMetaBucket;
+
+    public static Bucket<BucketObject> getMetaBucket() {
+        return mMetaBucket;
+    }
+
+    public static void setMetaBucket(Bucket<BucketObject> metaBucket) {
+        mMetaBucket = metaBucket;
+    }
 
     public static Simperium configureSimperium(final Context context, String token) {
 
@@ -28,9 +59,9 @@ public class SimperiumUtils {
             final Bucket<Note> notesBucket = simperium.bucket(new Note.Schema());
             final Bucket<BucketObject> metaBucket = simperium.bucket("meta");
 
-            WordPress.simperium = simperium;
-            WordPress.notesBucket = notesBucket;
-            WordPress.metaBucket = metaBucket;
+            setSimperium(simperium);
+            setNotesBucket(notesBucket);
+            setMetaBucket(metaBucket);
 
             simperium.setUserStatusChangeListener( new User.StatusChangeListener() {
 
@@ -74,12 +105,12 @@ public class SimperiumUtils {
 
         User user = simperium.getUser();
 
-        String wpccToken = String.format(TOKEN_FORMAT, BuildConfig.SIMPERIUM_APP_SECRET, token);
+        String tokenFormat = "WPCC/%s/%s";
+        String wpccToken = String.format(tokenFormat, BuildConfig.SIMPERIUM_APP_SECRET, token);
 
         user.setAccessToken(wpccToken);
 
         // we'll assume the user is AUTHORIZED, and catch NOT_AUTHORIZED if something goes wrong.
         user.setStatus(User.Status.AUTHORIZED);
     }
-
 }

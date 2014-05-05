@@ -18,7 +18,6 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
@@ -136,7 +136,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             String noteID = intent.getStringExtra(NOTE_ID_EXTRA);
 
-            Bucket<Note> notesBucket = WordPress.notesBucket;
+            Bucket<Note> notesBucket = SimperiumUtils.getNotesBucket();
             try {
                 if (notesBucket != null) {
                     Note note = notesBucket.get(noteID);
