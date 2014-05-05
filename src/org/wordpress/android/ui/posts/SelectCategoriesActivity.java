@@ -300,6 +300,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
 
                     // Check if the category name already exists
                     if (!mCategoryNames.keySet().contains(category_name)) {
+                        mPullToRefreshHelper.setRefreshing(true);
                         Thread th = new Thread() {
                             public void run() {
                                 finalResult = addCategory(category_name, category_slug, category_desc, parent_id);
