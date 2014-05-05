@@ -16,7 +16,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
@@ -27,7 +28,8 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 public class PullToRefreshHelper implements OnRefreshListener {
     private static final String REFRESH_BUTTON_HIT_COUNT = "REFRESH_BUTTON_HIT_COUNT";
-    private static final List<Integer> toastFrequency = Arrays.asList(1, 5, 10, 20, 40, 80, 160, 320, 640);
+    private static final Set<Integer> TOAST_FREQUENCY = new HashSet<Integer>(Arrays.asList(1, 5, 10, 20, 40, 80, 160,
+            320, 640));
     private PullToRefreshHeaderTransformer mHeaderTransformer;
     private PullToRefreshLayout mPullToRefreshLayout;
     private RefreshListener mRefreshListener;
@@ -90,7 +92,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
         int refreshHits = preferences.getInt(REFRESH_BUTTON_HIT_COUNT, 0);
         refreshHits += 1;
-        if (toastFrequency.contains(refreshHits)) {
+        if (TOAST_FREQUENCY.contains(refreshHits)) {
             ToastUtils.showToast(mActivity, R.string.ptr_tip_message, Duration.LONG);
         }
         Editor editor = preferences.edit();
