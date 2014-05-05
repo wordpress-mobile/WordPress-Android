@@ -15,10 +15,11 @@ import com.simperium.client.BucketObject;
 import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 
 public class SimperiumUtils {
+    public static final String BROADCAST_ACTION_SIMPERIUM_SIGNED_IN = "simperium-signin";
+    public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
 
     private static com.simperium.Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
@@ -72,14 +73,14 @@ public class SimperiumUtils {
                             notesBucket.start();
                             metaBucket.start();
                             Intent simperiumSignedInIntent = new Intent();
-                            simperiumSignedInIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+                            simperiumSignedInIntent.setAction(BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
                             context.sendBroadcast(simperiumSignedInIntent);
                             break;
                         case NOT_AUTHORIZED:
                             notesBucket.stop();
                             metaBucket.stop();
                             Intent simperiumNotAuthorizedIntent = new Intent();
-                            simperiumNotAuthorizedIntent.setAction(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
+                            simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
                             context.sendBroadcast(simperiumNotAuthorizedIntent);
                             break;
                         default:

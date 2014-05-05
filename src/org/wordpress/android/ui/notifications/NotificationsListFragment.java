@@ -186,10 +186,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private void registerReceiver() {
         if (!hasActivity())
             return;
-        
+
         IntentFilter filter = new IntentFilter();
-        filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-        filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
+        filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
+        filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
         getActivity().registerReceiver(mReceiver, filter);
     }
 
@@ -209,12 +209,12 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null || !hasActivity())
                 return;
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
+            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
                 // Get the new bucket instance and start listening again
                 mBucket.removeListener(NotificationsListFragment.this);
                 mBucket = SimperiumUtils.getNotesBucket();
                 mBucket.addListener(NotificationsListFragment.this);
-            } else if (intent.getAction().equals(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
+            } else if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
                 getActivity().setProgressBarIndeterminateVisibility(false);
 
                 // Simperium user is not authorized, log in again
