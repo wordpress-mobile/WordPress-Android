@@ -89,8 +89,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if (isSharingText()) {
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
-            // if text/plain and only one blog, then don't show this fragment, share it directly
-            // to a new post
+            // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
             if (blogNames.length == 1) {
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
@@ -234,7 +233,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             if (selectBlog(blogId)) {
                 shareIt();
                 return true;
-            } else { // blog is hidden or has been deleted, reset settings
+            } else {
+                // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_TEXT_BLOG_ID_KEY);
                 editor.commit();
@@ -254,7 +254,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             if (selectBlog(blogId)) {
                 shareIt();
                 return true;
-            } else { // blog is hidden or has been deleted, reset settings
+            } else {
+                // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_IMAGE_BLOG_ID_KEY);
                 editor.remove(SHARE_IMAGE_ADDTO_KEY);
