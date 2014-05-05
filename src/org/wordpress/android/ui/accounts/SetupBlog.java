@@ -200,15 +200,12 @@ public class SetupBlog {
 
     private String getmXmlrpcByUserEnteredPath(String baseUrl) {
         String xmlRpcUrl = null;
-        // Try the user entered path
-        URI uri;
-        try {
-            uri = URI.create(baseUrl);
-        } catch (IllegalArgumentException e) {
-            AppLog.e(T.NUX, "invalid URL: " + baseUrl, e);
+        if (!UrlUtils.isValidUrlAndHostNotNull(baseUrl)) {
+            AppLog.e(T.NUX, "invalid URL: " + baseUrl);
             mErrorMsgId = R.string.invalid_url_message;
             return null;
         }
+        URI uri = URI.create(baseUrl);
         XMLRPCClientInterface client = XMLRPCFactory.instantiate(uri, mHttpUsername, mHttpPassword);
         try {
             client.call("system.listMethods");
