@@ -32,7 +32,6 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReaderBlogActions {
 

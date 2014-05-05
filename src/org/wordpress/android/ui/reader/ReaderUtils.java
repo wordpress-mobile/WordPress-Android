@@ -9,9 +9,6 @@ import org.wordpress.android.R;
 
 import java.util.List;
 
-/**
- * Created by nbradbury on 4/29/14.
- */
 public class ReaderUtils {
 
     /*

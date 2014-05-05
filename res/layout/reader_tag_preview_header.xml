@@ -4,6 +4,7 @@
     header used by reader post list when previewing posts with a specific tag
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -19,7 +20,7 @@
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:background="@color/white"
+        android:background="@drawable/reader_post_background"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -32,7 +33,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:gravity="center_vertical"
-            android:text="@string/reader_label_tag_preview"
+            tools:text="@string/reader_label_tag_preview"
             android:textColor="@color/grey_medium"
             android:textSize="@dimen/text_sz_extra_large" />
 

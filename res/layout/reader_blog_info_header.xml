@@ -20,7 +20,7 @@
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
         android:paddingBottom="@dimen/margin_medium"
-        android:background="@color/white">
+        android:background="@drawable/reader_post_background">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_name"
