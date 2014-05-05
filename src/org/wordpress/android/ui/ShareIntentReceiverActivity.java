@@ -36,13 +36,13 @@ import java.util.Map;
  * along with the content passed in the intent
  */
 public class ShareIntentReceiverActivity extends SherlockFragmentActivity implements OnItemSelectedListener {
-    final static public String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
-    final static public String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
-    final static public String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
-    final static public String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
-    final static public String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
-    final static public int ADD_TO_NEW_POST = 0;
-    final static public int ADD_TO_MEDIA_LIBRARY = 1;
+    public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
+    public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
+    public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
+    public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
+    public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
+    public static final int ADD_TO_NEW_POST = 0;
+    public static final int ADD_TO_MEDIA_LIBRARY = 1;
     private IcsSpinner mBlogSpinner;
     private IcsSpinner mActionSpinner;
     private CheckedTextView mAlwaysUseCheckBox;
