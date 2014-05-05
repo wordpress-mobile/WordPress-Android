@@ -10,7 +10,6 @@
     android:layout_marginLeft="@dimen/reader_list_margin"
     android:layout_marginRight="@dimen/reader_list_margin"
     android:layout_marginTop="@dimen/margin_medium"
-    android:layout_marginBottom="@dimen/margin_small"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,6 +19,7 @@
         android:paddingTop="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_medium"
         android:background="@color/white">
 
         <org.wordpress.android.widgets.WPTextView
@@ -69,12 +69,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/reader_divider_grey" />
 
     </LinearLayout>
 </LinearLayout>

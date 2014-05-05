@@ -1145,9 +1145,8 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         float centerX = mMshotWidth * 0.5f;
-        float centerY = mMshotHeight * 0.5f;
         Matrix matrix = new Matrix();
-        matrix.setScale(scale, scale, centerX, centerY);
+        matrix.setScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);
 
         // remember the scale so we can avoid unnecessary scaling the next time

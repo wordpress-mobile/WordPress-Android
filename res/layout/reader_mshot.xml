@@ -8,11 +8,11 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_mshot"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/reader_mshot_image_height"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_medium"
         android:scaleType="matrix" />
 
     <ProgressBar
