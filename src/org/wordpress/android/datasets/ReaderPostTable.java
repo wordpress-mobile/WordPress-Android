@@ -333,7 +333,7 @@ public class ReaderPostTable {
             } else {
                 String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
                         + " WHERE blog_url=?";
-                db.execSQL(sql, new String[]{blogUrl});
+                db.execSQL(sql, new String[]{UrlUtils.normalizeUrl(blogUrl)});
             }
 
             // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in

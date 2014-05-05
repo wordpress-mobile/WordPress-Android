@@ -243,9 +243,11 @@ public class ReaderBlogActions {
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                    // followed blogs have changed, make sure we have complete info about new blogs
-                    updateIncompleteBlogInfo();
                 }
+
+                // fill in incomplete blogInfos to make sure we have correct info about all
+                // followed blogs
+                updateIncompleteBlogInfo();
 
                 if (resultListener != null) {
                     handler.post(new Runnable() {
@@ -433,8 +435,10 @@ public class ReaderBlogActions {
      */
     private static final int MAX_BATCH_URLS = 25;
     private static void updateIncompleteBlogInfo() {
-        // get list of all blogInfos that are incomplete
+        // get list of all blogInfos that are incomplete, then remove external (feed) blogs
+        // since we know looking them up will fail
         ReaderBlogInfoList incompleteBlogs = ReaderBlogTable.getAllFollowedBlogInfo().getIncompleteList();
+        incompleteBlogs.removeExternal();
         if (incompleteBlogs.size() == 0) {
             return;
         }
@@ -442,14 +446,10 @@ public class ReaderBlogActions {
         // lookup full info in batches
         ReaderUrlList requestUrls = new ReaderUrlList();
         for (ReaderBlogInfo info: incompleteBlogs) {
-            // don't bother looking it up if the blogId is missing, since call will fail
-            if (info.hasBlogId()) {
-                requestUrls.add("/sites/" + info.blogId);
-                // perform the batch request if we've reached the max batch size
-                if (requestUrls.size() >= MAX_BATCH_URLS) {
-                    batchUpdateIncompleteBlogInfo(requestUrls);
-                    requestUrls.clear();
-                }
+            requestUrls.add("/sites/" + info.blogId);
+            if (requestUrls.size() >= MAX_BATCH_URLS) {
+                batchUpdateIncompleteBlogInfo(requestUrls);
+                requestUrls.clear();
             }
         }
 

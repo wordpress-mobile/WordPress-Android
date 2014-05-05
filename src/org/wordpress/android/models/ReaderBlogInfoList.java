@@ -41,6 +41,26 @@ public class ReaderBlogInfoList extends ArrayList<ReaderBlogInfo> {
     }
 
     /*
+     * returns list of external (feed) blogInfos in this list
+     */
+    public ReaderBlogInfoList getExternalList() {
+        ReaderBlogInfoList externalList = new ReaderBlogInfoList();
+        for (ReaderBlogInfo info: this) {
+            if (info.isExternal()) {
+                externalList.add(info);
+            }
+        }
+        return externalList;
+    }
+
+    /*
+     * remove information about external blogs
+     */
+    public void removeExternal() {
+        this.removeAll(getExternalList());
+    }
+
+    /*
      * remove information about incomplete blogs
      */
     public void removeIncomplete() {

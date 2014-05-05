@@ -507,8 +507,9 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     public void onPostChanged(long blogId, long postId, ReaderPostDetailFragment.PostChangeType changeType) {
         ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment == null)
+        if (listFragment == null) {
             return;
+        }
 
         final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
         if (updatedPost == null) {
@@ -518,9 +519,9 @@ public class ReaderActivity extends WPActionBarActivity
         switch (changeType) {
             case FOLLOWED:
             case UNFOLLOWED:
-                // if follow status has changed, update the follow status on other posts in this blog
-                boolean followStatus = (changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
-                listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.getBlogUrl(), followStatus);
+                // if follow state has changed, update the follow state on other posts in this blog
+                boolean isFollowed = (changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.getBlogUrl(), isFollowed);
                 break;
             default:
                 // otherwise, reload the updated post so that changes are reflected

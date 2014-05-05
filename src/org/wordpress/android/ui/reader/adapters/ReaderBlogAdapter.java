@@ -310,10 +310,11 @@ public class ReaderBlogAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... params) {
             switch (getBlogType()) {
                 case RECOMMENDED:
+                    // get recommended blogs using this offset, then start over with no offset
+                    // if there aren't any with this offset,
                     int limit = ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
                     int offset = UserPrefs.getReaderRecommendedBlogOffset();
                     tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, offset);
-                    // if there aren't any with this offset, start over with no offset
                     if (tmpRecommendedBlogs.size() == 0 && offset > 0) {
                         UserPrefs.setReaderRecommendedBlogOffset(0);
                         tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, 0);
@@ -321,11 +322,12 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    // get all followed blogs, then remove those we don't have complete info for
-                    // TODO: we can stop removing incomplete info once the read/following/mine
-                    // endpoint returns full blog info
+                    // get all followed blogs, then remove incomplete/external blogs
+                    // TODO: we can stop removing incomplete info once the
+                    // read/following/mine endpoint returns full blog info
                     tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
                     tmpFollowedBlogs.removeIncomplete();
+                    tmpFollowedBlogs.removeExternal();
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:

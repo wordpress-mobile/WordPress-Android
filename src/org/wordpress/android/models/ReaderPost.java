@@ -72,7 +72,7 @@ public class ReaderPost {
         post.text = JSONUtil.getString(json, "content");
         post.title = JSONUtil.getStringDecoded(json, "title");
         post.url = JSONUtil.getString(json, "URL");
-        post.blogUrl = JSONUtil.getString(json, "site_URL");
+        post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
 
         post.numReplies = json.optInt("comment_count");
         post.numLikes = json.optInt("like_count");
@@ -156,7 +156,7 @@ public class ReaderPost {
             if (jsonSite != null) {
                 post.blogId = jsonSite.optInt("ID");
                 post.blogName = JSONUtil.getString(jsonSite, "name");
-                post.blogUrl = JSONUtil.getString(jsonSite, "URL");
+                post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
                 post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
             }
         }
@@ -178,7 +178,7 @@ public class ReaderPost {
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
         if (TextUtils.isEmpty(post.blogUrl)) {
-            post.blogUrl = JSONUtil.getString(jsonAuthor, "URL");
+            post.setBlogUrl(JSONUtil.getString(jsonAuthor, "URL"));
         }
     }
 
@@ -481,7 +481,8 @@ public class ReaderPost {
         return StringUtils.notNullStr(blogUrl);
     }
     public void setBlogUrl(String blogUrl) {
-        this.blogUrl = StringUtils.notNullStr(blogUrl);
+        // normalize the blogUrl for easier comparison
+        this.blogUrl = UrlUtils.normalizeUrl(StringUtils.notNullStr(blogUrl));
     }
 
     public String getPostAvatar() {

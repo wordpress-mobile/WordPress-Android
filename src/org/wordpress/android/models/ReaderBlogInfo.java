@@ -58,12 +58,19 @@ public class ReaderBlogInfo {
     }
 
     /*
-     * info is considered incomplete if it's missing a blog id, or missing both the name and
-     * description - used by ReaderBlogAction.updateIncompleteBlogInfo() to fill in incomplete
-     * blogInfo, and by ReaderBlogInfoList.removeIncomplete()
+     * info is considered incomplete if it's missing both the name and description - used
+     * used by ReaderBlogAction.updateIncompleteBlogInfo() to fill in incomplete blogInfo,
+     * and by ReaderBlogInfoList.removeIncomplete()
      */
     public boolean isIncomplete() {
-        return (!hasBlogId() || (!hasName() && !hasDescription()));
+        return (!hasName() && !hasDescription());
+    }
+
+    /*
+     * info is considered to external (ie: it's a feed) if it doesn't have a blogId
+     */
+    public boolean isExternal() {
+        return (blogId == 0);
     }
 
     public String getName() {
@@ -84,7 +91,7 @@ public class ReaderBlogInfo {
         return StringUtils.notNullStr(url);
     }
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
+        this.url = UrlUtils.normalizeUrl(StringUtils.notNullStr(url));
     }
 
     public boolean hasBlogId() {

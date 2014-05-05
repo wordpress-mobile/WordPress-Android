@@ -63,8 +63,10 @@ class ReaderBlogInfoHeader extends LinearLayout {
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
+        final View divider = findViewById(R.id.divider_bloginfo);
 
-        mHasBlogInfo = (blogInfo != null);
+        // don't show blogInfo until it's complete (has either a name or description)
+        mHasBlogInfo = (blogInfo != null && !blogInfo.isIncomplete());
 
         if (mHasBlogInfo) {
             if (blogInfo.hasName()) {
@@ -103,11 +105,14 @@ class ReaderBlogInfoHeader extends LinearLayout {
                 }
             });
 
+            divider.setVisibility(View.VISIBLE);
+
             if (mInfoListener != null) {
                 mInfoListener.onBlogInfoShown(blogInfo);
             }
         } else {
             txtFollowBtn.setVisibility(View.INVISIBLE);
+            divider.setVisibility(View.INVISIBLE);
         }
     }
 
