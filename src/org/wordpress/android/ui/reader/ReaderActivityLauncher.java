@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderFragmentType;
@@ -119,7 +120,8 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        if (openUrlType == OpenUrlType.INTERNAL) {
+        // TODO: NotificationsWebViewActivity will fail without a current blog
+        if (openUrlType == OpenUrlType.INTERNAL && WordPress.getCurrentBlog() != null) {
             NotificationsWebViewActivity.openUrl(context, url);
         } else {
             try {

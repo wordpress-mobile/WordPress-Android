@@ -93,7 +93,7 @@ public class WPListView extends ListView {
     }
 
     public boolean isScrolledToTop() {
-        return (getVerticalScrollOffset() == 0);
+        return (getChildCount() == 0 || getVerticalScrollOffset() == 0);
     }
 
     /*
