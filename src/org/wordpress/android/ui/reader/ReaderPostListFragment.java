@@ -803,11 +803,13 @@ public class ReaderPostListFragment extends SherlockFragment
                 }
 
                 if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
-                    // if we loaded new posts for a followed tag and posts are already displayed,
-                    // show the "new posts" bar rather than immediately refreshing the list
+                    // show the "new posts" bar rather than immediately update the list
+                    // if the user is viewing posts for a followed tag, posts are already
+                    // displayed, and the user has scrolled the list
                     if (!isPostAdapterEmpty()
                             && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                            && updateAction == RequestDataAction.LOAD_NEWER) {
+                            && updateAction == RequestDataAction.LOAD_NEWER
+                            && !isListScrolledToTop()) {
                         showNewPostsBar();
                     } else {
                         refreshPosts();
@@ -835,7 +837,7 @@ public class ReaderPostListFragment extends SherlockFragment
                     } else if (isPostAdapterEmpty()) {
                         // show the new posts right away if this is the current tag and there aren't
                         // any posts showing, otherwise just let them be shown on the next refresh
-                        showNewPostsBar();
+                        refreshPosts();
                     }
                 }
             };
@@ -956,6 +958,10 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderPostListType.getDefaultType());
+    }
+
+    private boolean isListScrolledToTop() {
+        return (mListView != null && mListView.isScrolledToTop());
     }
 
     /*

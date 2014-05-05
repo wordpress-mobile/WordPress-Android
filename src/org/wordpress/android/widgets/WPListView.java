@@ -92,10 +92,14 @@ public class WPListView extends ListView {
         return super.onTouchEvent(event);
     }
 
+    public boolean isScrolledToTop() {
+        return (getVerticalScrollOffset() == 0);
+    }
+
     /*
-         * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
-         * because canScrollVertically() requires API 14
-         */
+     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
+     * because canScrollVertically() requires API 14
+     */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean canScrollUp() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
