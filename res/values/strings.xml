@@ -568,10 +568,10 @@
     <!-- activity and page titles -->
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_userlist_default">People</string>
-    <string name="reader_title_followed_tags">Followed tags</string>
-    <string name="reader_title_popular_tags">Popular tags</string>
-    <string name="reader_title_followed_blogs">Followed blogs</string>
-    <string name="reader_title_recommended_blogs">Recommended blogs</string>
+    <string name="reader_title_followed_tags">Followed\ntags</string>
+    <string name="reader_title_popular_tags">Popular\ntags</string>
+    <string name="reader_title_followed_blogs">Followed\nblogs</string>
+    <string name="reader_title_recommended_blogs">Recommended\nblogs</string>
     <string name="reader_title_reblog">Reblog</string>
     <string name="reader_title_blog_preview">Preview blog</string>
     <string name="reader_title_tag_preview">Preview tag</string>

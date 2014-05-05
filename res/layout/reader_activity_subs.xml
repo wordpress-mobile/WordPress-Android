@@ -9,19 +9,7 @@
         android:id="@+id/viewpager"
         android:layout_above="@+id/divider_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/pager_tab_strip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:textColor="@color/blue_extra_light"
-            android:background="@color/blue_medium"
-            android:paddingTop="@dimen/margin_large"
-            android:paddingBottom="@dimen/margin_large" />
-
-    </android.support.v4.view.ViewPager>
+        android:layout_height="wrap_content"/>
 
     <include
         android:id="@+id/text_message_bar"

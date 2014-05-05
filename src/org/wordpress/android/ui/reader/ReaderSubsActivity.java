@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -52,7 +52,8 @@ import java.util.List;
  */
 public class ReaderSubsActivity extends SherlockFragmentActivity
                                 implements ReaderTagAdapter.TagActionListener,
-                                           ReaderBlogAdapter.BlogFollowChangeListener {
+                                           ReaderBlogAdapter.BlogFollowChangeListener,
+                                           ActionBar.TabListener {
 
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -81,17 +82,21 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         setContentView(R.layout.reader_activity_subs);
         restoreState(savedInstanceState);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
-        PagerTabStrip pagerTabStrip = (PagerTabStrip) findViewById(R.id.pager_tab_strip);
-        pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // add the tabs
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_followed_tags).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_popular_tags).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_followed_blogs).setTabListener(this));
+        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_recommended_blogs).setTabListener(this));
+
+        //pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -129,6 +134,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                getSupportActionBar().setSelectedNavigationItem(position);
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
@@ -503,9 +509,25 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         for (int i = 0; i < adapter.getCount(); i++) {
             if (pageTitle.equals(adapter.getPageTitle(i))) {
                 mViewPager.setCurrentItem(i);
+                getSupportActionBar().setSelectedNavigationItem(i);
                 return;
             }
         }
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
     }
 
     private class SubsPageAdapter extends FragmentPagerAdapter {
