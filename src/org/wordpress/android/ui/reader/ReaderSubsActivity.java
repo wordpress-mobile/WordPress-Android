@@ -89,14 +89,13 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // add the tabs
+        // add the tabs to match the viewPager
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_followed_tags).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_popular_tags).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_followed_blogs).setTabListener(this));
-        actionBar.addTab(actionBar.newTab().setText(R.string.reader_title_recommended_blogs).setTabListener(this));
-
-        //pagerTabStrip.setTabIndicatorColorResource(R.color.blue_light);
+        for (int i = 0; i < getPageAdapter().getCount(); i++) {
+            actionBar.addTab(actionBar.newTab()
+                                      .setText(getPageAdapter().getPageTitle(i))
+                                      .setTabListener(this));
+        }
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -542,13 +541,13 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_title_followed_tags);
+                    return getString(R.string.reader_page_followed_tags);
                 case TAB_IDX_SUGGESTED_TAGS:
-                    return getString(R.string.reader_title_popular_tags);
+                    return getString(R.string.reader_page_popular_tags);
                 case TAB_IDX_RECOMMENDED_BLOGS:
-                    return getString(R.string.reader_title_recommended_blogs);
+                    return getString(R.string.reader_page_recommended_blogs);
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_title_followed_blogs);
+                    return getString(R.string.reader_page_followed_blogs);
                 default:
                     return super.getPageTitle(position);
             }
