@@ -772,12 +772,22 @@ public class ReaderPostListFragment extends SherlockFragment
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
+            AppLog.i(T.READER, "reader post list > network unavailable, canceled update");
             return;
         }
 
         setIsUpdating(true, updateAction);
         setEmptyTitleAndDescriptionForCurrentTag();
+
+        // go no further if we're viewing a followed tag and the tag table is empty - this will
+        // occur when the Reader is accessed for the first time (ie: fresh install) - note that
+        // this check is purposely done after the "Refreshing" message is shown since we want
+        // that to appear in this situation - ReaderActivity will take of re-issuing this
+        // update request once tag data has been populated
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
+            AppLog.d(T.READER, "reader post list > empty followed tags, canceled update");
+            return;
+        }
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear

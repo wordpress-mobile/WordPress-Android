@@ -397,8 +397,9 @@ public class ReaderActivity extends WPActionBarActivity
             return;
         }
 
-        // remember whether we have any tags before updating
+        // remember whether we have any tags and posts before updating
         final boolean isTagTableEmpty = ReaderTagTable.isEmpty();
+        final boolean isPostTableEmpty = ReaderPostTable.isEmpty();
 
         // request the list of tags first and don't perform other calls until it returns - this
         // way changes to tags can be shown as quickly as possible (esp. important when tags
@@ -408,13 +409,15 @@ public class ReaderActivity extends WPActionBarActivity
             public void onUpdateResult(UpdateResult result) {
                 mHasPerformedInitialUpdate = true;
 
-                ReaderPostListFragment listFragment = getListFragment();
-                if (listFragment != null) {
-                    if (result == UpdateResult.CHANGED) {
+                if (result == UpdateResult.CHANGED) {
+                    // if the post list fragment is viewing followed tags, tell it to refresh
+                    // the list of tags
+                    ReaderPostListFragment listFragment = getListFragment();
+                    if (listFragment != null && listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                         listFragment.refreshTags();
-                        // if the tag table was empty and we have no posts (first run), tell the
-                        // list fragment to get posts with the current tag now that we have tags
-                        if (isTagTableEmpty && ReaderPostTable.isEmpty()) {
+                        // if the tag and posts tables were empty (first run), tell the list
+                        // fragment to get posts with the current tag now that we have tags
+                        if (isTagTableEmpty && isPostTableEmpty) {
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
                                     RequestDataAction.LOAD_NEWER,

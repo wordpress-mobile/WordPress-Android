@@ -14,6 +14,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
@@ -299,7 +300,15 @@ public class ReaderPostActions {
                                          final ReaderActions.UpdateResultAndCountListener resultListener,
                                          final ReaderActions.PostBackfillListener backfillListener) {
 
-        StringBuilder sb = new StringBuilder(getEndpointForTag(tagName));
+        String endpoint = getEndpointForTag(tagName);
+        if (TextUtils.isEmpty(endpoint)) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+            }
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder(endpoint);
 
         // append #posts to retrieve
         sb.append("?number=").append(ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
@@ -519,7 +528,13 @@ public class ReaderPostActions {
     private static String getEndpointForTag(String tagName) {
         String endpoint = ReaderTagTable.getEndpointForTag(tagName);
         if (TextUtils.isEmpty(endpoint)) {
-            return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tagName));
+            // never hand craft the endpoint for default tags, since these MUST be updated
+            // using their stored endpoints
+            if (ReaderTag.isDefaultTagName(tagName)) {
+                return null;
+            } else {
+                return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tagName));
+            }
         } else {
             return endpoint;
         }
@@ -535,6 +550,11 @@ public class ReaderPostActions {
                                              final Date dateBefore,
                                              final int recursionCounter,
                                              final ReaderActions.PostBackfillListener backfillListener) {
+        String endpoint = getEndpointForTag(tagName);
+        if (TextUtils.isEmpty(endpoint)) {
+            return;
+        }
+
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -549,7 +569,7 @@ public class ReaderPostActions {
         };
 
         String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
-        String path = getEndpointForTag(tagName)
+        String path = endpoint
                     + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
                     + "&order=DESC"
                     + "&before=" + UrlUtils.urlEncode(strDateBefore);
