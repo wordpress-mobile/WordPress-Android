@@ -184,6 +184,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
      * Broadcast listener for simperium sign in
      */
     private void registerReceiver() {
+        if (!hasActivity())
+            return;
+        
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
         filter.addAction(WordPress.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
