@@ -407,17 +407,10 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        switch (getPostListType()) {
-            case TAG_FOLLOWED:
-                inflater.inflate(R.menu.reader_native, menu);
-                checkActionBar();
-                break;
-            case TAG_PREVIEW:
-                inflater.inflate(R.menu.basic_menu, menu);
-                break;
-            case BLOG_PREVIEW:
-                inflater.inflate(R.menu.basic_menu, menu);
-                break;
+        // only followed tag list has a menu
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            inflater.inflate(R.menu.reader_native, menu);
+            checkActionBar();
         }
     }
 
