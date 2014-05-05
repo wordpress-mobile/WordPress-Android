@@ -75,7 +75,6 @@ public class ReaderPostDetailFragment extends SherlockFragment
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    private static final String ARG_IS_BLOG_PREVIEW = "is_blog_preview";
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
@@ -99,7 +98,6 @@ public class ReaderPostDetailFragment extends SherlockFragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
     private boolean mWebViewIsPaused;
-    private boolean mIsBlogPreview;
 
     private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
@@ -111,15 +109,11 @@ public class ReaderPostDetailFragment extends SherlockFragment
     private PostChangeListener mPostChangeListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, false);
-    }
-    public static ReaderPostDetailFragment newInstance(long blogId, long postId, boolean isBlogPreview) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
         args.putLong(ReaderActivity.ARG_POST_ID, postId);
-        args.putBoolean(ARG_IS_BLOG_PREVIEW, isBlogPreview);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -190,7 +184,6 @@ public class ReaderPostDetailFragment extends SherlockFragment
         if (args != null) {
             mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
-            mIsBlogPreview = args.getBoolean(ARG_IS_BLOG_PREVIEW);
         }
     }
 
@@ -325,7 +318,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
     }
 
     private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
+        return isAdded() && !isRemoving();
     }
 
     private boolean hostIsReaderActivity() {
@@ -409,6 +402,24 @@ public class ReaderPostDetailFragment extends SherlockFragment
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // retain title of the host if it's the reader activity, then clear it until post is loaded
+        if (activity instanceof ReaderActivity) {
+            mOriginalTitle = getTitle();
+            setTitle(null);
+        }
+
+        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        }
+        if (activity instanceof PostChangeListener) {
+            mPostChangeListener = (PostChangeListener) activity;
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -433,26 +444,12 @@ public class ReaderPostDetailFragment extends SherlockFragment
                 mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
             mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
         }
-
-        showPost();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // retain title of the host if it's the reader activity, then clear it until post is loaded
-        if (activity instanceof ReaderActivity) {
-            mOriginalTitle = getTitle();
-            setTitle(null);
-        }
-
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-        }
-        if (activity instanceof PostChangeListener) {
-            mPostChangeListener = (PostChangeListener) activity;
-        }
+    public void onStart() {
+        super.onStart();
+        showPost();
     }
 
     @Override
@@ -1068,9 +1065,10 @@ public class ReaderPostDetailFragment extends SherlockFragment
     /*
      * build html for post's content
      */
-    private String getPostHtml() {
-        if (mPost == null)
+    private String getPostHtml(Context context) {
+        if (mPost == null || context == null) {
             return "";
+        }
 
         String content;
         if (mPost.hasText()) {
@@ -1087,12 +1085,11 @@ public class ReaderPostDetailFragment extends SherlockFragment
             content = "";
         }
 
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-        int marginSmall = getResources().getDimensionPixelSize(R.dimen.margin_small);
-        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        int marginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
+        int marginSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
+        int marginExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
         int fullSizeImageWidth = getFullSizeImageWidth();
 
-        final Context context = WordPress.getContext();
         final String linkColor = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         final String greyExtraLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
@@ -1130,7 +1127,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
         if (hasEmbedsOrIframes()) {
             // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
-            int videoWidth =  DisplayUtils.pxToDp(getActivity(), fullSizeImageWidth - (marginLarge * 2));
+            int videoWidth =  DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int)(videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
@@ -1285,7 +1282,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
             if (mPost == null) {
                 return false;
             }
-            postHtml = getPostHtml();
+            postHtml = getPostHtml(container.getContext());
 
             // detect whether the post has a featured image that's not in the content - if so,
             // it will be shown between the post's title and its content (but skip mshots)
@@ -1306,8 +1303,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            // txtTitle is null if doInBackground() returned because view doesn't exist
-            if (!hasActivity() || txtTitle == null) {
+            if (!hasActivity()) {
                 return;
             }
 
@@ -1412,20 +1408,6 @@ public class ReaderPostDetailFragment extends SherlockFragment
                 }
             });
 
-            // show blog preview when avatar, blog or author name is tapped unless this fragment
-            // was shown from blog preview, or this is a post from an external feed
-            /*if (!mIsBlogPreview && !mPost.isExternal) {
-                View.OnClickListener clickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(getActivity(), mPost.blogId, mPost.getBlogUrl());
-                    }
-                };
-                txtBlogName.setOnClickListener(clickListener);
-                txtAuthorName.setOnClickListener(clickListener);
-                imgAvatar.setOnClickListener(clickListener);
-            }*/
-
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work
             mWebView.getSettings().setJavaScriptEnabled(hasEmbedsOrIframes());
@@ -1517,9 +1499,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
 
     private CharSequence getTitle() {
         ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return null;
-        return actionBar.getTitle();
+        return (actionBar != null ? actionBar.getTitle() : null);
     }
 
     private void setTitle(CharSequence title) {

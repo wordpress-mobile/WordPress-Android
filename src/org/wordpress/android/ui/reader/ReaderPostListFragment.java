@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
@@ -226,13 +227,13 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
+        final Resources resources = context.getResources();
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-
         boolean hasTransparentActionBar = isFullScreenSupported();
 
         mListView = (WPListView) view.findViewById(android.R.id.list);
 
-        // this is the view that contains the blogInfo & mshot, or the tag preview
+        // this is the view that contains the header for the blog or tag preview
         final ViewGroup layoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
 
         // bar that appears at top when new posts are downloaded
@@ -272,10 +273,10 @@ public class ReaderPostListFragment extends SherlockFragment
                 layoutHeader.addView(mBlogInfoView);
 
                 // determine the size of the mshot
-                int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                int marginWidth = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+                int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+                int marginWidth = resources.getDimensionPixelSize(R.dimen.reader_list_margin);
                 mMshotWidth = displayWidth - (marginWidth * 2);
-                mMshotHeight = getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+                mMshotHeight = resources.getDimensionPixelSize(R.dimen.reader_mshot_image_height);
 
                 // inflate the mshot container below the header
                 ViewGroup mshotContainer = (ViewGroup) inflater.inflate(R.layout.reader_mshot, container, false);

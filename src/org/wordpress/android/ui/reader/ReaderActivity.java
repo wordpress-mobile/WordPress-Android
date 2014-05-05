@@ -360,8 +360,7 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        boolean isBlogPreview = (mPostListType == ReaderPostListType.BLOG_PREVIEW);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, isBlogPreview);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
