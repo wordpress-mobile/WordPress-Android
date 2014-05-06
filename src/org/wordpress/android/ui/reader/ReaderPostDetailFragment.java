@@ -449,23 +449,27 @@ public class ReaderPostDetailFragment extends SherlockFragment
     @Override
     public void onStart() {
         super.onStart();
-        showPost();
+        if (!hasPost()) {
+            showPost();
+        }
     }
 
     @Override
     public void onPause() {
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
-        if (hasEmbedsOrIframes())
+        if (hasEmbedsOrIframes()) {
             pauseWebView();
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasEmbedsOrIframes())
+        if (hasEmbedsOrIframes()) {
             resumeWebView();
+        }
     }
 
     @Override
