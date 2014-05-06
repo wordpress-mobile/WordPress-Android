@@ -54,8 +54,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.OttoBusProvider;
-import org.wordpress.android.util.OttoBusProvider.RefreshEvent;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -682,9 +680,15 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 dialogBuilder.create().show();
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            OttoBusProvider.getInstance().post(new RefreshEvent());
+            broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void broadcastAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        sendBroadcast(intent);
     }
 
     /**

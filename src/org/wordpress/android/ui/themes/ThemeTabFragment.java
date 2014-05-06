@@ -233,4 +233,16 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
             }
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
 }
