@@ -92,7 +92,7 @@ public class SimperiumUtils {
             });
 
         } catch (BucketNameInvalid e) {
-            throw new RuntimeException("Failed to configure simperium", e);
+            AppLog.e(AppLog.T.SIMPERIUM, e.getMessage());
         }
 
         authorizeUser(simperium, token);
