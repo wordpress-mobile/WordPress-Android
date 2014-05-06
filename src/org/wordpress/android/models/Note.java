@@ -84,6 +84,7 @@ public class Note extends Syncable {
     public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
     public static final String NOTE_LIKE_TYPE="like";
     public static final String NOTE_MATCHER_TYPE = "automattcher";
+    public static final String NOTE_ACHIEVEMENT_TYPE = "achievement";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
@@ -208,8 +209,13 @@ public class Note extends Syncable {
     public String getId(){
         return queryJSON("id", "0");
     }
-    public String getType(){
-        return queryJSON("type", NOTE_UNKNOWN_TYPE);
+    public String getType() {
+        String noteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
+        if (noteType.contains(NOTE_ACHIEVEMENT_TYPE)) {
+            noteType = NOTE_ACHIEVEMENT_TYPE;
+        }
+
+        return noteType;
     }
     private Boolean isType(String type){
         return getType().equals(type);

@@ -113,4 +113,13 @@ public class SimperiumUtils {
         // we'll assume the user is AUTHORIZED, and catch NOT_AUTHORIZED if something goes wrong.
         user.setStatus(User.Status.AUTHORIZED);
     }
+
+    public static void resetBuckets() {
+        if (mNotesBucket != null) {
+            mNotesBucket.reset();
+        }
+        if (mMetaBucket != null) {
+            mMetaBucket.reset();
+        }
+    }
 }
