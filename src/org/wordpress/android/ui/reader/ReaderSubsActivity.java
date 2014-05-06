@@ -63,12 +63,12 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     private boolean mTagsChanged;
     private boolean mBlogsChanged;
     private String mLastAddedTag;
-    private boolean mAlreadyUpdated;
+    private boolean mHasPerformedUpdate;
 
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_BLOGS_CHANGED  = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG = "last_added_tag";
-    private static final String KEY_ALREADY_UPDATED = "is_updated";
+    private static final String KEY_HAS_UPDATED = "is_updated";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
@@ -84,18 +84,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // add the tabs to match the viewPager
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        for (int i = 0; i < getPageAdapter().getCount(); i++) {
-            actionBar.addTab(actionBar.newTab()
-                                      .setText(getPageAdapter().getPageTitle(i))
-                                      .setTabListener(this));
-        }
+        setupActionBar();
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -119,17 +108,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         if (savedInstanceState == null) {
             // return to the page the user was on the last time they viewed this activity
             restorePreviousPage();
-
-            // update list of tags and blogs from the server
-            if (!mAlreadyUpdated) {
-                updateTagList();
-                updateFollowedBlogs();
-                updateRecommendedBlogs();
-                mAlreadyUpdated = true;
-            }
         }
 
-        // remember which page the user last viewed
+        // remember which page the user last viewed - note this listener must be assigned
+        // after we've already called restorePreviousPage()
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -138,6 +120,39 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
+
+        // update list of tags and blogs from the server
+        if (!mHasPerformedUpdate) {
+            performUpdate();
+        }
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+            return;
+        }
+
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // add the tabs to match the viewPager
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        for (int i = 0; i < getPageAdapter().getCount(); i++) {
+            actionBar.addTab(actionBar.newTab()
+                     .setText(getPageAdapter().getPageTitle(i))
+                     .setTabListener(this));
+        }
+    }
+
+    private void performUpdate() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            return;
+        }
+        updateTagList();
+        updateFollowedBlogs();
+        updateRecommendedBlogs();
+        mHasPerformedUpdate = true;
     }
 
     private void restoreState(Bundle state) {
@@ -145,7 +160,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
             mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
-            mAlreadyUpdated = state.getBoolean(KEY_ALREADY_UPDATED);
+            mHasPerformedUpdate = state.getBoolean(KEY_HAS_UPDATED);
         }
     }
 
@@ -181,7 +196,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
-        outState.putBoolean(KEY_ALREADY_UPDATED, mAlreadyUpdated);
+        outState.putBoolean(KEY_HAS_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTag != null) {
             outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
         }
