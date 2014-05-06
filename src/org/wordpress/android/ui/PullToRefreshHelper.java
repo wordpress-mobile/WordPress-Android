@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
     private PullToRefreshHeaderTransformer mHeaderTransformer;
     private PullToRefreshLayout mPullToRefreshLayout;
     private RefreshListener mRefreshListener;
-    private Activity mActivity;
+    private WeakReference<Activity> mActivityRef;
 
     public PullToRefreshHelper(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener) {
         init(activity, pullToRefreshLayout, listener, null);
@@ -46,7 +47,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
 
     public void init(Activity activity, PullToRefreshLayout pullToRefreshLayout, RefreshListener listener,
                      java.lang.Class<?> viewClass) {
-        mActivity = activity;
+        mActivityRef = new WeakReference<Activity>(activity);
         mRefreshListener = listener;
         mPullToRefreshLayout = pullToRefreshLayout;
         mHeaderTransformer = new PullToRefreshHeaderTransformer();
@@ -87,13 +88,17 @@ public class PullToRefreshHelper implements OnRefreshListener {
     }
 
     public void refreshAction() {
+        Activity activity = mActivityRef.get();
+        if (activity == null) {
+            return;
+        }
         setRefreshing(true);
         mRefreshListener.onRefreshStarted(mPullToRefreshLayout);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mActivity);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         int refreshHits = preferences.getInt(REFRESH_BUTTON_HIT_COUNT, 0);
         refreshHits += 1;
         if (TOAST_FREQUENCY.contains(refreshHits)) {
-            ToastUtils.showToast(mActivity, R.string.ptr_tip_message, Duration.LONG);
+            ToastUtils.showToast(activity, R.string.ptr_tip_message, Duration.LONG);
         }
         Editor editor = preferences.edit();
         editor.putInt(REFRESH_BUTTON_HIT_COUNT, refreshHits);
