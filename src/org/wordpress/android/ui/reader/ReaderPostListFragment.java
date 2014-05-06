@@ -385,17 +385,20 @@ public class ReaderPostListFragment extends SherlockFragment
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
         if (!adapterAlreadyExists) {
+            boolean isRecreated = (savedInstanceState != null);
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
                     getPostAdapter().setCurrentTag(mCurrentTag);
-                    if (ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                    if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
                         updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, RefreshType.AUTOMATIC);
                     }
                     break;
                 case BLOG_PREVIEW:
                     getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                    if (!isRecreated) {
+                        updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                    }
                     break;
             }
         }
