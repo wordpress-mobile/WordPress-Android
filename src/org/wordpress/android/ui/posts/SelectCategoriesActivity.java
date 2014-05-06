@@ -11,24 +11,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.util.OttoBusProvider.RefreshEvent;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.OttoBusProvider;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -338,9 +341,7 @@ public class SelectCategoriesActivity extends SherlockListActivity {
             return true;
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            Intent intent = new Intent();
-            intent.setAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-            sendBroadcast(intent);
+            OttoBusProvider.getInstance().post(new RefreshEvent());
             return true;
         }
 
@@ -392,18 +393,6 @@ public class SelectCategoriesActivity extends SherlockListActivity {
     public void onBackPressed() {
         saveAndFinish();
         super.onBackPressed();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
     }
 
     private void updateSelectedCategoryList() {

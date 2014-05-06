@@ -311,15 +311,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(getActivity());
 
         if (!NetworkUtils.isNetworkAvailable(this.getActivity()))
             mHasRetrievedAllMedia = true;

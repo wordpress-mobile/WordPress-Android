@@ -208,18 +208,6 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(getActivity());
-    }
-
-    @Override
     public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();

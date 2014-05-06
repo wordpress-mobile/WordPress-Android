@@ -143,7 +143,6 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
 
         // register to receive broadcasts when StatsService starts/stops updating
@@ -182,7 +181,6 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
-        mPullToRefreshHelper.unregisterReceiver(this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
