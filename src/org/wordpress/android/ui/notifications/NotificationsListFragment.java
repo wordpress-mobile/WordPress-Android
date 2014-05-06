@@ -24,6 +24,7 @@ import org.wordpress.android.util.SimperiumUtils;
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
+    private boolean mShouldLoadFirstNote;
 
     Bucket<Note> mBucket;
 
@@ -130,6 +131,16 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             public void run() {
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
+
+                // Show first note if we're on a landscape tablet
+                if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
+                    mShouldLoadFirstNote = false;
+                    Note note = mNotesAdapter.getNote(0);
+                    if (note != null && mNoteClickListener != null) {
+                        mNoteClickListener.onClickNote(note);
+                        getListView().setItemChecked(0, true);
+                    }
+                }
             }
         });
     }
@@ -173,6 +184,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     @Override
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
+    }
+
+    public void setShouldLoadFirstNote(boolean shouldLoad) {
+        mShouldLoadFirstNote = shouldLoad;
     }
 
     private boolean hasActivity() {

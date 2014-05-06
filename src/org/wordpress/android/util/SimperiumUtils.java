@@ -23,6 +23,7 @@ public class SimperiumUtils {
 
     private static com.simperium.Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
+    private static Bucket<BucketObject> mMetaBucket;
 
     public static com.simperium.Simperium getSimperium() {
         return mSimperium;
@@ -39,8 +40,6 @@ public class SimperiumUtils {
     public static void setNotesBucket(Bucket<Note> notesBucket) {
         mNotesBucket = notesBucket;
     }
-
-    private static Bucket<BucketObject> mMetaBucket;
 
     public static Bucket<BucketObject> getMetaBucket() {
         return mMetaBucket;

@@ -148,10 +148,10 @@ public class NotificationsActivity extends WPActionBarActivity
                 AppLog.e(T.NOTIFS, "Could not load notification from bucket.");
             }
         } else {
-            // Dual pane and no note specified then open first note
-            /*if (mDualPane && mNotesList.getListAdapter() && !mNotesList.getNotesAdapter().isEmpty()) {
-                openNote(mNotesList.getNotesAdapter().getItem(0), false);
-            }*/
+            // Dual pane and no note specified then select the first note
+            if (mDualPane && mNotesList != null) {
+                mNotesList.setShouldLoadFirstNote(true);
+            }
         }
     }
 
@@ -231,7 +231,6 @@ public class NotificationsActivity extends WPActionBarActivity
             return;
         }
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
-        //mNotesList.setNoteSelected(note, scrollToNote);
 
         // mark the note as read if it's unread
         if (note.isUnread()) {
