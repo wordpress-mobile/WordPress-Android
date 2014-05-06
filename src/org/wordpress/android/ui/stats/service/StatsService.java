@@ -148,8 +148,9 @@ public class StatsService extends Service {
 
                 // visitors and views
                 String path = String.format("sites/%s/stats", blogId);
-                SummaryRestListener summaryListener = new SummaryRestListener(blogId);
+                SummaryListener summaryListener = new SummaryListener(blogId);
                 statsNetworkRequests.add(restClientUtils.get(path, summaryListener, summaryListener));
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
 
                 // bar charts
                 path = "batch/?urls%5B%5D=" 
@@ -161,6 +162,7 @@ public class StatsService extends Service {
                         getBarChartPath(blogId, StatsBarChartUnit.WEEK, 30), StatsBarChartUnit.WEEK,
                         getBarChartPath(blogId, StatsBarChartUnit.MONTH, 30), StatsBarChartUnit.MONTH);
                 statsNetworkRequests.add(restClientUtils.get(path, barChartRestListener, barChartRestListener));
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
 
                 // top posts and pages
                 path = "batch/?urls%5B%5D=" 
@@ -174,7 +176,8 @@ public class StatsService extends Service {
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, topPostAndPageRestListener,
                         topPostAndPageRestListener));
-
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
+                
                 // referrers
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/referrers?date=%s", blogId, today))
@@ -186,7 +189,8 @@ public class StatsService extends Service {
                         String.format("/sites/%s/stats/referrers?date=%s", blogId, yesterday)
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, referrersListener, referrersListener));
-
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
+                
                 // clicks
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/clicks?date=%s", blogId, today))
@@ -198,7 +202,8 @@ public class StatsService extends Service {
                         String.format("/sites/%s/stats/clicks?date=%s", blogId, yesterday)
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, clicksListener, clicksListener));
-
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
+                
                 // search engine terms
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/search-terms?date=%s", blogId, today))
@@ -211,7 +216,8 @@ public class StatsService extends Service {
                         );
                 statsNetworkRequests.add(restClientUtils
                         .get(path, searchEngineTermsListener, searchEngineTermsListener));
-
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
+                
                 // views by country - put at the end since this will start other networks calls on
                 // finish
                 path = "batch/?urls%5B%5D="
@@ -224,7 +230,8 @@ public class StatsService extends Service {
                         String.format("/sites/%s/stats/country-views?date=%s", blogId, yesterday)
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, viewsByCountryListener, viewsByCountryListener));
-
+                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
+                
                 numberOfNetworkCalls = statsNetworkRequests.size();
 
                 while (!isDone()) {
@@ -687,11 +694,11 @@ public class StatsService extends Service {
     }
 
     
-    private class SummaryRestListener implements RestRequest.Listener, RestRequest.ErrorListener {
+    private class SummaryListener implements RestRequest.Listener, RestRequest.ErrorListener {
         
         final String mRequestBlogId;
         
-        SummaryRestListener(String blogId) {
+        SummaryListener(String blogId) {
             this.mRequestBlogId = blogId;
         }
         
