@@ -84,7 +84,7 @@ public class SimperiumUtils {
                             context.sendBroadcast(simperiumNotAuthorizedIntent);
                             break;
                         default:
-                            android.util.Log.d("WordPress", "User not authorized yet");
+                            AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
                             break;
                     }
                 }
