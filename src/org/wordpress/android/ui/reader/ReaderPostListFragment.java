@@ -169,6 +169,18 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -205,18 +217,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // http://stackoverflow.com/a/5694441/1673548
         if (mListView != null && mListView.getFirstVisiblePosition() > 0)
             outState.putParcelable(KEY_LIST_STATE, mListView.onSaveInstanceState());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override

@@ -654,14 +654,14 @@ public class CommentsListFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(getActivity());
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 }

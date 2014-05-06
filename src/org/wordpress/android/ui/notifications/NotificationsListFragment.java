@@ -74,6 +74,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
             textview.setText(getText(R.string.notifications_empty_list));
         }
         initPullToRefreshHelper();
+        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
@@ -229,14 +230,8 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroyView() {
+        super.onDestroyView();
         mPullToRefreshHelper.unregisterReceiver(getActivity());
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 }
