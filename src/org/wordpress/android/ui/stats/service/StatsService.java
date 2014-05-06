@@ -74,7 +74,7 @@ public class StatsService extends Service {
 
     private final Object mSyncObject = new Object();
 
-    private String mCurrentBlogId;
+    private String mServiceBlogId;
     private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = -1; // The number of networks calls made by Stats.
     private int numberOfFinishedNetworkCalls = 0;
@@ -103,19 +103,19 @@ public class StatsService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
 
-        if (mCurrentBlogId == null) {
+        if (mServiceBlogId == null) {
             startTasks(blogId, startId);
-        } else if (blogId.equals(mCurrentBlogId)) {
+        } else if (blogId.equals(mServiceBlogId)) {
             // already running on the same blogID
             // Do nothing
-            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mCurrentBlogId);
+            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
         } else {
             // stats is running on a different blogID
             stopRefresh();
             startTasks(blogId, startId);
         }
 
-        this.mCurrentBlogId = blogId;
+        this.mServiceBlogId = blogId;
         return START_NOT_STICKY;
     }
 
@@ -130,7 +130,7 @@ public class StatsService extends Service {
             orchestrator.interrupt();
         }
         orchestrator = null;
-        this.mCurrentBlogId = null;
+        this.mServiceBlogId = null;
     }    
 
     private void startTasks(final String blogId, final int startId) {
@@ -236,7 +236,7 @@ public class StatsService extends Service {
                 // At this point all Threads previously enqueued in updateUIExecutor already
                 // finished their execution.
                 updateUIExecutor.shutdown();
-                mCurrentBlogId = null;
+                mServiceBlogId = null;
 
                 broadcastUpdate(false);
                 stopSelf(startId);
@@ -248,8 +248,8 @@ public class StatsService extends Service {
 
     private class SearchEngineTermsListener extends AbsListener {
 
-        SearchEngineTermsListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            super(blogID, todayAPICallPath, yesterdayAPICallPath);
+        SearchEngineTermsListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
+            super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
 
         @Override
@@ -264,7 +264,7 @@ public class StatsService extends Service {
                     .newDelete(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)",
                             new String[] {
-                                    mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                                    mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                             }).build();
 
             operations.add(delete_op);
@@ -274,7 +274,7 @@ public class StatsService extends Service {
             int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
             for (int i = 0; i < count; i++) {
                 JSONArray result = results.getJSONArray(i);
-                StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mBlogID, date, result);
+                StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mRequestBlogId, date, result);
                 ContentValues values = StatsSearchEngineTermsTable.getContentValues(stat);
                 getContentResolver().insert(StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI, values);
 
@@ -294,8 +294,8 @@ public class StatsService extends Service {
 
     private class ClicksListener extends AbsListener {
 
-        ClicksListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            super(blogID, todayAPICallPath, yesterdayAPICallPath);
+        ClicksListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
+            super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
 
         @Override
@@ -319,12 +319,12 @@ public class StatsService extends Service {
                     .newDelete(StatsContentProvider.STATS_CLICK_GROUP_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)",
                             new String[] {
-                                    mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                                    mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                             }).build();
             ContentProviderOperation delete_child = ContentProviderOperation
                     .newDelete(StatsContentProvider.STATS_CLICKS_URI).withSelection("blogId=? AND (date=? OR date<=?)",
                             new String[] {
-                            mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                            mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                             }).build();
 
             operations.add(delete_group);
@@ -336,7 +336,7 @@ public class StatsService extends Service {
             int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
             for (int i = 0; i < groupsCount; i++) {
                 JSONObject group = groups.getJSONObject(i);
-                StatsClickGroup statGroup = new StatsClickGroup(mBlogID, date, group);
+                StatsClickGroup statGroup = new StatsClickGroup(mRequestBlogId, date, group);
                 ContentValues values = StatsClickGroupsTable.getContentValues(statGroup);
 
                 ContentProviderOperation insert_group = ContentProviderOperation
@@ -348,7 +348,7 @@ public class StatsService extends Service {
                 int childCount = Math.min(clicks.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
                 if (childCount > 1) {
                     for (int j = 0; j < childCount; j++) {
-                        StatsClick stat = new StatsClick(mBlogID, date, statGroup.getGroupId(), clicks.getJSONArray(j));
+                        StatsClick stat = new StatsClick(mRequestBlogId, date, statGroup.getGroupId(), clicks.getJSONArray(j));
                         ContentValues v = StatsClicksTable.getContentValues(stat);
                         ContentProviderOperation insert_child = ContentProviderOperation
                                 .newInsert(StatsContentProvider.STATS_CLICKS_URI).withValues(v).build();
@@ -368,8 +368,8 @@ public class StatsService extends Service {
 
     private class ReferrersListener extends AbsListener {
 
-        ReferrersListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            super(blogID, todayAPICallPath, yesterdayAPICallPath);
+        ReferrersListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
+            super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
 
         @Override
@@ -392,14 +392,14 @@ public class StatsService extends Service {
             ContentProviderOperation delete_group_op = ContentProviderOperation
                     .newDelete(StatsContentProvider.STATS_REFERRER_GROUP_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)", new String[] {
-                            mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                            mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                     }).build();
             operations.add(delete_group_op);
 
             ContentProviderOperation delete_op = ContentProviderOperation
                     .newDelete(StatsContentProvider.STATS_REFERRERS_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)", new String[] {
-                            mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                            mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                     }).build();
             operations.add(delete_op);
 
@@ -409,7 +409,7 @@ public class StatsService extends Service {
             // insert groups
             for (int i = 0; i < groupsCount; i++) {
                 JSONObject group = groups.getJSONObject(i);
-                StatsReferrerGroup statGroup = new StatsReferrerGroup(mBlogID, date, group);
+                StatsReferrerGroup statGroup = new StatsReferrerGroup(mRequestBlogId, date, group);
                 ContentValues values = StatsReferrerGroupsTable.getContentValues(statGroup);
                 ContentProviderOperation insert_group_op = ContentProviderOperation
                         .newInsert(StatsContentProvider.STATS_REFERRER_GROUP_URI).withValues(values).build();
@@ -420,7 +420,7 @@ public class StatsService extends Service {
                 int childCount = Math.min(referrers.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
                 if (childCount > 1) {
                     for (int j = 0; j < childCount; j++) {
-                        StatsReferrer stat = new StatsReferrer(mBlogID, date, statGroup.getGroupId(),
+                        StatsReferrer stat = new StatsReferrer(mRequestBlogId, date, statGroup.getGroupId(),
                                 referrers.getJSONArray(j));
                         ContentValues v = StatsReferrersTable.getContentValues(stat);
                         ContentProviderOperation insert_child_op = ContentProviderOperation
@@ -441,8 +441,8 @@ public class StatsService extends Service {
 
     private class ViewsByCountryListener extends AbsListener {
 
-        ViewsByCountryListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            super(blogID, todayAPICallPath, yesterdayAPICallPath);
+        ViewsByCountryListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
+            super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
 
         @Override
@@ -464,14 +464,14 @@ public class StatsService extends Service {
                 ContentProviderOperation delete_op = ContentProviderOperation
                         .newDelete(StatsContentProvider.STATS_GEOVIEWS_URI)
                         .withSelection("blogId=? AND (date=? OR date<=?)", new String[] {
-                                mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                                mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                         }).build();
                 operations.add(delete_op);
             }
 
             for (int i = 0; i < count; i++) {
                 JSONObject result = results.getJSONObject(i);
-                StatsGeoview stat = new StatsGeoview(mBlogID, result);
+                StatsGeoview stat = new StatsGeoview(mRequestBlogId, result);
                 ContentValues values = StatsGeoviewsTable.getContentValues(stat);
                 ContentProviderOperation op = ContentProviderOperation
                         .newInsert(StatsContentProvider.STATS_GEOVIEWS_URI).withValues(values).build();
@@ -489,8 +489,8 @@ public class StatsService extends Service {
 
     private class TopPostAndPageListener extends AbsListener {
 
-        TopPostAndPageListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            super(blogID, todayAPICallPath, yesterdayAPICallPath);
+        TopPostAndPageListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
+            super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
 
         @Override
@@ -511,13 +511,13 @@ public class StatsService extends Service {
             ContentProviderOperation delete_op = ContentProviderOperation
                     .newDelete(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI)
                     .withSelection("blogId=? AND (date=? OR date<=?)", new String[] {
-                            mBlogID, dateMs + "", (dateMs - TWO_DAYS) + ""
+                            mRequestBlogId, dateMs + "", (dateMs - TWO_DAYS) + ""
                     }).build();
             operations.add(delete_op);
 
             for (int i = 0; i < count; i++) {
                 JSONObject result = results.getJSONObject(i);
-                StatsTopPostsAndPages stat = new StatsTopPostsAndPages(mBlogID, result);
+                StatsTopPostsAndPages stat = new StatsTopPostsAndPages(mRequestBlogId, result);
                 ContentValues values = StatsTopPostsAndPagesTable.getContentValues(stat);
                 ContentProviderOperation op = ContentProviderOperation
                         .newInsert(StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI).withValues(values).build();
@@ -536,7 +536,7 @@ public class StatsService extends Service {
     private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mTodayAPICallPath;
         final String mYesterdayAPICallPath;
-        final String mBlogID;
+        final String mRequestBlogId;
         
         protected abstract Uri getStatsContentProviderUpdateURI();
 
@@ -544,7 +544,7 @@ public class StatsService extends Service {
                 RemoteException, OperationApplicationException;
 
         AbsListener(String blogID, String todayAPICallPath, String yesterdayAPICallPath) {
-            this.mBlogID = blogID;
+            this.mRequestBlogId = blogID;
             this.mTodayAPICallPath = todayAPICallPath;
             this.mYesterdayAPICallPath = yesterdayAPICallPath;
         }
@@ -621,9 +621,9 @@ public class StatsService extends Service {
         private final StatsBarChartUnit mYesterdayBarChartUnit;
         private StatsBarChartUnit mCurrentBarChartUnit;
 
-        BarChartListener(String blogID, String todayAPICallPath, StatsBarChartUnit todayBarChartUnit, 
+        BarChartListener(String blogId, String todayAPICallPath, StatsBarChartUnit todayBarChartUnit, 
                 String yesterddayAPICallPath, StatsBarChartUnit yesterdayBarChartUnit) {
-            super(blogID, todayAPICallPath, yesterddayAPICallPath);
+            super(blogId, todayAPICallPath, yesterddayAPICallPath);
             this.mTodayBarChartUnit = todayBarChartUnit;
             this.mYesterdayBarChartUnit = yesterdayBarChartUnit;
         }
@@ -666,14 +666,14 @@ public class StatsService extends Service {
             if (count > 0) {
                 ContentProviderOperation op = ContentProviderOperation.newDelete(uri)
                         .withSelection("blogId=? AND unit=?", new String[] {
-                                mBlogID, mCurrentBarChartUnit.name()
+                                mRequestBlogId, mCurrentBarChartUnit.name()
                         }).build();
                 operations.add(op);
             }
 
             for (int i = 0; i < count; i++) {
                 JSONArray result = results.getJSONArray(i);
-                StatsBarChartData stat = new StatsBarChartData(mBlogID, mCurrentBarChartUnit, result);
+                StatsBarChartData stat = new StatsBarChartData(mRequestBlogId, mCurrentBarChartUnit, result);
                 ContentValues values = StatsBarChartDataTable.getContentValues(stat);
 
                 if (values != null && uri != null) {
@@ -689,10 +689,10 @@ public class StatsService extends Service {
     
     private class SummaryRestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         
-        final String mBlogID;
+        final String mRequestBlogId;
         
-        SummaryRestListener(String blogID) {
-            this.mBlogID = blogID;
+        SummaryRestListener(String blogId) {
+            this.mRequestBlogId = blogId;
         }
         
         @Override
@@ -701,7 +701,7 @@ public class StatsService extends Service {
                 updateUIExecutor.submit(new Thread() {
                     @Override
                     public void run() {
-                        AppLog.d(T.STATS, "Stats Summary Call responded for blogID " + mBlogID);
+                        AppLog.d(T.STATS, "Stats Summary Call responded for blogID " + mRequestBlogId);
                         numberOfFinishedNetworkCalls++;
 
                         try {
@@ -709,8 +709,8 @@ public class StatsService extends Service {
                                 return;
 
                             // save summary, then send broadcast that they've changed
-                            StatUtils.saveSummary(mBlogID, jsonObject);
-                            StatsSummary stats = StatUtils.getSummary(mBlogID);
+                            StatUtils.saveSummary(mRequestBlogId, jsonObject);
+                            StatsSummary stats = StatUtils.getSummary(mRequestBlogId);
                             if (stats != null) {
                                 LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
                                 Intent intent = new Intent(StatsService.ACTION_STATS_SUMMARY_UPDATED);
@@ -732,7 +732,7 @@ public class StatsService extends Service {
                     public void run() {
                         numberOfFinishedNetworkCalls++;
                         if (volleyError != null) {
-                            AppLog.e(T.STATS, "Error while reading Stats summary for " + mBlogID + " " + volleyError.getMessage(), volleyError);
+                            AppLog.e(T.STATS, "Error while reading Stats summary for " + mRequestBlogId + " " + volleyError.getMessage(), volleyError);
                         }
                         notifyResponseReceived();
                     }
