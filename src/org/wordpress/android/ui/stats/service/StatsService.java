@@ -586,14 +586,30 @@ public class StatsService extends Service {
                 OperationApplicationException {
             if (response.has(mTodayAPICallPath)) {
                 JSONObject todayJsonObject = response.getJSONObject(mTodayAPICallPath);
-                parseSingleDayResponse(todayJsonObject);
+                if (isSingleCallResponseError(todayJsonObject)) {
+                    AppLog.e(AppLog.T.STATS, "The single call failed with the following response: " + todayJsonObject.toString());
+                } else {
+                    parseSingleDayResponse(todayJsonObject);
+                }
             }
             if (response.has(mYesterdayAPICallPath)) {
                 JSONObject yesterdayJsonObject = response.getJSONObject(mYesterdayAPICallPath);
-                parseSingleDayResponse(yesterdayJsonObject);
+                if (isSingleCallResponseError(yesterdayJsonObject)) {
+                    AppLog.e(AppLog.T.STATS, "The single call failed with the following response: " + yesterdayJsonObject.toString());
+                } else {
+                    parseSingleDayResponse(yesterdayJsonObject);
+                }
             }
         }
 
+        private boolean isSingleCallResponseError(final JSONObject response){
+            if (response.has("errors")) {
+                return true;
+            }
+            
+            return false;
+        }
+        
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             AppLog.d(T.STATS, this.getClass().getName() + " responded with Error");
