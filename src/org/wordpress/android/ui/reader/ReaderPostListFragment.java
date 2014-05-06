@@ -431,6 +431,7 @@ public class ReaderPostListFragment extends SherlockFragment
      */
     private void showLoadingProgress() {
         if (hasActivity() && mProgress != null) {
+            mProgress.bringToFront();
             mProgress.setVisibility(View.VISIBLE);
         }
     }
