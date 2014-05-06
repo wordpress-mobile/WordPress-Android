@@ -170,9 +170,9 @@ public class ReaderBlogFragment extends SherlockFragment
      * called from the adapter when a blog is followed or unfollowed - note that the network
      * request has already occurred by the time this is called
      */
-    public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
+    public void onFollowBlogChanged() {
         if (getActivity() instanceof BlogFollowChangeListener) {
-            ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged(blogId, blogUrl, isFollowed);
+            ((BlogFollowChangeListener) getActivity()).onFollowBlogChanged();
         }
     }
 }

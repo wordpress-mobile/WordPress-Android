@@ -39,7 +39,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
 
     public interface BlogFollowChangeListener {
-        public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed);
+        public void onFollowBlogChanged();
     }
 
     private final LayoutInflater mInflater;
@@ -286,7 +286,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
             ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
             notifyDataSetChanged(); // <-- required for getView() to know correct follow status
             if (mFollowListener != null) {
-                mFollowListener.onFollowBlogChanged(blogId, blogUrl, isAskingToFollow);
+                mFollowListener.onFollowBlogChanged();
             }
         }
     }

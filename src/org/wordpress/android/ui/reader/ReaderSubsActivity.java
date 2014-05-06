@@ -345,9 +345,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                         EditTextUtils.hideSoftInput(mEditAdd);
                         String msgText = getString(R.string.reader_label_followed_blog);
                         MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO, null);
-                        // we may have the blogId now that the blog was followed
-                        long blogId = ReaderBlogTable.getBlogIdFromUrl(normUrl);
-                        onFollowBlogChanged(blogId, normUrl, true);
+                        onFollowBlogChanged();
                         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     } else {
                         ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
@@ -400,7 +398,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
      * followed or unfollowed
      */
     @Override
-    public void onFollowBlogChanged(long blogId, String blogUrl, boolean isFollowed) {
+    public void onFollowBlogChanged() {
         mBlogsChanged = true;
     }
 
