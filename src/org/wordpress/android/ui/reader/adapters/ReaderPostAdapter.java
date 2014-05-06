@@ -56,6 +56,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final int mPhotonWidth;
     private final int mPhotonHeight;
     private final int mAvatarSz;
+    private final int mMarginLarge;
 
     private final float mRowAnimationFromYDelta;
     private final int mRowAnimationDuration;
@@ -93,6 +94,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         mDataRequestedListener = dataRequestedListener;
 
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
+        mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
@@ -320,6 +322,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.txtText.setVisibility(View.GONE);
         }
 
+        final int titleMargin;
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
             // skip loading image if the imageView is already tagged with this url
@@ -328,14 +331,21 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgFeatured.setTag(imageUrl);
             }
             holder.imgFeatured.setVisibility(View.VISIBLE);
+            titleMargin = mMarginLarge;
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             holder.imgFeatured.setVisibility(View.VISIBLE);
             holder.imgFeatured.setTag(null);
+            titleMargin = mMarginLarge;
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
             holder.imgFeatured.setTag(null);
+            titleMargin = (holder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
         }
+
+        // set the top margin of the title based on whether there's a featured image and post header
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtTitle.getLayoutParams();
+        params.topMargin = titleMargin;
 
         // show the best tag for this post
         final String tagToDisplay = post.getTagForDisplay(mCurrentTag);
@@ -501,12 +511,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
-            // in a specific blog, and remove the top margin from the featured image since
-            // that's used to put space between it and the header
+            // in a specific blog
             if (postListType.equals(ReaderPostListType.BLOG_PREVIEW)) {
                 layoutPostHeader.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imgFeatured.getLayoutParams();
-                params.topMargin = 0;
             }
         }
     }
