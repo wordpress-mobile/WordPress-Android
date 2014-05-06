@@ -71,11 +71,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         registerReceiver();
         // start listening to bucket change events
         mBucket.addListener(this);
-
-        // Show progress indicator if we haven't indexed the notes yet
-        if (hasActivity() && !mBucket.hasChangeVersion()) {
-            getActivity().setProgressBarIndeterminateVisibility(true);
-        }
     }
 
     @Override
@@ -168,16 +163,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
-
-        if (hasActivity() && type == Bucket.ChangeType.INDEX) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getActivity().setProgressBarIndeterminateVisibility(false);
-                }
-            });
-        }
-
         refreshNotes();
     }
 
@@ -230,8 +215,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 mBucket = SimperiumUtils.getNotesBucket();
                 mBucket.addListener(NotificationsListFragment.this);
             } else if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
-                getActivity().setProgressBarIndeterminateVisibility(false);
-
                 // Simperium user is not authorized, log in again
                 Intent notAuthorizedIntent = new Intent();
                 notAuthorizedIntent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);

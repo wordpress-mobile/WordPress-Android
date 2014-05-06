@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.view.Window;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -53,7 +52,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
         // savedInstanceState will be non-null if activity is being re-created
@@ -85,8 +83,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // remove window background since background color is set in fragment (reduces overdraw)
         getWindow().setBackgroundDrawable(null);
-
-        setProgressBarIndeterminateVisibility(false);
     }
 
     @Override
