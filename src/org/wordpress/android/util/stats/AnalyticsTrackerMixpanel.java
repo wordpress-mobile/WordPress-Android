@@ -20,7 +20,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
 
     private static final String SESSION_COUNT = "sessionCount";
-    private static final String MIXPANEL_PLATFORM = "Android";
+    private static final String MIXPANEL_PLATFORM = "platform";
     private static final String MIXPANEL_SESSION_COUNT = "session_count";
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
