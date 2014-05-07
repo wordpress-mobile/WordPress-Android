@@ -9,12 +9,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 
 /*
- * used by activities such as the reader tag editor and the comment list to animate a message in
- * from the bottom, then animate it back out after a brief delay - optional runnable will be
- * executed by hideMessageBar() once the bar disappears
- * note that the activity's layout must contain message_bar_include.xml for this to work
+ * used by activities to animate a message in from the bottom then animate it back out after
+ * a brief delay - note that the activity's layout must contain message_bar_include.xml for
+ * this to work
  */
-
 public class MessageBarUtils {
     private static final long DELAY_MILLIS = 1500;
     public static enum MessageBarType { INFO, ALERT }
