@@ -330,7 +330,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
             String msgText = getString(R.string.reader_label_added_tag, tagName);
-            MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO, null);
+            MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
             getPageAdapter().refreshTagFragments(null, tagName);
             onTagAction(TagAction.ADD, tagName);
         }
@@ -360,7 +360,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                         mEditAdd.setText(null);
                         EditTextUtils.hideSoftInput(mEditAdd);
                         String msgText = getString(R.string.reader_label_followed_blog);
-                        MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO, null);
+                        MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
                         onFollowBlogChanged();
                         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     } else {
@@ -454,7 +454,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                 return;
         }
 
-        MessageBarUtils.showMessageBar(this, msgText, msgType, null);
+        MessageBarUtils.showMessageBar(this, msgText, msgType);
     }
 
     /*
