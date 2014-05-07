@@ -361,11 +361,7 @@ public class NotificationsActivity extends WPActionBarActivity
      *  Open a note fragment based on the type of note
      */
     private void openNote(final Note note, boolean scrollToNote) {
-        if (note == null || isFinishing()) {
-            return;
-        }
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed()) {
+        if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
         
