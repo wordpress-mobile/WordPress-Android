@@ -452,10 +452,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         
         //Update 'following' status on all other posts in the same blog.
         updateFollowStatusOnPostsForBlog(post.blogId, updatedPost.isFollowedByCurrentUser);
-
-        if (updatedPost.isFollowedByCurrentUser) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
-        }
     }
 
     private void showFollowStatus(TextView txtFollow, boolean isFollowed) {

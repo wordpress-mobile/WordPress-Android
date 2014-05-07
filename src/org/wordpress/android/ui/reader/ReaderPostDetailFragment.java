@@ -535,9 +535,6 @@ public class ReaderPostDetailFragment extends SherlockFragment {
                 }
                 break;
             case TOGGLE_FOLLOW:
-                if (mPost.isFollowedByCurrentUser) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
-                }
                 doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
                 break;
         }
