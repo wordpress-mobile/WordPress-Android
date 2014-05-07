@@ -34,7 +34,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_BLOG_URL, blogUrl);
         intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
-        showReaderPreviewIntent(context, intent);
+        context.startActivity(intent);
     }
 
     public static void showReaderTagPreview(Context context, String tagName) {
@@ -42,36 +42,7 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
         intent.putExtra(ReaderActivity.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_LIST);
-        showReaderPreviewIntent(context, intent);
-    }
-
-    /*
-     * called when launching a ReaderActivity intent that shows either a blog preview
-     * or a tag preview to provide the desired enter animation - note that the exit
-     * animation will be provided by ReaderPreviewActivity.finish()
-     */
-    private static void showReaderPreviewIntent(Context context, Intent intent) {
-        // is the intent being opened from a reader preview context?
-        boolean isContextReaderPreview =
-                (context instanceof ReaderActivity)
-                && ((ReaderActivity) context).getPostListType().isPreviewType();
-
-        if (isContextReaderPreview) {
-            // disable animation if the calling context is another reader preview activity
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.putExtra(ReaderActivity.ARG_NO_EXIT_ANIM, true);
-            context.startActivity(intent);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            // calling context isn't another reader preview, so use our enter animation
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    context,
-                    R.anim.reader_preview_enter,
-                    R.anim.do_nothing);
-            context.startActivity(intent, options.toBundle()); // <-- SDK 16+
-        } else {
-            // fallback to default behavior for pre-Jellybean
-            context.startActivity(intent);
-        }
+        context.startActivity(intent);
     }
 
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
@@ -84,12 +55,17 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderSubsForResult(Activity activity, String tagName) {
+    public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        if (!TextUtils.isEmpty(tagName)) {
-            intent.putExtra(ReaderActivity.ARG_TAG_NAME, tagName);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    activity,
+                    R.anim.reader_flyin,
+                    0);
+            activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS, options.toBundle());
+        } else {
+            activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS);
         }
-        activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS);
     }
 
     public static void showReaderPhotoViewer(Context context, String imageUrl) {

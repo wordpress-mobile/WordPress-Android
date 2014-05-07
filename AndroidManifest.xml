@@ -169,14 +169,15 @@
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/ReaderTheme.Popup" />
+            android:theme="@style/ReaderTheme.PopupPanel" />
         <activity
             android:name=".ui.reader.ReaderSubsActivity"
             android:label="@string/reader_title_subs"
+            android:theme="@style/ReaderTheme.TranslucentActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
-            android:theme="@style/ReaderTheme.Popup"
+            android:theme="@style/ReaderTheme.PopupPanel"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity

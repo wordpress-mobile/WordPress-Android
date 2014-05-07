@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -73,7 +72,6 @@ public class ReaderActivity extends WPActionBarActivity
     static final String ARG_BLOG_URL        = "blog_url";
     static final String ARG_POST_ID         = "post_id";
     static final String ARG_POST_LIST_TYPE  = "post_list_type";
-    static final String ARG_NO_EXIT_ANIM    = "no_exit_anim";
 
     static final String KEY_LIST_STATE      = "list_state";
     static final String KEY_WAS_PAUSED      = "was_paused";
@@ -82,7 +80,6 @@ public class ReaderActivity extends WPActionBarActivity
     private static boolean mHasPerformedPurge;
 
     private boolean mIsFullScreen;
-    private boolean mDisableExitAnimation;
     private ReaderPostListType mPostListType;
 
     @Override
@@ -101,9 +98,6 @@ public class ReaderActivity extends WPActionBarActivity
         if (intent == null) {
             return;
         }
-
-        // see ReaderActivityLauncher.showReaderPreviewIntent()
-        mDisableExitAnimation = intent.getBooleanExtra(ARG_NO_EXIT_ANIM, false);
 
         if (intent.hasExtra(ARG_POST_LIST_TYPE)) {
             mPostListType = (ReaderPostListType) intent.getSerializableExtra(ARG_POST_LIST_TYPE);
@@ -167,18 +161,6 @@ public class ReaderActivity extends WPActionBarActivity
                     showDetailFragment(blogId, postId);
                     break;
             }
-        }
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-
-        // see ReaderActivityLauncher.showReaderPreviewIntent()
-        if (mDisableExitAnimation) {
-            overridePendingTransition(0, 0);
-        } else if (getPostListType().isPreviewType() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            overridePendingTransition(0, R.anim.reader_preview_exit);
         }
     }
 

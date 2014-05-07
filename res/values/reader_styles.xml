@@ -7,11 +7,14 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- activity themes -->
-    <style name="ReaderTheme" />
-    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
+    <style name="ReaderTheme" parent="@style/WordPress" />
+    <style name="ReaderTheme.PopupPanel" parent="@android:style/Theme.Panel">
         <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="ReaderTheme.TranslucentActivity" parent="@style/ReaderTheme">
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!-- window animations -->
