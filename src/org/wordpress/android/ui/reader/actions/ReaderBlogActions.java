@@ -30,6 +30,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.ArrayList;
 
@@ -70,6 +71,10 @@ public class ReaderBlogActions {
         if (!hasBlogId && canLookupBlogInfo) {
             lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
             return true;
+        }
+
+        if (isAskingToFollow) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
         }
 
         final String path = getFollowEndpoint(blogId, blogUrl, isAskingToFollow);
