@@ -552,18 +552,26 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
+            final String title;
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags);
+                    title = getString(R.string.reader_page_followed_tags);
+                    break;
                 case TAB_IDX_SUGGESTED_TAGS:
-                    return getString(R.string.reader_page_popular_tags);
+                    title = getString(R.string.reader_page_popular_tags);
+                    break;
                 case TAB_IDX_RECOMMENDED_BLOGS:
-                    return getString(R.string.reader_page_recommended_blogs);
+                    title = getString(R.string.reader_page_recommended_blogs);
+                    break;
                 case TAB_IDX_FOLLOWED_BLOGS:
-                    return getString(R.string.reader_page_followed_blogs);
+                    title = getString(R.string.reader_page_followed_blogs);
+                    break;
                 default:
                     return super.getPageTitle(position);
             }
+
+            // force titles to two lines by replacing spaces with new lines
+            return title.replace(" ", "\n");
         }
 
         @Override
