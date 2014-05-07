@@ -360,7 +360,7 @@ public class NotificationsActivity extends WPActionBarActivity
      *  Open a note fragment based on the type of note
      */
     private void openNote(final Note note, boolean scrollToNote) {
-        if (note == null || isFinishing()) {
+        if (note == null || isFinishing() || isDestroyed()) {
             return;
         }
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
