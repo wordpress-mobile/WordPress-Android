@@ -19,7 +19,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -91,6 +90,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private WPNetworkImageView mImageMshot;
     private ReaderBlogInfoHeader mBlogInfoView;
+    private View mMshotSpacer;
 
     private String mCurrentTag;
     private long mCurrentBlogId;
@@ -267,39 +267,49 @@ public class ReaderPostListFragment extends SherlockFragment
                 break;
 
             case BLOG_PREVIEW:
-                // add the blog info view to the header
-                mBlogInfoView = new ReaderBlogInfoHeader(context);
-                layoutHeader.addView(mBlogInfoView);
-
                 // determine the size of the mshot
                 int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
                 int marginWidth = resources.getDimensionPixelSize(R.dimen.reader_list_margin);
                 mMshotWidth = displayWidth - (marginWidth * 2);
                 mMshotHeight = resources.getDimensionPixelSize(R.dimen.reader_mshot_image_height);
 
-                // inflate the mshot container below the header
+                // add the mshot to the header
                 ViewGroup mshotContainer = (ViewGroup) inflater.inflate(R.layout.reader_mshot, container, false);
                 mImageMshot = (WPNetworkImageView) mshotContainer.findViewById(R.id.image_mshot);
                 mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.BELOW, R.id.layout_header);
-                mshotContainer.setLayoutParams(params);
-                view.addView(mshotContainer);
+                layoutHeader.addView(mshotContainer);
 
-                // add a blank header to the listView that's the same height as the mshot, and make
-                // sure the listView is in front - this way it will appear to scroll over the mshot
-                ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
+                // add a blank header to the listView that's the same height as the mshot
+                mMshotSpacer = ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
+
+                // don't show dividers on the headers, and make sure the listView is in front - this
+                // way it will appear to scroll over the mshot
                 mListView.setHeaderDividersEnabled(false);
                 ((ViewGroup)mListView.getParent()).bringToFront();
+
+                // now add the blog info to the view and bring it in front of the listView
+                mBlogInfoView = new ReaderBlogInfoHeader(context);
+                view.addView(mBlogInfoView);
+                mBlogInfoView.bringToFront();
+                mBlogInfoView.getViewTreeObserver().addOnGlobalLayoutListener(
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                // change the spacer height to account for the blogInfo
+                                int spacerHeight = mMshotHeight + mBlogInfoView.getHeight();
+                                mMshotSpacer.getLayoutParams().height = spacerHeight;
+                                positionBlogInfo();
+                                AppLog.d(T.READER, "blogInfo layout");
+                                mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            }
+                        }
+                );
 
                 // listen for scroll changes so we can scale the mshot as the user scrolls
                 mListView.setOnScrollChangedListener(this);
 
-                // show the header and populate blog info
                 layoutHeader.setVisibility(View.VISIBLE);
-                getBlogInfo();
+
                 break;
         }
 
@@ -402,6 +412,9 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         }
 
+        if (mBlogInfoView != null) {
+            getBlogInfo();
+        }
         updateTagPreviewHeader();
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
@@ -1131,8 +1144,11 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onScrollChanged() {
-        if (mHasLoadedMshot && getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
-            scaleMshotImage();
+        if (getPostListType().equals(ReaderPostListType.BLOG_PREVIEW)) {
+            if (mHasLoadedMshot) {
+                scaleMshotImage();
+            }
+            positionBlogInfo();
         }
     }
 
@@ -1144,9 +1160,9 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        // calculate the scale based on the listView's scroll position
-        int scrollPos = -mListView.getVerticalScrollOffset();
-        float scale = Math.max(0f, 0.9f + (scrollPos * 0.002f));
+        // calculate the mshot scale based on the listView's scroll position
+        int scrollPos = mListView.getVerticalScrollOffset();
+        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.004f));
         if (scale == mPreviousMshotScale) {
             return;
         }
@@ -1155,11 +1171,20 @@ public class ReaderPostListFragment extends SherlockFragment
         Matrix matrix = new Matrix();
         matrix.setScale(scale, scale, centerX, 0);
         mImageMshot.setImageMatrix(matrix);
-
-        // remember the scale so we can avoid unnecessary scaling the next time
         mPreviousMshotScale = scale;
     }
 
+    private void positionBlogInfo() {
+        if (mBlogInfoView == null) {
+            return;
+        }
+
+        int mshotBottom = mMshotSpacer.getTop() + mMshotHeight;
+        int abHeight = DisplayUtils.getActionBarHeight(getActivity());
+        int infoTop = (mshotBottom < abHeight ? abHeight : mshotBottom);
+        ReaderFullScreenUtils.addTopMargin(mBlogInfoView, infoTop);
+        mBlogInfoView.requestLayout();
+    }
     /*
      * show info about the current blog in the blog header
      */
@@ -1175,6 +1200,7 @@ public class ReaderPostListFragment extends SherlockFragment
             @Override
             public void onBlogInfoShown(ReaderBlogInfo blogInfo) {
                 if (hasActivity() && blogInfo != null) {
+                    positionBlogInfo();
                     // set the mshot url if it hasn't already been set
                     if (TextUtils.isEmpty(mImageMshot.getUrl())) {
                         loadMshotImage(blogInfo);

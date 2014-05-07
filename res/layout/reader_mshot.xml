@@ -12,7 +12,6 @@
         android:layout_height="@dimen/reader_mshot_image_height"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_medium"
         android:scaleType="matrix" />
 
     <ProgressBar

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -21,7 +22,7 @@ import org.wordpress.android.util.FormatUtils;
  * header view showing blog name, description, follower count & follow button
  * designed for use on ReaderPostListFragment, which shows an mshot of the blog
  */
-class ReaderBlogInfoHeader extends LinearLayout {
+class ReaderBlogInfoHeader extends RelativeLayout {
     private boolean mHasBlogInfo;
 
     interface OnBlogInfoListener {
@@ -58,7 +59,7 @@ class ReaderBlogInfoHeader extends LinearLayout {
     /*
      * show blog header with info from passed blog filled in
      */
-    private void showBlogInfo(final ReaderBlogInfo blogInfo) {
+    public void showBlogInfo(final ReaderBlogInfo blogInfo) {
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);

@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/layout_header"
+        android:orientation="vertical"
         android:visibility="gone">
         <!-- the tag preview or blog preview header is inserted into this layout -->
-    </RelativeLayout>
+    </LinearLayout>
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
         android:id="@+id/ptr_layout"
-        android:layout_below="@+id/layout_header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

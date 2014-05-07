@@ -30,16 +30,17 @@ class ReaderFullScreenUtils {
      * add a header to the listView that's the same height as the ActionBar - used when fullscreen
      * mode is supported, should be called before adding any other listView headers
      */
-    static void addListViewHeader(Context context, ListView listView) {
-        addListViewHeader(context, listView, DisplayUtils.getActionBarHeight(context));
+    static View addListViewHeader(Context context, ListView listView) {
+        return addListViewHeader(context, listView, DisplayUtils.getActionBarHeight(context));
     }
 
-    static void addListViewHeader(Context context, ListView listView, int height) {
+    static View addListViewHeader(Context context, ListView listView, int height) {
         RelativeLayout headerFake = new RelativeLayout(context);
         headerFake.setLayoutParams(new AbsListView.LayoutParams(
                 AbsListView.LayoutParams.MATCH_PARENT,
                 height));
         listView.addHeaderView(headerFake, null, false);
+        return headerFake;
     }
 
     /*
