@@ -24,7 +24,7 @@
         android:layout_above="@+id/layout_bottom"
         android:layout_alignWithParentIfMissing="true"
         android:layout_height="1dp"
-        android:background="@color/reader_divider_blue" />
+        android:background="@color/grey_light" />
 
     <LinearLayout
         android:id="@+id/layout_bottom"

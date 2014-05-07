@@ -332,7 +332,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             String msgText = getString(R.string.reader_label_added_tag, tagName);
             MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO, null);
             getPageAdapter().refreshTagFragments(null, tagName);
-            onTagAction(TagAction.ADD, tagName);        }
+            onTagAction(TagAction.ADD, tagName);
+        }
     }
 
     /*
@@ -425,35 +426,35 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     public void onTagAction(TagAction action, String tagName) {
         mTagsChanged = true;
 
+        final String msgText;
+        final MessageBarType msgType;
+
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
+                msgText = getString(R.string.reader_label_added_tag, tagName);
+                msgType = MessageBarType.INFO;
                 mLastAddedTag = tagName;
+                // user added from recommended tags, make sure addition is reflected on followed tags
+                getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
+                msgText = getString(R.string.reader_label_removed_tag, tagName);
+                msgType = MessageBarType.ALERT;
                 if (mLastAddedTag != null && mLastAddedTag.equals(tagName)) {
                     mLastAddedTag = null;
                 }
+                // user deleted from followed tags, make sure deletion is reflected on recommended tags
+                getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
                 break;
 
             default :
                 return;
         }
 
-        // when this is called from a tag fragment, we need to make sure other tag fragments
-        // reflect the change
-        switch (action) {
-            case ADD:
-                // user added from recommended tags, make sure addition is reflected on followed tags
-                getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
-                break;
-            case DELETE:
-                // user deleted from followed tags, make sure deletion is reflected on recommended tags
-                getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
-                break;
-        }
+        MessageBarUtils.showMessageBar(this, msgText, msgType, null);
     }
 
     /*
