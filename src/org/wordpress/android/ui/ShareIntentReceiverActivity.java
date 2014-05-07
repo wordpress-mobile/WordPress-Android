@@ -36,11 +36,13 @@ import java.util.Map;
  * along with the content passed in the intent
  */
 public class ShareIntentReceiverActivity extends SherlockFragmentActivity implements OnItemSelectedListener {
-    final static public String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
-    final static public String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
-    final static public String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
-    final static public int ADD_TO_NEW_POST = 0;
-    final static public int ADD_TO_MEDIA_LIBRARY = 1;
+    public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
+    public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
+    public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
+    public static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
+    public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
+    public static final int ADD_TO_NEW_POST = 0;
+    public static final int ADD_TO_MEDIA_LIBRARY = 1;
     private IcsSpinner mBlogSpinner;
     private IcsSpinner mActionSpinner;
     private CheckedTextView mAlwaysUseCheckBox;
@@ -89,8 +91,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if (isSharingText()) {
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
-            // if text/plain and only one blog, then don't show this fragment, share it directly
-            // to a new post
+            // if text/plain and only one blog, then don't show this fragment, share it directly to a new post
             if (blogNames.length == 1) {
                 startActivityAndFinish(new Intent(this, EditPostActivity.class));
             }
@@ -102,6 +103,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             mActionSpinner.setAdapter(actionAdapter);
             mActionSpinner.setOnItemSelectedListener(this);
         }
+        loadLastUsed();
         getSupportActionBar().hide();
     }
 
@@ -126,6 +128,30 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         } else {
             ToastUtils.showToast(getBaseContext(), R.string.cant_share_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
+        }
+    }
+
+    private int gepPositionByLocalBlogId(long localBlogId) {
+        for (int i = 0; i < mAccountIDs.length; i++) {
+            if (mAccountIDs[i] == localBlogId) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void loadLastUsed() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        int localBlogId = settings.getInt(SHARE_LAST_USED_BLOG_ID_KEY, -1);
+        int actionPosition = settings.getInt(SHARE_LAST_USED_ADDTO_KEY, -1);
+        if (localBlogId != -1) {
+            int position = gepPositionByLocalBlogId(localBlogId);
+            if (position != -1) {
+                mBlogSpinner.setSelection(position);
+            }
+        }
+        if (actionPosition >= 0 && actionPosition < mActionSpinner.getCount()) {
+            mActionSpinner.setSelection(actionPosition);
         }
     }
 
@@ -234,7 +260,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             if (selectBlog(blogId)) {
                 shareIt();
                 return true;
-            } else { // blog is hidden or has been deleted, reset settings
+            } else {
+                // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_TEXT_BLOG_ID_KEY);
                 editor.commit();
@@ -254,7 +281,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             if (selectBlog(blogId)) {
                 shareIt();
                 return true;
-            } else { // blog is hidden or has been deleted, reset settings
+            } else {
+                // blog is hidden or has been deleted, reset settings
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
                 editor.remove(SHARE_IMAGE_BLOG_ID_KEY);
                 editor.remove(SHARE_IMAGE_ADDTO_KEY);
@@ -271,15 +299,22 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         if (WordPress.currentBlog == null) {
             return ;
         }
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+
+        // Save last used settings
+        editor.putInt(SHARE_LAST_USED_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
+        editor.putInt(SHARE_LAST_USED_ADDTO_KEY, mActionIndex);
+
+        // Save "always use these settings"
         if (mAlwaysUseCheckBox.isChecked()) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
             if (isSharingText()) {
                 editor.putInt(SHARE_TEXT_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
             } else {
                 editor.putInt(SHARE_IMAGE_BLOG_ID_KEY, WordPress.currentBlog.getLocalTableBlogId());
-                editor.putInt(SHARE_IMAGE_ADDTO_KEY, mActionIndex); // Add to new post or media
+                // Add to new post or media
+                editor.putInt(SHARE_IMAGE_ADDTO_KEY, mActionIndex);
             }
-            editor.commit();
         }
+        editor.commit();
     }
 }
