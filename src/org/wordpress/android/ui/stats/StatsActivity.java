@@ -573,7 +573,7 @@ public class StatsActivity extends WPActionBarActivity {
                 new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (isFinishing() || isDestroyed())
+                        if (isFinishing())
                             return;
                         if (mSignInDialog != null && mSignInDialog.isShowing()) {
                             return;
