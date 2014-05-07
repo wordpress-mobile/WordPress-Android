@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -74,7 +75,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
 
         // savedInstanceState will be non-null if activity is being re-created
         if (savedInstanceState == null) {
@@ -360,9 +361,14 @@ public class NotificationsActivity extends WPActionBarActivity
      *  Open a note fragment based on the type of note
      */
     private void openNote(final Note note, boolean scrollToNote) {
-        if (note == null || isFinishing() || isDestroyed()) {
+        if (note == null || isFinishing()) {
             return;
         }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed()) {
+            return;
+        }
+        
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
         mNotesList.setNoteSelected(note, scrollToNote);
 
