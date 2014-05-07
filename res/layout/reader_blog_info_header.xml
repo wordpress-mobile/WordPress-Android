@@ -10,10 +10,33 @@
     android:layout_marginLeft="@dimen/reader_list_margin"
     android:layout_marginRight="@dimen/reader_list_margin">
 
+    <RelativeLayout
+        android:id="@+id/layout_mshot_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_mshot"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/reader_mshot_image_height"
+            android:layout_marginLeft="@dimen/reader_list_margin"
+            android:layout_marginRight="@dimen/reader_list_margin"
+            android:scaleType="matrix" />
+
+        <ProgressBar
+            android:id="@+id/progress_mshot"
+            style="@style/ReaderProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/layout_bloginfo_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/reader_mshot_image_height"
         android:paddingTop="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
