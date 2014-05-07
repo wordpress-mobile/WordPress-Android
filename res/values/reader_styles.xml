@@ -13,11 +13,6 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
-    <style name="ReaderTheme.Subs" parent="@style/WordPress">
-        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
-        <item name="android:windowNoTitle">false</item>
-        <item name="android:windowIsTranslucent">true</item>
-    </style>
 
     <!-- window animations -->
     <style name="ReaderAnimation" />
