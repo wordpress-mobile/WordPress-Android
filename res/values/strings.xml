@@ -8,7 +8,7 @@
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
     <string name="sign_out_confirm">Are you sure you want to sign out?</string>
-    <string name="please_sign_in">Sign in again.</string>
+    <string name="sign_in_again">Sign in again</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
     <string name="visit_security_settings">Visit security settings</string>
 
@@ -707,4 +707,7 @@
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+
+    <!-- Simperium -->
+    <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
 </resources>

@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
+import com.simperium.client.User;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
@@ -28,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class NotificationsActivity extends WPActionBarActivity
@@ -83,6 +85,14 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // remove window background since background color is set in fragment (reduces overdraw)
         getWindow().setBackgroundDrawable(null);
+
+        // Show an auth alert if we don't have an authorized Simperium user
+        if (SimperiumUtils.getSimperium() != null) {
+            User user = SimperiumUtils.getSimperium().getUser();
+            if (user != null && user.getStatus() == User.Status.NOT_AUTHORIZED) {
+                ToastUtils.showAuthErrorDialog(this, R.string.sign_in_again, R.string.simperium_connection_error);
+            }
+        }
     }
 
     @Override

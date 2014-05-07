@@ -17,7 +17,6 @@ import com.simperium.client.BucketObject;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.SimperiumUtils;
 
@@ -189,7 +188,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-        filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
         getActivity().registerReceiver(mReceiver, filter);
     }
 
@@ -209,16 +207,12 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         public void onReceive(Context context, Intent intent) {
             if (intent == null || intent.getAction() == null || !hasActivity())
                 return;
+
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
                 // Get the new bucket instance and start listening again
                 mBucket.removeListener(NotificationsListFragment.this);
                 mBucket = SimperiumUtils.getNotesBucket();
                 mBucket.addListener(NotificationsListFragment.this);
-            } else if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)) {
-                // Simperium user is not authorized, log in again
-                Intent notAuthorizedIntent = new Intent();
-                notAuthorizedIntent.setAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
-                getActivity().sendBroadcast(notAuthorizedIntent);
             }
         }
     };
