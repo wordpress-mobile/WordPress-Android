@@ -62,8 +62,7 @@ import java.util.Map;
 import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 
 /**
- * Fragment hosted by ReaderActivity to show posts with a specific tag
- * or by ReaderBlogDetailActivity to show posts in a specific blog
+ * Fragment hosted by ReaderActivity to show posts with a specific tag or in a specific blog
  */
 public class ReaderPostListFragment extends SherlockFragment
         implements AbsListView.OnScrollListener,
