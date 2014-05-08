@@ -28,12 +28,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * when previewing posts in a blog (blog preview)
  */
 class ReaderBlogInfoHeader extends RelativeLayout {
-    private boolean mHasBlogInfo;
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
 
-    private float mPreviousMshotScale;
-    boolean mHasLoadedMshot;
+    private float mCurrentMshotScale = 1.0f;
+    private boolean mHasLoadedMshot;
 
     private int mMshotWidth;
     private int mMshotHeight;
@@ -87,9 +86,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
 
         // don't show blogInfo until it's complete (has either a name or description)
-        mHasBlogInfo = (blogInfo != null && !blogInfo.isIncomplete());
-
-        if (mHasBlogInfo) {
+        if ((blogInfo != null && !blogInfo.isIncomplete())) {
             mInfoContainerView.setVisibility(View.VISIBLE);
 
             if (blogInfo.hasName()) {
@@ -203,16 +200,14 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         }
 
         // calculate the mshot scale based on the listView's scroll position
-        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.004f));
-        if (scale == mPreviousMshotScale) {
-            return;
+        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.008f));
+        if (scale != mCurrentMshotScale) {
+            float centerX = mMshotWidth * 0.5f;
+            Matrix matrix = new Matrix();
+            matrix.setScale(scale, scale, centerX, 0);
+            mImageMshot.setImageMatrix(matrix);
+            mCurrentMshotScale = scale;
         }
-
-        float centerX = mMshotWidth * 0.5f;
-        Matrix matrix = new Matrix();
-        matrix.setScale(scale, scale, centerX, 0);
-        mImageMshot.setImageMatrix(matrix);
-        mPreviousMshotScale = scale;
     }
 
     /*
