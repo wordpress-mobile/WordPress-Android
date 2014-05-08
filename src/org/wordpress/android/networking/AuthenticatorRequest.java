@@ -11,7 +11,8 @@ import com.wordpress.rest.RestRequest.ErrorListener;
  * allows the request maker to disregard the authentication state when making requests.
  */
 public class AuthenticatorRequest {
-    static public final String SITE_PREFIX = "https://public-api.wordpress.com/rest/v1/sites/";
+    static private final String SITE_PREFIX = "https://public-api.wordpress.com/rest/v1/sites/";
+    static private final String BATCH_CALL_PREFIX = "https://public-api.wordpress.com/rest/v1/batch/?urls%5B%5D=%2Fsites%2F";
     private RestRequest mRequest;
     private RestRequest.ErrorListener mListener;
     private RestClient mRestClient;
@@ -26,16 +27,34 @@ public class AuthenticatorRequest {
     }
 
     public String getSiteId() {
-        // parse out the site id from the url
-        String url = mRequest.getUrl();
+        return extractSiteIdFromUrl(mRequest.getUrl());
+    }
 
+    /**
+     * Parse out the site ID from an URL.
+     * Note: For batch REST API calls, only the first siteID is returned
+     *
+     * @return The site ID
+     */
+    public static String extractSiteIdFromUrl(String url) {
+        if (url == null) {
+            return null;
+        }
         if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
             int marker = SITE_PREFIX.length();
-            if (url.indexOf("/", marker) < marker)
+            if (url.indexOf("/", marker) < marker) {
                 return null;
+            }
             return url.substring(marker, url.indexOf("/", marker));
+        } else if (url.startsWith(BATCH_CALL_PREFIX) && !BATCH_CALL_PREFIX.equals(url)) {
+            int marker = BATCH_CALL_PREFIX.length();
+            if (url.indexOf("%2F", marker) < marker) {
+                return null;
+            }
+            return url.substring(marker, url.indexOf("%2F", marker));
         }
-        // not a sites/$siteId request
+
+        // not a sites/$siteId request or a batch request
         return null;
     }
 
