@@ -75,7 +75,6 @@ android {
         androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
-        compile 'org.wordpress:actionbarsherlock:4.4.0'
         compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
         compile 'org.wordpress:gcm:1.0.0'
         compile 'org.wordpress:volley:wp-0.0.1'
