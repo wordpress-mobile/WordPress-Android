@@ -1,6 +1,7 @@
 
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -158,6 +160,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         refreshMenuDrawer();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    protected boolean isActivityDestroyed() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
+    }
+    
     protected void refreshMenuDrawer(){
         // the current blog may have changed while we were away
         setupCurrentBlog();

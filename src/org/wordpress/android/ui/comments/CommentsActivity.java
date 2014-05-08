@@ -38,7 +38,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(null);
+        super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.comment_activity);
         View detailView = findViewById(R.id.fragment_comment_detail);
         mDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
