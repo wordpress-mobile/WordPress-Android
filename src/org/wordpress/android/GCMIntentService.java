@@ -1,6 +1,7 @@
 
 package org.wordpress.android;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,8 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.IntentCompat;
 import android.util.Base64;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -166,34 +165,30 @@ public class GCMIntentService extends GCMBaseIntentService {
         vibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
         light = prefs.getBoolean("wp_pref_notification_light", false);
 
-        NotificationCompat.Builder mBuilder;
+        Notification.Builder mBuilder;
 
         Intent resultIntent = new Intent(this, PostsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (activeNotificationsMap.size() <= 1) {
-            mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.notification_icon)
-                            .setContentTitle(title)
-                            .setContentText(message)
-                            .setTicker(message)
-                            .setAutoCancel(true)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
+                                                     .setContentText(message).setTicker(message).setAutoCancel(true)
+                                                     .setStyle(new Notification.BigTextStyle().bigText(message));
 
-            if (note_id != null)
+            if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+            }
 
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
                 Intent commentReplyIntent = new Intent(this, PostsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
                 commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
                 commentReplyIntent.addCategory("comment-reply");
@@ -212,8 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 mBuilder.setLargeIcon(largeIconBitmap);
             }
         } else {
-
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
 
             int noteCtr = 1;
             for (Bundle wpPN : activeNotificationsMap.values()) {
@@ -239,8 +233,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications),
                     activeNotificationsMap.size());
 
-            mBuilder =
-                    new NotificationCompat.Builder(this)
+            mBuilder = new Notification.Builder(this)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
                             .setSmallIcon(R.drawable.notification_icon)
                             .setContentTitle("WordPress")
@@ -312,5 +305,4 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onUnregistered(Context context, String regId) {
         AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
     }
-
 }

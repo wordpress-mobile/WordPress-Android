@@ -2,7 +2,9 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,8 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.app.Fragment;
-import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
