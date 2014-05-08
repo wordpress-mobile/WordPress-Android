@@ -565,8 +565,8 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
                     return super.getPageTitle(position);
             }
 
-            // force titles to two lines by replacing spaces with new lines
-            return title.replace(" ", "\n");
+            // force titles to two lines by replacing the first space with a new line
+            return title.replaceFirst(" ", "\n");
         }
 
         @Override
