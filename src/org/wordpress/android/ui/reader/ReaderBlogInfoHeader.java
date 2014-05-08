@@ -30,12 +30,13 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 class ReaderBlogInfoHeader extends RelativeLayout {
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
+    private ViewGroup mMshotContainerView;
 
     private float mCurrentMshotScale = 1.0f;
     private boolean mHasLoadedMshot;
 
     private int mMshotWidth;
-    private int mMshotHeight;
+    private int mMshotDefaultHeight;
 
     public ReaderBlogInfoHeader(Context context){
         super(context);
@@ -58,19 +59,18 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
         mMshotWidth = displayWidth - (marginWidth * 2);
-        mMshotHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+        mMshotDefaultHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
 
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
         mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
 
-        // this is the view that contains the actual info (ie: everything but the mshot)
         mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
+        mMshotContainerView = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
     }
 
-    public int getMshotHeight() {
-        return mMshotHeight;
-    }
-
+    /*
+     * shows the blogInfo from local db (if available) then request latest blogInfo from server
+     */
     public void setBlogIdAndUrl(long blogId, String blogUrl) {
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl));
         requestBlogInfo(blogId, blogUrl);
@@ -200,7 +200,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         }
 
         // calculate the mshot scale based on the listView's scroll position
-        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.008f));
+        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.005f));
         if (scale != mCurrentMshotScale) {
             float centerX = mMshotWidth * 0.5f;
             Matrix matrix = new Matrix();
@@ -221,10 +221,23 @@ class ReaderBlogInfoHeader extends RelativeLayout {
      * sets the top of the container view holding the info
      */
     public void setInfoContainerTop(int top) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mInfoContainerView.getLayoutParams();
-        if (params.topMargin != top) {
-            params.topMargin = top;
-            mInfoContainerView.requestLayout();
+        RelativeLayout.LayoutParams infoParams = (RelativeLayout.LayoutParams) mInfoContainerView.getLayoutParams();
+        if (infoParams.topMargin != top) {
+            infoParams.topMargin = top;
+
+            // force the mshot container to match the bottom of the info container to
+            // prevent the bottom of the mshot from appearing below the info
+            int infoBottom = top + mInfoContainerView.getHeight();
+            RelativeLayout.LayoutParams mshotParams = (RelativeLayout.LayoutParams) mMshotContainerView.getLayoutParams();
+            if (mshotParams.height != infoBottom) {
+                mshotParams.height = infoBottom;
+            }
+
+            requestLayout();
         }
+    }
+
+    public int getMshotDefaultHeight() {
+        return mMshotDefaultHeight;
     }
 }

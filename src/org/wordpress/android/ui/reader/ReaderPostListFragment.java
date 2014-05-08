@@ -71,6 +71,7 @@ public class ReaderPostListFragment extends SherlockFragment
         public void onTagSelected(String tagName);
     }
 
+    private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
@@ -271,7 +272,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 mBlogInfoView.bringToFront();
 
                 // add a blank header to the listView that's the same height as the mshot
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
 
                 // blank header height needs to be adjusted based on the actual height of the info
                 // view, which we don't know at this point - so assign a one-shot listener to
@@ -282,8 +283,8 @@ public class ReaderPostListFragment extends SherlockFragment
                             public void onGlobalLayout() {
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                                 mMshotSpacerView.getLayoutParams().height =
-                                        mBlogInfoView.getMshotHeight() + mBlogInfoView.getInfoContainerHeight();
-                                updateBlogInfoView();
+                                        mBlogInfoView.getMshotDefaultHeight() + mBlogInfoView.getInfoContainerHeight();
+                                repositionBlogInfoView();
                             }
                         }
                 );
@@ -956,8 +957,9 @@ public class ReaderPostListFragment extends SherlockFragment
     void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
-        if (!TextUtils.isEmpty(newCurrentTag))
+        if (!TextUtils.isEmpty(newCurrentTag)) {
             setCurrentTag(newCurrentTag);
+        }
     }
 
     /*
@@ -981,8 +983,9 @@ public class ReaderPostListFragment extends SherlockFragment
         boolean isFlingingNow = (scrollState == SCROLL_STATE_FLING);
         if (isFlingingNow != mIsFlinging) {
             mIsFlinging = isFlingingNow;
-            if (hasPostAdapter())
+            if (hasPostAdapter()) {
                 getPostAdapter().setIsFlinging(mIsFlinging);
+            }
         }
     }
 
@@ -994,8 +997,6 @@ public class ReaderPostListFragment extends SherlockFragment
     /*
      * ActionBar tag dropdown adapter
      */
-    private ReaderActionBarTagAdapter mActionBarAdapter;
-
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
@@ -1094,10 +1095,13 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onScrollChanged() {
-        updateBlogInfoView();
+        repositionBlogInfoView();
     }
 
-    private void updateBlogInfoView() {
+    /*
+     * scale & reposition blog info
+     */
+    private void repositionBlogInfoView() {
         if (mBlogInfoView == null) {
             return;
         }
@@ -1111,7 +1115,7 @@ public class ReaderPostListFragment extends SherlockFragment
         // info view to re-position itself to match this - if this position is less
         // than the height of the transparent ActionBar, then set it to the ActionBar
         // height so it sticks once it reaches the top of the screen
-        int mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotHeight();
+        int mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight();
         int infoTop = (mshotBottom < mActionBarHeight ? mActionBarHeight : mshotBottom);
         mBlogInfoView.setInfoContainerTop(infoTop);
     }
