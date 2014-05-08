@@ -18,7 +18,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class NotificationsListFragment extends ListFragment implements NotesAdapter.DataLoadedListener {
     private static final int LOAD_MORE_WITHIN_X_ROWS = 5;

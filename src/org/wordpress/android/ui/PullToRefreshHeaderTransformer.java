@@ -6,13 +6,12 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.AbsDefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
 import uk.co.senab.actionbarpulltorefresh.library.R;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
-public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer {
+public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
     private View mHeaderView;
     private ViewGroup mContentLayout;
     private long mAnimationDuration;
@@ -33,23 +32,12 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
         super.onViewCreated(activity, headerView);
         mHeaderView = headerView;
         mContentLayout = (ViewGroup) headerView.findViewById(R.id.ptr_content);
-
-        mHeaderOutAnimation = AnimationUtils.loadAnimation(activity,
-                uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.R.anim.fade_out);
         mAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        if (mHeaderOutAnimation != null) {
-            final AnimationCallback callback = new AnimationCallback();
-            if (mHeaderOutAnimation != null) {
-                mHeaderOutAnimation.setAnimationListener(callback);
-            }
-        }
     }
 
     @Override
     public boolean hideHeaderView() {
         mShowProgressBarOnly = false;
-
         return super.hideHeaderView();
     }
 
@@ -106,23 +94,5 @@ public class PullToRefreshHeaderTransformer extends AbsDefaultHeaderTransformer 
 
     public void setOnTopScrollChangedListener(OnTopScrollChangedListener listener) {
         mOnTopScrollChangedListener = listener;
-    }
-
-    class AnimationCallback implements Animation.AnimationListener {
-        @Override
-        public void onAnimationStart(Animation animation) {
-        }
-
-        @Override
-        public void onAnimationEnd(Animation animation) {
-            if (animation == mHeaderOutAnimation) {
-                mHeaderView.setVisibility(View.GONE);
-                onReset();
-            }
-        }
-
-        @Override
-        public void onAnimationRepeat(Animation animation) {
-        }
     }
 }

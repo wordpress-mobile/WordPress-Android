@@ -31,7 +31,7 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class ManageBlogsActivity extends ListActivity {
     private List<Map<String, Object>> mAccounts;

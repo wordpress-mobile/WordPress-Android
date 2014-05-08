@@ -25,7 +25,7 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * A fragment display the themes on a grid view.

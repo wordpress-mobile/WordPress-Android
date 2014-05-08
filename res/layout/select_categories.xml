@@ -6,7 +6,7 @@
     android:padding="0px"
     android:orientation="vertical">
 
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
@@ -22,5 +22,5 @@
             android:cacheColorHint="#00000000">
         </ListView>
 
-    </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 </LinearLayout>

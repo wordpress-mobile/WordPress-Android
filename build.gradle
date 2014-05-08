@@ -86,7 +86,6 @@ android {
         compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
-        compile 'org.wordpress:pulltorefresh-abs:+'
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'

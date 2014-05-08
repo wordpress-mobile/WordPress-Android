@@ -36,7 +36,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import java.util.List;
 import java.util.Vector;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PostsListFragment extends ListFragment implements WordPress.OnPostUploadedListener {
     public static final int POSTS_REQUEST_COUNT = 20;

@@ -40,7 +40,7 @@ import org.xmlrpc.android.ApiHelper;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;

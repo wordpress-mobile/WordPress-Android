@@ -48,7 +48,7 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
