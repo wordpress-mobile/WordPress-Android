@@ -44,7 +44,7 @@ public class ReaderActivity extends WPActionBarActivity
                                        OnTagSelectedListener,
                                        FragmentManager.OnBackStackChangedListener,
                                        ReaderPostDetailFragment.PostChangeListener,
-                                       ReaderFullScreenUtils.FullScreenListener {
+                                       ReaderUtils.FullScreenListener {
 
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
@@ -85,7 +85,7 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.enableActionBarOverlay(this);
+            ReaderUtils.enableActionBarOverlay(this);
         }
 
         super.onCreate(savedInstanceState);

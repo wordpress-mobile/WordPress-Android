@@ -105,7 +105,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
-    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
+    private ReaderUtils.FullScreenListener mFullScreenListener;
     private PostChangeListener mPostChangeListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
@@ -195,7 +195,7 @@ public class ReaderPostDetailFragment extends SherlockFragment
         mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
-            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
+            ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(container.getContext()));
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -411,8 +411,8 @@ public class ReaderPostDetailFragment extends SherlockFragment
             setTitle(null);
         }
 
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        if (activity instanceof ReaderUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
         }
         if (activity instanceof PostChangeListener) {
             mPostChangeListener = (PostChangeListener) activity;

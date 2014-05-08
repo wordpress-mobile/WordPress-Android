@@ -31,9 +31,12 @@ class ReaderBlogInfoHeader extends RelativeLayout {
     private boolean mHasBlogInfo;
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
-    private int mMshotWidth;
+
     private float mPreviousMshotScale;
     boolean mHasLoadedMshot;
+
+    private int mMshotWidth;
+    private int mMshotHeight;
 
     public ReaderBlogInfoHeader(Context context){
         super(context);
@@ -53,13 +56,20 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.reader_blog_info_header, this, true);
 
-        mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
-        mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
-        mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
-
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
         mMshotWidth = displayWidth - (marginWidth * 2);
+        mMshotHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
+
+        mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
+        mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
+
+        // this is the view that contains the actual info (ie: everything but the mshot)
+        mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
+    }
+
+    public int getMshotHeight() {
+        return mMshotHeight;
     }
 
     public void setBlogIdAndUrl(long blogId, String blogUrl) {
@@ -70,17 +80,18 @@ class ReaderBlogInfoHeader extends RelativeLayout {
     /*
      * show blog header with info from passed blog filled in
      */
-    public void showBlogInfo(final ReaderBlogInfo blogInfo) {
+    private void showBlogInfo(final ReaderBlogInfo blogInfo) {
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
-        final View divider = findViewById(R.id.divider_bloginfo);
 
         // don't show blogInfo until it's complete (has either a name or description)
         mHasBlogInfo = (blogInfo != null && !blogInfo.isIncomplete());
 
         if (mHasBlogInfo) {
+            mInfoContainerView.setVisibility(View.VISIBLE);
+
             if (blogInfo.hasName()) {
                 txtBlogName.setText(blogInfo.getName());
                 // tapping the blog name opens the blog in the browser
@@ -121,11 +132,8 @@ class ReaderBlogInfoHeader extends RelativeLayout {
             if (!mHasLoadedMshot) {
                 loadMshotImage(blogInfo);
             }
-
-            divider.setVisibility(View.VISIBLE);
         } else {
-            txtFollowBtn.setVisibility(View.INVISIBLE);
-            divider.setVisibility(View.INVISIBLE);
+            mInfoContainerView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -187,7 +195,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
     }
 
     /*
-     * scale the mshot image based on the current scroll position
+     * scale the mshot image based on the scroll position of ReaderPostListFragment's listView
      */
     public void scaleMshotImageBasedOnScrollPos(int scrollPos) {
         if (mImageMshot == null) {
@@ -207,11 +215,17 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         mPreviousMshotScale = scale;
     }
 
-    public int getInfoHeight() {
+    /*
+     * returns the height of the container view holding the info
+     */
+    public int getInfoContainerHeight() {
         return mInfoContainerView.getHeight();
     }
 
-    public void setInfoTop(int top) {
+    /*
+     * sets the top of the container view holding the info
+     */
+    public void setInfoContainerTop(int top) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mInfoContainerView.getLayoutParams();
         if (params.topMargin != top) {
             params.topMargin = top;

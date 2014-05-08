@@ -74,23 +74,24 @@ public class ReaderPostListFragment extends SherlockFragment
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
-    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
+    private ReaderUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private WPListView mListView;
     private TextView mNewPostsBar;
     private View mEmptyView;
     private ProgressBar mProgress;
-    private ViewGroup mTagPreviewHeader;
+
+    private ViewGroup mTagInfoView;
 
     private ReaderBlogInfoHeader mBlogInfoView;
     private View mMshotSpacerView;
-    private int mMshotHeight;
 
     private String mCurrentTag;
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+    private int mActionBarHeight;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -218,12 +219,11 @@ public class ReaderPostListFragment extends SherlockFragment
         final Context context = container.getContext();
         final Resources resources = context.getResources();
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+
         boolean hasTransparentActionBar = isFullScreenSupported();
+        mActionBarHeight = DisplayUtils.getActionBarHeight(context);
 
         mListView = (WPListView) view.findViewById(android.R.id.list);
-
-        // this is the view that contains the header for the blog or tag preview
-        final ViewGroup layoutHeader = (ViewGroup) view.findViewById(R.id.layout_header);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
@@ -235,52 +235,58 @@ public class ReaderPostListFragment extends SherlockFragment
                 hideNewPostsBar();
             }
         });
-
-        // move header and new posts bar down to accommodate transparent ActionBar
         if (hasTransparentActionBar) {
-            ReaderFullScreenUtils.addTopMargin(context, layoutHeader);
-            ReaderFullScreenUtils.addTopMargin(context, mNewPostsBar);
+            ReaderUtils.setTopMargin(mNewPostsBar, mActionBarHeight);
         }
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 if (hasTransparentActionBar) {
-                    ReaderFullScreenUtils.addListViewHeader(context, mListView);
+                    ReaderUtils.addListViewHeader(mListView, mActionBarHeight);
                 }
                 break;
 
             case TAG_PREVIEW:
-                // show tag preview header
-                mTagPreviewHeader = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, container, false);
-                layoutHeader.addView(mTagPreviewHeader);
-                layoutHeader.setVisibility(View.VISIBLE);
+                // locate the view that will contain the tag info header
+                final ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.layout_preview_container);
+                if (hasTransparentActionBar) {
+                    ReaderUtils.setTopMargin(previewContainer, mActionBarHeight);
+                }
+
+                // inflate the tag info header and add it to the container
+                mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, container, false);
+                previewContainer.addView(mTagInfoView);
+                previewContainer.setVisibility(View.VISIBLE);
                 break;
 
             case BLOG_PREVIEW:
-                layoutHeader.setVisibility(View.VISIBLE);
                 mListView.setHeaderDividersEnabled(false);
-
-                // add a blank header to the listView that's the same height as the mshot
-                mMshotHeight = resources.getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-                mMshotSpacerView = ReaderFullScreenUtils.addListViewHeader(context, mListView, mMshotHeight);
 
                 // add the blog info to the view and bring it in front of the listView
                 mBlogInfoView = new ReaderBlogInfoHeader(context);
                 view.addView(mBlogInfoView);
                 mBlogInfoView.bringToFront();
+
+                // add a blank header to the listView that's the same height as the mshot
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
+
+                // blank header height needs to be adjusted based on the actual height of the info
+                // view, which we don't know at this point - so assign a one-shot listener to
+                // detect when we know the height and adjust accordingly
                 mBlogInfoView.getViewTreeObserver().addOnGlobalLayoutListener(
                         new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                // change the spacer height to account for the blogInfo
-                                mMshotSpacerView.getLayoutParams().height = mMshotHeight + mBlogInfoView.getInfoHeight();
-                                updateBlogInfoView();
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                                mMshotSpacerView.getLayoutParams().height =
+                                        mBlogInfoView.getMshotHeight() + mBlogInfoView.getInfoContainerHeight();
+                                updateBlogInfoView();
                             }
                         }
                 );
 
-                // listen for scroll changes so we can scale the mshot as the user scrolls
+                // listen for scroll changes so we can scale the mshot and reposition the blogInfo
+                // as the user scrolls
                 mListView.setOnScrollChangedListener(this);
                 break;
         }
@@ -346,8 +352,8 @@ public class ReaderPostListFragment extends SherlockFragment
         if (activity instanceof OnTagSelectedListener) {
             mOnTagSelectedListener = (OnTagSelectedListener) activity;
         }
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
+        if (activity instanceof ReaderUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
         }
     }
 
@@ -384,10 +390,17 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         }
 
-        if (mBlogInfoView != null) {
-            mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl);
+        switch (getPostListType()) {
+            case BLOG_PREVIEW:
+                // tell the blog info header to load information about the current blog
+                if (mBlogInfoView != null) {
+                    mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl);
+                }
+                break;
+            case TAG_PREVIEW:
+                updateTagPreviewHeader();
+                break;
         }
-        updateTagPreviewHeader();
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
     }
@@ -655,17 +668,17 @@ public class ReaderPostListFragment extends SherlockFragment
      * follow button to show the correct follow state for the tag
      */
     private void updateTagPreviewHeader() {
-        if (!getPostListType().equals(ReaderPostListType.TAG_PREVIEW) || mTagPreviewHeader == null) {
+        if (mTagInfoView == null) {
             return;
         }
 
-        final TextView txtTagName = (TextView) mTagPreviewHeader.findViewById(R.id.text_tag_name);
+        final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
         String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.grey_extra_dark);
         String htmlTag = "<font color=" + color + ">" + getCurrentTag() + "</font>";
         String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
         txtTagName.setText(Html.fromHtml(htmlLabel));
 
-        final TextView txtFollow = (TextView) mTagPreviewHeader.findViewById(R.id.text_follow_blog);
+        final TextView txtFollow = (TextView) mTagInfoView.findViewById(R.id.text_follow_blog);
         ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTag(getCurrentTag()));
 
         txtFollow.setOnClickListener(new View.OnClickListener() {
@@ -1086,12 +1099,17 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
+        // scale the mshot based on the scroll position
         int scrollPos = mListView.getVerticalScrollOffset();
         mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
 
-        int mshotBottom = mMshotSpacerView.getTop() + mMshotHeight;
-        int actionBarHeight = DisplayUtils.getActionBarHeight(getActivity());
-        int infoTop = (mshotBottom < actionBarHeight ? actionBarHeight : mshotBottom);
-        mBlogInfoView.setInfoTop(infoTop);
+        // here's the tricky part: get the actual bottom position of the mshot in the
+        // info view based on where the spacer has been scrolled to, then tell the
+        // info view to re-position itself to match this - if this position is less
+        // than the height of the transparent ActionBar, then set it to the ActionBar
+        // height so it sticks once it reaches the top of the screen
+        int mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotHeight();
+        int infoTop = (mshotBottom < mActionBarHeight ? mActionBarHeight : mshotBottom);
+        mBlogInfoView.setInfoContainerTop(infoTop);
     }
 }
