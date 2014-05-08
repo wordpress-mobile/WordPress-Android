@@ -24,12 +24,8 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
 
-    protected ThemeSearchFragment(int page) {
-        super(page);
-    }
-
     public static ThemeSearchFragment newInstance() {
-        ThemeSearchFragment fragment = new ThemeSearchFragment(-1);
+        ThemeSearchFragment fragment = new ThemeSearchFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
