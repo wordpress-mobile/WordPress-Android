@@ -14,6 +14,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class ReaderBlogActions {
 
@@ -35,6 +36,7 @@ public class ReaderBlogActions {
 
         switch (action) {
             case FOLLOW:
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
                 ReaderBlogTable.setIsFollowedBlogUrl(blogUrl, true);
                 path = "/read/following/mine/new?url=" + UrlUtils.urlEncode(blogUrl);
                 break;
