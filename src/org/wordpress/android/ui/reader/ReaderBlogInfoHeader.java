@@ -237,6 +237,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
             // force the mshot container to match the bottom of the info container to
             // prevent the bottom of the mshot from appearing below the info
             int infoBottom = top + mInfoContainerView.getHeight();
+
             RelativeLayout.LayoutParams mshotParams = (RelativeLayout.LayoutParams) mMshotContainerView.getLayoutParams();
             if (mshotParams.height != infoBottom) {
                 mshotParams.height = infoBottom;

@@ -1091,13 +1091,8 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onScrollChanged() {
-        if (isPostAdapterEmpty()) {
-            return;
-        }
-        int scrollPos = mListView.getVerticalScrollOffset();
-        if (scrollPos != mLastPostListScrollPos) {
-            repositionBlogInfoView(scrollPos);
-            mLastPostListScrollPos = scrollPos;
+        if (!isPostAdapterEmpty()) {
+            repositionBlogInfoView(mListView.getVerticalScrollOffset());
         }
     }
 
@@ -1105,7 +1100,14 @@ public class ReaderPostListFragment extends SherlockFragment
      * scale & reposition blog info
      */
     private void repositionBlogInfoView(int scrollPos) {
-        if (mBlogInfoView == null) {
+        if (mBlogInfoView == null || scrollPos == mLastPostListScrollPos) {
+            return;
+        }
+
+        // skip if blogInfo hasn't had a layout pass
+        if (mBlogInfoView.getHeight() == 0) {
+            AppLog.w(AppLog.T.READER, "blogInfo height = 0");
+            mBlogInfoView.requestLayout();
             return;
         }
 
@@ -1125,7 +1127,9 @@ public class ReaderPostListFragment extends SherlockFragment
             mshotBottom = 0;
         }
         int infoTop = (mshotBottom < mActionBarHeight ? mActionBarHeight : mshotBottom);
+
         mBlogInfoView.setInfoContainerTop(infoTop);
+        mLastPostListScrollPos = scrollPos;
     }
 
     private void loadBlogInfoIfNotLoaded() {
