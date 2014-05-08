@@ -34,6 +34,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
 
     private float mCurrentMshotScale = 1.0f;
     private boolean mHasLoadedMshot;
+    private boolean mHasLoadedInfo;
 
     private int mMshotWidth;
     private int mMshotDefaultHeight;
@@ -85,6 +86,10 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
 
+        if (blogInfo != null) {
+            mHasLoadedInfo = true;
+        }
+
         // don't show blogInfo until it's complete (has either a name or description)
         if ((blogInfo != null && !blogInfo.isIncomplete())) {
             mInfoContainerView.setVisibility(View.VISIBLE);
@@ -132,6 +137,10 @@ class ReaderBlogInfoHeader extends RelativeLayout {
         } else {
             mInfoContainerView.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public boolean hasLoaded() {
+        return mHasLoadedInfo;
     }
 
     /*

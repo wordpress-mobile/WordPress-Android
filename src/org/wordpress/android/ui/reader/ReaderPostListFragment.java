@@ -92,6 +92,7 @@ public class ReaderPostListFragment extends SherlockFragment
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
     private int mActionBarHeight;
+    private int mLastPostListScrollPos = -1;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -259,13 +260,12 @@ public class ReaderPostListFragment extends SherlockFragment
                 break;
 
             case BLOG_PREVIEW:
-                // add the blog info to the view and bring it in front of the listView
+                // add the blog info to the view
                 mBlogInfoView = new ReaderBlogInfoHeader(context);
                 if (hasTransparentActionBar) {
                     ReaderUtils.setTopMargin(mBlogInfoView, mActionBarHeight);
                 }
                 view.addView(mBlogInfoView);
-                mBlogInfoView.bringToFront();
 
                 // add a blank header to the listView that's the same height as the mshot
                 mListView.setHeaderDividersEnabled(false);
@@ -281,10 +281,12 @@ public class ReaderPostListFragment extends SherlockFragment
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                                 mMshotSpacerView.getLayoutParams().height =
                                         mBlogInfoView.getMshotDefaultHeight() + mBlogInfoView.getInfoContainerHeight();
-                                repositionBlogInfoView();
                             }
                         }
                 );
+
+                // make sure blog info is in front of the listView
+                mBlogInfoView.bringToFront();
 
                 // listen for scroll changes so we can scale the mshot and reposition the blogInfo
                 // as the user scrolls
@@ -393,10 +395,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
         switch (getPostListType()) {
             case BLOG_PREVIEW:
-                // tell the blog info header to load information about the current blog
-                if (mBlogInfoView != null) {
-                    mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl);
-                }
+                loadBlogInfoIfNotLoaded();
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
@@ -1092,19 +1091,25 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onScrollChanged() {
-        repositionBlogInfoView();
+        if (isPostAdapterEmpty()) {
+            return;
+        }
+        int scrollPos = mListView.getVerticalScrollOffset();
+        if (scrollPos != mLastPostListScrollPos) {
+            repositionBlogInfoView(scrollPos);
+            mLastPostListScrollPos = scrollPos;
+        }
     }
 
     /*
      * scale & reposition blog info
      */
-    private void repositionBlogInfoView() {
+    private void repositionBlogInfoView(int scrollPos) {
         if (mBlogInfoView == null) {
             return;
         }
 
         // scale the mshot based on the scroll position
-        int scrollPos = mListView.getVerticalScrollOffset();
         mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
 
         // here's the tricky part: get the actual bottom position of the mshot in the
@@ -1112,8 +1117,22 @@ public class ReaderPostListFragment extends SherlockFragment
         // info view to re-position itself to match this - if this position is less
         // than the height of the transparent ActionBar, then set it to the ActionBar
         // height so it sticks once it reaches the top of the screen
-        int mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight();
+        int mshotBottom;
+        if (mMshotSpacerView.getHeight() > 0) {
+            mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight();
+        } else {
+            // mshot is offscreen if it has no height
+            mshotBottom = 0;
+        }
         int infoTop = (mshotBottom < mActionBarHeight ? mActionBarHeight : mshotBottom);
         mBlogInfoView.setInfoContainerTop(infoTop);
     }
+
+    private void loadBlogInfoIfNotLoaded() {
+        if (mBlogInfoView != null && !mBlogInfoView.hasLoaded()) {
+            AppLog.d(T.READER, "reader post list > loading blogInfo");
+            mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl);
+        }
+    }
+
 }
