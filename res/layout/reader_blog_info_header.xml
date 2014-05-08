@@ -39,7 +39,7 @@
         android:paddingTop="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_large"
+        android:paddingBottom="@dimen/margin_medium"
         android:background="@drawable/reader_post_background">
 
         <org.wordpress.android.widgets.WPTextView
@@ -64,7 +64,6 @@
             tools:text="text_blog_description" />
 
         <View
-            android:id="@+id/divider_bloginfo"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_large"

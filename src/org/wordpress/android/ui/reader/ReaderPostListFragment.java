@@ -247,7 +247,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 break;
 
             case TAG_PREVIEW:
-                // locate the view that will contain the tag info header
+                // locate the view that will contain the tag preview header
                 final ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.layout_preview_container);
                 if (hasTransparentActionBar) {
                     ReaderUtils.setTopMargin(previewContainer, mActionBarHeight);
@@ -279,25 +279,20 @@ public class ReaderPostListFragment extends SherlockFragment
                             @Override
                             public void onGlobalLayout() {
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                mMshotSpacerView.getLayoutParams().height =
-                                        mBlogInfoView.getMshotDefaultHeight() + mBlogInfoView.getInfoContainerHeight();
+                                mMshotSpacerView.getLayoutParams().height = mBlogInfoView.getHeight();
                             }
                         }
                 );
 
                 // make sure blog info is in front of the listView
                 mBlogInfoView.bringToFront();
-
-                // listen for scroll changes so we can scale the mshot and reposition the blogInfo
-                // as the user scrolls
-                mListView.setOnScrollChangedListener(this);
                 break;
         }
 
         // textView that appears when current tag has no posts
         mEmptyView = view.findViewById(R.id.empty_view);
 
-        // set the listView's scroll listeners so we can detect up/down scrolling
+        // set the listView's scroll listener so we can detect flings
         mListView.setOnScrollListener(this);
 
         // tapping a post opens the detail view
@@ -396,6 +391,9 @@ public class ReaderPostListFragment extends SherlockFragment
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfoIfNotLoaded();
+                // listen for scroll changes so we can scale the mshot and reposition the blogInfo
+                // as the user scrolls
+                mListView.setOnScrollChangedListener(this);
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
@@ -1091,15 +1089,18 @@ public class ReaderPostListFragment extends SherlockFragment
 
     @Override
     public void onScrollChanged() {
+        // note that onScrollChanged is only called when previewing posts in a specific blog,
+        // so we can scale & reposition the blogInfo that appears above the listView
         if (!isPostAdapterEmpty()) {
-            repositionBlogInfoView(mListView.getVerticalScrollOffset());
+            repositionBlogInfoView();
         }
     }
 
     /*
-     * scale & reposition blog info
+     * scale & reposition blog info based on the listView's scroll position
      */
-    private void repositionBlogInfoView(int scrollPos) {
+    private void repositionBlogInfoView() {
+        int scrollPos = mListView.getVerticalScrollOffset();
         if (mBlogInfoView == null || scrollPos == mLastPostListScrollPos) {
             return;
         }
@@ -1107,7 +1108,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // skip if blogInfo hasn't had a layout pass
         if (mBlogInfoView.getHeight() == 0) {
             AppLog.w(AppLog.T.READER, "blogInfo height = 0");
-            mBlogInfoView.requestLayout();
             return;
         }
 

@@ -114,7 +114,8 @@ class ReaderBlogInfoHeader extends RelativeLayout {
 
             // only show the follower count if there are subscribers
             if (blogInfo.numSubscribers > 0) {
-                String numFollowers = getResources().getString(R.string.reader_label_followers, FormatUtils.formatInt(blogInfo.numSubscribers));
+                String numFollowers = getResources().getString(R.string.reader_label_followers,
+                        FormatUtils.formatInt(blogInfo.numSubscribers));
                 txtFollowCnt.setText(numFollowers);
                 txtFollowCnt.setVisibility(View.VISIBLE);
             } else {
@@ -204,10 +205,6 @@ class ReaderBlogInfoHeader extends RelativeLayout {
      * scale the mshot image based on the scroll position of ReaderPostListFragment's listView
      */
     public void scaleMshotImageBasedOnScrollPos(int scrollPos) {
-        if (mImageMshot == null) {
-            return;
-        }
-
         // calculate the mshot scale based on the listView's scroll position
         float scale = Math.max(0f, 0.9f + (-scrollPos * 0.005f));
         if (scale != mCurrentMshotScale) {
@@ -217,13 +214,6 @@ class ReaderBlogInfoHeader extends RelativeLayout {
             mImageMshot.setImageMatrix(matrix);
             mCurrentMshotScale = scale;
         }
-    }
-
-    /*
-     * returns the height of the container view holding the info
-     */
-    public int getInfoContainerHeight() {
-        return mInfoContainerView.getHeight();
     }
 
     /*
