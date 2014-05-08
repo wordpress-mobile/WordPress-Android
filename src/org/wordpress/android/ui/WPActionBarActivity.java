@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -686,9 +687,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     private void broadcastAction(String action) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         Intent intent = new Intent();
         intent.setAction(action);
-        sendBroadcast(intent);
+        lbm.sendBroadcast(intent);
     }
 
     /**

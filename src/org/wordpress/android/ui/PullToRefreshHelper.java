@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import org.wordpress.android.R;
@@ -111,7 +112,8 @@ public class PullToRefreshHelper implements OnRefreshListener {
         }
         IntentFilter filter = new IntentFilter();
         filter.addAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-        context.registerReceiver(mReceiver, filter);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+        lbm.registerReceiver(mReceiver, filter);
     }
 
     public void unregisterReceiver(Context context) {
@@ -119,7 +121,8 @@ public class PullToRefreshHelper implements OnRefreshListener {
             return;
         }
         try {
-            context.unregisterReceiver(mReceiver);
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+            lbm.unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
             // exception occurs if receiver already unregistered (safe to ignore)
         }
