@@ -264,6 +264,9 @@ public class ReaderPostListFragment extends SherlockFragment
 
                 // add the blog info to the view and bring it in front of the listView
                 mBlogInfoView = new ReaderBlogInfoHeader(context);
+                if (hasTransparentActionBar) {
+                    ReaderUtils.setTopMargin(mBlogInfoView, mActionBarHeight);
+                }
                 view.addView(mBlogInfoView);
                 mBlogInfoView.bringToFront();
 
