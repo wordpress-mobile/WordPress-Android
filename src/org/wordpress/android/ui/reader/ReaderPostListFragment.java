@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
@@ -218,7 +217,6 @@ public class ReaderPostListFragment extends SherlockFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Context context = container.getContext();
-        final Resources resources = context.getResources();
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
 
         boolean hasTransparentActionBar = isFullScreenSupported();
@@ -261,8 +259,6 @@ public class ReaderPostListFragment extends SherlockFragment
                 break;
 
             case BLOG_PREVIEW:
-                mListView.setHeaderDividersEnabled(false);
-
                 // add the blog info to the view and bring it in front of the listView
                 mBlogInfoView = new ReaderBlogInfoHeader(context);
                 if (hasTransparentActionBar) {
@@ -272,6 +268,7 @@ public class ReaderPostListFragment extends SherlockFragment
                 mBlogInfoView.bringToFront();
 
                 // add a blank header to the listView that's the same height as the mshot
+                mListView.setHeaderDividersEnabled(false);
                 mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
 
                 // blank header height needs to be adjusted based on the actual height of the info
