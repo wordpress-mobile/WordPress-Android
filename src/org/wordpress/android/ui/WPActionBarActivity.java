@@ -2,6 +2,7 @@
 package org.wordpress.android.ui;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,24 +15,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
-import com.actionbarsherlock.view.MenuItem;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -69,7 +69,7 @@ import java.util.Map;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends SherlockFragmentActivity {
+public abstract class WPActionBarActivity extends FragmentActivity {
     public static final int NEW_BLOG_CANCELED = 10;
     private static final String TAG = "WPActionBarActivity";
 
@@ -116,7 +116,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mListView;
-    private IcsSpinner mBlogSpinner;
+    private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -163,7 +163,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     protected boolean isActivityDestroyed() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
     }
-    
+
     protected void refreshMenuDrawer(){
         // the current blog may have changed while we were away
         setupCurrentBlog();
@@ -190,7 +190,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @param contentViewID {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewID) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
@@ -204,7 +207,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @param contentView {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(View contentView) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentView);
@@ -236,12 +242,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      */
     private MenuDrawer attachMenuDrawer() {
         final MenuDrawer menuDrawer;
+        ActionBar actionBar = getActionBar();
+
         if (isStaticMenuDrawer()) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(false);
+            }
         } else {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
             menuDrawer.setDrawerIndicatorEnabled(true);
         }
 
@@ -344,7 +356,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
             });
         }
-        mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
+        mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         populateBlogSpinner(blogNames);
         mListView.addHeaderView(spinnerWrapper);
@@ -357,7 +369,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (mBlogSpinner == null)
             return;
         mBlogSpinnerInitialized = false;
-        mBlogSpinner.setAdapter(new BlogSpinnerAdapter(getSupportActionBar().getThemedContext(), blogNames));
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(actionBar.getThemedContext(), blogNames));
+        } else {
+            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(this, blogNames));
+        }
     }
 
     /*
@@ -636,9 +653,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
 
-    private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
+    private OnItemSelectedListener mItemSelectedListener = new OnItemSelectedListener() {
         @Override
-        public void onItemSelected(IcsAdapterView<?> arg0, View arg1, int position, long arg3) {
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
             if (!mBlogSpinnerInitialized) {
                 mBlogSpinnerInitialized = true;
@@ -650,7 +667,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onNothingSelected(IcsAdapterView<?> arg0) {
+        public void onNothingSelected(AdapterView<?> parent) {
         }
     };
 

@@ -5,16 +5,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.widget.CursorAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -28,13 +26,13 @@ import org.wordpress.android.util.StatUtils;
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
  */
 public class StatsVideoFragment extends StatsAbsPagedViewFragment {
-    
+
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY, StatsTimeframe.SUMMARY };
-    
+
     public static final String TAG = StatsVideoFragment.class.getSimpleName();
-    
-    
+
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -49,14 +47,14 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         @Override
         public Fragment getItem(int position) {
             return getFragment(position);
-            
+
         }
 
         @Override
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel();
@@ -70,9 +68,9 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             int entryLabelResId = R.string.stats_entry_video_plays;
             int totalsLabelResId = R.string.stats_totals_plays;
             int emptyLabelResId = R.string.stats_empty_video;
-            
+
             Uri uri = Uri.parse(STATS_VIDEOS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-            
+
             StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             return fragment;
@@ -80,7 +78,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             return new VideoSummaryFragment();
         }
     }
-    
+
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
 
@@ -116,17 +114,17 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     public String getTitle() {
         return getString(R.string.stats_view_video_plays);
     }
-    
+
     @Override
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-    
+
     /**
      * Fragment used for video summary
      */
-    public static class VideoSummaryFragment extends SherlockFragment {
-        
+    public static class VideoSummaryFragment extends Fragment {
+
         private TextView mHeader;
         private TextView mPlays;
         private TextView mImpressions;
@@ -136,8 +134,8 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.stats_video_summary, container, false); 
-            
+            View view = inflater.inflate(R.layout.stats_video_summary, container, false);
+
             mHeader = (TextView) view.findViewById(R.id.stats_video_summary_header);
             mHeader.setText("");
             mPlays = (TextView) view.findViewById(R.id.stats_video_summary_plays_total);
@@ -145,10 +143,10 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             mPlaybackTotals = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_total);
             mPlaybackUnit = (TextView) view.findViewById(R.id.stats_video_summary_playback_length_unit);
             mBandwidth = (TextView) view.findViewById(R.id.stats_video_summary_bandwidth_total);
-            
+
             return view;
         }
-        
+
         @Override
         public void onResume() {
             super.onResume();
@@ -159,10 +157,10 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         private void refreshSummary() {
 
             if (WordPress.getCurrentBlog() == null)
-                return; 
+                return;
 
             String blogId = String.valueOf(WordPress.getCurrentBlog());
-            
+
             new AsyncTask<String, Void, StatsVideoSummary>() {
 
                 @Override
@@ -170,7 +168,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                     final String blogId = params[0];
                     return StatUtils.getVideoSummary(blogId);
                 }
-                
+
                 protected void onPostExecute(StatsVideoSummary result) {
                     refreshSummaryViews(result);
                 }
@@ -181,16 +179,16 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         private void refreshStatsFromServer() {
 
             if (WordPress.getCurrentBlog() == null)
-                return; 
+                return;
 
             final String blogId = String.valueOf(WordPress.getCurrentBlog());
-                        
-        /*    WordPress.getRestClientUtils().getStatsVideoSummary(blogId, 
+
+        /*    WordPress.getRestClientUtils().getStatsVideoSummary(blogId,
                     new Listener() {
-                        
+
                         @Override
                         public void onResponse(final JSONObject response) {
-                            
+
                             new AsyncTask<Void, Void, Void> () {
 
                                 @Override
@@ -201,31 +199,31 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
                                 protected void onPostExecute(Void result) {
                                     if (getActivity() == null)
-                                        return; 
-                                        
+                                        return;
+
                                     getActivity().runOnUiThread(new Runnable() {
-                                        
+
                                         @Override
                                         public void run() {
-                                            refreshSummary();      
+                                            refreshSummary();
                                         }
                                     });
                                 }
-                                
+
                             }.execute();
-                            
+
                         }
-                    }, 
+                    },
                     new ErrorListener() {
-                        
+
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // TODO Auto-generated method stub
-                            
+
                         }
                     });*/
         }
-        
+
         void refreshSummaryViews(StatsVideoSummary result) {
 
             String header = "";
@@ -233,7 +231,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             int impressions = 0;
             int playbackTotals = 0;
             String bandwidth = "0 MB";
-            
+
             if (result != null) {
                 plays = result.getPlays();
                 impressions = result.getImpressions();
@@ -249,7 +247,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
             mBandwidth.setText(bandwidth);
         }
 
-        
+
     }
 
 }

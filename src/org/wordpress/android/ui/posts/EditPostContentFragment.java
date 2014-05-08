@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,8 +54,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
@@ -91,7 +91,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class EditPostContentFragment extends SherlockFragment implements TextWatcher,
+public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
 
     EditPostActivity mActivity;
@@ -139,7 +139,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // Go to full screen editor when 'next' button is tapped on soft keyboard
-                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar().isShowing()) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getActionBar() != null && mActivity
+                        .getActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
                 }
                 return false;
@@ -173,7 +174,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
                 // Bottom comparison is there to ensure that the keyboard is actually showing
-                if (mRootView.getBottom() < mFullViewBottom && !mActivity.getSupportActionBar().isShowing()) {
+                if (mRootView.getBottom() < mFullViewBottom && mActivity.getActionBar() != null && !mActivity
+                        .getActionBar().isShowing()) {
                     setContentEditingModeVisible(false);
                 }
             }
@@ -251,7 +253,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     public void setContentEditingModeVisible(boolean isVisible) {
         if (mActivity == null)
             return;
-        ActionBar actionBar = mActivity.getSupportActionBar();
+        ActionBar actionBar = mActivity.getActionBar();
         if (isVisible) {
             Animation fadeAnimation = new AlphaAnimation(1, 0);
             fadeAnimation.setDuration(CONTENT_ANIMATION_DURATION);
@@ -274,7 +276,9 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             });
 
             mPostContentLinearLayout.startAnimation(fadeAnimation);
-            actionBar.hide();
+            if (actionBar != null) {
+                actionBar.hide();
+            }
         } else {
             mTitleEditText.setVisibility(View.VISIBLE);
             mFormatBar.setVisibility(View.GONE);
@@ -297,8 +301,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                 }
             });
             mPostContentLinearLayout.startAnimation(fadeAnimation);
-            mActivity.supportInvalidateOptionsMenu();
-            actionBar.show();
+            mActivity.invalidateOptionsMenu();
+            if (actionBar != null) {
+                actionBar.show();
+            }
         }
     }
 
@@ -1094,8 +1100,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             s.insert(selectionEnd + 1, "\n\n");
         }
         // Show the soft keyboard after adding media
-        if (mActivity != null && !mActivity.getSupportActionBar().isShowing())
-            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        if (mActivity != null && mActivity.getActionBar() != null && !mActivity.getActionBar().isShowing()) {
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                    InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
         return true;
     }
 
@@ -1265,7 +1273,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mLastYPos = pos;
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
+            if (mActivity != null && mActivity.getActionBar() != null && mActivity.getActionBar().isShowing()) {
                 setContentEditingModeVisible(true);
                 return false;
             }

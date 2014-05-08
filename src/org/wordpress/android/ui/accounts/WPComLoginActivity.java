@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -46,7 +45,7 @@ import java.net.URISyntaxException;
  * An activity to let the user specify their WordPress.com credentials.
  * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
  */
-public class WPComLoginActivity extends SherlockFragmentActivity implements TextWatcher {
+public class WPComLoginActivity extends Activity implements TextWatcher {
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";

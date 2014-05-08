@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -28,29 +28,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 /**
- * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment}, 
+ * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment},
  * except it is used for stats that have expandable groups, such as Referrers or Clicks.
- * <p> 
+ * <p>
  * The fragment has a {@link ContentObserver} to listen for changes in the supplied group URIs.
- * By implementing {@link LoaderCallbacks}, it asynchronously fetches new data to update itself. 
- * It then restarts loaders on the children URI for each group id, which results in the children views being updated.   
+ * By implementing {@link LoaderCallbacks}, it asynchronously fetches new data to update itself.
+ * It then restarts loaders on the children URI for each group id, which results in the children views being updated.
  * </p>
  * <p>
  * For phone layouts, this fragment appears as an expandable listview, with a CursorTreeAdapter supplying the group and children views.
  * </p>
  * <p>
- * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries. 
+ * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries.
  * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the tablet's root layout.
  * The linearlayout also gets its group and children views from the CursorTreeAdapter.
- * </p> 
+ * </p>
  */
-public class StatsCursorTreeFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
+public class StatsCursorTreeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
 
     private static final int LOADER_URI_GROUP_INDEX = -1;
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
@@ -63,20 +61,20 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
-    
+
     private SparseBooleanArray mGroupIdToExpandedMap;
 
     private CursorTreeAdapter mAdapter;
     private final ContentObserver mContentObserver = new MyObserver(new Handler());
-    
+
     private StatsCursorInterface mCallback;
 
     private static final int ANIM_DURATION = 150;
 
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
-        
+
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
-        
+
         Bundle args = new Bundle();
         args.putString(ARGS_GROUP_URI, groupUri.toString());
         args.putString(ARGS_CHILDREN_URI, childrenUri.toString());
@@ -84,39 +82,39 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
         args.putInt(ARGS_EMPTY_LABEL, emptyLabelResId);
         fragment.setArguments(args);
-        
+
         return fragment;
     }
-    
+
     private Uri getGroupUri() {
         return Uri.parse(getArguments().getString(ARGS_GROUP_URI));
     }
-    
+
     private Uri getChildrenUri() {
         return Uri.parse(getArguments().getString(ARGS_CHILDREN_URI));
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         try {
             mCallback = (StatsCursorInterface) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
         }
     }
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mGroupIdToExpandedMap = new SparseBooleanArray();
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        
+
         View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
 
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
@@ -135,7 +133,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
         mLinearLayout.setVisibility(View.VISIBLE);
-        
+
         return view;
     }
 
@@ -150,7 +148,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
     private int getEmptyLabelResId() {
         return getArguments().getInt(ARGS_EMPTY_LABEL);
     }
-    
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -167,7 +165,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
         if (TextUtils.isEmpty(blogId))
             blogId = "0";
-        
+
         Uri uri = getGroupUri();
 
         if (id == LOADER_URI_GROUP_INDEX) {
@@ -199,7 +197,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             }
 
             mCallback.onCursorLoaded(getGroupUri(), data);
-            
+
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
         } else {
@@ -209,7 +207,7 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
             if (mAdapter != null) {
                 // due to a race condition that occurs when stats are refreshed,
                 // it is possible to have more rows in the listview initially than when done refreshing,
-                // causing null pointer exceptions to occur. 
+                // causing null pointer exceptions to occur.
                 try {
                     mAdapter.setChildrenCursor(loader.getId(), data);
                 } catch (NullPointerException e) {
@@ -227,10 +225,10 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        
+
         mGroupIdToExpandedMap.clear();
         mNumChildLoaders = 0;
-        
+
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
@@ -416,17 +414,17 @@ public class StatsCursorTreeFragment extends SherlockFragment implements LoaderM
         super.onPause();
         getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
     }
-    
-    class MyObserver extends ContentObserver {      
+
+    class MyObserver extends ContentObserver {
        public MyObserver(Handler handler) {
-          super(handler);           
+          super(handler);
        }
 
        @Override
        public void onChange(boolean selfChange) {
            if (isAdded())
-               getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, StatsCursorTreeFragment.this);           
-       }        
+               getLoaderManager().restartLoader(LOADER_URI_GROUP_INDEX, null, StatsCursorTreeFragment.this);
+       }
     }
 
     private void configureEmptyLabel() {

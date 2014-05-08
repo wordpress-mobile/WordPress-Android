@@ -9,8 +9,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -20,20 +23,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ import java.util.List;
  * A fragment display a media item's details.
  * Only appears on phone.
  */
-public class MediaItemFragment extends SherlockFragment {
+public class MediaItemFragment extends Fragment {
 
     private static final String ARGS_MEDIA_ID = "media_id";
 
@@ -166,8 +165,9 @@ public class MediaItemFragment extends SherlockFragment {
         // check whether or not to show the edit button
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         mIsLocal = MediaUtils.isLocalFile(state);
-        if (mIsLocal)
-            getSherlockActivity().invalidateOptionsMenu();
+        if (mIsLocal && getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
 
         // title
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));

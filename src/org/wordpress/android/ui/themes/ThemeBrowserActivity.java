@@ -1,20 +1,20 @@
 package org.wordpress.android.ui.themes;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.AuthFailureError;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest.ErrorListener;
@@ -80,11 +80,13 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         createMenuDrawer(R.layout.theme_browser_activity);
 
-        mThemePagerAdapter = new ThemePagerAdapter(getSupportFragmentManager());
+        mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         mViewPager = (ViewPager) findViewById(R.id.theme_browser_pager);
         mViewPager.setAdapter(mThemePagerAdapter);
@@ -106,7 +108,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
         mTabView.setSelectedTab(0);
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         setupBaseLayout();
         mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
@@ -132,7 +134,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     };
 
     private void setupBaseLayout() {
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             mMenuDrawer.setDrawerIndicatorEnabled(true);
             mViewPager.setVisibility(View.VISIBLE);
             mTabView.setVisibility(View.VISIBLE);
@@ -207,7 +209,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                             String errorMsg = getString(R.string.theme_auth_error_message);
 
                             if (mIsRunning) {
-                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                                FragmentTransaction ft = getFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
                                 ft.add(fragment, "alert");
@@ -254,7 +256,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.theme, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -264,14 +266,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
                 setupBaseLayout();
                 return true;
             }
         } else if (itemId == R.id.menu_search) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
                 mSearchFragment = ThemeSearchFragment.newInstance();
             }
@@ -287,7 +289,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (fm.getBackStackEntryCount() > 0) {
@@ -306,7 +308,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onThemeSelected(String themeId) {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
             // show details as a fragment on top
@@ -325,8 +327,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         } else {
             // show details as a dialog
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
-            mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
-            getSupportFragmentManager().executePendingTransactions();
+            mDetailsFragment.show(getFragmentManager(), ThemeDetailsFragment.TAG);
+            getFragmentManager().executePendingTransactions();
             int minWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int height = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_height);
             int width = Math.max((int) (DisplayUtils.getDisplayPixelWidth(this) * 0.6), minWidth);
@@ -450,7 +452,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         setRefreshing(false, page);
 
                         if (ref.get() != null && mIsRunning && fragment instanceof ThemePreviewFragment) {
-                            FragmentManager fm = ref.get().getSupportFragmentManager();
+                            FragmentManager fm = ref.get().getFragmentManager();
 
                             if (fm.getBackStackEntryCount() > 0) {
                                 fm.popBackStack();
@@ -485,7 +487,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         if (mPreviewFragment == null) {

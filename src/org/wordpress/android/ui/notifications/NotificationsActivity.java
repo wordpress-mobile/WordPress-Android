@@ -1,22 +1,21 @@
 package org.wordpress.android.ui.notifications;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -86,11 +85,13 @@ public class NotificationsActivity extends WPActionBarActivity
         View fragmentContainer = findViewById(R.id.layout_fragment_container);
         mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
         setTitle(getResources().getString(R.string.notifications));
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setNoteProvider(new NoteProvider());
@@ -194,7 +195,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     // This is ugly, but onBackStackChanged is not called just after a fragment commit.
                     // In a 2 commits in a row case, onBackStackChanged is called twice but after the
                     // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
@@ -270,7 +271,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
-                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentManager fm = getFragmentManager();
                     if (fm.getBackStackEntryCount() > 0) {
                         popNoteDetail();
                         return true;
@@ -286,13 +287,13 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         return true;
     }
 
     void popNoteDetail(){
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
             fm.popBackStack();
@@ -364,7 +365,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
-        
+
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
         mNotesList.setNoteSelected(note, scrollToNote);
 
@@ -372,7 +373,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note.isUnread()) {
             markNoteAsRead(note);
         }
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0) {
@@ -418,7 +419,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         // remove the comment detail fragment if the comment was trashed
         if (changeType == CommentActions.ChangeType.TRASHED && changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
             }
@@ -635,7 +636,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
@@ -651,7 +652,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mTmpSelectedComment = new BlogPairId(remoteBlogId, commentId);
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
           .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
           .addToBackStack(tagForFragment)
