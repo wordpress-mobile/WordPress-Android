@@ -26,27 +26,34 @@ public class AuthenticatorRequest {
         mAuthenticator = authenticator;
     }
 
+    public String getSiteId() {
+        return extractSiteIdFromUrl(mRequest.getUrl());
+    }
+
     /**
-     * Parse out the site ID from the URL.
+     * Parse out the site ID from an URL.
      * Note: For batch REST API calls, only the first siteID is returned
-     * 
+     *
      * @return The site ID
      */
-    public String getSiteId() {
-        String url = mRequest.getUrl();
-
+    public static String extractSiteIdFromUrl(String url) {
+        if (url == null) {
+            return null;
+        }
         if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
             int marker = SITE_PREFIX.length();
-            if (url.indexOf("/", marker) < marker)
+            if (url.indexOf("/", marker) < marker) {
                 return null;
+            }
             return url.substring(marker, url.indexOf("/", marker));
         } else if (url.startsWith(BATCH_CALL_PREFIX) && !BATCH_CALL_PREFIX.equals(url)) {
             int marker = BATCH_CALL_PREFIX.length();
-            if (url.indexOf("%2F", marker) < marker)
+            if (url.indexOf("%2F", marker) < marker) {
                 return null;
+            }
             return url.substring(marker, url.indexOf("%2F", marker));
         }
-        
+
         // not a sites/$siteId request or a batch request
         return null;
     }
