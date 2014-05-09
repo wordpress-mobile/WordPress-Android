@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.datasets.StatsClickGroupsTable;
@@ -65,6 +66,8 @@ public class StatsService extends Service {
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
     public static final String EXTRA_IS_UPDATING = "is-updating";
+    public static final String EXTRA_IS_ERROR = "is-error";
+    public static final String EXTRA_ERROR_MSG = "error-message";
 
     // broadcast action to notify clients when summary data has changed
     public static final String ACTION_STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
@@ -75,6 +78,7 @@ public class StatsService extends Service {
     private final Object mSyncObject = new Object();
 
     private String mServiceBlogId;
+    private String mErrorMessage = null;
     private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = -1; // The number of networks calls made by Stats.
     private int numberOfFinishedNetworkCalls = 0;
@@ -134,10 +138,10 @@ public class StatsService extends Service {
     }    
 
     private void startTasks(final String blogId, final int startId) {
-
         orchestrator = new Thread() {
             @Override
             public void run() {
+                mErrorMessage = null;
                 updateUIExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1); // single thread otherwise the UI is sluggish
                 RestClientUtils restClientUtils = WordPress.getRestClientUtils();
                 final String today = StatUtils.getCurrentDate();
@@ -570,6 +574,8 @@ public class StatsService extends Service {
                                         parseResponse(response);
                                     } catch (JSONException e) {
                                         AppLog.e(AppLog.T.STATS, e);
+                                        //Parsing Error
+                                        mErrorMessage = StatsService.this.getString(R.string.stats_generic_error);
                                     } catch (RemoteException e) {
                                         AppLog.e(AppLog.T.STATS, e);
                                     } catch (OperationApplicationException e) {
@@ -582,8 +588,7 @@ public class StatsService extends Service {
                         });
         }
 
-        void parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
+        void parseResponse(JSONObject response) throws JSONException, RemoteException, OperationApplicationException {
             if (response.has(mTodayAPICallPath)) {
                 JSONObject todayJsonObject = response.getJSONObject(mTodayAPICallPath);
                 if (isSingleCallResponseError(todayJsonObject)) {
@@ -599,11 +604,18 @@ public class StatsService extends Service {
                 } else {
                     parseSingleDayResponse(yesterdayJsonObject);
                 }
+            } 
+                
+           if (!response.has(mTodayAPICallPath) && !response.has(mYesterdayAPICallPath)) {     
+                //No response for today or yestarday?
+                mErrorMessage = StatsService.this.getString(R.string.stats_generic_error);
+                return;
             }
         }
 
         private boolean isSingleCallResponseError(final JSONObject response){
             if (response.has("errors")) {
+                mErrorMessage = StatsService.this.getString(R.string.stats_generic_error);
                 return true;
             }
             
@@ -620,7 +632,8 @@ public class StatsService extends Service {
                         numberOfFinishedNetworkCalls++;
                         if (volleyError != null) {
                             AppLog.e(T.STATS, "Error while reading Stats - " + volleyError.getMessage(), volleyError);
-                        }
+                        } 
+                        mErrorMessage = StatsService.this.getString(R.string.stats_generic_error);
                         notifyResponseReceived();
                         getContentResolver().notifyChange(getStatsContentProviderUpdateURI(), null);
                     }
@@ -794,6 +807,12 @@ public class StatsService extends Service {
         Intent intent = new Intent()
                 .setAction(ACTION_STATS_UPDATING)
                 .putExtra(EXTRA_IS_UPDATING, isUpdating);
+        
+        if (mErrorMessage!=null) {
+            intent.putExtra(EXTRA_IS_ERROR, true);
+            intent.putExtra(EXTRA_ERROR_MSG, mErrorMessage);
+        }
+        
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

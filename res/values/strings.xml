@@ -320,6 +320,7 @@
 
     <!-- stats -->
     <string name="stats">Stats</string>
+    <string name="stats_generic_error">Oops! Something went wrong while reading Stats</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
 
