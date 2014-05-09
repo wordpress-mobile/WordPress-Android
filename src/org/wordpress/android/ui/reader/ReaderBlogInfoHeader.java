@@ -8,8 +8,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -27,7 +27,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * mshot of the blog - designed specifically for use in ReaderPostListFragment
  * when previewing posts in a blog (blog preview)
  */
-class ReaderBlogInfoHeader extends RelativeLayout {
+class ReaderBlogInfoHeader extends FrameLayout {
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
     private ViewGroup mMshotContainerView;
@@ -220,7 +220,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
      * sets the top of the container view holding the info
      */
     public void setInfoContainerTop(int top) {
-        RelativeLayout.LayoutParams infoParams = (RelativeLayout.LayoutParams) mInfoContainerView.getLayoutParams();
+        LayoutParams infoParams = (LayoutParams) mInfoContainerView.getLayoutParams();
         if (infoParams.topMargin != top) {
             infoParams.topMargin = top;
 
@@ -228,7 +228,7 @@ class ReaderBlogInfoHeader extends RelativeLayout {
             // prevent the bottom of the mshot from appearing below the info
             int infoBottom = top + mInfoContainerView.getHeight();
 
-            RelativeLayout.LayoutParams mshotParams = (RelativeLayout.LayoutParams) mMshotContainerView.getLayoutParams();
+            LayoutParams mshotParams = (LayoutParams) mMshotContainerView.getLayoutParams();
             if (mshotParams.height != infoBottom) {
                 mshotParams.height = infoBottom;
             }
