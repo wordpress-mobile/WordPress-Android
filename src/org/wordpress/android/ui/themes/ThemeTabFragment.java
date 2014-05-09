@@ -59,6 +59,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     }
 
     protected static final String ARGS_SORT = "ARGS_SORT";
+    protected static final String ARGS_PAGE = "ARGS_PAGE";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
@@ -66,18 +67,14 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
-    protected int mPage;
     private boolean mShouldRefreshOnStart;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    protected ThemeTabFragment(int page) {
-        mPage = page;
-    }
-
     public static ThemeTabFragment newInstance(ThemeSortType sort, int page) {
-        ThemeTabFragment fragment = new ThemeTabFragment(page);
+        ThemeTabFragment fragment = new ThemeTabFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
+        args.putInt(ARGS_PAGE, page);
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,7 +112,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
-                        ((ThemeBrowserActivity) getActivity()).fetchThemes(mPage);
+                        ((ThemeBrowserActivity) getActivity()).fetchThemes(getArguments().getInt(ARGS_PAGE));
                     }
                 }
             });
