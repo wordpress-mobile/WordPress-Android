@@ -506,7 +506,6 @@ public class WordPress extends Application {
      *  User is not notified in case of errors.
      */
     public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
-
         if (!alwaysUpdate && mStatsLastPingDate != null) {
         	// check if the last stats refresh was done less than 30 minute ago
             if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {

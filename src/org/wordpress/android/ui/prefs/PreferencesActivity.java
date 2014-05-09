@@ -359,7 +359,6 @@ public class PreferencesActivity extends PreferenceActivity {
      * Listens for changes to notification blogs settings
      */
     private OnPreferenceChangeListener mMuteBlogChangeListener = new OnPreferenceChangeListener() {
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference instanceof CheckBoxPreference) {
@@ -383,7 +382,6 @@ public class PreferencesActivity extends PreferenceActivity {
      * Listens for changes to notification enabled toggle
      */
     private OnPreferenceChangeListener mNotificationsEnabledChangeListener = new OnPreferenceChangeListener() {
-
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             if (preference instanceof CheckBoxPreference) {
@@ -647,7 +645,6 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     private OnPreferenceClickListener signInPreferenceClickListener = new OnPreferenceClickListener() {
-
         @Override
         public boolean onPreferenceClick(Preference preference) {
             Intent i = new Intent(PreferencesActivity.this, WelcomeActivity.class);
@@ -674,7 +671,6 @@ public class PreferencesActivity extends PreferenceActivity {
     };
 
     private OnPreferenceClickListener signOutPreferenceClickListener = new OnPreferenceClickListener() {
-
         @Override
         public boolean onPreferenceClick(Preference preference) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PreferencesActivity.this);

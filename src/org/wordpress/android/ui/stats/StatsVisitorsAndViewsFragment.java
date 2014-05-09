@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -32,7 +32,7 @@ import java.util.Locale;
 /**
  * Fragment for visitors and views stats. Has three pages, for DAY, WEEK and MONTH stats.
  * A summary of the blog's stats are also shown on each page.
- */ 
+ */
 public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implements RadioGroup.OnCheckedChangeListener {
     private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(),
                                                            StatsBarChartUnit.WEEK.getLabel(),
@@ -50,7 +50,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
         setRetainInstance(true);
 

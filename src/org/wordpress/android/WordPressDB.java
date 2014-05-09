@@ -51,7 +51,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-
     private static final int DATABASE_VERSION = 26;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
@@ -145,7 +144,7 @@ public class WordPressDB {
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
-   
+
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
@@ -245,8 +244,8 @@ public class WordPressDB {
                 currentVersion++;
             case 25:
                 //ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
-                //SQLite supports a limited subset of ALTER TABLE. 
-                //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table. 
+                //SQLite supports a limited subset of ALTER TABLE.
+                //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
                 //It is not possible to rename a column, remove a column, or add or remove constraints from a table.
                 currentVersion++;
         }
@@ -584,7 +583,6 @@ public class WordPressDB {
     }
 
     public List<String> loadStatsLogin(int id) {
-
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "dotcom_username",
                 "dotcom_password" }, "id=" + id, null, null, null, null);
 
@@ -686,7 +684,6 @@ public class WordPressDB {
 
     public List<Map<String, Object>> loadDrafts(int blogID,
             boolean loadPages) {
-
         List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c;
         if (loadPages)
@@ -856,7 +853,6 @@ public class WordPressDB {
     }
 
     public List<PostsListPost> getPostsListPosts(int blogId, boolean loadPages) {
-
         List<PostsListPost> posts = new ArrayList<PostsListPost>();
         Cursor c;
         c = db.query(POSTS_TABLE,
@@ -891,7 +887,6 @@ public class WordPressDB {
     public long savePost(Post post) {
         long result = -1;
         if (post != null) {
-
             ContentValues values = new ContentValues();
             values.put("blogID", post.getLocalTableBlogId());
             values.put("title", post.getTitle());
@@ -929,7 +924,6 @@ public class WordPressDB {
     public int updatePost(Post post) {
         int result = 0;
         if (post != null) {
-
             ContentValues values = new ContentValues();
             values.put("title", post.getTitle());
             values.put("date_created_gmt", post.getDate_created_gmt());
@@ -964,7 +958,6 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
-
         List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c;
         if (loadPages)
@@ -1007,7 +1000,6 @@ public class WordPressDB {
     }
 
     public void deleteUploadedPosts(int blogID, boolean isPage) {
-
         if (isPage)
             db.delete(POSTS_TABLE, "blogID=" + blogID
                     + " AND localDraft != 1 AND isPage=1", null);
@@ -1018,7 +1010,6 @@ public class WordPressDB {
     }
 
     public Post getPostForLocalTablePostId(long localTablePostId) {
-
         Cursor c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
 
         Post post = new Post();
@@ -1065,7 +1056,6 @@ public class WordPressDB {
 
     // Categories
     public boolean insertCategory(int id, int wp_id, int parent_id, String category_name) {
-
         ContentValues values = new ContentValues();
         values.put("blog_id", id);
         values.put("wp_id", wp_id);
@@ -1080,7 +1070,6 @@ public class WordPressDB {
     }
 
     public List<String> loadCategories(int id) {
-
         Cursor c = db.query(CATEGORIES_TABLE, new String[] { "id", "wp_id",
                 "category_name" }, "blog_id=" + id, null, null, null, null);
         int numRows = c.getCount();
@@ -1128,14 +1117,12 @@ public class WordPressDB {
     }
 
     public void clearCategories(int id) {
-
         // clear out the table since we are refreshing the whole enchilada
         db.delete(CATEGORIES_TABLE, "blog_id=" + id, null);
 
     }
 
     public boolean addQuickPressShortcut(int accountId, String name) {
-
         ContentValues values = new ContentValues();
         values.put("accountId", accountId);
         values.put("name", name);
@@ -1159,7 +1146,6 @@ public class WordPressDB {
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
         for (int i = 0; i < numRows; i++) {
-
             id = c.getString(0);
             name = c.getString(2);
             if (id != null) {
@@ -1245,7 +1231,6 @@ public class WordPressDB {
     }
 
     private void migratePasswords() {
-
         Cursor c = db.query(SETTINGS_TABLE, new String[] { "id", "password",
                 "httppassword", "dotcom_password" }, null, null, null, null,
                 null);
@@ -1292,7 +1277,6 @@ public class WordPressDB {
     }
 
     public void saveMediaFile(MediaFile mf) {
-
         ContentValues values = new ContentValues();
         values.put("postID", mf.getPostID());
         values.put("filePath", mf.getFilePath());
@@ -1386,7 +1370,6 @@ public class WordPressDB {
 
     /** Ids in the filteredIds will not be selected **/
     public Cursor getMediaImagesForBlog(String blogId, ArrayList<String> filteredIds) {
-
         String mediaIdsStr = "";
 
         if (filteredIds != null && filteredIds.size() > 0) {
@@ -1419,7 +1402,6 @@ public class WordPressDB {
     }
 
     public Cursor getMediaFiles(String blogId, ArrayList<String> mediaIds) {
-
         if (mediaIds == null || mediaIds.size() == 0)
             return null;
 
@@ -1433,7 +1415,6 @@ public class WordPressDB {
     }
 
     public MediaFile getMediaFile(String src, Post post) {
-
         Cursor c = db.query(MEDIA_TABLE, null, "postID=? AND filePath=?",
                 new String[]{String.valueOf(post.getLocalTablePostId()), src}, null, null, null);
 
@@ -1669,7 +1650,6 @@ public class WordPressDB {
     }
 
     public void setCurrentTheme(String blogId, String themeId) {
-
         // update any old themes that are set to true to false
         ContentValues values = new ContentValues();
         values.put("isCurrent", false);

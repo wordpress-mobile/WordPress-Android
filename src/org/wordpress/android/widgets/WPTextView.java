@@ -9,7 +9,6 @@ import android.widget.TextView;
  * avoid having to set the typeface for every single TextView in every single activity)
  */
 public class WPTextView extends TextView {
-
     public WPTextView(Context context) {
         super(context);
         TypefaceCache.setCustomTypeface(context, this, null);

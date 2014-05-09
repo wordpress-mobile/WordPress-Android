@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MediaUtils {
-
     public class RequestCode {
         public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
@@ -142,7 +141,6 @@ public class MediaUtils {
     }
 
     private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback) {
-
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
@@ -220,7 +218,6 @@ public class MediaUtils {
      * @return
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-
         if (WordPress.currentBlog == null)
             return false;
 
@@ -255,7 +252,6 @@ public class MediaUtils {
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         cursor.close();
         if (state != null && state.equals("uploading")) {
-
             return false;
         }
         return true;

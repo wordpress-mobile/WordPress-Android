@@ -1,18 +1,18 @@
 package org.wordpress.android.ui;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.CursorAdapter;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.media.MediaGridAdapter;
+
+import java.util.ArrayList;
 
 /**
  * A GridView implementation that aims to do multiselect on GridViews since
@@ -20,7 +20,6 @@ import org.wordpress.android.ui.media.MediaGridAdapter;
  *
  */
 public class MultiSelectGridView extends GridView implements  AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
-
     private OnItemClickListener mOnItemClickListener;
     private MultiSelectListener mMultiSelectListener;
     private MediaGridAdapter mAdapter;
@@ -118,7 +117,6 @@ public class MultiSelectGridView extends GridView implements  AdapterView.OnItem
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
         // do not allow item long clicks if multi-select is disabled
         if (!mIsMultiSelectModeEnabled)
             return true;

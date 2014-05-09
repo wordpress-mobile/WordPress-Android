@@ -7,7 +7,6 @@ import android.os.Bundle;
  * A generic view for all the different stats views.
  */
 public abstract class StatsAbsViewFragment extends Fragment {
-
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();
 
     public static StatsAbsViewFragment newInstance(StatsViewType viewType) {

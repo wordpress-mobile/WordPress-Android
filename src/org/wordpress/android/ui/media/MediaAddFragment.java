@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -38,7 +38,6 @@ import java.util.List;
  * Also queues up media for upload and listens to notifications from the upload service.
  */
 public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
-
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
     private MediaAddFragmentCallback mCallback;
@@ -263,7 +262,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];

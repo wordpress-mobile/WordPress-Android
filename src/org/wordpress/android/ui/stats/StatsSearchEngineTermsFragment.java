@@ -20,7 +20,6 @@ import org.wordpress.android.util.FormatUtils;
  * Fragment for search engine term stats. Has two pages, for Today's and Yesterday's stats.
  */
 public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
 
@@ -32,7 +31,6 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -104,5 +102,4 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-
 }

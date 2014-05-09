@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DeviceUtils {
-
     private static DeviceUtils instance;
     private boolean isKindleFire = false;
 

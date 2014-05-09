@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class ImageUtils {
-
     /*
      * used for round avatars in Reader
      */
@@ -70,5 +69,4 @@ public class ImageUtils {
 
         return bmpCopy;
     }*/
-
 }

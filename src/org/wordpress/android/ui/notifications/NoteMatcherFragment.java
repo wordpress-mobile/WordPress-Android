@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,25 +20,25 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class NoteMatcherFragment extends Fragment implements NotificationFragment {
     private Note mNote;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
         View view = inflater.inflate(R.layout.notifications_matcher, parent, false);
 
         // No note? No service.
         if (getNote() == null)
-            return view;        
+            return view;
 
         JSONObject noteBody = getNote().queryJSON("body", new JSONObject());
         JSONArray noteBodyItems = getNote().queryJSON("body.items", new JSONArray());
         JSONObject noteBodyItemAtPositionZero = JSONUtil.queryJSON(noteBodyItems, String.format("[%d]", 0), new JSONObject());
-        
+
         DetailHeader noteHeader = (DetailHeader) view.findViewById(R.id.header);
         JSONObject subject = getNote().queryJSON("subject", new JSONObject());
         String headerText = JSONUtil.getStringDecoded(subject, "text");
         noteHeader.setText(headerText);
         noteHeader.setClickable(false);
-        
+
         String gravURL = JSONUtil.queryJSON(noteBodyItemAtPositionZero, "icon", "");
         if (!gravURL.equals("")) {
             NetworkImageView mBadgeImageView = (NetworkImageView) view.findViewById(R.id.gravatar);
@@ -67,12 +67,11 @@ public class NoteMatcherFragment extends Fragment implements NotificationFragmen
 
         return view;
     }
-    
+
     public void setNote(Note note){
         mNote = note;
     }
     public Note getNote(){
         return mNote;
     }
-    
 }

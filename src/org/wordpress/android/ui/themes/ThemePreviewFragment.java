@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +29,6 @@ import java.net.URLEncoder;
  *
  */
 public class ThemePreviewFragment extends Fragment {
-
     public static final String TAG = ThemePreviewFragment.class.getName();
     private static final String ARGS_THEME_ID = "theme_id";
     private static final String ARGS_PREVIEW_URL = "preview_url";
@@ -123,7 +122,6 @@ public class ThemePreviewFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mBlog = WordPress.getCurrentBlog();
         String previewURL = getPreviewURL();
 

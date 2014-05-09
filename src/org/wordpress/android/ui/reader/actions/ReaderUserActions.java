@@ -12,7 +12,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class ReaderUserActions {
-
     /*
      * request the current user's info, update locally if different than existing local
      */

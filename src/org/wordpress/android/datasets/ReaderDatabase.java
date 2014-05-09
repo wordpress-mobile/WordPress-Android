@@ -159,5 +159,4 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         }.start();
     }
 
-
 }

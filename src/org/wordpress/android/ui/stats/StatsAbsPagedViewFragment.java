@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,6 @@ import java.util.Locale;
 public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
                                                 implements OnCheckedChangeListener,
                                                            StatsCursorInterface {
-
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";

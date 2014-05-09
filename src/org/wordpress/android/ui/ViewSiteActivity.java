@@ -17,7 +17,6 @@ import java.util.Map;
  * Activity to view the WordPress blog in a WebView
  */
 public class ViewSiteActivity extends AuthenticatedWebViewActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,7 +50,6 @@ import java.util.Iterator;
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
                    OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
-
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";

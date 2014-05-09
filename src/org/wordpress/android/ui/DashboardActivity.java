@@ -42,7 +42,6 @@ public class DashboardActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
@@ -103,7 +102,6 @@ public class DashboardActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
         if (mWebView != null && mWebView.canGoBack())
             mWebView.goBack();
         else
@@ -175,5 +173,4 @@ public class DashboardActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

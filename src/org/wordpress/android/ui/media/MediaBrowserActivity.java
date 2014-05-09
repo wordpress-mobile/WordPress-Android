@@ -3,6 +3,9 @@ package org.wordpress.android.ui.media;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -10,9 +13,6 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -62,7 +62,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
         MediaAddFragmentCallback,
         ActionMode.Callback {
-
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -172,7 +171,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void setupAddMenuPopup() {
-
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
         String pickPhotoFromGallery = getResources().getString(
@@ -189,7 +187,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         ListView listView = (ListView) layoutView.findViewById(R.id.actionbar_add_media_listview);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
-
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
 
@@ -253,7 +250,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return;
 
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
-
             @Override
             public void onResult(FeatureSet featureSet) {
                 mFeatureSet = featureSet;
@@ -313,7 +309,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemSelected(String mediaId) {
-
         if (mSearchView != null)
             mSearchView.clearFocus();
 
@@ -435,7 +430,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setMessage(R.string.confirm_delete_media)
                 .setCancelable(true)
                 .setPositiveButton(R.string.delete, new OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> ids = new ArrayList<String>(1);
@@ -723,7 +717,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setMessage(R.string.confirm_delete_multi_media)
                 .setCancelable(true)
                 .setPositiveButton(R.string.delete, new OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();

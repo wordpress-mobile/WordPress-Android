@@ -26,7 +26,6 @@ import java.util.ArrayList;
  * The fragment containing the settings for the media gallery
  */
 public class MediaGallerySettingsFragment extends Fragment implements OnCheckedChangeListener {
-
     private static final int DEFAULT_THUMBNAIL_COLUMN_COUNT = 3;
 
     private static final String STATE_NUM_COLUMNS = "STATE_NUM_COLUMNS";
@@ -108,7 +107,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mAllowCheckChanged = true;
         mType = GalleryType.DEFAULT;
         mNumColumns = DEFAULT_THUMBNAIL_COLUMN_COUNT;
@@ -160,7 +158,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
         Button reverseButton = (Button) view.findViewById(R.id.media_gallery_settings_reverse_button);
         reverseButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 mCallback.onReverseClicked();
@@ -190,7 +187,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
     @Override
     public void onCheckedChanged(CompoundButton button, boolean checked) {
-
         if (!mAllowCheckChanged)
             return;
 
@@ -255,7 +251,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
     }
 
     private class CustomGridAdapter extends BaseAdapter implements OnCheckedChangeListener {
-
         private boolean mAllowCheckChanged;
         private final SparseBooleanArray mCheckedPositions;
 
@@ -294,7 +289,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             CheckBox checkbox = (CheckBox) inflater.inflate(R.layout.media_gallery_column_checkbox, parent, false);
             checkbox.setChecked(mCheckedPositions.get(position));
@@ -307,9 +301,7 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
 
         @Override
         public void onCheckedChanged(CompoundButton button, boolean checked) {
-
             if (mAllowCheckChanged) {
-
                 mAllowCheckChanged = false;
 
                 int position = (Integer) button.getTag();

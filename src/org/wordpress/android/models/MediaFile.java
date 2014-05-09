@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.Map;
 
 public class MediaFile {
-
     protected int id;
     protected long postID;
     protected String filePath = null; //path of the file into disk

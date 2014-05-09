@@ -49,7 +49,6 @@ import org.wordpress.android.WordPress;
  * </p>
  */
 public class StatsCursorTreeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
-
     private static final int LOADER_URI_GROUP_INDEX = -1;
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
     private static final String ARGS_CHILDREN_URI = "ARGS_CHILDREN_URI";
@@ -72,7 +71,6 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
     private static final int ANIM_DURATION = 150;
 
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
-
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
 
         Bundle args = new Bundle();
@@ -114,7 +112,6 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
 
         TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
@@ -225,7 +222,6 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
         mGroupIdToExpandedMap.clear();
         mNumChildLoaders = 0;
 

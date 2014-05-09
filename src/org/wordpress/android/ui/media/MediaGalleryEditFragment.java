@@ -29,7 +29,6 @@ import java.util.Collections;
  *
  */
 public class MediaGalleryEditFragment extends Fragment implements DropListener, RemoveListener {
-
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private MediaGalleryAdapter mGridAdapter;
     private ArrayList<String> mIds;
@@ -112,7 +111,6 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
 
     private class OrderedCursor extends CursorWrapper {
-
         final int mPos;
         private final int mCount;
 
@@ -163,7 +161,6 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Cursor cursor = mGridAdapter.getCursor();
         if (cursor == null)
@@ -192,6 +189,5 @@ public class MediaGalleryEditFragment extends Fragment implements DropListener, 
 
     @Override
     public void remove(int position) {
-
     }
 }

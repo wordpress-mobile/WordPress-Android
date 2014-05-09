@@ -53,7 +53,6 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
     private StatsCursorInterface mCallback;
 
     public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
-
         StatsCursorFragment fragment = new StatsCursorFragment();
 
         Bundle args = new Bundle();

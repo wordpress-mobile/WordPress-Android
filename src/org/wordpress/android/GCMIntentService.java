@@ -39,7 +39,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
-
     public static Map<String, Bundle> activeNotificationsMap = new HashMap<String, Bundle>();
     private int notificationId = 1337;
 
@@ -285,7 +284,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onRegistered(Context context, String regId) {
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (regId != null && regId.length() > 0) {
             // Get or create UUID for WP.com notes api

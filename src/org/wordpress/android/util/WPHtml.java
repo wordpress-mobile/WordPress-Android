@@ -552,7 +552,6 @@ public class WPHtml {
 }
 
 class HtmlToSpannedConverter implements ContentHandler {
-
     private static final float[] HEADER_SIZES = { 1.5f, 1.4f, 1.3f, 1.2f, 1.1f,
             1f, };
 
@@ -581,7 +580,6 @@ class HtmlToSpannedConverter implements ContentHandler {
     }
 
     public Spanned convert() {
-
         mReader.setContentHandler(this);
         try {
             mReader.parse(new InputSource(new StringReader(mSource)));
@@ -686,7 +684,6 @@ class HtmlToSpannedConverter implements ContentHandler {
             } else if (tag.equalsIgnoreCase("img")) {
                 startImg(mSpannableStringBuilder, attributes, mImageGetter);
             } else {
-
                 if (tag.equalsIgnoreCase("html")
                         || tag.equalsIgnoreCase("body")) {
                     return;
@@ -763,7 +760,6 @@ class HtmlToSpannedConverter implements ContentHandler {
                 endHeader(mSpannableStringBuilder);
             }
         } else {
-
             if (tag.equalsIgnoreCase("html") || tag.equalsIgnoreCase("body")) {
                 return;
             }
@@ -1004,7 +1000,6 @@ class HtmlToSpannedConverter implements ContentHandler {
 
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
-
         if (!mysteryTagFound) {
             mysteryTagContent = "";
         }

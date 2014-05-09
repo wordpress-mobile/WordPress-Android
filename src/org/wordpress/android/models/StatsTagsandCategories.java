@@ -7,7 +7,6 @@ import org.json.JSONObject;
  * A model to represent a for a tag or category stat
  */
 public class StatsTagsandCategories {
-
     private String mBlogId;
     private String mTopic;
     private String mType;
@@ -15,7 +14,7 @@ public class StatsTagsandCategories {
 
     public enum Type {
         TAG("tag"), CATEGORY("category");
-        
+
         private String mLabel;
 
         private Type (String label) {
@@ -26,7 +25,7 @@ public class StatsTagsandCategories {
             return mLabel;
         }
     }
-    
+
     public StatsTagsandCategories(String blogId, String topic, Type type, int views) {
         this.mBlogId = blogId;
         this.mTopic = topic;

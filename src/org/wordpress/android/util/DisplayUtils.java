@@ -10,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class DisplayUtils {
-
     private DisplayUtils() {
         throw new AssertionError();
     }

@@ -7,7 +7,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.MediaGallery;
 
 public class MediaGalleryImageSpan extends ImageSpan {
-
     private MediaGallery mMediaGallery;
 
     public MediaGalleryImageSpan(Context context, MediaGallery mediaGallery) {
@@ -22,5 +21,4 @@ public class MediaGalleryImageSpan extends ImageSpan {
     public void setMediaGallery(MediaGallery mediaGallery) {
         this.mMediaGallery = mediaGallery;
     }
-    
 }

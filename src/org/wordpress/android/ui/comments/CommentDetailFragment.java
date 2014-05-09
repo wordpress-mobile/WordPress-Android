@@ -2,11 +2,11 @@ package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -63,7 +63,6 @@ import java.util.EnumSet;
  * prior to this there were separate comment detail screens for each list
  */
 public class CommentDetailFragment extends Fragment implements NotificationFragment {
-
     private int mLocalBlogId;
     private int mRemoteBlogId;
 

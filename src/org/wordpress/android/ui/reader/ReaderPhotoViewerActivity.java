@@ -69,5 +69,4 @@ public class ReaderPhotoViewerActivity extends Activity {
         if (mImageUrl != null)
             outState.putString(ARG_IMAGE_URL, mImageUrl);
     }
-
 }

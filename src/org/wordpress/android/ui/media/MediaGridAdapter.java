@@ -8,13 +8,13 @@ import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
-import android.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -133,7 +133,6 @@ public class MediaGridAdapter extends CursorAdapter {
 	@SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
-
         int itemViewType = getItemViewType(cursor.getPosition());
 
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
@@ -223,7 +222,6 @@ public class MediaGridAdapter extends CursorAdapter {
         // multi-select highlighting
         holder.frameLayout.setTag(mediaId);
         holder.frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
             @Override
             public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
                 String mediaId = (String) view.getTag();
@@ -256,7 +254,6 @@ public class MediaGridAdapter extends CursorAdapter {
                 if (state.equals("failed")) {
                     state = "retry";
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
-
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
@@ -346,7 +343,6 @@ public class MediaGridAdapter extends CursorAdapter {
                     mFilePathToCallbackMap.put(filePath, list);
                 }
                 list.add(new BitmapReadyCallback() {
-
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
                         if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
@@ -370,7 +366,6 @@ public class MediaGridAdapter extends CursorAdapter {
             @Override
             public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
                 mHandler.post(new Runnable() {
-
                     @Override
                     public void run() {
                         List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
@@ -450,12 +445,10 @@ public class MediaGridAdapter extends CursorAdapter {
 
     /** Updates the width of a cell to max out the space available, for phones **/
     private void updateGridWidth(Context context, View view) {
-
         setGridItemWidth();
         int columnCount = getColumnCount(context);
 
         if (columnCount > 1) {
-
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
             int margins = (int) Utils.dpToPx(8);
             params.setMargins(0, margins, 0, margins);

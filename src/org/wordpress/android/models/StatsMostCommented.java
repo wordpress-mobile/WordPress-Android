@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * A model to represent a most commented post stat  
+ * A model to represent a most commented post stat
  */
 public class StatsMostCommented {
     private String mBlogId;

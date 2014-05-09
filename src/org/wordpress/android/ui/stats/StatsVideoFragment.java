@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -26,7 +26,6 @@ import org.wordpress.android.util.StatUtils;
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.
  */
 public class StatsVideoFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_VIDEOS_URI = StatsContentProvider.STATS_VIDEOS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY, StatsTimeframe.SUMMARY };
 
@@ -39,7 +38,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -124,7 +122,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
      * Fragment used for video summary
      */
     public static class VideoSummaryFragment extends Fragment {
-
         private TextView mHeader;
         private TextView mPlays;
         private TextView mImpressions;
@@ -155,14 +152,12 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         }
 
         private void refreshSummary() {
-
             if (WordPress.getCurrentBlog() == null)
                 return;
 
             String blogId = String.valueOf(WordPress.getCurrentBlog());
 
             new AsyncTask<String, Void, StatsVideoSummary>() {
-
                 @Override
                 protected StatsVideoSummary doInBackground(String... params) {
                     final String blogId = params[0];
@@ -177,7 +172,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
 
         private void refreshStatsFromServer() {
-
             if (WordPress.getCurrentBlog() == null)
                 return;
 
@@ -185,12 +179,9 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
         /*    WordPress.getRestClientUtils().getStatsVideoSummary(blogId,
                     new Listener() {
-
                         @Override
                         public void onResponse(final JSONObject response) {
-
                             new AsyncTask<Void, Void, Void> () {
-
                                 @Override
                                 protected Void doInBackground(Void... params) {
                                     StatUtils.saveVideoSummary(blogId, response);
@@ -202,7 +193,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                                         return;
 
                                     getActivity().runOnUiThread(new Runnable() {
-
                                         @Override
                                         public void run() {
                                             refreshSummary();
@@ -215,7 +205,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                         }
                     },
                     new ErrorListener() {
-
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // TODO Auto-generated method stub
@@ -225,7 +214,6 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
         }
 
         void refreshSummaryViews(StatsVideoSummary result) {
-
             String header = "";
             int plays = 0;
             int impressions = 0;
@@ -249,5 +237,4 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
 
     }
-
 }

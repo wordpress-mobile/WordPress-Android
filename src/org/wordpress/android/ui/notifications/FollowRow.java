@@ -30,7 +30,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class FollowRow extends LinearLayout {
-
     public static interface OnFollowListener {
         public void onUnfollow(FollowRow row, String blogId);
         public void onFollow(FollowRow row, String blogId);

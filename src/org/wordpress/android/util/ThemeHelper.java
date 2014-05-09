@@ -5,12 +5,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.WordUtils;
 
-/** 
- * A helper class to retrieve the labels for a given feature based on the tag supplied by the api. 
+/**
+ * A helper class to retrieve the labels for a given feature based on the tag supplied by the api.
  *
  */
 public class ThemeHelper {
-
     private static Map<String, String> mTagToLabelMap;
 
     public static String getLabel(String feature_tag) {
@@ -64,5 +63,4 @@ public class ThemeHelper {
         mTagToLabelMap.put("photoblogging", "Photoblogging");
         mTagToLabelMap.put("seasonal", "Seasonal");
     }
-    
 }

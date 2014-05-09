@@ -33,7 +33,6 @@ import java.util.Map;
  * Currently, this activity can only load content for the {@link WordPress.currentBlog}.
  */
 public class AuthenticatedWebViewActivity extends WebViewActivity {
-
     public static final String LOAD_AUTHENTICATED_URL = "loadAuthenticatedUrl";
 
     /**

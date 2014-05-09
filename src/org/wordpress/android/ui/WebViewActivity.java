@@ -7,8 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebView;
-import org.wordpress.android.R;
 
+import org.wordpress.android.R;
 
 /**
  * Basic activity for displaying a WebView.
@@ -19,7 +19,6 @@ public class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         super.onCreate(savedInstanceState);
@@ -87,7 +86,6 @@ public class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onBackPressed() {
-
         if (mWebView != null && mWebView.canGoBack())
             mWebView.goBack();
         else

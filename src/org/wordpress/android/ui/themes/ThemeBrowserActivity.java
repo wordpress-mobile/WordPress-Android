@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.ActionBar;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -233,7 +233,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         final String siteId = getBlogId();
 
         WordPress.getRestClientUtils().getCurrentTheme(siteId, new Listener() {
-
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
@@ -354,7 +353,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                     array = response.getJSONArray("themes");
 
                     if (array != null) {
-
                         int count = array.length();
                         for (int i = 0; i < count; i++) {
                             JSONObject object = array.getJSONObject(i);
@@ -439,7 +437,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         mIsActivatingTheme = true;
         final int page = mViewPager.getCurrentItem();
         WordPress.getRestClientUtils().setTheme(siteId, themeId, new Listener() {
-
                     @Override
                     public void onResponse(JSONObject arg0) {
                         mIsActivatingTheme = false;
@@ -462,7 +459,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         }
                     }
                 }, new ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError arg0) {
                         mIsActivatingTheme = false;

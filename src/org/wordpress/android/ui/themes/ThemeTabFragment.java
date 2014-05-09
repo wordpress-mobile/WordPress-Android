@@ -169,7 +169,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     }
 
     private Cursor fetchThemes(ThemeSortType themeSortType) {
-
         String blogId = getBlogId();
 
         switch(themeSortType) {
@@ -218,7 +217,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 

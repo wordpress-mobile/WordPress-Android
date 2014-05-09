@@ -162,7 +162,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinnerContainer.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (!isInMultiSelect()) {
@@ -371,7 +370,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             apiArgs.add(WordPress.getCurrentBlog());
 
             Callback callback = new Callback() {
-
                 // refresh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
@@ -590,7 +588,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onMovedToScrapHeap(View view) {
-
         // cancel image fetch requests if the view has been moved to recycler.
 
         View imageView = view.findViewById(R.id.media_grid_item_image);
@@ -600,7 +597,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 

@@ -56,7 +56,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 public class ReaderPostListFragment extends Fragment
                                     implements AbsListView.OnScrollListener,
                                                ActionBar.OnNavigationListener {
-
     static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
     }

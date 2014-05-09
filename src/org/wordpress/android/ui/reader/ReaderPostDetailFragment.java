@@ -67,7 +67,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 
 public class ReaderPostDetailFragment extends Fragment {
-
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
     static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);

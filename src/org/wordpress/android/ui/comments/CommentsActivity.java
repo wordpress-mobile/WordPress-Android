@@ -2,11 +2,11 @@ package org.wordpress.android.ui.comments;
 
 import android.app.ActionBar;
 import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;

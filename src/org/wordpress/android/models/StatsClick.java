@@ -9,7 +9,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a click child stat.
  */
 public class StatsClick {
-
     private String mBlogId;
     private long mDate;
     private String mGroupId;
@@ -28,7 +27,7 @@ public class StatsClick {
         setBlogId(blogId);
         setDate(StatUtils.toMs(date));
         setGroupId(groupId);
-        
+
         setName(result.getString(0));
         setTotal(result.getInt(1));
     }

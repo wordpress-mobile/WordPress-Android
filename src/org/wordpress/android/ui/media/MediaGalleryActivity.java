@@ -25,7 +25,6 @@ import java.util.ArrayList;
  * An activity where the user can manage a media gallery
  */
 public class MediaGalleryActivity extends Activity implements MediaGallerySettingsCallback {
-
     public static final int REQUEST_CODE = 3000;
 
     // params for the gallery
@@ -90,10 +89,8 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
             mSlidingPanelLayout.setDragView(mMediaGallerySettingsFragment.getDragView());
             mSlidingPanelLayout.setPanelHeight((int) Utils.dpToPx(48));
             mSlidingPanelLayout.setPanelSlideListener(new PanelSlideListener() {
-
                 @Override
                 public void onPanelSlide(View panel, float slideOffset) {
-
                 }
 
                 @Override
@@ -159,7 +156,6 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
     }
 
     private void handleSaveMedia() {
-
         Intent intent = new Intent();
         ArrayList<String> ids = mMediaGalleryEditFragment.getMediaIds();
         boolean isRandom = mMediaGallerySettingsFragment.isRandom();
@@ -178,7 +174,6 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
 
     @Override
     public void onBackPressed() {
-
         if (Utils.isTablet()) {
             super.onBackPressed();
         } else {
@@ -194,5 +189,4 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
     public void onReverseClicked() {
         mMediaGalleryEditFragment.reverseIds();
     }
-
 }

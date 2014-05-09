@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import android.widget.EditText;
 
 public class WPEditText extends EditText {
-
     private EditTextImeBackListener mOnImeBack;
     private OnSelectionChangedListener onSelectionChangedListener;
 
@@ -44,7 +43,6 @@ public class WPEditText extends EditText {
     }
 
     public interface EditTextImeBackListener {
-
         public abstract void onImeBack(WPEditText ctrl, String text);
     }
 

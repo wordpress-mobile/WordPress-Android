@@ -27,7 +27,6 @@ import org.wordpress.android.util.WPViewPager;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class EditPostActivity extends Activity {
-
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -86,7 +85,6 @@ public class EditPostActivity extends Activity {
                     || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
                     || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                     || (extras != null && extras.getInt("quick-media", -1) > -1)) {
-
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
@@ -363,7 +361,6 @@ public class EditPostActivity extends Activity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }

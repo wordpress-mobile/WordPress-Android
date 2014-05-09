@@ -14,7 +14,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
 public class EditPostPreviewFragment extends Fragment {
-
     EditPostActivity mActivity;
     WebView mWebView;
     TextView mTextView;
@@ -33,7 +32,6 @@ public class EditPostPreviewFragment extends Fragment {
     }
 
     public void loadPost(Post post) {
-
         // Don't load if the Post object is null, see #395
         if (post == null)
             return;

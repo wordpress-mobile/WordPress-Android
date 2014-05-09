@@ -2,11 +2,11 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
@@ -41,7 +41,6 @@ public class ReaderActivity extends WPActionBarActivity
                                        FragmentManager.OnBackStackChangedListener,
                                        ReaderPostDetailFragment.PostChangeListener,
                                        ReaderFullScreenUtils.FullScreenListener {
-
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
@@ -382,5 +381,4 @@ public class ReaderActivity extends WPActionBarActivity
                 listFragment.reloadPost(updatedPost);
         }
     }
-
 }

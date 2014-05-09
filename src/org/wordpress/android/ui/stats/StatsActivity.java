@@ -3,6 +3,8 @@ package org.wordpress.android.ui.stats;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,8 +15,6 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
 import android.view.Menu;
@@ -64,7 +64,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity {
-
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
     public static final int STATS_CHILD_MAX_ITEMS = 25;
@@ -255,7 +254,6 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void loadStatsFragments() {
-
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 

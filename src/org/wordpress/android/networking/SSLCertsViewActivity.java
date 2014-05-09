@@ -11,7 +11,6 @@ import org.wordpress.android.ui.WebViewActivity;
  * Display details of a SSL cert
  */
 public class SSLCertsViewActivity extends WebViewActivity {
-
     public static final String CERT_DETAILS_KEYS = "CertDetails";
 
     @Override

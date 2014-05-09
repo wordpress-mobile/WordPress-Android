@@ -17,7 +17,6 @@ import org.wordpress.android.ui.stats.StatsBarChartUnit;
  * </p>
  */
 public class StatsBarChartData {
-
     private String mBlogId;
     private String mDate;
     private int mViews;
@@ -71,5 +70,4 @@ public class StatsBarChartData {
     public void setBarChartUnit(StatsBarChartUnit unit) {
         this.mBarChartUnit = unit;
     }
-
 }

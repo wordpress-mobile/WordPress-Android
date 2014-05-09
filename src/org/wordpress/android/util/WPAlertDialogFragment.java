@@ -134,7 +134,6 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-
     }
 }
 

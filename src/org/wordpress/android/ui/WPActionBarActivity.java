@@ -347,7 +347,6 @@ public abstract class WPActionBarActivity extends FragmentActivity {
         LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
         if (spinnerWrapper != null) {
             spinnerWrapper.setOnClickListener(new OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     if (mBlogSpinner != null) {
@@ -479,7 +478,6 @@ public abstract class WPActionBarActivity extends FragmentActivity {
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
-
         MenuAdapter(Context context) {
             super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
         }

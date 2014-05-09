@@ -3,10 +3,10 @@ package org.wordpress.android.ui.themes;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -93,7 +93,7 @@ public class ThemeTabAdapter extends CursorAdapter {
             urlHolder.requestURL = screenshotURL;
             themeViewHolder.imageView.setTag(urlHolder);
         }
-        
+
         if (!urlHolder.requestURL.equals(screenshotURL)) {
             themeViewHolder.imageView.setImageBitmap(null);
             urlHolder.requestURL = screenshotURL;
@@ -111,19 +111,18 @@ public class ThemeTabAdapter extends CursorAdapter {
         int columnCount = context.getResources().getInteger(R.integer.themes_grid_num_columns);
         int dp4 = (int) Utils.dpToPx(4);
         int padding = (columnCount + 1) * dp4;
-        
+
         // the max width of the themes is either:
         // = width of entire screen (phone and tablet portrait)
         // = width of entire screen - menu drawer width (tablet landscape)
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
         if (Utils.isXLarge(context) && Utils.isLandscape(context))
             maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
-        
+
         return (maxWidth - padding) / columnCount;
     }
-    
+
     static class ScreenshotHolder {
         String requestURL;
     }
-    
 }

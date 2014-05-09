@@ -30,7 +30,6 @@ import java.util.List;
 public class MediaGalleryPickerActivity extends Activity
         implements MultiSelectListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
                    AdapterView.OnItemClickListener {
-
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
@@ -175,7 +174,6 @@ public class MediaGalleryPickerActivity extends Activity
 
     @Override
     public void onRetryUpload(String mediaId) {
-
     }
 
     @Override
@@ -208,7 +206,6 @@ public class MediaGalleryPickerActivity extends Activity
             apiArgs.add(WordPress.getCurrentBlog());
 
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-
                 // refersh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
@@ -227,7 +224,6 @@ public class MediaGalleryPickerActivity extends Activity
                     // the activity may be gone by the time this finishes, so check for it
                     if (!isFinishing()) {
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();

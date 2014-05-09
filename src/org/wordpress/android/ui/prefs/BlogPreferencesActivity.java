@@ -161,7 +161,6 @@ public class BlogPreferencesActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             finish();
@@ -188,7 +187,6 @@ public class BlogPreferencesActivity extends Activity {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mImageWidthSpinner.setAdapter(spinnerArrayAdapter);
         mImageWidthSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);

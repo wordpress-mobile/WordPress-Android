@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;

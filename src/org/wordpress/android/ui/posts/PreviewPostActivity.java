@@ -15,7 +15,6 @@ import org.wordpress.android.util.StringUtils;
  * Activity for previewing a post or page in a webview.
  */
 public class PreviewPostActivity extends AuthenticatedWebViewActivity {
-
     @SuppressLint("SetJavaScriptEnabled")
 	@Override
     public void onCreate(Bundle savedInstanceState) {

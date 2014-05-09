@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
@@ -20,7 +20,6 @@ import org.wordpress.android.util.FormatUtils;
  * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
  */
 public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
-    
     private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
 
@@ -45,7 +44,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return TIMEFRAMES[position].getLabel(); 
+            return TIMEFRAMES[position].getLabel();
         }
     }
 
@@ -54,9 +53,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
         int entryLabelResId = R.string.stats_entry_posts_and_pages;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_top_posts;
-        
+
         Uri uri = Uri.parse(STATS_TOP_POSTS_AND_PAGES_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-        
+
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
@@ -105,5 +104,4 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-    
 }

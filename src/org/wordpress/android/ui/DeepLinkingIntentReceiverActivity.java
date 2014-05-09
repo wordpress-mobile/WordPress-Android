@@ -15,10 +15,10 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
 /**
- * An activity to handle deep linking. 
- * 
+ * An activity to handle deep linking.
+ *
  * wordpress://viewpost?blogId={blogId}&postId={postId}
- * 
+ *
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends Activity {
@@ -73,7 +73,7 @@ public class DeepLinkingIntentReceiverActivity extends Activity {
 
         finish();
     }
-    
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

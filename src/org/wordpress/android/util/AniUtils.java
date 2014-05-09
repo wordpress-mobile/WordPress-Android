@@ -16,7 +16,6 @@ import org.wordpress.android.R;
 
 
 public class AniUtils {
-
     public static enum Duration { DEFAULT, SHORT, MEDIUM, LONG }
 
     private AniUtils() {
@@ -146,5 +145,4 @@ public class AniUtils {
 
         target.startAnimation(animation);
     }
-
 }

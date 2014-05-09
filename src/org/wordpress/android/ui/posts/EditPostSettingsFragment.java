@@ -60,7 +60,6 @@ import java.util.Map;
 import java.util.Vector;
 
 public class EditPostSettingsFragment extends Fragment implements View.OnClickListener {
-
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -89,7 +88,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -336,7 +334,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     }
 
     private void showPostDateSelectionDialog() {
-
         final DatePicker datePicker = new DatePicker(getActivity());
         datePicker.init(mYear, mMonth, mDay, null);
         datePicker.setCalendarViewShown(false);
@@ -344,7 +341,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_date)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mYear = datePicker.getYear();
@@ -355,7 +351,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                 })
                 .setNeutralButton(getResources().getText(R.string.immediately),
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialogInterface,
                                                 int i) {
@@ -365,7 +360,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                         })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
@@ -383,7 +377,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_time)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mHour = timePicker.getCurrentHour();
@@ -410,7 +403,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                 })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {

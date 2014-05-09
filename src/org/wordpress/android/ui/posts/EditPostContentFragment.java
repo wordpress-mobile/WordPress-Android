@@ -93,7 +93,6 @@ import java.util.Vector;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
-
     EditPostActivity mActivity;
 
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
@@ -271,7 +270,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
 
@@ -287,7 +285,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
@@ -297,7 +294,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
             mPostContentLinearLayout.startAnimation(fadeAnimation);
@@ -388,7 +384,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                             return;
                         String linkURL = extras.getString("linkURL");
                         if (linkURL != null && !linkURL.equals("http://") && !linkURL.equals("")) {
-
                             if (mSelectionStart > mSelectionEnd) {
                                 int temp = mSelectionEnd;
                                 mSelectionEnd = mSelectionStart;
@@ -477,7 +472,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
-
             if (title != null) {
                 mTitleEditText.setText(title);
             }
@@ -520,7 +514,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     public void savePostContent(boolean isAutoSave) {
-
         Post post = mActivity.getPost();
 
         if (post == null || mContentEditText.getText() == null)
@@ -562,7 +555,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             //content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
             WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
             if (imageSpans.length != 0) {
-
                 for (WPImageSpan wpIS : imageSpans) {
                     //images += wpIS.getImageSource().toString() + ",";
                     MediaFile mediaFile = wpIS.getMediaFile();
@@ -637,7 +629,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
 
     private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
-
         protected void onPreExecute() {
             Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
         }
@@ -681,7 +672,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private void launchCamera() {
         MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
-
             @Override
             public void onMediaCapturePathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
@@ -804,7 +794,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
-
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null || wpIS == null)
             return;
@@ -819,7 +808,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
                 mf.getDescription(), mf.getCaption(),
                 new ApiHelper.GenericCallback() {
-
                     @Override
                     public void onSuccess() {
                         if (WordPress.getCurrentBlog() == null) {
@@ -873,7 +861,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
             @Override
             public void onErrorResponse(VolleyError arg0) {
-
             }
 
             @Override
@@ -1020,7 +1007,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
-
         if (ssb != null && !MediaUtils.isInMediaStore(imageUri))
             imageUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
 
@@ -1357,7 +1343,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         if (mediaFile.getWidth() != 0)
                             seekBar.setProgress(mediaFile.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
                             @Override
                             public void onStopTrackingTouch(SeekBar seekBar) {
                             }
@@ -1464,7 +1449,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     @Override
     public void afterTextChanged(Editable s) {
-
         int position = Selection.getSelectionStart(mContentEditText.getText());
         if ((mIsBackspace && position != 1) || mLastPosition == position || !mActivity.getPost().isLocalDraft())
             return;
@@ -1474,7 +1458,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
         mLastPosition = position;
         if (position > 0) {
-
             if (mStyleStart > position) {
                 mStyleStart = position - 1;
             }

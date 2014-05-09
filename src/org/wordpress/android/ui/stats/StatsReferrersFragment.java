@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +35,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -159,5 +158,4 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-
 }

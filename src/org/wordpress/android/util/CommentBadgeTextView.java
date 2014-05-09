@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 public class CommentBadgeTextView extends TextView {
-
     public CommentBadgeTextView(Context context) {
         super(context);
     }
@@ -35,5 +34,4 @@ public class CommentBadgeTextView extends TextView {
         canvas.restore();
 
     }
-
 }

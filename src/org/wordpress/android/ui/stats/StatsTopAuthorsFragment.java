@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTopAuthorsTable;
@@ -20,19 +20,17 @@ import org.wordpress.android.util.FormatUtils;
  * Fragment for top author stats. Has two pages, for Today's and Yesterday's stats.
  */
 public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_TOP_AUTHORS_URI = StatsContentProvider.STATS_TOP_AUTHORS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-    
+
     public static final String TAG = StatsTopAuthorsFragment.class.getSimpleName();
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -46,7 +44,7 @@ public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel();
@@ -59,14 +57,14 @@ public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
         int entryLabelResId = R.string.stats_entry_authors;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_top_authors;
-        
+
         Uri uri = Uri.parse(STATS_TOP_AUTHORS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-        
+
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
-    
+
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
 
@@ -92,7 +90,7 @@ public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
 
             holder.entryTextView.setText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-            
+
             // image
             holder.showNetworkImage(imageUrl);
         }
@@ -107,5 +105,4 @@ public class StatsTopAuthorsFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-    
 }

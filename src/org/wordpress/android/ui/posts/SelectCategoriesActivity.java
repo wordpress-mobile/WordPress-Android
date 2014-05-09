@@ -287,7 +287,6 @@ public class SelectCategoriesActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
-
             final Bundle extras = data.getExtras();
 
             switch (requestCode) {

@@ -32,7 +32,6 @@ import java.util.Map;
  */
 
 public class CommentActions {
-
     private CommentActions() {
         throw new AssertionError();
     }
@@ -132,7 +131,6 @@ public class CommentActions {
                                      final Comment comment,
                                      final String replyText,
                                      final CommentActionListener actionListener) {
-
         final Blog blog = WordPress.getBlog(accountId);
         if (blog==null || comment==null || TextUtils.isEmpty(replyText)) {
             if (actionListener != null)
@@ -241,7 +239,6 @@ public class CommentActions {
                                 final Comment comment,
                                 final CommentStatus newStatus,
                                 final CommentActionListener actionListener) {
-
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
             deleteComment(accountId, comment, actionListener);
@@ -315,7 +312,6 @@ public class CommentActions {
                                  final CommentList comments,
                                  final CommentStatus newStatus,
                                  final OnCommentsModeratedListener actionListener) {
-
         // deletion is handled separately
         if (newStatus != null && newStatus.equals(CommentStatus.TRASH)) {
             deleteComments(accountId, comments, actionListener);
@@ -451,7 +447,6 @@ public class CommentActions {
     private static void deleteComments(final int accountId,
                                        final CommentList comments,
                                        final OnCommentsModeratedListener actionListener) {
-
         final Blog blog = WordPress.getBlog(accountId);
 
         if (blog==null || comments==null || comments.size() == 0) {
