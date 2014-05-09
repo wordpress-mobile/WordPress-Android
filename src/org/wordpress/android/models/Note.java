@@ -3,7 +3,6 @@
  */
 package org.wordpress.android.models;
 
-import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -119,64 +117,12 @@ public class Note extends Syncable {
     private transient String mTimestamp;
     private transient String mSnippet;
 
-    // TODO: add other types
-    private static final Map<String, String> pnType2type = new Hashtable<String, String>() {{
-        put("c", "comment");
-    }};
-
     /**
-     * Create a note using JSON from REST API
+     * Create a note using JSON from Simperium
      */
-    public Note(JSONObject noteJSON){
+    public Note(JSONObject noteJSON) {
         mNoteJSON = noteJSON;
         preloadContent();
-    }
-
-    /**
-     * Create a placeholder note from a Push Notification payload
-     */
-    public Note(Bundle extras) {
-        JSONObject tmpNoteJSON = new JSONObject();
-        String type = extras.getString("type");
-        String finalType = NOTE_UNKNOWN_TYPE;
-        if (type != null && pnType2type.containsKey(type)) {
-            finalType = pnType2type.get(type);
-        }
-        JSONObject subject = new JSONObject();
-        JSONObject body = new JSONObject();
-        JSONObject html = new JSONObject();
-        JSONArray items = new JSONArray();
-        try {
-            // subject
-            if (finalType.equals(NOTE_COMMENT_TYPE)) {
-                subject.put("text", extras.get("title"));
-            } else {
-                subject.put("text", extras.get("msg"));
-            }
-            subject.put("icon", extras.get("icon"));
-            subject.put("noticon", extras.get("noticon"));
-
-            html.put("html", extras.get("msg"));
-            items.put(html);
-            body.put("items", items);
-
-            // fake timestamp to put it in top of the list
-            String timestamp = extras.getString("note_timestamp");
-            if (timestamp==null || timestamp.equals("")) {
-                timestamp = "" + (System.currentTimeMillis() / 1000);
-            }
-            tmpNoteJSON.put("timestamp", timestamp);
-
-            // root
-            tmpNoteJSON.put("id", extras.get("note_id"));
-            tmpNoteJSON.put("subject", subject);
-            tmpNoteJSON.put("body", body);
-            tmpNoteJSON.put("type", finalType);
-            tmpNoteJSON.put("unread", "1");
-        } catch (JSONException e) {
-            AppLog.e(T.NOTIFS, "Failed to put key in noteJSON", e);
-        }
-        mNoteJSON = tmpNoteJSON;
     }
 
     /**
@@ -527,53 +473,4 @@ public class Note extends Syncable {
             return mRestPath;
         }
     }
-
-    /*
-     * returns subject as spanned html with user names and quoted strings highlighted
-     */
-    /*private transient Spanned mFormattedSubject;
-    private static final String TAG_START = "</font><font color='#222222'>";
-    private static final String TAG_END = "</font><font color='#666666'>";
-    public Spanned getFormattedSubject() {
-        if (mFormattedSubject == null) {
-            StringBuilder sb = new StringBuilder(getSubject());
-
-            // highlight user names - note we skip the first item in replies because it's the
-            // actual header text (ex: "In reply to your comment") rather than a user name
-            if (isMultiLineListTemplate() || isSingleLineListTemplate()) {
-                JSONArray items = queryJSON("body.items", new JSONArray());
-                int startIndex = (isCommentType() ? 1 : 0);
-                if (items.length() > startIndex) {
-                    for (int i = startIndex; i < items.length(); i++) {
-                        try {
-                            String name = JSONUtil.getString((JSONObject) items.get(i), "header_text");
-                            if (!TextUtils.isEmpty(name)) {
-                                // note that we only replace the first instance to avoid false matches
-                                int index = sb.indexOf(name);
-                                if (index > -1) {
-                                    sb.replace(index, index + name.length(), TAG_START + name + TAG_END);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            // nop
-                        }
-                    }
-                }
-            }
-
-            // highlight quoted strings
-            int startQuote = sb.indexOf("\"");
-            while (startQuote > -1) {
-                int endQuote = sb.indexOf("\"", startQuote + 1);
-                if (endQuote == -1)
-                    break;
-                String quoted = sb.substring(startQuote, endQuote + 1);
-                sb.replace(startQuote, endQuote + 1, TAG_START + quoted + TAG_END);
-                startQuote = sb.indexOf("\"", endQuote + TAG_START.length() + TAG_END.length());
-            }
-
-            mFormattedSubject = Html.fromHtml(sb.toString());
-        }
-        return mFormattedSubject;
-    }*/
 }
