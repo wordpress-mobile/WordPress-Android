@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -687,8 +688,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             dialogBuilder.setCancelable(true);
             if (!isFinishing())
                 dialogBuilder.create().show();
+        } else if (item.getItemId()  == R.id.menu_refresh) {
+            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
+            broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void broadcastAction(String action) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        Intent intent = new Intent();
+        intent.setAction(action);
+        lbm.sendBroadcast(intent);
     }
 
     /**

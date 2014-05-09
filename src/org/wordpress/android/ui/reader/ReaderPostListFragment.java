@@ -341,6 +341,18 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
@@ -894,8 +906,6 @@ public class ReaderPostListFragment extends SherlockFragment
 
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_in);
         mNewPostsBar.setVisibility(View.VISIBLE);
-
-        mPullToRefreshHelper.hideTipTemporarily(true);
     }
 
     private void hideNewPostsBar() {
@@ -918,7 +928,6 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
-        mPullToRefreshHelper.showTip(true);
     }
 
     /*

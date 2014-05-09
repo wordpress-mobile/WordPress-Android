@@ -399,13 +399,17 @@
 
     <!-- stats: empty list strings -->
     <string name="stats_empty_geoviews">No posts viewed</string>
-    <string name="stats_empty_top_posts"><![CDATA[<b>No top posts or pages found yet.</b> This view shows your most viewed posts and pages.]]></string>
-    <string name="stats_empty_referrers"><![CDATA[<b>No referrers.</b> A referrer is a click from another site that links to yours.]]></string>
-    <string name="stats_empty_clicks"><![CDATA[<b>No clicks recorded.</b> "Clicks" are viewers clicking outbound links on your site.]]></string>
+    <string name="stats_empty_top_posts_title">No top posts or pages found yet.</string>
+    <string name="stats_empty_top_posts_desc">This view shows your most viewed posts and pages.</string>
+    <string name="stats_empty_referrers_title">No referrers.</string>
+    <string name="stats_empty_referrers_desc">A referrer is a click from another site that links to yours.</string>
+    <string name="stats_empty_clicks_title">No clicks recorded.</string>
+    <string name="stats_empty_clicks_desc">"Clicks" are viewers clicking outbound links on your site.</string>
+    <string name="stats_empty_search_engine_terms_title">No search terms.</string>
+    <string name="stats_empty_search_engine_terms_desc">Search terms are words or phrases users find you with when they search.</string>
     <string name="stats_empty_top_authors">No posts viewed</string>
     <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet</string>
     <string name="stats_empty_video">No videos have been played yet</string>
-    <string name="stats_empty_search_engine_terms"><![CDATA[<b>No search terms.</b> Search terms are words or phrases users find you with when they search.]]></string>
     <string name="stats_empty_comments">No comments yet</string>
     <string name="stats_bar_graph_empty">No stats available</string>
 
