@@ -1,22 +1,21 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.ActionBar;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.ListView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -32,9 +31,9 @@ import org.wordpress.android.util.ToastUtils;
 import java.util.List;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-public class ManageBlogsActivity extends SherlockListActivity {
+public class ManageBlogsActivity extends ListActivity {
     private List<Map<String, Object>> mAccounts;
     private static boolean mIsRefreshing;
     private ListScrollPositionManager mListScrollPositionManager;
@@ -46,9 +45,11 @@ public class ManageBlogsActivity extends SherlockListActivity {
         setContentView(R.layout.empty_listview);
         mListScrollPositionManager = new ListScrollPositionManager(getListView(), false);
         setTitle(getString(R.string.blogs_visibility));
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
@@ -79,7 +80,7 @@ public class ManageBlogsActivity extends SherlockListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.manage_blogs, menu);
         return true;
     }

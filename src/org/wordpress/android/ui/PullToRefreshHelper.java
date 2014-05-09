@@ -11,7 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.PullToRefreshHeaderTransformer.OnTopScrollChangedListener;
 import org.wordpress.android.util.DisplayUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh.SetupWizard;
 import uk.co.senab.actionbarpulltorefresh.library.Options;

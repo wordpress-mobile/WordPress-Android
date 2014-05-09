@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ import org.wordpress.android.util.SysUtils;
 /**
  * displays a list of users who like a specific reader post
  */
-public class ReaderUserListActivity extends FragmentActivity {
+public class ReaderUserListActivity extends Activity {
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_POST_ID = "post_id";
 

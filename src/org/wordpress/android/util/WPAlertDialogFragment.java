@@ -2,21 +2,17 @@ package org.wordpress.android.util;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
-import java.io.Serializable;
-
-public class WPAlertDialogFragment extends SherlockDialogFragment implements DialogInterface.OnClickListener {
+public class WPAlertDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     private static enum WPAlertDialogType {ALERT,    // simple ok dialog with error message
                                            CONFIRM,  // dialog with yes/no and callback when positive button clicked
                                            URL_INFO} // info dialog that shows url when positive button clicked

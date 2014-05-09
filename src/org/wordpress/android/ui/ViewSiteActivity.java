@@ -2,8 +2,8 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

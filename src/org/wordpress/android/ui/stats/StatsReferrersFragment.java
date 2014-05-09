@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +23,12 @@ import org.wordpress.android.util.FormatUtils;
  * Referrers contain expandable lists.
  */
 public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
-    
     private static final Uri STATS_REFERRER_GROUP_URI = StatsContentProvider.STATS_REFERRER_GROUP_URI;
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-    
+
     public static final String TAG = StatsReferrersFragment.class.getSimpleName();
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -50,7 +49,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel();
@@ -63,10 +62,10 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
         int entryLabelResId = R.string.stats_entry_referrers;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_referrers;
-        
+
         Uri groupUri = Uri.parse(STATS_REFERRER_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
         Uri childrenUri = STATS_REFERRERS_URI;
-        
+
         StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
@@ -150,7 +149,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
             return null;
         }
     }
-    
+
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_referrers);

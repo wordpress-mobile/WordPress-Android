@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsGeoviewsTable;
@@ -20,13 +20,12 @@ import org.wordpress.android.util.FormatUtils;
  * Fragment for geoview (views by country) stats. Has two pages, for Today's and Yesterday's stats.
  */
 public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
-    
     private static final Uri STATS_GEOVIEWS_URI = StatsContentProvider.STATS_GEOVIEWS_URI;
 
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-    
+
     public static final String TAG = StatsGeoviewsFragment.class.getSimpleName();
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
@@ -46,7 +45,7 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return TIMEFRAMES[position].getLabel(); 
+            return TIMEFRAMES[position].getLabel();
         }
     }
 
@@ -55,14 +54,14 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
         int entryLabelResId = R.string.stats_entry_country;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_geoviews;
-        
+
         Uri uri = Uri.parse(STATS_GEOVIEWS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-        
+
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
-    
+
     public static class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
 
@@ -81,19 +80,19 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             final StatsViewHolder holder = (StatsViewHolder) view.getTag();
-            
+
             String entry = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.COUNTRY));
             String imageUrl = cursor.getString(cursor.getColumnIndex(StatsGeoviewsTable.Columns.IMAGE_URL));
             int total = cursor.getInt(cursor.getColumnIndex(StatsGeoviewsTable.Columns.VIEWS));
 
             holder.entryTextView.setText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-            
+
             // image (country flag)
             holder.showNetworkImage(imageUrl);
         }
     }
-    
+
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_views_by_country);
@@ -103,5 +102,4 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-
 }

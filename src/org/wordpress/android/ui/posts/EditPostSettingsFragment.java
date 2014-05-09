@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -30,7 +31,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -59,7 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditPostSettingsFragment extends SherlockFragment implements View.OnClickListener {
+public class EditPostSettingsFragment extends Fragment implements View.OnClickListener {
 
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 

@@ -1,8 +1,8 @@
 package org.wordpress.android.util;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -78,8 +78,8 @@ public class ToastUtils {
             message = error.getMessage();
         }
 
-        if (isInvalidTokenError && (context instanceof FragmentActivity)) {
-            showAuthErrorDialog((FragmentActivity) context);
+        if (isInvalidTokenError && (context instanceof Activity)) {
+            showAuthErrorDialog((Activity) context);
         } else {
             String fallbackErrorMessage = TextUtils.isEmpty(friendlyMessage) ? context.getString(
                     R.string.error_generic) : friendlyMessage;
@@ -91,16 +91,16 @@ public class ToastUtils {
         }
     }
 
-    public static void showAuthErrorDialog(FragmentActivity activity) {
+    public static void showAuthErrorDialog(Activity activity) {
         final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
         // abort if the dialog is already visible
-        if (activity.getSupportFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
+        if (activity.getFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
             return;
         }
-        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert;
         if (WordPress.getCurrentBlog() == null) {
             // No blogs found, so the user is logged in wpcom and doesn't own any blog

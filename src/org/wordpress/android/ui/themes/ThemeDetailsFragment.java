@@ -1,14 +1,16 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.text.Html;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
@@ -21,8 +23,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.view.Menu;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 /**
  * A fragment to show the theme's details, including its description and features.
  */
-public class ThemeDetailsFragment extends SherlockDialogFragment {
+public class ThemeDetailsFragment extends DialogFragment {
 
     public static final String TAG = ThemeDetailsFragment.class.getName();
     private static final String ARGS_THEME_ID = "ARGS_THEME_ID";

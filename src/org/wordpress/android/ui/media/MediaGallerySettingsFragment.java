@@ -1,8 +1,7 @@
 package org.wordpress.android.ui.media;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -17,29 +16,29 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
 import org.wordpress.android.util.Utils;
 
+import java.util.ArrayList;
+
 /**
  * The fragment containing the settings for the media gallery
  */
-public class MediaGallerySettingsFragment extends SherlockFragment implements OnCheckedChangeListener {
+public class MediaGallerySettingsFragment extends Fragment implements OnCheckedChangeListener {
 
     private static final int DEFAULT_THUMBNAIL_COLUMN_COUNT = 3;
 
     private static final String STATE_NUM_COLUMNS = "STATE_NUM_COLUMNS";
     private static final String STATE_GALLERY_TYPE_ORD = "GALLERY_TYPE_ORD";
     private static final String STATE_RANDOM_ORDER = "STATE_RANDOM_ORDER";
-    
+
     private CheckBox mThumbnailCheckbox;
     private CheckBox mSquaresCheckbox;
     private CheckBox mTiledCheckbox;
     private CheckBox mCirclesCheckbox;
     private CheckBox mSlideshowCheckbox;
-    
+
     private GalleryType mType;
     private int mNumColumns;
     private boolean mIsRandomOrder;
@@ -66,17 +65,17 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         SQUARES("square"),
         CIRCLES("circle"),
         SLIDESHOW("slideshow");
-        
+
         private final String mTag;
 
         private GalleryType(String tag) {
             mTag = tag;
         }
-        
+
         public String getTag() {
             return mTag;
         }
-        
+
         public static GalleryType getTypeFromTag(String tag) {
             if (tag.equals("rectangular"))
                 return TILED;
@@ -89,9 +88,9 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
             else
                 return DEFAULT;
         }
-        
+
     }
-    
+
     public interface MediaGallerySettingsCallback {
         public void onReverseClicked();
     }
@@ -106,7 +105,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
             throw new ClassCastException(activity.toString() + " must implement MediaGallerySettingsCallback");
         }
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -114,18 +113,18 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mType = GalleryType.DEFAULT;
         mNumColumns = DEFAULT_THUMBNAIL_COLUMN_COUNT;
         mIsRandomOrder = false;
-        
+
         restoreState(savedInstanceState);
-        
+
         View view = inflater.inflate(R.layout.media_gallery_settings_fragment, container, false);
-        
+
         mHeader = view.findViewById(R.id.media_gallery_settings_header);
         mScrollView = (ScrollView) view.findViewById(R.id.media_gallery_settings_content_container);
         mTitleView = (TextView) view.findViewById(R.id.media_gallery_settings_title);
-        
+
         if (!Utils.isTablet()) // show the arrow initially as collapsed when on phone
             onPanelCollapsed();
-        
+
         mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
         int visible = (mType == GalleryType.DEFAULT) ? View.VISIBLE : View.GONE;
         mNumColumnsContainer.setVisibility(visible);
@@ -136,45 +135,45 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         for (int i = 1; i <= 9; i++) {
             list.add(i + "");
         }
-        
+
         mGridAdapter = new CustomGridAdapter(mNumColumns);
         numColumnsGrid.setAdapter(mGridAdapter);
-        
+
         mThumbnailCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_thumbnail_grid);
         mTiledCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_tiled);
         mSquaresCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_squares);
         mCirclesCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_circles);
         mSlideshowCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_type_slideshow);
-        
+
         setType(mType.getTag());
-        
+
         mThumbnailCheckbox.setOnCheckedChangeListener(this);
         mTiledCheckbox.setOnCheckedChangeListener(this);
         mSquaresCheckbox.setOnCheckedChangeListener(this);
         mCirclesCheckbox.setOnCheckedChangeListener(this);
-        
+
         mSlideshowCheckbox.setOnCheckedChangeListener(this);
-        
+
         mRandomOrderCheckbox = (CheckBox) view.findViewById(R.id.media_gallery_random_checkbox);
         mRandomOrderCheckbox.setChecked(mIsRandomOrder);
         mRandomOrderCheckbox.setOnCheckedChangeListener(this);
-        
+
         Button reverseButton = (Button) view.findViewById(R.id.media_gallery_settings_reverse_button);
         reverseButton.setOnClickListener(new OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
                 mCallback.onReverseClicked();
             }
         });
-        
+
         return view;
     }
 
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
-        
+
         mNumColumns = savedInstanceState.getInt(STATE_NUM_COLUMNS);
         int galleryTypeOrdinal = savedInstanceState.getInt(STATE_GALLERY_TYPE_ORD);
         mType = GalleryType.values()[galleryTypeOrdinal];
@@ -191,7 +190,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
 
     @Override
     public void onCheckedChanged(CompoundButton button, boolean checked) {
-        
+
         if (!mAllowCheckChanged)
             return;
 
@@ -199,12 +198,12 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         // the others must be unset. Disable the checkChange listener during this time,
         // and re-enable it once done.
         mAllowCheckChanged = false;
-        
+
         int numColumnsContainerVisible = View.GONE;
         switch (button.getId()) {
             case R.id.media_gallery_type_thumbnail_grid:
                 numColumnsContainerVisible = View.VISIBLE;
-                
+
                 mType = GalleryType.DEFAULT;
                 mThumbnailCheckbox.setChecked(true);
                 mSquaresCheckbox.setChecked(false);
@@ -249,9 +248,9 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                 mIsRandomOrder = checked;
                 break;
         }
-        
+
         mNumColumnsContainer.setVisibility(numColumnsContainerVisible);
-        
+
         mAllowCheckChanged = true;
     }
 
@@ -259,7 +258,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
 
         private boolean mAllowCheckChanged;
         private final SparseBooleanArray mCheckedPositions;
-        
+
         public CustomGridAdapter(int selection) {
             mAllowCheckChanged = true;
             mCheckedPositions = new SparseBooleanArray(9);
@@ -267,7 +266,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         }
 
         // when a number of columns is checked, the numbers less than
-        // the one chose are also set to checked on the ui. 
+        // the one chose are also set to checked on the ui.
         // e.g. when 3 is checked, 1 and 2 are as well.
         private void setSelection(int selection) {
             for (int i = 0; i < 9; i++){
@@ -277,7 +276,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                     mCheckedPositions.put(i, false);
             }
         }
-        
+
         @Override
         public int getCount() {
             return 9;
@@ -295,27 +294,27 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            
+
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             CheckBox checkbox = (CheckBox) inflater.inflate(R.layout.media_gallery_column_checkbox, parent, false);
             checkbox.setChecked(mCheckedPositions.get(position));
             checkbox.setTag(position);
             checkbox.setText(String.valueOf(position + 1));
             checkbox.setOnCheckedChangeListener(this);
-            
+
             return checkbox;
         }
 
         @Override
         public void onCheckedChanged(CompoundButton button, boolean checked) {
-            
+
             if (mAllowCheckChanged) {
-            
+
                 mAllowCheckChanged = false;
-                
+
                 int position = (Integer) button.getTag();
                 mNumColumns = position + 1;
-                
+
                 int count = mCheckedPositions.size();
                 for (int i = 0; i < count; i++) {
                     if (i <= position)
@@ -327,7 +326,7 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                 mAllowCheckChanged = true;
             }
         }
-        
+
     }
 
     public View getDragView() {
@@ -347,11 +346,11 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
         mIsRandomOrder = random;
         mRandomOrderCheckbox.setChecked(mIsRandomOrder);
     }
-    
+
     public boolean isRandom() {
         return mIsRandomOrder;
     }
-    
+
     public void setType(String type) {
         mType = GalleryType.getTypeFromTag(type);
         switch (mType) {
@@ -372,17 +371,17 @@ public class MediaGallerySettingsFragment extends SherlockFragment implements On
                 break;
         }
     }
-    
+
     public String getType() {
         return mType.getTag();
     }
-    
+
     public void setNumColumns(int numColumns) {
         mNumColumns = numColumns;
         mGridAdapter.setSelection(numColumns);
         mGridAdapter.notifyDataSetChanged();
     }
-    
+
     public int getNumColumns() {
         return mNumColumns;
     }

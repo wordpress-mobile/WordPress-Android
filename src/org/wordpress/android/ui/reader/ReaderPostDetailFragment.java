@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +14,9 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +32,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -65,7 +66,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
-public class ReaderPostDetailFragment extends SherlockFragment {
+public class ReaderPostDetailFragment extends Fragment {
 
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
     static interface PostChangeListener {
@@ -322,14 +323,14 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.reader_native_detail, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_browse:
                 if (hasPost())
@@ -1537,8 +1538,8 @@ public class ReaderPostDetailFragment extends SherlockFragment {
     }
 
     private ActionBar getActionBar() {
-        if (getActivity() instanceof SherlockFragmentActivity) {
-            return ((SherlockFragmentActivity) getActivity()).getSupportActionBar();
+        if (getActivity() instanceof Activity) {
+            return getActivity().getActionBar();
         } else {
             AppLog.w(T.READER, "reader post detail > null ActionBar");
             return null;

@@ -7,7 +7,7 @@
     android:clickable="true"
     android:background="@drawable/md_list_selector" >
 
-    <com.actionbarsherlock.internal.widget.IcsSpinner
+    <Spinner
         android:id="@+id/blog_spinner"
         style="@style/DropDownNav.WordPress"
         android:layout_width="fill_parent"

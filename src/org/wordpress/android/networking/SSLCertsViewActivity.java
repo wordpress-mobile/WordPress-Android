@@ -1,10 +1,8 @@
 package org.wordpress.android.networking;
 
-
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.webkit.WebSettings;
-
-import com.actionbarsherlock.app.ActionBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.WebViewActivity;
@@ -20,11 +18,13 @@ public class SSLCertsViewActivity extends WebViewActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle(getResources().getText(R.string.ssl_certificate_details));
-        
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
         mWebView.getSettings().setBuiltInZoomControls(false);
-        
+
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(CERT_DETAILS_KEYS)) {
             String certDetails = extras.getString(CERT_DETAILS_KEYS);
@@ -36,8 +36,8 @@ public class SSLCertsViewActivity extends WebViewActivity {
             mWebView.loadDataWithBaseURL(null, sb.toString(), "text/html", "utf-8", null);
         }
     }
-    
+
     protected void refreshMenuDrawer(){
-        //No need to refresh menu drawer here. Also fix an issue where the login screen is force-pushed on the stack. 
+        //No need to refresh menu drawer here. Also fix an issue where the login screen is force-pushed on the stack.
     }
 }

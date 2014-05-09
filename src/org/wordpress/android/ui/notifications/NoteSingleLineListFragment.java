@@ -3,8 +3,8 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +22,11 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.notifications_follow_list, container, false);
     }
-    
+
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
-        
+
         ListView list = getListView();
         list.setDivider(getResources().getDrawable(R.drawable.list_divider));
         list.setDividerHeight(1);
@@ -35,7 +35,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
         // No note? No service.
         if (getNote() == null)
             return;
-        
+
         // set the header
         final DetailHeader noteHeader = (DetailHeader) getView().findViewById(R.id.header);
         noteHeader.setText(JSONUtil.getStringDecoded(getNote().queryJSON("subject", new JSONObject()), "text"));
@@ -56,7 +56,7 @@ public class NoteSingleLineListFragment extends ListFragment implements Notifica
     public void setNote(Note note){
         mNote = note;
     }
-    
+
     @Override
     public Note getNote(){
         return mNote;

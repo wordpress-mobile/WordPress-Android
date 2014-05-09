@@ -3,8 +3,8 @@
  */
 package org.wordpress.android.ui.notifications;
 
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     @Override
     public void onActivityCreated(Bundle bundle){
         super.onActivityCreated(bundle);
-        
+
         ListView list = getListView();
         list.setDivider(getResources().getDrawable(R.drawable.list_divider));
         list.setDividerHeight(1);
@@ -72,7 +72,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
     public void setNote(Note note){
         mNote = note;
     }
-    
+
     @Override
     public Note getNote(){
         return mNote;
@@ -84,7 +84,7 @@ public class NoteCommentLikeFragment extends ListFragment implements Notificatio
         JSONObject noteItem = JSONUtil.queryJSON(bodyItems, String.format("[%d]", 0), new JSONObject());
         return JSONUtil.getStringDecoded(noteItem, "header_text");
     }
-    
+
     private String getCommentSnippet(JSONArray bodyItems) {
         if (bodyItems == null)
             return "";

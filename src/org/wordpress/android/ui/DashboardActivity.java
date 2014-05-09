@@ -1,21 +1,20 @@
 
 package org.wordpress.android.ui;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -32,7 +31,7 @@ import java.net.URLEncoder;
 /**
  * Basic activity for displaying a WebView.
  */
-public class DashboardActivity extends SherlockActivity {
+public class DashboardActivity extends Activity {
     /** Primary webview used to display content. */
     protected WebView mWebView;
 
@@ -50,13 +49,13 @@ public class DashboardActivity extends SherlockActivity {
 
         setContentView(R.layout.webview);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        ActionBar actionBar = getActionBar();
         setTitle(R.string.view_admin);
-
-        ActionBar ab = getSupportActionBar();
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        ab.setDisplayShowTitleEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
@@ -144,7 +143,7 @@ public class DashboardActivity extends SherlockActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.dashboard, menu);
         return true;
     }

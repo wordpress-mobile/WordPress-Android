@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -25,12 +25,12 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener {
+public class ThemeTabFragment extends Fragment implements OnItemClickListener, RecyclerListener {
     public enum ThemeSortType {
         TRENDING("Trending"),
         NEWEST("Newest"),

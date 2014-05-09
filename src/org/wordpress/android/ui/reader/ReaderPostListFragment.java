@@ -1,11 +1,16 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -17,10 +22,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -47,12 +48,12 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * Fragment hosted by ReaderActivity which shows a list of posts in a specific tag
  */
-public class ReaderPostListFragment extends SherlockFragment
+public class ReaderPostListFragment extends Fragment
                                     implements AbsListView.OnScrollListener,
                                                ActionBar.OnNavigationListener {
 
@@ -213,7 +214,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.reader_native, menu);
@@ -221,7 +222,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags :
                 ReaderActivityLauncher.showReaderTagsForResult(getActivity(), null);
@@ -651,8 +652,8 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private ActionBar getActionBar() {
-        if (getActivity() instanceof SherlockFragmentActivity) {
-            return ((SherlockFragmentActivity)getActivity()).getSupportActionBar();
+        if (getActivity() instanceof Activity) {
+            return getActivity().getActionBar();
         } else {
             AppLog.w(T.READER, "reader post list > null ActionBar");
             return null;
