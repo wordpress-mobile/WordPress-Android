@@ -6,6 +6,7 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.simperium.Simperium;
@@ -73,14 +74,14 @@ public class SimperiumUtils {
                             metaBucket.start();
                             Intent simperiumSignedInIntent = new Intent();
                             simperiumSignedInIntent.setAction(BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-                            context.sendBroadcast(simperiumSignedInIntent);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumSignedInIntent);
                             break;
                         case NOT_AUTHORIZED:
                             notesBucket.stop();
                             metaBucket.stop();
                             Intent simperiumNotAuthorizedIntent = new Intent();
                             simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
-                            context.sendBroadcast(simperiumNotAuthorizedIntent);
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
                             break;
                         default:
                             AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");

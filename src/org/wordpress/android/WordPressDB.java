@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -1196,7 +1197,7 @@ public class WordPressDB {
             broadcastShortcutIntent.putExtra("duplicate", false);
             broadcastShortcutIntent
                     .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            ctx.sendBroadcast(broadcastShortcutIntent);
+            LocalBroadcastManager.getInstance(ctx).sendBroadcast(broadcastShortcutIntent);
 
             // remove from shortcuts table
             String shortcutId = shortcutHash.get("id").toString();

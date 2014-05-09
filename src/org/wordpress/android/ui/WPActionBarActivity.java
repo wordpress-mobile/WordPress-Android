@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -1059,12 +1060,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
         filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
-        registerReceiver(mReceiver, filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
     private void unregisterReceiver() {
         try {
-            unregisterReceiver(mReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
             // exception occurs if receiver already unregistered (safe to ignore)
         }

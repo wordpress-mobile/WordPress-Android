@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,7 +189,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-        getActivity().registerReceiver(mReceiver, filter);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
     }
 
     private void unregisterReceiver() {
@@ -196,7 +197,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             return;
 
         try {
-            getActivity().unregisterReceiver(mReceiver);
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
             // exception occurs if receiver already unregistered (safe to ignore)
         }

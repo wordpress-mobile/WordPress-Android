@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -240,13 +241,13 @@ public class GCMIntentService extends GCMBaseIntentService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(notificationId, mBuilder.build());
-        broadcastNewNotification();
+        broadcastNewNotification(context);
     }
 
-    public void broadcastNewNotification() {
+    public void broadcastNewNotification(Context context) {
         Intent msgIntent = new Intent();
         msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
-        sendBroadcast(msgIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 
     @Override

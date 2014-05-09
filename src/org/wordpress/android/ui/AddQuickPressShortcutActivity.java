@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     }
 
                     addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                    AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
+                    LocalBroadcastManager.getInstance(AddQuickPressShortcutActivity.this).sendBroadcast(addIntent);
                     AddQuickPressShortcutActivity.this.finish();
                 }
             }

@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.net.ssl.SSLHandshakeException;
 
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -591,7 +592,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private void broadcastAction(String action) {
         Intent intent = new Intent();
         intent.setAction(action);
-        WordPress.getContext().sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
     }
 
     private void deleteTempFile(String method, File tempFile) {

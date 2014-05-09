@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
@@ -432,7 +433,7 @@ public class WordPress extends Application {
         // descendants
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        context.sendBroadcast(broadcastIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     public static void removeWpComUserRelatedData(Context context) {
@@ -465,7 +466,7 @@ public class WordPress extends Application {
         // descendants
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        context.sendBroadcast(broadcastIntent);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     public static String getLoginUrl(Blog blog) {
