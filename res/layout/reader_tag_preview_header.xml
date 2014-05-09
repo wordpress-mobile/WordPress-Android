@@ -7,6 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/reader_post_background"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +21,6 @@
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:background="@drawable/reader_post_background"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
