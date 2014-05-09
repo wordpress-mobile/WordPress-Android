@@ -23,14 +23,14 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
     private static final Uri STATS_SEARCH_ENGINE_TERMS_URI = StatsContentProvider.STATS_SEARCH_ENGINE_TERMS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-    
+
     public static final String TAG = StatsSearchEngineTermsFragment.class.getSimpleName();
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
-    
+
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
         public CustomPagerAdapter(FragmentManager fm) {
@@ -46,7 +46,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
         public int getCount() {
             return TIMEFRAMES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TIMEFRAMES[position].getLabel();
@@ -56,17 +56,15 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        int entryLabelResId = R.string.stats_entry_search_engine_terms;
-        int totalsLabelResId = R.string.stats_totals_views;
-        int emptyLabelResId = R.string.stats_empty_search_engine_terms;
-        
         Uri uri = Uri.parse(STATS_SEARCH_ENGINE_TERMS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
-        
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, R.string.stats_entry_search_engine_terms,
+                R.string.stats_totals_views, R.string.stats_empty_search_engine_terms_title,
+                R.string.stats_empty_search_engine_terms_desc);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }
-    
+
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
 

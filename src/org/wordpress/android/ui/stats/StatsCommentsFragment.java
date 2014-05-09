@@ -34,17 +34,17 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
 
     public static final String TAG = StatsCommentsFragment.class.getSimpleName();
-    
+
     private static final String[] TITLES = new String[] { "Top Recent Commenters", "Most Commented", "Summary" };
-    
+
     private static final int TOP_COMMENTERS = 0;
     private static final int MOST_COMMENTED = 1;
-    
+
     @Override
     protected FragmentStatePagerAdapter getAdapter() {
         return new CustomPagerAdapter(getChildFragmentManager());
     }
-    
+
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
         public CustomPagerAdapter(FragmentManager fm) {
@@ -60,35 +60,34 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         public int getCount() {
             return TITLES.length;
         }
-        
+
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position];
         }
-        
+
     }
 
 
     @Override
     protected Fragment getFragment(int position) {
-        int emptyLabelResId = R.string.stats_empty_comments;
         if (position == 0) {
-            int entryLabelResId = R.string.stats_entry_top_commenter;
-            int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI,
+                    R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI,
+                    R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {
             return new CommentsSummaryFragment();
         }
     }
-    
+
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
         private final int mType;
@@ -122,8 +121,8 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
             holder.entryTextView.setText(entry);
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
-            
-            // image 
+
+            // image
             if (mType == TOP_COMMENTERS) {
                 String imageUrl = cursor.getString(cursor.getColumnIndex(StatsTopCommentersTable.Columns.IMAGE_URL));
                 holder.networkImageView.setVisibility(View.VISIBLE);
@@ -133,7 +132,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             }
         }
     }
-    
+
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_comments);
@@ -146,26 +145,26 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
     /** Fragment used for summary view **/
     public static class CommentsSummaryFragment extends SherlockFragment {
-        
+
         private TextView mPerMonthText;
         private TextView mTotalText;
         private TextView mActiveDayText;
         private TextView mActiveTimeText;
         private TextView mMostCommentedText;
-        
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.stats_comments_summary, container, false);
-            
+
             mPerMonthText = (TextView) view.findViewById(R.id.stats_comments_summary_per_month_count);
             mTotalText = (TextView) view.findViewById(R.id.stats_comments_summary_total_count);
             mActiveDayText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_day_text);
             mActiveTimeText = (TextView) view.findViewById(R.id.stats_comments_summary_most_active_time_text);
             mMostCommentedText = (TextView) view.findViewById(R.id.stats_comments_summary_most_commented_text);
-            
+
             return view;
         }
-        
+
         @Override
         public void onResume() {
             super.onResume();
@@ -175,7 +174,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         private void refreshStatsFromFile() {
             if (WordPress.getCurrentBlog() == null)
                 return;
-            
+
             final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             new AsyncTask<Void, Void, StatsSummary>() {
 
@@ -184,15 +183,15 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
                     //StatsRestHelper.getStatsSummary(blogId);
                     return StatUtils.getSummary(blogId);
                 }
-                
+
                 protected void onPostExecute(final StatsSummary result) {
                     if (getActivity() == null)
                         return;
                     getActivity().runOnUiThread(new Runnable() {
-                        
+
                         @Override
                         public void run() {
-                            refreshStats(result);     
+                            refreshStats(result);
                         }
                     });
                 }
@@ -200,14 +199,14 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         }
 
         private void refreshStats(StatsSummary stats) {
-    
+
             int perMonth = 0;
             int total = 0;
             String activeDay = "";
             String activeTime = "";
             String activePost = "";
             String activePostUrl = "";
-            
+
             if (stats != null) {
                 perMonth = stats.getCommentsPerMonth();
                 total = stats.getCommentsAllTime();
@@ -216,7 +215,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 //                activePost = result.getRecentMostActivePost(); // TODO
 //                activePostUrl = result.getRecentMostActivePostUrl(); // TODO
             }
-    
+
 
             mPerMonthText.setText(FormatUtils.formatDecimal(perMonth));
             mTotalText.setText(FormatUtils.formatDecimal(total));
