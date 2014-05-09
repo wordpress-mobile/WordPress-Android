@@ -48,13 +48,15 @@ import org.wordpress.android.WordPress;
  * The linearlayout also gets its group and children views from the CursorTreeAdapter.
  * </p>
  */
-public class StatsCursorTreeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
+public class StatsCursorTreeFragment extends Fragment
+        implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
     private static final int LOADER_URI_GROUP_INDEX = -1;
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
     private static final String ARGS_CHILDREN_URI = "ARGS_CHILDREN_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
-    private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
+    private static final String ARGS_EMPTY_LABEL_TITLE = "ARGS_EMPTY_LABEL_TITLE";
+    private static final String ARGS_EMPTY_LABEL_DESC = "ARGS_EMPTY_LABEL_DESC";
 
     public static final String TAG = StatsCursorTreeFragment.class.getSimpleName();
 
@@ -70,7 +72,9 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
 
     private static final int ANIM_DURATION = 150;
 
-    public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
+    public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId,
+                                                      int totalsLabelResId, int emptyLabelTitleResId,
+                                                      int emptyLabelDescResId) {
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
 
         Bundle args = new Bundle();
@@ -78,7 +82,8 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
         args.putString(ARGS_CHILDREN_URI, childrenUri.toString());
         args.putInt(ARGS_ENTRY_LABEL, entryLabelResId);
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
-        args.putInt(ARGS_EMPTY_LABEL, emptyLabelResId);
+        args.putInt(ARGS_EMPTY_LABEL_TITLE, emptyLabelTitleResId);
+        args.putInt(ARGS_EMPTY_LABEL_DESC, emptyLabelDescResId);
         fragment.setArguments(args);
 
         return fragment;
@@ -120,8 +125,8 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
         totalsLabel.setText(getTotalsLabelResId());
 
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
-        String label = getString(getEmptyLabelResId());
-        if (label != null && label.contains("<")) {
+        String label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+        if (label.contains("<")) {
             mEmptyLabel.setText(Html.fromHtml(label));
         } else {
             mEmptyLabel.setText(label);
@@ -142,8 +147,12 @@ public class StatsCursorTreeFragment extends Fragment implements LoaderManager.L
         return getArguments().getInt(ARGS_TOTALS_LABEL);
     }
 
-    private int getEmptyLabelResId() {
-        return getArguments().getInt(ARGS_EMPTY_LABEL);
+    private int getEmptyLabelTitleResId() {
+        return getArguments().getInt(ARGS_EMPTY_LABEL_TITLE);
+    }
+
+    private int getEmptyLabelDescResId() {
+        return getArguments().getInt(ARGS_EMPTY_LABEL_DESC);
     }
 
     @Override

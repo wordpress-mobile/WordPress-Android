@@ -50,13 +50,10 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        int entryLabelResId = R.string.stats_entry_posts_and_pages;
-        int totalsLabelResId = R.string.stats_totals_views;
-        int emptyLabelResId = R.string.stats_empty_top_posts;
-
         Uri uri = Uri.parse(STATS_TOP_POSTS_AND_PAGES_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
 
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, R.string.stats_entry_posts_and_pages,
+                R.string.stats_totals_views, R.string.stats_empty_top_posts_title, R.string.stats_empty_top_posts_desc);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         return fragment;
     }

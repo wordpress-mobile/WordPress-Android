@@ -40,7 +40,9 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
-    private static final String ARGS_EMPTY_LABEL = "ARGS_EMPTY_LABEL";
+    private static final String ARGS_EMPTY_LABEL_TITLE = "ARGS_EMPTY_LABEL_TITLE";
+    private static final String ARGS_EMPTY_LABEL_DESC = "ARGS_EMPTY_LABEL_DESC";
+    private static final int NO_STRING_ID = -1;
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
 
@@ -52,14 +54,21 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
 
     private StatsCursorInterface mCallback;
 
-    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId, int emptyLabelResId) {
+    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId,
+                                                  int emptyLabelTitleResId) {
+        return newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelTitleResId, NO_STRING_ID);
+    }
+
+    public static StatsCursorFragment newInstance(Uri uri, int entryLabelResId, int totalsLabelResId,
+                                                  int emptyLabelTitleResId, int emptyLabelDescResId) {
         StatsCursorFragment fragment = new StatsCursorFragment();
 
         Bundle args = new Bundle();
         args.putString(ARGS_URI, uri.toString());
         args.putInt(ARGS_ENTRY_LABEL, entryLabelResId);
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
-        args.putInt(ARGS_EMPTY_LABEL, emptyLabelResId);
+        args.putInt(ARGS_EMPTY_LABEL_TITLE, emptyLabelTitleResId);
+        args.putInt(ARGS_EMPTY_LABEL_DESC, emptyLabelDescResId);
         fragment.setArguments(args);
 
         return fragment;
@@ -90,11 +99,16 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
         totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
 
-        String empty = getString(getEmptyLabelResId());
-        if (empty != null && empty.contains("<")) {
-            mEmptyLabel.setText(Html.fromHtml(empty));
+        String label;
+        if (getEmptyLabelDescResId() == NO_STRING_ID) {
+            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b>";
         } else {
-            mEmptyLabel.setText(empty);
+            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+        }
+        if (label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
         }
         configureEmptyLabel();
 
@@ -112,8 +126,12 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
         return getArguments().getInt(ARGS_TOTALS_LABEL);
     }
 
-    private int getEmptyLabelResId() {
-        return getArguments().getInt(ARGS_EMPTY_LABEL);
+    private int getEmptyLabelTitleResId() {
+        return getArguments().getInt(ARGS_EMPTY_LABEL_TITLE);
+    }
+
+    private int getEmptyLabelDescResId() {
+        return getArguments().getInt(ARGS_EMPTY_LABEL_DESC);
     }
 
     @Override

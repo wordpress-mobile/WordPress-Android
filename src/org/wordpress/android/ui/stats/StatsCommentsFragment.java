@@ -67,17 +67,16 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        int emptyLabelResId = R.string.stats_empty_comments;
         if (position == 0) {
-            int entryLabelResId = R.string.stats_entry_top_commenter;
-            int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI,
+                    R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI,
+                    R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             return fragment;
         } else {

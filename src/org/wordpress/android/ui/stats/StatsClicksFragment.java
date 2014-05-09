@@ -70,14 +70,12 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
     @Override
     protected Fragment getFragment(int position) {
-        int entryLabelResId = R.string.stats_entry_clicks_url;
-        int totalsLabelResId = R.string.stats_totals_clicks;
-        int emptyLabelResId = R.string.stats_empty_clicks;
-
         Uri groupUri = Uri.parse(STATS_CLICK_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
         Uri childrenUri = STATS_CLICKS_URI;
 
-        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri,
+                R.string.stats_entry_clicks_url, R.string.stats_totals_clicks, R.string.stats_empty_clicks_title,
+                R.string.stats_empty_clicks_desc);
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
         fragment.setListAdapter(adapter);
