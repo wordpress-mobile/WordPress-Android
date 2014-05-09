@@ -325,11 +325,4 @@
         <item name="ptrProgressBarColor">@color/blue_dark</item>
         <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
     </style>
-
-    <!-- On top message -->
-    <style name="WordPress.OnTopMessage">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_height">@dimen/nux_button_height</item>
-        <item name="android:background">@drawable/on_top_message_shape</item>
-    </style>
 </resources>

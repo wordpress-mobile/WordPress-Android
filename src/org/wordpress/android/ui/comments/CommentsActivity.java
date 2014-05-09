@@ -120,7 +120,7 @@ public class CommentsActivity extends WPActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.basic_menu, menu);
+        inflater.inflate(R.menu.comments, menu);
         return true;
     }
 

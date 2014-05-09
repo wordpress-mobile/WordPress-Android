@@ -79,6 +79,7 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         super.onActivityCreated(bundle);
 
         initPullToRefreshHelper();
+        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
@@ -231,5 +232,11 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 }

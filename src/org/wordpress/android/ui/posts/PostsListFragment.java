@@ -206,6 +206,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             }
         }
         initPullToRefreshHelper();
+        mPullToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
     }
 
@@ -220,6 +221,12 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     public void onResume() {

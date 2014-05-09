@@ -318,11 +318,13 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     @Override

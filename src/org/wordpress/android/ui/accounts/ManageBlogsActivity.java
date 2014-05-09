@@ -195,4 +195,16 @@ public class ManageBlogsActivity extends ListActivity {
             mPullToRefreshHelper.setRefreshing(false);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPullToRefreshHelper.unregisterReceiver(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPullToRefreshHelper.registerReceiver(this);
+    }
 }
