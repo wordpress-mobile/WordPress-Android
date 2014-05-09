@@ -220,9 +220,8 @@ class ReaderBlogInfoHeader extends FrameLayout {
      * sets the top of the container view holding the info
      */
     public void setInfoContainerTop(int top) {
-        LayoutParams infoParams = (LayoutParams) mInfoContainerView.getLayoutParams();
-        if (infoParams.topMargin != top) {
-            infoParams.topMargin = top;
+        if (mInfoContainerView.getTranslationY() != top) {
+            mInfoContainerView.setTranslationY(top);
 
             // force the mshot container to match the bottom of the info container to
             // prevent the bottom of the mshot from appearing below the info
@@ -231,10 +230,13 @@ class ReaderBlogInfoHeader extends FrameLayout {
             LayoutParams mshotParams = (LayoutParams) mMshotContainerView.getLayoutParams();
             if (mshotParams.height != infoBottom) {
                 mshotParams.height = infoBottom;
+                requestLayout();
             }
-
-            requestLayout();
         }
+    }
+
+    public int getInfoContainerHeight() {
+        return mInfoContainerView.getHeight();
     }
 
     public int getMshotDefaultHeight() {

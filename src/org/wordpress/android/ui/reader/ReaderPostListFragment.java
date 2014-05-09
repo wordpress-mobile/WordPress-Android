@@ -42,7 +42,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -91,7 +90,6 @@ public class ReaderPostListFragment extends SherlockFragment
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
-    private int mActionBarHeight;
     private int mLastPostListScrollPos = -1;
 
     private boolean mIsUpdating;
@@ -221,7 +219,6 @@ public class ReaderPostListFragment extends SherlockFragment
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
 
         boolean hasTransparentActionBar = isFullScreenSupported();
-        mActionBarHeight = DisplayUtils.getActionBarHeight(context);
 
         mListView = (WPListView) view.findViewById(android.R.id.list);
 
@@ -235,23 +232,19 @@ public class ReaderPostListFragment extends SherlockFragment
                 hideNewPostsBar();
             }
         });
+
         if (hasTransparentActionBar) {
-            ReaderUtils.setTopMargin(mNewPostsBar, mActionBarHeight);
+            View actionBarSpacer = view.findViewById(R.id.view_actionbar_spacer);
+            actionBarSpacer.setVisibility(View.VISIBLE);
         }
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
-                if (hasTransparentActionBar) {
-                    ReaderUtils.addListViewHeader(mListView, mActionBarHeight);
-                }
                 break;
 
             case TAG_PREVIEW:
                 // locate the view that will contain the tag preview header
                 final ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.layout_preview_container);
-                if (hasTransparentActionBar) {
-                    ReaderUtils.setTopMargin(previewContainer, mActionBarHeight);
-                }
 
                 // inflate the tag info header and add it to the container
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, container, false);
@@ -261,15 +254,13 @@ public class ReaderPostListFragment extends SherlockFragment
 
             case BLOG_PREVIEW:
                 // add the blog info to the view
-                mBlogInfoView = new ReaderBlogInfoHeader(context);
-                if (hasTransparentActionBar) {
-                    ReaderUtils.setTopMargin(mBlogInfoView, mActionBarHeight);
-                }
-                view.addView(mBlogInfoView);
+                mBlogInfoView = (ReaderBlogInfoHeader) view.findViewById(R.id.blog_info_view);
+                mBlogInfoView.setVisibility(View.VISIBLE);
 
                 // add a blank header to the listView that's the same height as the mshot
                 mListView.setHeaderDividersEnabled(false);
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView,
+                        mBlogInfoView.getMshotDefaultHeight());
 
                 // blank header height needs to be adjusted based on the actual height of the info
                 // view, which we don't know at this point - so assign a one-shot listener to
@@ -279,7 +270,9 @@ public class ReaderPostListFragment extends SherlockFragment
                             @Override
                             public void onGlobalLayout() {
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                mMshotSpacerView.getLayoutParams().height = mBlogInfoView.getHeight();
+                                mMshotSpacerView.getLayoutParams().height =
+                                        mBlogInfoView.getInfoContainerHeight()
+                                      + mBlogInfoView.getMshotDefaultHeight();
                             }
                         }
                 );
@@ -1114,12 +1107,6 @@ public class ReaderPostListFragment extends SherlockFragment
             return;
         }
 
-        // skip if blogInfo hasn't had a layout pass
-        if (mBlogInfoView.getHeight() == 0) {
-            AppLog.w(AppLog.T.READER, "blogInfo height = 0");
-            return;
-        }
-
         // scale the mshot based on the scroll position
         mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
 
@@ -1135,7 +1122,7 @@ public class ReaderPostListFragment extends SherlockFragment
             // mshot is offscreen if it has no height
             mshotBottom = 0;
         }
-        int infoTop = (mshotBottom < mActionBarHeight ? mActionBarHeight : mshotBottom);
+        int infoTop = (mshotBottom < 0 ? 0 : mshotBottom);
 
         mBlogInfoView.setInfoContainerTop(infoTop);
         mLastPostListScrollPos = scrollPos;

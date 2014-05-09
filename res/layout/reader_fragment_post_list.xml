@@ -5,9 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/view_actionbar_spacer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/abs__action_bar_default_height"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/view_actionbar_spacer"
         android:id="@+id/layout_preview_container"
         android:orientation="vertical"
         android:visibility="gone">
@@ -38,6 +45,14 @@
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
         android:text="@string/reader_label_new_posts"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <org.wordpress.android.ui.reader.ReaderBlogInfoHeader
+        android:id="@+id/blog_info_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/view_actionbar_spacer"
         android:visibility="gone"
         tools:visibility="visible" />
 
