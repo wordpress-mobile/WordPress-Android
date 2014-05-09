@@ -46,6 +46,8 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
+        mProgressFooterView.setVisibility(View.GONE);
         return inflater.inflate(R.layout.empty_listview, container, false);
     }
 
@@ -54,11 +56,8 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
-
-        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
-        mProgressFooterView.setVisibility(View.GONE);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -73,6 +72,12 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle bundle) {
+        super.onActivityCreated(bundle);
+
         initPullToRefreshHelper();
     }
 

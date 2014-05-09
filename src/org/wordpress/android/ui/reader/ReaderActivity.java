@@ -88,8 +88,8 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
+    protected void onResume() {
+        super.onResume();
         checkMenuDrawer();
     }
 

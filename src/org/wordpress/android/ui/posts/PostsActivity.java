@@ -646,9 +646,6 @@ public class PostsActivity extends WPActionBarActivity
             }
         };
 
-        new ApiHelper.RefreshBlogContentTask(this,
-                                             WordPress.getCurrentBlog(),
-                                             callback)
-                                             .execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).execute(false);
     }
 }
