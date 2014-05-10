@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.Window;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -83,7 +84,7 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (isFullScreenSupported()) {
-            ReaderUtils.enableActionBarOverlay(this);
+            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         }
 
         super.onCreate(savedInstanceState);

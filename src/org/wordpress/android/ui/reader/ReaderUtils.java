@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -19,10 +17,6 @@ public class ReaderUtils {
         public boolean onRequestFullScreen(boolean enable);
         public boolean isFullScreen();
         public boolean isFullScreenSupported();
-    }
-
-    public static void enableActionBarOverlay(Activity activity) {
-        activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 
     /*

@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view_actionbar_spacer"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:visibility="gone" />
-
     <!-- fragment container -->
     <FrameLayout
         android:id="@+id/fragment_container"
