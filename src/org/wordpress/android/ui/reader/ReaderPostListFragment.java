@@ -258,9 +258,7 @@ public class ReaderPostListFragment extends Fragment
                 mBlogInfoView.setVisibility(View.VISIBLE);
 
                 // add a blank header to the listView that's the same height as the mshot
-                mListView.setHeaderDividersEnabled(false);
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView,
-                        mBlogInfoView.getMshotDefaultHeight());
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
 
                 // blank header height needs to be adjusted based on the actual height of the info
                 // view, which we don't know at this point - so assign a one-shot listener to

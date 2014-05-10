@@ -34,6 +34,7 @@
             android:paddingRight="@dimen/reader_list_margin"
             android:divider="@color/transparent"
             android:dividerHeight="@dimen/reader_post_divider_height"
+            android:headerDividersEnabled="false"
             tools:listitem="@layout/reader_listitem_post_excerpt" />
 
         <include
