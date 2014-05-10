@@ -11,7 +11,6 @@ import org.wordpress.android.util.StringUtils;
 import java.io.Serializable;
 
 public class Post implements Serializable {
-
     // Increment this value if this model changes
     // See: http://www.javapractices.com/topic/TopicAction.do?Id=45
     static final long serialVersionUID  = 2L;
@@ -55,7 +54,6 @@ public class Post implements Serializable {
     private String quickPostType;
 
     public Post() {
-
     }
 
     public Post(int blogId, boolean isPage) {

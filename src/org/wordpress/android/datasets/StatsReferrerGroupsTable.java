@@ -14,13 +14,12 @@ import java.util.Map;
 
 /**
  * A database table to represent groups in the stats for referrers.
- * A group may or may not have children. 
- * See {@link StatsReferrersTable} for the children table structure.  
+ * A group may or may not have children.
+ * See {@link StatsReferrersTable} for the children table structure.
  */
 public class StatsReferrerGroupsTable extends SQLTable {
-
     private static final String NAME = "referrer_groups";
-    
+
     public static final class Columns {
         public static final String BLOG_ID = "blogId";
         public static final String DATE = "date";
@@ -39,9 +38,9 @@ public class StatsReferrerGroupsTable extends SQLTable {
     public static synchronized StatsReferrerGroupsTable getInstance() {
         return Holder.INSTANCE;
     }
-    
+
     private StatsReferrerGroupsTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -85,16 +84,15 @@ public class StatsReferrerGroupsTable extends SQLTable {
         values.put(Columns.CHILDREN, item.getChildren());
         return values;
     }
-    
+
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        
         String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC LIMIT " + StatsActivity.STATS_GROUP_MAX_ITEMS;
-        
+
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
             return super.query(database, uri, projection, selection, selectionArgs, sort);
-        
+
         // get the latest for "Today", and the next latest for "Yesterday"
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
             return database.rawQuery("SELECT * FROM " + NAME +", " +
@@ -106,7 +104,7 @@ public class StatsReferrerGroupsTable extends SQLTable {
                     "SELECT * FROM " + NAME + ", " +
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
                                 "( SELECT MAX(date) AS max FROM " + NAME + ")" +
-                            " WHERE " + NAME + ".date < max) AS temp " + 
+                            " WHERE " + NAME + ".date < max) AS temp " +
                     "WHERE " + NAME + ".date = temp.date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
 

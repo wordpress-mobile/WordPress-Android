@@ -9,7 +9,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a top post or page stat
  */
 public class StatsTopPostsAndPages {
-
     private String mBlogId;
     private long mDate;
     private int mPostId;

@@ -233,25 +233,24 @@ public class RestClientUtils {
 
     /**
      * Make Synchronous GET request
-     * 
-     * @throws TimeoutException 
-     * @throws ExecutionException 
-     * @throws InterruptedException 
+     *
+     * @throws TimeoutException
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
     public JSONObject getSynchronous(String path) throws InterruptedException, ExecutionException, TimeoutException {
         return getSynchronous(path, null, null);
     }
-    
+
     /**
      * Make Synchronous GET request with params
-     * 
-     * @throws TimeoutException 
-     * @throws ExecutionException 
-     * @throws InterruptedException 
+     *
+     * @throws TimeoutException
+     * @throws ExecutionException
+     * @throws InterruptedException
      */
-    public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy) 
+    public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy)
             throws InterruptedException, ExecutionException, TimeoutException {
-
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
         RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, future, future);
 

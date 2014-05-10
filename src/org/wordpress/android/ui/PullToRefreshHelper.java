@@ -21,10 +21,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh.SetupWizard;
 import uk.co.senab.actionbarpulltorefresh.library.Options;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 

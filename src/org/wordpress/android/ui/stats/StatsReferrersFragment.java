@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +23,6 @@ import org.wordpress.android.util.FormatUtils;
  * Referrers contain expandable lists.
  */
 public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_REFERRER_GROUP_URI = StatsContentProvider.STATS_REFERRER_GROUP_URI;
     private static final Uri STATS_REFERRERS_URI = StatsContentProvider.STATS_REFERRERS_URI;
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
@@ -36,7 +35,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -158,5 +156,4 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
     }
-
 }

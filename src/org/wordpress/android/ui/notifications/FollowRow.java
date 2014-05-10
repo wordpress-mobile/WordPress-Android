@@ -9,9 +9,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -32,7 +30,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class FollowRow extends LinearLayout {
-
     public static interface OnFollowListener {
         public void onUnfollow(FollowRow row, String blogId);
         public void onFollow(FollowRow row, String blogId);
@@ -58,7 +55,6 @@ public class FollowRow extends LinearLayout {
         super(context, attributes);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public FollowRow(Context context, AttributeSet attributes, int defStyle) {
         super(context, attributes, defStyle);
     }

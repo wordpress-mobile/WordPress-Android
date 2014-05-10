@@ -13,10 +13,9 @@ import org.wordpress.android.R;
 
 /**
  * A Bar graph depicting the view and visitors.
- * Based on BarGraph from the GraphView library. 
+ * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
-
 	public StatsBarGraph(Context context) {
 		super(context, "");
 
@@ -32,12 +31,11 @@ class StatsBarGraph extends GraphView {
         getGraphViewStyle().setNumVerticalLabels(6);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
-
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if(isValueX)
                     return null;
-                
+
                 if (value < 1000) {
                     return null;
                 } else if (value < 1000000) { // thousands
@@ -56,7 +54,6 @@ class StatsBarGraph extends GraphView {
 			float graphwidth, float graphheight, float border, double minX,
 			double minY, double diffX, double diffY, float horstart,
 			GraphViewSeriesStyle style) {
-
 		float colwidth = graphwidth / values.length;
 
 		paint.setStrokeWidth(style.thickness);
@@ -75,12 +72,12 @@ class StatsBarGraph extends GraphView {
 
 
 			float pad = style.padding;
-			
+
 			float left = (i * colwidth) + horstart;
 			float top = (border - y) + graphheight;
 			float right = left + colwidth;
 			float bottom = graphheight + border - 1;
-			
+
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
 		}
 	}
@@ -107,10 +104,9 @@ class StatsBarGraph extends GraphView {
 			divideBy = 100000;
 		else
 			divideBy = 1000000;
-		
-		maxY = Math.rint((maxY / divideBy) + 1) * divideBy; 
+
+		maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
 		return maxY;
-		
+
 	}
-	
 }

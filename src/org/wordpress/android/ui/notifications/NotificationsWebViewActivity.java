@@ -1,17 +1,15 @@
 package org.wordpress.android.ui.notifications;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -34,8 +32,10 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             mWebView.getSettings().setDisplayZoomControls(false);
         }
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         // load URL if one was provided in the intent
         String url = getIntent().getStringExtra(URL_TO_LOAD);

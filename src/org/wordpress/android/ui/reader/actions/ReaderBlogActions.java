@@ -17,12 +17,10 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class ReaderBlogActions {
-
     public enum BlogAction {FOLLOW, UNFOLLOW}
 
     public static boolean performBlogAction(final BlogAction action,
                                             final String blogUrl) {
-
         if (TextUtils.isEmpty(blogUrl))
             return false;
 

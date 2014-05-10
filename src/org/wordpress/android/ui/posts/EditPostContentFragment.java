@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +13,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -54,8 +54,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
@@ -73,17 +71,17 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPImageSpan;
-import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.util.WPUnderlineSpan;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -93,9 +91,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class EditPostContentFragment extends SherlockFragment implements TextWatcher,
+public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
-
     EditPostActivity mActivity;
 
     private static final int ACTIVITY_REQUEST_CODE_CREATE_LINK = 4;
@@ -141,21 +138,14 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // Go to full screen editor when 'next' button is tapped on soft keyboard
-                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getSupportActionBar().isShowing()) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && mActivity.getActionBar() != null && mActivity
+                        .getActionBar().isShowing()) {
                     setContentEditingModeVisible(true);
                 }
                 return false;
             }
         });
         mContentEditText = (WPEditText) rootView.findViewById(R.id.post_content);
-        if (Build.VERSION.SDK_INT <= VERSION_CODES.GINGERBREAD_MR1) {
-            mContentEditText.setBackgroundResource(android.R.drawable.editbox_background_normal);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mContentEditText.getLayoutParams();
-            int sideMargin = mActivity.getResources().getDimensionPixelSize(
-                    R.dimen.post_editor_content_side_margin_gingerbread);
-            layoutParams.setMargins(sideMargin, layoutParams.topMargin, sideMargin, layoutParams.bottomMargin);
-            mContentEditText.setLayoutParams(layoutParams);
-        }
         mPostContentLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_content_wrapper);
         mPostSettingsLinearLayout = (LinearLayout) rootView.findViewById(R.id.post_settings_wrapper);
         Button postSettingsButton = (Button) rootView.findViewById(R.id.post_settings_button);
@@ -183,7 +173,8 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             public void onImeBack(WPEditText ctrl, String text) {
                 // Go back to regular editor if IME keyboard is dismissed
                 // Bottom comparison is there to ensure that the keyboard is actually showing
-                if (mRootView.getBottom() < mFullViewBottom && !mActivity.getSupportActionBar().isShowing()) {
+                if (mRootView.getBottom() < mFullViewBottom && mActivity.getActionBar() != null && !mActivity
+                        .getActionBar().isShowing()) {
                     setContentEditingModeVisible(false);
                 }
             }
@@ -261,7 +252,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     public void setContentEditingModeVisible(boolean isVisible) {
         if (mActivity == null)
             return;
-        ActionBar actionBar = mActivity.getSupportActionBar();
+        ActionBar actionBar = mActivity.getActionBar();
         if (isVisible) {
             Animation fadeAnimation = new AlphaAnimation(1, 0);
             fadeAnimation.setDuration(CONTENT_ANIMATION_DURATION);
@@ -279,12 +270,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
 
             mPostContentLinearLayout.startAnimation(fadeAnimation);
-            actionBar.hide();
+            if (actionBar != null) {
+                actionBar.hide();
+            }
         } else {
             mTitleEditText.setVisibility(View.VISIBLE);
             mFormatBar.setVisibility(View.GONE);
@@ -293,7 +285,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             fadeAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
@@ -303,12 +294,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
             mPostContentLinearLayout.startAnimation(fadeAnimation);
-            mActivity.supportInvalidateOptionsMenu();
-            actionBar.show();
+            mActivity.invalidateOptionsMenu();
+            if (actionBar != null) {
+                actionBar.show();
+            }
         }
     }
 
@@ -392,7 +384,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                             return;
                         String linkURL = extras.getString("linkURL");
                         if (linkURL != null && !linkURL.equals("http://") && !linkURL.equals("")) {
-
                             if (mSelectionStart > mSelectionEnd) {
                                 int temp = mSelectionEnd;
                                 mSelectionEnd = mSelectionStart;
@@ -481,7 +472,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         String text = intent.getStringExtra(Intent.EXTRA_TEXT);
         String title = intent.getStringExtra(Intent.EXTRA_SUBJECT);
         if (text != null) {
-
             if (title != null) {
                 mTitleEditText.setText(title);
             }
@@ -524,7 +514,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     public void savePostContent(boolean isAutoSave) {
-
         Post post = mActivity.getPost();
 
         if (post == null || mContentEditText.getText() == null)
@@ -566,7 +555,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             //content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
             WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
             if (imageSpans.length != 0) {
-
                 for (WPImageSpan wpIS : imageSpans) {
                     //images += wpIS.getImageSource().toString() + ",";
                     MediaFile mediaFile = wpIS.getMediaFile();
@@ -641,7 +629,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
      */
 
     private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
-
         protected void onPreExecute() {
             Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
         }
@@ -685,7 +672,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     private void launchCamera() {
         MediaUtils.launchCamera(this, new MediaUtils.LaunchCameraCallback() {
-
             @Override
             public void onMediaCapturePathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
@@ -707,14 +693,13 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-            else
-                new DownloadMediaTask().execute(mediaUri);
+            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             // It is a regular local image file
-            if (!addMedia(mediaUri, null))
-                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
+            if (!addMedia(mediaUri, null)) {
+                Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
+                     .show();
+            }
         }
     }
 
@@ -809,7 +794,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private void updateMediaFileOnServer(WPImageSpan wpIS) {
-
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null || wpIS == null)
             return;
@@ -824,7 +808,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         ApiHelper.EditMediaItemTask task = new ApiHelper.EditMediaItemTask(mf.getMediaId(), mf.getTitle(),
                 mf.getDescription(), mf.getCaption(),
                 new ApiHelper.GenericCallback() {
-
                     @Override
                     public void onSuccess() {
                         if (WordPress.getCurrentBlog() == null) {
@@ -878,7 +861,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         WordPress.imageLoader.get(imageURL, new ImageLoader.ImageListener() {
             @Override
             public void onErrorResponse(VolleyError arg0) {
-
             }
 
             @Override
@@ -1025,7 +1007,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
     }
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
-
         if (ssb != null && !MediaUtils.isInMediaStore(imageUri))
             imageUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
 
@@ -1105,8 +1086,10 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
             s.insert(selectionEnd + 1, "\n\n");
         }
         // Show the soft keyboard after adding media
-        if (mActivity != null && !mActivity.getSupportActionBar().isShowing())
-            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        if (mActivity != null && mActivity.getActionBar() != null && !mActivity.getActionBar().isShowing()) {
+            ((InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                    InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
         return true;
     }
 
@@ -1276,7 +1259,7 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         mLastYPos = pos;
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (mActivity != null && mActivity.getSupportActionBar().isShowing()) {
+            if (mActivity != null && mActivity.getActionBar() != null && mActivity.getActionBar().isShowing()) {
                 setContentEditingModeVisible(true);
                 return false;
             }
@@ -1360,7 +1343,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
                         if (mediaFile.getWidth() != 0)
                             seekBar.setProgress(mediaFile.getWidth() / 10);
                         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
                             @Override
                             public void onStopTrackingTouch(SeekBar seekBar) {
                             }
@@ -1467,7 +1449,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
 
     @Override
     public void afterTextChanged(Editable s) {
-
         int position = Selection.getSelectionStart(mContentEditText.getText());
         if ((mIsBackspace && position != 1) || mLastPosition == position || !mActivity.getPost().isLocalDraft())
             return;
@@ -1477,7 +1458,6 @@ public class EditPostContentFragment extends SherlockFragment implements TextWat
         }
         mLastPosition = position;
         if (position > 0) {
-
             if (mStyleStart > position) {
                 mStyleStart = position - 1;
             }

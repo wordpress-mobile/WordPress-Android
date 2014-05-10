@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
@@ -47,7 +45,7 @@ import java.net.URISyntaxException;
  * An activity to let the user specify their WordPress.com credentials.
  * Should be used to get WordPress.com credentials for JetPack integration in self-hosted sites.
  */
-public class WPComLoginActivity extends SherlockFragmentActivity implements TextWatcher {
+public class WPComLoginActivity extends Activity implements TextWatcher {
     public static final int REQUEST_CODE = 5000;
     public static final String JETPACK_AUTH_REQUEST = "jetpackAuthRequest";
     private static final String NEED_HELP_URL = "http://android.wordpress.org/faq";
@@ -65,11 +63,7 @@ public class WPComLoginActivity extends SherlockFragmentActivity implements Text
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wp_dot_com_login_activity);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            setTitle(getString(R.string.wpcom_signin_dialog_title));
-        } else {
-            getSupportActionBar().hide();
-        }
+        setTitle(getString(R.string.wpcom_signin_dialog_title));
 
         if (getIntent().hasExtra(JETPACK_AUTH_REQUEST)) {
             mIsJetpackAuthRequest = true;

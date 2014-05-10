@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,10 +22,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
@@ -40,7 +39,7 @@ import java.util.List;
 /**
  * A fragment for editing media on the Media tab
  */
-public class MediaEditFragment extends SherlockFragment {
+public class MediaEditFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
     // also appears in the layouts, from the strings.xml
     public static final String TAG = "MediaEditFragment";
@@ -233,9 +232,9 @@ public class MediaEditFragment extends SherlockFragment {
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                         if (getActivity() != null) {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
+                            getActivity().invalidateOptionsMenu();
                         }
                         setMediaUpdating(false);
-                        getSherlockActivity().invalidateOptionsMenu();
                         if (hasCallback()) {
                             mCallback.onSavedEdit(mediaId, false);
                         }

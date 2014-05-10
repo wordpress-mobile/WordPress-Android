@@ -12,10 +12,9 @@ import org.wordpress.android.models.StatsTagsandCategories;
 
 /**
  * A database table to represent the stats for tags and categories.
- * The type is either "tag" or "category"  
+ * The type is either "tag" or "category"
  */
 public class StatsTagsAndCategoriesTable extends SQLTable {
-
     private static final String NAME = "tags_and_categories";
 
     public static final class Columns {
@@ -34,7 +33,7 @@ public class StatsTagsAndCategoriesTable extends SQLTable {
     }
 
     private StatsTagsAndCategoriesTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -59,9 +58,9 @@ public class StatsTagsAndCategoriesTable extends SQLTable {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public static ContentValues getContentValues(StatsTagsandCategories item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());

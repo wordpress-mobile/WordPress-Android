@@ -11,7 +11,6 @@ import org.wordpress.android.R;
 import java.util.Hashtable;
 
 public class TypefaceCache {
-
     protected static final int VARIATION_NORMAL = 0;
     protected static final int VARIATION_LIGHT = 1;
 

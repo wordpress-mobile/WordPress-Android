@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderCommentActions {
-
     /**
      * get the latest comments for this post
      **/

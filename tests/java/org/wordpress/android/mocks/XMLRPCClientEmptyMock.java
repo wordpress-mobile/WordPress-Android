@@ -9,15 +9,12 @@ import java.net.URI;
 
 public class XMLRPCClientEmptyMock implements XMLRPCClientInterface {
     public XMLRPCClientEmptyMock(URI uri, String httpUser, String httpPassword) {
-
     }
 
     public void addQuickPostHeader(String type) {
-
     }
 
     public void setAuthorizationHeader(String authToken) {
-
     }
 
     public Object call(String method, Object[] params) throws XMLRPCException {

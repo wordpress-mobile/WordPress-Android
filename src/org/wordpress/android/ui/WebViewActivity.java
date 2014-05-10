@@ -1,19 +1,14 @@
 
 package org.wordpress.android.ui;
 
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
-
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-
 
 /**
  * Basic activity for displaying a WebView.
@@ -24,9 +19,8 @@ public class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         requestWindowFeature(Window.FEATURE_PROGRESS);
-        
+
         super.onCreate(savedInstanceState);
 
         // clear title text so there's no title until actual web page title can be shown
@@ -36,11 +30,12 @@ public class WebViewActivity extends WPActionBarActivity {
 
         setContentView(R.layout.webview);
 
-        ActionBar ab = getSupportActionBar();
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        ab.setDisplayShowTitleEnabled(true);
-        ab.setDisplayHomeAsUpEnabled(true);
-
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         // note: do NOT call mWebView.getSettings().setUserAgentString(WordPress.getUserAgent())
         // here since it causes problems with the browser-sniffing that some sites rely on to
         // format the page for mobile display
@@ -68,21 +63,21 @@ public class WebViewActivity extends WPActionBarActivity {
         resumeWebView();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void pauseWebView() {
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        if (mWebView != null) {
             mWebView.onPause();
+        }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void resumeWebView() {
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        if (mWebView != null) {
             mWebView.onResume();
+        }
     }
 
     /**
      * Load the specified URL in the webview.
-     * 
+     *
      * @param url URL to load in the webview.
      */
     protected void loadUrl(String url) {
@@ -91,13 +86,12 @@ public class WebViewActivity extends WPActionBarActivity {
 
     @Override
     public void onBackPressed() {
-
         if (mWebView != null && mWebView.canGoBack())
             mWebView.goBack();
         else
             super.onBackPressed();
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

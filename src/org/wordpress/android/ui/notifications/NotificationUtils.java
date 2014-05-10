@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.zip.InflaterInputStream;
 
 public class NotificationUtils {
-
     static interface NoteUpdatedListener {
         void onNoteUpdated(int noteId);
     }

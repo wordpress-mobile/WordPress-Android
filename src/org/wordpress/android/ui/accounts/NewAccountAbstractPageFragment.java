@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
@@ -30,7 +30,7 @@ import org.wordpress.android.util.AppLog.T;
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
  */
-public abstract class NewAccountAbstractPageFragment extends SherlockFragment {
+public abstract class NewAccountAbstractPageFragment extends Fragment {
     protected static RequestQueue requestQueue;
     protected static RestClientUtils mRestClientUtils;
     protected ConnectivityManager mSystemService;

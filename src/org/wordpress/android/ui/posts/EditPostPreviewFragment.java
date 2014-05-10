@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,15 +8,12 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
 import org.wordpress.android.R;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
-public class EditPostPreviewFragment extends SherlockFragment {
-
+public class EditPostPreviewFragment extends Fragment {
     EditPostActivity mActivity;
     WebView mWebView;
     TextView mTextView;
@@ -34,7 +32,6 @@ public class EditPostPreviewFragment extends SherlockFragment {
     }
 
     public void loadPost(Post post) {
-
         // Don't load if the Post object is null, see #395
         if (post == null)
             return;

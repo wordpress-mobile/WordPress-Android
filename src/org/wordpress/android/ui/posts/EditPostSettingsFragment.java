@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -10,7 +11,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -31,7 +31,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -41,11 +40,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
@@ -60,8 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditPostSettingsFragment extends SherlockFragment implements View.OnClickListener {
-
+public class EditPostSettingsFragment extends Fragment implements View.OnClickListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -90,7 +88,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -337,17 +334,13 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
     }
 
     private void showPostDateSelectionDialog() {
-
         final DatePicker datePicker = new DatePicker(getActivity());
         datePicker.init(mYear, mMonth, mDay, null);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            datePicker.setCalendarViewShown(false);
-        }
+        datePicker.setCalendarViewShown(false);
 
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_date)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mYear = datePicker.getYear();
@@ -358,7 +351,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 })
                 .setNeutralButton(getResources().getText(R.string.immediately),
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialogInterface,
                                                 int i) {
@@ -368,7 +360,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                         })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {
@@ -386,7 +377,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.select_time)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mHour = timePicker.getCurrentHour();
@@ -413,7 +403,6 @@ public class EditPostSettingsFragment extends SherlockFragment implements View.O
                 })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int which) {

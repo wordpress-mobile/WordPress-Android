@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -27,8 +27,6 @@ import android.widget.CursorTreeAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -50,7 +48,7 @@ import org.wordpress.android.WordPress;
  * The linearlayout also gets its group and children views from the CursorTreeAdapter.
  * </p>
  */
-public class StatsCursorTreeFragment extends SherlockFragment
+public class StatsCursorTreeFragment extends Fragment
         implements LoaderManager.LoaderCallbacks<Cursor>, StatsCursorLoaderCallback {
     private static final int LOADER_URI_GROUP_INDEX = -1;
     private static final String ARGS_GROUP_URI = "ARGS_GROUP_URI";
@@ -77,7 +75,6 @@ public class StatsCursorTreeFragment extends SherlockFragment
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId,
                                                       int totalsLabelResId, int emptyLabelTitleResId,
                                                       int emptyLabelDescResId) {
-
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
 
         Bundle args = new Bundle();
@@ -234,7 +231,6 @@ public class StatsCursorTreeFragment extends SherlockFragment
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
         mGroupIdToExpandedMap.clear();
         mNumChildLoaders = 0;
 

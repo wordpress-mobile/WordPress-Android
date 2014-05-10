@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderPostActions {
-
     public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
 
     private ReaderPostActions() {

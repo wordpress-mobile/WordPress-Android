@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.comments;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,12 +11,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -26,7 +26,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -36,7 +35,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EditCommentActivity extends SherlockActivity {
+public class EditCommentActivity extends Activity {
     static final String ARG_LOCAL_BLOG_ID = "blog_id";
     static final String ARG_COMMENT_ID = "comment_id";
 
@@ -53,7 +52,7 @@ public class EditCommentActivity extends SherlockActivity {
         setContentView(R.layout.comment_edit_activity);
         setTitle(getString(R.string.edit_comment));
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -111,9 +110,9 @@ public class EditCommentActivity extends SherlockActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_comment, menu);
         return true;
     }

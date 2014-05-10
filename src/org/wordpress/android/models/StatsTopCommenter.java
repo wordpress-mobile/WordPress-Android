@@ -7,7 +7,6 @@ import org.json.JSONObject;
  * A model to represent a top commenter stat
  */
 public class StatsTopCommenter {
-
     private String mBlogId;
     private int mUserId;
     private String mName;
@@ -70,5 +69,4 @@ public class StatsTopCommenter {
     public void setImageUrl(String imageUrl) {
         this.mImageUrl = imageUrl;
     }
-
 }

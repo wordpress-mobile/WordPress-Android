@@ -1,15 +1,14 @@
 package org.wordpress.android.ui;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
@@ -18,7 +17,7 @@ import org.wordpress.android.util.ToastUtils;
 /**
  * views the activity log (see utils/AppLog.java)
  */
-public class AppLogViewerActivity extends SherlockFragmentActivity {
+public class AppLogViewerActivity extends Activity {
     private TextView mTxtLogViewer;
     private static final int ID_SHARE = 1;
 
@@ -27,11 +26,12 @@ public class AppLogViewerActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logviewer_activity);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         mTxtLogViewer = (TextView) findViewById(R.id.text_log);
         mTxtLogViewer.setText(Html.fromHtml(AppLog.toHtml(this)));
 

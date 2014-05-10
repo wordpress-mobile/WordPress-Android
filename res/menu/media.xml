@@ -8,7 +8,7 @@
         android:title="@string/new_media"/>
     <item
         android:id="@+id/menu_search"
-        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
+        android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/tab_icon_search"
         android:showAsAction="ifRoom"
         android:title="@string/menu_search"/>

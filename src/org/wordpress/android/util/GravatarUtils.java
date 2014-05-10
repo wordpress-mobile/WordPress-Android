@@ -3,7 +3,6 @@ package org.wordpress.android.util;
 import android.text.TextUtils;
 
 public class GravatarUtils {
-
     /*
      * see https://en.gravatar.com/site/implement/images/
      */
@@ -20,5 +19,4 @@ public class GravatarUtils {
 
         return url;
     }
-
 }

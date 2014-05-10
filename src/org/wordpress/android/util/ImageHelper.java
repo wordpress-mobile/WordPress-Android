@@ -32,7 +32,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 public class ImageHelper {
-
     public static int[] getImageSize(Uri uri, Context context){
         String path = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -161,7 +160,6 @@ public class ImageHelper {
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
-
             // Calculate ratios of height and width to requested height and width
             final int heightRatio = Math.round((float) height / (float) reqHeight);
             final int widthRatio = Math.round((float) width / (float) reqWidth);
@@ -380,7 +378,6 @@ public class ImageHelper {
     }
 
     public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
-
         if (largeBitmap.getWidth() < resizeWidth)
             return largeBitmap; //Do not resize.
 
@@ -400,7 +397,6 @@ public class ImageHelper {
             int maxWidth,
             String fileExtension,
             int rotation) {
-
         if (context == null || imageUri == null)
             return null;
 

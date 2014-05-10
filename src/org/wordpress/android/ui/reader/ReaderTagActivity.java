@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,7 +26,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-public class ReaderTagActivity extends FragmentActivity implements ReaderTagAdapter.TagActionListener {
+public class ReaderTagActivity extends Activity implements ReaderTagAdapter.TagActionListener {
     private ViewGroup mLayoutAddTag;
     private EditText mEditAddTag;
     private ListView mListView;

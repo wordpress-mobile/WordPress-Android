@@ -60,7 +60,6 @@ public abstract class VersionedGestureDetector {
 	}
 
 	private static class CupcakeDetector extends VersionedGestureDetector {
-
 		float mLastTouchX;
 		float mLastTouchY;
 		final float mTouchSlop;
@@ -225,13 +224,11 @@ public abstract class VersionedGestureDetector {
 
 	@TargetApi(8)
 	private static class FroyoDetector extends EclairDetector {
-
 		private final ScaleGestureDetector mDetector;
 
 		// Needs to be an inner class so that we don't hit
 		// VerifyError's on API 4.
 		private final OnScaleGestureListener mScaleListener = new OnScaleGestureListener() {
-
 			@Override
 			public boolean onScale(ScaleGestureDetector detector) {
 				mListener.onScale(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY());
