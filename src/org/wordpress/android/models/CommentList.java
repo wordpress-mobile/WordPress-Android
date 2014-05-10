@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import java.util.ArrayList;
 
 public class CommentList extends ArrayList<Comment> {
-
     public int indexOfCommentId(long commentId) {
         for (int i=0; i < this.size(); i++) {
             if (commentId==this.get(i).commentID)

@@ -13,7 +13,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
 
 public class ReaderVideoUtils {
-	
 	private ReaderVideoUtils() {
 		throw new AssertionError();
 	}
@@ -54,13 +53,13 @@ public class ReaderVideoUtils {
 	private static String getYouTubeVideoId(final String link) {
 		if (link==null)
 			return "";
-		
-		Uri uri = Uri.parse(link);		
+
+		Uri uri = Uri.parse(link);
 		try {
 			String host = uri.getHost();
 			if (host==null)
 				return "";
-			
+
 			// youtube.com links
 			if (host.equals("youtube.com") || host.equals("www.youtube.com")) {
 				// if link contains "watch" in the path, then the id is in the "v=" query param
@@ -72,8 +71,8 @@ public class ReaderVideoUtils {
                     return uri.getLastPathSegment();
 				return "";
 			}
-			
-			// youtu.be urls have the videoId as the path - ex:  http://youtu.be/pEnXclbO9jg 
+
+			// youtu.be urls have the videoId as the path - ex:  http://youtu.be/pEnXclbO9jg
 			if (host.equals("youtu.be")) {
 				String path = uri.getPath();
 				if (path==null)
@@ -81,17 +80,17 @@ public class ReaderVideoUtils {
 				// remove the leading slash
 				return path.replace("/", "");
 			}
-			
+
 			// YouTube mobile urls include video id in fragment, ex: http://m.youtube.com/?dc=organic&source=mog#/watch?v=t77Vlme_pf8
 			if (host.equals("m.youtube.com")) {
-				String fragment = uri.getFragment();			
+				String fragment = uri.getFragment();
 				if (fragment==null)
 					return "";
 				int index = fragment.lastIndexOf("v=");
 				if (index!=-1)
 					return fragment.substring(index+2, fragment.length());
 			}
-			
+
 			return "";
 		} catch (UnsupportedOperationException e) {
 			AppLog.e(T.READER, e);

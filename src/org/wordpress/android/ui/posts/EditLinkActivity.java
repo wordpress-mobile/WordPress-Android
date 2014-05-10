@@ -10,7 +10,6 @@ import android.widget.EditText;
 import org.wordpress.android.R;
 
 public class EditLinkActivity extends Activity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,6 @@ public class EditLinkActivity extends Activity {
 
         okButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 EditText linkURLET = (EditText) findViewById(R.id.linkURL);
                 String linkURL = linkURLET.getText().toString();
 
@@ -75,5 +73,4 @@ public class EditLinkActivity extends Activity {
         // select end of url
         urlEditText.performClick();
     }
-
 }

@@ -106,7 +106,7 @@ public class FlowLayout extends ViewGroup {
 	public LayoutParams generateLayoutParams(AttributeSet attrs) {
 		return new LayoutParams(getContext(), attrs);
 	}
-	
+
 	@Override
 	protected LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
 		return new LayoutParams(p.width, p.height);
@@ -115,7 +115,7 @@ public class FlowLayout extends ViewGroup {
 	public static class LayoutParams extends ViewGroup.LayoutParams {
 		int x;
 		int y;
-		
+
 		public int horizontalSpacing;
 
 		public LayoutParams(Context context, AttributeSet attrs) {

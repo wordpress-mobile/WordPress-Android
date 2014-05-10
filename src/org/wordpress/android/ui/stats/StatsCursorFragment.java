@@ -1,26 +1,24 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -38,7 +36,7 @@ import org.wordpress.android.WordPress;
  * The linearlayout also gets its views from the CursorAdapter.
  * </p>
  */
-public class StatsCursorFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StatsCursorFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARGS_URI = "ARGS_URI";
     private static final String ARGS_ENTRY_LABEL = "ARGS_ENTRY_LABEL";
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";

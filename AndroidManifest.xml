@@ -55,7 +55,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Sherlock"
+            android:theme="@android:style/Theme.Holo"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.accounts.NewBlogActivity"
@@ -69,12 +69,12 @@
             android:name=".ui.prefs.BlogPreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.Sherlock.Light" />
+            android:theme="@android:style/Theme.Holo.Light" />
         <activity android:name=".ui.prefs.LicensesActivity" />
         <activity
             android:name=".ui.prefs.PreferencesActivity"
             android:windowSoftInputMode="stateHidden"
-            android:theme="@style/Theme.Sherlock.Light" />
+            android:theme="@android:style/Theme.Holo.Light" />
         <activity android:name=".ui.accounts.ManageBlogsActivity" />
 
 	<activity android:name=".networking.SSLCertsViewActivity" />
@@ -233,18 +233,18 @@
         <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
-            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Sherlock.Light"
+            android:theme="@android:style/Theme.Holo.Light"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
-            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
 

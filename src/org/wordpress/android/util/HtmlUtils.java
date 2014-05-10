@@ -13,7 +13,6 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
 public class HtmlUtils {
-
     /*
      * removes html from the passed string - relies on Html.fromHtml which handles invalid HTML,
      * but it's very slow, so avoid using this where performance is important

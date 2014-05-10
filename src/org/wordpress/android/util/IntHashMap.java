@@ -15,7 +15,6 @@ package org.wordpress.android.util;
  * @see java.util.HashMap
  */
 class IntHashMap {
-
     /**
      * The hash table data.
      */
@@ -337,5 +336,4 @@ class IntHashMap {
         }
         count = 0;
     }
-
 }

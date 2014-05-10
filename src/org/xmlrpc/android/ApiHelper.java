@@ -1062,7 +1062,6 @@ public class ApiHelper {
 
     private static String getResponse(final String url, int maxRedirection)
             throws SSLHandshakeException {
-
         RequestFuture<String> requestFuture = RequestFuture.newFuture();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, requestFuture, requestFuture);
         WordPress.requestQueue.add(stringRequest);

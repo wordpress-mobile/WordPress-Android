@@ -8,7 +8,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUser {
-
     public long userId;
     public long blogId;
     private String userName;
@@ -117,5 +116,4 @@ public class ReaderUser {
             return false;
         return true;
     }
-
 }

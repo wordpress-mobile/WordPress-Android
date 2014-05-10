@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqlUtils {
-
     private SqlUtils() {
         throw new AssertionError();
     }

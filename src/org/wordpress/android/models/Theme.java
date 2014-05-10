@@ -21,7 +21,6 @@ import java.util.Locale;
  * A model to represent a theme
  */
 public class Theme {
-
     private String themeId = null;
     private String screenshotURL = "";
     private String name = "";
@@ -37,7 +36,6 @@ public class Theme {
     private String features;
 
     public Theme() {
-
     }
 
     public Theme(String themeId, String screenshotURL, String name, String description, int trendingRank, int popularityRank, String launchDate, String blogId, String previewURL, boolean isPremium, String features) {
@@ -220,5 +218,4 @@ public class Theme {
     public void setPremium(boolean isPremium) {
         this.isPremium = isPremium;
     }
-
 }

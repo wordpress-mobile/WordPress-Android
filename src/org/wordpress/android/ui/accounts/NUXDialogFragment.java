@@ -1,21 +1,19 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import org.wordpress.android.R;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NUXDialogFragment extends SherlockDialogFragment {
+public class NUXDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
     private static String ARG_FOOTER = "footer";

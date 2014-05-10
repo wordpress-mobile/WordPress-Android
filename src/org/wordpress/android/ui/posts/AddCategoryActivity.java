@@ -37,7 +37,6 @@ public class AddCategoryActivity extends Activity {
 
         okButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                 EditText categoryNameET = (EditText)findViewById(R.id.category_name);
                 String category_name = categoryNameET.getText().toString();
                 EditText categorySlugET = (EditText)findViewById(R.id.category_slug);
@@ -88,7 +87,6 @@ public class AddCategoryActivity extends Activity {
 
         cancelButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-
                  Bundle bundle = new Bundle();
 
                  bundle.putString("continue", "FALSE");

@@ -1,7 +1,11 @@
 package org.wordpress.android.ui.media;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -9,11 +13,13 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,16 +27,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -60,11 +59,9 @@ import java.util.List;
  */
 
 public class MediaBrowserActivity extends WPActionBarActivity implements MediaGridListener,
-        MediaItemFragmentCallback,
-        OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
+        MediaItemFragmentCallback, OnQueryTextListener, OnActionExpandListener, MediaEditFragmentCallback,
         MediaAddFragmentCallback,
-        com.actionbarsherlock.view.ActionMode.Callback {
-
+        ActionMode.Callback {
     private static final String SAVED_QUERY = "SAVED_QUERY";
 
     private MediaGridFragment mMediaGridFragment;
@@ -96,10 +93,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         createMenuDrawer(R.layout.media_browser_activity);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         FragmentTransaction ft = fm.beginTransaction();
         setupBaseLayout();
@@ -163,7 +162,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void setupBaseLayout() {
         // hide access to the drawer when there are fragments in the back stack
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             mMenuDrawer.setDrawerIndicatorEnabled(true);
         } else {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
@@ -172,7 +171,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     /** Setup the popup that allows you to add new media from camera, video camera or local files **/
     private void setupAddMenuPopup() {
-
         String capturePhoto = getResources().getString(R.string.media_add_popup_capture_photo);
         String captureVideo = getResources().getString(R.string.media_add_popup_capture_video);
         String pickPhotoFromGallery = getResources().getString(
@@ -189,7 +187,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         ListView listView = (ListView) layoutView.findViewById(R.id.actionbar_add_media_listview);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
-
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.notifyDataSetChanged();
 
@@ -230,7 +227,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     private void showVideoPressUpgradeDialog() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         String title = getString(R.string.media_no_video_title);
         String message = getString(R.string.media_no_video_message);
         String infoTitle = getString(R.string.learn_more);
@@ -253,7 +250,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return;
 
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures(new Callback() {
-
             @Override
             public void onResult(FeatureSet featureSet) {
                 mFeatureSet = featureSet;
@@ -285,15 +281,15 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
             // hide if in phone
             if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
-                getSupportFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
             }
         }
 
-        getSupportFragmentManager().executePendingTransactions();
+        getFragmentManager().executePendingTransactions();
 
         // clear item fragment (only visible on phone)
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         }
 
         // reset the media fragment
@@ -313,7 +309,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemSelected(String mediaId) {
-
         if (mSearchView != null)
             mSearchView.clearFocus();
 
@@ -321,7 +316,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mSearchMenuItem != null && !Utils.isTablet())
             mSearchMenuItem.collapseActionView();
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
             // phone: hide the grid and show the item details
@@ -348,7 +343,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         mMenu = menu;
-        getSupportMenuInflater().inflate(R.menu.media, menu);
+        getMenuInflater().inflate(R.menu.media, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         mSearchView.setOnQueryTextListener(this);
         return true;
@@ -359,7 +354,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
                 setupBaseLayout();
@@ -395,7 +390,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return true;
         } else if (itemId == R.id.menu_edit_media) {
             String mediaId = mMediaItemFragment.getMediaId();
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
 
             if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
                 // phone layout: hide item details, show and update edit fragment
@@ -435,7 +430,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setMessage(R.string.confirm_delete_media)
                 .setCancelable(true)
                 .setPositiveButton(R.string.delete, new OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> ids = new ArrayList<String>(1);
@@ -535,7 +529,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             // phone layout: pop the item fragment if it's visible
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         }
 
         //Make sure there are no media in "uploading"
@@ -572,7 +566,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     public void onSavedEdit(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             fm.popBackStack();
 
             // refresh media item details (phone-only)
@@ -593,7 +587,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         mMultiSelectCount = count;
 
         if (count > 0 && mActionMode == null) {
-            mActionMode = getSherlock().startActionMode(this);
+            mActionMode = startActionMode(this);
         } else if (count == 0 && mActionMode != null) {
             mActionMode.finish();
         }
@@ -611,7 +605,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (fm.getBackStackEntryCount() > 0) {
@@ -637,7 +631,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(null);
                 } else {
-                    getSupportFragmentManager().popBackStack();
+                    getFragmentManager().popBackStack();
                 }
             }
         } else {
@@ -723,7 +717,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 .setMessage(R.string.confirm_delete_multi_media)
                 .setCancelable(true)
                 .setPositiveButton(R.string.delete, new OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> ids = mMediaGridFragment.getCheckedItems();

@@ -10,7 +10,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent the summary of a blog's stats.
  */
 public class StatsSummary implements Serializable{
-
     private static final long serialVersionUID = 1951520106663020694L;
 
     @SerializedName("visitors_today")
@@ -21,49 +20,49 @@ public class StatsSummary implements Serializable{
 
     @SerializedName("views_today")
     private int viewsToday;
-    
+
     @SerializedName("views_yesterday")
     private int viewsYesterday;
-    
+
     @SerializedName("views_best_day")
     private String viewsBestDay;
-    
+
     @SerializedName("views_best_day_total")
     private int viewsBestDayTotal;
-    
+
     @SerializedName("views")
     private int viewsAllTime;
-    
+
     @SerializedName("comments")
     private int commentsAllTime;
-    
+
     @SerializedName("posts")
     private int posts;
-    
+
     @SerializedName("followers_blog")
     private int followersBlog;
-    
+
     @SerializedName("followers_comments")
     private int followersComments;
-    
+
     @SerializedName("comments_per_month")
     private int commentsPerMonth;
-    
+
     @SerializedName("comments_most_active_recent_day")
     private String commentsMostActiveRecentDay;
-    
+
     @SerializedName("comments_most_active_time")
     private String commentsMostActiveTime;
-    
+
     @SerializedName("comments_spam")
     private int commentsSpam;
-    
+
     @SerializedName("categories")
     private int categories;
-    
+
     @SerializedName("tags")
     private int tags;
-    
+
     @SerializedName("shares")
     private int shares;
 
@@ -210,5 +209,4 @@ public class StatsSummary implements Serializable{
     public void setShares(int shares) {
         this.shares = shares;
     }
-
 }

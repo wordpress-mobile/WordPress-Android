@@ -10,7 +10,6 @@ import java.util.Date;
  * Barebones post/page as listed in PostsListFragment
  */
 public class PostsListPost {
-
     private int postId;
     private int blogId;
     private String title;
@@ -92,5 +91,4 @@ public class PostsListPost {
     public void setHasLocalChanges(boolean localChanges) {
         this.hasLocalChanges = localChanges;
     }
-
 }

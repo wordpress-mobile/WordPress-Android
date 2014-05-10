@@ -1,7 +1,6 @@
 package org.xmlrpc.android;
 
 public class XMLRPCException extends Exception {
-
     /**
      *
      */

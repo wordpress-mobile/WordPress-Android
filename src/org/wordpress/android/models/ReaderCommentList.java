@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
-
     public static ReaderCommentList fromJson(JSONObject json, long blogId) {
         if (json==null)
             throw new IllegalArgumentException("null json comment list");

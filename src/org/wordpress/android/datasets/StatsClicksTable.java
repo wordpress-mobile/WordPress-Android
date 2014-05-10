@@ -12,11 +12,10 @@ import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 /**
- * A database table to represent the stats for clicks children. 
+ * A database table to represent the stats for clicks children.
  * See {@link StatsClickGroupsTable} for the parent table structure.
  */
 public class StatsClicksTable extends SQLTable {
-
     private static final String NAME = "clicks";
 
     public static final class Columns {
@@ -36,7 +35,7 @@ public class StatsClicksTable extends SQLTable {
     }
 
     private StatsClicksTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -62,9 +61,9 @@ public class StatsClicksTable extends SQLTable {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public static ContentValues getContentValues(StatsClick item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());
@@ -77,13 +76,12 @@ public class StatsClicksTable extends SQLTable {
 
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        
         String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC";
-        
+
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
             return super.query(database, uri, projection, selection, selectionArgs, sort);
-        
+
         // get the latest for "Today", and the next latest for "Yesterday"
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
             return database.rawQuery("SELECT * FROM " + NAME +", " +
@@ -95,7 +93,7 @@ public class StatsClicksTable extends SQLTable {
                     "SELECT * FROM " + NAME + ", " +
                             "(SELECT MAX(date) AS date FROM " + NAME + ", " +
                                 "( SELECT MAX(date) AS max FROM " + NAME + ")" +
-                            " WHERE " + NAME + ".date < max) AS temp " + 
+                            " WHERE " + NAME + ".date < max) AS temp " +
                     "WHERE " + NAME + ".date = temp.date AND " + selection + " ORDER BY " + sort, selectionArgs);
         }
 

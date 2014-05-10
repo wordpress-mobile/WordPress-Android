@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.media;
 
+import android.app.Fragment;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.DragSortListView.DropListener;
 import com.mobeta.android.dslv.DragSortListView.RemoveListener;
@@ -28,22 +28,21 @@ import java.util.Collections;
  * to change their position in a media gallery
  *
  */
-public class MediaGalleryEditFragment extends SherlockFragment implements DropListener, RemoveListener {
-
+public class MediaGalleryEditFragment extends Fragment implements DropListener, RemoveListener {
     private static final String SAVED_MEDIA_IDS = "SAVED_MEDIA_IDS";
     private MediaGalleryAdapter mGridAdapter;
     private ArrayList<String> mIds;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        
+
         mIds = new ArrayList<String>();
         if (savedInstanceState != null)
             mIds = savedInstanceState.getStringArrayList(SAVED_MEDIA_IDS);
-            
+
         mGridAdapter = new MediaGalleryAdapter(getActivity(), R.layout.media_gallery_item, null, true, MediaImageLoader.getInstance());
-        
+
         View view = inflater.inflate(R.layout.media_gallery_edit_fragment, container, false);
 
         DragSortListView gridView = (DragSortListView) view.findViewById(R.id.edit_media_gallery_gridview);
@@ -52,30 +51,30 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         gridView.setDropListener(this);
         gridView.setRemoveListener(this);
         refreshGridView();
-        
+
         return view;
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putStringArrayList(SAVED_MEDIA_IDS, mIds);
     }
 
-    
+
     private void refreshGridView() {
         if (WordPress.getCurrentBlog() == null)
             return;
-        
+
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-        
+
         Cursor cursor = WordPress.wpDB.getMediaFiles(blogId, mIds);
-        
+
         if (cursor == null) {
             mGridAdapter.changeCursor(null);
             return;
         }
-        
+
         SparseIntArray positions = mapIdsToCursorPositions(cursor);
         mGridAdapter.swapCursor(new OrderedCursor(cursor, positions));
     }
@@ -100,7 +99,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         mIds = ids;
         refreshGridView();
     }
-    
+
     public ArrayList<String> getMediaIds() {
         return mIds;
     }
@@ -109,16 +108,15 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         Collections.reverse(mIds);
         refreshGridView();
     }
- 
-    
-    private class OrderedCursor extends CursorWrapper {
 
+
+    private class OrderedCursor extends CursorWrapper {
         final int mPos;
         private final int mCount;
-        
+
         // a map of custom position to cursor position
         private final SparseIntArray mPositions;
-        
+
         /** A wrapper to allow for a custom order of items in a cursor **/
         public OrderedCursor(Cursor cursor, SparseIntArray positions) {
             super(cursor);
@@ -127,7 +125,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
             mCount = cursor.getCount();
             mPositions = positions;
         }
-        
+
         @Override
         public boolean move(int offset) {
             return this.moveToPosition(this.mPos+offset);
@@ -152,18 +150,17 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
         public boolean moveToLast() {
             return this.moveToPosition(this.mCount-1);
         }
-        
+
         @Override
         public boolean moveToPosition(int position) {
             return super.moveToPosition(mPositions.get(position));
         }
 
-        
+
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Cursor cursor = mGridAdapter.getCursor();
         if (cursor == null)
@@ -173,7 +170,7 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
 
         menu.add(ContextMenu.NONE, mIds.indexOf(mediaId), ContextMenu.NONE, R.string.delete);
     }
-    
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int index = item.getItemId();
@@ -192,6 +189,5 @@ public class MediaGalleryEditFragment extends SherlockFragment implements DropLi
 
     @Override
     public void remove(int position) {
-        
     }
 }

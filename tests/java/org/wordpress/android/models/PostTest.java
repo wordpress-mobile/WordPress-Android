@@ -31,5 +31,4 @@ public class PostTest extends InstrumentationTestCase {
         assertEquals(loadedPost.getTitle(), post.getTitle());
     }
 
-
 }

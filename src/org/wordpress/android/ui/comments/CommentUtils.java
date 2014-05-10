@@ -9,7 +9,6 @@ import org.wordpress.android.util.Emoticons;
 import org.wordpress.android.util.WPImageGetter;
 
 public class CommentUtils {
-
     /*
      * displays comment text as html, including retrieving images
      */

@@ -22,7 +22,6 @@ import org.wordpress.android.util.VolleyUtils;
 import java.util.Iterator;
 
 public class ReaderTagActions {
-
     public enum TagAction {ADD, DELETE}
 
     private ReaderTagActions() {
@@ -267,7 +266,6 @@ public class ReaderTagActions {
             ReaderDatabase.getWritableDb().endTransaction();
         }
     }
-
 
 
 }

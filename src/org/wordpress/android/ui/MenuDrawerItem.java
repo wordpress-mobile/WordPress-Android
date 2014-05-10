@@ -34,7 +34,7 @@ public abstract class MenuDrawerItem {
      * implementation does nothing.
      */
     public void onConfigureView(View view){};
-    
+
     // Resource id for the title string
     protected int mTitle;
     // Resource id for the icon drawable
@@ -96,5 +96,4 @@ public abstract class MenuDrawerItem {
     public void configureView(View v){
         onConfigureView(v);
     }
-
 }

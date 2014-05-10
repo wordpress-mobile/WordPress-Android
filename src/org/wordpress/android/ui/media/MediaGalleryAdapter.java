@@ -18,7 +18,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 
 /**
- * Adapter for a drag-sort listview where the user can drag media items to sort their order 
+ * Adapter for a drag-sort listview where the user can drag media items to sort their order
  * for a media gallery
  */
 class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
@@ -72,13 +72,13 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         if (holder.filenameView != null) {
             holder.filenameView.setText("File name: " + fileName);
         }
-        
+
         // title of media
         String title = cursor.getString(cursor.getColumnIndex("title"));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
-        
+
         // upload date
         if (holder.uploadDateView != null) {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
@@ -91,12 +91,12 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         } else {
             loadNetworkImage(cursor, (NetworkImageView) holder.imageView);
         }
-        
+
         // get the file extension from the fileURL
         String filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("filePath")));
         if (filePath.isEmpty())
             filePath = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex("fileURL")));
-            
+
         // file type
         String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
         if  (Utils.isXLarge(context)) {
@@ -110,7 +110,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = cursor.getInt(cursor.getColumnIndex("width"));
                 int height = cursor.getInt(cursor.getColumnIndex("height"));
-                
+
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
                     holder.dimensionView.setText("Dimensions: " + dimensions);
@@ -122,7 +122,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
         }
 
     }
-    
+
     private void loadNetworkImage(Cursor cursor, NetworkImageView imageView) {
         String thumbnailURL = cursor.getString(cursor.getColumnIndex("thumbnailURL"));
         if (thumbnailURL == null) {
@@ -138,5 +138,4 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
             imageView.setImageUrl(null, null);
         }
     }
-
 }

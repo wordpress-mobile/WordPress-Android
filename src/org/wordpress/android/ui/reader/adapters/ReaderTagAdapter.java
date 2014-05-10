@@ -243,5 +243,4 @@ public class ReaderTagAdapter extends BaseAdapter {
         }
     }
 
-
 }

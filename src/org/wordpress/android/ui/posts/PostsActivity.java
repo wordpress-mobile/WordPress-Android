@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,15 +13,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -35,7 +34,7 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.WPAlertDialogFragment.OnDialogConfirmListener;
+import org.wordpress.android.util.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
@@ -50,8 +49,7 @@ import java.util.Iterator;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
-                   OnDetailPostActionListener, OnDialogConfirmListener {
-
+                   OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -112,10 +110,12 @@ public class PostsActivity extends WPActionBarActivity
 
         createMenuDrawer(R.layout.posts);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+        }
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
@@ -202,7 +202,7 @@ public class PostsActivity extends WPActionBarActivity
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            if (getFragmentManager().getBackStackEntryCount() == 0)
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
@@ -250,7 +250,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     protected void popPostDetail() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f == null) {
             try {
@@ -288,7 +288,7 @@ public class PostsActivity extends WPActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.posts, menu);
         if (mIsPage) {
             menu.findItem(R.id.menu_new_post).setTitle(R.string.new_page);
@@ -320,7 +320,7 @@ public class PostsActivity extends WPActionBarActivity
             newPost();
             return true;
         } else if (itemId == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
                 return true;
@@ -343,7 +343,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     protected void attemptToSelectPost() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
             mPostList.setShouldSelectFirstPost(true);
@@ -352,7 +352,7 @@ public class PostsActivity extends WPActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
 
@@ -574,7 +574,7 @@ public class PostsActivity extends WPActionBarActivity
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
         } else if (action == POST_CLEAR) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
                     .findFragmentById(R.id.postDetail);
             if (f != null) {
@@ -646,9 +646,6 @@ public class PostsActivity extends WPActionBarActivity
             }
         };
 
-        new ApiHelper.RefreshBlogContentTask(this,
-                                             WordPress.getCurrentBlog(),
-                                             callback)
-                                             .execute(false);
+        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).execute(false);
     }
 }

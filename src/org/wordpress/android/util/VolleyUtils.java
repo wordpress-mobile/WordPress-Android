@@ -17,7 +17,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.WPDelayedHurlStack;
 
 public class VolleyUtils {
-
     /*
      * returns REST API error string from the response in the passed VolleyError
      * for example, returns "already_subscribed" from this response:
@@ -99,19 +98,19 @@ public class VolleyUtils {
     }
 
     /*
-     * Return true if the blog is protected with HTTP Basic Auth 
+     * Return true if the blog is protected with HTTP Basic Auth
      */
     public static boolean isCustomHTTPClientStackNeeded(Blog currentBlog) {
         if (currentBlog.hasValidHTTPAuthCredentials())
             return true;
-        
+
         return false;
     }
-    
+
     public static HttpStack getHTTPClientStack(final Context ctx) {
         return getHTTPClientStack(ctx, null);
     }
-    
+
     public static HttpStack getHTTPClientStack(final Context ctx, final Blog currentBlog) {
         return new WPDelayedHurlStack(ctx, currentBlog);
     }

@@ -16,7 +16,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
 public class AboutActivity extends Activity implements OnClickListener {
-
     private static final String URL_TOS = "http://en.wordpress.com/tos";
     private static final String URL_AUTOMATTIC = "http://automattic.com";
     private static final String URL_PRIVACY_POLICY = "/privacy";
@@ -57,11 +56,10 @@ public class AboutActivity extends Activity implements OnClickListener {
         AppLockManager.getInstance().setExtendedTimeout();
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
-    
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;

@@ -19,13 +19,12 @@ import org.wordpress.android.models.StatsBarChartData;
  *  <li> weeks (unit="WEEK", date e.g. "2013W26")
  *  <li> months (unit="MONTH", date e.g. "2013-06-01")
  * </ul>
- * </p>  
+ * </p>
  */
 
 public class StatsBarChartDataTable extends SQLTable {
-
     private static final String NAME = "bar_chart_data";
-    
+
     public static final class Columns {
         public static final String BLOG_ID = "blogId";
         public static final String DATE = "date";
@@ -33,7 +32,7 @@ public class StatsBarChartDataTable extends SQLTable {
         public static final String VISITORS = "visitors";
         public static final String UNIT = "unit";
     }
-    
+
     private static final class Holder {
         public static final StatsBarChartDataTable INSTANCE = new StatsBarChartDataTable();
     }
@@ -43,7 +42,7 @@ public class StatsBarChartDataTable extends SQLTable {
     }
 
     private StatsBarChartDataTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -71,7 +70,7 @@ public class StatsBarChartDataTable extends SQLTable {
         // TODO Auto-generated method stub
 
     }
-    
+
     public static ContentValues getContentValues(StatsBarChartData item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());

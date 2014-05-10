@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
-
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
         Intent intent = new Intent(context, ReaderActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);

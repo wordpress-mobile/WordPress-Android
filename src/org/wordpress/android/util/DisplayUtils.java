@@ -1,10 +1,8 @@
 package org.wordpress.android.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -12,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class DisplayUtils {
-
     private DisplayUtils() {
         throw new AssertionError();
     }
@@ -27,31 +24,22 @@ public class DisplayUtils {
         return isLandscape(context) && isTablet(context);
     }
 
-    @SuppressLint("NewApi")
     public static Point getDisplayPixelSize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        if (SysUtils.isGteAndroid4()) {
-            Point size = new Point();
-            display.getSize(size);
-            return size;
-        } else {
-            return new Point(display.getWidth(), display.getHeight());
-        }
+        Point size = new Point();
+        display.getSize(size);
+        return size;
     }
 
     public static int getDisplayPixelWidth(Context context) {
         Point size = getDisplayPixelSize(context);
         return (size.x);
-        //DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        //return metrics.widthPixels;
     }
 
     public static int getDisplayPixelHeight(Context context) {
         Point size = getDisplayPixelSize(context);
         return (size.y);
-        //DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        //return metrics.heightPixels;
     }
 
     public static int dpToPx(Context context, int dp) {
@@ -79,10 +67,7 @@ public class DisplayUtils {
         if (context == null)
             return 0;
         TypedValue tv = new TypedValue();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-                return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
-        } else if (context.getTheme().resolveAttribute(com.actionbarsherlock.R.attr.actionBarSize, tv, true)) {
+        if (context.getTheme() != null && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 
@@ -92,15 +77,9 @@ public class DisplayUtils {
     }
 
     /**
-     * detect when FEATURE_ACTION_BAR_OVERLAY has been set - always returns false prior to
-     * API 11 since hasFeature() requires API 11
+     * detect when FEATURE_ACTION_BAR_OVERLAY has been set
      */
-    @SuppressLint("NewApi")
     public static boolean hasActionBarOverlay(Window window) {
-        if (window != null && Build.VERSION.SDK_INT >= 11) {
-            return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        } else {
-            return false;
-        }
+        return window.hasFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 }

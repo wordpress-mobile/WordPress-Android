@@ -2,7 +2,9 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,8 +12,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.CursorLoader;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class MediaUtils {
-
     public class RequestCode {
         public static final int ACTIVITY_REQUEST_CODE_PICTURE_LIBRARY = 1000;
         public static final int ACTIVITY_REQUEST_CODE_TAKE_PHOTO = 1100;
@@ -142,7 +141,6 @@ public class MediaUtils {
     }
 
     private static Intent prepareLaunchCameraIntent(LaunchCameraCallback callback) {
-
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";
@@ -220,7 +218,6 @@ public class MediaUtils {
      * @return
      */
     public static boolean isWordPressVersionWithMediaEditingCapabilities() {
-
         if (WordPress.currentBlog == null)
             return false;
 
@@ -255,7 +252,6 @@ public class MediaUtils {
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         cursor.close();
         if (state != null && state.equals("uploading")) {
-
             return false;
         }
         return true;

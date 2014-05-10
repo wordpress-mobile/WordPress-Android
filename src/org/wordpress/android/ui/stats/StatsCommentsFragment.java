@@ -1,20 +1,18 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.widget.CursorAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -29,7 +27,6 @@ import org.wordpress.android.util.StatUtils;
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary
  */
 public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_MOST_COMMENTED_URI = StatsContentProvider.STATS_MOST_COMMENTED_URI;
     private static final Uri STATS_TOP_COMMENTERS_URI = StatsContentProvider.STATS_TOP_COMMENTERS_URI;
 
@@ -46,7 +43,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -144,8 +140,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     }
 
     /** Fragment used for summary view **/
-    public static class CommentsSummaryFragment extends SherlockFragment {
-
+    public static class CommentsSummaryFragment extends Fragment {
         private TextView mPerMonthText;
         private TextView mTotalText;
         private TextView mActiveDayText;
@@ -177,7 +172,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
             final String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
             new AsyncTask<Void, Void, StatsSummary>() {
-
                 @Override
                 protected StatsSummary doInBackground(Void... params) {
                     //StatsRestHelper.getStatsSummary(blogId);
@@ -188,7 +182,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
                     if (getActivity() == null)
                         return;
                     getActivity().runOnUiThread(new Runnable() {
-
                         @Override
                         public void run() {
                             refreshStats(result);
@@ -199,7 +192,6 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
         }
 
         private void refreshStats(StatsSummary stats) {
-
             int perMonth = 0;
             int total = 0;
             String activeDay = "";
@@ -227,5 +219,4 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
 
 
     }
-
 }

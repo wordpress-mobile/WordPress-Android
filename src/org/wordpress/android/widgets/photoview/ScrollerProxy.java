@@ -23,7 +23,6 @@ import android.widget.OverScroller;
 import android.widget.Scroller;
 
 public abstract class ScrollerProxy {
-
 	public static ScrollerProxy getScroller(Context context) {
 		if (VERSION.SDK_INT < VERSION_CODES.GINGERBREAD) {
 			return new PreGingerScroller(context);
@@ -45,7 +44,6 @@ public abstract class ScrollerProxy {
 
 	@TargetApi(9)
 	private static class GingerScroller extends ScrollerProxy {
-
 		private OverScroller mScroller;
 
 		public GingerScroller(Context context) {
@@ -80,7 +78,6 @@ public abstract class ScrollerProxy {
 	}
 
 	private static class PreGingerScroller extends ScrollerProxy {
-
 		private Scroller mScroller;
 
 		public PreGingerScroller(Context context) {

@@ -13,10 +13,9 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 
 /**
- * A database table to represent the stats for the top posts and pages.  
+ * A database table to represent the stats for the top posts and pages.
  */
 public class StatsTopPostsAndPagesTable extends SQLTable {
-
     private static final String NAME = "top_post_and_pages";
 
     public static final class Columns {
@@ -37,7 +36,7 @@ public class StatsTopPostsAndPagesTable extends SQLTable {
     }
 
     private StatsTopPostsAndPagesTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -64,9 +63,9 @@ public class StatsTopPostsAndPagesTable extends SQLTable {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public static ContentValues getContentValues(StatsTopPostsAndPages item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());
@@ -81,11 +80,11 @@ public class StatsTopPostsAndPagesTable extends SQLTable {
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String sort = NAME + "." + Columns.VIEWS + " DESC, " + NAME + "." + Columns.TITLE + " ASC LIMIT " + StatsActivity.STATS_GROUP_MAX_ITEMS;
-        
+
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)
             return super.query(database, uri, projection, selection, selectionArgs, sort);
-        
+
         // get the latest for "Today", and the next latest for "Yesterday"
         if (timeframe.equals(StatsTimeframe.TODAY.name())) {
             return database.rawQuery("SELECT * FROM " + NAME +", " +
