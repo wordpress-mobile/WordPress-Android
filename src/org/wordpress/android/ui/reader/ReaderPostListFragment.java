@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -176,6 +177,7 @@ public class ReaderPostListFragment extends Fragment
     public void onPause() {
         super.onPause();
         mWasPaused = true;
+        mLastPostListScrollPos = -1;
     }
 
     @Override
@@ -190,6 +192,7 @@ public class ReaderPostListFragment extends Fragment
             if (hasPostAdapter()) {
                 getPostAdapter().checkFollowStatusForAllPosts();
             }
+
             // likewise for tags
             refreshTags();
         }
@@ -245,8 +248,8 @@ public class ReaderPostListFragment extends Fragment
                 break;
 
             case TAG_PREVIEW:
-                // inflate the tag info header, add it to the view, tell it to appear below the
-                // action bar spacer, and tell the ptr layout to appear below the header
+                // add the tag header to the view, tell it to appear below the action bar spacer,
+                // and tell the ptr layout to appear below the header
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
                 rootView.addView(mTagInfoView);
                 ReaderUtils.layoutBelow(rootView, mTagInfoView.getId(), R.id.view_actionbar_spacer);
@@ -254,13 +257,13 @@ public class ReaderPostListFragment extends Fragment
                 break;
 
             case BLOG_PREVIEW:
-                // add the blog info to the view, make it full size, and tell it to appear below
-                // the action bar spacer
+                // inflate the blog info, make it full size, and tell it to appear below the
+                // action bar spacer
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
-                mBlogInfoView.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
                 rootView.addView(mBlogInfoView);
+                mBlogInfoView.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT));
                 ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
                 // add a blank header to the listView that's the same height as the mshot
