@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
@@ -216,9 +215,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final Context context = container.getContext();
         final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-
         boolean hasTransparentActionBar = isFullScreenSupported();
 
         mListView = (WPListView) view.findViewById(android.R.id.list);

@@ -1,7 +1,6 @@
 package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +13,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -25,7 +23,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ReaderVideoUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 /**
@@ -365,17 +362,9 @@ public class WPNetworkImageView extends ImageView {
 
     private static final int FADE_TRANSITION = 250;
 
-    @SuppressLint("NewApi")
     private void fadeIn() {
-        // use faster property animation if device supports it
-        if (SysUtils.isGteAndroid4()) {
-            ObjectAnimator alpha = ObjectAnimator.ofFloat(this, View.ALPHA, 0.25f, 1f);
-            alpha.setDuration(FADE_TRANSITION);
-            alpha.start();
-        } else {
-            AlphaAnimation animation = new AlphaAnimation(0.25f, 1f);
-            animation.setDuration(FADE_TRANSITION);
-            this.startAnimation(animation);
-        }
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(this, View.ALPHA, 0.25f, 1f);
+        alpha.setDuration(FADE_TRANSITION);
+        alpha.start();
     }
 }

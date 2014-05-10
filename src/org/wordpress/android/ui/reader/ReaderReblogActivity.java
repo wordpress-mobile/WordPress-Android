@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
@@ -33,7 +33,7 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
  * in the manifest to prevent re-creation when the device is rotated - important since we
  * don't want the activity re-created while the reblog is being submitted
  */
-public class ReaderReblogActivity extends FragmentActivity {
+public class ReaderReblogActivity extends Activity {
     private long mBlogId;
     private long mPostId;
     private ReaderPost mPost;
