@@ -22,7 +22,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +40,7 @@ public class Note extends Syncable {
             public List<Index> index(Note note) {
                 List<Index> indexes = new ArrayList<Index>(1);
                 try {
-                    Integer timestamp = Integer.parseInt(note.getTimestamp());
-                    indexes.add(new Index(TIMESTAMP_INDEX, timestamp));
+                    indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
                 } catch (NumberFormatException e) {
                     // note will not have an indexed timestamp so it will
                     // show up at the end of a query sorting by timestamp
@@ -110,11 +108,11 @@ public class Note extends Syncable {
     private int mPostId;
     private long mCommentId;
     private long mCommentParentId;
+    private long mTimestamp;
 
     private transient String mCommentPreview;
     private transient String mSubject;
     private transient String mIconUrl;
-    private transient String mTimestamp;
     private transient String mSnippet;
 
     /**
@@ -273,9 +271,11 @@ public class Note extends Syncable {
     /**
      * Get the timestamp provided by the API for the note - cached for performance
      */
-    public String getTimestamp() {
-        if (mTimestamp == null)
-            mTimestamp = queryJSON("timestamp", "");
+    public long getTimestamp() {
+        if (mTimestamp == 0) {
+            mTimestamp = queryJSON("timestamp", 0);
+        }
+
         return mTimestamp;
     }
 
@@ -285,7 +285,7 @@ public class Note extends Syncable {
      */
     public String getTimeSpan() {
         try {
-            return DateTimeUtils.timestampToTimeSpan(Long.valueOf(getTimestamp()));
+            return DateTimeUtils.timestampToTimeSpan(getTimestamp());
         } catch (NumberFormatException e) {
             AppLog.e(T.NOTIFS, "failed to convert timestamp to long", e);
             return "";
@@ -444,13 +444,6 @@ public class Note extends Syncable {
      */
     public <U> U queryJSON(String query, U defaultObject){
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
-    }
-
-    public static class TimeStampComparator implements Comparator<Note> {
-        @Override
-        public int compare(Note a, Note b) {
-            return b.getTimestamp().compareTo(a.getTimestamp());
-        }
     }
 
     /**
