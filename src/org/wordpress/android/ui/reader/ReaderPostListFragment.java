@@ -215,13 +215,13 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final ViewGroup view = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
+        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         boolean hasTransparentActionBar = isFullScreenSupported();
 
-        mListView = (WPListView) view.findViewById(android.R.id.list);
+        mListView = (WPListView) rootView.findViewById(android.R.id.list);
 
         // bar that appears at top when new posts are downloaded
-        mNewPostsBar = (TextView) view.findViewById(R.id.text_new_posts);
+        mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
         mNewPostsBar.setVisibility(View.GONE);
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +234,7 @@ public class ReaderPostListFragment extends Fragment
         // show empty view at the top that's the same height as the ActionBar if transparent
         // ActionBar is enabled
         if (hasTransparentActionBar) {
-            View actionBarSpacer = view.findViewById(R.id.view_actionbar_spacer);
+            View actionBarSpacer = rootView.findViewById(R.id.view_actionbar_spacer);
             actionBarSpacer.setVisibility(View.VISIBLE);
         }
 
@@ -246,15 +246,20 @@ public class ReaderPostListFragment extends Fragment
                 // inflate the tag info header, add it to the view, tell it to appear below the
                 // action bar spacer, and tell the ptr layout to appear below the header
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                view.addView(mTagInfoView);
-                ReaderUtils.layoutBelow(view, mTagInfoView.getId(), R.id.view_actionbar_spacer);
-                ReaderUtils.layoutBelow(view, R.id.ptr_layout, mTagInfoView.getId());
+                rootView.addView(mTagInfoView);
+                ReaderUtils.layoutBelow(rootView, mTagInfoView.getId(), R.id.view_actionbar_spacer);
+                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mTagInfoView.getId());
                 break;
 
             case BLOG_PREVIEW:
-                // add the blog info to the view
-                mBlogInfoView = (ReaderBlogInfoView) view.findViewById(R.id.blog_info_view);
-                mBlogInfoView.setVisibility(View.VISIBLE);
+                // add the blog info to the view, make it full size, and tell it to appear below
+                // the action bar spacer
+                mBlogInfoView = new ReaderBlogInfoView(container.getContext());
+                mBlogInfoView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                rootView.addView(mBlogInfoView);
+                ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
                 // add a blank header to the listView that's the same height as the mshot
                 mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
@@ -280,7 +285,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // textView that appears when current tag has no posts
-        mEmptyView = view.findViewById(R.id.empty_view);
+        mEmptyView = rootView.findViewById(R.id.empty_view);
 
         // set the listView's scroll listener so we can detect flings
         mListView.setOnScrollListener(this);
@@ -301,12 +306,12 @@ public class ReaderPostListFragment extends Fragment
         });
 
         // progress bar that appears when loading more posts
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_footer);
+        mProgress = (ProgressBar) rootView.findViewById(R.id.progress_footer);
         mProgress.setVisibility(View.GONE);
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
-                (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
+                (PullToRefreshLayout) rootView.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
@@ -327,7 +332,7 @@ public class ReaderPostListFragment extends Fragment
                 }
         );
 
-        return view;
+        return rootView;
     }
 
     @Override

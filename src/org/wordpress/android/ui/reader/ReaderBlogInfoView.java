@@ -53,6 +53,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
+        view.setId(R.id.layout_blog_info_view);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);

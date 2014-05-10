@@ -39,15 +39,6 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <!-- this view is only shown when previewing posts in a specific blog -->
-    <org.wordpress.android.ui.reader.ReaderBlogInfoView
-        android:id="@+id/blog_info_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/view_actionbar_spacer"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <ProgressBar
         android:id="@+id/progress_footer"
         style="@style/ReaderProgressBar"
