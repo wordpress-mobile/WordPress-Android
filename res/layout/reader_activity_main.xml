@@ -7,7 +7,7 @@
     <View
         android:id="@+id/view_actionbar_spacer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abs__action_bar_default_height"
+        android:layout_height="?android:attr/actionBarSize"
         android:visibility="gone" />
 
     <!-- fragment container -->

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -8,8 +9,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag.ReaderTagType;
@@ -23,7 +22,7 @@ import org.wordpress.android.util.AppLog;
 /**
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
  */
-public class ReaderTagFragment extends SherlockFragment implements ReaderTagAdapter.TagActionListener {
+public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {
     private ListView mListView;
     private ReaderTagAdapter mTagAdapter;
     private ReaderTagType mTagType;

@@ -8,8 +8,8 @@
     <View
         android:id="@+id/view_actionbar_spacer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abs__action_bar_default_height"
-        android:visibility="gone"/>
+        android:layout_height="?android:attr/actionBarSize"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
         <!-- the tag preview header is inserted into this layout -->
     </LinearLayout>
 
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_below="@+id/layout_preview_container"
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
         <include
             android:id="@+id/empty_view"
             layout="@layout/reader_empty_view" />
-    </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"

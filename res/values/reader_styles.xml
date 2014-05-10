@@ -6,11 +6,15 @@
 -->
 <resources>
     <!-- activity themes -->
-    <style name="ReaderTheme" />
-    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Holo.Light.Panel">
+    <style name="ReaderTheme" parent="@style/WordPress" />
+    <style name="ReaderTheme.PopupPanel" parent="@android:style/Theme.Holo.Light.Panel">
         <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="ReaderTheme.TranslucentActivity" parent="ReaderTheme">
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!-- window animations -->
@@ -70,6 +74,18 @@
         <item name="android:maxLines">4</item>
         <item name="android:ellipsize">end</item>
     </style>
+    <style name="ReaderTextView.Post.Tag" parent="ReaderTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:background">@drawable/reader_transparent_selector</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableLeft">@drawable/stats_icon_tags</item>
+        <item name="android:drawablePadding">@dimen/margin_small</item>
+    </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:textColor">@color/grey_medium</item>
@@ -123,7 +139,7 @@
         <item name="android:minWidth">90dp</item>
         <item name="android:gravity">center</item>
         <item name="android:drawableLeft">@drawable/note_icon_follow</item>
-        <item name="android:background">@drawable/reader_follow_background</item>
+        <item name="android:background">@drawable/reader_button_follow</item>
         <item name="android:textColor">@color/reader_follow_text</item>
         <item name="android:paddingLeft">@dimen/margin_small</item>
         <item name="android:paddingTop">@dimen/margin_small</item>

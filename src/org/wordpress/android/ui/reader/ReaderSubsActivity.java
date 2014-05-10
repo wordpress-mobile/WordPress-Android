@@ -1,15 +1,18 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.URLUtil;
@@ -17,10 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -50,7 +49,7 @@ import java.util.List;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, popular tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends SherlockFragmentActivity
+public class ReaderSubsActivity extends Activity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {
@@ -115,7 +114,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                getSupportActionBar().setSelectedNavigationItem(position);
+                getActionBar().setSelectedNavigationItem(position);
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
@@ -128,7 +127,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     }
 
     private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         if (actionBar == null) {
             return;
         }
@@ -176,7 +175,7 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
-            mPageAdapter = new SubsPageAdapter(getSupportFragmentManager(), fragments);
+            mPageAdapter = new SubsPageAdapter(getFragmentManager(), fragments);
         }
         return mPageAdapter;
     }
@@ -516,15 +515,10 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
         for (int i = 0; i < adapter.getCount(); i++) {
             if (pageTitle.equals(adapter.getPageTitle(i))) {
                 mViewPager.setCurrentItem(i);
-                getSupportActionBar().setSelectedNavigationItem(i);
+                getActionBar().setSelectedNavigationItem(i);
                 return;
             }
         }
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
@@ -535,6 +529,11 @@ public class ReaderSubsActivity extends SherlockFragmentActivity
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        mViewPager.setCurrentItem(tab.getPosition());
     }
 
     private class SubsPageAdapter extends FragmentPagerAdapter {

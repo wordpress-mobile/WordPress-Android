@@ -1,13 +1,12 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -19,7 +18,7 @@ import org.wordpress.android.util.AppLog;
 /**
  * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
-public class ReaderBlogFragment extends SherlockFragment
+public class ReaderBlogFragment extends Fragment
                                 implements BlogFollowChangeListener {
     private ListView mListView;
     private ReaderBlogAdapter mAdapter;

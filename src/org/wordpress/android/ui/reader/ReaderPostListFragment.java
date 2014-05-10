@@ -1,12 +1,17 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -17,10 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -42,7 +43,6 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -52,12 +52,12 @@ import org.wordpress.android.widgets.WPListView;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * Fragment hosted by ReaderActivity to show posts with a specific tag or in a specific blog
  */
-public class ReaderPostListFragment extends SherlockFragment
+public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
         ViewTreeObserver.OnScrollChangedListener,
         ActionBar.OnNavigationListener {
@@ -238,7 +238,6 @@ public class ReaderPostListFragment extends SherlockFragment
         // ActionBar is enabled
         if (hasTransparentActionBar) {
             View actionBarSpacer = view.findViewById(R.id.view_actionbar_spacer);
-            actionBarSpacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(context);
             actionBarSpacer.setVisibility(View.VISIBLE);
         }
 
@@ -413,7 +412,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu, com.actionbarsherlock.view.MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
@@ -423,7 +422,7 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_tags:
                 ReaderActivityLauncher.showReaderSubsForResult(getActivity());
@@ -1031,8 +1030,8 @@ public class ReaderPostListFragment extends SherlockFragment
     }
 
     private ActionBar getActionBar() {
-        if (getActivity() instanceof SherlockFragmentActivity) {
-            return ((SherlockFragmentActivity) getActivity()).getSupportActionBar();
+        if (hasActivity()) {
+            return getActivity().getActionBar();
         } else {
             AppLog.w(T.READER, "reader post list > null ActionBar");
             return null;
