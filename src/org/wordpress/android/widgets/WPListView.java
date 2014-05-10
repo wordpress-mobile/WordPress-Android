@@ -1,8 +1,6 @@
 package org.wordpress.android.widgets;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
@@ -97,19 +95,12 @@ public class WPListView extends ListView {
     }
 
     /*
-     * returns true if the listView can scroll up/down vertically - always returns true prior to ICS
-     * because canScrollVertically() requires API 14
+     * returns true if the listView can scroll up/down vertically
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean canScrollUp() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
         return canScrollVertically(-1);
     }
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public boolean canScrollDown() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            return true;
         return canScrollVertically(1);
     }
 }

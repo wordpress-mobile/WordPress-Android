@@ -31,7 +31,6 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /*
@@ -164,9 +163,9 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onPostResume() {
+    protected void onResume() {
         // TODO: this was previously done in onResumeFragments(), make sure it still works
-        super.onPostResume();
+        super.onResume();
         checkMenuDrawer();
     }
 
@@ -475,12 +474,8 @@ public class ReaderActivity extends WPActionBarActivity
         return mIsFullScreen;
     }
 
-    /*
-     * auto-hiding the ActionBar is jittery/buggy on Gingerbread (and probably other
-     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
-     */
     public boolean isFullScreenSupported() {
-        return (SysUtils.isGteAndroid4()) && !isStaticMenuDrawer();
+        return !isStaticMenuDrawer();
     }
 
     /*

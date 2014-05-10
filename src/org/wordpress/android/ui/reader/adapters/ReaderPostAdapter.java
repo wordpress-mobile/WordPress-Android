@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -39,7 +38,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -107,9 +105,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
         mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
 
-        // enable preloading of images on Android 4 or later (earlier devices tend not to have
-        // enough memory/heap to make this worthwhile)
-        mEnableImagePreload = SysUtils.isGteAndroid4();
+        // enable preloading of images
+        mEnableImagePreload = true;
     }
 
     private Context getContext() {
@@ -231,17 +228,11 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
         }
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadPostsTask().execute();
-        }
+        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -454,20 +445,14 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * animate in the passed view - uses faster property animation on ICS and above, falls back to
-     * animation resource for older devices
+     * animate in the passed listView item
      */
     private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
-    @SuppressLint("NewApi")
     private void animateRow(View view) {
-        if (SysUtils.isGteAndroid4()) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
-            animator.setDuration(mRowAnimationDuration);
-            animator.setInterpolator(mRowInterpolator);
-            animator.start();
-        } else {
-            AniUtils.startAnimation(view, R.anim.reader_listview_row);
-        }
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
+        animator.setDuration(mRowAnimationDuration);
+        animator.setInterpolator(mRowInterpolator);
+        animator.start();
     }
 
     private static class PostViewHolder {

@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -13,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.SysUtils;
 
 import java.util.List;
 
@@ -24,11 +21,8 @@ public class ReaderUtils {
         public boolean isFullScreenSupported();
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void enableActionBarOverlay(Activity activity) {
-        if ((SysUtils.isGteAndroid4())) {
-            activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        }
+        activity.getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
     }
 
     /*

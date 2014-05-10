@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.Gravity;
@@ -18,7 +17,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.SysUtils;
 
 /**
  * populates ActionBar dropdown with reader tags
@@ -55,16 +53,11 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         return -1;
     }
 
-    @SuppressLint("NewApi")
     public void refreshTags() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader tag adapter > Load tags task already running");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadTagsTask().execute();
         }
+        new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void reloadTags() {

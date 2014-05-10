@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -25,7 +24,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -69,17 +67,11 @@ public class ReaderBlogAdapter extends BaseAdapter {
         return mWeakContext.get();
     }
 
-    @SuppressLint("NewApi")
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "load blogs task is already running");
         }
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadBlogsTask().execute();
-        }
+        new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*

@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Matrix;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +45,6 @@ class ReaderBlogInfoView extends FrameLayout {
         super(context, attributes);
         inflateView(context);
     }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public ReaderBlogInfoView(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
         inflateView(context);

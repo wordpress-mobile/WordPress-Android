@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -9,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -60,7 +57,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -1222,17 +1218,12 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    @SuppressLint("NewApi")
     private void showPost() {
         if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
         }
 
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new ShowPostTask().execute();
-        }
+        new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -1543,21 +1534,15 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void pauseWebView() {
-        if (mWebViewIsPaused)
-            return;
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (mWebViewIsPaused && mWebView != null) {
             mWebViewIsPaused = true;
             mWebView.onPause();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void resumeWebView() {
-        if (!mWebViewIsPaused)
-            return;
-        if (mWebView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (!mWebViewIsPaused && mWebView != null) {
             mWebViewIsPaused = false;
             mWebView.onResume();
         }
