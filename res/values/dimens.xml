@@ -73,6 +73,7 @@
 
     <dimen name="reader_video_overlay_size">48dp</dimen>
     <dimen name="actionbar_refresh_margin">12dp</dimen>
+    <dimen name="reader_post_divider_height">@dimen/margin_large</dimen>
 
     <!-- margin to use when indenting comment replies under their parents -->
     <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>

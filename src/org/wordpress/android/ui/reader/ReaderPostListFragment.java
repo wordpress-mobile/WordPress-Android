@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -83,7 +84,7 @@ public class ReaderPostListFragment extends SherlockFragment
 
     private ViewGroup mTagInfoView;
 
-    private ReaderBlogInfoHeader mBlogInfoView;
+    private ReaderBlogInfoView mBlogInfoView;
     private View mMshotSpacerView;
 
     private String mCurrentTag;
@@ -233,8 +234,11 @@ public class ReaderPostListFragment extends SherlockFragment
             }
         });
 
+        // show empty view at the top that's the same height as the ActionBar if transparent
+        // ActionBar is enabled
         if (hasTransparentActionBar) {
             View actionBarSpacer = view.findViewById(R.id.view_actionbar_spacer);
+            actionBarSpacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(context);
             actionBarSpacer.setVisibility(View.VISIBLE);
         }
 
@@ -247,14 +251,14 @@ public class ReaderPostListFragment extends SherlockFragment
                 final ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.layout_preview_container);
 
                 // inflate the tag info header and add it to the container
-                mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_preview_header, container, false);
+                mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
                 previewContainer.addView(mTagInfoView);
                 previewContainer.setVisibility(View.VISIBLE);
                 break;
 
             case BLOG_PREVIEW:
                 // add the blog info to the view
-                mBlogInfoView = (ReaderBlogInfoHeader) view.findViewById(R.id.blog_info_view);
+                mBlogInfoView = (ReaderBlogInfoView) view.findViewById(R.id.blog_info_view);
                 mBlogInfoView.setVisibility(View.VISIBLE);
 
                 // add a blank header to the listView that's the same height as the mshot
@@ -1093,9 +1097,7 @@ public class ReaderPostListFragment extends SherlockFragment
     public void onScrollChanged() {
         // note that onScrollChanged is only called when previewing posts in a specific blog,
         // so we can scale & reposition the blogInfo that appears above the listView
-        if (!isPostAdapterEmpty()) {
-            repositionBlogInfoView();
-        }
+        repositionBlogInfoView();
     }
 
     /*
@@ -1115,16 +1117,15 @@ public class ReaderPostListFragment extends SherlockFragment
         // info view to re-position itself to match this - if this position is less
         // than the height of the transparent ActionBar, then set it to the ActionBar
         // height so it sticks once it reaches the top of the screen
-        int mshotBottom;
+        final int mshotBottom;
         if (mMshotSpacerView.getHeight() > 0) {
-            mshotBottom = mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight();
+            mshotBottom = Math.max(0, mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight());
         } else {
             // mshot is offscreen if it has no height
             mshotBottom = 0;
         }
-        int infoTop = (mshotBottom < 0 ? 0 : mshotBottom);
 
-        mBlogInfoView.setInfoContainerTop(infoTop);
+        mBlogInfoView.setInfoContainerTop(mshotBottom);
         mLastPostListScrollPos = scrollPos;
     }
 

@@ -27,7 +27,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * mshot of the blog - designed specifically for use in ReaderPostListFragment
  * when previewing posts in a blog (blog preview)
  */
-class ReaderBlogInfoHeader extends FrameLayout {
+class ReaderBlogInfoView extends FrameLayout {
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
     private ViewGroup mMshotContainerView;
@@ -39,23 +39,23 @@ class ReaderBlogInfoHeader extends FrameLayout {
     private int mMshotWidth;
     private int mMshotDefaultHeight;
 
-    public ReaderBlogInfoHeader(Context context){
+    public ReaderBlogInfoView(Context context){
         super(context);
         inflateView(context);
     }
-    public ReaderBlogInfoHeader(Context context, AttributeSet attributes){
+    public ReaderBlogInfoView(Context context, AttributeSet attributes){
         super(context, attributes);
         inflateView(context);
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public ReaderBlogInfoHeader(Context context, AttributeSet attributes, int defStyle){
+    public ReaderBlogInfoView(Context context, AttributeSet attributes, int defStyle){
         super(context, attributes, defStyle);
         inflateView(context);
     }
 
     private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.reader_blog_info_header, this, true);
+        View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);

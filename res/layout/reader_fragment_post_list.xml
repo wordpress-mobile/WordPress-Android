@@ -32,8 +32,8 @@
             style="@style/ReaderListView.PostList"
             android:paddingLeft="@dimen/reader_list_margin"
             android:paddingRight="@dimen/reader_list_margin"
-            android:divider="@color/reader_divider_grey"
-            android:dividerHeight="@dimen/margin_large"
+            android:divider="@color/transparent"
+            android:dividerHeight="@dimen/reader_post_divider_height"
             tools:listitem="@layout/reader_listitem_post_excerpt" />
 
         <include
@@ -48,7 +48,8 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <org.wordpress.android.ui.reader.ReaderBlogInfoHeader
+    <!-- this view is only shown when previewing posts in a specific blog -->
+    <org.wordpress.android.ui.reader.ReaderBlogInfoView
         android:id="@+id/blog_info_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
