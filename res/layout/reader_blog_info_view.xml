@@ -35,8 +35,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:translationY="@dimen/reader_mshot_image_height"
-        android:paddingTop="@dimen/margin_extra_large"
         android:background="@color/white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:background="@color/grey_light" />
 
         <LinearLayout
             android:id="@+id/layout_bloginfo_container_inner"
