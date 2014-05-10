@@ -243,13 +243,12 @@ public class ReaderPostListFragment extends Fragment
                 break;
 
             case TAG_PREVIEW:
-                // locate the view that will contain the tag preview header
-                final ViewGroup previewContainer = (ViewGroup) view.findViewById(R.id.layout_preview_container);
-
-                // inflate the tag info header and add it to the container
+                // inflate the tag info header, add it to the view, tell it to appear below the
+                // action bar spacer, and tell the ptr layout to appear below the header
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
-                previewContainer.addView(mTagInfoView);
-                previewContainer.setVisibility(View.VISIBLE);
+                view.addView(mTagInfoView);
+                ReaderUtils.layoutBelow(view, mTagInfoView.getId(), R.id.view_actionbar_spacer);
+                ReaderUtils.layoutBelow(view, R.id.ptr_layout, mTagInfoView.getId());
                 break;
 
             case BLOG_PREVIEW:

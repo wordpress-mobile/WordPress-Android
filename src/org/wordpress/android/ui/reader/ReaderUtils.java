@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -100,5 +101,25 @@ public class ReaderUtils {
                 height));
         listView.addHeaderView(headerFake, null, false);
         return headerFake;
+    }
+
+    /*
+     * adds a rule which tells the view with targetId to be placed below layoutBelowId - only
+     * works if viewParent is a RelativeLayout
+     */
+    public static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
+        if (viewParent == null || !(viewParent instanceof RelativeLayout)) {
+            return;
+        }
+
+        View target = viewParent.findViewById(targetId);
+        if (target == null) {
+            return;
+        }
+
+        if (target.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) target.getLayoutParams();
+            params.addRule(RelativeLayout.BELOW, layoutBelowId);
+        }
     }
 }

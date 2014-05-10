@@ -11,19 +11,9 @@
         android:layout_height="?android:attr/actionBarSize"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view_actionbar_spacer"
-        android:id="@+id/layout_preview_container"
-        android:orientation="vertical"
-        android:visibility="gone">
-        <!-- the tag preview header is inserted into this layout -->
-    </LinearLayout>
-
     <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
         android:id="@+id/ptr_layout"
-        android:layout_below="@+id/layout_preview_container"
+        android:layout_below="@+id/view_actionbar_spacer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
