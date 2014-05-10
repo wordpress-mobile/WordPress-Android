@@ -240,6 +240,8 @@ public class ReaderPostListFragment extends Fragment
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
+                // tell the ptr layout to appear below the action bar spacer
+                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, R.id.view_actionbar_spacer);
                 break;
 
             case TAG_PREVIEW:

@@ -36,13 +36,12 @@
         android:orientation="vertical"
         android:translationY="@dimen/reader_mshot_image_height"
         android:paddingTop="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_medium"
-        android:background="@drawable/reader_post_background">
+        android:background="@color/white">
 
         <LinearLayout
             android:id="@+id/layout_bloginfo_container_inner"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
             android:layout_marginLeft="@dimen/reader_list_margin"
             android:layout_marginRight="@dimen/reader_list_margin"
             android:layout_width="match_parent"
@@ -96,5 +95,16 @@
                     android:layout_centerVertical="true" />
             </RelativeLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/grey_light" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_small"
+            android:background="@color/reader_divider_grey" />
     </LinearLayout>
 </FrameLayout>
