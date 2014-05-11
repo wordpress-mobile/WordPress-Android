@@ -466,309 +466,323 @@ public class PostUploadService extends Service {
         }
 
         public String uploadMediaFile(MediaFile mediaFile, Blog blog) {
-            String content = "";
-
             String curImagePath = mediaFile.getFilePath();
             if (curImagePath == null) {
                 return null;
             }
 
             if (curImagePath.contains("video")) {
-                // Upload the video
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-                // create temp file for media upload
-                String tempFileName = "wp-" + System.currentTimeMillis();
+                return uploadVideoFile(mediaFile, blog, curImagePath);
+            } else {
+                return uploadImageFile(mediaFile, blog, curImagePath);
+            }
+        }
+
+
+        private String uploadVideoFile(MediaFile mediaFile, Blog blog, String curImagePath) {
+            String content = "";
+
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+            // create temp file for media upload
+            String tempFileName = "wp-" + System.currentTimeMillis();
+            try {
+                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+            } catch (FileNotFoundException e) {
+                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mIsMediaError = true;
+                return null;
+            }
+
+            Uri videoUri = Uri.parse(curImagePath);
+            File videoFile = null;
+            String mimeType = "", xRes = "", yRes = "";
+
+            if (videoUri.toString().contains("content:")) {
+
+                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
+                Cursor cur = context.getContentResolver().query(videoUri, projection, null, null, null);
+
+                if (cur != null && cur.moveToFirst()) {
+
+                    int mimeTypeColumn, resolutionColumn, dataColumn;
+
+                    dataColumn = cur.getColumnIndex(Video.Media.DATA);
+                    mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+                    resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
+
+                    mediaFile = new MediaFile();
+
+                    String thumbData = cur.getString(dataColumn);
+                    mimeType = cur.getString(mimeTypeColumn);
+
+                    videoFile = new File(thumbData);
+                    mediaFile.setFilePath(videoFile.getPath());
+                    String resolution = cur.getString(resolutionColumn);
+                    if (resolution != null) {
+                        String[] resx = resolution.split("x");
+                        xRes = resx[0];
+                        yRes = resx[1];
+                    } else {
+                        // set the width of the video to the thumbnail width, else 640x480
+                        if (!blog.getMaxImageWidth().equals("Original Size")) {
+                            xRes = blog.getMaxImageWidth();
+                            yRes = String.valueOf(Math.round(Integer.valueOf(blog.getMaxImageWidth()) * 0.75));
+                        } else {
+                            xRes = "640";
+                            yRes = "480";
+                        }
+                    }
+                }
+            } else { // file is not in media library
+                String filePath = videoUri.toString().replace("file://", "");
+                mediaFile.setFilePath(filePath);
+                videoFile = new File(filePath);
+            }
+
+            if (videoFile == null) {
+                mErrorMessage = context.getResources().getString(R.string.error_media_upload);
+                return null;
+            }
+
+            if (TextUtils.isEmpty(mimeType)) {
+                mimeType = MediaUtils.getMediaFileMimeType(videoFile);
+            }
+            String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
+
+            // try to upload the video
+            Map<String, Object> m = new HashMap<String, Object>();
+            m.put("name", videoName);
+            m.put("type", mimeType);
+            m.put("bits", mediaFile);
+            m.put("overwrite", true);
+
+            Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
+
+            FeatureSet featureSet = synchronousGetFeatureSet();
+            boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
+            boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
+            if (isVideoEnabled) {
+                File tempFile;
                 try {
-                    context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
+                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                    tempFile = createTempUploadFile(fileExtension);
+                } catch (IOException e) {
                     mErrorMessage = getResources().getString(R.string.file_error_create);
                     mIsMediaError = true;
                     return null;
                 }
 
-                Uri videoUri = Uri.parse(curImagePath);
-                File videoFile = null;
-                String mimeType = "", xRes = "", yRes = "";
-
-                if (videoUri.toString().contains("content:")) {
-                    String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
-                    Cursor cur = context.getContentResolver().query(videoUri, projection, null, null, null);
-
-                    if (cur != null && cur.moveToFirst()) {
-                        int mimeTypeColumn, resolutionColumn, dataColumn;
-
-                        dataColumn = cur.getColumnIndex(Video.Media.DATA);
-                        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
-                        resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
-
-                        mediaFile = new MediaFile();
-
-                        String thumbData = cur.getString(dataColumn);
-                        mimeType = cur.getString(mimeTypeColumn);
-
-                        videoFile = new File(thumbData);
-                        mediaFile.setFilePath(videoFile.getPath());
-                        String resolution = cur.getString(resolutionColumn);
-                        if (resolution != null) {
-                            String[] resx = resolution.split("x");
-                            xRes = resx[0];
-                            yRes = resx[1];
-                        } else {
-                            // set the width of the video to the thumbnail width, else 640x480
-                            if (!blog.getMaxImageWidth().equals("Original Size")) {
-                                xRes = blog.getMaxImageWidth();
-                                yRes = String.valueOf(Math.round(Integer.valueOf(blog.getMaxImageWidth()) * 0.75));
-                            } else {
-                                xRes = "640";
-                                yRes = "480";
-                            }
-                        }
+                Object result = uploadFileHelper(client, params, tempFile);
+                Map<?, ?> resultMap = (HashMap<?, ?>) result;
+                if (resultMap != null && resultMap.containsKey("url")) {
+                    String resultURL = resultMap.get("url").toString();
+                    if (resultMap.containsKey("videopress_shortcode")) {
+                        resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
+                    } else {
+                        resultURL = String.format(
+                                "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                                xRes, yRes, resultURL, mimeType, resultURL);
                     }
-                } else { // file is not in media library
-                    String filePath = videoUri.toString().replace("file://", "");
-                    mediaFile.setFilePath(filePath);
-                    videoFile = new File(filePath);
-                }
-
-                if (videoFile == null) {
-                    mErrorMessage = context.getResources().getString(R.string.error_media_upload);
+                    content = content + resultURL;
+                } else {
                     return null;
                 }
+            } else {
+                mErrorMessage = getString(R.string.media_no_video_message);
+                mErrorUnavailableVideoPress = true;
+                return null;
+            }
 
-                if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = MediaUtils.getMediaFileMimeType(videoFile);
+            return content;
+        }
+
+        private String uploadImageFile(MediaFile mediaFile, Blog blog, String curImagePath) {
+            String content = "";
+
+            curImagePath = mediaFile.getFilePath();
+
+            Uri imageUri = Uri.parse(curImagePath);
+            File imageFile = null;
+            String mimeType = "", path = "";
+            int orientation;
+
+            if (imageUri.toString().contains("content:")) {
+                String[] projection;
+                Uri imgPath;
+
+                projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
+
+                imgPath = imageUri;
+
+                Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
+                    int dataColumn, mimeTypeColumn;
+                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+
+                    String thumbData = cur.getString(dataColumn);
+                    mimeType = cur.getString(mimeTypeColumn);
+                    imageFile = new File(thumbData);
+                    path = thumbData;
+                    mediaFile.setFilePath(imageFile.getPath());
                 }
-                String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
+            } else { // file is not in media library
+                path = imageUri.toString().replace("file://", "");
+                imageFile = new File(path);
+                mediaFile.setFilePath(path);
+            }
 
-                // try to upload the video
-                Map<String, Object> m = new HashMap<String, Object>();
-                m.put("name", videoName);
-                m.put("type", mimeType);
-                m.put("bits", mediaFile);
-                m.put("overwrite", true);
+            // check if the file exists
+            if (imageFile == null) {
+                mErrorMessage = context.getString(R.string.file_not_found);
+                mIsMediaError = true;
+                return null;
+            }
 
-                Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
+            if (TextUtils.isEmpty(mimeType)) {
+                mimeType = MediaUtils.getMediaFileMimeType(imageFile);
+            }
+            String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-                FeatureSet featureSet = synchronousGetFeatureSet();
-                boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
-                boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
-                if (isVideoEnabled) {
-                    File tempFile;
+            ImageHelper ih = new ImageHelper();
+            orientation = ih.getImageOrientation(context, path);
+
+            String resizedPictureURL = null;
+
+            // We need to upload a resized version of the picture when the blog settings != original size, or when
+            // the user has selected a smaller size for the current picture in the picture settings screen
+            // We won't resize gif images to keep them awesome.
+            boolean shouldUploadResizedVersion = false;
+            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+            if (!mimeType.equals("image/gif") && !blog.getMaxImageWidth().equals("Original Size")) {
+                //check the picture settings
+                int pictureSettingWidth = mediaFile.getWidth();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, options);
+                int imageHeight = options.outHeight;
+                int imageWidth = options.outWidth;
+                int[] dimensions = {imageWidth, imageHeight};
+                if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
+                    shouldUploadResizedVersion = true;
+                }
+            }
+
+            boolean shouldAddImageWidthCSS = false;
+
+            if (shouldUploadResizedVersion) {
+                MediaFile resizedMediaFile = new MediaFile(mediaFile);
+                // Create resized image
+                byte[] bytes = ih.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
+                        fileExtension, orientation);
+
+                if (bytes == null) {
+                    // We weren't able to resize the image, so we will upload the full size image with css to resize it
+                    shouldUploadResizedVersion = false;
+                    shouldAddImageWidthCSS = true;
+                } else {
+                    // Save temp image
+                    String tempFilePath;
+                    File resizedImageFile;
                     try {
-                        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                        tempFile = createTempUploadFile(fileExtension);
+                        resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+                        FileOutputStream out = new FileOutputStream(resizedImageFile);
+                        out.write(bytes);
+                        out.close();
+                        tempFilePath = resizedImageFile.getPath();
                     } catch (IOException e) {
-                        mErrorMessage = getResources().getString(R.string.file_error_create);
+                        AppLog.w(T.POSTS, "failed to create image temp file");
+                        mErrorMessage = context.getString(R.string.error_media_upload);
                         mIsMediaError = true;
                         return null;
                     }
 
-                    Object result = uploadFileHelper(client, params, tempFile);
-                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                    if (resultMap != null && resultMap.containsKey("url")) {
-                        String resultURL = resultMap.get("url").toString();
-                        if (resultMap.containsKey("videopress_shortcode")) {
-                            resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
-                        } else {
-                            resultURL = String.format(
-                                    "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                    xRes, yRes, resultURL, mimeType, resultURL);
+                    // upload resized picture
+                    if (!TextUtils.isEmpty(tempFilePath)) {
+                        resizedMediaFile.setFilePath(tempFilePath);
+                        Map<String, Object> parameters = new HashMap<String, Object>();
+
+                        parameters.put("name", fileName);
+                        parameters.put("type", mimeType);
+                        parameters.put("bits", resizedMediaFile);
+                        parameters.put("overwrite", true);
+                        resizedPictureURL = uploadPicture(parameters, resizedMediaFile, blog);
+                        if (resizedPictureURL == null) {
+                            AppLog.w(T.POSTS, "failed to upload resized picture");
+                            return null;
+                        } else if (resizedImageFile != null && resizedImageFile.exists()) {
+                            resizedImageFile.delete();
                         }
-                        content = content + resultURL;
                     } else {
+                        AppLog.w(T.POSTS, "failed to create resized picture");
+                        mErrorMessage = context.getString(R.string.out_of_memory);
+                        mIsMediaError = true;
                         return null;
                     }
-                } else {
-                    mErrorMessage = getString(R.string.media_no_video_message);
-                    mErrorUnavailableVideoPress = true;
-                    return null;
-                }
-            } else {
-                // Upload the image
-                curImagePath = mediaFile.getFilePath();
-
-                Uri imageUri = Uri.parse(curImagePath);
-                File imageFile = null;
-                String mimeType = "", path = "";
-                int orientation;
-
-                if (imageUri.toString().contains("content:")) {
-                    String[] projection;
-                    Uri imgPath;
-
-                    projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
-
-                    imgPath = imageUri;
-
-                    Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
-                    if (cur != null && cur.moveToFirst()) {
-                        int dataColumn, mimeTypeColumn;
-                        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-
-                        String thumbData = cur.getString(dataColumn);
-                        mimeType = cur.getString(mimeTypeColumn);
-                        imageFile = new File(thumbData);
-                        path = thumbData;
-                        mediaFile.setFilePath(imageFile.getPath());
-                    }
-                } else { // file is not in media library
-                    path = imageUri.toString().replace("file://", "");
-                    imageFile = new File(path);
-                    mediaFile.setFilePath(path);
-                }
-
-                // check if the file exists
-                if (imageFile == null) {
-                    mErrorMessage = context.getString(R.string.file_not_found);
-                    mIsMediaError = true;
-                    return null;
-                }
-
-                if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = MediaUtils.getMediaFileMimeType(imageFile);
-                }
-                String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
-
-                ImageHelper ih = new ImageHelper();
-                orientation = ih.getImageOrientation(context, path);
-
-                String resizedPictureURL = null;
-
-                // We need to upload a resized version of the picture when the blog settings != original size, or when
-                // the user has selected a smaller size for the current picture in the picture settings screen
-                // We won't resize gif images to keep them awesome.
-                boolean shouldUploadResizedVersion = false;
-                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-                if (!mimeType.equals("image/gif") && !blog.getMaxImageWidth().equals("Original Size")) {
-                    //check the picture settings
-                    int pictureSettingWidth = mediaFile.getWidth();
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(path, options);
-                    int imageHeight = options.outHeight;
-                    int imageWidth = options.outWidth;
-                    int[] dimensions = {imageWidth, imageHeight};
-                    if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
-                        shouldUploadResizedVersion = true;
-                    }
-                }
-
-                boolean shouldAddImageWidthCSS = false;
-
-                if (shouldUploadResizedVersion) {
-                    MediaFile resizedMediaFile = new MediaFile(mediaFile);
-                    // Create resized image
-                    byte[] bytes = ih.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
-                            fileExtension, orientation);
-
-                    if (bytes == null) {
-                        // We weren't able to resize the image, so we will upload the full size image with css to resize it
-                        shouldUploadResizedVersion = false;
-                        shouldAddImageWidthCSS = true;
-                    } else {
-                        // Save temp image
-                        String tempFilePath;
-                        File resizedImageFile;
-                        try {
-                            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
-                            FileOutputStream out = new FileOutputStream(resizedImageFile);
-                            out.write(bytes);
-                            out.close();
-                            tempFilePath = resizedImageFile.getPath();
-                        } catch (IOException e) {
-                            AppLog.w(T.POSTS, "failed to create image temp file");
-                            mErrorMessage = context.getString(R.string.error_media_upload);
-                            mIsMediaError = true;
-                            return null;
-                        }
-
-                        // upload resized picture
-                        if (!TextUtils.isEmpty(tempFilePath)) {
-                            resizedMediaFile.setFilePath(tempFilePath);
-                            Map<String, Object> parameters = new HashMap<String, Object>();
-
-                            parameters.put("name", fileName);
-                            parameters.put("type", mimeType);
-                            parameters.put("bits", resizedMediaFile);
-                            parameters.put("overwrite", true);
-                            resizedPictureURL = uploadPicture(parameters, resizedMediaFile, blog);
-                            if (resizedPictureURL == null) {
-                                AppLog.w(T.POSTS, "failed to upload resized picture");
-                                return null;
-                            } else if (resizedImageFile != null && resizedImageFile.exists()) {
-                                resizedImageFile.delete();
-                            }
-                        } else {
-                            AppLog.w(T.POSTS, "failed to create resized picture");
-                            mErrorMessage = context.getString(R.string.out_of_memory);
-                            mIsMediaError = true;
-                            return null;
-                        }
-                    }
-                }
-
-                String fullSizeUrl = null;
-                // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
-                if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
-                    // try to upload the image
-                    Map<String, Object> parameters = new HashMap<String, Object>();
-                    parameters.put("name", fileName);
-                    parameters.put("type", mimeType);
-                    parameters.put("bits", mediaFile);
-                    parameters.put("overwrite", true);
-
-                    fullSizeUrl = uploadPicture(parameters, mediaFile, blog);
-                    if (fullSizeUrl == null)
-                        return null;
-                }
-
-                String alignment = "";
-                switch (mediaFile.getHorizontalAlignment()) {
-                    case 0:
-                        alignment = "alignnone";
-                        break;
-                    case 1:
-                        alignment = "alignleft";
-                        break;
-                    case 2:
-                        alignment = "aligncenter";
-                        break;
-                    case 3:
-                        alignment = "alignright";
-                        break;
-                }
-
-                String alignmentCSS = "class=\"" + alignment + " size-full\" ";
-
-                if (shouldAddImageWidthCSS) {
-                    alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
-                }
-
-                // Check if we uploaded a featured picture that is not added to the post content (normal case)
-                if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
-                        (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
-                    return ""; // Not featured in post. Do not add to the content.
-                }
-
-                if (fullSizeUrl == null && resizedPictureURL != null) {
-                    fullSizeUrl = resizedPictureURL;
-                } else if (fullSizeUrl != null && resizedPictureURL == null){
-                    resizedPictureURL = fullSizeUrl;
-                }
-
-                String mediaTitle = TextUtils.isEmpty(mediaFile.getTitle()) ? "" : mediaFile.getTitle();
-
-                content = content + "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
-                        + alignmentCSS + "alt=\"image\" src=\"" + resizedPictureURL + "\" /></a>";
-
-                if (!TextUtils.isEmpty(mediaFile.getCaption())) {
-                    content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                            alignment, mediaFile.getWidth(), TextUtils.htmlEncode(mediaFile.getCaption()), content);
                 }
             }
+
+            String fullSizeUrl = null;
+            // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
+            if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
+                // try to upload the image
+                Map<String, Object> parameters = new HashMap<String, Object>();
+                parameters.put("name", fileName);
+                parameters.put("type", mimeType);
+                parameters.put("bits", mediaFile);
+                parameters.put("overwrite", true);
+
+                fullSizeUrl = uploadPicture(parameters, mediaFile, blog);
+                if (fullSizeUrl == null)
+                    return null;
+            }
+
+            String alignment = "";
+            switch (mediaFile.getHorizontalAlignment()) {
+                case 0:
+                    alignment = "alignnone";
+                    break;
+                case 1:
+                    alignment = "alignleft";
+                    break;
+                case 2:
+                    alignment = "aligncenter";
+                    break;
+                case 3:
+                    alignment = "alignright";
+                    break;
+            }
+
+            String alignmentCSS = "class=\"" + alignment + " size-full\" ";
+
+            if (shouldAddImageWidthCSS) {
+                alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
+            }
+
+            // Check if we uploaded a featured picture that is not added to the post content (normal case)
+            if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
+                    (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
+                return ""; // Not featured in post. Do not add to the content.
+            }
+
+            if (fullSizeUrl == null && resizedPictureURL != null) {
+                fullSizeUrl = resizedPictureURL;
+            } else if (fullSizeUrl != null && resizedPictureURL == null){
+                resizedPictureURL = fullSizeUrl;
+            }
+
+            String mediaTitle = TextUtils.isEmpty(mediaFile.getTitle()) ? "" : mediaFile.getTitle();
+
+            content = content + "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
+                    + alignmentCSS + "alt=\"image\" src=\"" + resizedPictureURL + "\" /></a>";
+
+            if (!TextUtils.isEmpty(mediaFile.getCaption())) {
+                content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+                        alignment, mediaFile.getWidth(), TextUtils.htmlEncode(mediaFile.getCaption()), content);
+            }
+
             return content;
         }
 
