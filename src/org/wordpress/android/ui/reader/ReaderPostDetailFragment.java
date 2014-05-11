@@ -76,7 +76,6 @@ public class ReaderPostDetailFragment extends Fragment
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_ALREADY_REQUESTED = "already_requested";
-    private static final String KEY_ORIGINAL_TITLE = "original_title";
 
     private long mPostId;
     private long mBlogId;
@@ -96,7 +95,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsUpdatingComments;
     private boolean mWebViewIsPaused;
 
-    private CharSequence mOriginalTitle;
     private Parcelable mListState = null;
 
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
@@ -384,9 +382,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (mIsAddCommentBoxShowing) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         }
-        if (mOriginalTitle != null) {
-            outState.putCharSequence(KEY_ORIGINAL_TITLE, mOriginalTitle);
-        }
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is reloaded
@@ -401,12 +396,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        // retain title of the host if it's the reader activity, then clear it until post is loaded
-        if (activity instanceof ReaderActivity) {
-            mOriginalTitle = getTitle();
-            setTitle(null);
-        }
 
         if (activity instanceof ReaderUtils.FullScreenListener) {
             mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
@@ -437,8 +426,6 @@ public class ReaderPostDetailFragment extends Fragment
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
-            if (savedInstanceState.containsKey(KEY_ORIGINAL_TITLE))
-                mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
             mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
         }
     }
@@ -467,15 +454,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (hasEmbedsOrIframes()) {
             resumeWebView();
         }
-    }
-
-    @Override
-    public void onDetach() {
-        // return the activity's title to what it was
-        if (hostIsReaderActivity() && mOriginalTitle != null) {
-            setTitle(mOriginalTitle);
-        }
-        super.onDetach();
     }
 
     /*
@@ -1316,7 +1294,7 @@ public class ReaderPostDetailFragment extends Fragment
             // set the activity title to the post's title if this is being shown in the reader
             final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
             if (hostIsReaderActivity()) {
-                setTitle(postTitle);
+                getActivity().setTitle(postTitle);
             }
 
             txtTitle.setText(postTitle);
@@ -1492,18 +1470,6 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
     };
-
-    private CharSequence getTitle() {
-        ActionBar actionBar = getActionBar();
-        return (actionBar != null ? actionBar.getTitle() : null);
-    }
-
-    private void setTitle(CharSequence title) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(title);
-        }
-    }
 
     /*
      * called when user taps a link in the webView
