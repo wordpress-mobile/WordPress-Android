@@ -25,6 +25,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * when previewing posts in a blog (blog preview)
  */
 class ReaderBlogInfoView extends FrameLayout {
+    public interface BlogInfoListener {
+        void onBlogInfoLoaded();
+    }
+    private BlogInfoListener mBlogInfoListener;
+
     private WPNetworkImageView mImageMshot;
     private ViewGroup mInfoContainerView;
     private ViewGroup mMshotContainerView;
@@ -61,7 +66,8 @@ class ReaderBlogInfoView extends FrameLayout {
     /*
      * shows the blogInfo from local db (if available) then request latest blogInfo from server
      */
-    public void setBlogIdAndUrl(long blogId, String blogUrl) {
+    public void loadBlogInfo(long blogId, String blogUrl, BlogInfoListener blogInfoListener) {
+        mBlogInfoListener = blogInfoListener;
         showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl));
         requestBlogInfo(blogId, blogUrl);
     }
@@ -74,14 +80,11 @@ class ReaderBlogInfoView extends FrameLayout {
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
-
-        if (blogInfo != null) {
-            mHasLoadedInfo = true;
-        }
+        final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
         // don't show blogInfo until it's complete (has either a name or description)
         if ((blogInfo != null && !blogInfo.isIncomplete())) {
-            mInfoContainerView.setVisibility(View.VISIBLE);
+            layoutInner.setVisibility(View.VISIBLE);
 
             if (blogInfo.hasName()) {
                 txtBlogName.setText(blogInfo.getName());
@@ -124,8 +127,16 @@ class ReaderBlogInfoView extends FrameLayout {
             if (!mHasLoadedMshot) {
                 loadMshotImage(blogInfo);
             }
+
+            if (!mHasLoadedInfo) {
+                mHasLoadedInfo = true;
+                if (mBlogInfoListener != null) {
+                    mBlogInfoListener.onBlogInfoLoaded();
+                }
+            }
         } else {
-            mInfoContainerView.setVisibility(View.INVISIBLE);
+            // hide the inner container until we have blogInfo
+            layoutInner.setVisibility(View.INVISIBLE);
         }
     }
 

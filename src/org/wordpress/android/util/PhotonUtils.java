@@ -37,6 +37,7 @@ public class PhotonUtils {
     /*
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
+    private static final int MAX_PHOTON_SZ = 1000;
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         if (TextUtils.isEmpty(imageUrl))
             return "";
@@ -61,6 +62,15 @@ public class PhotonUtils {
         // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
         if (isMshotsUrl(imageUrl))
             return imageUrl + String.format("?w=%d&h=%d", width, height);
+
+        // photon fails with images larger than the max, so enforce a max size
+        // TODO: revisit this when photon increases the max - https://code.trac.wordpress.org/ticket/47
+        if (width > MAX_PHOTON_SZ) {
+            width = MAX_PHOTON_SZ;
+        }
+        if (height > MAX_PHOTON_SZ) {
+            height = MAX_PHOTON_SZ;
+        }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
         // one of them is set, otherwise no query string

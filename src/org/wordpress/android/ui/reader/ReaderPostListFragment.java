@@ -280,9 +280,7 @@ public class ReaderPostListFragment extends Fragment
                             @Override
                             public void onGlobalLayout() {
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                mMshotSpacerView.getLayoutParams().height =
-                                        mBlogInfoView.getInfoContainerHeight()
-                                      + mBlogInfoView.getMshotDefaultHeight();
+                                resizeBlogInfo();
                             }
                         }
                 );
@@ -1138,8 +1136,26 @@ public class ReaderPostListFragment extends Fragment
     private void loadBlogInfoIfNotLoaded() {
         if (mBlogInfoView != null && !mBlogInfoView.hasLoaded()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
-            mBlogInfoView.setBlogIdAndUrl(mCurrentBlogId, mCurrentBlogUrl);
+            mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
+                        @Override
+                        public void onBlogInfoLoaded() {
+                            resizeBlogInfo();
+                        }
+                    }
+            );
         }
+    }
+
+    /*
+     * called when the blog info view has changed size, resizes the listView spacer to match
+     * the size of the mshot and blog info view
+     */
+    private void resizeBlogInfo() {
+        if (!hasActivity() || mBlogInfoView == null) {
+            return;
+        }
+        mMshotSpacerView.getLayoutParams().height =
+                mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotDefaultHeight();
     }
 
 }
