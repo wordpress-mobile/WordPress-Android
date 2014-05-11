@@ -1529,7 +1529,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (hasActivity()) {
             return getActivity().getActionBar();
         } else {
-            AppLog.w(T.READER, "reader post detail > null ActionBar");
+            AppLog.w(T.READER, "reader post detail > getActionBar called with no activity");
             return null;
         }
     }

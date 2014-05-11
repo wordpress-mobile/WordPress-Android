@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.content.Context;
 import android.graphics.Matrix;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +38,6 @@ class ReaderBlogInfoView extends FrameLayout {
 
     public ReaderBlogInfoView(Context context){
         super(context);
-        inflateView(context);
-    }
-    public ReaderBlogInfoView(Context context, AttributeSet attributes){
-        super(context, attributes);
-        inflateView(context);
-    }
-    public ReaderBlogInfoView(Context context, AttributeSet attributes, int defStyle){
-        super(context, attributes, defStyle);
         inflateView(context);
     }
 
@@ -203,7 +194,6 @@ class ReaderBlogInfoView extends FrameLayout {
      * scale the mshot image based on the scroll position of ReaderPostListFragment's listView
      */
     public void scaleMshotImageBasedOnScrollPos(int scrollPos) {
-        // calculate the mshot scale based on the listView's scroll position
         float scale = Math.max(0f, 0.9f + (-scrollPos * 0.005f));
         if (scale != mCurrentMshotScale) {
             float centerX = mMshotWidth * 0.5f;
@@ -215,7 +205,7 @@ class ReaderBlogInfoView extends FrameLayout {
     }
 
     /*
-     * sets the top of the container view holding the info
+     * sets the top of the container view holding the info (ie: everything except the mshot)
      */
     public void setInfoContainerTop(int top) {
         if (mInfoContainerView.getTranslationY() != top) {
@@ -224,7 +214,6 @@ class ReaderBlogInfoView extends FrameLayout {
             // force the mshot container to match the bottom of the info container to
             // prevent the bottom of the mshot from appearing below the info
             int infoBottom = top + mInfoContainerView.getHeight();
-
             LayoutParams mshotParams = (LayoutParams) mMshotContainerView.getLayoutParams();
             if (mshotParams.height != infoBottom) {
                 mshotParams.height = infoBottom;

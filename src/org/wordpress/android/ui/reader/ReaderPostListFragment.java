@@ -845,7 +845,7 @@ public class ReaderPostListFragment extends Fragment
         if (allowBackfill) {
             ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
                 @Override
-                public void onPostsBackfilled(int numNewPosts) {
+                public void onPostsBackfilled() {
                     if (!hasActivity()) {
                         AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
                         return;

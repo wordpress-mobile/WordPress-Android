@@ -252,8 +252,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
      * replace the comment that has the passed commentId with another comment - used
      * after a comment is submitted to replace the "fake" comment with the real one
      */
-    public boolean replaceComment(long commentId, ReaderComment comment) {
-        return mComments.replaceComment(commentId, comment);
+    public void replaceComment(long commentId, ReaderComment comment) {
+        mComments.replaceComment(commentId, comment);
     }
 
     /*

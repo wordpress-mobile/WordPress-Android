@@ -120,7 +120,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean isReblogged = (jsonObject!=null ? JSONUtil.getBool(jsonObject, "is_reblogged") : false);
+                boolean isReblogged = (jsonObject != null && JSONUtil.getBool(jsonObject, "is_reblogged"));
                 if (isReblogged) {
                     ReaderPostTable.setPostReblogged(post, true);
                 }
@@ -517,7 +517,7 @@ public class ReaderPostActions {
         ReaderPostTable.addOrUpdatePosts(null, posts);
 
         if (actionListener != null) {
-            actionListener.onActionResult(posts.size() > 0 ? true : false);
+            actionListener.onActionResult(posts.size() > 0);
         }
     }
 
@@ -601,7 +601,7 @@ public class ReaderPostActions {
                 handler.post(new Runnable() {
                     public void run() {
                         if (backfillListener != null) {
-                            backfillListener.onPostsBackfilled(numNewPosts);
+                            backfillListener.onPostsBackfilled();
                         }
 
                         // backfill again if all posts were new, but enforce a max on recursion
