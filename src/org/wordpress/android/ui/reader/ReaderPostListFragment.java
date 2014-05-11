@@ -270,7 +270,7 @@ public class ReaderPostListFragment extends Fragment
                 ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
                 // add a blank header to the listView that's the same height as the mshot
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotDefaultHeight());
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
 
                 // blank header height needs to be adjusted based on the actual height of the info
                 // view, which we don't know at this point - so assign a one-shot listener to
@@ -280,7 +280,7 @@ public class ReaderPostListFragment extends Fragment
                             @Override
                             public void onGlobalLayout() {
                                 mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                resizeBlogInfo();
+                                checkBlogInfoSize();
                             }
                         }
                 );
@@ -403,7 +403,7 @@ public class ReaderPostListFragment extends Fragment
 
         switch (getPostListType()) {
             case BLOG_PREVIEW:
-                loadBlogInfoIfNotLoaded();
+                loadBlogInfo();
                 // listen for scroll changes so we can scale the mshot and reposition the blogInfo
                 // as the user scrolls
                 mListView.setOnScrollChangedListener(this);
@@ -1123,23 +1123,26 @@ public class ReaderPostListFragment extends Fragment
         // height so it sticks once it reaches the top of the screen
         final int mshotBottom;
         if (mMshotSpacerView.getHeight() > 0) {
-            mshotBottom = Math.max(0, mMshotSpacerView.getTop() + mBlogInfoView.getMshotDefaultHeight());
+            mshotBottom = Math.max(0, mMshotSpacerView.getTop() + mBlogInfoView.getMshotHeight());
         } else {
             // mshot is offscreen if it has no height
             mshotBottom = 0;
         }
 
-        mBlogInfoView.setInfoContainerTop(mshotBottom);
+        mBlogInfoView.moveInfoContainer(mshotBottom);
         mLastPostListScrollPos = scrollPos;
     }
 
-    private void loadBlogInfoIfNotLoaded() {
-        if (mBlogInfoView != null && !mBlogInfoView.hasLoaded()) {
+    /*
+     * tell the blog info view to show the current blog if it's not already loaded
+     */
+    private void loadBlogInfo() {
+        if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
             mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
                         public void onBlogInfoLoaded() {
-                            resizeBlogInfo();
+                            checkBlogInfoSize();
                         }
                     }
             );
@@ -1150,12 +1153,12 @@ public class ReaderPostListFragment extends Fragment
      * called when the blog info view has changed size, resizes the listView spacer to match
      * the size of the mshot and blog info view
      */
-    private void resizeBlogInfo() {
+    private void checkBlogInfoSize() {
         if (!hasActivity() || mBlogInfoView == null) {
             return;
         }
         mMshotSpacerView.getLayoutParams().height =
-                mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotDefaultHeight();
+                mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotHeight();
     }
 
 }

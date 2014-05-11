@@ -35,11 +35,11 @@ class ReaderBlogInfoView extends FrameLayout {
     private ViewGroup mMshotContainerView;
 
     private float mCurrentMshotScale = 1.0f;
-    private boolean mHasLoadedMshot;
-    private boolean mHasLoadedInfo;
 
     private int mMshotWidth;
     private int mMshotDefaultHeight;
+
+    private boolean mIsLoaded;
 
     public ReaderBlogInfoView(Context context){
         super(context);
@@ -82,19 +82,24 @@ class ReaderBlogInfoView extends FrameLayout {
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
-        // don't show blogInfo until it's complete (has either a name or description)
-        if ((blogInfo != null && !blogInfo.isIncomplete())) {
+        if (blogInfo != null ) {
+            mIsLoaded = true;
             layoutInner.setVisibility(View.VISIBLE);
 
-            if (blogInfo.hasName()) {
-                txtBlogName.setText(blogInfo.getName());
-                // tapping the blog name opens the blog in the browser
-                txtBlogName.setOnClickListener(new View.OnClickListener() {
+            if (blogInfo.hasUrl()) {
+                // clicking the blog name or mshot shows the blog in the browser
+                View.OnClickListener urlClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
                     }
-                });
+                };
+                txtBlogName.setOnClickListener(urlClickListener);
+                mImageMshot.setOnClickListener(urlClickListener);
+            }
+
+            if (blogInfo.hasName()) {
+                txtBlogName.setText(blogInfo.getName());
             }
 
             if (blogInfo.hasDescription()) {
@@ -124,15 +129,12 @@ class ReaderBlogInfoView extends FrameLayout {
             });
 
             // show the mshot if it hasn't already been shown
-            if (!mHasLoadedMshot) {
+            if (mImageMshot.getUrl() == null) {
                 loadMshotImage(blogInfo);
             }
 
-            if (!mHasLoadedInfo) {
-                mHasLoadedInfo = true;
-                if (mBlogInfoListener != null) {
-                    mBlogInfoListener.onBlogInfoLoaded();
-                }
+            if (mBlogInfoListener != null) {
+                mBlogInfoListener.onBlogInfoLoaded();
             }
         } else {
             // hide the inner container until we have blogInfo
@@ -140,8 +142,8 @@ class ReaderBlogInfoView extends FrameLayout {
         }
     }
 
-    public boolean hasLoaded() {
-        return mHasLoadedInfo;
+    public boolean isEmpty() {
+        return !mIsLoaded;
     }
 
     /*
@@ -153,6 +155,8 @@ class ReaderBlogInfoView extends FrameLayout {
             public void onResult(ReaderBlogInfo blogInfo) {
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
+                } else {
+                    hideProgress();
                 }
             }
         };
@@ -175,17 +179,14 @@ class ReaderBlogInfoView extends FrameLayout {
     private void loadMshotImage(final ReaderBlogInfo blogInfo) {
         // can't get mshot for private blogs
         if (blogInfo == null || blogInfo.isPrivate) {
-            hideMshotProgress();
+            hideProgress();
             return;
         }
 
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
-                hideMshotProgress();
-                if (succeeded) {
-                    mHasLoadedMshot = true;
-                }
+                hideProgress();
             }
         };
         final String imageUrl = blogInfo.getMshotsUrl(mMshotWidth);
@@ -196,7 +197,7 @@ class ReaderBlogInfoView extends FrameLayout {
      * hide the progress bar that appears on the mshot - note that it's set to visible at
      * design time, so it'll stay visible until this is called
      */
-    private void hideMshotProgress() {
+    private void hideProgress() {
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_mshot);
         progress.setVisibility(View.GONE);
     }
@@ -218,7 +219,7 @@ class ReaderBlogInfoView extends FrameLayout {
     /*
      * sets the top of the container view holding the info (ie: everything except the mshot)
      */
-    public void setInfoContainerTop(int top) {
+    public void moveInfoContainer(int top) {
         if (mInfoContainerView.getTranslationY() != top) {
             mInfoContainerView.setTranslationY(top);
 
@@ -237,7 +238,7 @@ class ReaderBlogInfoView extends FrameLayout {
         return mInfoContainerView.getHeight();
     }
 
-    public int getMshotDefaultHeight() {
+    public int getMshotHeight() {
         return mMshotDefaultHeight;
     }
 }
