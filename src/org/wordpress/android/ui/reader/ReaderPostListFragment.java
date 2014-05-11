@@ -257,6 +257,9 @@ public class ReaderPostListFragment extends Fragment
                 break;
 
             case BLOG_PREVIEW:
+                // tell the ptr layout to appear below the action bar spacer
+                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, R.id.view_actionbar_spacer);
+
                 // inflate the blog info, make it full size, and tell it to appear below the
                 // action bar spacer
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
