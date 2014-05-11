@@ -34,13 +34,14 @@ import org.wordpress.android.util.VolleyUtils;
  *  (5) automatically retrying mshot requests that return a 307
  */
 public class WPNetworkImageView extends ImageView {
-    public static enum ImageType {PHOTO,
+    public static enum ImageType {NONE,
+                                  PHOTO,
                                   PHOTO_FULL,
                                   MSHOT,
                                   VIDEO,
                                   AVATAR}
 
-    private ImageType mImageType = ImageType.PHOTO;
+    private ImageType mImageType = ImageType.NONE;
     private String mUrl;
     private ImageLoader.ImageContainer mImageContainer;
 
@@ -76,12 +77,8 @@ public class WPNetworkImageView extends ImageView {
         mImageListener = imageListener;
         mRetryCnt = 0;
 
-        if (TextUtils.isEmpty(mUrl)) {
-            showErrorImage(mImageType);
-        } else {
-            // The URL has potentially changed. See if we need to load it.
-            loadImageIfNecessary(false);
-        }
+        // The URL has potentially changed. See if we need to load it.
+        loadImageIfNecessary(false);
     }
 
     public void setImageType(ImageType imageType) {
@@ -95,7 +92,7 @@ public class WPNetworkImageView extends ImageView {
         mImageType = ImageType.VIDEO;
 
         if (TextUtils.isEmpty(videoUrl)) {
-            showDefaultImage(ImageType.VIDEO);
+            showDefaultImage();
             return;
         }
 
@@ -106,7 +103,7 @@ public class WPNetworkImageView extends ImageView {
             return;
         }
 
-        showDefaultImage(ImageType.VIDEO);
+        showDefaultImage();
 
         // vimeo videos require network request to get thumbnail
         if (ReaderVideoUtils.isVimeoLink(videoUrl)) {
@@ -144,6 +141,11 @@ public class WPNetworkImageView extends ImageView {
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
     private void loadImageIfNecessary(final boolean isInLayoutPass) {
+        // do nothing if image type hasn't been set yet
+        if (mImageType == ImageType.NONE) {
+            return;
+        }
+
         int width = getWidth();
         int height = getHeight();
 
@@ -163,7 +165,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showErrorImage(mImageType);
+            showErrorImage();
             return;
         }
 
@@ -175,7 +177,7 @@ public class WPNetworkImageView extends ImageView {
             } else {
                 // if there is a pre-existing request, cancel it if it's fetching a different URL.
                 mImageContainer.cancelRequest();
-                showDefaultImage(mImageType);
+                showDefaultImage();
             }
         }
 
@@ -195,7 +197,7 @@ public class WPNetworkImageView extends ImageView {
                             mRetryCnt++;
                             retry(isInLayoutPass);
                         } else {
-                            showErrorImage(mImageType);
+                            showErrorImage();
                             if (mImageListener != null) {
                                 mImageListener.onImageLoaded(false);
                             }
@@ -246,7 +248,7 @@ public class WPNetworkImageView extends ImageView {
                 mImageListener.onImageLoaded(true);
             }
         } else {
-            showDefaultImage(mImageType);
+            showDefaultImage();
         }
     }
 
@@ -286,8 +288,11 @@ public class WPNetworkImageView extends ImageView {
         return getContext().getResources().getColor(resId);
     }
 
-    private void showDefaultImage(ImageType imageType) {
-        switch (imageType) {
+    private void showDefaultImage() {
+        switch (mImageType) {
+            case NONE:
+                // do nothing
+                break;
             case PHOTO_FULL:
                 // null default for full-screen photos
                 setImageDrawable(null);
@@ -303,8 +308,11 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
-    private void showErrorImage(ImageType imageType) {
-        switch (imageType) {
+    public void showErrorImage() {
+        switch (mImageType) {
+            case NONE:
+                // do nothing
+                break;
             case PHOTO_FULL:
                 // null default for full-screen photos
                 setImageDrawable(null);
@@ -314,8 +322,9 @@ public class WPNetworkImageView extends ImageView {
                 setImageResource(R.drawable.placeholder);
                 break;
             case MSHOT:
-                // null default for mshots
-                setImageDrawable(null);
+                // centered error icon for mshots
+                setScaleType(ImageView.ScaleType.CENTER);
+                setImageResource(R.drawable.ic_error);
                 break;
             default :
                 // medium grey box for all others

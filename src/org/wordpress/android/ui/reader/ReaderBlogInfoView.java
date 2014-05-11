@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -55,9 +56,7 @@ class ReaderBlogInfoView extends FrameLayout {
         int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
         mMshotWidth = displayWidth - (marginWidth * 2);
         mMshotDefaultHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
-        mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
 
         mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
         mMshotContainerView = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
@@ -76,69 +75,71 @@ class ReaderBlogInfoView extends FrameLayout {
      * show blog header with info from passed blog filled in
      */
     private void showBlogInfo(final ReaderBlogInfo blogInfo) {
+        final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
+
+        // hide the inner container until we have blogInfo
+        if (blogInfo == null) {
+            layoutInner.setVisibility(View.INVISIBLE);
+            return;
+        }
+
+        mIsLoaded = true;
+        layoutInner.setVisibility(View.VISIBLE);
+
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
         final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
-        final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
-        if (blogInfo != null ) {
-            mIsLoaded = true;
-            layoutInner.setVisibility(View.VISIBLE);
-
-            if (blogInfo.hasUrl()) {
-                // clicking the blog name or mshot shows the blog in the browser
-                View.OnClickListener urlClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
-                    }
-                };
-                txtBlogName.setOnClickListener(urlClickListener);
-                mImageMshot.setOnClickListener(urlClickListener);
-            }
-
-            if (blogInfo.hasName()) {
-                txtBlogName.setText(blogInfo.getName());
-            }
-
-            if (blogInfo.hasDescription()) {
-                txtDescription.setText(blogInfo.getDescription());
-                txtDescription.setVisibility(View.VISIBLE);
-            } else {
-                txtDescription.setVisibility(View.GONE);
-            }
-
-            // only show the follower count if there are subscribers
-            if (blogInfo.numSubscribers > 0) {
-                String numFollowers = getResources().getString(R.string.reader_label_followers,
-                        FormatUtils.formatInt(blogInfo.numSubscribers));
-                txtFollowCnt.setText(numFollowers);
-                txtFollowCnt.setVisibility(View.VISIBLE);
-            } else {
-                txtFollowCnt.setVisibility(View.INVISIBLE);
-            }
-
-            ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
-            txtFollowBtn.setVisibility(View.VISIBLE);
-            txtFollowBtn.setOnClickListener(new View.OnClickListener() {
+        if (blogInfo.hasUrl()) {
+            // clicking the blog name or mshot shows the blog in the browser
+            View.OnClickListener urlClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleBlogFollowStatus(txtFollowBtn, blogInfo);
+                    ReaderActivityLauncher.openUrl(getContext(), blogInfo.getUrl());
                 }
-            });
+            };
+            txtBlogName.setOnClickListener(urlClickListener);
+            mImageMshot.setOnClickListener(urlClickListener);
+        }
 
-            // show the mshot if it hasn't already been shown
-            if (mImageMshot.getUrl() == null) {
-                loadMshotImage(blogInfo);
-            }
+        if (blogInfo.hasName()) {
+            txtBlogName.setText(blogInfo.getName());
+        }
 
-            if (mBlogInfoListener != null) {
-                mBlogInfoListener.onBlogInfoLoaded();
-            }
+        if (blogInfo.hasDescription()) {
+            txtDescription.setText(blogInfo.getDescription());
+            txtDescription.setVisibility(View.VISIBLE);
         } else {
-            // hide the inner container until we have blogInfo
-            layoutInner.setVisibility(View.INVISIBLE);
+            txtDescription.setVisibility(View.GONE);
+        }
+
+        // only show the follower count if there are subscribers
+        if (blogInfo.numSubscribers > 0) {
+            String numFollowers = getResources().getString(R.string.reader_label_followers,
+                    FormatUtils.formatInt(blogInfo.numSubscribers));
+            txtFollowCnt.setText(numFollowers);
+            txtFollowCnt.setVisibility(View.VISIBLE);
+        } else {
+            txtFollowCnt.setVisibility(View.INVISIBLE);
+        }
+
+        ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
+        txtFollowBtn.setVisibility(View.VISIBLE);
+        txtFollowBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleBlogFollowStatus(txtFollowBtn, blogInfo);
+            }
+        });
+
+        // show the mshot if it hasn't already been shown
+        if (mImageMshot.getUrl() == null) {
+            loadMshotImage(blogInfo);
+        }
+
+        if (mBlogInfoListener != null) {
+            mBlogInfoListener.onBlogInfoLoaded();
         }
     }
 
@@ -177,9 +178,16 @@ class ReaderBlogInfoView extends FrameLayout {
     }
 
     private void loadMshotImage(final ReaderBlogInfo blogInfo) {
-        // can't get mshot for private blogs
-        if (blogInfo == null || blogInfo.isPrivate) {
+        if (blogInfo == null || !blogInfo.hasUrl()) {
             hideProgress();
+            return;
+        }
+
+        // can't get mshot for private blogs (mshot will just be a login screen!)
+        if (blogInfo.isPrivate) {
+            hideProgress();
+            mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
+            mImageMshot.showErrorImage();
             return;
         }
 

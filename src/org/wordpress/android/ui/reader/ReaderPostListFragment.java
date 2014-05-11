@@ -1151,7 +1151,7 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * called when the blog info view has changed size, resizes the listView spacer to match
-     * the size of the mshot and blog info view
+     * the size of the mshot and blog info container
      */
     private void checkBlogInfoSize() {
         if (!hasActivity() || mBlogInfoView == null) {
