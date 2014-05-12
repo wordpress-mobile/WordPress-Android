@@ -30,15 +30,14 @@ class ReaderBlogInfoView extends FrameLayout {
     }
     private BlogInfoListener mBlogInfoListener;
 
-    private WPNetworkImageView mImageMshot;
-    private ViewGroup mInfoContainerView;
-    private ViewGroup mMshotContainerView;
+    private final WPNetworkImageView mImageMshot;
+    private final ViewGroup mInfoContainerView;
+    private final ViewGroup mMshotContainerView;
+
+    private final int mMshotWidth;
+    private final int mMshotDefaultHeight;
 
     private float mCurrentMshotScale = 1.0f;
-
-    private int mMshotWidth;
-    private int mMshotDefaultHeight;
-
     private boolean mIsLoaded;
 
     public ReaderBlogInfoView(Context context){
@@ -48,7 +47,6 @@ class ReaderBlogInfoView extends FrameLayout {
         View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);
 
-        // mshot height is 75% of the width
         mMshotDefaultHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
         mMshotWidth = (int) (mMshotDefaultHeight * 1.33f);
 
