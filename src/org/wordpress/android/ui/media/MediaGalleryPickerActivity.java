@@ -1,18 +1,17 @@
 package org.wordpress.android.ui.media;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.ActionMode.Callback;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -25,11 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An activity where the user can add new images to their media gallery or where the user 
+ * An activity where the user can add new images to their media gallery or where the user
  * can choose a single image to embed into their post.
  */
-public class MediaGalleryPickerActivity extends SherlockActivity implements MultiSelectListener, Callback, MediaGridAdapter.MediaGridAdapterCallback, AdapterView.OnItemClickListener {
-
+public class MediaGalleryPickerActivity extends Activity
+        implements MultiSelectListener, ActionMode.Callback, MediaGridAdapter.MediaGridAdapterCallback,
+                   AdapterView.OnItemClickListener {
     private MultiSelectGridView mGridView;
     private MediaGridAdapter mGridAdapter;
     private ActionMode mActionMode;
@@ -38,11 +38,11 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
     private boolean mIsSelectOneItem;
     private boolean mIsRefreshing;
     private boolean mHasRetrievedAllMedia;
-    
+
     private static final String STATE_FILTERED_ITEMS = "STATE_FILTERED_ITEMS";
     private static final String STATE_SELECTED_ITEMS = "STATE_SELECTED_ITEMS";
     private static final String STATE_IS_SELECT_ONE_ITEM = "STATE_IS_SELECT_ONE_ITEM";
-    
+
     public static final int REQUEST_CODE = 4000;
     public static final String PARAM_SELECT_ONE_ITEM = "PARAM_SELECT_ONE_ITEM";
     private static final String PARAM_FILTERED_IDS = "PARAM_FILTERED_IDS";
@@ -59,11 +59,11 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         ArrayList<String> checkedItems = new ArrayList<String>();
         mFilteredItems = getIntent().getStringArrayListExtra(PARAM_FILTERED_IDS);
         mIsSelectOneItem = getIntent().getBooleanExtra(PARAM_SELECT_ONE_ITEM, false);
-        
+
         ArrayList<String> prevSelectedItems = getIntent().getStringArrayListExtra(PARAM_SELECTED_IDS);
-        if( prevSelectedItems != null ) 
+        if( prevSelectedItems != null )
             checkedItems.addAll(prevSelectedItems);
-        
+
         if (savedInstanceState != null) {
             checkedItems.addAll(savedInstanceState.getStringArrayList(STATE_SELECTED_ITEMS));
             mFilteredItems = savedInstanceState.getStringArrayList(STATE_FILTERED_ITEMS);
@@ -78,9 +78,12 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             setTitle(R.string.select_from_media_library);
             mGridView.setHighlightSelectModeEnabled(false);
             mGridView.setMultiSelectModeEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         } else {
-            mActionMode = getSherlock().startActionMode(this);
+            mActionMode = startActionMode(this);
             mActionMode.setTitle(checkedItems.size() + " selected");
             mGridView.setMultiSelectModeActive(true);
         }
@@ -94,7 +97,7 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
         super.onResume();
         refreshViews();
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -171,7 +174,6 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
 
     @Override
     public void onRetryUpload(String mediaId) {
-
     }
 
     @Override
@@ -204,7 +206,6 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
             apiArgs.add(WordPress.getCurrentBlog());
 
             ApiHelper.SyncMediaLibraryTask.Callback callback = new ApiHelper.SyncMediaLibraryTask.Callback() {
-
                 // refersh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
@@ -223,7 +224,6 @@ public class MediaGalleryPickerActivity extends SherlockActivity implements Mult
                     // the activity may be gone by the time this finishes, so check for it
                     if (!isFinishing()) {
                         runOnUiThread(new Runnable() {
-
                             @Override
                             public void run() {
                                 //mListener.onMediaItemListDownloaded();

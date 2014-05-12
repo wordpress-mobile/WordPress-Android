@@ -62,7 +62,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
-    private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
 
@@ -94,10 +93,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         // text for follow button
         mFollowing = context.getString(R.string.reader_btn_unfollow).toUpperCase();
         mFollow = context.getString(R.string.reader_btn_follow).toUpperCase();
-
-        // enable preloading of images on Android 4 or later (earlier devices tend not to have
-        // enough memory/heap to make this worthwhile)
-        mEnableImagePreload = SysUtils.isGteAndroid4();
     }
 
     public String getCurrentTag() {
@@ -157,7 +152,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPosts.set(index, updatedPost);
         notifyDataSetChanged();
     }
-    
+
     public void updateFollowStatusOnPostsForBlog(long blogId, boolean followStatus) {
         boolean isChanged = false;
         for (ReaderPost readerPost: mPosts) {
@@ -169,8 +164,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (isChanged)
          notifyDataSetChanged();
     }
-    
-    
+
+
     @SuppressLint("NewApi")
     private void loadPosts() {
         if (mIsTaskRunning)
@@ -342,8 +337,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (mCanRequestMorePosts && mDataRequestedListener!=null && (position >= getCount()-1))
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
 
-        // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one
-        if (mEnableImagePreload && position > (mLastPreloadPos - PRELOAD_OFFSET))
+        // preload images in the post PRELOAD_OFFSET positions ahead of this one
+        if (position > (mLastPreloadPos - PRELOAD_OFFSET))
             preloadPostImages(position + PRELOAD_OFFSET);
 
         return convertView;
@@ -372,21 +367,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    /*
-     * animate in the passed view - uses faster property animation on ICS and above, falls back to
-     * animation resource for older devices
+    /**
+     * animate in the passed view - uses faster property animation
      */
     private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
-    @SuppressLint("NewApi")
     private void animateRow(View view) {
-        if (SysUtils.isGteAndroid4()) {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
-            animator.setDuration(mRowAnimationDuration);
-            animator.setInterpolator(mRowInterpolator);
-            animator.start();
-        } else {
-            AniUtils.startAnimation(view, R.anim.reader_listview_row);
-        }
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
+        animator.setDuration(mRowAnimationDuration);
+        animator.setInterpolator(mRowInterpolator);
+        animator.start();
     }
 
     private static class PostViewHolder {
@@ -449,7 +438,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showFollowStatus(holder.txtFollow, updatedPost.isFollowedByCurrentUser);
-        
+
         //Update 'following' status on all other posts in the same blog.
         updateFollowStatusOnPostsForBlog(post.blogId, updatedPost.isFollowedByCurrentUser);
     }
@@ -506,7 +495,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 mPosts = (ReaderPostList)(tmpPosts.clone());
 
                 // preload images in the first few posts
-                if (mEnableImagePreload && mPosts.size() >= PRELOAD_OFFSET) {
+                if (mPosts.size() >= PRELOAD_OFFSET) {
                     for (int i = 0; i <= PRELOAD_OFFSET; i++)
                         preloadPostImages(i);
                 }

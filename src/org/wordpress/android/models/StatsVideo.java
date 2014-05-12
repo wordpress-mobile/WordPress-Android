@@ -9,7 +9,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a video stat
  */
 public class StatsVideo {
-
     private String mBlogId;
     private long mDate;
     private int mVideoId;

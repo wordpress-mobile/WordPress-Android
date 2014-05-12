@@ -1,17 +1,17 @@
 package org.wordpress.android.ui.notifications;
 
+import android.app.ActionBar;
 import android.app.Dialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.User;
@@ -33,8 +33,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class NotificationsActivity extends WPActionBarActivity
-                                   implements NotificationFragment.OnPostClickListener,
-                                              NotificationFragment.OnCommentClickListener {
+        implements NotificationFragment.OnPostClickListener,
+        NotificationFragment.OnCommentClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
@@ -65,11 +65,11 @@ public class NotificationsActivity extends WPActionBarActivity
         View fragmentContainer = findViewById(R.id.layout_fragment_container);
         mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         setTitle(getResources().getString(R.string.notifications));
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setOnNoteClickListener(new NoteClickListener());
@@ -105,7 +105,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     // This is ugly, but onBackStackChanged is not called just after a fragment commit.
                     // In a 2 commits in a row case, onBackStackChanged is called twice but after the
                     // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
@@ -123,7 +123,7 @@ public class NotificationsActivity extends WPActionBarActivity
                             } else {
                                 mSelectedReaderPost = null;
                                 mSelectedComment = null;
-                             }
+                            }
                             break;
                         case 0:
                             mMenuDrawer.setDrawerIndicatorEnabled(true);
@@ -169,7 +169,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
-                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentManager fm = getFragmentManager();
                     if (fm.getBackStackEntryCount() > 0) {
                         popNoteDetail();
                         return true;
@@ -185,13 +185,13 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         return true;
     }
 
     void popNoteDetail(){
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
         if (f == null) {
             fm.popBackStack();
@@ -236,7 +236,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
-        
+
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
 
         // mark the note as read if it's unread
@@ -244,7 +244,7 @@ public class NotificationsActivity extends WPActionBarActivity
             // mark as read which syncs with simperium
             note.markAsRead();
         }
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         // remove the note detail if it's already on there
         if (fm.getBackStackEntryCount() > 0) {
@@ -266,8 +266,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(
-                FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.layout_fragment_container, detailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
         // only add to backstack if we're removing the list view from the fragment container
@@ -337,11 +336,11 @@ public class NotificationsActivity extends WPActionBarActivity
         mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-          .addToBackStack(tagForFragment)
-          .commit();
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(tagForFragment)
+                .commit();
     }
 
     /**
@@ -353,10 +352,10 @@ public class NotificationsActivity extends WPActionBarActivity
         mTmpSelectedComment = new BlogPairId(remoteBlogId, commentId);
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
-          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-          .addToBackStack(tagForFragment)
-          .commit();
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(tagForFragment)
+                .commit();
     }
 }

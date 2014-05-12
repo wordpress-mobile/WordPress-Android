@@ -27,11 +27,10 @@ import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
 import org.wordpress.android.datasets.StatsVideosTable;
 
 /**
- * Content Provider for stats. Provides a common interface to the stats database. 
+ * Content Provider for stats. Provides a common interface to the stats database.
  * See {@link WordPressStatsDB}
  */
 public class StatsContentProvider extends ContentProvider {
-
     public static final Uri STATS_CLICK_GROUP_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.CLICK_GROUPS);
     public static final Uri STATS_CLICKS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.CLICKS);
     public static final Uri STATS_GEOVIEWS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.GEOVIEWS);
@@ -45,7 +44,7 @@ public class StatsContentProvider extends ContentProvider {
     public static final Uri STATS_TOP_POSTS_AND_PAGES_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.TOP_POSTS_AND_PAGES);
     public static final Uri STATS_VIDEOS_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.VIDEOS);
     public static final Uri STATS_BAR_CHART_DATA_URI = Uri.parse("content://" + BuildConfig.STATS_PROVIDER_AUTHORITY + "/" + Paths.BAR_CHART_DATA);
-    
+
     private static final class Paths {
         private static final String CLICK_GROUPS = "click_groups";
         private static final String CLICKS = "clicks";
@@ -61,11 +60,11 @@ public class StatsContentProvider extends ContentProvider {
         private static final String VIDEOS = "videos";
         private static final String BAR_CHART_DATA = "bar_chart_data";
     }
-    
+
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static SparseArray<SQLTable> sUriMatchToSQLTableMap = new SparseArray<SQLTable>();
     private int URI_MATCH = 0;
-    
+
     @Override
     public synchronized boolean onCreate() {
         registerTable(Paths.CLICK_GROUPS, StatsClickGroupsTable.getInstance());
@@ -83,7 +82,7 @@ public class StatsContentProvider extends ContentProvider {
         registerTable(Paths.BAR_CHART_DATA, StatsBarChartDataTable.getInstance());
         return true;
     }
-    
+
     private void registerTable(String path, SQLTable table) {
         final int match = URI_MATCH++;
         sUriMatcher.addURI(BuildConfig.STATS_PROVIDER_AUTHORITY, path, match);
@@ -94,16 +93,15 @@ public class StatsContentProvider extends ContentProvider {
     public synchronized String getType(Uri uri) {
         return null;
     }
-    
+
     @Override
     public synchronized int delete(Uri uri, String selection, String[] selectionArgs) {
-        
         SQLTable table = getSQLTable(uri);
         if (table != null) {
-            int count = table.delete(getDB(), uri, selection, selectionArgs); 
+            int count = table.delete(getDB(), uri, selection, selectionArgs);
             return count;
         }
-        
+
         return 0;
     }
 
@@ -115,7 +113,7 @@ public class StatsContentProvider extends ContentProvider {
             long _id = table.insert(getDB(), uri, values);
             result_uri = Uri.parse(uri.toString() + "/" + _id);
         }
-        
+
         return result_uri;
     }
 
@@ -125,7 +123,7 @@ public class StatsContentProvider extends ContentProvider {
         if (table != null) {
             return table.query(getDB(), uri, projection, selection, selectionArgs, sortOrder);
         }
-        
+
         return null;
     }
 
@@ -136,21 +134,20 @@ public class StatsContentProvider extends ContentProvider {
             int count = table.update(getDB(), uri, values, selection, selectionArgs);
             return count;
         }
-        
+
         return 0;
     }
-    
+
     private static synchronized SQLTable getSQLTable(Uri uri) {
         int uriMatch = sUriMatcher.match(uri);
-        
+
         if (sUriMatchToSQLTableMap.indexOfKey(uriMatch) >= 0)
             return sUriMatchToSQLTableMap.get(uriMatch);
-        
+
         return null;
     }
-    
+
     private synchronized SQLiteDatabase getDB() {
         return WordPress.wpStatsDB.getWritableDatabase();
     }
-
 }

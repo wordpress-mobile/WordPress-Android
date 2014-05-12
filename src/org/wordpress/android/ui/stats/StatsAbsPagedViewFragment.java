@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +39,11 @@ import java.util.Locale;
 public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
                                                 implements OnCheckedChangeListener,
                                                            StatsCursorInterface {
-
     private static final int ONE_DAY = 24 * 60 * 60 * 1000;
 
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     private int mSelectedButtonIndex = 0;
-    
+
     // the active fragment has the tag CHILD_TAG:<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
 
@@ -54,14 +53,14 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
-        
+
         setRetainInstance(true);
         initLayout(view);
         restoreState(savedInstanceState);
-        
+
         return view;
     }
-    
+
     private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState == null)
             return;
@@ -71,7 +70,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     private void initLayout(View view) {
         final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
-        
+
         mFragmentContainer = (FrameLayout) view.findViewById(R.id.stats_pager_container);
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
@@ -91,7 +90,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             rb.setLayoutParams(params);
             rb.setText(titles[i]);
             mRadioGroup.addView(rb);
-            
+
             if (i == mSelectedButtonIndex)
                 rb.setChecked(true);
         }
@@ -139,13 +138,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         super.onSaveInstanceState(outState);
         outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
     }
-    
+
     protected abstract FragmentStatePagerAdapter getAdapter();
 
     protected abstract String[] getTabTitles();
 
     protected abstract Fragment getFragment(int position);
-        
+
     @Override
     public void onCursorLoaded(final Uri uri, Cursor cursor) {
         if (getActivity() == null)

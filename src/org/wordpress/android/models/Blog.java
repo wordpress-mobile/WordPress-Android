@@ -46,7 +46,6 @@ public class Blog {
     private boolean isHidden;
 
     public Blog() {
-
     }
 
     public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
@@ -245,7 +244,7 @@ public class Blog {
                     if (!TextUtils.isEmpty(jetpackBlogId)) {
                         this.setApi_blogid(jetpackBlogId);
                         WordPress.wpDB.saveBlog(this);
-                    }   
+                    }
                 } catch (JSONException e) {
                     AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + jsonOptions, e);
                 }
@@ -373,7 +372,7 @@ public class Blog {
                 String jetpackBlogId = options.getJSONObject("jetpack_client_id").getString("value");
                 if (!TextUtils.isEmpty(jetpackBlogId)) {
                     this.setApi_blogid(jetpackBlogId);
-                }   
+                }
             } catch (JSONException e) {
                 AppLog.e(T.UTILS, "Cannot load jetpack_client_id from options: " + blogOptions, e);
             }
@@ -435,7 +434,7 @@ public class Blog {
                 String blogPublicValue = jsonOptions.getJSONObject("blog_public").getString("value");
                 if (!TextUtils.isEmpty(blogPublicValue) && "-1".equals(blogPublicValue)) {
                     return true;
-                }   
+                }
             } catch (JSONException e) {
                 AppLog.e(T.UTILS, "Cannot load blog_public from options: " + jsonOptions, e);
             }

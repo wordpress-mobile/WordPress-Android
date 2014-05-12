@@ -240,7 +240,6 @@ public class PostUploadService extends Service {
             Pattern pattern = Pattern.compile(imgTags);
 
             for (int x = 0; x < moreCount; x++) {
-
                 if (x == 0)
                     descriptionContent = post.getDescription();
                 else
@@ -260,7 +259,6 @@ public class PostUploadService extends Service {
                 }
 
                 for (String tag : imageTags) {
-
                     Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                     Matcher m = p.matcher(tag);
                     if (m.find()) {
@@ -494,12 +492,10 @@ public class PostUploadService extends Service {
                 String mimeType = "", xRes = "", yRes = "";
 
                 if (videoUri.toString().contains("content:")) {
-
                     String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
                     Cursor cur = context.getContentResolver().query(videoUri, projection, null, null, null);
 
                     if (cur != null && cur.moveToFirst()) {
-
                         int mimeTypeColumn, resolutionColumn, dataColumn;
 
                         dataColumn = cur.getColumnIndex(Video.Media.DATA);

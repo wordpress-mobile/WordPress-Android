@@ -59,7 +59,6 @@ import org.wordpress.android.util.StringUtils;
  */
 
 public class StatsService extends Service {
-
     public static final String ARG_BLOG_ID = "blog_id";
 
     // broadcast action to notify clients of update start/end
@@ -131,10 +130,9 @@ public class StatsService extends Service {
         }
         orchestrator = null;
         this.mServiceBlogId = null;
-    }    
+    }
 
     private void startTasks(final String blogId, final int startId) {
-
         orchestrator = new Thread() {
             @Override
             public void run() {
@@ -153,9 +151,9 @@ public class StatsService extends Service {
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
 
                 // bar charts
-                path = "batch/?urls%5B%5D=" 
-                        + Uri.encode(getBarChartPath(blogId, StatsBarChartUnit.WEEK, 30)) 
-                        + "&urls%5B%5D=" 
+                path = "batch/?urls%5B%5D="
+                        + Uri.encode(getBarChartPath(blogId, StatsBarChartUnit.WEEK, 30))
+                        + "&urls%5B%5D="
                         + Uri.encode(getBarChartPath(blogId, StatsBarChartUnit.MONTH, 30));
                 BarChartListener barChartRestListener = new BarChartListener(
                         blogId,
@@ -165,9 +163,9 @@ public class StatsService extends Service {
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
 
                 // top posts and pages
-                path = "batch/?urls%5B%5D=" 
+                path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/top-posts?date=%s", blogId, today))
-                        + "&urls%5B%5D=" 
+                        + "&urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/top-posts?date=%s", blogId, yesterday));
                 TopPostAndPageListener topPostAndPageRestListener = new TopPostAndPageListener(
                         blogId,
@@ -177,7 +175,7 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils.get(path, topPostAndPageRestListener,
                         topPostAndPageRestListener));
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                
+
                 // referrers
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/referrers?date=%s", blogId, today))
@@ -190,7 +188,7 @@ public class StatsService extends Service {
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, referrersListener, referrersListener));
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                
+
                 // clicks
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/clicks?date=%s", blogId, today))
@@ -203,7 +201,7 @@ public class StatsService extends Service {
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, clicksListener, clicksListener));
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                
+
                 // search engine terms
                 path = "batch/?urls%5B%5D="
                         + Uri.encode(String.format("/sites/%s/stats/search-terms?date=%s", blogId, today))
@@ -217,7 +215,7 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils
                         .get(path, searchEngineTermsListener, searchEngineTermsListener));
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                
+
                 // views by country - put at the end since this will start other networks calls on
                 // finish
                 path = "batch/?urls%5B%5D="
@@ -231,7 +229,7 @@ public class StatsService extends Service {
                         );
                 statsNetworkRequests.add(restClientUtils.get(path, viewsByCountryListener, viewsByCountryListener));
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                
+
                 numberOfNetworkCalls = statsNetworkRequests.size();
 
                 while (!isDone()) {
@@ -254,7 +252,6 @@ public class StatsService extends Service {
     }
 
     private class SearchEngineTermsListener extends AbsListener {
-
         SearchEngineTermsListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
             super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
@@ -300,7 +297,6 @@ public class StatsService extends Service {
     }
 
     private class ClicksListener extends AbsListener {
-
         ClicksListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
             super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
@@ -374,7 +370,6 @@ public class StatsService extends Service {
     }
 
     private class ReferrersListener extends AbsListener {
-
         ReferrersListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
             super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
@@ -447,7 +442,6 @@ public class StatsService extends Service {
     }
 
     private class ViewsByCountryListener extends AbsListener {
-
         ViewsByCountryListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
             super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
@@ -495,7 +489,6 @@ public class StatsService extends Service {
     }
 
     private class TopPostAndPageListener extends AbsListener {
-
         TopPostAndPageListener(String blogId, String todayAPICallPath, String yesterdayAPICallPath) {
             super(blogId, todayAPICallPath, yesterdayAPICallPath);
         }
@@ -544,7 +537,7 @@ public class StatsService extends Service {
         final String mTodayAPICallPath;
         final String mYesterdayAPICallPath;
         final String mRequestBlogId;
-        
+
         protected abstract Uri getStatsContentProviderUpdateURI();
 
         protected abstract void parseSingleDayResponse(final JSONObject response) throws JSONException,
@@ -606,10 +599,10 @@ public class StatsService extends Service {
             if (response.has("errors")) {
                 return true;
             }
-            
+
             return false;
         }
-        
+
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             AppLog.d(T.STATS, this.getClass().getName() + " responded with Error");
@@ -639,12 +632,11 @@ public class StatsService extends Service {
     }
 
     private class BarChartListener extends AbsListener {
-
         private final StatsBarChartUnit mTodayBarChartUnit;
         private final StatsBarChartUnit mYesterdayBarChartUnit;
         private StatsBarChartUnit mCurrentBarChartUnit;
 
-        BarChartListener(String blogId, String todayAPICallPath, StatsBarChartUnit todayBarChartUnit, 
+        BarChartListener(String blogId, String todayAPICallPath, StatsBarChartUnit todayBarChartUnit,
                 String yesterddayAPICallPath, StatsBarChartUnit yesterdayBarChartUnit) {
             super(blogId, todayAPICallPath, yesterddayAPICallPath);
             this.mTodayBarChartUnit = todayBarChartUnit;
@@ -709,15 +701,14 @@ public class StatsService extends Service {
         }
     }
 
-    
+
     private class SummaryListener implements RestRequest.Listener, RestRequest.ErrorListener {
-        
         final String mRequestBlogId;
-        
+
         SummaryListener(String blogId) {
             this.mRequestBlogId = blogId;
         }
-        
+
         @Override
         public void onResponse(final JSONObject jsonObject) {
             if (!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
@@ -746,7 +737,7 @@ public class StatsService extends Service {
                     }
                 });
         }
-        
+
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
             if (!updateUIExecutor.isShutdown() && !updateUIExecutor.isTerminated() && !updateUIExecutor.isTerminating())
@@ -762,7 +753,7 @@ public class StatsService extends Service {
                 });
         }
     }
-    
+
     boolean isDone() {
         return numberOfFinishedNetworkCalls == numberOfNetworkCalls;
     }

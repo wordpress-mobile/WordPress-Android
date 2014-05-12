@@ -58,7 +58,6 @@ public class MediaUploadService extends Service {
     }
 
     private Runnable mFetchQueueTask = new Runnable() {
-
         @Override
         public void run() {
             Cursor cursor = getQueue();

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -61,7 +61,6 @@ public class ViewPostFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.viewpost, container, false);
 
         // comment views

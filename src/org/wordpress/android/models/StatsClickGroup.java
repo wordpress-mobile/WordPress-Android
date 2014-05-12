@@ -10,7 +10,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a click group stat.
  */
 public class StatsClickGroup {
-
     private String mBlogId;
     private long mDate;
     private String mGroupId;
@@ -41,11 +40,11 @@ public class StatsClickGroup {
             setIcon(result.getString("icon"));
 
         // Set a url only if there is one result, and this result starts with http
-        // If there are more, the urls will be set in the children 
+        // If there are more, the urls will be set in the children
         JSONArray array = result.getJSONArray("results");
         if (array.length() == 1) {
             setChildren(0); // the child won't be stored if there's only one child
-            
+
             JSONArray firstEntry = array.getJSONArray(0);
             String url = firstEntry.getString(0);
             if (url.startsWith("http"))

@@ -30,7 +30,6 @@ import org.wordpress.android.widgets.photoview.PhotoViewAttacher.OnPhotoTapListe
 import org.wordpress.android.widgets.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
-
 	private final PhotoViewAttacher mAttacher;
 
 	private ScaleType mPendingScaleType;
@@ -42,7 +41,7 @@ public class PhotoView extends ImageView implements IPhotoView {
 	public PhotoView(Context context, AttributeSet attr) {
 		this(context, attr, 0);
 	}
-	
+
 	public PhotoView(Context context, AttributeSet attr, int defStyle) {
 		super(context, attr, defStyle);
 		super.setScaleType(ScaleType.MATRIX);
@@ -178,5 +177,4 @@ public class PhotoView extends ImageView implements IPhotoView {
 		mAttacher.cleanup();
 		super.onDetachedFromWindow();
 	}
-
 }

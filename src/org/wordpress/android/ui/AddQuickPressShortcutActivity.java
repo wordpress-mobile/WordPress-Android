@@ -81,7 +81,6 @@ public class AddQuickPressShortcutActivity extends ListActivity {
             blavatars = new String[accounts.size()];
             int validBlogCtr = 0;
             for (int i = 0; i < accounts.size(); i++) {
-
                 Map<String, Object> curHash = accounts.get(i);
                 blogNames[validBlogCtr] = curHash.get("blogName").toString();
                 accountUsers[validBlogCtr] = curHash.get("username").toString();
@@ -133,7 +132,6 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         dialogBuilder.setView(quickPressShortcutName);
 
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
                     Toast t = Toast.makeText(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error, Toast.LENGTH_LONG);
@@ -190,7 +188,6 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     }
 
     protected class HomeListAdapter extends BaseAdapter {
-
         public HomeListAdapter() {
         }
 

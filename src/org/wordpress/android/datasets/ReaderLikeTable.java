@@ -124,7 +124,6 @@ public class ReaderLikeTable {
             SqlUtils.closeStatement(stmt);
         }
     }
-
 }
 
 

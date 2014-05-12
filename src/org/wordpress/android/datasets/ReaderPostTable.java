@@ -291,7 +291,7 @@ public class ReaderPostTable {
             db.endTransaction();
         }
     }
-    
+
     public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
         if (posts==null || posts.size()==0)
             return;
@@ -397,7 +397,7 @@ public class ReaderPostTable {
             SqlUtils.closeCursor(cursor);
         }
     }
-    
+
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post == null)
             return;

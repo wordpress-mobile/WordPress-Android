@@ -1,20 +1,19 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Window;
+import android.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NuxHelpActivity extends SherlockFragmentActivity {
+public class NuxHelpActivity extends Activity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
     final private static String FORUM_URL = "http://android.forums.wordpress.org/";
 

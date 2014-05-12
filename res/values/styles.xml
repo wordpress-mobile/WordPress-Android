@@ -2,27 +2,49 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <style name="WordPress" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="WordPress" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
-        <item name="actionBarItemBackground">@drawable/selectable_background_wordpress</item>
-        <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.WordPress</item>
-        <item name="actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.WordPress</item>
-        <item name="actionBarStyle">@style/ActionBar.Solid.WordPress</item>
-        <item name="actionModeBackground">@drawable/cab_background_top_wordpress</item>
-        <item name="actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
-        <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
-        <item name="actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_wordpress</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_wordpress</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextStyle.WordPress</item>
+        <item name="android:actionBarTabBarStyle">@style/TabBarStyle.WordPress</item>
 
         <!-- Light.DarkActionBar specific -->
-        <item name="actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
-        <item name="android:panelBackground">@drawable/menu_hardkey_panel_wordpress</item>
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+    </style>
 
-        <item name="android:windowBackground">@color/background_grey</item>
+    <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:icon">@drawable/ab_icon_wp</item>
+        <item name="android:background">@color/blue_new_kid</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
+    </style>
+
+    <style name="ActionBar.Transparent.WordPress" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@drawable/ab_transparent_wordpress</item>
+        <item name="android:progressBarStyle">@style/ProgressBar.WordPress</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.WordPress.Widget" parent="android:Theme.Holo">
+        <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
+    </style>
+
+    <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
     <!-- http://www.curious-creature.org/2009/03/04/speed-up-your-android-ui/ -->
@@ -30,61 +52,34 @@
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="ActionBar.Solid.WordPress" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="icon">@drawable/ab_icon_wp</item>
-        <item name="background">@color/blue_new_kid</item>
-        <item name="backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
-        <item name="backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
-        <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
-        <item name="indeterminateProgressStyle">@style/IndeterminateProgress.WordPress</item>
-    </style>
-
-    <style name="ActionBar.Transparent.WordPress" parent="@style/Widget.Sherlock.ActionBar">
-        <item name="background">@drawable/ab_transparent_wordpress</item>
-        <item name="progressBarStyle">@style/ProgressBar.WordPress</item>
-    </style>
-
-    <style name="IndeterminateProgress.WordPress" parent="@android:style/Widget.ProgressBar.Small">
-        <item name="android:minWidth">32dp</item>
-        <item name="android:maxWidth">32dp</item>
-        <item name="android:minHeight">32dp</item>
-        <item name="android:maxHeight">32dp</item>
-    </style>
-
-    <style name="PopupMenu.WordPress" parent="@style/Widget.Sherlock.ListPopupWindow">
+   <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
-    <style name="DropDownListView.WordPress" parent="@style/Widget.Sherlock.ListView.DropDown">
+    <style name="DropDownListView.WordPress" parent="android:Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
-    <style name="ActionBarTabStyle.WordPress" parent="@style/Widget.Sherlock.ActionBar.TabView">
+    <style name="ActionBarTabStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_wordpress</item>
     </style>
 
-    <style name="TabTextStyle.WordPress" parent="@style/Widget.Sherlock.ActionBar.TabText">
+    <style name="TabTextStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabText">
         <item name="android:textColor">@color/grey_dark</item>
     </style>
 
-    <style name="DropDownNav.WordPress" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
+    <style name="DropDownNav.WordPress" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_wordpress</item>
     </style>
 
-    <style name="ProgressBar.WordPress" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
+    <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
     </style>
 
-    <style name="ActionButton.CloseMode.WordPress" parent="@style/Widget.Sherlock.ActionButton.CloseMode">
+    <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Holo.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
-    </style>
-
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.WordPress.Widget" parent="@style/Theme.Sherlock">
-        <item name="popupMenuStyle">@style/PopupMenu.WordPress</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.WordPress</item>
     </style>
 
     <style name="WordPress.Dialog" parent="@style/FloatingActivityTheme"/>
@@ -234,7 +229,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="FloatingActivityTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="FloatingActivityTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
@@ -329,12 +324,5 @@
     <style name="Widget.Custom.PtrHeader" parent="android:Widget">
         <item name="ptrProgressBarColor">@color/blue_dark</item>
         <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
-    </style>
-
-    <!-- On top message -->
-    <style name="WordPress.OnTopMessage">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_height">@dimen/nux_button_height</item>
-        <item name="android:background">@drawable/on_top_message_shape</item>
     </style>
 </resources>

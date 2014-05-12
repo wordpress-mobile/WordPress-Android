@@ -56,5 +56,4 @@ public class ReaderThumbnailTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT thumbnail_url FROM tbl_thumbnails WHERE full_url=?", new String[]{fullUrl});
     }
 
-
 }

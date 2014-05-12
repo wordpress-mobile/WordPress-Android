@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class WPViewPager extends ViewPager {
-
     private boolean enabled;
     private int mPreviousPage;
 

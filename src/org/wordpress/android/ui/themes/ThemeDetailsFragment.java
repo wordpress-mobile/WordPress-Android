@@ -1,14 +1,16 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
@@ -21,8 +23,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.view.Menu;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
@@ -38,8 +38,7 @@ import java.util.ArrayList;
 /**
  * A fragment to show the theme's details, including its description and features.
  */
-public class ThemeDetailsFragment extends SherlockDialogFragment {
-
+public class ThemeDetailsFragment extends DialogFragment {
     public static final String TAG = ThemeDetailsFragment.class.getName();
     private static final String ARGS_THEME_ID = "ARGS_THEME_ID";
 
@@ -135,7 +134,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mParentView = inflater.inflate(R.layout.theme_details_fragment, container, false);
 
         mNameView = (TextView) mParentView.findViewById(R.id.theme_details_fragment_name);
@@ -155,7 +153,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
         mViewSiteButton = (Button) mParentView.findViewById(R.id.theme_details_fragment_view_site_button);
         mViewSiteButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ViewSiteActivity.class);
@@ -165,7 +162,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         });
 
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (mPreviewURL != null && hasCallback())
@@ -174,7 +170,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         });
 
         mActivateThemeButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String themeId = getThemeId();
@@ -297,7 +292,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
      **/
     private void populateViews(LinearLayout linearLayout, View[] views, Context context)
     {
-
         RelativeLayout.LayoutParams llParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -307,7 +301,6 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
 
 
         if (Utils.isXLarge(getActivity())) {
-
             int minDialogWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int dialogWidth = Math.max((int) (display.getWidth() * 0.6), minDialogWidth);
             maxWidth = dialogWidth / 2 - llParams.leftMargin - llParams.rightMargin;
@@ -366,5 +359,4 @@ public class ThemeDetailsFragment extends SherlockDialogFragment {
         }
         linearLayout.addView(newLL);
     }
-
 }

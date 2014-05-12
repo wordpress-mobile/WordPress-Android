@@ -7,7 +7,6 @@ import android.text.TextUtils;
  * http://developer.wordpress.com/docs/photon/
  */
 public class PhotonUtils {
-
     private PhotonUtils() {
         throw new AssertionError();
     }

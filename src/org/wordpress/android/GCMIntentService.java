@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gcm.GCMBaseIntentService;
@@ -34,7 +33,6 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
-
     public static Map<String, Bundle> activeNotificationsMap = new HashMap<String, Bundle>();
     private int notificationId = 1337;
 
@@ -145,30 +143,26 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         Intent resultIntent = new Intent(this, PostsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (activeNotificationsMap.size() <= 1) {
-            mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.notification_icon)
-                            .setContentTitle(title)
-                            .setContentText(message)
-                            .setTicker(message)
-                            .setAutoCancel(true)
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
+                                                     .setContentText(message).setTicker(message).setAutoCancel(true)
+                                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
-            if (note_id != null)
+            if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+            }
 
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
                 Intent commentReplyIntent = new Intent(this, PostsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                        | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
                 commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
                 commentReplyIntent.addCategory("comment-reply");
@@ -187,7 +181,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                 mBuilder.setLargeIcon(largeIconBitmap);
             }
         } else {
-
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
             int noteCtr = 1;
@@ -214,8 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications),
                     activeNotificationsMap.size());
 
-            mBuilder =
-                    new NotificationCompat.Builder(this)
+            mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
                             .setSmallIcon(R.drawable.notification_icon)
                             .setContentTitle("WordPress")
@@ -252,7 +244,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     @Override
     protected void onRegistered(Context context, String regId) {
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (regId != null && regId.length() > 0) {
             // Get or create UUID for WP.com notes api
@@ -272,5 +263,4 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onUnregistered(Context context, String regId) {
         AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
     }
-
 }

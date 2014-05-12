@@ -1,10 +1,8 @@
 package org.wordpress.android.datasets;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
@@ -69,7 +67,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         reset(db);
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // IMPORTANT: do NOT call super() here - doing so throws a SQLiteException
@@ -161,6 +158,5 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             }
         }.start();
     }
-
 
 }

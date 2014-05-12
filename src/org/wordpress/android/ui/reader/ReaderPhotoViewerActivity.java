@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,7 +20,7 @@ import org.wordpress.android.widgets.photoview.PhotoViewAttacher;
 /**
  * Full-screen photo viewer, relies on widgets.photoview for pinch/zoom & double tap enlargement
  */
-public class ReaderPhotoViewerActivity extends FragmentActivity {
+public class ReaderPhotoViewerActivity extends Activity {
     static final String ARG_IMAGE_URL = "image_url";
     private String mImageUrl;
 
@@ -69,5 +69,4 @@ public class ReaderPhotoViewerActivity extends FragmentActivity {
         if (mImageUrl != null)
             outState.putString(ARG_IMAGE_URL, mImageUrl);
     }
-
 }

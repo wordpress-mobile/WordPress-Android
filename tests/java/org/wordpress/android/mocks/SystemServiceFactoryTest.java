@@ -32,5 +32,4 @@ public class SystemServiceFactoryTest implements SystemServiceFactoryAbstract {
         return null;
     }
 
-
 }

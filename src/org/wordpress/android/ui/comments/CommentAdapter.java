@@ -157,10 +157,8 @@ class CommentAdapter extends BaseAdapter {
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
             // animate the selection change on ICS or later (looks wonky on Gingerbread)
-            if (SysUtils.isGteAndroid4()) {
-                holder.imgCheckmark.clearAnimation();
-                AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-            }
+            holder.imgCheckmark.clearAnimation();
+            AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
             holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 

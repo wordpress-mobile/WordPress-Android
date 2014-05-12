@@ -1,22 +1,21 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -27,8 +26,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPViewPager;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-public class EditPostActivity extends SherlockFragmentActivity {
-
+public class EditPostActivity extends Activity {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -50,7 +48,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -74,8 +72,10 @@ public class EditPostActivity extends SherlockFragmentActivity {
         setContentView(R.layout.activity_new_edit_post);
 
         // Set up the action bar.
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
@@ -85,7 +85,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
                     || EditPostContentFragment.NEW_MEDIA_POST.equals(action)
                     || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
                     || (extras != null && extras.getInt("quick-media", -1) > -1)) {
-
                 if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
@@ -140,7 +139,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
         setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (WPViewPager) findViewById(R.id.pager);
@@ -154,8 +153,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-
-                supportInvalidateOptionsMenu();
+                invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
                     setTitle(WordPress.getCurrentBlog().getBlogName());
                 } else if (position == PAGE_SETTINGS) {
@@ -202,9 +200,9 @@ public class EditPostActivity extends SherlockFragmentActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_post, menu);
         return true;
     }
@@ -226,7 +224,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
 
     // Menu actions
     @Override
-    public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
             if (mPost.isUploaded()) {
@@ -248,7 +246,7 @@ public class EditPostActivity extends SherlockFragmentActivity {
         } else if (itemId == android.R.id.home) {
             if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
                 mViewPager.setCurrentItem(PAGE_CONTENT);
-                supportInvalidateOptionsMenu();
+                invalidateOptionsMenu();
             } else {
                 showCancelAlert();
             }
@@ -286,15 +284,16 @@ public class EditPostActivity extends SherlockFragmentActivity {
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() > PAGE_CONTENT) {
             mViewPager.setCurrentItem(PAGE_CONTENT);
-            supportInvalidateOptionsMenu();
+            invalidateOptionsMenu();
             return;
         }
 
-        if (getSupportActionBar() != null) {
-            if (getSupportActionBar().isShowing())
+        if (getActionBar() != null) {
+            if (getActionBar().isShowing()) {
                 showCancelAlert();
-            else if (mEditPostContentFragment != null)
+            } else if (mEditPostContentFragment != null) {
                 mEditPostContentFragment.setContentEditingModeVisible(false);
+            }
         }
     }
 
@@ -362,7 +361,6 @@ public class EditPostActivity extends SherlockFragmentActivity {
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }

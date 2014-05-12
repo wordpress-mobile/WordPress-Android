@@ -2,12 +2,10 @@ package org.wordpress.android.util;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,7 +15,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 /**
  * An alert dialog fragment for XML-RPC authentication failures
  */
-public class AuthErrorDialogFragment extends SherlockDialogFragment {
+public class AuthErrorDialogFragment extends DialogFragment {
     public static int DEFAULT_RESOURCE_ID = -1;
 
     private static boolean mIsWPCom;

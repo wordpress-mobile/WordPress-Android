@@ -3,14 +3,17 @@ package org.wordpress.android.ui.media;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -20,20 +23,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +41,7 @@ import java.util.List;
  * A fragment display a media item's details.
  * Only appears on phone.
  */
-public class MediaItemFragment extends SherlockFragment {
-
+public class MediaItemFragment extends Fragment {
     private static final String ARGS_MEDIA_ID = "media_id";
 
     public static final String TAG = MediaItemFragment.class.getName();
@@ -118,7 +116,6 @@ public class MediaItemFragment extends SherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mView = inflater.inflate(R.layout.media_listitem_details, container, false);
 
         mTitleView = (TextView) mView.findViewById(R.id.media_listitem_details_title);
@@ -166,8 +163,9 @@ public class MediaItemFragment extends SherlockFragment {
         // check whether or not to show the edit button
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         mIsLocal = MediaUtils.isLocalFile(state);
-        if (mIsLocal)
-            getSherlockActivity().invalidateOptionsMenu();
+        if (mIsLocal && getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        }
 
         // title
         mTitleView.setText(cursor.getString(cursor.getColumnIndex("title")));
@@ -220,7 +218,6 @@ public class MediaItemFragment extends SherlockFragment {
 
         // image and dimensions
         if (MediaUtils.isValidImage(imageUri)) {
-
             int width = cursor.getInt(cursor.getColumnIndex("width"));
             int height = cursor.getInt(cursor.getColumnIndex("height"));
 
@@ -291,7 +288,6 @@ public class MediaItemFragment extends SherlockFragment {
     }
 
     private synchronized void loadLocalImage(ImageView imageView, String filePath, int width, int height) {
-
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
 
@@ -341,7 +337,6 @@ public class MediaItemFragment extends SherlockFragment {
                     .setMessage(R.string.confirm_delete_media)
                     .setCancelable(true)
                     .setPositiveButton(R.string.delete, new OnClickListener() {
-
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                                 ArrayList<String> ids = new ArrayList<String>(1);
@@ -358,5 +353,4 @@ public class MediaItemFragment extends SherlockFragment {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

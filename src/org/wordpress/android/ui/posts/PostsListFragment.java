@@ -2,11 +2,11 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
+import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.ListFragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +36,7 @@ import org.xmlrpc.android.ApiHelper.ErrorType;
 import java.util.List;
 import java.util.Vector;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class PostsListFragment extends ListFragment implements WordPress.OnPostUploadedListener {
     public static final int POSTS_REQUEST_COUNT = 20;
@@ -206,6 +206,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             }
         }
         initPullToRefreshHelper();
+        mPullToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
     }
 
@@ -220,6 +221,12 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             throw new ClassCastException(activity.toString()
                     + " must implement Callback");
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 
     public void onResume() {

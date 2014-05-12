@@ -1,15 +1,14 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.MenuItem;
+import android.view.MenuItem;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /*
@@ -43,7 +41,6 @@ public class ReaderActivity extends WPActionBarActivity
                                        FragmentManager.OnBackStackChangedListener,
                                        ReaderPostDetailFragment.PostChangeListener,
                                        ReaderFullScreenUtils.FullScreenListener {
-
     public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
 
     public static final String ARG_READER_FRAGMENT = "reader_fragment";
@@ -60,7 +57,7 @@ public class ReaderActivity extends WPActionBarActivity
         super.onCreate(savedInstanceState);
         createMenuDrawer(R.layout.reader_activity_main);
 
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        getFragmentManager().addOnBackStackChangedListener(this);
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
@@ -91,8 +88,8 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
+    protected void onResume() {
+        super.onResume();
         checkMenuDrawer();
     }
 
@@ -123,7 +120,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (hasListFragment() && hasDetailFragment()) {
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -146,7 +143,7 @@ public class ReaderActivity extends WPActionBarActivity
             AppLog.w(T.READER, "reader activity > null menu drawer");
             return;
         }
-        int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+        int entryCount = getFragmentManager().getBackStackEntryCount();
         mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
     }
 
@@ -205,7 +202,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment == null && detailFragment == null)
             return;
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (detailFragment != null)
             ft.remove(detailFragment);
         if (listFragment != null)
@@ -219,14 +216,14 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragment(final String tagName) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName);
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null)
             return null;
         return ((ReaderPostListFragment) fragment);
@@ -243,7 +240,7 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // if list fragment exists, replace it with the detail and add to backstack
@@ -258,7 +255,7 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_reader_post_detail));
         if (fragment == null)
             return null;
@@ -334,9 +331,10 @@ public class ReaderActivity extends WPActionBarActivity
         if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen)
             return false;
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar == null)
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
             return false;
+        }
 
         if (enableFullScreen) {
             actionBar.hide();
@@ -353,12 +351,11 @@ public class ReaderActivity extends WPActionBarActivity
         return mIsFullScreen;
     }
 
-    /*
-     * auto-hiding the ActionBar is jittery/buggy on Gingerbread (and probably other
-     * pre-ICS devices), and requires the ActionBar overlay (ICS or later)
+    /**
+     * full screen supported if the menu drawer is not static (XLarge screen landscape for instance)
      */
     public boolean isFullScreenSupported() {
-        return (SysUtils.isGteAndroid4()) && !isStaticMenuDrawer();
+        return !isStaticMenuDrawer();
     }
 
     /*
@@ -384,5 +381,4 @@ public class ReaderActivity extends WPActionBarActivity
                 listFragment.reloadPost(updatedPost);
         }
     }
-
 }

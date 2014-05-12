@@ -2,8 +2,7 @@ package org.wordpress.android.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
-
-import com.actionbarsherlock.internal.widget.IcsSpinner;
+import android.widget.Spinner;
 
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.util.AppLog;
@@ -11,7 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.lang.reflect.Field;
 
-public class CustomSpinner extends IcsSpinner {
+public class CustomSpinner extends Spinner {
     OnItemSelectedListener listener;
 
     public CustomSpinner(Context context, AttributeSet attrs) {
@@ -30,7 +29,7 @@ public class CustomSpinner extends IcsSpinner {
             OnItemSelectedListener listener) {
         this.listener = listener;
     }
-    
+
     private void ignoreOldSelectionByReflection() {
         try {
             Class<?> c = this.getClass().getSuperclass().getSuperclass().getSuperclass();

@@ -2,14 +2,12 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import org.wordpress.android.util.StatUtils;
 
 /**
  * A model to represent a referrer child stat.
  */
 public class StatsReferrer {
-
     private String mBlogId;
     private long mDate;
     private String mGroupId;
@@ -28,7 +26,7 @@ public class StatsReferrer {
         setBlogId(blogId);
         setDate(StatUtils.toMs(date));
         setGroupId(groupId);
-        
+
         setName(result.getString(0));
         setTotal(result.getInt(1));
     }

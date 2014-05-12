@@ -30,30 +30,29 @@ import java.util.Locale;
  * Fragment for summary stats. Only a single page.
  */
 public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment {
-
     public static final String TAG = StatsTotalsFollowersAndSharesFragment.class.getSimpleName();
-    
+
     private TextView mPostsCountView;
     private TextView mCategoriesCountView;
     private TextView mTagsCountView;
     private TextView mFollowersCountView;
     private TextView mCommentsCountView;
     private TextView mSharesCountView;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_totals_followers_shares, container, false);
 
         final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
-        
+
         mPostsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_posts_count);
         mCategoriesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_categories_count);
         mTagsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_tags_count);
         mFollowersCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_followers_count);
         mCommentsCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_comments_count);
         mSharesCountView = (TextView) view.findViewById(R.id.stats_totals_followers_shares_shares_count);
-        
+
         TextView followersHeader = (TextView) view.findViewById(R.id.stats_totals_followers_shares_header_followers);
         if (followersHeader != null) {
             String headerText = getString(R.string.stats_totals_followers_shares_header_followers) +
@@ -64,7 +63,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
             followersHeader.setText(Html.fromHtml(headerText));
             followersHeader.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
-        
+
         return view;
     }
 
@@ -128,7 +127,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
             mSharesCountView.setText(FormatUtils.formatDecimal(stats.getShares()));
         }
     }
-    
+
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_totals_followers_and_shares);

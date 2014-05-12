@@ -8,13 +8,13 @@ import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.CursorAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -43,7 +43,6 @@ import java.util.Map;
  * An adapter for the media gallery listViews.
  */
 public class MediaGridAdapter extends CursorAdapter {
-    
     private MediaGridAdapterCallback mCallback;
     private final ArrayList<String> mCheckedItems;
     private boolean mHasRetrievedAll;
@@ -56,7 +55,8 @@ public class MediaGridAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
     private boolean mIsCurrentBlogPhotonCapable;
     private ImageLoader mImageLoader;
-    
+    private Context mContext;
+
     public interface MediaGridAdapterCallback {
         public void fetchMoreData(int offset);
         public void onRetryUpload(String mediaId);
@@ -66,18 +66,15 @@ public class MediaGridAdapter extends CursorAdapter {
     interface BitmapReadyCallback {
         void onBitmapReady(Bitmap bitmap);
     }
-    
+
     private static enum ViewTypes {
         LOCAL, NETWORK, PROGRESS, SPACER
     }
 
-    public MediaGridAdapter(Context context,
-                            Cursor c,
-                            int flags,
-                            ArrayList<String> checkedItems,
+    public MediaGridAdapter(Context context, Cursor c, int flags, ArrayList<String> checkedItems,
                             ImageLoader imageLoader) {
         super(context, c, flags);
-
+        mContext = context;
         mCheckedItems = checkedItems;
         mLocalImageWidth = context.getResources().getDimensionPixelSize(R.dimen.media_grid_local_image_width);
         mInflater = LayoutInflater.from(context);
@@ -97,9 +94,10 @@ public class MediaGridAdapter extends CursorAdapter {
     }
 
     private void checkPhotonCapable() {
-        mIsCurrentBlogPhotonCapable = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
+        mIsCurrentBlogPhotonCapable =
+                (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable());
     }
-    
+
     public ArrayList<String> getCheckedItems() {
         return mCheckedItems;
     }
@@ -135,15 +133,14 @@ public class MediaGridAdapter extends CursorAdapter {
 	@SuppressLint("DefaultLocale")
 	@Override
     public void bindView(final View view, Context context, Cursor cursor) {
-        
         int itemViewType = getItemViewType(cursor.getPosition());
-        
+
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
             if (mIsRefreshing) {
                 int height = mContext.getResources().getDimensionPixelSize(R.dimen.media_grid_progress_height);
                 view.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT, height));
                 view.setVisibility(View.VISIBLE);
-            } else { 
+            } else {
                 view.setLayoutParams(new GridView.LayoutParams(0, 0));
                 view.setVisibility(View.GONE);
             }
@@ -162,7 +159,7 @@ public class MediaGridAdapter extends CursorAdapter {
             holder = new GridViewHolder(view);
             view.setTag(holder);
         }
-        
+
         final String mediaId = cursor.getString(cursor.getColumnIndex("mediaId"));
 
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
@@ -173,13 +170,13 @@ public class MediaGridAdapter extends CursorAdapter {
         if (holder.filenameView != null) {
             holder.filenameView.setText(fileName);
         }
-        
+
         // title of media
         String title = cursor.getString(cursor.getColumnIndex("title"));
         if (title == null || title.equals(""))
             title = fileName;
         holder.titleView.setText(title);
-        
+
         // upload date
         if (holder.uploadDateView != null) {
             String date = MediaUtils.getDate(cursor.getLong(cursor.getColumnIndex("date_created_gmt")));
@@ -211,7 +208,7 @@ public class MediaGridAdapter extends CursorAdapter {
             if( MediaUtils.isValidImage(filePath)) {
                 int width = cursor.getInt(cursor.getColumnIndex("width"));
                 int height = cursor.getInt(cursor.getColumnIndex("height"));
-                
+
                 if (width > 0 && height > 0) {
                     String dimensions = width + "x" + height;
                     holder.dimensionView.setText(dimensions);
@@ -225,7 +222,6 @@ public class MediaGridAdapter extends CursorAdapter {
         // multi-select highlighting
         holder.frameLayout.setTag(mediaId);
         holder.frameLayout.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            
             @Override
             public void onCheckedChanged(CheckableFrameLayout view, boolean isChecked) {
                 String mediaId = (String) view.getTag();
@@ -236,14 +232,14 @@ public class MediaGridAdapter extends CursorAdapter {
                 } else {
                     mCheckedItems.remove(mediaId);
                 }
-                
+
             }
         });
         holder.frameLayout.setChecked(mCheckedItems.contains(mediaId));
-        
+
         // resizing layout to fit nicely into grid view
         updateGridWidth(context, holder.frameLayout);
-        
+
         // show upload state
         if (holder.stateTextView != null) {
             if (state != null && state.length() > 0) {
@@ -254,11 +250,10 @@ public class MediaGridAdapter extends CursorAdapter {
                     holder.progressUpload.setVisibility(View.GONE);
                 }
 
-                // add onclick to retry failed uploads 
+                // add onclick to retry failed uploads
                 if (state.equals("failed")) {
                     state = "retry";
                     holder.stateTextView.setOnClickListener(new OnClickListener() {
-                        
                         @Override
                         public void onClick(View v) {
                             if (!inMultiSelect()) {
@@ -313,7 +308,7 @@ public class MediaGridAdapter extends CursorAdapter {
             // no default image while downloading
             imageView.setDefaultImageResId(0);
 
-            if (MediaUtils.isValidImage(filepath)) { 
+            if (MediaUtils.isValidImage(filepath)) {
                 imageView.setTag(thumbnailURL);
                 imageView.setImageUrl(thumbnailURL, mImageLoader);
             } else {
@@ -322,23 +317,23 @@ public class MediaGridAdapter extends CursorAdapter {
         } else {
             imageView.setImageResource(0);
         }
-        
+
     }
-    
+
     private synchronized void loadLocalImage(Cursor cursor, final ImageView imageView) {
         final String filePath = cursor.getString(cursor.getColumnIndex("filePath"));
 
         if (MediaUtils.isValidImage(filePath)) {
             imageView.setTag(filePath);
-            
+
             Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
             if (bitmap != null) {
                 imageView.setImageBitmap(bitmap);
             } else {
                 imageView.setImageBitmap(null);
-                
+
                 boolean shouldFetch = false;
-                
+
                 List<BitmapReadyCallback> list;
                 if (mFilePathToCallbackMap.containsKey(filePath)) {
                     list = mFilePathToCallbackMap.get(filePath);
@@ -348,14 +343,13 @@ public class MediaGridAdapter extends CursorAdapter {
                     mFilePathToCallbackMap.put(filePath, list);
                 }
                 list.add(new BitmapReadyCallback() {
-                    
                     @Override
                     public void onBitmapReady(Bitmap bitmap) {
                         if (imageView.getTag() instanceof String && imageView.getTag().equals(filePath))
                             imageView.setImageBitmap(bitmap);
                     }
                 });
-                
+
 
                 if (shouldFetch) {
                     fetchBitmap(filePath);
@@ -372,17 +366,16 @@ public class MediaGridAdapter extends CursorAdapter {
             @Override
             public void onBitmapReady(final String path, ImageView imageView, final Bitmap bitmap) {
                 mHandler.post(new Runnable() {
-                    
                     @Override
                     public void run() {
                         List<BitmapReadyCallback> callbacks = mFilePathToCallbackMap.get(path);
                         for (BitmapReadyCallback callback : callbacks) {
                             callback.onBitmapReady(bitmap);
                         }
-                        
+
                         WordPress.getBitmapCache().put(path, bitmap);
                         callbacks.clear();
-                        mFilePathToCallbackMap.remove(path);        
+                        mFilePathToCallbackMap.remove(path);
                     }
                 });
             }
@@ -393,17 +386,17 @@ public class MediaGridAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup root) {
         int itemViewType = getItemViewType(cursor.getPosition());
-        
+
         // spacer and progress spinner views
         if (itemViewType == ViewTypes.PROGRESS.ordinal()) {
             return mInflater.inflate(R.layout.media_grid_progress, root, false);
         } else if (itemViewType == ViewTypes.SPACER.ordinal()) {
             return mInflater.inflate(R.layout.media_grid_item, root, false);
         }
-        
+
         View view =  mInflater.inflate(R.layout.media_grid_item, root, false);
         ViewStub imageStub = (ViewStub) view.findViewById(R.id.media_grid_image_stub);
-        
+
         // We need to use ViewStubs to inflate the image to either:
         // - a regular ImageView (for local images)
         // - a FadeInNetworkImageView (for network images)
@@ -415,11 +408,11 @@ public class MediaGridAdapter extends CursorAdapter {
         } else {
             imageStub.setLayoutResource(R.layout.media_grid_image_network);
         }
-        
+
         imageStub.inflate();
 
         view.setTag(new GridViewHolder(view));
-        
+
         return view;
     }
 
@@ -427,21 +420,21 @@ public class MediaGridAdapter extends CursorAdapter {
     public int getViewTypeCount() {
         return ViewTypes.values().length;
     }
-    
+
     @Override
     public int getItemViewType(int position) {
         Cursor cursor = getCursor();
         cursor.moveToPosition(position);
-        
+
         // spacer / progress cells
         int _id = cursor.getInt(cursor.getColumnIndex("_id"));
         if (_id < 0) {
             if (_id == Integer.MIN_VALUE)
                 return ViewTypes.PROGRESS.ordinal();
-            else 
+            else
                 return ViewTypes.SPACER.ordinal();
         }
-        
+
         // regular cells
         String state = cursor.getString(cursor.getColumnIndex("uploadState"));
         if (MediaUtils.isLocalFile(state))
@@ -449,22 +442,20 @@ public class MediaGridAdapter extends CursorAdapter {
         else
             return ViewTypes.NETWORK.ordinal();
     }
-    
+
     /** Updates the width of a cell to max out the space available, for phones **/
     private void updateGridWidth(Context context, View view) {
-
         setGridItemWidth();
         int columnCount = getColumnCount(context);
-        
+
         if (columnCount > 1) {
-            
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
             int margins = (int) Utils.dpToPx(8);
             params.setMargins(0, margins, 0, margins);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
             view.setLayoutParams(params);
         }
-        
+
     }
 
     @Override
@@ -475,10 +466,10 @@ public class MediaGridAdapter extends CursorAdapter {
             mCursorDataCount = 0;
             return super.swapCursor(newCursor);
         }
-        
+
         mCursorDataCount = newCursor.getCount();
 
-        // to mimic the infinite the notification's infinite scroll ui 
+        // to mimic the infinite the notification's infinite scroll ui
         // (with a progress spinner on the bottom of the list), we'll need to add
         // extra cells in the gridview:
         // - spacer cells as fillers to place the progress spinner on the first cell (_id < 0)
@@ -491,7 +482,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int columnCount = getColumnCount(mContext);
         int remainder = newCursor.getCount() % columnCount;
         if (remainder > 0) {
-            int spaceCount = columnCount - remainder; 
+            int spaceCount = columnCount - remainder;
             for (int i = 0; i < spaceCount; i++ ) {
                 int id = i - spaceCount;
                 matrixCursor.addRow(new Object[] {id + ""});
@@ -500,7 +491,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
         // add progress spinner cell
         matrixCursor.addRow(new Object[] { Integer.MIN_VALUE });
-        
+
         // use a merge cursor to place merge the extra rows at the bottom of the newly swapped cursor
         MergeCursor mergeCursor = new MergeCursor(new Cursor[] { newCursor, matrixCursor });
         return super.swapCursor(mergeCursor);
@@ -510,7 +501,7 @@ public class MediaGridAdapter extends CursorAdapter {
     private int getColumnCount(Context context) {
         return context.getResources().getInteger(R.integer.media_grid_num_columns);
     }
-    
+
     public void setCallback(MediaGridAdapterCallback callback) {
         mCallback = callback;
     }
@@ -518,12 +509,12 @@ public class MediaGridAdapter extends CursorAdapter {
     public void setHasRetrievedAll(boolean b) {
         mHasRetrievedAll = b;
     }
-    
+
     public void setRefreshing(boolean refreshing) {
         mIsRefreshing = refreshing;
         notifyDataSetChanged();
     }
-    
+
     public int getDataCount() {
         return mCursorDataCount;
     }

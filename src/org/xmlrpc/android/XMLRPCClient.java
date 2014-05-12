@@ -320,7 +320,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     public void preparePostMethod(String method, Object[] params, File tempFile) throws IOException, XMLRPCException, IllegalArgumentException, IllegalStateException {
         // prepare POST body
         if (method.equals("wp.uploadFile")) {
-
             if (!tempFile.exists() && !tempFile.mkdirs()) {
                 throw new XMLRPCException("Path to file could not be created.");
             }
@@ -394,7 +393,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
      * For synchronous calls the Thread function of this class isn't used.
      */
     private class Caller extends Thread {
-
         private XMLRPCCallback listener;
         private long threadId;
         private String methodName;
@@ -432,7 +430,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
          */
         @Override
         public void run() {
-
             if(listener == null)
                 return;
 
