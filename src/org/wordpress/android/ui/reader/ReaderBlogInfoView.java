@@ -181,7 +181,7 @@ class ReaderBlogInfoView extends FrameLayout {
         if (blogInfo.isPrivate) {
             hideProgress();
             mImageMshot.setScaleType(ImageView.ScaleType.CENTER);
-            mImageMshot.setImageResource(R.drawable.dashicon_lock);
+            mImageMshot.setImageResource(R.drawable.ic_action_secure);
             return;
         }
 
