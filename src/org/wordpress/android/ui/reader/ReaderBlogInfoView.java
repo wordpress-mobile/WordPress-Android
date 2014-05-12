@@ -16,7 +16,6 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -49,12 +48,11 @@ class ReaderBlogInfoView extends FrameLayout {
         View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int marginWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
-        mMshotWidth = displayWidth - (marginWidth * 2);
+        // mshot height is 75% of the width
         mMshotDefaultHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_height);
-        mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
+        mMshotWidth = (int) (mMshotDefaultHeight * 1.33f);
 
+        mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
         mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
         mMshotContainerView = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
     }
@@ -212,11 +210,12 @@ class ReaderBlogInfoView extends FrameLayout {
      * scale the mshot image based on the scroll position of ReaderPostListFragment's listView
      */
     public void scaleMshotImageBasedOnScrollPos(int scrollPos) {
-        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.005f));
+        float scale = Math.max(0f, 0.9f + (-scrollPos * 0.0025f));
         if (scale != mCurrentMshotScale) {
             float centerX = mMshotWidth * 0.5f;
+            float centerY = mMshotDefaultHeight * 0.5f;
             Matrix matrix = new Matrix();
-            matrix.setScale(scale, scale, centerX, 0);
+            matrix.setScale(scale, scale, centerX, centerY);
             mImageMshot.setImageMatrix(matrix);
             mCurrentMshotScale = scale;
         }

@@ -39,13 +39,15 @@ public class PhotonUtils {
      */
     private static final int MAX_PHOTON_SZ = 1000;
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
-        if (TextUtils.isEmpty(imageUrl))
+        if (TextUtils.isEmpty(imageUrl)) {
             return "";
+        }
 
         // make sure it's valid
         int schemePos = imageUrl.indexOf("://");
-        if (schemePos==-1)
+        if (schemePos == -1) {
             return imageUrl;
+        }
 
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
@@ -54,14 +56,17 @@ public class PhotonUtils {
         // can't be read by BitmapFactory.decodeByteArray (used by Volley in ImageRequest.java
         // to decode the downloaded image)
         // ex: http://i0.wp.com/lusianne.files.wordpress.com/2013/08/193.gif?resize=768,320
-        if (imageUrl.endsWith(".gif"))
+        if (imageUrl.endsWith(".gif")) {
             return imageUrl;
+        }
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
         // (these are screenshots of the blog that often appear in freshly pressed posts)
         // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
-        if (isMshotsUrl(imageUrl))
+        // ex: http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
+        if (isMshotsUrl(imageUrl)) {
             return imageUrl + String.format("?w=%d&h=%d", width, height);
+        }
 
         // photon fails with images larger than the max, so enforce a max size
         // TODO: revisit this when photon increases the max - https://code.trac.wordpress.org/ticket/47

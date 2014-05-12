@@ -107,10 +107,17 @@ public class ReaderBlogInfo {
         return !TextUtils.isEmpty(description);
     }
 
+    /*
+     * returns the mshot url to use for this blog, ex:
+     *   http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
+     * note that while mshots support a "h=" parameter, this crops rather than
+     * scales the image to that height
+     *   https://github.com/Automattic/mShots
+     */
     public String getMshotsUrl(int width) {
         return "http://s.wordpress.com/mshots/v1/"
              + UrlUtils.urlEncode(getUrl())
-             + "?w=" + Integer.toString(width);
+             + String.format("?w=%d", width);
     }
 
     protected boolean isSameAs(ReaderBlogInfo blogInfo) {

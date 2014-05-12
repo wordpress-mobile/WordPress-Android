@@ -11,6 +11,7 @@
 
     <FrameLayout
         android:id="@+id/layout_mshot_container"
+        android:background="@color/grey_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
