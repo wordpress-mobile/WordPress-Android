@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -58,7 +57,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -1220,16 +1218,12 @@ public class ReaderPostDetailFragment extends Fragment {
 
     }
 
-    @SuppressLint("NewApi")
     private void showPost() {
-        if (mIsPostTaskRunning)
+        if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new ShowPostTask().execute();
         }
+
+        new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*

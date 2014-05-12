@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.SysUtils;
 
 /**
  * displays a list of users who like a specific reader post
@@ -132,15 +130,11 @@ public class ReaderUserListActivity extends Activity {
         }.start();
     }
 
-    @SuppressLint("NewApi")
     private void loadUsers() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(AppLog.T.READER, "user task already running");
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadUsersTask().execute();
         }
+        new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private boolean mIsTaskRunning = false;

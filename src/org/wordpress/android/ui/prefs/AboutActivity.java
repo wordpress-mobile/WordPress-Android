@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,8 +26,9 @@ public class AboutActivity extends Activity implements OnClickListener {
         super.onCreate(icicle);
         setContentView(R.layout.about);
 
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         TextView version = (TextView) findViewById(R.id.about_version);

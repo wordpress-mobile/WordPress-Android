@@ -24,14 +24,11 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         context.startActivity(intent);
     }
 
-    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            mWebView.getSettings().setDisplayZoomControls(false);
-        }
+        mWebView.getSettings().setDisplayZoomControls(false);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
