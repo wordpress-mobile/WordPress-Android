@@ -46,8 +46,8 @@
 
         <LinearLayout
             android:id="@+id/layout_bloginfo_container_inner"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
             android:layout_marginLeft="@dimen/reader_list_margin"
             android:layout_marginRight="@dimen/reader_list_margin"
             android:layout_width="match_parent"
