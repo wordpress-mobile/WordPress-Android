@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -33,6 +34,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private final WPNetworkImageView mImageMshot;
     private final ViewGroup mInfoContainerView;
     private final ViewGroup mMshotContainerView;
+    private final ProgressBar mMshotProgress;
 
     private final int mMshotWidth;
     private final int mMshotDefaultHeight;
@@ -53,6 +55,12 @@ class ReaderBlogInfoView extends FrameLayout {
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
         mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
         mMshotContainerView = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
+
+        // position the progressBar halfway down the mshot - done this way to avoid it
+        // moving when the mshot container is resized
+        int actionBarHeight = DisplayUtils.getActionBarHeight(context);
+        mMshotProgress = (ProgressBar) view.findViewById(R.id.progress_mshot);
+        mMshotProgress.setTranslationY((mMshotDefaultHeight / 2) - (actionBarHeight / 2));
     }
 
     /*
@@ -200,8 +208,7 @@ class ReaderBlogInfoView extends FrameLayout {
      * design time, so it'll stay visible until this is called
      */
     private void hideProgress() {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_mshot);
-        progress.setVisibility(View.GONE);
+        mMshotProgress.setVisibility(View.GONE);
     }
 
     /*
