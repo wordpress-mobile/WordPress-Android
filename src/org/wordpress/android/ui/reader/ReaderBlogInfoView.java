@@ -28,6 +28,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 class ReaderBlogInfoView extends FrameLayout {
     public interface BlogInfoListener {
         void onBlogInfoLoaded();
+        void onBlogInfoFailed();
     }
     private BlogInfoListener mBlogInfoListener;
 
@@ -40,7 +41,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private final int mMshotDefaultHeight;
 
     private float mCurrentMshotScale = 1.0f;
-    private boolean mIsLoaded;
+    private boolean mIsBlogInfoLoaded;
 
     public ReaderBlogInfoView(Context context){
         super(context);
@@ -84,7 +85,7 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
-        mIsLoaded = true;
+        mIsBlogInfoLoaded = true;
         layoutInner.setVisibility(View.VISIBLE);
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
@@ -145,7 +146,7 @@ class ReaderBlogInfoView extends FrameLayout {
     }
 
     public boolean isEmpty() {
-        return !mIsLoaded;
+        return !mIsBlogInfoLoaded;
     }
 
     /*
@@ -159,6 +160,10 @@ class ReaderBlogInfoView extends FrameLayout {
                     showBlogInfo(blogInfo);
                 } else {
                     hideProgress();
+                    if (!mIsBlogInfoLoaded && mBlogInfoListener != null) {
+                        mBlogInfoListener.onBlogInfoFailed();
+                    }
+
                 }
             }
         };

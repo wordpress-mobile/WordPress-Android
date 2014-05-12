@@ -642,7 +642,7 @@
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
-    <string name="reader_toast_err_get_blog">Unable to retrieve this blog</string>
+    <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
     <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
