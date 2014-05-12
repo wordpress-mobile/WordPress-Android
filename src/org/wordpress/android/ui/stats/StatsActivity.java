@@ -45,6 +45,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
@@ -644,6 +645,12 @@ public class StatsActivity extends WPActionBarActivity {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
                 if (!mIsUpdatingStats) {
                     mPullToRefreshHelper.setRefreshing(false);
+                }
+                
+                if (intent.getBooleanExtra(StatsService.EXTRA_IS_ERROR, false)) {
+                    ToastUtils.showToast(StatsActivity.this, 
+                            intent.getStringExtra(StatsService.EXTRA_ERROR_MSG),
+                            Duration.LONG);
                 }
             }
         }
