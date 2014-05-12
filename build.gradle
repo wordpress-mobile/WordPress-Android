@@ -56,9 +56,9 @@ android {
 
     defaultConfig {
         packageName "org.wordpress.android"
-        versionName "2.8"
-        versionCode 109
-        minSdkVersion 9
+        versionName "2.8.1"
+        versionCode 110
+        minSdkVersion 14
         targetSdkVersion 19
     }
 
@@ -66,7 +66,7 @@ android {
         // Provided by maven central
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-        compile 'com.android.support:support-v4:19.0.+'
+        compile 'com.android.support:support-v13:19.0.+'
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
@@ -75,7 +75,6 @@ android {
         androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
-        compile 'org.wordpress:actionbarsherlock:4.4.0'
         compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
         compile 'org.wordpress:gcm:1.0.0'
         compile 'org.wordpress:volley:wp-0.0.1'
@@ -87,7 +86,6 @@ android {
         compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
-        compile 'org.wordpress:pulltorefresh-abs:+'
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'

@@ -236,6 +236,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Reader - Commented on Article");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_article");
                 break;
+            case READER_FOLLOWED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Followed Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_site");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
@@ -386,6 +391,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Signed into Jetpack from Stats Screen");
+                break;
+            case STATS_ACCESSED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Accessed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_accessed_stats");
                 break;
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.

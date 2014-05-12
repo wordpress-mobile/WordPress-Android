@@ -37,7 +37,6 @@ import java.util.Date;
  * A utility class to help with date parsing and saving summaries in stats
  */
 public class StatUtils {
-
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;

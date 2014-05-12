@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,7 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -25,12 +25,12 @@ import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.util.NetworkUtils;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeTabFragment extends SherlockFragment implements OnItemClickListener, RecyclerListener {
+public class ThemeTabFragment extends Fragment implements OnItemClickListener, RecyclerListener {
     public enum ThemeSortType {
         TRENDING("Trending"),
         NEWEST("Newest"),
@@ -59,6 +59,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     }
 
     protected static final String ARGS_SORT = "ARGS_SORT";
+    protected static final String ARGS_PAGE = "ARGS_PAGE";
     protected static final String BUNDLE_SCROLL_POSTION = "BUNDLE_SCROLL_POSTION";
 
     protected GridView mGridView;
@@ -66,18 +67,14 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     protected ThemeTabAdapter mAdapter;
     protected ThemeTabFragmentCallback mCallback;
     protected int mSavedScrollPosition = 0;
-    protected int mPage;
     private boolean mShouldRefreshOnStart;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    protected ThemeTabFragment(int page) {
-        mPage = page;
-    }
-
     public static ThemeTabFragment newInstance(ThemeSortType sort, int page) {
-        ThemeTabFragment fragment = new ThemeTabFragment(page);
+        ThemeTabFragment fragment = new ThemeTabFragment();
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, sort.ordinal());
+        args.putInt(ARGS_PAGE, page);
         fragment.setArguments(args);
         return fragment;
     }
@@ -115,7 +112,7 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
                         return;
                     }
                     if (getActivity() instanceof ThemeBrowserActivity) {
-                        ((ThemeBrowserActivity) getActivity()).fetchThemes(mPage);
+                        ((ThemeBrowserActivity) getActivity()).fetchThemes(getArguments().getInt(ARGS_PAGE));
                     }
                 }
             });
@@ -172,7 +169,6 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
     }
 
     private Cursor fetchThemes(ThemeSortType themeSortType) {
-
         String blogId = getBlogId();
 
         switch(themeSortType) {
@@ -221,7 +217,6 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
             if (tag != null && tag.requestURL != null) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag.requestURL, new ImageListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 
@@ -232,5 +227,17 @@ public class ThemeTabFragment extends SherlockFragment implements OnItemClickLis
                 container.cancelRequest();
             }
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
     }
 }

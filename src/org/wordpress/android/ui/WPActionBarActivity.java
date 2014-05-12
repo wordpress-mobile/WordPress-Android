@@ -1,6 +1,9 @@
 
 package org.wordpress.android.ui;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,27 +12,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
-import com.actionbarsherlock.view.MenuItem;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -67,9 +70,8 @@ import java.util.Map;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends SherlockFragmentActivity {
+public abstract class WPActionBarActivity extends Activity {
     public static final int NEW_BLOG_CANCELED = 10;
-    private static final String TAG = "WPActionBarActivity";
 
     /**
      * AuthenticatorRequest code used when no accounts exist, and user is prompted to add an
@@ -114,7 +116,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
     private ListView mListView;
-    private IcsSpinner mBlogSpinner;
+    private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,6 +159,11 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         refreshMenuDrawer();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    protected boolean isActivityDestroyed() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
+    }
+
     protected void refreshMenuDrawer(){
         // the current blog may have changed while we were away
         setupCurrentBlog();
@@ -183,7 +190,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @param contentViewID {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(int contentViewID) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentViewID);
@@ -197,7 +207,10 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      * @param contentView {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(View contentView) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mMenuDrawer = attachMenuDrawer();
         mMenuDrawer.setContentView(contentView);
@@ -229,12 +242,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
      */
     private MenuDrawer attachMenuDrawer() {
         final MenuDrawer menuDrawer;
+        ActionBar actionBar = getActionBar();
+
         if (isStaticMenuDrawer()) {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(false);
+            }
         } else {
             menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
             menuDrawer.setDrawerIndicatorEnabled(true);
         }
 
@@ -328,7 +347,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         LinearLayout spinnerWrapper = (LinearLayout) layoutInflater.inflate(R.layout.blog_spinner, null);
         if (spinnerWrapper != null) {
             spinnerWrapper.setOnClickListener(new OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     if (mBlogSpinner != null) {
@@ -337,7 +355,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 }
             });
         }
-        mBlogSpinner = (IcsSpinner) spinnerWrapper.findViewById(R.id.blog_spinner);
+        mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         populateBlogSpinner(blogNames);
         mListView.addHeaderView(spinnerWrapper);
@@ -350,7 +368,12 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         if (mBlogSpinner == null)
             return;
         mBlogSpinnerInitialized = false;
-        mBlogSpinner.setAdapter(new BlogSpinnerAdapter(getSupportActionBar().getThemedContext(), blogNames));
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(actionBar.getThemedContext(), blogNames));
+        } else {
+            mBlogSpinner.setAdapter(new BlogSpinnerAdapter(this, blogNames));
+        }
     }
 
     /*
@@ -455,7 +478,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
-
         MenuAdapter(Context context) {
             super(context, R.layout.menu_drawer_row, R.id.menu_row_title, new ArrayList<MenuDrawerItem>());
         }
@@ -507,7 +529,6 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
                 return;
             }
         }
-
         super.onBackPressed();
     }
 
@@ -631,9 +652,9 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
     }
 
-    private IcsAdapterView.OnItemSelectedListener mItemSelectedListener = new IcsAdapterView.OnItemSelectedListener() {
+    private OnItemSelectedListener mItemSelectedListener = new OnItemSelectedListener() {
         @Override
-        public void onItemSelected(IcsAdapterView<?> arg0, View arg1, int position, long arg3) {
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // http://stackoverflow.com/questions/5624825/spinner-onitemselected-executes-when-it-is-not-suppose-to/5918177#5918177
             if (!mBlogSpinnerInitialized) {
                 mBlogSpinnerInitialized = true;
@@ -645,7 +666,7 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
         }
 
         @Override
-        public void onNothingSelected(IcsAdapterView<?> arg0) {
+        public void onNothingSelected(AdapterView<?> parent) {
         }
     };
 
@@ -680,8 +701,18 @@ public abstract class WPActionBarActivity extends SherlockFragmentActivity {
             dialogBuilder.setCancelable(true);
             if (!isFinishing())
                 dialogBuilder.create().show();
+        } else if (item.getItemId()  == R.id.menu_refresh) {
+            // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
+            broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void broadcastAction(String action) {
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        Intent intent = new Intent();
+        intent.setAction(action);
+        lbm.sendBroadcast(intent);
     }
 
     /**

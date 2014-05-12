@@ -23,23 +23,22 @@ import org.wordpress.android.util.SqlUtils;
 
 /**
  * A database for storing stats. Do not access this class directly.
- * Instead, use a {@link ContentResolver} and the URIs listed in 
+ * Instead, use a {@link ContentResolver} and the URIs listed in
  * {@link StatsContentProvider} to perform inserts, updates, and deletes.
  * See {@link org.wordpress.android.ui.stats.service.StatsService} for examples.
  */
 public class WordPressStatsDB extends SQLiteOpenHelper{
-
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "wordpress_stats";
-    
+
     private Context mContext;
-    
+
     public WordPressStatsDB(Context ctx) {
         super(ctx, DATABASE_NAME, null, DATABASE_VERSION);
         mContext = ctx;
         getWritableDatabase();
     }
-    
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(StatsClickGroupsTable.getInstance().toCreateQuery());
@@ -59,9 +58,8 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        
         onCreate(db);
-        
+
         StatsClickGroupsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsClicksTable.getInstance().onUpgrade(db, oldVersion, newVersion);
         StatsGeoviewsTable.getInstance().onUpgrade(db, oldVersion, newVersion);
@@ -85,5 +83,4 @@ public class WordPressStatsDB extends SQLiteOpenHelper{
         SqlUtils.dropAllTables(db);
         onCreate(db);
     }
-
 }

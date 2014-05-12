@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 //See: http://stackoverflow.com/a/11024200
 public class Version implements Comparable<Version> {
-
     private String version;
 
     public final String get() {
@@ -45,5 +44,4 @@ public class Version implements Comparable<Version> {
             return false;
         return this.compareTo((Version) that) == 0;
     }
-
 }

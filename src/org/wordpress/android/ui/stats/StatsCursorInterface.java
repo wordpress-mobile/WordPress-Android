@@ -4,11 +4,9 @@ import android.database.Cursor;
 import android.net.Uri;
 
 /**
- * An interface to call when the cursor has been loaded. 
+ * An interface to call when the cursor has been loaded.
  * Used so that the {@link StatsAbsPagedViewFragment} can update its titles
  */
 interface StatsCursorInterface {
-
     public void onCursorLoaded(Uri uri, Cursor cursor);
-    
 }

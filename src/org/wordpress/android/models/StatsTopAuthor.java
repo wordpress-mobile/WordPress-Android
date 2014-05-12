@@ -9,7 +9,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a top author stat
  */
 public class StatsTopAuthor {
-
     private String mBlogId;
     private long mDate;
     private int mUserId;

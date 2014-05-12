@@ -9,7 +9,6 @@ import java.util.HashSet;
  * of URLs that may be different strings but point to the same URL
  */
 public class ReaderUrlList extends HashSet<String> {
-
     @Override
     public boolean add(String url) {
         return super.add(UrlUtils.normalizeUrl(url));
@@ -32,7 +31,6 @@ public class ReaderUrlList extends HashSet<String> {
             return super.contains(object);
         }
     }
-
 
 
 }

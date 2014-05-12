@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
         <include
             android:id="@+id/empty_view"
             layout="@layout/reader_empty_view"/>
-    </uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_new_posts"

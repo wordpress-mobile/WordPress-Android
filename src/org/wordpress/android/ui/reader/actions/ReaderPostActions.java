@@ -24,13 +24,13 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderPostActions {
-
     public enum PostAction {TOGGLE_LIKE, TOGGLE_FOLLOW}
 
     private ReaderPostActions() {
@@ -77,6 +77,7 @@ public class ReaderPostActions {
                 ReaderPostTable.setBlogPostsFollowStatus(post.blogId, isAskingToFollow);
                 path = "sites/" + post.blogId + "/follows/";
                 if (isAskingToFollow) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
                     path += "new";
                 } else {
                     path += "mine/delete";

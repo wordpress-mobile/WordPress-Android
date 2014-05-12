@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +23,11 @@ import org.wordpress.android.util.FormatUtils;
  * Clicks contain expandable lists.
  */
 public class StatsClicksFragment extends StatsAbsPagedViewFragment {
-
     private static final Uri STATS_CLICK_GROUP_URI = StatsContentProvider.STATS_CLICK_GROUP_URI;
     private static final Uri STATS_CLICKS_URI = StatsContentProvider.STATS_CLICKS_URI;
 
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
-    
+
     public static final String TAG = StatsClicksFragment.class.getSimpleName();
 
     @Override
@@ -37,7 +36,6 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     }
 
     private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-
         public CustomPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -58,7 +56,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
         }
 
     }
-    
+
     @Override
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
@@ -68,18 +66,16 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
     public String getTitle() {
         return getString(R.string.stats_view_clicks);
     }
-    
+
 
     @Override
     protected Fragment getFragment(int position) {
-        int entryLabelResId = R.string.stats_entry_clicks_url;
-        int totalsLabelResId = R.string.stats_totals_clicks;
-        int emptyLabelResId = R.string.stats_empty_clicks;
-        
         Uri groupUri = Uri.parse(STATS_CLICK_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
         Uri childrenUri = STATS_CLICKS_URI;
-        
-        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+
+        StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri,
+                R.string.stats_entry_clicks_url, R.string.stats_totals_clicks, R.string.stats_empty_clicks_title,
+                R.string.stats_empty_clicks_desc);
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
         fragment.setListAdapter(adapter);

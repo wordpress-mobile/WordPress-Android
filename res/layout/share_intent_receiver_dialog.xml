@@ -52,7 +52,7 @@
         android:layout_marginRight="8dp"
         android:background="@drawable/md_list_selector" >
 
-        <com.actionbarsherlock.internal.widget.IcsSpinner
+        <Spinner
             android:id="@+id/blog_spinner"
             style="@style/DropDownNav.WordPress"
             android:layout_width="match_parent"
@@ -79,7 +79,7 @@
         android:layout_marginRight="8dp"
         android:background="@drawable/md_list_selector" >
 
-        <com.actionbarsherlock.internal.widget.IcsSpinner
+        <Spinner
             android:id="@+id/action_spinner"
             style="@style/DropDownNav.WordPress"
             android:layout_width="match_parent"

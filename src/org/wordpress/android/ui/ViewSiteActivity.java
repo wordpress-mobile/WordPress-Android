@@ -2,8 +2,8 @@
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,7 +17,6 @@ import java.util.Map;
  * Activity to view the WordPress blog in a WebView
  */
 public class ViewSiteActivity extends AuthenticatedWebViewActivity {
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

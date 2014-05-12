@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,19 +15,17 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -54,7 +55,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * The native stats activity, accessible via the menu drawer.
@@ -63,7 +64,6 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefresh
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity {
-
     // Max number of rows to show in a stats fragment
     public static final int STATS_GROUP_MAX_ITEMS = 10;
     public static final int STATS_CHILD_MAX_ITEMS = 25;
@@ -108,7 +108,10 @@ public class StatsActivity extends WPActionBarActivity {
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         } else {
             createMenuDrawer(R.layout.stats_activity);
         }
@@ -143,6 +146,7 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
 
         // register to receive broadcasts when StatsService starts/stops updating
@@ -181,6 +185,7 @@ public class StatsActivity extends WPActionBarActivity {
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        mPullToRefreshHelper.unregisterReceiver(this);
     }
 
     private void restoreState(Bundle savedInstanceState) {
@@ -251,8 +256,7 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void loadStatsFragments() {
-
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbsViewFragment fragment;
@@ -444,7 +448,7 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getSupportMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.stats, menu);
         return true;
     }
@@ -475,7 +479,7 @@ public class StatsActivity extends WPActionBarActivity {
         scrollToTop();
         mHasVerifiedCreds = false;
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbsViewFragment fragment;
@@ -508,14 +512,14 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     /**
-     * Do not refresh Stats in BG when user switch between blogs since the refresh 
+     * Do not refresh Stats in BG when user switch between blogs since the refresh
      * is already started in foreground at this point.
      */
     @Override
     protected boolean shouldUpdateCurrentBlogStatsInBackground() {
         return false;
     }
-    
+
     boolean dotComCredentialsMatch() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
@@ -582,9 +586,15 @@ public class StatsActivity extends WPActionBarActivity {
 
                         if (error.networkResponse != null && error.networkResponse.statusCode == 403) {
                             // This site has the wrong WP.com credentials
-                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(StatsActivity.this);
-                            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-                            
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
+                                    StatsActivity.this);
+                            // Read the current wpcom username from blog settings, then read it from
+                            // the app wpcom account.
+                            String username = StringUtils.notNullStr(WordPress.getCurrentBlog().getDotcom_username());
+                            if (username.equals("")) {
+                                username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
+                            }
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(StatsActivity.this);
                             builder.setTitle(getString(R.string.jetpack_stats_unauthorized))
                                     .setMessage(getString(R.string.jetpack_stats_switch_user, username));

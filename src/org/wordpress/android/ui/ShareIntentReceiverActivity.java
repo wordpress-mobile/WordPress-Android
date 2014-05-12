@@ -1,5 +1,7 @@
 package org.wordpress.android.ui;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,14 +9,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
-import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
-import com.actionbarsherlock.internal.widget.IcsSpinner;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -22,6 +22,8 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -35,7 +37,7 @@ import java.util.Map;
  * It lists what actions that the user can perform and redirects them to the activity,
  * along with the content passed in the intent
  */
-public class ShareIntentReceiverActivity extends SherlockFragmentActivity implements OnItemSelectedListener {
+public class ShareIntentReceiverActivity extends Activity implements OnItemSelectedListener {
     public static final String SHARE_TEXT_BLOG_ID_KEY = "wp-settings-share-text-blogid";
     public static final String SHARE_IMAGE_BLOG_ID_KEY = "wp-settings-share-image-blogid";
     public static final String SHARE_IMAGE_ADDTO_KEY = "wp-settings-share-image-addto";
@@ -43,8 +45,8 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     public static final String SHARE_LAST_USED_ADDTO_KEY = "wp-settings-share-last-used-image-addto";
     public static final int ADD_TO_NEW_POST = 0;
     public static final int ADD_TO_MEDIA_LIBRARY = 1;
-    private IcsSpinner mBlogSpinner;
-    private IcsSpinner mActionSpinner;
+    private Spinner mBlogSpinner;
+    private Spinner mActionSpinner;
     private CheckedTextView mAlwaysUseCheckBox;
     private int mAccountIDs[];
     private TextView mBlogSpinnerTitle;
@@ -55,10 +57,16 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.share_intent_receiver_dialog);
-        Context themedContext = getSupportActionBar().getThemedContext();
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            AppLog.e(T.UTILS, "Theme applied to ShareIntentReceiverActivity must have an action bar");
+            return;
+        }
+
+        Context themedContext = getActionBar().getThemedContext();
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
-        mBlogSpinner = (IcsSpinner) findViewById(R.id.blog_spinner);
+        mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
         mAlwaysUseCheckBox = (CheckedTextView) findViewById(R.id.always_use_checkbox);
         mAlwaysUseCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,13 +89,13 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             mBlogSpinnerTitle.setVisibility(View.GONE);
         } else {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(themedContext,
-                    R.layout.sherlock_spinner_dropdown_item, blogNames);
+                    R.layout.spinner_menu_dropdown_item, blogNames);
             mBlogSpinner.setAdapter(adapter);
             mBlogSpinner.setOnItemSelectedListener(this);
         }
 
         // If type is text/plain hide Media Gallery option
-        mActionSpinner = (IcsSpinner) findViewById(R.id.action_spinner);
+        mActionSpinner = (Spinner) findViewById(R.id.action_spinner);
         if (isSharingText()) {
             mActionSpinner.setVisibility(View.GONE);
             findViewById(R.id.action_spinner_title).setVisibility(View.GONE);
@@ -99,12 +107,11 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
             String[] actions = new String[]{getString(R.string.share_action_post), getString(
                     R.string.share_action_media)};
             ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext,
-                    R.layout.sherlock_spinner_dropdown_item, actions);
+                    R.layout.spinner_menu_dropdown_item, actions);
             mActionSpinner.setAdapter(actionAdapter);
             mActionSpinner.setOnItemSelectedListener(this);
         }
         loadLastUsed();
-        getSupportActionBar().hide();
     }
 
     @Override
@@ -114,7 +121,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     }
 
     @Override
-    public void onNothingSelected(IcsAdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent) {
         // noop
     }
 
@@ -185,7 +192,7 @@ public class ShareIntentReceiverActivity extends SherlockFragmentActivity implem
     }
 
     @Override
-    public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.blog_spinner) {
             if (!selectBlog(mAccountIDs[position])) {
                 ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);

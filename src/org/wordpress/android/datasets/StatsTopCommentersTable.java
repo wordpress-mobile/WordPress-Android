@@ -11,10 +11,9 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsTopCommenter;
 
 /**
- * A database table to represent the stats for top commenters.  
+ * A database table to represent the stats for top commenters.
  */
 public class StatsTopCommentersTable extends SQLTable {
-
     private static final String NAME = "top_commenters";
 
     public static final class Columns {
@@ -34,7 +33,7 @@ public class StatsTopCommentersTable extends SQLTable {
     }
 
     private StatsTopCommentersTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -60,9 +59,9 @@ public class StatsTopCommentersTable extends SQLTable {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public static ContentValues getContentValues(StatsTopCommenter item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());

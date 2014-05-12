@@ -9,7 +9,6 @@ import org.wordpress.android.models.ReaderPost;
  * or wish to get the latest data from the server
  */
 public class ReaderActions {
-
     private ReaderActions() {
         throw new AssertionError();
     }
@@ -66,5 +65,4 @@ public class ReaderActions {
     public interface RequestReblogListener {
         public void onRequestReblog(ReaderPost post);
     }
-
 }

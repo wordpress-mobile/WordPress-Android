@@ -590,5 +590,4 @@ public class ReaderPost {
         }
         return firstTag;
     }
-
 }

@@ -1,19 +1,17 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockFragment;
 
 /**
  * A generic view for all the different stats views.
  */
-public abstract class StatsAbsViewFragment extends SherlockFragment {
-    
+public abstract class StatsAbsViewFragment extends Fragment {
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();
 
     public static StatsAbsViewFragment newInstance(StatsViewType viewType) {
         StatsAbsViewFragment fragment = null;
-        
+
         switch (viewType) {
             case CLICKS:
                 fragment = new StatsClicksFragment();
@@ -48,13 +46,13 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
             case VISITORS_AND_VIEWS:
                 fragment = new StatsVisitorsAndViewsFragment();
                 break;
-            
+
         }
-    
+
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
         fragment.setArguments(args);
-        
+
         return fragment;
     }
 
@@ -64,6 +62,6 @@ public abstract class StatsAbsViewFragment extends SherlockFragment {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
         return StatsViewType.values()[ordinal];
     }
-    
+
     protected abstract String getTitle();
 }

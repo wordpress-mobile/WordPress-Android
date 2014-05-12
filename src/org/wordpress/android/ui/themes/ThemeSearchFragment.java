@@ -3,16 +3,15 @@ package org.wordpress.android.ui.themes;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
-import com.actionbarsherlock.widget.SearchView;
-import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -24,12 +23,8 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
 
-    protected ThemeSearchFragment(int page) {
-        super(page);
-    }
-
     public static ThemeSearchFragment newInstance() {
-        ThemeSearchFragment fragment = new ThemeSearchFragment(-1);
+        ThemeSearchFragment fragment = new ThemeSearchFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_SORT, ThemeSortType.POPULAR.ordinal());
@@ -112,7 +107,7 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getFragmentManager().popBackStack();
         return true;
     }
 

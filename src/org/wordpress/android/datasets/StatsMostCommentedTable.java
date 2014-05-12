@@ -11,10 +11,9 @@ import android.net.Uri;
 import org.wordpress.android.models.StatsMostCommented;
 
 /**
- * A database table to represent the stats for the most commented posts.   
+ * A database table to represent the stats for the most commented posts.
  */
 public class StatsMostCommentedTable extends SQLTable {
-
     private static final String NAME = "most_commented";
 
     public static final class Columns {
@@ -34,7 +33,7 @@ public class StatsMostCommentedTable extends SQLTable {
     }
 
     private StatsMostCommentedTable() {}
-    
+
     @Override
     public String getName() {
         return NAME;
@@ -60,9 +59,9 @@ public class StatsMostCommentedTable extends SQLTable {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public static ContentValues getContentValues(StatsMostCommented item) {
         ContentValues values = new ContentValues();
         values.put(Columns.BLOG_ID, item.getBlogId());

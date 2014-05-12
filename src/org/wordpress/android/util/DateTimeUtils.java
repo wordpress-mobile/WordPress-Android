@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateTimeUtils {
-
     private DateTimeUtils() {
         throw new AssertionError();
     }

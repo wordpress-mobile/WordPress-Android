@@ -1,19 +1,17 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -30,8 +28,7 @@ import java.net.URLEncoder;
  * A fragment to display a preview of the theme being applied on a blog.
  *
  */
-public class ThemePreviewFragment extends SherlockFragment {
-
+public class ThemePreviewFragment extends Fragment {
     public static final String TAG = ThemePreviewFragment.class.getName();
     private static final String ARGS_THEME_ID = "theme_id";
     private static final String ARGS_PREVIEW_URL = "preview_url";
@@ -125,12 +122,11 @@ public class ThemePreviewFragment extends SherlockFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mBlog = WordPress.getCurrentBlog();
         String previewURL = getPreviewURL();
 
         if (previewURL == null || mBlog == null)
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+            getActivity().getFragmentManager().beginTransaction().remove(this).commit();
 
         View view = inflater.inflate(R.layout.webview, container, false);
 

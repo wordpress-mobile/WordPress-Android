@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class DeviceUtils {
-
     private static DeviceUtils instance;
     private boolean isKindleFire = false;
 
@@ -42,10 +41,6 @@ public class DeviceUtils {
      */
     public boolean hasCamera(Context context) {
         final PackageManager pm = context.getPackageManager();
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD) {
-            return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        }
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
                     || pm.hasSystemFeature("android.hardware.camera.front");

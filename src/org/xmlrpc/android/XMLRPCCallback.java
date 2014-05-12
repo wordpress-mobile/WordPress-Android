@@ -8,7 +8,6 @@ package org.xmlrpc.android;
  * @author Tim Roes
  */
 public interface XMLRPCCallback {
-
 	/**
 	 * This callback is called whenever the server successfully responds.
 	 *
@@ -24,5 +23,4 @@ public interface XMLRPCCallback {
 	 * @param error The error occured.
 	 */
 	public void onFailure(long id, Exception error);
-
 }

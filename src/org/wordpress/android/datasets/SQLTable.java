@@ -12,7 +12,6 @@ import android.net.Uri;
  */
 
 public abstract class SQLTable {
-
     public abstract String getName();
 
     protected abstract String getUniqueConstraint();
@@ -42,7 +41,7 @@ public abstract class SQLTable {
     public Cursor query(final SQLiteDatabase database, final Uri uri, final String[] projection, final String selection, final String[] selectionArgs, final String sortOrder) {
         return database.query(getName(), projection, selection, selectionArgs, null, null, sortOrder);
     }
-    
+
     public long insert(final SQLiteDatabase database, final Uri uri, final ContentValues values) {
         return database.insert(getName(), null, values);
     }

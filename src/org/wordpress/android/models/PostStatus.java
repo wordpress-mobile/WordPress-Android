@@ -33,13 +33,13 @@ public enum PostStatus {
 
         return PostStatus.UNKNOWN;
     }
-    
+
     public synchronized static PostStatus fromPost(Post post) {
         String value = post.getPostStatus();
         long dateCreatedGMT = post.getDate_created_gmt();
         return fromStringAndDateGMT(value, dateCreatedGMT);
     }
-    
+
     public synchronized static PostStatus fromPostsListPost(PostsListPost post) {
         String value = post.getOriginalStatus();
         long dateCreatedGMT = post.getDateCreatedGmt();

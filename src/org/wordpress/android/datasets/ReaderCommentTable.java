@@ -13,7 +13,6 @@ import org.wordpress.android.util.SqlUtils;
  * stores comments on reader posts
  */
 public class ReaderCommentTable {
-
     private static final String COLUMN_NAMES =
             "blog_id, post_id, comment_id, parent_id, author_name, author_avatar, author_url, published, timestamp, status, text";
 

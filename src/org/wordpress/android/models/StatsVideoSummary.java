@@ -4,7 +4,6 @@ package org.wordpress.android.models;
  * A model representing the summary for video views
  */
 public class StatsVideoSummary {
-
     private String mTimeframe;
     private int mPlays;
     private int mImpressions;
@@ -68,5 +67,4 @@ public class StatsVideoSummary {
     public void setDate(String date) {
         this.mDate = date;
     }
-
 }

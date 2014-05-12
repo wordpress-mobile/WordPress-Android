@@ -16,7 +16,6 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.ui.posts.EditPostActivity;
 
 public class WPImageSpan extends ImageSpan {
-
     private Context mContext;
 
     private Uri mImageSource = null;

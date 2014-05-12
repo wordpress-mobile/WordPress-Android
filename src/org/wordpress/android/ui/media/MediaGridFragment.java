@@ -1,12 +1,13 @@
 package org.wordpress.android.ui.media;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,13 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.internal.widget.IcsAdapterView;
-import com.actionbarsherlock.internal.widget.IcsAdapterView.OnItemSelectedListener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
@@ -34,7 +34,6 @@ import org.wordpress.android.ui.MultiSelectGridView;
 import org.wordpress.android.ui.MultiSelectGridView.MultiSelectListener;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -47,7 +46,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarsherlock.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
  * The grid displaying the media items.
@@ -118,7 +117,7 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     private final OnItemSelectedListener mFilterSelectedListener = new OnItemSelectedListener() {
         @Override
-        public void onItemSelected(IcsAdapterView<?> parent, View view, int position, long id) {
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             // need this to stop the bug where onItemSelected is called during initialization, before user input
             if (!mSpinnerHasLaunched) {
                 return;
@@ -130,8 +129,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
         }
 
         @Override
-        public void onNothingSelected(IcsAdapterView<?> parent) { }
-
+        public void onNothingSelected(AdapterView<?> parent) {
+        }
     };
 
     @Override
@@ -163,7 +162,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         mSpinnerContainer = view.findViewById(R.id.media_filter_spinner_container);
         mSpinnerContainer.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (!isInMultiSelect()) {
@@ -250,13 +248,20 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     private void setupSpinnerAdapter() {
-        if (getActivity() == null || WordPress.getCurrentBlog() == null)
+        if (getActivity() == null || WordPress.getCurrentBlog() == null) {
             return;
+        }
 
         updateFilterText();
 
-        Context context = ((WPActionBarActivity) getActivity()).getSupportActionBar().getThemedContext();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.sherlock_spinner_dropdown_item, mFiltersText);
+        Context context = getActivity();
+        ActionBar actionBar = getActivity().getActionBar();
+        if (actionBar != null) {
+            if (actionBar.getThemedContext() != null) {
+                context = getActivity().getActionBar().getThemedContext();
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.spinner_menu_dropdown_item, mFiltersText);
         mSpinner.setAdapter(adapter);
         mSpinner.setSelection(mFilter.ordinal());
     }
@@ -311,11 +316,24 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
-        if (!NetworkUtils.isNetworkAvailable(this.getActivity()))
+        if (!NetworkUtils.isNetworkAvailable(this.getActivity())) {
             mHasRetrievedAllMedia = true;
+        }
 
         refreshSpinnerAdapter();
         refreshMediaFromDB();
@@ -354,7 +372,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             apiArgs.add(WordPress.getCurrentBlog());
 
             Callback callback = new Callback() {
-
                 // refresh db from server. If returned count is 0, we've retrieved all the media.
                 // stop retrieving until the user manually refreshes
 
@@ -573,7 +590,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onMovedToScrapHeap(View view) {
-
         // cancel image fetch requests if the view has been moved to recycler.
 
         View imageView = view.findViewById(R.id.media_grid_item_image);
@@ -583,7 +599,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             if (tag != null && tag.startsWith("http")) {
                 // need a listener to cancel request, even if the listener does nothing
                 ImageContainer container = WordPress.imageLoader.get(tag, new ImageListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) { }
 

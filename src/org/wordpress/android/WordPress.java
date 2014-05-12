@@ -1,7 +1,5 @@
 package org.wordpress.android;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
@@ -62,9 +60,6 @@ public class WordPress extends Application {
     public static final String ACCESS_TOKEN_PREFERENCE="wp_pref_wpcom_access_token";
     public static final String WPCOM_USERNAME_PREFERENCE="wp_pref_wpcom_username";
     public static final String WPCOM_PASSWORD_PREFERENCE="wp_pref_wpcom_password";
-    private static final String APP_ID_PROPERTY="oauth.app_id";
-    private static final String APP_SECRET_PROPERTY="oauth.app_secret";
-    private static final String APP_REDIRECT_PROPERTY="oauth.redirect_uri";
 
     public static String versionName;
     public static Blog currentBlog;
@@ -82,6 +77,7 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
+    public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -136,11 +132,9 @@ public class WordPress extends Application {
 
         super.onCreate();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            ApplicationLifecycleMonitor pnBackendMponitor = new ApplicationLifecycleMonitor();
-            registerComponentCallbacks(pnBackendMponitor);
-            registerActivityLifecycleCallbacks(pnBackendMponitor);
-        }
+        ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
+        registerComponentCallbacks(pnBackendMonitor);
+        registerActivityLifecycleCallbacks(pnBackendMonitor);
 
         updateCurrentBlogStatsInBackground(false);
     }
@@ -202,14 +196,15 @@ public class WordPress extends Application {
         return mRestClientUtils;
     }
 
-    /*
+    /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
-    @SuppressLint("NewApi")
     private static void enableStrictMode() {
-        // strict mode requires API level 9 or later
-        if (Build.VERSION.SDK_INT < 9)
+        // return if the build is not a debug build
+        if (!BuildConfig.DEBUG) {
+            AppLog.e(T.UTILS, "You should not call enableStrictMode() on a non debug build");
             return;
+        }
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
@@ -512,7 +507,6 @@ public class WordPress extends Application {
      *  User is not notified in case of errors.
      */
     public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
-
         if (!alwaysUpdate && mStatsLastPingDate != null) {
         	// check if the last stats refresh was done less than 30 minute ago
             if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {
@@ -538,20 +532,18 @@ public class WordPress extends Application {
         }
     }
 
-    /*
+    /**
      * Detect when the app goes to the background and come back to the foreground.
      *
      * Turns out that when your app has no more visible UI, a callback is triggered.
      * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
-     * This callback is only available in API Level 14 (Ice Cream Sandwich) and above.
      *
-     * This class also uses ActivityLifecycleCallbacks and a timer used as guard, to make sure to detect the send to background event and not other events.
+     * This class also uses ActivityLifecycleCallbacks and a timer used as guard,
+     * to make sure to detect the send to background event and not other events.
      *
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-
-        private final int DEFAULT_TIMEOUT = 2 * 60; //2 minutes
+        private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
         private Date lastPingDate;
 
         boolean isInBackground = false;
@@ -566,7 +558,6 @@ public class WordPress extends Application {
 
         @Override
         public void onTrimMemory(final int level) {
-
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
@@ -576,29 +567,33 @@ public class WordPress extends Application {
                 isInBackground = false;
             }
 
-            //Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15; - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
+            // Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15;
+            // - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
-
         }
 
-        /*
+        /**
          * Checks that the network connection is available, and that at least 2 minutes are passed
          * since the last ping.
          */
         private boolean canSynchWithWordPressDotComBackend() {
-
-            if (isInBackground == false) //The app wasn't in background. No need to ping the backend again.
+            // The app wasn't in background. No need to ping the backend again.
+            if (isInBackground == false) {
                 return false;
+            }
 
-            isInBackground = false; //The app moved from background -> foreground. Set this flag to false for security reason.
-
-            if (!NetworkUtils.isNetworkAvailable(mContext))
+            // The app moved from background -> foreground. Set this flag to false for security reason.
+            isInBackground = false;
+            if (!NetworkUtils.isNetworkAvailable(mContext)) {
                 return false;
+            }
 
-            if (lastPingDate == null)
-                return false; //first startup
+            if (lastPingDate == null) {
+                // first startup
+                return false;
+            }
 
             Date now = new Date();
             if (DateTimeUtils.secondsBetween(now,lastPingDate) >= DEFAULT_TIMEOUT) {
@@ -611,13 +606,13 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity arg0) {
-
-            if (!canSynchWithWordPressDotComBackend())
+            if (!canSynchWithWordPressDotComBackend()) {
                 return;
+            }
 
-            /* Note: The Code below is not called at startup */
+            // Note: The Code below is not called at startup
 
-            //Synch Push Notifications settings
+            // Synch Push Notifications settings
             if (WordPress.hasValidWPComCredentials(mContext)) {
                 String token = null;
                 try {
@@ -654,6 +649,7 @@ public class WordPress extends Application {
         public void onActivityPaused(Activity arg0) {
             lastPingDate = new Date();
         }
+
         @Override
         public void onActivitySaveInstanceState(Activity arg0, Bundle arg1) {
         }

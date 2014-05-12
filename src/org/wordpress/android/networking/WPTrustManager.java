@@ -17,9 +17,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 public class WPTrustManager implements X509TrustManager {
-
     private X509TrustManager defaultTrustManager;
-    private X509TrustManager localTrustManager;    
+    private X509TrustManager localTrustManager;
     private X509Certificate[] acceptedIssuers;
 
     public WPTrustManager(KeyStore localKeyStore) {
@@ -76,7 +75,6 @@ public class WPTrustManager implements X509TrustManager {
     }
 
     static class LocalStoreX509TrustManager implements X509TrustManager {
-
         private X509TrustManager trustManager;
 
         LocalStoreX509TrustManager(KeyStore localKeyStore) {

@@ -343,5 +343,4 @@ public class ReaderTagTable {
             db.endTransaction();
         }
     }
-
 }

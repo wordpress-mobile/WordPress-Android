@@ -1,20 +1,20 @@
 package org.wordpress.android.ui.stats;
 
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
@@ -29,7 +29,7 @@ import org.wordpress.android.util.Utils;
 /**
  * A fragment that shows stats bar chart data.
  */
-public class StatsBarGraphFragment extends SherlockFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class StatsBarGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
 
     private LinearLayout mGraphContainer;
@@ -210,8 +210,9 @@ public class StatsBarGraphFragment extends SherlockFragment implements LoaderMan
 
         @Override
         public void onChange(boolean selfChange) {
-            if (isAdded())
+            if (isAdded()) {
                 getLoaderManager().restartLoader(0, null, StatsBarGraphFragment.this);
+            }
         }
     }
 }

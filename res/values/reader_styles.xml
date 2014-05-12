@@ -7,7 +7,7 @@
 <resources>
     <!-- activity themes -->
     <style name="ReaderTheme" />
-    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Panel">
+    <style name="ReaderTheme.Popup" parent="@android:style/Theme.Holo.Light.Panel">
         <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
@@ -205,6 +205,6 @@
     </style>
 
     <!-- progress bars -->
-    <style name="ReaderProgressBar" parent="@android:style/Widget.ProgressBar" />
+    <style name="ReaderProgressBar" parent="@android:style/Widget.Holo.Light.ProgressBar" />
 
 </resources>

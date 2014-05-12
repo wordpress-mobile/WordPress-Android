@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
-import java.util.List;
-import java.util.Locale;
-
+import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -21,10 +21,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -32,10 +28,13 @@ import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends SherlockFragmentActivity {
+public class BlogPreferencesActivity extends Activity {
     private boolean mIsViewingAdmin;
 
     /** The blog this activity is managing settings for. */
@@ -65,10 +64,12 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             return;
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(StringUtils.unescapeHTML(blog.getBlogName()));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         mUsernameET = (EditText) findViewById(R.id.username);
         mPasswordET = (EditText) findViewById(R.id.password);
         mHttpUsernameET = (EditText) findViewById(R.id.httpuser);
@@ -79,7 +80,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         mLocationCB = (CheckBox) findViewById(R.id.location);
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
         Button removeBlogButton = (Button) findViewById(R.id.remove_account);
-        
+
         if (blog.isDotcomFlag()) {
             // Hide credentials section
             RelativeLayout credentialsRL = (RelativeLayout)findViewById(R.id.sectionContent);
@@ -98,10 +99,10 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        
+
         if (mBlogDeleted || mIsViewingAdmin)
             return;
-        
+
         blog.setUsername(mUsernameET.getText().toString());
         blog.setPassword(mPasswordET.getText().toString());
         blog.setHttpuser(mHttpUsernameET.getText().toString());
@@ -138,16 +139,16 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
                 blog.setScaledImageWidth(width);
             }
         }
-        
+
         blog.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
 
         blog.setLocation(mLocationCB.isChecked());
 
         WordPress.wpDB.saveBlog(blog);
-        
+
         if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
             WordPress.currentBlog = blog;
-        
+
         // exit settings screen
         Bundle bundle = new Bundle();
 
@@ -160,7 +161,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int itemID = item.getItemId();
         if (itemID == android.R.id.home) {
             finish();
@@ -187,7 +187,6 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mImageWidthSpinner.setAdapter(spinnerArrayAdapter);
         mImageWidthSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                CheckBox fullSizeImageCheckBox = (CheckBox)findViewById(R.id.fullSizeImage);
@@ -201,7 +200,7 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-        
+
 
         mUsernameET.setText(blog.getUsername());
         mPasswordET.setText(blog.getPassword());
@@ -220,14 +219,14 @@ public class BlogPreferencesActivity extends SherlockFragmentActivity {
 
         mFullSizeCB.setChecked(blog.isFullSizeImage());
         mScaledCB.setChecked(blog.isScaledImage());
-        
+
         this.mScaledImageWidthET.setText("" + blog.getScaledImageWidth());
         showScaledSetting(blog.isScaledImage());
-        
+
         CheckBox scaledImage = (CheckBox) findViewById(R.id.scaledImage);
         scaledImage.setChecked(false);
         scaledImage.setVisibility(View.GONE);
-        
+
         // sets up a state listener for the scaled image checkbox
    /*     ((CheckBox) findViewById(R.id.scaledImage)).setOnClickListener(new View.OnClickListener() {
             @Override

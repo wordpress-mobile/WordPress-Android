@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ReaderPostList extends ArrayList<ReaderPost> {
-
     public static ReaderPostList fromJson(JSONObject json) {
         if (json==null)
             throw new IllegalArgumentException("null json post list");

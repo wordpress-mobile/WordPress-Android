@@ -9,7 +9,6 @@ import org.wordpress.android.util.StatUtils;
  * A model to represent a geoview stat.
  */
 public class StatsGeoview {
-
     private String mBlogId;
     private long mDate;
     private String mCountry;

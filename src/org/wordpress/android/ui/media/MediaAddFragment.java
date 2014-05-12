@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +10,8 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -39,7 +38,6 @@ import java.util.List;
  * Also queues up media for upload and listens to notifications from the upload service.
  */
 public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
-
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
     private String mMediaCapturePath = "";
     private MediaAddFragmentCallback mCallback;
@@ -47,39 +45,39 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public interface MediaAddFragmentCallback {
         public void onMediaAdded(String mediaId);
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // This view doesn't really matter as this fragment is invisible
-        
+
         if (savedInstanceState != null && savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH) != null)
             mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
-        
+
         return inflater.inflate(R.layout.actionbar_add_media_cell, container, false);
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
+
         try {
             mCallback = (MediaAddFragmentCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement " + MediaAddFragmentCallback.class.getSimpleName());
         }
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mMediaCapturePath != null && !mMediaCapturePath.equals(""))
             outState.putString(BUNDLE_MEDIA_CAPTURE_PATH, mMediaCapturePath);
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(MediaUploadService.MEDIA_UPLOAD_INTENT_NOTIFICATION));
 
@@ -89,7 +87,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     @Override
     public void onPause() {
         super.onPause();
-        
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
     }
@@ -143,10 +141,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private void fetchMedia(Uri mediaUri) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
             // Create an AsyncTask to download the file
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-                new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
-            else
-                new DownloadMediaTask().execute(mediaUri);
+            new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             // It is a regular local media file
             String path = getRealPathFromURI(mediaUri);
@@ -169,7 +164,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     private String getRealPathFromContentURI(Uri contentUri) {
         if (contentUri == null)
             return null;
-        
+
         String[] proj = { MediaStore.Images.Media.DATA };
         CursorLoader loader = new CursorLoader(getActivity(), contentUri, proj, null, null, null);
         Cursor cursor = loader.loadInBackground();
@@ -188,13 +183,13 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         cursor.close();
         return path;
     }
-    
+
     private void queueFileForUpload(String path) {
         if (path == null || path.equals("")) {
             Toast.makeText(getActivity(), "Error opening file", Toast.LENGTH_SHORT).show();
             return;
         }
-        
+
         Blog blog = WordPress.getCurrentBlog();
 
         File file = new File(path);
@@ -203,7 +198,7 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
 
         String mimeType = MediaUtils.getMediaFileMimeType(file);
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        
+
         MediaFile mediaFile = new MediaFile();
         mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
         mediaFile.setFileName(fileName);
@@ -223,9 +218,9 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
         if (!TextUtils.isEmpty(mimeType))
             mediaFile.setMimeType(mimeType);
         mediaFile.save();
-        
+
         mCallback.onMediaAdded(mediaFile.getMediaId());
-     
+
         startMediaUploadService();
     }
 
@@ -245,15 +240,15 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     public void launchVideoCamera() {
         MediaUtils.launchVideoCamera(this);
     }
-    
+
     public void launchVideoLibrary() {
         MediaUtils.launchVideoLibrary(this);
     }
-    
+
     public void launchPictureLibrary() {
         MediaUtils.launchPictureLibrary(this);
     }
-    
+
     public void addToQueue(String mediaId) {
         String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
         WordPress.wpDB.updateMediaUploadState(blogId, mediaId, "queued");
@@ -267,7 +262,6 @@ public class MediaAddFragment extends Fragment implements LaunchCameraCallback {
     }
 
     private class DownloadMediaTask extends AsyncTask<Uri, Integer, Uri> {
-
         @Override
         protected Uri doInBackground(Uri... uris) {
             Uri imageUri = uris[0];
