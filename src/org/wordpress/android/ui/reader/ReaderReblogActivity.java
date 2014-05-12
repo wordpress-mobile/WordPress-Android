@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -24,7 +23,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
@@ -103,13 +101,8 @@ public class ReaderReblogActivity extends Activity {
         overridePendingTransition(0, 0);
     }
 
-    @SuppressLint("NewApi")
     private void loadPost() {
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadPostTask().execute();
-        }
+        new LoadPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*

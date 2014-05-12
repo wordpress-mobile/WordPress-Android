@@ -375,14 +375,10 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private boolean isInLandscape() {
-        if (android.os.Build.VERSION.SDK_INT >= 13) {
-            Display display = getWindowManager().getDefaultDisplay();
-            Point point = new Point();
-            display.getSize(point);
-            return (point.y < point.x);
-        } else {
-            return false;
-        }
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        return (point.y < point.x);
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {

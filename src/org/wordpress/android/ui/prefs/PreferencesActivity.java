@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -236,11 +235,7 @@ public class PreferencesActivity extends PreferenceActivity {
     }
 
     /** Sets up the action bar for an {@link PreferenceScreen} */
-    @SuppressLint("NewApi")
     public static void initializeActionBar(PreferenceScreen preferenceScreen) {
-        if (android.os.Build.VERSION.SDK_INT < 11)
-            return;
-
         final Dialog dialog = preferenceScreen.getDialog();
 
         if (dialog != null) {

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -32,7 +31,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -165,17 +163,12 @@ public class ReaderPostAdapter extends BaseAdapter {
          notifyDataSetChanged();
     }
 
-
-    @SuppressLint("NewApi")
     private void loadPosts() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadPostsTask().execute();
         }
+
+        new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

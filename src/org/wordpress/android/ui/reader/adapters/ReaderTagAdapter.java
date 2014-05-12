@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -20,7 +19,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.SysUtils;
 
 public class ReaderTagAdapter extends BaseAdapter {
     public interface TagActionListener {
@@ -44,16 +42,12 @@ public class ReaderTagAdapter extends BaseAdapter {
         mDrawableRemove = context.getResources().getDrawable(R.drawable.ic_content_remove);
     }
 
-    @SuppressLint("NewApi")
     public void refreshTags(ReaderActions.DataLoadedListener dataListener) {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
-        mDataLoadadListener = dataListener;
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadTagsTask().execute();
         }
+        mDataLoadadListener = dataListener;
+        new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void refreshTags() {
