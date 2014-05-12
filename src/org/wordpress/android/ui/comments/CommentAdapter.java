@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -20,7 +19,6 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
@@ -294,16 +292,11 @@ class CommentAdapter extends BaseAdapter {
     /*
      * load comments using an AsyncTask
      */
-    @SuppressLint("NewApi")
     void loadComments() {
-        if (mIsLoadTaskRunning)
+        if (mIsLoadTaskRunning) {
             AppLog.w(AppLog.T.COMMENTS, "load comments task already active");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadCommentsTask().execute();
         }
+        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*

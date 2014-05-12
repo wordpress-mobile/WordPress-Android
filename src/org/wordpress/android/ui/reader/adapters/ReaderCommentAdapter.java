@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -24,7 +23,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.SysUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -76,16 +74,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
     }
 
-    @SuppressLint("NewApi")
     public void refreshComments() {
-        if (mIsTaskRunning)
+        if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
-
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadCommentsTask().execute();
         }
+
+        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

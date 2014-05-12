@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -14,7 +13,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.SysUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +36,8 @@ public class ReaderReblogAdapter extends BaseAdapter {
         loadAccounts();
     }
 
-    @SuppressLint("NewApi")
     private void loadAccounts() {
-        if (SysUtils.canUseExecuteOnExecutor()) {
-            new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new LoadAccountsTask().execute();
-        }
+        new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void reload() {
