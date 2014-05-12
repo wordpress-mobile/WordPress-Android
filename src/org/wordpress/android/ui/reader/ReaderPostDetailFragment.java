@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
