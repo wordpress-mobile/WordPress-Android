@@ -81,10 +81,6 @@ public class WPNetworkImageView extends ImageView {
         loadImageIfNecessary(false);
     }
 
-    public void setImageType(ImageType imageType) {
-        mImageType = imageType;
-    }
-
     /*
      * retrieves and displays the thumbnail for the passed video
      */
@@ -320,11 +316,6 @@ public class WPNetworkImageView extends ImageView {
             case AVATAR:
                 // "mystery man" for failed avatars
                 setImageResource(R.drawable.placeholder);
-                break;
-            case MSHOT:
-                // centered error icon for mshots
-                setScaleType(ImageView.ScaleType.CENTER);
-                setImageResource(R.drawable.ic_error);
                 break;
             default :
                 // medium grey box for all others

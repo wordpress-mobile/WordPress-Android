@@ -183,11 +183,12 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
-        // can't get mshot for private blogs (mshot will just be a login screen!)
+        // mshot for private blogs will just be a login screen, so show a lock icon
+        // instead of requesting the mshot
         if (blogInfo.isPrivate) {
             hideProgress();
-            mImageMshot.setImageType(WPNetworkImageView.ImageType.MSHOT);
-            mImageMshot.showErrorImage();
+            mImageMshot.setScaleType(ImageView.ScaleType.CENTER);
+            mImageMshot.setImageResource(R.drawable.dashicon_lock);
             return;
         }
 

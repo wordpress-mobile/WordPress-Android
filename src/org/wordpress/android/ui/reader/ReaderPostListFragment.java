@@ -86,6 +86,7 @@ public class ReaderPostListFragment extends Fragment
 
     private ReaderBlogInfoView mBlogInfoView;
     private View mMshotSpacerView;
+    private static final String MSHOT_SPACER_TAG = "mshot_spacer";
 
     private String mCurrentTag;
     private long mCurrentBlogId;
@@ -269,8 +270,10 @@ public class ReaderPostListFragment extends Fragment
                         RelativeLayout.LayoutParams.MATCH_PARENT));
                 ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
-                // add a blank header to the listView that's the same height as the mshot
+                // add a blank header to the listView that's the same height as the mshot, and
+                // tag it so we can identify it later
                 mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
+                mMshotSpacerView.setTag(MSHOT_SPACER_TAG);
 
                 // blank header height needs to be adjusted based on the actual height of the info
                 // view, which we don't know at this point - so assign a one-shot listener to
@@ -1116,20 +1119,23 @@ public class ReaderPostListFragment extends Fragment
         // scale the mshot based on the scroll position
         mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
 
-        // here's the tricky part: get the actual bottom position of the mshot in the
-        // info view based on where the spacer has been scrolled to, then tell the
-        // info view to re-position itself to match this - if this position is less
-        // than the height of the transparent ActionBar, then set it to the ActionBar
-        // height so it sticks once it reaches the top of the screen
-        final int mshotBottom;
-        if (mMshotSpacerView.getHeight() > 0) {
-            mshotBottom = Math.max(0, mMshotSpacerView.getTop() + mBlogInfoView.getMshotHeight());
+        // get the first child of the listView and determine whether it's the mshot spacer
+        // we added in onCreateVew
+        View firstChild = mListView.getChildAt(0);
+        boolean isSpacer = (firstChild != null && MSHOT_SPACER_TAG.equals(firstChild.getTag()));
+
+        // if it is the spacer, the top of the blog info container should move to match the top
+        // of the spacer (which will be negative is list is scrolled) plus the height of the
+        // mshot - and if it's not the spacer, then it means the spacer has been scrolled out
+        // of view which means the blog info container should stick to the top
+        final int infoTop;
+        if (isSpacer) {
+            infoTop = Math.max(0, firstChild.getTop() + mBlogInfoView.getMshotHeight());
         } else {
-            // mshot is offscreen if it has no height
-            mshotBottom = 0;
+            infoTop = 0;
         }
 
-        mBlogInfoView.moveInfoContainer(mshotBottom);
+        mBlogInfoView.moveInfoContainer(infoTop);
         mLastPostListScrollPos = scrollPos;
     }
 
@@ -1150,7 +1156,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called when the blog info view has changed size, resizes the listView spacer to match
+     * called when the blog info view has changed size, resizes the listView mshot spacer to match
      * the size of the mshot and blog info container
      */
     private void checkBlogInfoSize() {
