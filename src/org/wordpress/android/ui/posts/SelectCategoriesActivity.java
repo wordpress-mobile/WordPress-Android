@@ -432,13 +432,6 @@ public class SelectCategoriesActivity extends ListActivity {
     }
 
     private int getCheckedItemCount(ListView listView) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            return listView.getCheckedItemCount();
-        } else {
-            int count = 0;
-            for (int i = listView.getCount() - 1; i >= 0; i--)
-                if (listView.isItemChecked(i)) count++;
-            return count;
-        }
+        return listView.getCheckedItemCount();
     }
 }

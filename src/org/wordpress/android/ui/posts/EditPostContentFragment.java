@@ -535,12 +535,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             return;
 
         if (post.isLocalDraft()) {
-            if (android.os.Build.VERSION.SDK_INT >= 14) {
-                // remove suggestion spans, they cause craziness in WPHtml.toHTML().
-                CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(), CharacterStyle.class);
-                for (CharacterStyle characterStyle : characterStyles) {
-                    if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan"))
-                        postContentEditable.removeSpan(characterStyle);
+            // remove suggestion spans, they cause craziness in WPHtml.toHTML().
+            CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(),
+                    CharacterStyle.class);
+            for (CharacterStyle characterStyle : characterStyles) {
+                if (characterStyle.getClass().getName().equals("android.text.style.SuggestionSpan")) {
+                    postContentEditable.removeSpan(characterStyle);
                 }
             }
             content = WPHtml.toHtml(postContentEditable);
