@@ -44,10 +44,7 @@ class ReaderBlogInfoView extends FrameLayout {
 
     public ReaderBlogInfoView(Context context){
         super(context);
-        inflateView(context);
-    }
 
-    private void inflateView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);

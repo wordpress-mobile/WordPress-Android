@@ -482,8 +482,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void startBoxAndPagesAnimation() {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         Animation animPage1 = AnimationUtils.loadAnimation(getActivity(),
                 R.anim.box_with_pages_slide_up_page1);
@@ -502,8 +503,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!hasActivity() || getActionBarAdapter() == null)
+        if (!hasActivity() || getActionBarAdapter() == null) {
             return;
+        }
 
         int title;
         int description = -1;
@@ -722,7 +724,7 @@ public class ReaderPostListFragment extends Fragment
      * post may have been changed (either by the user, or because it updated)
      */
     void reloadPost(ReaderPost post) {
-        if (post != null) {
+        if (post != null && hasPostAdapter()) {
             getPostAdapter().reloadPost(post);
         }
     }
@@ -1102,8 +1104,8 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void onScrollChanged() {
-        // note that onScrollChanged is only called when previewing posts in a specific blog,
-        // so we can scale & reposition the blogInfo that appears above the listView
+        // onScrollChanged is only called when previewing posts in a specific blog so we
+        // can scale & reposition the blogInfo that appears above the listView
         repositionBlogInfoView();
     }
 
@@ -1125,7 +1127,7 @@ public class ReaderPostListFragment extends Fragment
         boolean isSpacer = (firstChild != null && MSHOT_SPACER_TAG.equals(firstChild.getTag()));
 
         // if it is the spacer, the top of the blog info container should move to match the top
-        // of the spacer (which will be negative is list is scrolled) plus the height of the
+        // of the spacer (which will be negative if list is scrolled) plus the height of the
         // mshot - and if it's not the spacer, then it means the spacer has been scrolled out
         // of view which means the blog info container should stick to the top
         final int infoTop;
@@ -1160,11 +1162,9 @@ public class ReaderPostListFragment extends Fragment
      * the size of the mshot and blog info container
      */
     private void checkBlogInfoSize() {
-        if (!hasActivity() || mBlogInfoView == null) {
-            return;
+        if (hasActivity() && mBlogInfoView != null && mMshotSpacerView != null) {
+            mMshotSpacerView.getLayoutParams().height =
+                    mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotHeight();
         }
-        mMshotSpacerView.getLayoutParams().height =
-                mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotHeight();
     }
-
 }
