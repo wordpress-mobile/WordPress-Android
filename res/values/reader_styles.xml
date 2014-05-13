@@ -187,8 +187,10 @@
         <item name="android:dividerHeight">0dp</item>
     </style>
     <style name="ReaderListView.Topics" parent="ReaderListView">
-        <item name="android:divider">@color/reader_divider_grey</item>
+        <item name="android:divider">@drawable/list_divider</item>
         <item name="android:dividerHeight">1dp</item>
+        <item name="android:footerDividersEnabled">false</item>
+        <item name="android:headerDividersEnabled">false</item>
     </style>
     <!-- no selector for post list - reader_listitem_post_excerpt handles selection -->
     <style name="ReaderListView.PostList" parent="ReaderListView">

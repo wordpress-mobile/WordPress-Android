@@ -8,8 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium">
 
@@ -21,7 +21,6 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/margin_medium"
         android:drawableLeft="@drawable/ic_action_labels_dark"
         android:drawablePadding="@dimen/margin_small"
         android:id="@+id/text_topic" />
