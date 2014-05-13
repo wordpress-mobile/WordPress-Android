@@ -266,7 +266,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.layout_fragment_container, detailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
         // only add to backstack if we're removing the list view from the fragment container
@@ -337,7 +337,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.layout_fragment_container, readerFragment, tagForFragment)
+        ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(tagForFragment)
                 .commit();
@@ -353,7 +353,7 @@ public class NotificationsActivity extends WPActionBarActivity
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.add(R.id.layout_fragment_container, commentFragment, tagForFragment)
+        ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(tagForFragment)
                 .commit();
