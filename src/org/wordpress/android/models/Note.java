@@ -114,6 +114,7 @@ public class Note extends Syncable {
     private transient String mSubject;
     private transient String mIconUrl;
     private transient String mSnippet;
+    private transient String mNoteType;
 
     /**
      * Create a note using JSON from Simperium
@@ -154,12 +155,14 @@ public class Note extends Syncable {
         return queryJSON("id", "0");
     }
     public String getType() {
-        String noteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
-        if (noteType.contains(NOTE_ACHIEVEMENT_TYPE)) {
-            noteType = NOTE_ACHIEVEMENT_TYPE;
+        if (mNoteType == null) {
+            mNoteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
+            if (mNoteType.contains(NOTE_ACHIEVEMENT_TYPE)) {
+                mNoteType = NOTE_ACHIEVEMENT_TYPE;
+            }
         }
 
-        return noteType;
+        return mNoteType;
     }
     private Boolean isType(String type){
         return getType().equals(type);
@@ -382,9 +385,10 @@ public class Note extends Syncable {
             getCommentPreview();
         }
 
-        // pre-load the subject and avatar url
+        // pre-load the subject, avatar url and type
         getSubject();
         getIconURL();
+        getType();
 
         // pre-load site/post/comment IDs
         preloadMetaIds();
