@@ -112,7 +112,7 @@ public class StatsService extends Service {
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
-        
+
         return START_NOT_STICKY;
     }
 
@@ -272,7 +272,7 @@ public class StatsService extends Service {
                     parseSearchEngineTermsResponse(response);
                     parseViewsByCountryResponse(response);
 
-                    // Stop the service if this is the current response, or mServiceBlogId is already null
+                    // Stop the service if this is the current response, or mServiceBlogId is null
                     if (mServiceBlogId == null || mServiceBlogId.equals(mRequestBlogId)) {
                         stopService();
                     }

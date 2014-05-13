@@ -631,7 +631,7 @@ public class StatsActivity extends WPActionBarActivity {
                         ToastUtils.showToastOrAuthAlert(StatsActivity.this, (VolleyError) errorObject,
                                 StatsActivity.this.getString(R.string.error_refresh_stats));
                     } else {
-                        ToastUtils.showToast(StatsActivity.this,    
+                        ToastUtils.showToast(StatsActivity.this,
                                 StatsActivity.this.getString(R.string.error_refresh_stats),
                                 Duration.LONG);
                     }
