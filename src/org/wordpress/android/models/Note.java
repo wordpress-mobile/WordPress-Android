@@ -284,12 +284,7 @@ public class Note extends Syncable {
      * in the notification list (ex: "3d")
      */
     public String getTimeSpan() {
-        try {
-            return DateTimeUtils.timestampToTimeSpan(getTimestamp());
-        } catch (NumberFormatException e) {
-            AppLog.e(T.NOTIFS, "failed to convert timestamp to long", e);
-            return "";
-        }
+        return DateTimeUtils.timestampToTimeSpan(getTimestamp());
     }
 
     String getTemplate(){
