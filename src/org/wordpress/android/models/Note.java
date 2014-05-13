@@ -378,7 +378,11 @@ public class Note extends Syncable {
      * pre-loads commonly-accessed fields - avoids performance hit of loading these
      * fields inside an adapter's getView()
      **/
-    void preloadContent(){
+    void preloadContent() {
+        if (mNoteJSON == null || mNoteJSON.length() == 0) {
+            return;
+        }
+
         if (isCommentType()) {
             // pre-load the comment HTML for being displayed. Cleans up emoticons.
             mComment = HtmlUtils.fromHtml(getCommentText());
