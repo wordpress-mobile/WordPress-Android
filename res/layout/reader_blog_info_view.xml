@@ -40,8 +40,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_large"
             android:background="@color/grey_light" />
 
         <RelativeLayout
@@ -69,11 +69,12 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_description"
-                style="@style/ReaderTextView.Post.Excerpt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_blog_name"
                 android:layout_toLeftOf="@+id/text_follow_blog"
+                android:textSize="@dimen/text_sz_medium"
+                android:textColor="@color/grey_medium_dark"
                 android:ellipsize="end"
                 android:maxLines="3"
                 tools:text="text_blog_description" />
@@ -98,8 +99,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_large"
             android:background="@color/grey_light" />
     </LinearLayout>
 </FrameLayout>
