@@ -44,6 +44,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -272,9 +273,13 @@ public class ReaderPostListFragment extends Fragment
                         RelativeLayout.LayoutParams.MATCH_PARENT));
                 ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
-                // add a blank header to the listView that's the same height as the mshot, and
-                // tag it so we can identify it later
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
+                // add a blank header to the listView that's the same height as the mshot with a fudge
+                // factor to account for the info container - global layout listener below will
+                // use the actual container height once it's known
+                int spacerHeight = mBlogInfoView.getMshotHeight() + DisplayUtils.dpToPx(container.getContext(), 86);
+                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, spacerHeight);
+
+                // tag the spacer so we can identify it later
                 mMshotSpacerView.setTag(MSHOT_SPACER_TAG);
 
                 // make sure blog info is in front of the listView
