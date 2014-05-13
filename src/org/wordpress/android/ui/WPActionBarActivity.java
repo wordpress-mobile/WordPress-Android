@@ -626,7 +626,9 @@ public abstract class WPActionBarActivity extends Activity {
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
                     }
-                    onBlogChanged();
+                    if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
+                        onBlogChanged();
+                    }
                     WordPress.registerForCloudMessaging(this);
                 }
 
