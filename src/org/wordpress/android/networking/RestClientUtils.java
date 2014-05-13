@@ -6,7 +6,6 @@ package org.wordpress.android.networking;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -196,15 +195,6 @@ public class RestClientUtils {
         String path = String.format("sites/%s/themes/mine", siteId);
         get(path, listener, errorListener);
     }
-
-    /**
-     * Get a site's stats summary
-     */
-    public void getStatsSummary(String siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats", siteId);
-        get(path, listener, errorListener);
-    }
-
 
     /**
      * Make GET request
