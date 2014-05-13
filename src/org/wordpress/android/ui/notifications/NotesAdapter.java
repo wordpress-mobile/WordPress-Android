@@ -48,7 +48,7 @@ class NotesAdapter extends CursorAdapter {
     }
 
     public void reloadNotes() {
-        swapCursor(mQuery.execute());
+        changeCursor(mQuery.execute());
     }
 
     public Note getNote(int position) {
