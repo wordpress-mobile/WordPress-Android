@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
@@ -34,14 +35,13 @@ class ReaderBlogInfoView extends FrameLayout {
 
     private final WPNetworkImageView mImageMshot;
     private final ViewGroup mInfoContainerView;
-    private final ViewGroup mMshotContainerView;
     private final ProgressBar mMshotProgress;
 
     private final int mMshotWidth;
     private final int mMshotDefaultHeight;
 
     private float mCurrentMshotScale = 1.0f;
-    private boolean mIsBlogInfoLoaded;
+    private ReaderBlogInfo mBlogInfo;
 
     public ReaderBlogInfoView(Context context){
         super(context);
@@ -55,7 +55,6 @@ class ReaderBlogInfoView extends FrameLayout {
 
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
         mInfoContainerView = (ViewGroup) view.findViewById(R.id.layout_bloginfo_container);
-        mMshotContainerView = (ViewGroup) view.findViewById(R.id.layout_mshot_container);
 
         // position the progressBar halfway down the mshot - done this way to avoid it
         // moving when the mshot container is resized
@@ -79,13 +78,18 @@ class ReaderBlogInfoView extends FrameLayout {
     private void showBlogInfo(final ReaderBlogInfo blogInfo) {
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
-        // hide the inner container until we have blogInfo
-        if (blogInfo == null) {
+        // hide the inner container until we have complete blogInfo
+        if (blogInfo == null || blogInfo.isIncomplete()) {
             layoutInner.setVisibility(View.INVISIBLE);
             return;
         }
 
-        mIsBlogInfoLoaded = true;
+        // do nothing if blogInfo hasn't changed
+        if (mBlogInfo != null && mBlogInfo.isSameAs(blogInfo)) {
+            return;
+        }
+
+        mBlogInfo = blogInfo;
         layoutInner.setVisibility(View.VISIBLE);
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
@@ -111,6 +115,9 @@ class ReaderBlogInfoView extends FrameLayout {
 
         if (blogInfo.hasDescription()) {
             txtDescription.setText(blogInfo.getDescription());
+            txtDescription.setVisibility(View.VISIBLE);
+        } else if (blogInfo.hasUrl()) {
+            txtDescription.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
             txtDescription.setVisibility(View.VISIBLE);
         } else {
             txtDescription.setVisibility(View.GONE);
@@ -146,7 +153,7 @@ class ReaderBlogInfoView extends FrameLayout {
     }
 
     public boolean isEmpty() {
-        return !mIsBlogInfoLoaded;
+        return mBlogInfo == null;
     }
 
     /*
@@ -160,7 +167,7 @@ class ReaderBlogInfoView extends FrameLayout {
                     showBlogInfo(blogInfo);
                 } else {
                     hideProgress();
-                    if (!mIsBlogInfoLoaded && mBlogInfoListener != null) {
+                    if (isEmpty() && mBlogInfoListener != null) {
                         mBlogInfoListener.onBlogInfoFailed();
                     }
 
@@ -238,12 +245,12 @@ class ReaderBlogInfoView extends FrameLayout {
         if (mInfoContainerView.getTranslationY() != top) {
             mInfoContainerView.setTranslationY(top);
 
-            // force the mshot container to match the bottom of the info container to
+            // force the container to match the bottom of the info container to
             // prevent the bottom of the mshot from appearing below the info
             int infoBottom = top + mInfoContainerView.getHeight();
-            LayoutParams mshotParams = (LayoutParams) mMshotContainerView.getLayoutParams();
-            if (mshotParams.height != infoBottom) {
-                mshotParams.height = infoBottom;
+            ViewGroup.LayoutParams params = this.getLayoutParams();
+            if (params.height != infoBottom) {
+                params.height = infoBottom;
                 requestLayout();
             }
         }

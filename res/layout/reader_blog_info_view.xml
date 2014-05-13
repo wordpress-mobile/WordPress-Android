@@ -40,9 +40,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_marginBottom="@dimen/margin_large"
-            android:background="@color/grey_light" />
+            android:background="@color/grey_medium_light" />
 
         <RelativeLayout
             android:id="@+id/layout_bloginfo_container_inner"
@@ -60,12 +60,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:layout_toLeftOf="@+id/text_follow_blog"
-                tools:text="text_blog_name"
+                android:maxLines="1"
                 android:textColor="@color/reader_hyperlink"
                 android:background="@drawable/reader_transparent_selector"
-                android:textSize="@dimen/text_sz_extra_large" />
+                android:textSize="@dimen/text_sz_extra_large"
+                tools:text="text_blog_name" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_description"
@@ -86,21 +85,22 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/text_follow_blog"
                 android:layout_below="@+id/text_blog_description"
-                tools:text="Followers" />
+                tools:text="followers" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_blog"
                 style="@style/ReaderTextView.Follow"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
+                android:layout_below="@+id/text_blog_name"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:layout_alignParentRight="true" />
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="1px"
             android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/grey_light" />
+            android:background="@color/grey_medium_light" />
     </LinearLayout>
 </FrameLayout>

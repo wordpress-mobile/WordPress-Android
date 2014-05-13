@@ -47,7 +47,7 @@ public class WPNetworkImageView extends ImageView {
 
     private int mRetryCnt;
     private static final int MAX_RETRIES = 3;
-    private static final long RETRY_DELAY = 2000;
+    private static final long RETRY_DELAY = 2500;
 
     public interface ImageListener {
         public void onImageLoaded(boolean succeeded);

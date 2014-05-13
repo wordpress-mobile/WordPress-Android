@@ -120,28 +120,14 @@ public class ReaderBlogInfo {
              + String.format("?w=%d", width);
     }
 
-    protected boolean isSameAs(ReaderBlogInfo blogInfo) {
-        if (blogInfo == null) {
-            return false;
-        }
-        if (this.blogId != blogInfo.blogId) {
-            return false;
-        }
-        if (this.isFollowing != blogInfo.isFollowing) {
-            return false;
-        }
-        if (this.numSubscribers != blogInfo.numSubscribers) {
-            return false;
-        }
-        if (!this.getName().equals(blogInfo.getName())) {
-            return false;
-        }
-        if (!this.getDescription().equals(blogInfo.getDescription())) {
-            return false;
-        }
-        if (!this.getUrl().equals(blogInfo.getUrl())) {
-            return false;
-        }
-        return true;
+    public boolean isSameAs(ReaderBlogInfo blogInfo) {
+        return blogInfo != null
+            && this.blogId == blogInfo.blogId
+            && this.isFollowing == blogInfo.isFollowing
+            && this.isPrivate == blogInfo.isPrivate
+            && this.numSubscribers == blogInfo.numSubscribers
+            && this.getName().equals(blogInfo.getName())
+            && this.getDescription().equals(blogInfo.getDescription())
+            && this.getUrl().equals(blogInfo.getUrl());
     }
 }

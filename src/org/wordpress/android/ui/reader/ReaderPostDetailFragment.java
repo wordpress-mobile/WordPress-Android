@@ -1429,7 +1429,7 @@ public class ReaderPostDetailFragment extends Fragment
                     AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
-        }, 750L);
+        }, 1000L);
     }
 
     private void showContent() {

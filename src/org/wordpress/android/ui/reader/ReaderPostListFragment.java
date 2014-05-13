@@ -277,21 +277,25 @@ public class ReaderPostListFragment extends Fragment
                 mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, mBlogInfoView.getMshotHeight());
                 mMshotSpacerView.setTag(MSHOT_SPACER_TAG);
 
-                // blank header height needs to be adjusted based on the actual height of the info
-                // view, which we don't know at this point - so assign a one-shot listener to
-                // detect when we know the height and adjust accordingly
+                // make sure blog info is in front of the listView
+                mBlogInfoView.bringToFront();
+
+                // assign a global layout listener to detect changes to the size of the blogInfo so
+                // we can resize the mshot spacer accordingly
                 mBlogInfoView.getViewTreeObserver().addOnGlobalLayoutListener(
                         new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
                             public void onGlobalLayout() {
-                                mBlogInfoView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                                checkBlogInfoSize();
+                                int currentHeight = mMshotSpacerView.getLayoutParams().height;
+                                int newHeight = mBlogInfoView.getInfoContainerHeight()
+                                              + mBlogInfoView.getMshotHeight();
+                                if (currentHeight != newHeight) {
+                                    mMshotSpacerView.getLayoutParams().height = newHeight;
+                                }
                             }
                         }
                 );
 
-                // make sure blog info is in front of the listView
-                mBlogInfoView.bringToFront();
                 break;
         }
 
@@ -1152,7 +1156,7 @@ public class ReaderPostListFragment extends Fragment
             mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
                         public void onBlogInfoLoaded() {
-                            checkBlogInfoSize();
+                            // nop
                         }
                         @Override
                         public void onBlogInfoFailed() {
@@ -1171,17 +1175,6 @@ public class ReaderPostListFragment extends Fragment
                         }
                     }
             );
-        }
-    }
-
-    /*
-     * called when the blog info view has changed size, resizes the listView mshot spacer to match
-     * the size of the mshot and blog info container
-     */
-    private void checkBlogInfoSize() {
-        if (hasActivity() && mBlogInfoView != null && mMshotSpacerView != null) {
-            mMshotSpacerView.getLayoutParams().height =
-                    mBlogInfoView.getInfoContainerHeight() + mBlogInfoView.getMshotHeight();
         }
     }
 }
