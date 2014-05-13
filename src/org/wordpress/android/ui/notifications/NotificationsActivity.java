@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -33,7 +34,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 public class NotificationsActivity extends WPActionBarActivity
-        implements NotificationFragment.OnPostClickListener,
+        implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
         NotificationFragment.OnCommentClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
@@ -188,6 +189,23 @@ public class NotificationsActivity extends WPActionBarActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         return true;
+    }
+
+    /*
+     * triggered from the comment details fragment whenever a comment is changed (moderated, added,
+     * deleted, etc.) - refresh notifications so changes are reflected here
+     */
+    @Override
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        // remove the comment detail fragment if the comment was trashed
+        if (changeType == CommentActions.ChangeType.TRASHED && changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            }
+        }
+
+        mNotesList.refreshNotes();
     }
 
     void popNoteDetail(){

@@ -332,6 +332,7 @@ public class Note extends Syncable {
         mCommentPreview = null;
         mSubject = null;
         mIconUrl = null;
+        mNoteType = null;
 
         // preload content again
         preloadContent();
