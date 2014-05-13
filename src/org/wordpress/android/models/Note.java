@@ -328,6 +328,7 @@ public class Note extends Syncable {
         mNoteJSON = json;
 
         // clear out the preloaded content
+        mTimestamp = 0;
         mComment = null;
         mCommentPreview = null;
         mSubject = null;
