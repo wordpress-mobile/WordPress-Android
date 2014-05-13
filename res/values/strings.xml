@@ -40,7 +40,7 @@
     <string name="add">Add</string>
     <string name="add_self_hosted_blog">Add self-hosted blog</string>
     <string name="show_and_hide_blogs">Show/hide WordPress.com blogs</string>
-    <string name="blogs_visibility">Blogs visibility</string>
+    <string name="blogs_visibility">Blogs</string>
     <string name="show_all">Show all</string>
     <string name="hide_all">Hide all</string>
     <string name="notification_sound">Play notification sound</string>
