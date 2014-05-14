@@ -323,4 +323,7 @@
         <item name="ptrProgressBarColor">@color/blue_dark</item>
         <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
     </style>
+
+    <!-- Dialog -->
+    <style name="WordPress.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
 </resources>
