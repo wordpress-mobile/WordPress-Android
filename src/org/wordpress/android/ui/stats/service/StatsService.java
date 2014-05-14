@@ -149,27 +149,27 @@ public class StatsService extends Service {
                 // top posts and pages
                 final String topPostsAndPagesTodayPath = String.format(
                         "/sites/%s/stats/top-posts?date=%s", blogId, today);
-                final String topPostsAndPagesYestardayPath = String.format(
+                final String topPostsAndPagesYesterdayPath = String.format(
                         "/sites/%s/stats/top-posts?date=%s", blogId, yesterday);
                 // referrers
                 final String referrersTodayPath = String.format(
                         "/sites/%s/stats/referrers?date=%s", blogId, today);
-                final String referrersYestardayPath = String.format(
+                final String referrersYesterdayPath = String.format(
                         "/sites/%s/stats/referrers?date=%s", blogId, yesterday);
                 // clicks
                 final String clicksTodayPath = String.format(
                         "/sites/%s/stats/clicks?date=%s", blogId, today);
-                final String clicksYestardayPath = String.format(
+                final String clicksYesterdayPath = String.format(
                         "/sites/%s/stats/clicks?date=%s", blogId, yesterday);
                 // search engine terms
                 final String searchEngineTermsTodayPath = String.format(
                         "/sites/%s/stats/search-terms?date=%s", blogId, today);
-                final String searchEngineTermsYestardayPath = String.format(
+                final String searchEngineTermsYesterdayPath = String.format(
                         "/sites/%s/stats/search-terms?date=%s", blogId, yesterday);
                 // Views by country
                 final String viewByCountryTodayPath = String.format(
                         "/sites/%s/stats/country-views?date=%s", blogId, today);
-                final String viewByCountryYestardayPath = String.format(
+                final String viewByCountryYesterdayPath = String.format(
                         "/sites/%s/stats/country-views?date=%s", blogId, yesterday);
 
                 final String parametersSepator = "&urls%5B%5D=";
@@ -183,33 +183,33 @@ public class StatsService extends Service {
                         .append(parametersSepator)
                         .append(Uri.encode(topPostsAndPagesTodayPath))
                         .append(parametersSepator)
-                        .append(Uri.encode(topPostsAndPagesYestardayPath))
+                        .append(Uri.encode(topPostsAndPagesYesterdayPath))
                         .append(parametersSepator)
                         .append(Uri.encode(referrersTodayPath))
                         .append(parametersSepator)
-                        .append(Uri.encode(referrersYestardayPath))
+                        .append(Uri.encode(referrersYesterdayPath))
                         .append(parametersSepator)
                         .append(Uri.encode(clicksTodayPath))
                         .append(parametersSepator)
-                        .append(Uri.encode(clicksYestardayPath))
+                        .append(Uri.encode(clicksYesterdayPath))
                         .append(parametersSepator)
                         .append(Uri.encode(searchEngineTermsTodayPath))
                         .append(parametersSepator)
-                        .append(Uri.encode(searchEngineTermsYestardayPath))
+                        .append(Uri.encode(searchEngineTermsYesterdayPath))
                         .append(parametersSepator)
                         .append(Uri.encode(viewByCountryTodayPath))
                         .append(parametersSepator)
-                        .append(Uri.encode(viewByCountryYestardayPath))
+                        .append(Uri.encode(viewByCountryYesterdayPath))
                         .toString();
 
                 RestBatchCallListener restAPIListener = new RestBatchCallListener(blogId,
                         summaryPath,
                         barChartWeekPath, barChartMonthPath,
-                        topPostsAndPagesTodayPath, topPostsAndPagesYestardayPath,
-                        referrersTodayPath, referrersYestardayPath,
-                        clicksTodayPath, clicksYestardayPath,
-                        searchEngineTermsTodayPath, searchEngineTermsYestardayPath,
-                        viewByCountryTodayPath, viewByCountryYestardayPath);
+                        topPostsAndPagesTodayPath, topPostsAndPagesYesterdayPath,
+                        referrersTodayPath, referrersYesterdayPath,
+                        clicksTodayPath, clicksYesterdayPath,
+                        searchEngineTermsTodayPath, searchEngineTermsYesterdayPath,
+                        viewByCountryTodayPath, viewByCountryYesterdayPath);
 
                 AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
                 restClientUtils.get(path, restAPIListener, restAPIListener);
@@ -229,32 +229,32 @@ public class StatsService extends Service {
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
         final String mRequestBlogId, mSummaryAPICallPath, mBarChartWeekPath, mBarChartMonthPath,
-        mTopPostsAndPagesTodayPath, mTopPostsAndPagesYestardayPath, mReferrersTodayPath,
-        mReferrersYestardayPath, mClicksTodayPath, mClicksYestardayPath,
-        mSearchEngineTermsTodayPath, mSearchEngineTermsYestardayPath,
-        mViewByCountryTodayPath, mViewByCountryYestardayPath;
+        mTopPostsAndPagesTodayPath, mTopPostsAndPagesYesterdayPath, mReferrersTodayPath,
+        mReferrersYesterdayPath, mClicksTodayPath, mClicksYesterdayPath,
+        mSearchEngineTermsTodayPath, mSearchEngineTermsYesterdayPath,
+        mViewByCountryTodayPath, mViewByCountryYesterdayPath;
 
         RestBatchCallListener(String blogId, String summaryAPICallPath,
                 String barChartWeekPath, String barChartMonthPath,
-                String topPostsAndPagesTodayPath, String topPostsAndPagesYestardayPath,
-                String referrersTodayPath, String referrersYestardayPath,
-                String clicksTodayPath, String clicksYestardayPath,
-                String searchEngineTermsTodayPath, String searchEngineTermsYestardayPath,
-                String viewByCountryTodayPath, String viewByCountryYestardayPath) {
+                String topPostsAndPagesTodayPath, String topPostsAndPagesYesterdayPath,
+                String referrersTodayPath, String referrersYesterdayPath,
+                String clicksTodayPath, String clicksYesterdayPath,
+                String searchEngineTermsTodayPath, String searchEngineTermsYesterdayPath,
+                String viewByCountryTodayPath, String viewByCountryYesterdayPath) {
             this.mRequestBlogId = blogId;
             this.mSummaryAPICallPath = summaryAPICallPath;
             this.mBarChartWeekPath = barChartWeekPath;
             this.mBarChartMonthPath = barChartMonthPath;
             this.mTopPostsAndPagesTodayPath = topPostsAndPagesTodayPath;
-            this.mTopPostsAndPagesYestardayPath = topPostsAndPagesYestardayPath;
+            this.mTopPostsAndPagesYesterdayPath = topPostsAndPagesYesterdayPath;
             this.mReferrersTodayPath = referrersTodayPath;
-            this.mReferrersYestardayPath = referrersYestardayPath;
+            this.mReferrersYesterdayPath = referrersYesterdayPath;
             this.mClicksTodayPath = clicksTodayPath;
-            this.mClicksYestardayPath = clicksYestardayPath;
+            this.mClicksYesterdayPath = clicksYesterdayPath;
             this.mSearchEngineTermsTodayPath = searchEngineTermsTodayPath;
-            this.mSearchEngineTermsYestardayPath = searchEngineTermsYestardayPath;
+            this.mSearchEngineTermsYesterdayPath = searchEngineTermsYesterdayPath;
             this.mViewByCountryTodayPath = viewByCountryTodayPath;
-            this.mViewByCountryYestardayPath = viewByCountryYestardayPath;
+            this.mViewByCountryYesterdayPath = viewByCountryYesterdayPath;
         }
 
         @Override
@@ -284,7 +284,7 @@ public class StatsService extends Service {
             if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
-            String[] viewsByCountryPaths = {mViewByCountryTodayPath, mViewByCountryYestardayPath};
+            String[] viewsByCountryPaths = {mViewByCountryTodayPath, mViewByCountryYesterdayPath};
             for (String currentViewsByCountryPath : viewsByCountryPaths) {
                 if (response.has(currentViewsByCountryPath)) {
                     try {
@@ -339,7 +339,7 @@ public class StatsService extends Service {
             if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
-            String[] searchEngineTermsPaths = {mSearchEngineTermsTodayPath, mSearchEngineTermsYestardayPath};
+            String[] searchEngineTermsPaths = {mSearchEngineTermsTodayPath, mSearchEngineTermsYesterdayPath};
             for (String currentSearchEngineTermsPath : searchEngineTermsPaths) {
                 if (response.has(currentSearchEngineTermsPath)) {
                     try {
@@ -396,7 +396,7 @@ public class StatsService extends Service {
             if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
-            String[] clicksPaths = {mClicksTodayPath, mClicksYestardayPath};
+            String[] clicksPaths = {mClicksTodayPath, mClicksYesterdayPath};
             for (String currentClickPath : clicksPaths) {
                 if (response.has(currentClickPath)) {
                     try {
@@ -474,7 +474,7 @@ public class StatsService extends Service {
             if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
-            String[] referrersPaths = {mReferrersTodayPath, mReferrersYestardayPath};
+            String[] referrersPaths = {mReferrersTodayPath, mReferrersYesterdayPath};
             for (String currentReferrerPath : referrersPaths) {
                 if (response.has(currentReferrerPath)) {
                     try {
@@ -549,7 +549,7 @@ public class StatsService extends Service {
             if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
-            String[] topPostsAndPagesPaths = {mTopPostsAndPagesTodayPath, mTopPostsAndPagesYestardayPath};
+            String[] topPostsAndPagesPaths = {mTopPostsAndPagesTodayPath, mTopPostsAndPagesYesterdayPath};
             for (String currentTopPostsAndPagesPath : topPostsAndPagesPaths) {
                 if (response.has(currentTopPostsAndPagesPath)) {
                     try {
