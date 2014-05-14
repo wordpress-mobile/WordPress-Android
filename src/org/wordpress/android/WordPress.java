@@ -1,5 +1,6 @@
 package org.wordpress.android;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentCallbacks2;
@@ -15,6 +16,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -72,6 +75,7 @@ public class WordPress extends Application {
     public static RestClientUtils mRestClientUtils;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
+
     public static final String BROADCAST_ACTION_SIGNOUT = "wp-signout";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS = "XMLRPC_INVALID_CREDENTIALS";
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
@@ -199,6 +203,7 @@ public class WordPress extends Application {
     /**
      * enables "strict mode" for testing - should NEVER be used in release builds
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void enableStrictMode() {
         // return if the build is not a debug build
         if (!BuildConfig.DEBUG) {
@@ -218,7 +223,7 @@ public class WordPress extends Application {
                 .detectActivityLeaks()
                 .detectLeakedSqlLiteObjects()
                 .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects()
+                .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
                 .penaltyLog()
                 .build());
 
@@ -414,9 +419,7 @@ public class WordPress extends Application {
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        context.sendBroadcast(broadcastIntent);
+        sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
     }
 
     public static void removeWpComUserRelatedData(Context context) {
@@ -444,9 +447,17 @@ public class WordPress extends Application {
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        context.sendBroadcast(broadcastIntent);
+        sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
+    }
+
+    public static boolean sendLocalBroadcast(Context context, String action) {
+        if (context == null || TextUtils.isEmpty(action)) {
+            return false;
+        }
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
+        Intent intent = new Intent();
+        intent.setAction(action);
+        return lbm.sendBroadcast(intent);
     }
 
     public static String getLoginUrl(Blog blog) {

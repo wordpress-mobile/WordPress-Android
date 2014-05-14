@@ -3,12 +3,10 @@ package org.wordpress.android.ui.accounts;
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,17 +99,10 @@ public class ManageBlogsActivity extends ListActivity {
                 finish();
                 return true;
             case R.id.menu_refresh:
-                broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+                WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void broadcastAction(String action) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        Intent intent = new Intent();
-        intent.setAction(action);
-        lbm.sendBroadcast(intent);
     }
 
     private void selectAll() {
