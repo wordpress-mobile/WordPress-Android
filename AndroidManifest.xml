@@ -90,11 +90,11 @@
             android:name=".ui.posts.AddCategoryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/add_new_category"
-            android:theme="@style/WordPress.Dialog" />
+            android:theme="@android:style/Theme.Holo.Light.Dialog" />
         <activity
             android:name=".ui.posts.EditLinkActivity"
             android:label="@string/create_a_link"
-            android:theme="@style/WordPress.Dialog"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
@@ -203,7 +203,7 @@
 
         <activity
             android:name=".ui.accounts.WPComLoginActivity"
-            android:theme="@style/WordPress.Dialog">
+            android:theme="@android:style/Theme.Holo.Light.Dialog">
         </activity>
         <activity
             android:name=".ui.AddQuickPressShortcutActivity"
