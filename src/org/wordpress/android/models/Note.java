@@ -73,33 +73,35 @@ public class Note extends Syncable {
     }
 
 
-    protected static final String TAG="NoteModel";
+    protected static final String TAG = "NoteModel";
 
-    protected static final String NOTE_UNKNOWN_TYPE="unknown";
-    public static final String NOTE_COMMENT_TYPE="comment";
-    public static final String NOTE_COMMENT_LIKE_TYPE="comment_like";
-    public static final String NOTE_LIKE_TYPE="like";
+    protected static final String NOTE_UNKNOWN_TYPE = "unknown";
+    public static final String NOTE_COMMENT_TYPE = "comment";
+    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
+    public static final String NOTE_LIKE_TYPE = "like";
     public static final String NOTE_MATCHER_TYPE = "automattcher";
     public static final String NOTE_ACHIEVEMENT_TYPE = "achievement";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
     private static final String SINGLE_LINE_LIST_TEMPLATE = "single-line-list";
-    private static final String MULTI_LINE_LIST_TEMPLATE  = "multi-line-list";
-    private static final String BIG_BADGE_TEMPLATE        = "big-badge";
+    private static final String MULTI_LINE_LIST_TEMPLATE = "multi-line-list";
+    private static final String BIG_BADGE_TEMPLATE = "big-badge";
 
     // JSON action keys
-    private static final String ACTION_KEY_REPLY     = "replyto-comment";
-    private static final String ACTION_KEY_APPROVE   = "approve-comment";
+    private static final String ACTION_KEY_REPLY = "replyto-comment";
+    private static final String ACTION_KEY_APPROVE = "approve-comment";
     private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
-    private static final String ACTION_KEY_SPAM      = "spam-comment";
+    private static final String ACTION_KEY_SPAM = "spam-comment";
 
-    public static enum EnabledActions {ACTION_REPLY,
-                                       ACTION_APPROVE,
-                                       ACTION_UNAPPROVE,
-                                       ACTION_SPAM}
+    public static enum EnabledActions {
+        ACTION_REPLY,
+        ACTION_APPROVE,
+        ACTION_UNAPPROVE,
+        ACTION_SPAM
+    }
 
-    private Map<String,JSONObject> mActions;
+    private Map<String, JSONObject> mActions;
     private JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
 
@@ -139,12 +141,14 @@ public class Note extends Syncable {
         return getId();
     }
 
-    public JSONObject toJSONObject(){
+    public JSONObject toJSONObject() {
         return mNoteJSON;
     }
-    public String getId(){
+
+    public String getId() {
         return queryJSON("id", "0");
     }
+
     public String getType() {
         if (mNoteType == null) {
             mNoteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
@@ -155,20 +159,25 @@ public class Note extends Syncable {
 
         return mNoteType;
     }
-    private Boolean isType(String type){
+
+    private Boolean isType(String type) {
         return getType().equals(type);
     }
-    public Boolean isCommentType(){
+
+    public Boolean isCommentType() {
         return isType(NOTE_COMMENT_TYPE);
     }
-    public Boolean isCommentLikeType(){
+
+    public Boolean isCommentLikeType() {
         return isType(NOTE_COMMENT_LIKE_TYPE);
     }
-    public Boolean isAutomattcherType(){
+
+    public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
     }
-    public String getSubject(){
-        if (mSubject==null) {
+
+    public String getSubject() {
+        if (mSubject == null) {
             String text = queryJSON("subject.text", "").trim();
             if (text.equals("")) {
                 text = queryJSON("subject.html", "");
@@ -177,8 +186,9 @@ public class Note extends Syncable {
         }
         return mSubject;
     }
-    public String getIconURL(){
-        if (mIconUrl==null)
+
+    public String getIconURL() {
+        if (mIconUrl == null)
             mIconUrl = queryJSON("subject.icon", "");
         return mIconUrl;
     }
@@ -186,8 +196,8 @@ public class Note extends Syncable {
     /**
      * Removes HTML and cleans up newlines and whitespace
      */
-    public String getCommentPreview(){
-        if (mCommentPreview==null)
+    public String getCommentPreview() {
+        if (mCommentPreview == null)
             mCommentPreview = getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
         return mCommentPreview;
     }
@@ -195,7 +205,7 @@ public class Note extends Syncable {
     /**
      * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
      */
-    Spanned getCommentBody(){
+    Spanned getCommentBody() {
         return mComment;
     }
 
@@ -203,14 +213,14 @@ public class Note extends Syncable {
      * For a comment note the text is in the body object's last item. It currently
      * is only provided in HTML format.
      */
-    String getCommentText(){
+    String getCommentText() {
         return queryJSON("body.items[last].html", "");
     }
 
     /**
      * The inverse of isRead
      */
-    public Boolean isUnread(){
+    public Boolean isUnread() {
         return !isRead();
     }
 
@@ -219,7 +229,7 @@ public class Note extends Syncable {
      * quantity of likes that are "unread" within the single note. So for a note to be "read" it
      * should have "0"
      */
-    Boolean isRead(){
+    Boolean isRead() {
         return getUnreadCount().equals("0");
     }
 
@@ -240,22 +250,22 @@ public class Note extends Syncable {
      * For some reason the unread count is a string in the JSON API but is truly represented
      * by an Integer. We can handle a simple string.
      */
-    public String getUnreadCount(){
+    public String getUnreadCount() {
         return queryJSON("unread", "0");
     }
 
     /**
      *
      */
-    public void setUnreadCount(String count){
+    public void setUnreadCount(String count) {
         try {
             mNoteJSON.putOpt("unread", count);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             AppLog.e(T.NOTIFS, "Failed to set unread property", e);
         }
     }
 
-    public Reply buildReply(String content){
+    public Reply buildReply(String content) {
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
@@ -281,24 +291,28 @@ public class Note extends Syncable {
         return DateTimeUtils.timestampToTimeSpan(getTimestamp());
     }
 
-    String getTemplate(){
+    String getTemplate() {
         return queryJSON("body.template", "");
     }
-    public Boolean isMultiLineListTemplate(){
+
+    public Boolean isMultiLineListTemplate() {
         return getTemplate().equals(MULTI_LINE_LIST_TEMPLATE);
     }
-    public Boolean isSingleLineListTemplate(){
+
+    public Boolean isSingleLineListTemplate() {
         return getTemplate().equals(SINGLE_LINE_LIST_TEMPLATE);
     }
-    public Boolean isBigBadgeTemplate(){
+
+    public Boolean isBigBadgeTemplate() {
         return getTemplate().equals(BIG_BADGE_TEMPLATE);
     }
-    Map<String,JSONObject> getActions(){
+
+    Map<String, JSONObject> getActions() {
         if (mActions == null) {
             try {
                 JSONArray actions = queryJSON("body.actions", new JSONArray());
-                mActions = new HashMap<String,JSONObject>(actions.length());
-                for (int i=0; i<actions.length(); i++) {
+                mActions = new HashMap<String, JSONObject>(actions.length());
+                for (int i = 0; i < actions.length(); i++) {
                     JSONObject action = actions.getJSONObject(i);
                     String actionType = JSONUtil.queryJSON(action, "type", "");
                     if (!actionType.equals("")) {
@@ -307,14 +321,14 @@ public class Note extends Syncable {
                 }
             } catch (JSONException e) {
                 AppLog.e(T.NOTIFS, "Could not find actions", e);
-                mActions = new HashMap<String,JSONObject>();
+                mActions = new HashMap<String, JSONObject>();
             }
         }
         return mActions;
     }
 
 
-    protected void updateJSON(JSONObject json){
+    protected void updateJSON(JSONObject json) {
 
         mNoteJSON = json;
 
@@ -352,7 +366,7 @@ public class Note extends Syncable {
      */
     public EnumSet<EnabledActions> getEnabledActions() {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
-        Map<String,JSONObject> jsonActions = getActions();
+        Map<String, JSONObject> jsonActions = getActions();
         if (jsonActions == null || jsonActions.size() == 0)
             return actions;
         if (jsonActions.containsKey(ACTION_KEY_REPLY))
@@ -369,7 +383,7 @@ public class Note extends Syncable {
     /**
      * pre-loads commonly-accessed fields - avoids performance hit of loading these
      * fields inside an adapter's getView()
-     **/
+     */
     void preloadContent() {
         if (mNoteJSON == null || mNoteJSON.length() == 0) {
             return;
@@ -411,12 +425,15 @@ public class Note extends Syncable {
     public int getBlogId() {
         return mBlogId;
     }
+
     public int getPostId() {
         return mPostId;
     }
+
     public long getCommentId() {
         return mCommentId;
     }
+
     public long getCommentParentId() {
         return mCommentParentId;
     }
@@ -438,7 +455,7 @@ public class Note extends Syncable {
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
-    public <U> U queryJSON(String query, U defaultObject){
+    public <U> U queryJSON(String query, U defaultObject) {
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
     }
 
@@ -450,15 +467,17 @@ public class Note extends Syncable {
         private final String mContent;
         private final String mRestPath;
 
-        Reply(Note note, String restPath, String content){
+        Reply(Note note, String restPath, String content) {
             mNote = note;
             mRestPath = restPath;
             mContent = content;
         }
-        public String getContent(){
+
+        public String getContent() {
             return mContent;
         }
-        public String getRestPath(){
+
+        public String getRestPath() {
             return mRestPath;
         }
     }
