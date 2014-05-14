@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.SqlUtils;
+import org.wordpress.android.util.UrlUtils;
 
 /**
  * tbl_posts contains all reader posts
@@ -21,27 +22,30 @@ public class ReaderPostTable {
           + "blog_id,"              // 2
           + "pseudo_id,"            // 3
           + "author_name,"          // 4
-          + "title,"                // 5
-          + "text,"                 // 6
-          + "excerpt,"              // 7
-          + "url,"                  // 8
-          + "blog_url,"             // 9
-          + "blog_name,"            // 10
-          + "featured_image,"       // 11
-          + "featured_video,"       // 12
-          + "post_avatar,"          // 13
-          + "timestamp,"            // 14
-          + "published,"            // 15
-          + "num_replies,"          // 16
-          + "num_likes,"            // 17
-          + "is_liked,"             // 18
-          + "is_followed,"          // 19
-          + "is_comments_open,"     // 20
-          + "is_reblogged,"         // 21
-          + "is_external,"          // 22
-          + "is_private,"           // 23
-          + "is_videopress,"        // 24
-          + "tag_list";             // 25
+          + "author_id,"            // 5
+          + "title,"                // 6
+          + "text,"                 // 7
+          + "excerpt,"              // 8
+          + "url,"                  // 9
+          + "blog_url,"             // 10
+          + "blog_name,"            // 11
+          + "featured_image,"       // 12
+          + "featured_video,"       // 13
+          + "post_avatar,"          // 14
+          + "timestamp,"            // 15
+          + "published,"            // 16
+          + "num_replies,"          // 17
+          + "num_likes,"            // 18
+          + "is_liked,"             // 19
+          + "is_followed,"          // 20
+          + "is_comments_open,"     // 21
+          + "is_reblogged,"         // 22
+          + "is_external,"          // 23
+          + "is_private,"           // 24
+          + "is_videopress,"        // 25
+          + "tag_list,"             // 26
+          + "primary_tag,"          // 27
+          + "secondary_tag";        // 28
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -50,6 +54,7 @@ public class ReaderPostTable {
                 + " blog_id             INTEGER,"       // blog_id for WP blogs, feed_id for non-WP blogs
                 + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
+                + " author_id           INTEGER DEFAULT 0,"
                 + "	title	            TEXT,"
                 + "	text                TEXT,"
                 + "	excerpt             TEXT,"
@@ -71,6 +76,8 @@ public class ReaderPostTable {
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
                 + " tag_list            TEXT,"
+                + " primary_tag         TEXT,"
+                + " secondary_tag       TEXT,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
@@ -116,6 +123,10 @@ public class ReaderPostTable {
         return (int)count;
     }
 
+    public static int getNumPostsInBlog(long blogId) {
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_posts WHERE blog_id=?", new String[]{Long.toString(blogId)});
+    }
+
     public static int getNumPostsWithTag(String tagName) {
         if (TextUtils.isEmpty(tagName))
             return 0;
@@ -133,7 +144,7 @@ public class ReaderPostTable {
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return;
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
@@ -203,7 +214,7 @@ public class ReaderPostTable {
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
     public static int getNumCommentsForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return 0;
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
@@ -216,7 +227,7 @@ public class ReaderPostTable {
      * may differ from ReaderPostTable.getNumLikesForPost (which returns # local likes for this post)
      */
     public static int getNumLikesForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return 0;
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
@@ -225,7 +236,7 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        if (post==null)
+        if (post == null)
             return false;
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
@@ -234,12 +245,32 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostFollowed(ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return false;
+        }
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_followed FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
+    }
+
+    /*
+     * updates the follow status of all posts in the passed list, returns true if any changed
+     */
+    public static boolean checkFollowStatusOnPosts(ReaderPostList posts) {
+        if (posts == null || posts.size() == 0) {
+            return false;
+        }
+
+        boolean isChanged = false;
+        for (ReaderPost post: posts) {
+            boolean isFollowed = isPostFollowed(post);
+            if (isFollowed != post.isFollowedByCurrentUser) {
+                post.isFollowedByCurrentUser = isFollowed;
+                isChanged = true;
+            }
+        }
+        return isChanged;
     }
 
     public static int deletePostsWithTag(String tagName) {
@@ -260,7 +291,7 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns the iso8601 published date of the oldest post
+     * returns the iso8601 published date of the oldest post with the passed tag
      */
     public static String getOldestPubDateWithTag(final String tagName) {
         if (TextUtils.isEmpty(tagName))
@@ -272,35 +303,62 @@ public class ReaderPostTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
     }
 
-    public static void setBlogPostsFollowStatus(long blogId, boolean isFollowed) {
+    /*
+     * returns the iso8601 published date of the oldest post in the passed blog
+     */
+    public static String getOldestPubDateInBlog(long blogId) {
+        String sql = "SELECT published FROM tbl_posts"
+                  + " WHERE blog_id = ?"
+                  + " ORDER BY published LIMIT 1";
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{Long.toString(blogId)});
+    }
+
+    /*
+     * sets the following status for all posts in the passed blog
+     */
+    public static void setFollowStatusForPostsInBlog(long blogId, String blogUrl, boolean isFollowed) {
+        if (blogId == 0 && TextUtils.isEmpty(blogUrl)) {
+            return;
+        }
+
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
-            // change is_followed in tbl_posts for this blog
-            String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                       + " WHERE blog_id=?";
-            db.execSQL(sql, new String[]{Long.toString(blogId)});
+            // change is_followed in tbl_posts for this blog - use blogId if we have it,
+            // otherwise use url
+            if (blogId != 0) {
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_id=?";
+                db.execSQL(sql, new String[]{Long.toString(blogId)});
+            } else {
+                String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_url=?";
+                db.execSQL(sql, new String[]{UrlUtils.normalizeUrl(blogUrl)});
+            }
 
-            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in tbl_post_tags
-            if (!isFollowed)
+            // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in
+            // tbl_post_tags - note that this requires the blogId
+            if (!isFollowed && blogId != 0) {
                 db.delete("tbl_post_tags", "blog_id=? AND tag_name=?",
                         new String[]{Long.toString(blogId), ReaderTag.TAG_NAME_FOLLOWING});
+            }
 
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
     }
-
+    
     public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
-        if (posts==null || posts.size()==0)
+        if (posts == null || posts.size() == 0) {
             return;
+        }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
 
@@ -310,29 +368,32 @@ public class ReaderPostTable {
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
                 stmtPosts.bindLong  (2,  post.blogId);
-                stmtPosts.bindString(3, post.getPseudoId());
+                stmtPosts.bindString(3,  post.getPseudoId());
                 stmtPosts.bindString(4,  post.getAuthorName());
-                stmtPosts.bindString(5,  post.getTitle());
-                stmtPosts.bindString(6,  post.getText());
-                stmtPosts.bindString(7,  post.getExcerpt());
-                stmtPosts.bindString(8,  post.getUrl());
-                stmtPosts.bindString(9,  post.getBlogUrl());
-                stmtPosts.bindString(10, post.getBlogName());
-                stmtPosts.bindString(11, post.getFeaturedImage());
-                stmtPosts.bindString(12, post.getFeaturedVideo());
-                stmtPosts.bindString(13, post.getPostAvatar());
-                stmtPosts.bindLong  (14, post.timestamp);
-                stmtPosts.bindString(15, post.getPublished());
-                stmtPosts.bindLong  (16, post.numReplies);
-                stmtPosts.bindLong  (17, post.numLikes);
-                stmtPosts.bindLong  (18, SqlUtils.boolToSql(post.isLikedByCurrentUser));
-                stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
-                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isCommentsOpen));
-                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
-                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isExternal));
-                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isPrivate));
-                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindString(25, post.getTags());
+                stmtPosts.bindLong  (5,  post.authorId);
+                stmtPosts.bindString(6,  post.getTitle());
+                stmtPosts.bindString(7,  post.getText());
+                stmtPosts.bindString(8,  post.getExcerpt());
+                stmtPosts.bindString(9,  post.getUrl());
+                stmtPosts.bindString(10, post.getBlogUrl());
+                stmtPosts.bindString(11, post.getBlogName());
+                stmtPosts.bindString(12, post.getFeaturedImage());
+                stmtPosts.bindString(13, post.getFeaturedVideo());
+                stmtPosts.bindString(14, post.getPostAvatar());
+                stmtPosts.bindLong  (15, post.timestamp);
+                stmtPosts.bindString(16, post.getPublished());
+                stmtPosts.bindLong  (17, post.numReplies);
+                stmtPosts.bindLong  (18, post.numLikes);
+                stmtPosts.bindLong  (19, SqlUtils.boolToSql(post.isLikedByCurrentUser));
+                stmtPosts.bindLong  (20, SqlUtils.boolToSql(post.isFollowedByCurrentUser));
+                stmtPosts.bindLong  (21, SqlUtils.boolToSql(post.isCommentsOpen));
+                stmtPosts.bindLong  (22, SqlUtils.boolToSql(post.isRebloggedByCurrentUser));
+                stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
+                stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
+                stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
+                stmtPosts.bindString(26, post.getTags());
+                stmtPosts.bindString(27, post.getPrimaryTag());
+                stmtPosts.bindString(28, post.getSecondaryTag());
                 stmtPosts.execute();
                 stmtPosts.clearBindings();
             }
@@ -398,6 +459,30 @@ public class ReaderPostTable {
         }
     }
 
+    public static ReaderPostList getPostsInBlog(long blogId, int maxPosts) {
+        String sql = "SELECT * FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0)
+            sql += " LIMIT " + Integer.toString(maxPosts);
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderPostList posts = new ReaderPostList();
+            if (cursor == null || !cursor.moveToFirst())
+                return posts;
+
+            final PostColumnIndexes cols = new PostColumnIndexes(cursor);
+            do {
+                posts.add(getPostFromCursor(cursor, cols));
+            } while (cursor.moveToNext());
+
+            return posts;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post == null)
             return;
@@ -418,6 +503,7 @@ public class ReaderPostTable {
         private final int idx_pseudo_id;
 
         private final int idx_author_name;
+        private final int idx_author_id;
         private final int idx_blog_name;
         private final int idx_blog_url;
         private final int idx_excerpt;
@@ -444,6 +530,8 @@ public class ReaderPostTable {
         private final int idx_is_videopress;
 
         private final int idx_tag_list;
+        private final int idx_primary_tag;
+        private final int idx_secondary_tag;
 
         private PostColumnIndexes(Cursor c) {
             if (c == null)
@@ -454,6 +542,7 @@ public class ReaderPostTable {
             idx_pseudo_id = c.getColumnIndex("pseudo_id");
 
             idx_author_name = c.getColumnIndex("author_name");
+            idx_author_id = c.getColumnIndex("author_id");
             idx_blog_name = c.getColumnIndex("blog_name");
             idx_blog_url = c.getColumnIndex("blog_url");
             idx_excerpt = c.getColumnIndex("excerpt");
@@ -480,6 +569,8 @@ public class ReaderPostTable {
             idx_is_videopress = c.getColumnIndex("is_videopress");
 
             idx_tag_list = c.getColumnIndex("tag_list");
+            idx_primary_tag = c.getColumnIndex("primary_tag");
+            idx_secondary_tag = c.getColumnIndex("secondary_tag");
         }
     }
 
@@ -495,6 +586,7 @@ public class ReaderPostTable {
 
         post.postId = c.getLong(cols.idx_post_id);
         post.blogId = c.getLong(cols.idx_blog_id);
+        post.authorId = c.getLong(cols.idx_author_id);
         post.setPseudoId(c.getString(cols.idx_pseudo_id));
 
         post.setAuthorName(c.getString(cols.idx_author_name));
@@ -524,6 +616,8 @@ public class ReaderPostTable {
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(cols.idx_is_videopress));
 
         post.setTags(c.getString(cols.idx_tag_list));
+        post.setPrimaryTag(c.getString(cols.idx_primary_tag));
+        post.setSecondaryTag(c.getString(cols.idx_secondary_tag));
 
         return post;
     }

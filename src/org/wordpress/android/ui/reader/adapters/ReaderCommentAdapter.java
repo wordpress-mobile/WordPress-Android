@@ -78,7 +78,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
         }
-
         new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -108,17 +107,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReaderComment comment = mComments.get(position);
-        CommentViewHolder holder;
-        if (convertView==null) {
-            convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
-            holder = new CommentViewHolder(convertView);
-            convertView.setTag(holder);
+        final CommentHolder holder;
 
-            // this is necessary in order for anchor tags in the comment text to be clickable
-            holder.txtText.setLinksClickable(true);
-            holder.txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
+            holder = new CommentHolder(convertView);
+            convertView.setTag(holder);
         } else {
-            holder = (CommentViewHolder) convertView.getTag();
+            holder = (CommentHolder) convertView.getTag();
         }
 
         holder.txtAuthor.setText(comment.getAuthorName());
@@ -128,16 +124,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
 
-        // tapping avatar or author name opens blog in browser
-        if (comment.hasAuthorUrl()) {
-            View.OnClickListener listener = new View.OnClickListener() {
+        // tapping avatar or author name opens blog preview
+        if (comment.hasAuthorBlogId()) {
+            View.OnClickListener authorListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.openUrl(view.getContext(), comment.getAuthorUrl());
+                    ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId, comment.getAuthorUrl());
                 }
             };
-            holder.imgAvatar.setOnClickListener(listener);
-            holder.txtAuthor.setOnClickListener(listener);
+            holder.imgAvatar.setOnClickListener(authorListener);
+            holder.txtAuthor.setOnClickListener(authorListener);
             holder.txtAuthor.setTextColor(mLinkColor);
         } else {
             holder.txtAuthor.setTextColor(mNoLinkColor);
@@ -177,8 +173,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1))
+        if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_NEWER);
+        }
 
         // hide divider if this is the last comment
         holder.divider.setVisibility(position < getCount()-1 ? View.VISIBLE : View.INVISIBLE);
@@ -186,7 +183,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private static class CommentViewHolder {
+    private static class CommentHolder {
         private final TextView txtAuthor;
         private final TextView txtText;
         private final TextView txtDate;
@@ -197,7 +194,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final ProgressBar progress;
         private final View divider;
 
-        CommentViewHolder(View view) {
+        CommentHolder(View view) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
@@ -207,6 +204,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
             spacerTop = view.findViewById(R.id.spacer_top);
             progress = (ProgressBar) view.findViewById(R.id.progress);
             divider = view.findViewById(R.id.divider_comment);
+
+            // this is necessary in order for anchor tags in the comment text to be clickable
+            txtText.setLinksClickable(true);
+            txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
     }
 
@@ -214,13 +215,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
      * called from post detail activity when user submits a comment
      */
     public void addComment(ReaderComment comment) {
-        if (comment==null)
+        if (comment == null) {
             return;
+        }
 
         // if the comment doesn't have a parent we can just add it to the list of existing
         // comments - but if it does have a parent, we need to reload the list so that it
         // appears under its parent and is correctly indented
-        if (comment.parentId==0) {
+        if (comment.parentId == 0) {
             mComments.add(comment);
             notifyDataSetChanged();
         } else {
@@ -233,12 +235,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
      * that was inserted while the API call was still being processed
      */
     public void removeComment(long commentId) {
-        if (commentId==mHighlightCommentId)
+        if (commentId == mHighlightCommentId) {
             setHighlightCommentId(0, false);
+        }
 
         int position = indexOfCommentId(commentId);
-        if (position == -1)
+        if (position == -1) {
             return;
+        }
 
         mComments.remove(position);
         notifyDataSetChanged();
@@ -248,8 +252,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
      * replace the comment that has the passed commentId with another comment - used
      * after a comment is submitted to replace the "fake" comment with the real one
      */
-    public boolean replaceComment(long commentId, ReaderComment comment) {
-        return mComments.replaceComment(commentId, comment);
+    public void replaceComment(long commentId, ReaderComment comment) {
+        mComments.replaceComment(commentId, comment);
     }
 
     /*
@@ -272,7 +276,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private boolean mIsTaskRunning = false;
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderCommentList tmpComments;
-        private boolean moreCommentsExist;
+        private boolean tmpMoreCommentsExist;
 
         @Override
         protected void onPreExecute() {
@@ -284,32 +288,32 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
         @Override
         protected Boolean doInBackground(Void... params) {
-            if (mPost==null)
+            if (mPost == null) {
                 return false;
+            }
 
             // determine whether more comments can be downloaded by comparing the number of
             // comments the post says it has with the number of comments actually stored
             // locally for this post
             int numServerComments = ReaderPostTable.getNumCommentsForPost(mPost);
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(mPost);
-            moreCommentsExist = (numServerComments > numLocalComments);
+            tmpMoreCommentsExist = (numServerComments > numLocalComments);
 
             tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
-            if (mComments.isSameList(tmpComments))
-                return false;
-
-            return true;
+            return !mComments.isSameList(tmpComments);
         }
         @Override
         protected void onPostExecute(Boolean result) {
-            mMoreCommentsExist = moreCommentsExist;
+            mMoreCommentsExist = tmpMoreCommentsExist;
+
             if (result) {
                 // assign the comments with children sorted under their parents and indent levels applied
                 mComments = ReaderCommentList.getLevelList(tmpComments);
                 notifyDataSetChanged();
             }
-            if (mDataLoadedListener!=null)
+            if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
+            }
             mIsTaskRunning = false;
         }
     }

@@ -28,7 +28,7 @@ public class ReaderTagActions {
         throw new AssertionError();
     }
 
-    public static String getReadEndpointForTag(final String tagName) {
+    protected static String getReadEndpointForTag(final String tagName) {
         return String.format("/read/tags/%s/posts", sanitizeTitle(tagName));
     }
 
@@ -38,8 +38,17 @@ public class ReaderTagActions {
     public static boolean performTagAction(final TagAction action,
                                            final String tagName,
                                            final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return false;
+        }
+
+        // don't allow actions on default tags
+        if (ReaderTagTable.isDefaultTag(tagName)) {
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
 
         final ReaderTag originalTopic;
         final String path;
@@ -47,9 +56,7 @@ public class ReaderTagActions {
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTagTable.getTag(tagName);
-                if (originalTopic==null)
-                    return false;
+                originalTopic = ReaderTagTable.getTag(tagName, ReaderTagType.FOLLOWED);
                 // delete tag & all related posts
                 ReaderTagTable.deleteTag(tagName);
                 ReaderPostTable.deletePostsWithTag(tagName);
@@ -59,7 +66,7 @@ public class ReaderTagActions {
             case ADD :
                 originalTopic = null; // prevent compiler warning
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.SUBSCRIBED);
+                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
@@ -72,8 +79,9 @@ public class ReaderTagActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.i(T.READER, "tag action " + action.name() + " succeeded");
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -88,8 +96,9 @@ public class ReaderTagActions {
                                  || (action== TagAction.DELETE && error.equals("not_subscribed"));
                 if (isSuccess) {
                     AppLog.w(T.READER, "tag action " + action.name() + " succeeded with error " + error);
-                    if (actionListener!=null)
+                    if (actionListener != null) {
                         actionListener.onActionResult(true);
+                    }
                     return;
                 }
 
@@ -100,7 +109,9 @@ public class ReaderTagActions {
                 switch (action) {
                     case DELETE:
                         // add back original topic
-                        ReaderTagTable.addOrUpdateTag(originalTopic);
+                        if (originalTopic != null) {
+                            ReaderTagTable.addOrUpdateTag(originalTopic);
+                        }
                         break;
                     case ADD:
                         // remove new topic
@@ -108,8 +119,9 @@ public class ReaderTagActions {
                         break;
                 }
 
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false);
+                }
             }
         };
         WordPress.getRestClientUtils().post(path, listener, errorListener);
@@ -117,17 +129,18 @@ public class ReaderTagActions {
         return true;
     }
 
-
     /*
      * returns the passed tagName formatted for use with our API
      * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
      */
-    private static String sanitizeTitle(final String tagName) {
-        if (tagName==null)
+    static String sanitizeTitle(final String tagName) {
+        if (tagName == null) {
             return "";
+        }
 
-        // remove ampersands, replace spaces & periods with dashes
+        // remove ampersands and number signs, replace spaces & periods with dashes
         String sanitized = tagName.replace("&", "")
+                                  .replace("#", "")
                                   .replace(" ", "-")
                                   .replace(".", "-");
 
@@ -173,15 +186,15 @@ public class ReaderTagActions {
         new Thread() {
             @Override
             public void run() {
-                // get server topics, both default & subscribed
+                // get server topics, both default & followed
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.SUBSCRIBED));
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.FOLLOWED));
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
-                localTopics.addAll(ReaderTagTable.getSubscribedTags());
+                localTopics.addAll(ReaderTagTable.getFollowedTags());
                 final boolean hasChanges = !localTopics.isSameList(serverTopics);
 
                 if (hasChanges) {

@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
@@ -71,8 +72,10 @@ public class PreferencesActivity extends PreferenceActivity {
 
     private PreferenceGroup mNotificationsGroup;
     WPEditTextPreference mTaglineTextPreference;
+    private Blog mCurrentBlogOnCreate;
 
     public static final int RESULT_SIGNED_OUT = RESULT_FIRST_USER;
+    public static final String CURRENT_BLOG_CHANGED = "CURRENT_BLOG_CHANGED";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class PreferencesActivity extends PreferenceActivity {
         overridePendingTransition(R.anim.slide_up, R.anim.do_nothing);
 
         setTitle(getResources().getText(R.string.settings));
+        mCurrentBlogOnCreate = WordPress.getCurrentBlog();
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -208,8 +212,35 @@ public class PreferencesActivity extends PreferenceActivity {
     @Override
     protected void onPause() {
         overridePendingTransition(R.anim.do_nothing, R.anim.slide_down);
-        setResult(RESULT_OK);
         super.onPause();
+    }
+
+    @Override
+    public void finish() {
+        Intent data = new Intent();
+        boolean currentBlogChanged = false;
+        if (mCurrentBlogOnCreate != null) {
+            if (mCurrentBlogOnCreate.isDotcomFlag()) {
+                if (!WordPress.wpDB.isDotComAccountVisible(mCurrentBlogOnCreate.getRemoteBlogId())) {
+                    // dotcom blog has been hidden or removed
+                    currentBlogChanged = true;
+                }
+            } else {
+                if (!WordPress.wpDB.isBlogInDatabase(mCurrentBlogOnCreate.getRemoteBlogId(), mCurrentBlogOnCreate.getUrl())) {
+                    // self hosted blog has been removed
+                    currentBlogChanged = true;
+                }
+            }
+        } else {
+            // no visible blogs when preferences opened
+            if (WordPress.wpDB.getNumVisibleAccounts() != 0) {
+                // now at least one blog could be selected
+                currentBlogChanged = true;
+            }
+        }
+        data.putExtra(CURRENT_BLOG_CHANGED, currentBlogChanged);
+        setResult(RESULT_OK, data);
+        super.finish();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {

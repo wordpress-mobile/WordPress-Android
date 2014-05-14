@@ -82,8 +82,6 @@
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
     </style>
 
-    <style name="WordPress.Dialog" parent="@style/FloatingActivityTheme"/>
-
     <style name="WordPressSectionHeader">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginLeft">4dp</item>
@@ -229,7 +227,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="FloatingActivityTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="FloatingActivityTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:checkboxStyle">@style/FloatingActivityTheme.CheckBox</item>
@@ -325,4 +323,7 @@
         <item name="ptrProgressBarColor">@color/blue_dark</item>
         <item name="ptrProgressBarHeight">@dimen/progress_bar_height</item>
     </style>
+
+    <!-- Dialog -->
+    <style name="WordPress.Dialog" parent="android:Theme.Holo.Light.Dialog"/>
 </resources>

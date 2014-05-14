@@ -64,15 +64,17 @@ public class DisplayUtils {
      * and ActionBarSherlock - http://stackoverflow.com/a/15476793/1673548
      */
     public static int getActionBarHeight(Context context) {
-        if (context == null)
+        if (context == null) {
             return 0;
+        }
         TypedValue tv = new TypedValue();
-        if (context.getTheme() != null && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+        if (context.getTheme() != null
+                && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 
-        // if we get this far, it's because the device doesn't support an ActionBar or the app
-        // doesn't use ActionBarSherlock - so return the standard ActionBar height (48dp)
+        // if we get this far, it's because the device doesn't support an ActionBar,
+        // so return the standard ActionBar height (48dp)
         return dpToPx(context, 48);
     }
 

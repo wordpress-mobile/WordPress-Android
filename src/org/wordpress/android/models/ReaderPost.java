@@ -12,14 +12,13 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
 public class ReaderPost {
     private String pseudoId;
     public long postId;
     public long blogId;
+    public long authorId;
 
     private String title;
     private String text;
@@ -28,7 +27,10 @@ public class ReaderPost {
     private String blogName;
     private String blogUrl;
     private String postAvatar;
+
     private String tags;          // comma-separated list of tags
+    private String primaryTag;    // most popular tag on this post based on usage in blog
+    private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
     public long timestamp;        // used for sorting
     private String published;
@@ -49,8 +51,9 @@ public class ReaderPost {
     public boolean isVideoPress;
 
     public static ReaderPost fromJson(JSONObject json) {
-        if (json==null)
+        if (json == null) {
             throw new IllegalArgumentException("null json post");
+        }
 
         ReaderPost post = new ReaderPost();
 
@@ -69,7 +72,7 @@ public class ReaderPost {
         post.text = JSONUtil.getString(json, "content");
         post.title = JSONUtil.getStringDecoded(json, "title");
         post.url = JSONUtil.getString(json, "URL");
-        post.blogUrl = JSONUtil.getString(json, "site_URL");
+        post.setBlogUrl(JSONUtil.getString(json, "site_URL"));
 
         post.numReplies = json.optInt("comment_count");
         post.numLikes = json.optInt("like_count");
@@ -80,18 +83,16 @@ public class ReaderPost {
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
 
-        JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor!=null) {
-            post.authorName = JSONUtil.getString(jsonAuthor, "name");
-            post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
-        }
+        // parse the author section
+        assignAuthorFromJson(post, json.optJSONObject("author"));
 
         // only freshly-pressed posts have the "editorial" section
         JSONObject jsonEditorial = json.optJSONObject("editorial");
-        if (jsonEditorial!=null) {
+        if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
             post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
+            post.setPrimaryTag(JSONUtil.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
             // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
             post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
         } else {
@@ -110,53 +111,8 @@ public class ReaderPost {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
-        // parse attachments to get the VideoPress thumbnail & url
-        /*"attachments": {
-				"321": {
-					"ID": 321,
-					"URL": "http://dissolvingbuildings.files.wordpress.com/2013/08/webcam-video-from-25-august-2013-18-33.mp4",
-					"guid": "http://dissolvingbuildings.files.wordpress.com/2013/08/webcam-video-from-25-august-2013-18-33.mp4",
-					"mime_type": "video/mp4",
-					"width": 640,
-					"height": 360,
-					"duration": 21,
-					"videopress_files": {
-						"dvd": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_dvd.mp4",
-							"mime_type": "video/mp4"
-						},
-						"std": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_std.mp4",
-							"mime_type": "video/mp4"
-						},
-						"ogg": {
-							"url": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_fmt1.ogv",
-							"mime_type": "video/ogg"
-						}
-					},
-					"videopress_thumbnail": "https://videos.files.wordpress.com/K2nkj5C2/webcam-video-from-25-august-2013-18-33_dvd.original.jpg"
-				}
-			}, */
-        JSONObject jsonAttachments = json.optJSONObject("attachments");
-        if (jsonAttachments != null) {
-            Iterator<String> it = jsonAttachments.keys();
-            if (it != null && it.hasNext()) {
-                JSONObject jsonFirstAttachment = jsonAttachments.optJSONObject(it.next());
-                if (jsonFirstAttachment != null) {
-                    String thumbnail = JSONUtil.getString(jsonFirstAttachment, "videopress_thumbnail");
-                    if (!TextUtils.isEmpty(thumbnail))
-                        post.featuredImage = thumbnail;
-                    JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
-                    if (jsonVideoPress != null) {
-                        JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
-                        if (jsonStdVideo != null) {
-                            post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
-                            post.isVideoPress = true;
-                        }
-                    }
-                }
-            }
-        }
+        // parse the attachments section
+        assignAttachmentsFromJson(post, json.optJSONObject("attachments"));
 
         // if there's no featured thumbnail, check if featured media has been set - this is sometimes
         // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
@@ -179,30 +135,18 @@ public class ReaderPost {
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image - this is done since featured_media seems to miss
             // some images that would work well as featured images on mobile
-            if (!post.hasFeaturedImage())
+            if (!post.hasFeaturedImage()) {
                 post.featuredImage = findFeaturedImage(post.text);
+            }
         }
 
         // if the post is untitled, make up a title from the excerpt
-        if (!post.hasTitle() && post.hasExcerpt())
+        if (!post.hasTitle() && post.hasExcerpt()) {
             post.title = extractTitle(post.excerpt, 50);
-
-        // extract comma-separated list of tags
-        JSONObject jsonTags = json.optJSONObject("tags");
-        if (jsonTags != null) {
-            StringBuilder sbTags = new StringBuilder();
-            Iterator<String> it = jsonTags.keys();
-            boolean isFirst = true;
-            while (it.hasNext()) {
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    sbTags.append(",");
-                }
-                sbTags.append(it.next());
-            }
-            post.setTags(sbTags.toString());
         }
+
+        // parse the tags section
+        assignTagsFromJson(post, json.optJSONObject("tags"));
 
         // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
         // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
@@ -212,13 +156,114 @@ public class ReaderPost {
             if (jsonSite != null) {
                 post.blogId = jsonSite.optInt("ID");
                 post.blogName = JSONUtil.getString(jsonSite, "name");
-                post.blogUrl = JSONUtil.getString(jsonSite, "URL");
+                post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
                 post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
             }
         }
 
         return post;
     }
+
+     /*
+      * assigns author-related info to the passed post from the passed JSON "author" object
+      */
+    private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
+        if (jsonAuthor == null) {
+            return;
+        }
+
+        post.authorName = JSONUtil.getString(jsonAuthor, "name");
+        post.postAvatar = JSONUtil.getString(jsonAuthor, "avatar_URL");
+        post.authorId = jsonAuthor.optLong("ID");
+
+        // site_URL doesn't exist for /sites/ endpoints, so get it from the author
+        if (TextUtils.isEmpty(post.blogUrl)) {
+            post.setBlogUrl(JSONUtil.getString(jsonAuthor, "URL"));
+        }
+    }
+
+    /*
+     * assigns tag-related info to the passed post from the passed JSON "tags" object
+     */
+    private static void assignTagsFromJson(ReaderPost post, JSONObject jsonTags) {
+        if (jsonTags == null) {
+            return;
+        }
+
+        Iterator<String> it = jsonTags.keys();
+        if (!it.hasNext()) {
+            return;
+        }
+
+        // most popular tag & second most popular tag, based on usage count on this blog
+        String mostPopularTag = null;
+        String nextMostPopularTag = null;
+        int popularCount = 0;
+
+        StringBuilder sbAllTags = new StringBuilder();
+        boolean isFirst = true;
+
+        while (it.hasNext()) {
+            JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
+            String tagName = JSONUtil.getString(jsonThisTag, "name");
+
+            // if the number of posts on this blog that use this tag is higher than previous,
+            // set this as the most popular tag, and set the second most popular tag to
+            // the current most popular tag
+            int postCount = jsonThisTag.optInt("post_count");
+            if (postCount > popularCount) {
+                nextMostPopularTag = mostPopularTag;
+                mostPopularTag = tagName;
+                popularCount = postCount;
+            }
+
+            // add to list of all tags
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sbAllTags.append(",");
+            }
+            sbAllTags.append(tagName);
+        }
+
+        // don't set primary tag if one is already set (may have been set from the editorial
+        // section if this is a Freshly Pressed post)
+        if (!post.hasPrimaryTag()) {
+            post.setPrimaryTag(mostPopularTag);
+        }
+        post.setSecondaryTag(nextMostPopularTag);
+
+        post.setTags(sbAllTags.toString());
+    }
+
+    /*
+     * assigns attachment-related info to the passed post from the passed JSON "attachments" object
+     */
+    private static void assignAttachmentsFromJson(ReaderPost post, JSONObject jsonAttachments) {
+        if (jsonAttachments == null) {
+            return;
+        }
+
+        Iterator<String> it = jsonAttachments.keys();
+        if (it != null && it.hasNext()) {
+            JSONObject jsonFirstAttachment = jsonAttachments.optJSONObject(it.next());
+            if (jsonFirstAttachment != null) {
+                String thumbnail = JSONUtil.getString(jsonFirstAttachment, "videopress_thumbnail");
+                if (!TextUtils.isEmpty(thumbnail)) {
+                    post.featuredImage = thumbnail;
+                }
+                JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
+                if (jsonVideoPress != null) {
+                    JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
+                    if (jsonStdVideo != null) {
+                        post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
+                        post.isVideoPress = true;
+                    }
+                }
+            }
+        }
+    }
+
 
     /*
      * extracts a title from a post's excerpt
@@ -229,8 +274,6 @@ public class ReaderPost {
 
         if (excerpt.length() < maxLen)
             return excerpt.trim();
-
-        //return excerpt.substring(0, maxLen).trim() + "...";
 
         StringBuilder result = new StringBuilder();
         BreakIterator wordIterator = BreakIterator.getWordInstance();
@@ -438,7 +481,8 @@ public class ReaderPost {
         return StringUtils.notNullStr(blogUrl);
     }
     public void setBlogUrl(String blogUrl) {
-        this.blogUrl = StringUtils.notNullStr(blogUrl);
+        // normalize the blogUrl for easier comparison
+        this.blogUrl = UrlUtils.normalizeUrl(StringUtils.notNullStr(blogUrl));
     }
 
     public String getPostAvatar() {
@@ -473,12 +517,28 @@ public class ReaderPost {
     public void setTags(String tags) {
         this.tags = StringUtils.notNullStr(tags);
     }
-    public boolean hasTags() {
-        return !TextUtils.isEmpty(tags);
+
+    public String getPrimaryTag() {
+        return StringUtils.notNullStr(primaryTag);
+    }
+    public void setPrimaryTag(String tagName) {
+        // this is a bit of a hack to avoid setting the primary tag to one of the default
+        // tag names ("Freshly Pressed", etc.)
+        if (!ReaderTag.isDefaultTagName(tagName)) {
+            this.primaryTag = StringUtils.notNullStr(tagName);
+        }
+    }
+    public boolean hasPrimaryTag() {
+        return !TextUtils.isEmpty(primaryTag);
     }
 
-    List<String> getTagList() {
-        return Arrays.asList(getTags().split(","));
+    public String getSecondaryTag() {
+        return StringUtils.notNullStr(secondaryTag);
+    }
+    public void setSecondaryTag(String tagName) {
+        if (!ReaderTag.isDefaultTagName(tagName)) {
+            this.secondaryTag = StringUtils.notNullStr(tagName);
+        }
     }
 
     // --------------------------------------------------------------------------------------------
@@ -560,9 +620,10 @@ public class ReaderPost {
      */
     private transient String avatarForDisplay;
     public String getPostAvatarForDisplay(int avatarSize) {
-        if (avatarForDisplay==null) {
-            if (!hasPostAvatar())
+        if (avatarForDisplay == null) {
+            if (!hasPostAvatar()) {
                 return "";
+            }
             avatarForDisplay = PhotonUtils.fixAvatar(postAvatar, avatarSize);
         }
         return avatarForDisplay;
@@ -573,21 +634,31 @@ public class ReaderPost {
      */
     private transient java.util.Date dtPublished;
     public java.util.Date getDatePublished() {
-        if (dtPublished==null)
+        if (dtPublished == null) {
             dtPublished = DateTimeUtils.iso8601ToJavaDate(published);
+        }
         return dtPublished;
     }
 
-    private transient String firstTag;
-    public String getFirstTag() {
-        if (firstTag == null) {
-            List<String> tags = getTagList();
-            if (tags != null && tags.size() > 0) {
-                firstTag = tags.get(0);
+    /*
+     * determine which tag to display for this post
+     *  - no tag if this is a private blog or there is no primary tag for this post
+     *  - primary tag, unless it's the same as the currently selected tag
+     *  - secondary tag if primary tag is the same as the currently selected tag
+     */
+    private transient String tagForDisplay;
+    public String getTagForDisplay(final String currentTag) {
+        if (tagForDisplay == null) {
+            if (!isPrivate && hasPrimaryTag()) {
+                if (getPrimaryTag().equalsIgnoreCase(currentTag)) {
+                    tagForDisplay = getSecondaryTag();
+                } else {
+                    tagForDisplay = getPrimaryTag();
+                }
             } else {
-                firstTag = "";
+                tagForDisplay = "";
             }
         }
-        return firstTag;
+        return tagForDisplay;
     }
 }

@@ -10,10 +10,6 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -102,7 +98,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     }
 
     private class ConnectionClient extends DefaultHttpClient {
-        public ConnectionClient(int port) throws KeyManagementException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+        public ConnectionClient(int port) throws IOException, GeneralSecurityException {
             super();
             TrustUserSSLCertsSocketFactory tasslf = new TrustUserSSLCertsSocketFactory();
             Scheme scheme = new Scheme("https", tasslf, port);
@@ -126,16 +122,10 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
             try {
                 client = new ConnectionClient(port);
-            } catch (NoSuchAlgorithmException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
-                client = null;
-            } catch (KeyStoreException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
-                client = null;
-            } catch (UnrecoverableKeyException e) {
-                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
-                client = null;
             } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
+                client = null;
+            } catch (IOException e) {
                 AppLog.e(T.API, "Cannot create the DefaultHttpClient object with our TrustAllSSLSocketFactory", e);
                 client = null;
             }

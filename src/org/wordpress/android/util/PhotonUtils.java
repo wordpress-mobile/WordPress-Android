@@ -37,14 +37,17 @@ public class PhotonUtils {
     /*
      * returns a photon url for the passed image with the resize query set to the passed dimensions
      */
+    private static final int MAX_PHOTON_SZ = 1000;
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
-        if (TextUtils.isEmpty(imageUrl))
+        if (TextUtils.isEmpty(imageUrl)) {
             return "";
+        }
 
         // make sure it's valid
         int schemePos = imageUrl.indexOf("://");
-        if (schemePos==-1)
+        if (schemePos == -1) {
             return imageUrl;
+        }
 
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
@@ -53,14 +56,26 @@ public class PhotonUtils {
         // can't be read by BitmapFactory.decodeByteArray (used by Volley in ImageRequest.java
         // to decode the downloaded image)
         // ex: http://i0.wp.com/lusianne.files.wordpress.com/2013/08/193.gif?resize=768,320
-        if (imageUrl.endsWith(".gif"))
+        if (imageUrl.endsWith(".gif")) {
             return imageUrl;
+        }
 
         // if this is an "mshots" url, skip photon and return it with a query that sets the width/height
         // (these are screenshots of the blog that often appear in freshly pressed posts)
         // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
-        if (isMshotsUrl(imageUrl))
+        // ex: http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
+        if (isMshotsUrl(imageUrl)) {
             return imageUrl + String.format("?w=%d&h=%d", width, height);
+        }
+
+        // photon fails with images larger than the max, so enforce a max size
+        // TODO: revisit this when photon increases the max - https://code.trac.wordpress.org/ticket/47
+        if (width > MAX_PHOTON_SZ) {
+            width = MAX_PHOTON_SZ;
+        }
+        if (height > MAX_PHOTON_SZ) {
+            height = MAX_PHOTON_SZ;
+        }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
         // one of them is set, otherwise no query string

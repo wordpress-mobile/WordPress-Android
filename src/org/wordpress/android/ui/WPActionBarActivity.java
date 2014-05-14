@@ -1,7 +1,6 @@
 
 package org.wordpress.android.ui;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,7 +11,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -158,11 +156,6 @@ public abstract class WPActionBarActivity extends Activity {
         super.onResume();
         registerReceiver();
         refreshMenuDrawer();
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    protected boolean isActivityDestroyed() {
-        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
     }
 
     protected void refreshMenuDrawer(){
@@ -634,7 +627,9 @@ public abstract class WPActionBarActivity extends Activity {
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
                     }
-                    onBlogChanged();
+                    if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
+                        onBlogChanged();
+                    }
                     WordPress.registerForCloudMessaging(this);
                 }
 
@@ -674,6 +669,8 @@ public abstract class WPActionBarActivity extends Activity {
             if (mMenuDrawer != null) {
                 mMenuDrawer.toggleMenu();
                 return true;
+            } else {
+                onBackPressed();
             }
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);
