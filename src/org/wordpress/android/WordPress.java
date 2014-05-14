@@ -444,10 +444,6 @@ public class WordPress extends Application {
         // reset all reader-related prefs & data
         UserPrefs.reset();
         ReaderDatabase.reset();
-
-        // send broadcast that user is signing out - this is received by WPActionBarActivity
-        // descendants
-        sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
     }
 
     public static boolean sendLocalBroadcast(Context context, String action) {

@@ -189,6 +189,7 @@ public class WPComLoginActivity extends Activity implements TextWatcher {
                     // New wpcom credetials inserted here. Reset the app state: there is the possibility a different
                     // username/password is inserted here
                     WordPress.removeWpComUserRelatedData(WPComLoginActivity.this);
+                    WordPress.sendLocalBroadcast(WPComLoginActivity.this, WordPress.BROADCAST_ACTION_SIGNOUT);
 
                     Editor settings = PreferenceManager.getDefaultSharedPreferences(WPComLoginActivity.this).edit();
                     settings.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
