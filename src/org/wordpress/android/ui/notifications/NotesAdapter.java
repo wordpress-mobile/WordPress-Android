@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -95,7 +94,6 @@ class NotesAdapter extends CursorAdapter {
         noteViewHolder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
         noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
-        noteViewHolder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
     }
 
     // HashMap of drawables for note types
@@ -132,7 +130,6 @@ class NotesAdapter extends CursorAdapter {
         private final TextView txtDetail;
         private final TextView unreadIndicator;
         private final TextView txtDate;
-        private final ProgressBar placeholderLoading;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgNoteIcon;
 
@@ -141,7 +138,6 @@ class NotesAdapter extends CursorAdapter {
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
             txtDate = (TextView) view.findViewById(R.id.text_date);
-            placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
         }

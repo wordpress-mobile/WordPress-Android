@@ -92,7 +92,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onListItemClick(ListView l, View v, int position, long id) {
         Note note = mNotesAdapter.getNote(position);
         l.setItemChecked(position, true);
-        if (note != null && !note.isPlaceholder() && mNoteClickListener != null) {
+        if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
         }
     }

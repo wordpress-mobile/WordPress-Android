@@ -102,7 +102,6 @@ public class Note extends Syncable {
     private Map<String,JSONObject> mActions;
     private JSONObject mNoteJSON;
     private SpannableStringBuilder mComment = new SpannableStringBuilder();
-    private boolean mPlaceholder = false;
 
     private int mBlogId;
     private int mPostId;
@@ -138,14 +137,6 @@ public class Note extends Syncable {
     @Override
     public String getSimperiumKey() {
         return getId();
-    }
-
-    public boolean isPlaceholder() {
-        return mPlaceholder;
-    }
-
-    public void setPlaceholder(boolean placeholder) {
-        this.mPlaceholder = placeholder;
     }
 
     public JSONObject toJSONObject(){
