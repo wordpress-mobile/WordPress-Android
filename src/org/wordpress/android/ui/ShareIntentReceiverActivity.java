@@ -1,8 +1,6 @@
 package org.wordpress.android.ui;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -22,8 +20,6 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -57,13 +53,6 @@ public class ShareIntentReceiverActivity extends Activity implements OnItemSelec
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.share_intent_receiver_dialog);
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            AppLog.e(T.UTILS, "Theme applied to ShareIntentReceiverActivity must have an action bar");
-            return;
-        }
-
-        Context themedContext = getActionBar().getThemedContext();
 
         mBlogSpinnerTitle = (TextView) findViewById(R.id.blog_spinner_title);
         mBlogSpinner = (Spinner) findViewById(R.id.blog_spinner);
@@ -88,7 +77,7 @@ public class ShareIntentReceiverActivity extends Activity implements OnItemSelec
             mBlogSpinner.setVisibility(View.GONE);
             mBlogSpinnerTitle.setVisibility(View.GONE);
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(themedContext,
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     R.layout.spinner_menu_dropdown_item, blogNames);
             mBlogSpinner.setAdapter(adapter);
             mBlogSpinner.setOnItemSelectedListener(this);
@@ -106,7 +95,7 @@ public class ShareIntentReceiverActivity extends Activity implements OnItemSelec
         } else {
             String[] actions = new String[]{getString(R.string.share_action_post), getString(
                     R.string.share_action_media)};
-            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(themedContext,
+            ArrayAdapter<String> actionAdapter = new ArrayAdapter<String>(this,
                     R.layout.spinner_menu_dropdown_item, actions);
             mActionSpinner.setAdapter(actionAdapter);
             mActionSpinner.setOnItemSelectedListener(this);
