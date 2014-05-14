@@ -28,7 +28,6 @@ import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,6 +43,7 @@ import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -60,25 +60,22 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 
-public class ReaderPostDetailFragment extends Fragment {
+public class ReaderPostDetailFragment extends Fragment
+                                      implements WPListView.OnScrollDirectionListener {
     protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
     static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, PostChangeType changeType);
     }
 
-    static final String ARG_BLOG_ID = "blog_id";
-    static final String ARG_POST_ID = "post_id";
-    private static final String ARG_LIST_STATE = "list_state";
-
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_ALREADY_UPDATED = "already_updated";
     private static final String KEY_ALREADY_REQUESTED = "already_requested";
-    private static final String KEY_ORIGINAL_TITLE = "original_title";
 
     private long mPostId;
     private long mBlogId;
@@ -86,98 +83,37 @@ public class ReaderPostDetailFragment extends Fragment {
 
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
-    private ListView mListView;
+    private WPListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private WebView mWebView;
 
-    private boolean mIsAddCommentBoxShowing = false;
+    private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
-    private boolean mHasAlreadyUpdatedPost = false;
-    private boolean mHasAlreadyRequestedPost = false;
-    private boolean mIsUpdatingComments = false;
+    private boolean mHasAlreadyUpdatedPost;
+    private boolean mHasAlreadyRequestedPost;
+    private boolean mIsUpdatingComments;
     private boolean mWebViewIsPaused;
-    private CharSequence mOriginalTitle;
+
     private Parcelable mListState = null;
 
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
-    private boolean mIsMoving;
-    private float mLastMotionY;
-
-    private ReaderFullScreenUtils.FullScreenListener mFullScreenListener;
+    private ReaderUtils.FullScreenListener mFullScreenListener;
     private PostChangeListener mPostChangeListener;
-
-    private static final int MOVE_MIN_DIFF = 8;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
-        args.putLong(ARG_BLOG_ID, blogId);
-        args.putLong(ARG_POST_ID, postId);
+        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
+        args.putLong(ReaderActivity.ARG_POST_ID, postId);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    private ListView getListView() {
-        return mListView;
-    }
-
-    private void setupListView(ListView listView) {
-        /*
-         * if full-screen mode is supported, enable full-screen when user scrolls down
-         * and disable full-screen when user scrolls up
-         */
-        if (isFullScreenSupported()) {
-            listView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    int action = event.getAction() & MotionEvent.ACTION_MASK;
-                    final float y = event.getY();
-                    final int yDiff = (int) (y - mLastMotionY);
-                    final boolean isFullScreen = isFullScreen();
-                    mLastMotionY = y;
-
-                    switch (action) {
-                        case MotionEvent.ACTION_MOVE :
-                            if (mIsMoving) {
-                                if (mIsAddCommentBoxShowing) {
-                                    // user is typing a comment, so don't toggle full-screen
-                                    return false;
-                                } else if (yDiff < -MOVE_MIN_DIFF && !isFullScreen && ReaderFullScreenUtils.canScrollDown(mListView)) {
-                                    // user is scrolling down, so enable full-screen
-                                    setIsFullScreen(true);
-                                    return true;
-                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollUp(mListView)) {
-                                    // disable full-screen if user scrolls to the top
-                                    setIsFullScreen(false);
-                                } else if (isFullScreen && !ReaderFullScreenUtils.canScrollDown(mListView)) {
-                                    // disable full-screen if user scrolls to the bottom
-                                    setIsFullScreen(false);
-                                } else if (yDiff > MOVE_MIN_DIFF && isFullScreen) {
-                                    // user is scrolling up, so disable full-screen
-                                    setIsFullScreen(false);
-                                    return true;
-                                }
-                            } else {
-                                mIsMoving = true;
-                            }
-                            break;
-
-                        default :
-                            mIsMoving = false;
-                            break;
-                    }
-
-                    return false;
-                }
-            });
-        }
     }
 
     /*
@@ -241,8 +177,8 @@ public class ReaderPostDetailFragment extends Fragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
-            mBlogId = args.getLong(ARG_BLOG_ID);
-            mPostId = args.getLong(ARG_POST_ID);
+            mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
+            mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
         }
     }
 
@@ -251,13 +187,10 @@ public class ReaderPostDetailFragment extends Fragment {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         // locate & init listView
-        mListView = (ListView) view.findViewById(android.R.id.list);
-        setupListView(mListView);
-
-        // add a header to the listView that's the same height as the ActionBar when fullscreen
-        // mode is supported
+        mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
-            ReaderFullScreenUtils.addListViewHeader(container.getContext(), mListView);
+            mListView.setOnScrollDirectionListener(this);
+            ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(container.getContext()));
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -310,6 +243,43 @@ public class ReaderPostDetailFragment extends Fragment {
         return view;
     }
 
+    private WPListView getListView() {
+        return mListView;
+    }
+
+    @Override
+    public void onScrollUp() {
+        // don't change fullscreen if user is typing a comment
+        if (mIsAddCommentBoxShowing) {
+            return;
+        }
+
+        // otherwise always disable fullscreen when scrolling up
+        if (isFullScreen()) {
+            setIsFullScreen(false);
+        }
+    }
+
+    @Override
+    public void onScrollDown() {
+        // don't change fullscreen if user is typing a comment
+        if (mIsAddCommentBoxShowing) {
+            return;
+        }
+
+        boolean isFullScreen = isFullScreen();
+        boolean canScrollDown = mListView.canScrollDown();
+        boolean canScrollUp = mListView.canScrollUp();
+
+        if (isFullScreen && !canScrollDown) {
+            // disable full screen once user hits the bottom
+            setIsFullScreen(false);
+        } else if (!isFullScreen && canScrollDown && canScrollUp) {
+            // enable full screen when scrolling down
+            setIsFullScreen(true);
+        }
+    }
+
     private boolean hasPost() {
         return (mPost != null);
     }
@@ -343,7 +313,7 @@ public class ReaderPostDetailFragment extends Fragment {
     }
 
     private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
+        return isAdded() && !isRemoving();
     }
 
     private boolean hostIsReaderActivity() {
@@ -402,23 +372,36 @@ public class ReaderPostDetailFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong(ARG_BLOG_ID, mBlogId);
-        outState.putLong(ARG_POST_ID, mPostId);
+        outState.putLong(ReaderActivity.ARG_BLOG_ID, mBlogId);
+        outState.putLong(ReaderActivity.ARG_POST_ID, mPostId);
+
         outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
-        if (mIsAddCommentBoxShowing)
+
+        if (mIsAddCommentBoxShowing) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        if (mOriginalTitle != null)
-            outState.putCharSequence(KEY_ORIGINAL_TITLE, mOriginalTitle);
+        }
 
         // retain listView state if a comment has been scrolled to - this enables us to restore
         // the scroll position after comment data is reloaded
         if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(ARG_LIST_STATE, mListState);
+            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListState);
         } else {
             mListState = null;
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        if (activity instanceof ReaderUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
+        }
+        if (activity instanceof PostChangeListener) {
+            mPostChangeListener = (PostChangeListener) activity;
         }
     }
 
@@ -435,62 +418,42 @@ public class ReaderPostDetailFragment extends Fragment {
         }
 
         if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ARG_POST_ID);
+            mBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderActivity.ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(KEY_ALREADY_REQUESTED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
-            if (savedInstanceState.containsKey(KEY_ORIGINAL_TITLE))
-                mOriginalTitle = savedInstanceState.getCharSequence(KEY_ORIGINAL_TITLE);
-            mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
+            mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
         }
-
-        showPost();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        // retain title of the host if it's the reader activity, then clear it until post is loaded
-        if (activity instanceof ReaderActivity) {
-            mOriginalTitle = getTitle();
-            setTitle(null);
+    public void onStart() {
+        super.onStart();
+        if (!hasPost()) {
+            showPost();
         }
-
-        if (activity instanceof ReaderFullScreenUtils.FullScreenListener)
-            mFullScreenListener = (ReaderFullScreenUtils.FullScreenListener) activity;
-
-        if (activity instanceof PostChangeListener)
-            mPostChangeListener = (PostChangeListener) activity;
     }
 
     @Override
     public void onPause() {
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
-        if (hasEmbedsOrIframes())
+        if (hasEmbedsOrIframes()) {
             pauseWebView();
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasEmbedsOrIframes())
+        if (hasEmbedsOrIframes()) {
             resumeWebView();
-    }
-
-    @Override
-    public void onDetach() {
-        // return the activity's title to what it was
-        if (hostIsReaderActivity() && mOriginalTitle != null) {
-            setTitle(mOriginalTitle);
         }
-        super.onDetach();
     }
 
     /*
@@ -504,16 +467,17 @@ public class ReaderPostDetailFragment extends Fragment {
     }
 
     /*
-     * called when user chooses to like or follow - actionView is the ImageView or TextView
-     * associated with the action (ex: like button)
+     * changes the like on the passed post
      */
-    private void doPostAction(View actionView, ReaderPostActions.PostAction action, final ReaderPost post) {
-        boolean isSelected = actionView.isSelected();
-        actionView.setSelected(!isSelected);
-        AniUtils.zoomAction(actionView);
+    private void togglePostLike(ReaderPost post, View likeButton) {
+        boolean isSelected = likeButton.isSelected();
+        likeButton.setSelected(!isSelected);
+        AniUtils.zoomAction(likeButton);
 
-        if (!ReaderPostActions.performPostAction(action, post, null)) {
-            actionView.setSelected(isSelected);
+        boolean isAskingToLike = !post.isLikedByCurrentUser;
+
+        if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+            likeButton.setSelected(isSelected);
             return;
         }
 
@@ -521,30 +485,50 @@ public class ReaderPostDetailFragment extends Fragment {
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
 
         // fire listener so host knows about the change
-        switch (action) {
-            case TOGGLE_LIKE:
-                if (mPost.isLikedByCurrentUser) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-                    doPostChanged(PostChangeType.LIKED);
-                } else {
-                    doPostChanged(PostChangeType.UNLIKED);
-                }
-                break;
-            case TOGGLE_FOLLOW:
-                doPostChanged(mPost.isFollowedByCurrentUser ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
-                break;
+        if (isAskingToLike) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
+            doPostChanged(PostChangeType.LIKED);
+        } else {
+            doPostChanged(PostChangeType.UNLIKED);
         }
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
-        switch (action) {
-            case TOGGLE_LIKE:
-                refreshLikes(true);
-                break;
-            case TOGGLE_FOLLOW:
-                refreshFollowed();
-                break;
+        refreshLikes(true);
+    }
+
+    /*
+     * change the follow state of the blog the passed post is in
+     */
+    private void togglePostFollowed(ReaderPost post, View followButton) {
+        boolean isSelected = followButton.isSelected();
+        followButton.setSelected(!isSelected);
+        AniUtils.zoomAction(followButton);
+
+        final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && hasActivity()) {
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    ToastUtils.showToast(getActivity(), resId);
+                }
+            }
+        };
+        if (!ReaderBlogActions.performFollowAction(post, isAskingToFollow, actionListener)) {
+            followButton.setSelected(isSelected);
+            return;
         }
+
+        // get the post again, since it has changed
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+
+        // fire listener so host knows about the change
+        doPostChanged(isAskingToFollow ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
+
+        // call returns before api completes, but local version of post will have been changed
+        // so refresh to show those changes
+        refreshFollowed();
     }
 
     /*
@@ -777,7 +761,7 @@ public class ReaderPostDetailFragment extends Fragment {
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                doPostAction(imgBtnLike, ReaderPostActions.PostAction.TOGGLE_LIKE, mPost);
+                                togglePostLike(mPost, imgBtnLike);
                             }
                         });
 
@@ -861,7 +845,6 @@ public class ReaderPostDetailFragment extends Fragment {
         imgPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
                 submitComment(replyToCommentId);
             }
         });
@@ -935,6 +918,8 @@ public class ReaderPostDetailFragment extends Fragment {
         if (TextUtils.isEmpty(commentText))
             return;
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
+
         // hide the comment box - this provides immediate indication that comment is being posted
         // and prevents users from submitting the same comment twice
         hideAddCommentBox();
@@ -990,25 +975,11 @@ public class ReaderPostDetailFragment extends Fragment {
     private void refreshFollowed() {
         if (!hasActivity())
             return;
+
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
-        showFollowedStatus(txtFollow, isFollowed);
-    }
 
-    private void showFollowedStatus(final TextView txtFollow, boolean isFollowed) {
-        if (txtFollow == null)
-            return;
-        final String followText = (isFollowed ? getString(R.string.reader_btn_unfollow) : getString(R.string.reader_btn_follow)).toUpperCase();
-        txtFollow.setText(followText);
-        int drawableId = (isFollowed ? R.drawable.note_icon_following : R.drawable.note_icon_follow);
-        txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
-        txtFollow.setSelected(isFollowed);
-        txtFollow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doPostAction(txtFollow, ReaderPostActions.PostAction.TOGGLE_FOLLOW, mPost);
-            }
-        });
+        ReaderUtils.showFollowStatus(txtFollow, isFollowed);
     }
 
     /*
@@ -1073,9 +1044,10 @@ public class ReaderPostDetailFragment extends Fragment {
     /*
      * build html for post's content
      */
-    private String getPostHtml() {
-        if (mPost == null)
+    private String getPostHtml(Context context) {
+        if (mPost == null || context == null) {
             return "";
+        }
 
         String content;
         if (mPost.hasText()) {
@@ -1092,12 +1064,11 @@ public class ReaderPostDetailFragment extends Fragment {
             content = "";
         }
 
-        int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-        int marginSmall = getResources().getDimensionPixelSize(R.dimen.margin_small);
-        int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        int marginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
+        int marginSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
+        int marginExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
         int fullSizeImageWidth = getFullSizeImageWidth();
 
-        final Context context = WordPress.getContext();
         final String linkColor = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         final String greyExtraLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
@@ -1135,7 +1106,7 @@ public class ReaderPostDetailFragment extends Fragment {
 
         if (hasEmbedsOrIframes()) {
             // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
-            int videoWidth =  DisplayUtils.pxToDp(getActivity(), fullSizeImageWidth - (marginLarge * 2));
+            int videoWidth =  DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int)(videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
@@ -1204,8 +1175,9 @@ public class ReaderPostDetailFragment extends Fragment {
      * called when post couldn't be loaded and failed to be returned from server
      */
     private void postFailed() {
-        if (hasActivity())
+        if (hasActivity()) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
+        }
     }
 
     /*
@@ -1213,9 +1185,15 @@ public class ReaderPostDetailFragment extends Fragment {
      * and CSS is customized so embedded videos can play
      */
     private boolean hasEmbedsOrIframes() {
-        return (mPost != null
-            && (mPost.getText().contains("<embed") || mPost.getText().contains("<iframe")));
-
+        if (mPost == null) {
+            return false;
+        } else if (mPost.isVideoPress || mPost.hasFeaturedVideo()) {
+            return true;
+        } else {
+            return (mPost.getText().contains("<embed")
+                 || mPost.getText().contains("<iframe")
+                 || mPost.getText().contains("videos.files.wordpress.com"));
+        }
     }
 
     private void showPost() {
@@ -1278,7 +1256,7 @@ public class ReaderPostDetailFragment extends Fragment {
             if (mPost == null) {
                 return false;
             }
-            postHtml = getPostHtml();
+            postHtml = getPostHtml(container.getContext());
 
             // detect whether the post has a featured image that's not in the content - if so,
             // it will be shown between the post's title and its content (but skip mshots)
@@ -1299,8 +1277,7 @@ public class ReaderPostDetailFragment extends Fragment {
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            // txtTitle is null if doInBackground() returned because view doesn't exist
-            if (!hasActivity() || txtTitle == null) {
+            if (!hasActivity()) {
                 return;
             }
 
@@ -1316,12 +1293,20 @@ public class ReaderPostDetailFragment extends Fragment {
 
             // set the activity title to the post's title if this is being shown in the reader
             final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
-            if (hostIsReaderActivity())
-                setTitle(postTitle);
+            if (hostIsReaderActivity()) {
+                getActivity().setTitle(postTitle);
+            }
 
             txtTitle.setText(postTitle);
             txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
-            showFollowedStatus(txtFollow, mPost.isFollowedByCurrentUser);
+
+            ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
+            txtFollow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    togglePostFollowed(mPost, txtFollow);
+                }
+            });
 
             // if we know refreshLikes() is going to show the liking layout, force it to take up
             // space right now
@@ -1397,19 +1382,6 @@ public class ReaderPostDetailFragment extends Fragment {
                 }
             });
 
-            // tapping blog name, author name or avatar opens blog home page in browser
-            if (mPost.hasBlogUrl()) {
-                View.OnClickListener clickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.openUrl(getActivity(), mPost.getBlogUrl());
-                    }
-                };
-                txtBlogName.setOnClickListener(clickListener);
-                txtAuthorName.setOnClickListener(clickListener);
-                imgAvatar.setOnClickListener(clickListener);
-            }
-
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work
             mWebView.getSettings().setJavaScriptEnabled(hasEmbedsOrIframes());
@@ -1423,12 +1395,14 @@ public class ReaderPostDetailFragment extends Fragment {
                 animateIconBar(true);
 
             // make sure the adapter is assigned
-            if (getListView().getAdapter() == null)
+            if (getListView().getAdapter() == null) {
                 getListView().setAdapter(getCommentAdapter());
+            }
 
             // listView is hidden in onCreateView()
-            if (getListView().getVisibility() != View.VISIBLE)
+            if (getListView().getVisibility() != View.VISIBLE) {
                 getListView().setVisibility(View.VISIBLE);
+            }
 
             // webView is hidden in onCreateView() and will be made visible by readerWebViewClient
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
@@ -1455,7 +1429,7 @@ public class ReaderPostDetailFragment extends Fragment {
                     AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
-        }, 750L);
+        }, 1000L);
     }
 
     private void showContent() {
@@ -1497,26 +1471,13 @@ public class ReaderPostDetailFragment extends Fragment {
         }
     };
 
-    private CharSequence getTitle() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return null;
-        return actionBar.getTitle();
-    }
-
-    private void setTitle(CharSequence title) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null)
-            return;
-        actionBar.setTitle(title);
-    }
-
     /*
      * called when user taps a link in the webView
      */
     private void openUrl(String url) {
-        if (!hasActivity() || TextUtils.isEmpty(url))
+        if (!hasActivity() || TextUtils.isEmpty(url)) {
             return;
+        }
 
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
@@ -1531,27 +1492,23 @@ public class ReaderPostDetailFragment extends Fragment {
     }
 
     private ActionBar getActionBar() {
-        if (getActivity() instanceof Activity) {
+        if (hasActivity()) {
             return getActivity().getActionBar();
         } else {
-            AppLog.w(T.READER, "reader post detail > null ActionBar");
+            AppLog.w(T.READER, "reader post detail > getActionBar called with no activity");
             return null;
         }
     }
 
     private void pauseWebView() {
-        if (mWebViewIsPaused)
-            return;
-        if (mWebView != null) {
+        if (mWebViewIsPaused && mWebView != null) {
             mWebViewIsPaused = true;
             mWebView.onPause();
         }
     }
 
     private void resumeWebView() {
-        if (!mWebViewIsPaused)
-            return;
-        if (mWebView != null) {
+        if (!mWebViewIsPaused && mWebView != null) {
             mWebViewIsPaused = false;
             mWebView.onResume();
         }

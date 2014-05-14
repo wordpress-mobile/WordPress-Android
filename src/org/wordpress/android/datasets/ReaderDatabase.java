@@ -1,19 +1,40 @@
 package org.wordpress.android.datasets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * database for all reader information
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 66;
+    private static final int DB_VERSION = 75;
+
+    /*
+     * version history
+     *   67 - added tbl_blog_info to ReaderBlogTable
+     *   68 - added author_blog_id to ReaderCommentTable
+     *   69 - renamed tbl_blog_urls to tbl_followed_blogs in ReaderBlogTable
+     *   70 - added author_id to ReaderCommentTable and ReaderPostTable
+     *   71 - added blog_id to ReaderUserTable
+     *   72 - removed tbl_followed_blogs from ReaderBlogTable
+     *   73 - added tbl_recommended_blogs to ReaderBlogTable
+     *   74 - added primary_tag to ReaderPostTable
+     *   75 - added secondary_tag to ReaderPostTable
+     */
 
     /*
 	 *  database singleton
@@ -38,6 +59,12 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     }
     public static SQLiteDatabase getWritableDb() {
         return getDatabase().getWritableDatabase();
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        //copyDatabase(db);
     }
 
     /*
@@ -158,5 +185,30 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             }
         }.start();
     }
+
+    /*
+     * used during development to copy database to external storage so we can access it via DDMS
+     */
+    private void copyDatabase(SQLiteDatabase db) {
+        String copyFrom = db.getPath();
+        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DB_NAME;
+
+        try {
+            InputStream input = new FileInputStream(copyFrom);
+            OutputStream output = new FileOutputStream(copyTo);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = input.read(buffer)) > 0)
+                output.write(buffer, 0, length);
+
+            output.flush();
+            output.close();
+            input.close();
+        } catch (IOException e) {
+            AppLog.e(T.DB, "failed to copy reader database", e);
+        }
+    }
+
 
 }

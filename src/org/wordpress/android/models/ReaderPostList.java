@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ReaderPostList extends ArrayList<ReaderPost> {
     public static ReaderPostList fromJson(JSONObject json) {
@@ -48,4 +49,24 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
 
         return true;
     }
+
+    /*
+     * returns the oldest pubDate of posts in this list
+     */
+    public Date getOldestPubDate() {
+        Date oldestDate = null;
+        for (ReaderPost post: this) {
+            Date dtPublished = post.getDatePublished();
+            if (dtPublished != null) {
+                if (oldestDate == null) {
+                    oldestDate = dtPublished;
+                } else if (oldestDate.after(dtPublished)) {
+                    oldestDate = dtPublished;
+                }
+            }
+        }
+
+        return oldestDate;
+    }
+
 }

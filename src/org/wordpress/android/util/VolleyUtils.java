@@ -32,6 +32,13 @@ public class VolleyUtils {
         return JSONUtil.getString(json, "error");
     }
 
+    public static int statusCodeFromVolleyError(VolleyError volleyError) {
+        if (volleyError == null || volleyError.networkResponse == null) {
+            return 0;
+        }
+        return volleyError.networkResponse.statusCode;
+    }
+
     /*
      * attempts to return JSON from a volleyError - useful for WP REST API failures, which often
      * contain JSON in the response

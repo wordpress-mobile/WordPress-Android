@@ -572,9 +572,16 @@
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_userlist_default">People</string>
-    <string name="reader_title_followed_tags">Followed tags</string>
-    <string name="reader_title_popular_tags">Popular tags</string>
     <string name="reader_title_reblog">Reblog</string>
+    <string name="reader_title_blog_preview">Preview Blog</string>
+    <string name="reader_title_tag_preview">Preview Tag</string>
+    <string name="reader_title_subs">Tags &amp; Blogs</string>
+
+    <!-- view pager titles -->
+    <string name="reader_page_followed_tags">Followed tags</string>
+    <string name="reader_page_popular_tags">Popular tags</string>
+    <string name="reader_page_followed_blogs">Followed blogs</string>
+    <string name="reader_page_recommended_blogs">Recommended blogs</string>
 
     <!-- share dialog title when sharing a reader url -->
     <string name="reader_share_link">Share link</string>
@@ -590,22 +597,28 @@
     <string name="reader_btn_reblog">Reblog</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
+    <string name="reader_btn_ignore">Ignore</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag">Enter a tag</string>
+    <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
     <!-- TextView labels -->
-    <string name="reader_label_new_posts_one">One new post</string>
-    <string name="reader_label_new_posts_multi">%d new posts</string>
+    <string name="reader_label_new_posts">Show new posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
     <string name="reader_label_reblog_to">Reblog this post to</string>
     <string name="reader_label_reply">Reply</string>
     <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_reblog_empty_link">Change blog visibility</string>
+    <string name="reader_label_followers">%s followers</string>
+    <string name="reader_label_followed_blog">Blog followed</string>
+    <string name="reader_label_unfollowed_blog">Blog unfollowed</string>
+    <string name="reader_label_more_recommendations">More recommendations</string>
+    <string name="reader_label_tag_preview">Posts tagged %s</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_likes_one">One person likes this</string>
@@ -629,12 +642,17 @@
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_toast_err_get_comment">Unable to retrieve this comment</string>
+    <string name="reader_toast_err_get_blog_info">Unable to show this blog</string>
+    <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
+    <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
+    <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
+    <string name="reader_empty_recommended_blogs">No recommended blogs</string>
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>

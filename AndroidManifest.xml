@@ -160,25 +160,24 @@
             </intent-filter>
         </activity>
 
-        <!-- Native Reader Activities -->
+        <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderActivity"
-            android:theme="@style/WordPress.Theme.NoBackground"
-            android:label="@string/reader">
-        </activity>
+            android:label="@string/reader" />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity
             android:name=".ui.reader.ReaderUserListActivity"
-            android:theme="@style/ReaderTheme.Popup" />
+            android:theme="@style/ReaderTheme.PopupPanel" />
         <activity
-            android:name=".ui.reader.ReaderTagActivity"
-            android:theme="@style/ReaderTheme.Popup"
+            android:name=".ui.reader.ReaderSubsActivity"
+            android:label="@string/reader_title_subs"
+            android:theme="@style/ReaderTheme.TranslucentActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
-            android:theme="@style/ReaderTheme.Popup"
+            android:theme="@style/ReaderTheme.PopupPanel"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity

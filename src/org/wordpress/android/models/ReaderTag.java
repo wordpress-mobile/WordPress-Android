@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ReaderTag {
     private static final int INT_DEFAULT = 0;
-    private static final int INT_SUBSCRIBED = 1;
+    private static final int INT_FOLLOWED = 1;
     private static final int INT_RECOMMENDED = 2;
 
     public static String TAG_ID_FOLLOWING = "following";
@@ -20,23 +20,23 @@ public class ReaderTag {
     public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
     public static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
 
-    public static enum ReaderTagType {SUBSCRIBED,
+    public static enum ReaderTagType {FOLLOWED,
                                       DEFAULT,
                                       RECOMMENDED;
         public static ReaderTagType fromInt(int value) {
             switch (value) {
                 case INT_RECOMMENDED :
                     return RECOMMENDED;
-                case INT_SUBSCRIBED :
-                    return SUBSCRIBED;
+                case INT_FOLLOWED :
+                    return FOLLOWED;
                 default :
                     return DEFAULT;
             }
         }
         public int toInt() {
             switch (this) {
-                case SUBSCRIBED:
-                    return INT_SUBSCRIBED;
+                case FOLLOWED:
+                    return INT_FOLLOWED;
                 case RECOMMENDED:
                     return INT_RECOMMENDED;
                 default :
@@ -130,5 +130,17 @@ public class ReaderTag {
             return "";
 
         return endpoint.substring(start, end);
+    }
+
+    /*
+     * is the passed tag name one of the default tags?
+     */
+    public static boolean isDefaultTagName(String tagName) {
+        if (TextUtils.isEmpty(tagName)) {
+            return false;
+        }
+        return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
+             || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
+             || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
     }
 }
