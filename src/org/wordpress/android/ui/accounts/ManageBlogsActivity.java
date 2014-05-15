@@ -161,7 +161,7 @@ public class ManageBlogsActivity extends ListActivity {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(mResource, parent, false);
             CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
-            String name = MapUtils.getMapStr(getItem(position), "blogName");
+            String name = StringUtils.unescapeHTML(MapUtils.getMapStr(getItem(position), "blogName"));
             if (name.trim().length() == 0) {
                 name = MapUtils.getMapStr(getItem(position), "url");
                 name = StringUtils.getHost(name);
