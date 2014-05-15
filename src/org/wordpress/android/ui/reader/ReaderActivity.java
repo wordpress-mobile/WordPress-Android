@@ -388,13 +388,18 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                mHasPerformedInitialUpdate = true;
-
+                if (result != UpdateResult.FAILED) {
+                    mHasPerformedInitialUpdate = true;
+                }
                 if (result == UpdateResult.CHANGED) {
                     // if the post list fragment is viewing followed tags, tell it to refresh
                     // the list of tags
                     ReaderPostListFragment listFragment = getListFragment();
-                    if (listFragment != null && listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                    if (listFragment == null) {
+                        // list fragment doesn't exist yet (can happen if user signed out) - create
+                        // it now showing the default followed tag
+                        showListFragmentForTag(ReaderTag.TAG_NAME_DEFAULT, ReaderPostListType.TAG_FOLLOWED);
+                    } else if ( listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                         listFragment.refreshTags();
                         // if the tag and posts tables were empty (first run), tell the list
                         // fragment to get posts with the current tag now that we have tags
