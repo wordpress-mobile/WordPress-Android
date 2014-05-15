@@ -25,9 +25,9 @@ import java.util.HashMap;
 
 class NotesAdapter extends CursorAdapter {
 
-    int mAvatarSz;
-    Query mQuery;
-    Context mContext;
+    private final int mAvatarSz;
+    private final Query mQuery;
+    private final Context mContext;
 
     NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
@@ -55,7 +55,7 @@ class NotesAdapter extends CursorAdapter {
         return getNote();
     }
 
-    public Note getNote() {
+    private Note getNote() {
         return ((Bucket.ObjectCursor<Note>) getCursor()).getObject();
     }
 
@@ -97,7 +97,7 @@ class NotesAdapter extends CursorAdapter {
     }
 
     // HashMap of drawables for note types
-    private HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
+    private final HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
 
     private Drawable getDrawableForType(String noteType) {
         if (mContext == null || noteType == null)
