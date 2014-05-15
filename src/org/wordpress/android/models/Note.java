@@ -227,42 +227,23 @@ public class Note extends Syncable {
     /**
      * A note can have an "unread" of 0 or more ("likes" can have unread of 2+) to indicate the
      * quantity of likes that are "unread" within the single note. So for a note to be "read" it
-     * should have "0"
+     * should have 0
      */
     Boolean isRead() {
-        return getUnreadCount().equals("0");
+        return queryJSON("unread", 0) == 0;
     }
 
     /**
-     * Sets the note's read count to "0" and saves it to sync with Simperium
+     * Sets the note's 'unread' to 0 and saves it to sync with Simperium
      */
     public void markAsRead() {
         try {
-            mNoteJSON.put("unread", "0");
+            mNoteJSON.put("unread", 0);
         } catch (JSONException e) {
             Log.e(TAG, "Unable to update note unread property", e);
             return;
         }
         save();
-    }
-
-    /**
-     * For some reason the unread count is a string in the JSON API but is truly represented
-     * by an Integer. We can handle a simple string.
-     */
-    public String getUnreadCount() {
-        return queryJSON("unread", "0");
-    }
-
-    /**
-     *
-     */
-    public void setUnreadCount(String count) {
-        try {
-            mNoteJSON.putOpt("unread", count);
-        } catch (JSONException e) {
-            AppLog.e(T.NOTIFS, "Failed to set unread property", e);
-        }
     }
 
     public Reply buildReply(String content) {

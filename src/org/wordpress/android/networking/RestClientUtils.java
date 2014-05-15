@@ -3,14 +3,9 @@
  */
 package org.wordpress.android.networking;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request.Method;
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.RequestFuture;
@@ -20,9 +15,13 @@ import com.wordpress.rest.RestRequest.ErrorListener;
 import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONObject;
-
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 public class RestClientUtils {
     private static final String NOTIFICATION_FIELDS = "id,type,unread,body,subject,timestamp,meta";
@@ -100,29 +99,6 @@ public class RestClientUtils {
     public void unfollowSite(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/follows/mine/delete", siteId);
         post(path, listener, errorListener);
-    }
-
-    /**
-     * Get a single notification.
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/get/notifications/
-     */
-    public void getNotification(String noteId, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("fields", NOTIFICATION_FIELDS);
-        get(String.format("notifications/%s", noteId), params, null, listener, errorListener);
-    }
-
-    /**
-     * Mark a notification as read
-     * <p/>
-     * https://developer.wordpress.com/docs/api/1/post/notifications/read/
-     */
-    public void markNoteAsRead(Note note, Listener listener, ErrorListener errorListener) {
-        String path = "notifications/read";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(String.format("counts[%s]", note.getId()), note.getUnreadCount());
-        post(path, params, null, listener, errorListener);
     }
 
     /**
