@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -110,6 +111,20 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         Button mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
+        mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (mActivity != null) {
+                    mActivity.getPost().setPostStatus(getPostStatusForSpinnerPosition(position));
+                    mActivity.invalidateOptionsMenu();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         mTagsEditText = (EditText) rootView.findViewById(R.id.tags);
         mSectionCategories = ((ViewGroup) rootView.findViewById(R.id.sectionCategories));
 
@@ -278,6 +293,21 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         return rootView;
     }
 
+    private String getPostStatusForSpinnerPosition(int position) {
+        switch (position) {
+            case 0:
+                return PostStatus.toString(PostStatus.PUBLISHED);
+            case 1:
+                return PostStatus.toString(PostStatus.DRAFT);
+            case 2:
+                return PostStatus.toString(PostStatus.PENDING);
+            case 3:
+                return PostStatus.toString(PostStatus.PRIVATE);
+            default:
+                return PostStatus.toString(PostStatus.UNKNOWN);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -441,23 +471,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             postFormat = mPostFormats[postFormatSpinner.getSelectedItemPosition()];
         }
 
-        int selectedStatus = mStatusSpinner.getSelectedItemPosition();
-        String status = "";
-
-        switch (selectedStatus) {
-            case 0:
-                status = PostStatus.toString(PostStatus.PUBLISHED);
-                break;
-            case 1:
-                status = PostStatus.toString(PostStatus.DRAFT);
-                break;
-            case 2:
-                status = PostStatus.toString(PostStatus.PENDING);
-                break;
-            case 3:
-                status = PostStatus.toString(PostStatus.PRIVATE);
-                break;
-        }
+        String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
 
         // We want to flag this post as having changed statuses from draft to published so that we
         // propertly track stats we care about for when users first publish posts.

@@ -1,23 +1,5 @@
 package org.xmlrpc.android;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.SequenceInputStream;
-import java.io.StringWriter;
-import java.net.URI;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.SSLHandshakeException;
-
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -39,15 +21,32 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StringUtils;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.io.StringWriter;
+import java.net.URI;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  * A WordPress XMLRPC Client.
@@ -577,9 +576,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     }
 
     private void broadcastAction(String action) {
-        Intent intent = new Intent();
-        intent.setAction(action);
-        LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
+        WordPress.sendLocalBroadcast(WordPress.getContext(), action);
     }
 
     private void deleteTempFile(String method, File tempFile) {

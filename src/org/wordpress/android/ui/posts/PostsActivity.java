@@ -250,6 +250,10 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     protected void popPostDetail() {
+        if (isFinishing()) {
+            return;
+        }
+
         FragmentManager fm = getFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f == null) {

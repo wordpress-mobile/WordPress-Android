@@ -210,13 +210,22 @@ public class EditPostActivity extends Activity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
-        MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
         if (mViewPager != null && mViewPager.getCurrentItem() > PAGE_CONTENT) {
             previewMenuItem.setVisible(false);
-            saveMenuItem.setVisible(false);
         } else {
             previewMenuItem.setVisible(true);
-            saveMenuItem.setVisible(true);
+        }
+
+        if (mPost != null) {
+            MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
+            switch (mPost.getStatusEnum()) {
+                case PUBLISHED:
+                case UNKNOWN:
+                    saveMenuItem.setTitle(R.string.publish_post);
+                    break;
+                default:
+                    saveMenuItem.setTitle(R.string.save);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
