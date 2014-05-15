@@ -2,10 +2,8 @@ package org.wordpress.android.ui.posts;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -257,7 +255,7 @@ public class EditPostActivity extends Activity {
                 mViewPager.setCurrentItem(PAGE_CONTENT);
                 invalidateOptionsMenu();
             } else {
-                showCancelAlert();
+                saveAndFinish();
             }
             return true;
         }
@@ -299,66 +297,33 @@ public class EditPostActivity extends Activity {
 
         if (getActionBar() != null) {
             if (getActionBar().isShowing()) {
-                showCancelAlert();
+                saveAndFinish();
             } else if (mEditPostContentFragment != null) {
                 mEditPostContentFragment.setContentEditingModeVisible(false);
             }
         }
     }
 
-    private void showCancelAlert() {
-        // Empty post? Let's not prompt then.
+    private void saveAndFinish() {
+        savePost(true);
         if (mEditPostContentFragment != null && mEditPostContentFragment.hasEmptyContentFields()) {
+            // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
             }
-            finish();
-            return;
-        }
-
-        savePost(true);
-
-        // Compare the current Post to the original and if no changes have been made,
-        // set the Post back to the original and go back to the previous view
-        if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+        } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            // if no changes have been made to the post, set it back to the original don't save it
             WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
-            finish();
-            return;
+        } else {
+            // changes have been made, save the post and ask for the post list to refresh
+            savePost(false);
+            WordPress.currentPost = mPost;
+            Intent i = new Intent();
+            i.putExtra("shouldRefresh", true);
+            setResult(RESULT_OK, i);
         }
-
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(getString((mPost.isPage()) ? R.string.edit_page : R.string.edit_post));
-        dialogBuilder.setMessage(getString(R.string.prompt_save_changes));
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.save), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                savePost(false);
-                WordPress.currentPost = mPost;
-                Intent i = new Intent();
-                i.putExtra("shouldRefresh", true);
-                setResult(RESULT_OK, i);
-                finish();
-            }
-        });
-        dialogBuilder.setNeutralButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // When discard option is chosen, restore existing post or delete new post if it was autosaved.
-                if (mOriginalPost != null && !mIsNewPost) {
-                    WordPress.wpDB.updatePost(mOriginalPost);
-                    WordPress.currentPost = mOriginalPost;
-                } else if (mPost != null && mIsNewPost) {
-                    WordPress.wpDB.deletePost(mPost);
-                }
-                finish();
-            }
-        });
-        dialogBuilder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                dialog.dismiss();
-            }
-        });
-        dialogBuilder.setCancelable(true);
-        dialogBuilder.create().show();
+        finish();
     }
 
     public void showPostSettings() {
