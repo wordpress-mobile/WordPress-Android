@@ -34,7 +34,7 @@ public class Note extends Syncable {
         static public final String NAME = "note";
         static public final String TIMESTAMP_INDEX = "timestamp";
 
-        private static Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
+        private static final Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
 
             @Override
             public List<Index> index(Note note) {
@@ -73,14 +73,14 @@ public class Note extends Syncable {
     }
 
 
-    protected static final String TAG = "NoteModel";
+    private static final String TAG = "NoteModel";
 
-    protected static final String NOTE_UNKNOWN_TYPE = "unknown";
-    public static final String NOTE_COMMENT_TYPE = "comment";
+    private static final String NOTE_UNKNOWN_TYPE = "unknown";
+    private static final String NOTE_COMMENT_TYPE = "comment";
     public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     public static final String NOTE_LIKE_TYPE = "like";
-    public static final String NOTE_MATCHER_TYPE = "automattcher";
-    public static final String NOTE_ACHIEVEMENT_TYPE = "achievement";
+    private static final String NOTE_MATCHER_TYPE = "automattcher";
+    private static final String NOTE_ACHIEVEMENT_TYPE = "achievement";
 
     // Notes have different types of "templates" for displaying differently
     // this is not a canonical list but covers all the types currently in use
@@ -328,7 +328,7 @@ public class Note extends Syncable {
     }
 
 
-    protected void updateJSON(JSONObject json) {
+    private void updateJSON(JSONObject json) {
 
         mNoteJSON = json;
 
