@@ -220,25 +220,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutIcons.setVisibility(View.GONE);
 
         // detect image taps so we can open images in the photo viewer activity
-        mWebView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_UP) {
-                    HitTestResult hr = ((WebView)v).getHitTestResult();
-                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                        String imageUrl = hr.getExtra();
-                        if (imageUrl == null)
-                            return false;
-                        // skip if image is a file: reference - this will be the video overlay, ie:
-                        // file:///android_res/drawable/ic_reader_video_overlay.png
-                        if (imageUrl.startsWith("file:"))
-                            return false;
-                        showPhotoViewer(imageUrl);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        mWebView.setOnTouchListener(mWebViewTouchListener);
 
         return view;
     }
@@ -1009,18 +991,60 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * called when user taps an image in the webView - shows the image full-screen
      */
-    private void showPhotoViewer(final String imageUrl) {
-        if (TextUtils.isEmpty(imageUrl))
+    private void showPhotoViewer(String imageUrl) {
+        if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
             return;
-        if (!hasActivity())
-            return;
+        }
+
         // images in private posts must use https for auth token to be sent with request
         if (mPost.isPrivate) {
-            ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), UrlUtils.makeHttps(imageUrl));
-        } else {
-            ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl);
+            imageUrl = UrlUtils.makeHttps(imageUrl);
         }
+
+        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl);
     }
+
+    private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                HitTestResult hr = ((WebView)view).getHitTestResult();
+                if (hr == null || (hr.getType() != HitTestResult.IMAGE_TYPE && hr.getType() != HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                    return false;
+                }
+
+                String imageUrl = hr.getExtra();
+                if (imageUrl == null) {
+                    return false;
+                }
+
+                if (mPost.isPrivate) {
+                    imageUrl = UrlUtils.makeHttps(imageUrl);
+                }
+
+                // skip if image is a file: reference - this will be the video overlay, ie:
+                // file:///android_res/drawable/ic_reader_video_overlay.png
+                if (imageUrl.startsWith("file:")) {
+                    return false;
+                }
+
+                int startX = (int)event.getX();
+                int startY = (int)event.getY();
+                int startWidth = 0;
+                int startHeight = 0;
+                ReaderActivityLauncher.showReaderPhotoViewer(
+                        getActivity(),
+                        imageUrl,
+                        view,
+                        startX,
+                        startY,
+                        startWidth,
+                        startHeight);
+                return true;
+            }
+            return false;
+        }
+    };
 
     private boolean hasStaticMenuDrawer() {
         return (getActivity() instanceof WPActionBarActivity)

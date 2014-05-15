@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.view.View;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -74,6 +76,31 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderPhotoViewerActivity.ARG_IMAGE_URL, imageUrl);
         context.startActivity(intent);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public static void showReaderPhotoViewer(Context context,
+                                             String imageUrl,
+                                             View source,
+                                             int startX,
+                                             int startY,
+                                             int startWidth,
+                                             int startHeight) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return;
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            showReaderPhotoViewer(context, imageUrl);
+            return;
+        }
+
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, startWidth, startHeight);
+
+        Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
+        intent.putExtra(ReaderPhotoViewerActivity.ARG_IMAGE_URL, imageUrl);
+        context.startActivity(intent, options.toBundle());
     }
 
     public static void showReaderReblogForResult(Activity activity, ReaderPost post) {
