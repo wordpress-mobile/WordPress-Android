@@ -182,7 +182,7 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
+            android:theme="@style/ReaderTheme.PhotoViewer" />
 
         <!-- Other activities -->
 
