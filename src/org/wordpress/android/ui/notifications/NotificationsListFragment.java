@@ -5,11 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,9 +22,13 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.SimperiumUtils;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
+    private PullToRefreshHelper mFauxPullToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private boolean mShouldLoadFirstNote;
@@ -63,6 +70,14 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initPullToRefreshHelper();
+        mFauxPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         refreshNotes();
@@ -82,10 +97,42 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         mNotesAdapter.closeCursor();
 
-        super.onDestroy();
+        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        boolean isRefreshing = mFauxPullToRefreshHelper.isRefreshing();
+        super.onConfigurationChanged(newConfig);
+        // Pull to refresh layout is destroyed onDetachedFromWindow,
+        // so we have to re-init the layout, via the helper here
+        initPullToRefreshHelper();
+        mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
+    }
+
+    private void initPullToRefreshHelper() {
+        mFauxPullToRefreshHelper = new PullToRefreshHelper(
+                getActivity(),
+                (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
+                new PullToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        // Show a fake refresh animation for a few seconds
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (hasActivity()) {
+                                    mFauxPullToRefreshHelper.setRefreshing(false);
+                                }
+                            }
+                        }, 2000);
+                    }
+                }, LinearLayout.class
+        );
     }
 
     @Override
