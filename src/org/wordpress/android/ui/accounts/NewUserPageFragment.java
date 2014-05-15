@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -173,13 +174,13 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     }
 
     private void finishThisStuff(String username) {
-        final NewAccountActivity act = (NewAccountActivity) getActivity();
-        Bundle bundle = new Bundle();
-        bundle.putString("username", username);
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
-        act.setResult(NewAccountActivity.RESULT_OK, intent);
-        act.finish();
+        final Activity activity = getActivity();
+        if (activity != null) {
+            Intent intent = new Intent();
+            intent.putExtra("username", username);
+            activity.setResult(NewAccountActivity.RESULT_OK, intent);
+            activity.finish();
+        }
     }
 
     protected boolean specificShowError(int messageId) {
