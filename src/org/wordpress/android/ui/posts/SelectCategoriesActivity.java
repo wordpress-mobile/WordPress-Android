@@ -5,10 +5,8 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -340,10 +338,7 @@ public class SelectCategoriesActivity extends ListActivity {
             return true;
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            Intent intent = new Intent();
-            intent.setAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
-            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-            lbm.sendBroadcast(intent);
+            WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
             return true;
         }
 
