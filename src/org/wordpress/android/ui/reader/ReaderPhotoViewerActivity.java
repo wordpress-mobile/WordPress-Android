@@ -15,10 +15,11 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
-import org.wordpress.android.widgets.photoview.PhotoViewAttacher;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
- * Full-screen photo viewer, relies on widgets.photoview for pinch/zoom & double tap enlargement
+ * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {
     static final String ARG_IMAGE_URL = "image_url";
