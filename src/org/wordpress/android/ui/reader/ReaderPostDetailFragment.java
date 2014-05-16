@@ -988,7 +988,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private boolean showPhotoViewer(String imageUrl) {
+    private boolean showPhotoViewer(String imageUrl, View source, int startX, int startY) {
         if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
             return false;
         }
@@ -998,7 +998,7 @@ public class ReaderPostDetailFragment extends Fragment
             imageUrl = UrlUtils.makeHttps(imageUrl);
         }
 
-        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl);
+        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl, source, startX, startY);
         return true;
     }
 
@@ -1016,7 +1016,7 @@ public class ReaderPostDetailFragment extends Fragment
             HitTestResult hr = ((WebView)view).getHitTestResult();
             if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
                 String imageUrl = hr.getExtra();
-                return showPhotoViewer(imageUrl);
+                return showPhotoViewer(imageUrl, view, (int)event.getX(), (int)event.getY());
             } else {
                 return false;
             }
@@ -1342,8 +1342,10 @@ public class ReaderPostDetailFragment extends Fragment
                 imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
                 imgFeatured.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        showPhotoViewer(mPost.getFeaturedImage());
+                    public void onClick(View view) {
+                        int startX = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
+                        int startY = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
+                        showPhotoViewer(mPost.getFeaturedImage(), view, startX, startY);
                     }
                 });
             } else {
