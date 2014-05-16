@@ -7,7 +7,6 @@ package org.wordpress.android.util;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
 
 import com.simperium.Simperium;
 import com.simperium.client.Bucket;
@@ -100,14 +99,11 @@ public class SimperiumUtils {
         return simperium;
     }
 
-    public static void authorizeUser(Simperium simperium, String token){
-
-        if (TextUtils.isEmpty(token)) return;
-
+    public static void authorizeUser(Simperium simperium, String token) {
         User user = simperium.getUser();
 
         String tokenFormat = "WPCC/%s/%s";
-        String wpccToken = String.format(tokenFormat, BuildConfig.SIMPERIUM_APP_SECRET, token);
+        String wpccToken = String.format(tokenFormat, BuildConfig.SIMPERIUM_APP_SECRET, StringUtils.notNullStr(token));
 
         user.setAccessToken(wpccToken);
 
