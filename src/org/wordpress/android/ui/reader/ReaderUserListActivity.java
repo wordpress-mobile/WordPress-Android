@@ -3,14 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
@@ -19,10 +17,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends Activity {
-    private ListView mListView;
-    private ReaderPost mPost;
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
+    private ListView mListView;
 
     private ListView getListView() {
         if (mListView == null) {
@@ -45,7 +42,7 @@ public class ReaderUserListActivity extends Activity {
     private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            // restore listView state - this returns to the previously scrolled-to item
+            // restore listView state so user returns to the previously scrolled-to item
             if (!isEmpty && mListState != null) {
                 getListView().onRestoreInstanceState(mListState);
                 mListState = null;
@@ -59,17 +56,15 @@ public class ReaderUserListActivity extends Activity {
 
         setContentView(R.layout.reader_activity_userlist);
 
-        // for now this activity only supports showing users who like a specific post
         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
-        mPost = ReaderPostTable.getPost(blogId, postId);
 
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
 
         getListView().setAdapter(getAdapter());
-        loadUsers();
+        loadUsers(blogId, postId);
     }
 
     @Override
@@ -86,10 +81,7 @@ public class ReaderUserListActivity extends Activity {
         }
     }
 
-    private String getTitleString() {
-        int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
-        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
-
+    private String getTitleString(int numLikes, boolean isLikedByCurrentUser) {
         if (isLikedByCurrentUser) {
             switch (numLikes) {
                 case 1 :
@@ -104,13 +96,17 @@ public class ReaderUserListActivity extends Activity {
         }
     }
 
-    private void loadUsers() {
+    private void loadUsers(final long blogId, final long postId) {
         new Thread() {
             @Override
             public void run() {
-                final String title = getTitleString();
-                final ReaderUserList users = ReaderUserTable.getUsersWhoLikePost(mPost, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
+                boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+                final String title = getTitleString(numLikes, isLikedByCurrentUser);
                 final TextView txtTitle = (TextView) findViewById(R.id.text_title);
+
+                final ReaderUserList users =
+                        ReaderUserTable.getUsersWhoLikePost(blogId, postId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
 
                 runOnUiThread(new Runnable() {
                     @Override
