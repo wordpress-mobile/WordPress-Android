@@ -163,8 +163,9 @@ public class ReaderUserAdapter extends BaseAdapter {
                     public void run() {
                         mUsers = (ReaderUserList) users.clone();
                         notifyDataSetChanged();
-                        if (mDataLoadedListener != null)
+                        if (mDataLoadedListener != null) {
                             mDataLoadedListener.onDataLoaded(isEmpty());
+                        }
                     }
                 });
             }
