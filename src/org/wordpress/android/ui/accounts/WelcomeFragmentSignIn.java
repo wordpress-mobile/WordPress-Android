@@ -201,7 +201,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         @Override
         public void onClick(View v) {
             Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
-            startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+            }
         }
     };
 

@@ -54,7 +54,6 @@ public class WelcomeActivity extends Activity {
             if (username != null) {
                 mWelcomeFragmentSignIn.signInDotComUser();
             }
-
         }
     }
 }

@@ -705,16 +705,9 @@ public abstract class WPActionBarActivity extends Activity {
                 dialogBuilder.create().show();
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            broadcastAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void broadcastAction(String action) {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        Intent intent = new Intent();
-        intent.setAction(action);
-        lbm.sendBroadcast(intent);
     }
 
     /**
@@ -1085,12 +1078,14 @@ public abstract class WPActionBarActivity extends Activity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
-        registerReceiver(mReceiver, filter);
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(mReceiver, filter);
     }
 
     private void unregisterReceiver() {
         try {
-            unregisterReceiver(mReceiver);
+            LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
+            lbm.unregisterReceiver(mReceiver);
         } catch (IllegalArgumentException e) {
             // exception occurs if receiver already unregistered (safe to ignore)
         }
