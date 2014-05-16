@@ -13,14 +13,14 @@
         style="@style/ReaderTextView.DialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/reader_title_userlist_default" />
+        android:text="@string/reader_title_userlist_likes"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/margin_small"
-        android:background="@color/reader_divider_blue" />
+        android:background="@color/reader_divider_grey" />
 
     <ListView
         android:id="@id/android:list"

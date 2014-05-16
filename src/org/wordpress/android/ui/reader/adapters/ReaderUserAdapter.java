@@ -82,6 +82,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtUrl.setText(user.getUrlDomain());
 
             // tapping anywhere in the view shows the user's blog (requires knowing the blog id)
+            convertView.setEnabled(true);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -102,10 +103,11 @@ public class ReaderUserAdapter extends BaseAdapter {
             });
             holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
-            // no blog url, so can't follow
+            // no blog url, so can't view blog or follow
             holder.txtUrl.setVisibility(View.GONE);
             holder.txtFollow.setVisibility(View.GONE);
             convertView.setOnClickListener(null);
+            convertView.setEnabled(false);
         }
 
         holder.imgAvatar.setImageUrl(user.getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);

@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -94,11 +92,6 @@ public class ReaderUserListActivity extends Activity {
         new Thread() {
             @Override
             public void run() {
-                int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
-                boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
-                final String title = getTitleString(numLikes, isLikedByCurrentUser);
-                final TextView txtTitle = (TextView) findViewById(R.id.text_title);
-
                 final ReaderUserList users =
                         ReaderUserTable.getUsersWhoLikePost(blogId, postId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
 
@@ -107,26 +100,10 @@ public class ReaderUserListActivity extends Activity {
                     public void run() {
                         if (!isFinishing()) {
                             getAdapter().setUsers(users);
-                            txtTitle.setText(title);
                         }
                     }
                 });
             }
         }.start();
-    }
-
-    private String getTitleString(int numLikes, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser) {
-            switch (numLikes) {
-                case 1 :
-                    return getString(R.string.reader_likes_only_you);
-                case 2 :
-                    return getString(R.string.reader_likes_you_and_one);
-                default :
-                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
-            }
-        } else {
-            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
-        }
     }
 }

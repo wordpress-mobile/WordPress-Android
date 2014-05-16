@@ -42,15 +42,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:layout_margin">@dimen/margin_medium</item>
-        <item name="android:gravity">center</item>
-    </style>
-    <style name="ReaderTextView.DialogSubTitle" parent="ReaderTextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/grey_medium</item>
         <item name="android:gravity">center</item>
     </style>
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
