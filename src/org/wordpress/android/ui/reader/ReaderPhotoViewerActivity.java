@@ -70,4 +70,10 @@ public class ReaderPhotoViewerActivity extends Activity {
         if (mImageUrl != null)
             outState.putString(ARG_IMAGE_URL, mImageUrl);
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
+    }
 }

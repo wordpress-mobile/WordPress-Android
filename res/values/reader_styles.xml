@@ -23,6 +23,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderZoom</item>
     </style>
 
     <!-- window animations -->
@@ -31,6 +32,11 @@
         <item name="android:windowEnterAnimation">@anim/reader_flyin</item>
         <item name="android:windowExitAnimation">@anim/reader_flyout</item>
     </style>
+    <style name="ReaderAnimation.ReaderZoom">
+        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
+        <item name="android:windowExitAnimation">@anim/zoom_out</item>
+    </style>
+
 
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">

@@ -991,9 +991,9 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * called when user taps an image in the webView - shows the image full-screen
      */
-    private void showPhotoViewer(String imageUrl) {
+    private boolean showPhotoViewer(String imageUrl) {
         if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
-            return;
+            return false;
         }
 
         // images in private posts must use https for auth token to be sent with request
@@ -1002,47 +1002,23 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl);
+        return true;
     }
 
     private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                HitTestResult hr = ((WebView)view).getHitTestResult();
-                if (hr == null || (hr.getType() != HitTestResult.IMAGE_TYPE && hr.getType() != HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                    return false;
-                }
-
-                String imageUrl = hr.getExtra();
-                if (imageUrl == null) {
-                    return false;
-                }
-
-                if (mPost.isPrivate) {
-                    imageUrl = UrlUtils.makeHttps(imageUrl);
-                }
-
-                // skip if image is a file: reference - this will be the video overlay, ie:
-                // file:///android_res/drawable/ic_reader_video_overlay.png
-                if (imageUrl.startsWith("file:")) {
-                    return false;
-                }
-
-                int startX = (int)event.getX();
-                int startY = (int)event.getY();
-                int startWidth = 0;
-                int startHeight = 0;
-                ReaderActivityLauncher.showReaderPhotoViewer(
-                        getActivity(),
-                        imageUrl,
-                        view,
-                        startX,
-                        startY,
-                        startWidth,
-                        startHeight);
-                return true;
+            if (event.getAction() != MotionEvent.ACTION_UP) {
+                return false;
             }
-            return false;
+
+            HitTestResult hr = ((WebView)view).getHitTestResult();
+            if (hr == null || (hr.getType() != HitTestResult.IMAGE_TYPE && hr.getType() != HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                return false;
+            }
+
+            // extra will be the url of the image
+            return showPhotoViewer(hr.getExtra());
         }
     };
 
