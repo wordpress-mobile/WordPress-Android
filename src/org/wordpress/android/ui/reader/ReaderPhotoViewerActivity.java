@@ -24,12 +24,14 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ReaderPhotoViewerActivity extends Activity {
     static final String ARG_IMAGE_URL = "image_url";
     private String mImageUrl;
+    private WPNetworkImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_photo_viewer);
+        mImageView = (WPNetworkImageView) findViewById(R.id.image_photo);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(ARG_IMAGE_URL)) {
             mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
@@ -43,32 +45,61 @@ public class ReaderPhotoViewerActivity extends Activity {
             }
         }
 
-        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-
-        if (!TextUtils.isEmpty(mImageUrl)) {
-            progress.setVisibility(View.VISIBLE);
-            imageView.setImageUrl(mImageUrl, ImageType.PHOTO_FULL, new ImageListener() {
-                @Override
-                public void onImageLoaded(boolean succeeded) {
-                    progress.setVisibility(View.GONE);
-                    if (succeeded) {
-                        new PhotoViewAttacher(imageView);
-                    } else {
-                        ToastUtils.showToast(ReaderPhotoViewerActivity.this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
-                    }
-                }
-            });
-        } else {
-            imageView.setImageResource(R.drawable.ic_error);
-        }
+        loadImage();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mImageUrl != null)
+        if (mImageUrl != null) {
             outState.putString(ARG_IMAGE_URL, mImageUrl);
+        }
+    }
+
+    private void loadImage() {
+        if (TextUtils.isEmpty(mImageUrl)) {
+            handleImageLoadFailure();
+            return;
+        }
+
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+
+        mImageView.setImageUrl(mImageUrl, ImageType.PHOTO_FULL, new ImageListener() {
+            @Override
+            public void onImageLoaded(boolean succeeded) {
+                progress.setVisibility(View.GONE);
+                if (succeeded) {
+                    createAttacher();
+                } else {
+                    handleImageLoadFailure();
+                }
+            }
+        });
+    }
+
+    private void createAttacher() {
+        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+
+        // tapping outside the photo closes the activity
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float v, float v2) {
+                finish();
+            }
+        });
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v2) {
+                // do nothing - photo tap listener must be assigned or else tapping the photo
+                // will fire the onViewTapListener() above
+            }
+        });
+    }
+
+    private void handleImageLoadFailure() {
+        ToastUtils.showToast(this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+        finish();
     }
 
     @Override
