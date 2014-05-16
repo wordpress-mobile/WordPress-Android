@@ -2,7 +2,6 @@
 <!--
     styles used by the native reader - all margins & padding use margin_xxxx sizes
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
-    see also reader_styles in values-v14 for holo versions of some of these
 -->
 <resources>
     <!-- activity themes -->
@@ -23,7 +22,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderZoom</item>
+        <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPhoto</item>
     </style>
 
     <!-- window animations -->
@@ -32,11 +31,10 @@
         <item name="android:windowEnterAnimation">@anim/reader_flyin</item>
         <item name="android:windowExitAnimation">@anim/reader_flyout</item>
     </style>
-    <style name="ReaderAnimation.ReaderZoom">
-        <item name="android:windowEnterAnimation">@anim/zoom_in</item>
-        <item name="android:windowExitAnimation">@anim/zoom_out</item>
+    <style name="ReaderAnimation.ReaderPhoto">
+        <item name="android:windowEnterAnimation">@anim/reader_photo_in</item>
+        <item name="android:windowExitAnimation">@anim/reader_photo_out</item>
     </style>
-
 
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">

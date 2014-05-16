@@ -988,16 +988,13 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
-     * called when user taps an image in the webView - shows the image full-screen
-     */
     private boolean showPhotoViewer(String imageUrl) {
         if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
             return false;
         }
 
         // images in private posts must use https for auth token to be sent with request
-        if (mPost.isPrivate) {
+        if (hasPost() && mPost.isPrivate) {
             imageUrl = UrlUtils.makeHttps(imageUrl);
         }
 
@@ -1005,6 +1002,10 @@ public class ReaderPostDetailFragment extends Fragment
         return true;
     }
 
+    /*
+     * touch listener for the webView - detects when an image is tapped and shows it in the
+     * photo viewer activity
+     */
     private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
@@ -1013,12 +1014,12 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             HitTestResult hr = ((WebView)view).getHitTestResult();
-            if (hr == null || (hr.getType() != HitTestResult.IMAGE_TYPE && hr.getType() != HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                String imageUrl = hr.getExtra();
+                return showPhotoViewer(imageUrl);
+            } else {
                 return false;
             }
-
-            // extra will be the url of the image
-            return showPhotoViewer(hr.getExtra());
         }
     };
 
