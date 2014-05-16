@@ -81,21 +81,6 @@ public class ReaderUserListActivity extends Activity {
         }
     }
 
-    private String getTitleString(int numLikes, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser) {
-            switch (numLikes) {
-                case 1 :
-                    return getString(R.string.reader_likes_only_you);
-                case 2 :
-                    return getString(R.string.reader_likes_you_and_one);
-                default :
-                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
-            }
-        } else {
-            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
-        }
-    }
-
     private void loadUsers(final long blogId, final long postId) {
         new Thread() {
             @Override
@@ -119,5 +104,20 @@ public class ReaderUserListActivity extends Activity {
                 });
             }
         }.start();
+    }
+
+    private String getTitleString(int numLikes, boolean isLikedByCurrentUser) {
+        if (isLikedByCurrentUser) {
+            switch (numLikes) {
+                case 1 :
+                    return getString(R.string.reader_likes_only_you);
+                case 2 :
+                    return getString(R.string.reader_likes_you_and_one);
+                default :
+                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
+            }
+        } else {
+            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
+        }
     }
 }

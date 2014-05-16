@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/layout_container"
+    android:orientation="vertical"
     android:background="@android:color/white">
 
     <org.wordpress.android.widgets.WPTextView
@@ -17,7 +19,6 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/text_title"
         android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_blue" />
 
@@ -26,7 +27,6 @@
         style="@style/ReaderListView.NoDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
         tools:listitem="@layout/reader_listitem_user" />
 
-</RelativeLayout>
+</LinearLayout>
