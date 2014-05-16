@@ -10,10 +10,13 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -57,6 +60,8 @@ public class ReaderUserAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return mUsers.get(position).userId;
     }
+
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -147,21 +152,25 @@ public class ReaderUserAdapter extends BaseAdapter {
             return;
         }
 
+        mUsers = (ReaderUserList) users.clone();
         final Handler handler = new Handler();
+
         new Thread() {
             @Override
             public void run() {
-                // flag followed users, set avatar urls for use with photon, and pre-load user domains
-                // so we can avoid having to do this for each user when getView() is called
+                // flag followed users, set avatar urls for use with photon, and pre-load
+                // user domains so we can avoid having to do this for each user when getView()
+                // is called
                 ReaderUrlList followedBlogUrls = ReaderBlogTable.getFollowedBlogUrls();
-                for (ReaderUser user: users) {
+                for (ReaderUser user: mUsers) {
                     user.isFollowed = user.hasUrl() && followedBlogUrls.contains(user.getUrl());
                     user.setAvatarUrl(PhotonUtils.fixAvatar(user.getAvatarUrl(), mAvatarSz));
                     user.getUrlDomain();
                 }
+
                 handler.post(new Runnable() {
+                    @Override
                     public void run() {
-                        mUsers = (ReaderUserList) users.clone();
                         notifyDataSetChanged();
                         if (mDataLoadedListener != null) {
                             mDataLoadedListener.onDataLoaded(isEmpty());

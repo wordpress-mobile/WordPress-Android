@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * displays a list of users who like a specific reader post
@@ -62,6 +64,13 @@ public class ReaderUserListActivity extends Activity {
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
+
+        // use a fixed size for the root view so the activity won't change size as users
+        // are loaded
+        final ViewGroup rootView = (ViewGroup) findViewById(R.id.layout_container);
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        int maxHeight = displayHeight - (displayHeight / 3);
+        rootView.getLayoutParams().height = maxHeight;
 
         getListView().setAdapter(getAdapter());
         loadUsers(blogId, postId);
