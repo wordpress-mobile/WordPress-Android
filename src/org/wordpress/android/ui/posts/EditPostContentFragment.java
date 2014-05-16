@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,6 +31,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -108,6 +110,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     private static final String TAG_FORMAT_BAR_BUTTON_QUOTE = "blockquote";
 
     private static final int CONTENT_ANIMATION_DURATION = 250;
+    private static final int MIN_THUMBNAIL_WIDTH = 200;
 
     private View mRootView;
     private WPEditText mContentEditText;
@@ -121,7 +124,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     private String mMediaCapturePath = "";
 
-    private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom;
+    private int mStyleStart, mSelectionStart, mSelectionEnd, mFullViewBottom, mMaximumThumbnailWidth;
     private int mLastPosition = -1, mQuickMediaType = -1;
 
     private float mLastYPos = 0;
@@ -832,9 +835,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
     /** Loads the thumbnail url in the imagespan from a server **/
     private void loadWPImageSpanThumbnail(WPImageSpan imageSpan) {
-        final int widthOfContentEditor = DisplayUtils.isLandscape(mActivity) ? mContentEditText.getHeight() : mContentEditText.getWidth();
-        final int maxPictureWidthForContentEditor = 400 > (widthOfContentEditor - 50) ? widthOfContentEditor - 50 : 400;
-        final int minPictureWidthForContentEditor = 200;
 
         MediaFile mediaFile = imageSpan.getMediaFile();
         if (mediaFile == null)
@@ -847,7 +847,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         String imageURL;
         if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()) {
             String photonUrl = imageSpan.getImageSource().toString();
-            imageURL = StringUtils.getPhotonUrl(photonUrl, maxPictureWidthForContentEditor);
+            imageURL = StringUtils.getPhotonUrl(photonUrl, getMaximumThumbnailWidth());
         } else {
             // Not a Jetpack or wpcom blog
             // imageURL = mediaFile.getThumbnailURL(); //do not use fileURL here since downloading picture
@@ -875,18 +875,18 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     return;
                 }
 
-                if (downloadedBitmap.getWidth() < minPictureWidthForContentEditor) {
+                if (downloadedBitmap.getWidth() < MIN_THUMBNAIL_WIDTH) {
                     //Picture is too small. Show the placeholder in this case.
                     return;
                 }
 
                 Bitmap resizedBitmap;
-                if (downloadedBitmap.getWidth() <= maxPictureWidthForContentEditor) {
+                if (downloadedBitmap.getWidth() <= getMaximumThumbnailWidth()) {
                     //bitmap is already small in size, do not resize.
                     resizedBitmap = downloadedBitmap;
                 } else {
                     //resize the downloaded bitmap
-                    int targetWidth = maxPictureWidthForContentEditor;
+                    int targetWidth = getMaximumThumbnailWidth();
                     try {
                         ImageHelper ih = new ImageHelper();
                         resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
@@ -1022,7 +1022,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         } else {
             ImageHelper ih = new ImageHelper();
             thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath(),
-                    mPostContentLinearLayout.getWidth());
+                    getMaximumThumbnailWidth());
             if (thumbnailBitmap == null) {
                 return false;
             }
@@ -1091,6 +1091,23 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
         return true;
+    }
+
+    /**
+     * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
+     */
+    public int getMaximumThumbnailWidth() {
+        if (mMaximumThumbnailWidth == 0 && hasActivity()) {
+            WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int screenWidth = size.x;
+            int screenHeight = size.y;
+            mMaximumThumbnailWidth = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+        }
+
+        return mMaximumThumbnailWidth;
     }
 
     /**
