@@ -1,14 +1,9 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +77,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         super.onResume();
         refreshNotes();
 
-        registerReceiver();
         // start listening to bucket change events
         mBucket.addListener(this);
     }
@@ -92,7 +86,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         // unregister the listener and close the cursor
         mBucket.removeListener(this);
 
-        unregisterReceiver();
         super.onPause();
     }
 
@@ -151,7 +144,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     protected void updateLastSeenTime() {
         // set the timestamp to now
         try {
-            if (mNotesAdapter != null && mNotesAdapter.getCount() > 0) {
+            if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
                 Note newestNote = mNotesAdapter.getNote(0);
                 BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
                 meta.setProperty("last_seen", newestNote.getTimestamp());
@@ -224,43 +217,4 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private boolean hasActivity() {
         return getActivity() != null;
     }
-
-
-    /**
-     * Broadcast listener for simperium sign in
-     */
-    private void registerReceiver() {
-        if (!hasActivity())
-            return;
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, filter);
-    }
-
-    private void unregisterReceiver() {
-        if (!hasActivity())
-            return;
-
-        try {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mReceiver);
-        } catch (IllegalArgumentException e) {
-            // exception occurs if receiver already unregistered (safe to ignore)
-        }
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent == null || intent.getAction() == null || !hasActivity())
-                return;
-
-            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_SIGNED_IN)) {
-                // Get the new bucket instance and start listening again
-                mBucket.removeListener(NotificationsListFragment.this);
-                mBucket = SimperiumUtils.getNotesBucket();
-                mBucket.addListener(NotificationsListFragment.this);
-            }
-        }
-    };
 }

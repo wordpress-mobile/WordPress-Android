@@ -456,7 +456,7 @@ public class WordPress extends Application {
         ReaderDatabase.reset();
 
         // Reset Simperium buckets (removes local data)
-        SimperiumUtils.resetBuckets();
+        SimperiumUtils.resetBucketsAndDeauthorize();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants

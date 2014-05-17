@@ -18,85 +18,67 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
 
 public class SimperiumUtils {
-    public static final String BROADCAST_ACTION_SIMPERIUM_SIGNED_IN = "simperium-signin";
     public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
 
-    private static com.simperium.Simperium mSimperium;
+    private static Simperium mSimperium;
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
 
-    public static com.simperium.Simperium getSimperium() {
+    public static Simperium getSimperium() {
         return mSimperium;
-    }
-
-    public static void setSimperium(com.simperium.Simperium simperium) {
-        mSimperium = simperium;
     }
 
     public static Bucket<Note> getNotesBucket() {
         return mNotesBucket;
     }
 
-    public static void setNotesBucket(Bucket<Note> notesBucket) {
-        mNotesBucket = notesBucket;
-    }
-
     public static Bucket<BucketObject> getMetaBucket() {
         return mMetaBucket;
     }
 
-    public static void setMetaBucket(Bucket<BucketObject> metaBucket) {
-        mMetaBucket = metaBucket;
-    }
-
     public static Simperium configureSimperium(final Context context, String token) {
+        // Create a new instance of Simperium if it doesn't exist yet.
+        // In any case, authorize the user.
+        if (mSimperium == null) {
+            mSimperium = Simperium.newClient(BuildConfig.SIMPERIUM_APP_NAME,
+                    BuildConfig.SIMPERIUM_APP_SECRET, context);
 
-        Simperium simperium = Simperium.newClient(BuildConfig.SIMPERIUM_APP_NAME,
-                BuildConfig.SIMPERIUM_APP_SECRET, context);
+            try {
+                mNotesBucket = mSimperium.bucket(new Note.Schema());
+                mMetaBucket = mSimperium.bucket("meta");
 
+                mSimperium.setUserStatusChangeListener(new User.StatusChangeListener() {
 
-        try {
-            final Bucket<Note> notesBucket = simperium.bucket(new Note.Schema());
-            final Bucket<BucketObject> metaBucket = simperium.bucket("meta");
-
-            setSimperium(simperium);
-            setNotesBucket(notesBucket);
-            setMetaBucket(metaBucket);
-
-            simperium.setUserStatusChangeListener( new User.StatusChangeListener() {
-
-                @Override
-                public void onUserStatusChange(User.Status status) {
-                    switch (status) {
-                        case AUTHORIZED:
-                            notesBucket.start();
-                            metaBucket.start();
-                            Intent simperiumSignedInIntent = new Intent();
-                            simperiumSignedInIntent.setAction(BROADCAST_ACTION_SIMPERIUM_SIGNED_IN);
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumSignedInIntent);
-                            break;
-                        case NOT_AUTHORIZED:
-                            notesBucket.stop();
-                            metaBucket.stop();
-                            Intent simperiumNotAuthorizedIntent = new Intent();
-                            simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
-                            LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
-                            break;
-                        default:
-                            AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
-                            break;
+                    @Override
+                    public void onUserStatusChange(User.Status status) {
+                        switch (status) {
+                            case AUTHORIZED:
+                                mNotesBucket.start();
+                                mMetaBucket.start();
+                                break;
+                            case NOT_AUTHORIZED:
+                                mNotesBucket.stop();
+                                mMetaBucket.stop();
+                                Intent simperiumNotAuthorizedIntent = new Intent();
+                                simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
+                                break;
+                            default:
+                                AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
+                                break;
+                        }
                     }
-                }
 
-            });
+                });
 
-        } catch (BucketNameInvalid e) {
-            AppLog.e(AppLog.T.SIMPERIUM, e.getMessage());
+            } catch (BucketNameInvalid e) {
+                AppLog.e(AppLog.T.SIMPERIUM, e.getMessage());
+            }
         }
 
-        authorizeUser(simperium, token);
+        authorizeUser(mSimperium, token);
 
-        return simperium;
+        return mSimperium;
     }
 
     public static void authorizeUser(Simperium simperium, String token) {
@@ -111,12 +93,17 @@ public class SimperiumUtils {
         user.setStatus(User.Status.AUTHORIZED);
     }
 
-    public static void resetBuckets() {
+    public static void resetBucketsAndDeauthorize() {
         if (mNotesBucket != null) {
             mNotesBucket.reset();
         }
         if (mMetaBucket != null) {
             mMetaBucket.reset();
+        }
+
+        // Reset user status
+        if (mSimperium != null) {
+            mSimperium.getUser().setStatus(User.Status.UNKNOWN);
         }
     }
 }
