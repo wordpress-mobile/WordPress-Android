@@ -31,7 +31,6 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -1098,10 +1097,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      */
     public int getMaximumThumbnailWidth() {
         if (mMaximumThumbnailWidth == 0 && hasActivity()) {
-            WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
+            Point size = DisplayUtils.getDisplayPixelSize(getActivity());
             int screenWidth = size.x;
             int screenHeight = size.y;
             mMaximumThumbnailWidth = (screenWidth > screenHeight) ? screenHeight : screenWidth;
