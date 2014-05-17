@@ -38,12 +38,12 @@
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
-    <style name="ReaderTextView.DialogTitle" parent="ReaderTextView">
+    <style name="ReaderTextView.PopupTitle" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:layout_margin">@dimen/margin_medium</item>
+        <item name="android:textColor">@color/grey_medium_dark</item>
+        <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:gravity">center</item>
     </style>
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">

@@ -571,8 +571,6 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_userlist_default">People</string>
-    <string name="reader_title_userlist_likes">People who like this</string>
     <string name="reader_title_reblog">Reblog</string>
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>

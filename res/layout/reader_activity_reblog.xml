@@ -8,7 +8,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
-        style="@style/ReaderTextView.DialogTitle"
+        style="@style/ReaderTextView.PopupTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/reader_title_reblog" />

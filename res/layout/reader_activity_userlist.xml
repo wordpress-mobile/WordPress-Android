@@ -5,21 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/layout_container"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
-        style="@style/ReaderTextView.DialogTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/reader_title_userlist_likes"/>
+        style="@style/ReaderTextView.PopupTitle"
+        tools:text="text_title" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/margin_small"
         android:background="@color/reader_divider_grey" />
 
     <ListView

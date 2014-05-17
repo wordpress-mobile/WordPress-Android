@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -63,11 +65,12 @@ public class ReaderUserListActivity extends Activity {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
         }
 
-        // use a fixed size for the root view so the activity won't change size as users
-        // are loaded
+        // use a fixed size for the root view so the activity won't change
+        // size as users are loaded
         final ViewGroup rootView = (ViewGroup) findViewById(R.id.layout_container);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        int maxHeight = displayHeight - (displayHeight / 3);
+        boolean isLandscape = DisplayUtils.isLandscape(this);
+        int maxHeight = displayHeight - (displayHeight / (isLandscape ? 5 : 3));
         rootView.getLayoutParams().height = maxHeight;
 
         getListView().setAdapter(getAdapter());
@@ -92,13 +95,20 @@ public class ReaderUserListActivity extends Activity {
         new Thread() {
             @Override
             public void run() {
+                final String title = getTitleString(blogId, postId);
+                final TextView txtTitle = (TextView) findViewById(R.id.text_title);
+
                 final ReaderUserList users =
-                        ReaderUserTable.getUsersWhoLikePost(blogId, postId, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                        ReaderUserTable.getUsersWhoLikePost(
+                                blogId,
+                                postId,
+                                ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (!isFinishing()) {
+                            txtTitle.setText(title);
                             getAdapter().setUsers(users);
                         }
                     }
@@ -106,4 +116,23 @@ public class ReaderUserListActivity extends Activity {
             }
         }.start();
     }
+
+    private String getTitleString(final long blogId, final long postId) {
+        int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
+        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+
+        if (isLikedByCurrentUser) {
+            switch (numLikes) {
+                case 1 :
+                    return getString(R.string.reader_likes_only_you);
+                case 2 :
+                    return getString(R.string.reader_likes_you_and_one);
+                default :
+                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
+            }
+        } else {
+            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
+        }
+    }
+
 }
