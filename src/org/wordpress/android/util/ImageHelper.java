@@ -359,9 +359,9 @@ public class ImageHelper {
                     options);
         } else {
             int[] dimensions = getImageSize(curUri, context);
-            float conversionFactor = 0.40f;
+            float conversionFactor = 0.60f;
             if (dimensions[0] > dimensions[1]) //width > height
-                conversionFactor = 0.60f;
+                conversionFactor = 0.80f;
             int resizedWidth = (int) (width * conversionFactor);
 
             // create resized picture
