@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
@@ -24,28 +25,20 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ReaderPhotoViewerActivity extends Activity {
     static final String ARG_IMAGE_URL = "image_url";
     private String mImageUrl;
-    private WPNetworkImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_photo_viewer);
-        mImageView = (WPNetworkImageView) findViewById(R.id.image_photo);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(ARG_IMAGE_URL)) {
             mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
         } else if (getIntent().hasExtra(ARG_IMAGE_URL)) {
             mImageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
-            // use photon to enforce max size unless this is https
-            if (!UrlUtils.isHttps(mImageUrl)) {
-                Point pt = DisplayUtils.getDisplayPixelSize(this);
-                int maxWidth = Math.max(pt.x, pt.y);
-                mImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
-            }
         }
 
-        loadImage();
+        loadImage(mImageUrl);
     }
 
     @Override
@@ -56,21 +49,29 @@ public class ReaderPhotoViewerActivity extends Activity {
         }
     }
 
-    private void loadImage() {
-        if (TextUtils.isEmpty(mImageUrl)) {
+    private void loadImage(String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
             handleImageLoadFailure();
             return;
+        }
+
+        // use photon to enforce max size unless this is https
+        if (!UrlUtils.isHttps(imageUrl)) {
+            Point pt = DisplayUtils.getDisplayPixelSize(this);
+            int maxWidth = Math.max(pt.x, pt.y);
+            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
         }
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
 
-        mImageView.setImageUrl(mImageUrl, ImageType.PHOTO_FULL, new ImageListener() {
+        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
+        imageView.setImageUrl(imageUrl, ImageType.PHOTO_FULL, new ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
                 progress.setVisibility(View.GONE);
                 if (succeeded) {
-                    createAttacher();
+                    createAttacher(imageView);
                 } else {
                     handleImageLoadFailure();
                 }
@@ -78,8 +79,8 @@ public class ReaderPhotoViewerActivity extends Activity {
         });
     }
 
-    private void createAttacher() {
-        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+    private void createAttacher(ImageView imageView) {
+        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
 
         // tapping outside the photo closes the activity
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
