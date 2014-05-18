@@ -472,25 +472,16 @@ public class PostUploadService extends Service {
             }
 
             if (curImagePath.contains("video")) {
-                return uploadVideoFile(mediaFile, blog, curImagePath);
+                return getPathAndUploadVideoFile(mediaFile, blog, curImagePath);
             } else {
-                return uploadImageFile(mediaFile, blog, curImagePath);
+                return getPathAndUploadImageFile(mediaFile, blog, curImagePath);
             }
         }
 
+        private String getPathAndUploadVideoFile(MediaFile mediaFile, Blog blog, String curImagePath) {
 
-        private String uploadVideoFile(MediaFile mediaFile, Blog blog, String curImagePath) {
-            String content = "";
-
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
             // create temp file for media upload
-            String tempFileName = "wp-" + System.currentTimeMillis();
-            try {
-                context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-            } catch (FileNotFoundException e) {
-                mErrorMessage = getResources().getString(R.string.file_error_create);
-                mIsMediaError = true;
+            if (!createTempFile()) {
                 return null;
             }
 
@@ -540,6 +531,11 @@ public class PostUploadService extends Service {
                 videoFile = new File(filePath);
             }
 
+            return getDetailsAndUploadVideoFile(mimeType, videoFile, mediaFile, blog, xRes, yRes);
+        }
+
+        private String getDetailsAndUploadVideoFile(String mimeType, File videoFile, MediaFile mediaFile, Blog blog,
+                                                    String xRes, String yRes) {
             if (videoFile == null) {
                 mErrorMessage = context.getResources().getString(R.string.error_media_upload);
                 return null;
@@ -550,62 +546,68 @@ public class PostUploadService extends Service {
             }
             String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
 
-            // try to upload the video
-            Map<String, Object> m = new HashMap<String, Object>();
-            m.put("name", videoName);
-            m.put("type", mimeType);
-            m.put("bits", mediaFile);
-            m.put("overwrite", true);
-
+            Map<String, Object> m = getStringObjectMap(mediaFile, mimeType, videoName);
             Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
 
             FeatureSet featureSet = synchronousGetFeatureSet();
             boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
             boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
-            if (isVideoEnabled) {
-                File tempFile;
-                try {
-                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                    tempFile = createTempUploadFile(fileExtension);
-                } catch (IOException e) {
-                    mErrorMessage = getResources().getString(R.string.file_error_create);
-                    mIsMediaError = true;
-                    return null;
-                }
 
-                Object result = uploadFileHelper(client, params, tempFile);
-                Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                if (resultMap != null && resultMap.containsKey("url")) {
-                    String resultURL = resultMap.get("url").toString();
-                    if (resultMap.containsKey("videopress_shortcode")) {
-                        resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
-                    } else {
-                        resultURL = String.format(
-                                "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                xRes, yRes, resultURL, mimeType, resultURL);
-                    }
-                    content = content + resultURL;
-                } else {
-                    return null;
-                }
+            if (isVideoEnabled) {
+                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                        blog.getHttppassword());
+                return uploadVideoFile(client, params, videoName, xRes, yRes, mimeType);
             } else {
                 mErrorMessage = getString(R.string.media_no_video_message);
                 mErrorUnavailableVideoPress = true;
                 return null;
             }
-
-            return content;
         }
 
-        private String uploadImageFile(MediaFile mediaFile, Blog blog, String curImagePath) {
-            String content = "";
+        private String uploadVideoFile(XMLRPCClientInterface client, Object[] params,
+                                       String videoName, String xRes, String yRes, String mimeType) {
+            File tempFile;
+            try {
+                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                tempFile = createTempUploadFile(fileExtension);
+            } catch (IOException e) {
+                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mIsMediaError = true;
+                return null;
+            }
 
-            curImagePath = mediaFile.getFilePath();
+            Object result = uploadFileHelper(client, params, tempFile);
+            Map<?, ?> resultMap = (HashMap<?, ?>) result;
+            if (resultMap != null && resultMap.containsKey("url")) {
+                String resultURL = resultMap.get("url").toString();
+                if (resultMap.containsKey("videopress_shortcode")) {
+                    resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
+                } else {
+                    resultURL = String.format(
+                            "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                            xRes, yRes, resultURL, mimeType, resultURL);
+                }
+                return resultURL;
+            } else {
+                return null;
+            }
+        }
 
+        private boolean createTempFile() {
+            try {
+                context.openFileOutput("wp-" + System.currentTimeMillis(), Context.MODE_PRIVATE);
+            } catch (FileNotFoundException e) {
+                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mIsMediaError = true;
+                return false;
+            }
+            return true;
+        }
+
+        private String getPathAndUploadImageFile(MediaFile mediaFile, Blog blog, String curImagePath) {
             Uri imageUri = Uri.parse(curImagePath);
             File imageFile = null;
             String mimeType = "", path = "";
-            int orientation;
 
             if (imageUri.toString().contains("content:")) {
                 String[] projection;
@@ -633,21 +635,21 @@ public class PostUploadService extends Service {
                 mediaFile.setFilePath(path);
             }
 
-            // check if the file exists
-            if (imageFile == null) {
-                mErrorMessage = context.getString(R.string.file_not_found);
-                mIsMediaError = true;
+            return checkForResizedVersionAndUploadImageFile(mediaFile, blog, imageUri, imageFile, mimeType, path);
+        }
+
+        private String checkForResizedVersionAndUploadImageFile(MediaFile mediaFile, Blog blog, Uri imageUri, File imageFile, String mimeType, String path) {
+            int orientation;
+            if (!fileExists(imageFile)){
                 return null;
             }
 
             if (TextUtils.isEmpty(mimeType)) {
                 mimeType = MediaUtils.getMediaFileMimeType(imageFile);
             }
+
             String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
             String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
-
-            ImageHelper ih = new ImageHelper();
-            orientation = ih.getImageOrientation(context, path);
 
             String resizedPictureURL = null;
 
@@ -658,22 +660,15 @@ public class PostUploadService extends Service {
             // If it's not a gif and blog don't keep original size, there is a chance we need to resize
             if (!mimeType.equals("image/gif") && !blog.getMaxImageWidth().equals("Original Size")) {
                 //check the picture settings
-                int pictureSettingWidth = mediaFile.getWidth();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, options);
-                int imageHeight = options.outHeight;
-                int imageWidth = options.outWidth;
-                int[] dimensions = {imageWidth, imageHeight};
-                if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
-                    shouldUploadResizedVersion = true;
-                }
+                shouldUploadResizedVersion = decideIfShouldUploadResizedVersion(mediaFile, path, shouldUploadResizedVersion);
             }
 
             boolean shouldAddImageWidthCSS = false;
 
             if (shouldUploadResizedVersion) {
                 MediaFile resizedMediaFile = new MediaFile(mediaFile);
+                ImageHelper ih = new ImageHelper();
+                orientation = ih.getImageOrientation(context, path);
                 // Create resized image
                 byte[] bytes = ih.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
                         fileExtension, orientation);
@@ -702,12 +697,7 @@ public class PostUploadService extends Service {
                     // upload resized picture
                     if (!TextUtils.isEmpty(tempFilePath)) {
                         resizedMediaFile.setFilePath(tempFilePath);
-                        Map<String, Object> parameters = new HashMap<String, Object>();
-
-                        parameters.put("name", fileName);
-                        parameters.put("type", mimeType);
-                        parameters.put("bits", resizedMediaFile);
-                        parameters.put("overwrite", true);
+                        Map<String, Object> parameters = getStringObjectMap(resizedMediaFile, mimeType, fileName);
                         resizedPictureURL = uploadPicture(parameters, resizedMediaFile, blog);
                         if (resizedPictureURL == null) {
                             AppLog.w(T.POSTS, "failed to upload resized picture");
@@ -724,58 +714,37 @@ public class PostUploadService extends Service {
                 }
             }
 
+            return getDetailsAndUploadImageFile(mediaFile, blog, mimeType, fileName, resizedPictureURL, shouldUploadResizedVersion, shouldAddImageWidthCSS);
+        }
+
+        private String getDetailsAndUploadImageFile(MediaFile mediaFile, Blog blog, String mimeType, String fileName,
+                                                    String resizedPictureURL, boolean shouldUploadResizedVersion, boolean shouldAddImageWidthCSS) {
             String fullSizeUrl = null;
             // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
             if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
                 // try to upload the image
-                Map<String, Object> parameters = new HashMap<String, Object>();
-                parameters.put("name", fileName);
-                parameters.put("type", mimeType);
-                parameters.put("bits", mediaFile);
-                parameters.put("overwrite", true);
+                Map<String, Object> parameters = getStringObjectMap(mediaFile, mimeType, fileName);
 
                 fullSizeUrl = uploadPicture(parameters, mediaFile, blog);
                 if (fullSizeUrl == null)
                     return null;
             }
 
-            String alignment = "";
-            switch (mediaFile.getHorizontalAlignment()) {
-                case 0:
-                    alignment = "alignnone";
-                    break;
-                case 1:
-                    alignment = "alignleft";
-                    break;
-                case 2:
-                    alignment = "aligncenter";
-                    break;
-                case 3:
-                    alignment = "alignright";
-                    break;
-            }
-
-            String alignmentCSS = "class=\"" + alignment + " size-full\" ";
-
-            if (shouldAddImageWidthCSS) {
-                alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
-            }
+            String alignment = getAlignment(mediaFile);
+            String alignmentCSS = getAlignmentCSS(mediaFile, alignment, shouldAddImageWidthCSS);
 
             // Check if we uploaded a featured picture that is not added to the post content (normal case)
-            if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
-                    (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
+            if (checkIfFeaturedInPost(resizedPictureURL, fullSizeUrl))
                 return ""; // Not featured in post. Do not add to the content.
-            }
 
             if (fullSizeUrl == null && resizedPictureURL != null) {
                 fullSizeUrl = resizedPictureURL;
-            } else if (fullSizeUrl != null && resizedPictureURL == null){
+            } else if (fullSizeUrl != null && resizedPictureURL == null) {
                 resizedPictureURL = fullSizeUrl;
             }
 
             String mediaTitle = TextUtils.isEmpty(mediaFile.getTitle()) ? "" : mediaFile.getTitle();
-
-            content = content + "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
+            String content = "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
                     + alignmentCSS + "alt=\"image\" src=\"" + resizedPictureURL + "\" /></a>";
 
             if (!TextUtils.isEmpty(mediaFile.getCaption())) {
@@ -784,6 +753,71 @@ public class PostUploadService extends Service {
             }
 
             return content;
+        }
+
+        private boolean fileExists(File imageFile) {
+            if (imageFile == null) {
+                mErrorMessage = context.getString(R.string.file_not_found);
+                mIsMediaError = true;
+                return false;
+            }
+            return true;
+        }
+
+        private boolean decideIfShouldUploadResizedVersion(MediaFile mediaFile, String path, boolean shouldUploadResizedVersion) {
+            int pictureSettingWidth = mediaFile.getWidth();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
+            int imageHeight = options.outHeight;
+            int imageWidth = options.outWidth;
+            int[] dimensions = {imageWidth, imageHeight};
+            if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
+                shouldUploadResizedVersion = true;
+            }
+            return shouldUploadResizedVersion;
+        }
+
+        private Map<String, Object> getStringObjectMap(MediaFile mediaFile, String mimeType, String fileName) {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("name", fileName);
+            parameters.put("type", mimeType);
+            parameters.put("bits", mediaFile);
+            parameters.put("overwrite", true);
+            return parameters;
+        }
+
+        private String getAlignmentCSS(MediaFile mediaFile, String alignment, boolean shouldAddImageWidthCSS) {
+            String alignmentCSS = "class=\"" + alignment + " size-full\" ";
+
+            if (shouldAddImageWidthCSS) {
+                alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
+            }
+
+            return alignmentCSS;
+        }
+
+        private String getAlignment(MediaFile mediaFile) {
+            switch (mediaFile.getHorizontalAlignment()) {
+                case 0:
+                    return "alignnone";
+                case 1:
+                    return "alignleft";
+                case 2:
+                    return "aligncenter";
+                case 3:
+                    return "alignright";
+                default:
+                    return "";
+            }
+        }
+
+        private boolean checkIfFeaturedInPost(String resizedPictureURL, String fullSizeUrl) {
+            if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
+                    (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
+                return true;
+            }
+            return false;
         }
 
         private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
