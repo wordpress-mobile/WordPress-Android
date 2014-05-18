@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
@@ -34,39 +35,76 @@ public class ReaderPhotoViewerActivity extends Activity {
             mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
         } else if (getIntent().hasExtra(ReaderConstants.ARG_IMAGE_URL)) {
             mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
-            // use photon to enforce max size unless this is https
-            if (!UrlUtils.isHttps(mImageUrl)) {
-                Point pt = DisplayUtils.getDisplayPixelSize(this);
-                int maxWidth = Math.max(pt.x, pt.y);
-                mImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
-            }
         }
 
-        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-
-        if (!TextUtils.isEmpty(mImageUrl)) {
-            progress.setVisibility(View.VISIBLE);
-            imageView.setImageUrl(mImageUrl, ImageType.PHOTO_FULL, new ImageListener() {
-                @Override
-                public void onImageLoaded(boolean succeeded) {
-                    progress.setVisibility(View.GONE);
-                    if (succeeded) {
-                        new PhotoViewAttacher(imageView);
-                    } else {
-                        ToastUtils.showToast(ReaderPhotoViewerActivity.this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
-                    }
-                }
-            });
-        } else {
-            imageView.setImageResource(R.drawable.ic_error);
-        }
+        loadImage(mImageUrl);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mImageUrl != null)
+        if (mImageUrl != null) {
             outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
+        }
+    }
+
+    private void loadImage(String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            handleImageLoadFailure();
+            return;
+        }
+
+        // use photon to enforce max size unless this is https
+        if (!UrlUtils.isHttps(imageUrl)) {
+            Point pt = DisplayUtils.getDisplayPixelSize(this);
+            int maxWidth = Math.max(pt.x, pt.y);
+            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
+        }
+
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+
+        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
+        imageView.setImageUrl(imageUrl, ImageType.PHOTO_FULL, new ImageListener() {
+            @Override
+            public void onImageLoaded(boolean succeeded) {
+                progress.setVisibility(View.GONE);
+                if (succeeded) {
+                    createAttacher(imageView);
+                } else {
+                    handleImageLoadFailure();
+                }
+            }
+        });
+    }
+
+    private void createAttacher(ImageView imageView) {
+        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
+
+        // tapping outside the photo closes the activity
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float v, float v2) {
+                finish();
+            }
+        });
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v2) {
+                // do nothing - photo tap listener must be assigned or else tapping the photo
+                // will fire the onViewTapListener() above
+            }
+        });
+    }
+
+    private void handleImageLoadFailure() {
+        ToastUtils.showToast(this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+        finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, 0);
     }
 }
