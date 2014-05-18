@@ -24,7 +24,6 @@ public class ReaderUserListActivity extends Activity {
     private ListView mListView;
     private TextView mTxtTitle;
     private ReaderPost mPost;
-    private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
 
     private ListView getListView() {
@@ -65,12 +64,12 @@ public class ReaderUserListActivity extends Activity {
         mTxtTitle.setVisibility(View.INVISIBLE);
 
         // for now this activity only supports showing users who like a specific post
-        long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-        long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+        long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+        long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         mPost = ReaderPostTable.getPost(blogId, postId);
 
         if (savedInstanceState != null)
-            mListState = savedInstanceState.getParcelable(LIST_STATE);
+            mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
 
         getListView().setAdapter(getAdapter());
         loadUsers();
@@ -87,7 +86,7 @@ public class ReaderUserListActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (getListView().getFirstVisiblePosition() > 0)
-            outState.putParcelable(LIST_STATE, getListView().onSaveInstanceState());
+            outState.putParcelable(ReaderConstants.KEY_LIST_STATE, getListView().onSaveInstanceState());
     }
 
     private void updateTitle() {

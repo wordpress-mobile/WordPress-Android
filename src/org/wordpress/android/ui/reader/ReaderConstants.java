@@ -9,4 +9,20 @@ public class ReaderConstants {
 
     public static final int  READER_MAX_RECOMMENDED_TO_REQUEST = 40;     // max # of recommended blogs to request
     public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 5;      // max # of recommended blogs to display
+
+    // intent IDs
+    static final int INTENT_READER_SUBS        = 1000;
+    static final int INTENT_READER_REBLOG      = 1001;
+
+    // intent arguments / keys
+    static final String ARG_TAG_NAME          = "tag_name";
+    static final String ARG_BLOG_ID           = "blog_id";
+    static final String ARG_BLOG_URL          = "blog_url";
+    static final String ARG_POST_ID           = "post_id";
+    static final String ARG_IMAGE_URL         = "image_url";
+
+    static final String KEY_ALREADY_UPDATED   = "already_updated";
+    static final String KEY_ALREADY_REQUESTED = "already_requested";
+    static final String KEY_LIST_STATE        = "list_state";
+    static final String KEY_WAS_PAUSED        = "was_paused";
 }

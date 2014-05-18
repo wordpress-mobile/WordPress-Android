@@ -74,8 +74,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_ALREADY_UPDATED = "already_updated";
-    private static final String KEY_ALREADY_REQUESTED = "already_requested";
 
     private long mPostId;
     private long mBlogId;
@@ -107,8 +105,8 @@ public class ReaderPostDetailFragment extends Fragment
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
-        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
-        args.putLong(ReaderActivity.ARG_POST_ID, postId);
+        args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
+        args.putLong(ReaderConstants.ARG_POST_ID, postId);
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -177,8 +175,8 @@ public class ReaderPostDetailFragment extends Fragment
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
-            mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
-            mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
+            mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
         }
     }
 
@@ -371,11 +369,11 @@ public class ReaderPostDetailFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong(ReaderActivity.ARG_BLOG_ID, mBlogId);
-        outState.putLong(ReaderActivity.ARG_POST_ID, mPostId);
+        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
+        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
-        outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
-        outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
 
         if (mIsAddCommentBoxShowing) {
@@ -386,7 +384,7 @@ public class ReaderPostDetailFragment extends Fragment
         // the scroll position after comment data is reloaded
         if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListState);
+            outState.putParcelable(ReaderConstants.KEY_LIST_STATE, mListState);
         } else {
             mListState = null;
         }
@@ -417,15 +415,15 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ReaderActivity.ARG_POST_ID);
-            mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
-            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(KEY_ALREADY_REQUESTED);
+            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
-            mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
+            mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
         }
     }
 

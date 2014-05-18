@@ -56,8 +56,8 @@ public class ReaderReblogActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_reblog);
 
-        mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-        mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+        mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+        mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
 
         mSpinner = (Spinner) findViewById(R.id.spinner_reblog);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -195,8 +195,8 @@ public class ReaderReblogActivity extends Activity {
             @Override
             public void run() {
                 Intent data = new Intent();
-                data.putExtra(ReaderActivity.ARG_BLOG_ID, mBlogId);
-                data.putExtra(ReaderActivity.ARG_POST_ID, mPostId);
+                data.putExtra(ReaderConstants.ARG_BLOG_ID, mBlogId);
+                data.putExtra(ReaderConstants.ARG_POST_ID, mPostId);
                 setResult(RESULT_OK, data);
                 finish();
             }

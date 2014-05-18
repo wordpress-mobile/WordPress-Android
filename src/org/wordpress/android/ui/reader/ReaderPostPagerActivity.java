@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class ReaderPostPagerActivity extends Activity
                                      implements ReaderUtils.FullScreenListener {
+
     protected static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
     protected static final String ARG_POSITION = "position";
     protected static final String ARG_TITLE = "title";

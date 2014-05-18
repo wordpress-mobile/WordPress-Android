@@ -22,7 +22,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {
-    static final String ARG_IMAGE_URL = "image_url";
     private String mImageUrl;
 
     @Override
@@ -31,10 +30,10 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_IMAGE_URL)) {
-            mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
-        } else if (getIntent().hasExtra(ARG_IMAGE_URL)) {
-            mImageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
+        if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.ARG_IMAGE_URL)) {
+            mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
+        } else if (getIntent().hasExtra(ReaderConstants.ARG_IMAGE_URL)) {
+            mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             // use photon to enforce max size unless this is https
             if (!UrlUtils.isHttps(mImageUrl)) {
                 Point pt = DisplayUtils.getDisplayPixelSize(this);
@@ -68,6 +67,6 @@ public class ReaderPhotoViewerActivity extends Activity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mImageUrl != null)
-            outState.putString(ARG_IMAGE_URL, mImageUrl);
+            outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
     }
 }

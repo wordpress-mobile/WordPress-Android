@@ -91,12 +91,12 @@ public class ReaderBlogFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
-        outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
     }
 
     private void restoreState(Bundle args) {
         if (args != null) {
-            mWasPaused = args.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
+            mWasPaused = args.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }

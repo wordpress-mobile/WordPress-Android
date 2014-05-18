@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.Window;
 
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -66,15 +65,8 @@ public class ReaderActivity extends WPActionBarActivity
         }
     }
 
-    public static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
-    static final String ARG_TAG_NAME        = "tag_name";
-    static final String ARG_BLOG_ID         = "blog_id";
-    static final String ARG_BLOG_URL        = "blog_url";
-    static final String ARG_POST_ID         = "post_id";
+    static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
     static final String ARG_POST_LIST_TYPE  = "post_list_type";
-
-    static final String KEY_LIST_STATE      = "list_state";
-    static final String KEY_WAS_PAUSED      = "was_paused";
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
@@ -137,12 +129,12 @@ public class ReaderActivity extends WPActionBarActivity
             switch (fragmentType) {
                 case POST_LIST:
                     if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
-                        long blogId = intent.getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-                        String blogUrl = intent.getStringExtra(ReaderActivity.ARG_BLOG_URL);
+                        long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                        String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
                         showListFragmentForBlog(blogId, blogUrl);
                     } else {
                         // get the tag name from the intent, if not there get it from prefs
-                        String tagName = intent.getStringExtra(ReaderActivity.ARG_TAG_NAME);
+                        String tagName = intent.getStringExtra(ReaderConstants.ARG_TAG_NAME);
                         if (TextUtils.isEmpty(tagName)) {
                             tagName = UserPrefs.getReaderTag();
                         }
@@ -156,8 +148,8 @@ public class ReaderActivity extends WPActionBarActivity
                     break;
 
                 case POST_DETAIL:
-                    long blogId = intent.getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-                    long postId = intent.getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+                    long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
                     showDetailFragment(blogId, postId);
                     break;
             }
@@ -235,7 +227,7 @@ public class ReaderActivity extends WPActionBarActivity
 
         switch (requestCode) {
             // user just returned from the tag editor
-            case Constants.INTENT_READER_SUBS :
+            case ReaderConstants.INTENT_READER_SUBS :
                 if (isResultOK && listFragment != null && data != null) {
                     if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
                         // reload tags if they were changed, and set the last tag added as the current one
@@ -256,10 +248,10 @@ public class ReaderActivity extends WPActionBarActivity
 
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
-            case Constants.INTENT_READER_REBLOG:
+            case ReaderConstants.INTENT_READER_REBLOG:
                 if (isResultOK && data != null) {
-                    long blogId = data.getLongExtra(ARG_BLOG_ID, 0);
-                    long postId = data.getLongExtra(ARG_POST_ID, 0);
+                    long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                    long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
                     if (listFragment != null)
                         listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
                     if (detailFragment != null)

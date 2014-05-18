@@ -67,7 +67,6 @@ public class ReaderSubsActivity extends Activity
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_BLOGS_CHANGED  = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG = "last_added_tag";
-    private static final String KEY_HAS_UPDATED = "is_updated";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
@@ -159,7 +158,7 @@ public class ReaderSubsActivity extends Activity
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
             mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
-            mHasPerformedUpdate = state.getBoolean(KEY_HAS_UPDATED);
+            mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
 
@@ -189,7 +188,7 @@ public class ReaderSubsActivity extends Activity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
-        outState.putBoolean(KEY_HAS_UPDATED, mHasPerformedUpdate);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTag != null) {
             outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
         }
