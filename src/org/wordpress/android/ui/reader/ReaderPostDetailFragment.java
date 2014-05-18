@@ -217,7 +217,6 @@ public class ReaderPostDetailFragment extends Fragment
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
         mWebView.setVisibility(View.INVISIBLE);
-        mLayoutIcons.setVisibility(View.GONE);
 
         // detect image taps so we can open images in the photo viewer activity
         mWebView.setOnTouchListener(new View.OnTouchListener() {

@@ -21,7 +21,6 @@
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar"
-            android:layout_centerVertical="true"
             android:background="@color/grey_extra_light"
             android:layout_marginRight="@dimen/margin_large" />
 

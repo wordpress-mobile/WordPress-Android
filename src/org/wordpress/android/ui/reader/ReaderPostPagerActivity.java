@@ -60,7 +60,7 @@ public class ReaderPostPagerActivity extends Activity
             this.setTitle(title);
         }
 
-        // when Android serialized the list, it was converted to ArrayList<ReaderBlogIdPostId>
+        // when Android serialized the list it was converted to ArrayList<ReaderBlogIdPostId>,
         // so convert it back to ReaderBlogIdPostIdList
         final ReaderBlogIdPostIdList idList;
         if (serializedList != null) {
@@ -80,6 +80,13 @@ public class ReaderPostPagerActivity extends Activity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+                if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                    onRequestFullScreen(false);
+                }
             }
         });
     }
