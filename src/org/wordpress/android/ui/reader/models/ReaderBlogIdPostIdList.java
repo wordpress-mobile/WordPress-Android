@@ -12,9 +12,15 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
         super();
     }
 
-    public ReaderBlogIdPostIdList(ArrayList<ReaderBlogIdPostId> list) {
+    /*
+     * when Android serializes any ArrayList descendant, it does so as an ArrayList
+     * rather than its actual class - use this to convert the serialized list back
+     * into a ReaderBlogIdPostIdList
+     */
+    public ReaderBlogIdPostIdList(Serializable serializedList) {
         super();
-        if (list != null) {
+        if (serializedList != null || serializedList instanceof ArrayList) {
+            ArrayList<ReaderBlogIdPostId> list = (ArrayList<ReaderBlogIdPostId>) serializedList;
             for (ReaderBlogIdPostId idPair: list) {
                 this.add(idPair);
             }

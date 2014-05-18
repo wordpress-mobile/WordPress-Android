@@ -18,7 +18,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
@@ -39,7 +38,9 @@ public class ReaderPostPagerActivity extends Activity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
+        // remove the window background since each fragment already has a background color
+        getWindow().setBackgroundDrawable(null);
 
         getActionBar().setDisplayShowTitleEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -61,16 +62,8 @@ public class ReaderPostPagerActivity extends Activity
             this.setTitle(title);
         }
 
-        // when Android serialized the list it was converted to ArrayList<ReaderBlogIdPostId>,
-        // so convert it back to ReaderBlogIdPostIdList
-        final ReaderBlogIdPostIdList idList;
-        if (serializedList != null) {
-            idList = new ReaderBlogIdPostIdList((ArrayList<ReaderBlogIdPostId>) serializedList);
-        } else {
-            idList = new ReaderBlogIdPostIdList();
-        }
-
-        mPageAdapter = new PostPagerAdapter(getFragmentManager(), idList);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mPageAdapter = new PostPagerAdapter(getFragmentManager(), new ReaderBlogIdPostIdList(serializedList));
         mViewPager.setAdapter(mPageAdapter);
         if (position >= 0 || position < mPageAdapter.getCount()) {
             mViewPager.setCurrentItem(position);

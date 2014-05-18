@@ -972,12 +972,14 @@ public class ReaderPostDetailFragment extends Fragment
     private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
 
     private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(videoUrl))
+        if (TextUtils.isEmpty(videoUrl)) {
             return "";
+        }
 
         // sometimes we get src values like "//player.vimeo.com/video/70534716" - prefix these with http:
-        if (videoUrl.startsWith("//"))
+        if (videoUrl.startsWith("//")) {
             videoUrl = "http:" + videoUrl;
+        }
 
         int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
 
@@ -1058,8 +1060,9 @@ public class ReaderPostDetailFragment extends Fragment
             // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
             content = mPost.getText().replace("src=\"//", "src=\"http://");
             // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (mPost.isVideoPress)
+            if (mPost.isVideoPress) {
                 content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
+            }
         } else if (mPost.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content
@@ -1089,26 +1092,26 @@ public class ReaderPostDetailFragment extends Fragment
         sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
 
         sbHtml.append("<style type='text/css'>")
-                .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-                .append("  body, p, div { max-width: 100% !important;}")
-                .append("  p, div { line-height: 1.6em; font-size: 1em; }")
-                .append("  h1, h2 { line-height: 1.2em; }");
+              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
+              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+              .append("  h1, h2 { line-height: 1.2em; }");
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
-                .append("    p:first-child { margin-top: 0px; }");
+              .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
-                .append("        border: 1px solid ").append(greyLight).append("; ")
-                .append("        background-color: ").append(greyExtraLight).append("; ")
-                .append("        padding: ").append(marginSmall).append("px; }");
+              .append("        border: 1px solid ").append(greyLight).append("; ")
+              .append("        background-color: ").append(greyExtraLight).append("; ")
+              .append("        padding: ").append(marginSmall).append("px; }");
 
         // add a left border to blockquotes
         sbHtml.append("  blockquote { margin-left: ").append(marginSmall).append("px; ")
-                .append("               padding-left: ").append(marginSmall).append("px; ")
-                .append("               border-left: 3px solid ").append(greyLight).append("; }");
+              .append("               padding-left: ").append(marginSmall).append("px; ")
+              .append("               border-left: 3px solid ").append(greyLight).append("; }");
 
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
@@ -1118,7 +1121,7 @@ public class ReaderPostDetailFragment extends Fragment
             int videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int) (videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
-                    .append("                  height: ").append(videoHeight).append("px !important; }");
+                  .append("                  height: ").append(videoHeight).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
@@ -1141,17 +1144,17 @@ public class ReaderPostDetailFragment extends Fragment
             String widthParam = "w=" + Integer.toString(fullSizeImageWidth);
             content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                    .append("  div.tiled-gallery-item img { ")
-                    .append("     width: auto !important; height: auto !important;")
-                    .append("     margin-top: ").append(marginExtraSmall).append("px; ")
-                    .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
-                    .append(" }")
-                    .append("  div.tiled-gallery-caption { clear: both; }");
+                  .append("  div.tiled-gallery-item img { ")
+                  .append("     width: auto !important; height: auto !important;")
+                  .append("     margin-top: ").append(marginExtraSmall).append("px; ")
+                  .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
+                  .append("  }")
+                  .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
         sbHtml.append("</style></head><body>")
-                .append(content)
-                .append("</body></html>");
+              .append(content)
+              .append("</body></html>");
 
         return sbHtml.toString();
     }
@@ -1251,6 +1254,11 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
+            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+            if (mPost == null) {
+                return false;
+            }
+
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
             txtFollow = (TextView) container.findViewById(R.id.text_follow);
@@ -1262,10 +1270,6 @@ public class ReaderPostDetailFragment extends Fragment
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-            if (mPost == null) {
-                return false;
-            }
             postHtml = getPostHtml(container.getContext());
 
             // detect whether the post has a featured image that's not in the content - if so,
