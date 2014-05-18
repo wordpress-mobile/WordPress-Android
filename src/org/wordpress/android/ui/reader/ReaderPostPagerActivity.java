@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
 import org.wordpress.android.R;
@@ -145,10 +148,16 @@ public class ReaderPostPagerActivity extends Activity
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderBlogIdPostIdList mIdList;
+        private final long END_ID = -1;
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList idList) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList) idList.clone();
+            // add a bogus entry to the end of the list so we can show the PostPagerEndFragment
+            // when the user scrolls beyond the last post
+            if (mIdList.indexOf(END_ID, END_ID) == -1) {
+                mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
+            }
         }
 
         @Override
@@ -160,7 +169,21 @@ public class ReaderPostPagerActivity extends Activity
         public Fragment getItem(int position) {
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
-            return ReaderPostDetailFragment.newInstance(blogId, postId);
+            if (blogId == END_ID && postId == END_ID) {
+                return PostPagerEndFragment.newInstance();
+            } else {
+                return ReaderPostDetailFragment.newInstance(blogId, postId);
+            }
+        }
+    }
+
+    public static class PostPagerEndFragment extends Fragment {
+        private static PostPagerEndFragment newInstance() {
+            return new PostPagerEndFragment();
+        }
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.reader_fragment_end, container, false);
         }
     }
 }
