@@ -11,6 +11,7 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
     public ReaderBlogIdPostIdList() {
         super();
     }
+
     public ReaderBlogIdPostIdList(ArrayList<ReaderBlogIdPostId> list) {
         super();
         if (list != null) {
@@ -18,5 +19,14 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
                 this.add(idPair);
             }
         }
+    }
+
+    public int indexOf(long blogId, long postId) {
+        for (int i = 0; i < this.size(); i++) {
+            if (this.get(i).getBlogId() == blogId && this.get(i).getPostId() == postId) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

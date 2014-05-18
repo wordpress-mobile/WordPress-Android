@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
@@ -431,9 +432,24 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     public void onPostSelected(long blogId, long postId) {
         //showDetailFragment(blogId, postId);
-        ReaderPostListFragment fragment = getListFragment();
-        if (fragment != null) {
-            ReaderActivityLauncher.showReaderPostPager(this, 0, fragment.getBlogIdPostIdList());
+
+        ReaderPostListFragment listFragment = getListFragment();
+        if (listFragment != null) {
+            ReaderBlogIdPostIdList idList = listFragment.getBlogIdPostIdList();
+            int position = idList.indexOf(blogId, postId);
+
+            final String title;
+            switch (getPostListType()) {
+                case TAG_FOLLOWED:
+                case TAG_PREVIEW:
+                    title = listFragment.getCurrentTag();
+                    break;
+                default:
+                    title = (String)this.getTitle();
+                    break;
+            }
+
+            ReaderActivityLauncher.showReaderPostPager(this, title, position, idList);
         }
     }
 

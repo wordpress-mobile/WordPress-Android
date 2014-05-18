@@ -28,8 +28,12 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showReaderPostPager(Context context, int position, ReaderBlogIdPostIdList idList) {
+    public static void showReaderPostPager(Context context,
+                                           String title,
+                                           int position,
+                                           ReaderBlogIdPostIdList idList) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
+        intent.putExtra(ReaderPostPagerActivity.ARG_TITLE, title);
         intent.putExtra(ReaderPostPagerActivity.ARG_POSITION, position);
         intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
         context.startActivity(intent);
