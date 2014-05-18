@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.Window;
 
 import org.wordpress.android.R;
@@ -98,6 +99,17 @@ public class ReaderPostPagerActivity extends Activity
         outState.putString(ARG_TITLE, (String) this.getTitle());
         outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
         outState.putSerializable(ARG_BLOG_POST_ID_LIST, mPageAdapter.mIdList);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
