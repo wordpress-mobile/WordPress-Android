@@ -1104,6 +1104,12 @@ public class ReaderPostDetailFragment extends Fragment
                 .append("        background-color: ").append(greyExtraLight).append("; ")
                 .append("        padding: ").append(marginSmall).append("px; }");
 
+        // add a left border to blockquotes
+        sbHtml.append("  blockquote { margin-left: ").append(marginSmall).append("px; ")
+                .append("               padding-left: ").append(marginSmall).append("px; ")
+                .append("               border-left: 3px solid ").append(greyLight).append("; }");
+
+
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
 
