@@ -62,7 +62,6 @@
     </style>
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
         <item name="android:maxLines">5</item>
     </style>
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">

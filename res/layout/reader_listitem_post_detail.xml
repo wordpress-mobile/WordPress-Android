@@ -47,7 +47,6 @@
                 style="@style/ReaderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/reader_transparent_selector"
                 android:ellipsize="end"
                 android:maxLines="2"
                 tools:text="text_blog_name"
@@ -76,7 +75,6 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
-        android:background="@drawable/reader_transparent_selector"
         tools:text="text_title" />
 
     <org.wordpress.android.widgets.WPNetworkImageView

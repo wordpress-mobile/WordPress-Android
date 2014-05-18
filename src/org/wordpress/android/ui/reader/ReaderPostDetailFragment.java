@@ -1381,14 +1381,6 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnComment.setVisibility(View.GONE);
             }
 
-            // tapping title opens post in browser
-            txtTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl());
-                }
-            });
-
             // external blogs (feeds) don't support action icons
             mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
 
