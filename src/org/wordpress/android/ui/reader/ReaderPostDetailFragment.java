@@ -298,10 +298,6 @@ public class ReaderPostDetailFragment extends Fragment
         return isAdded() && !isRemoving();
     }
 
-    private boolean hostIsReaderActivity() {
-        return (getActivity() instanceof ReaderActivity);
-    }
-
     /*
      * full-screen mode hides the ActionBar and icon bar
      */
@@ -424,18 +420,14 @@ public class ReaderPostDetailFragment extends Fragment
     public void onPause() {
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
-        if (hasEmbedsOrIframes()) {
-            pauseWebView();
-        }
+        pauseWebView();
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (hasEmbedsOrIframes()) {
-            resumeWebView();
-        }
+        resumeWebView();
     }
 
     /*
@@ -1097,6 +1089,9 @@ public class ReaderPostDetailFragment extends Fragment
               .append("  p, div { line-height: 1.6em; font-size: 1em; }")
               .append("  h1, h2 { line-height: 1.2em; }");
 
+        // make sure long strings don't force the user to scroll horizontally
+        sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
+
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
               .append("    p:first-child { margin-top: 0px; }");
@@ -1113,11 +1108,12 @@ public class ReaderPostDetailFragment extends Fragment
               .append("               padding-left: ").append(marginSmall).append("px; ")
               .append("               border-left: 3px solid ").append(greyLight).append("; }");
 
-        // make sure links don't overflow and are shown in the same color they are elsewhere in the app
-        sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
+        // show links in the same color they are elsewhere in the app
+        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
 
-        if (hasEmbedsOrIframes()) {
-            // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
+        // if javascript is allowed, make sure embedded videos fit the browser width and
+        // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
+        if (canEnableJavaScript()) {
             int videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
             int videoHeight = (int) (videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
@@ -1193,19 +1189,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * returns true if content contains embed or iframe tags - if so then JavaScript is enabled
-     * and CSS is customized so embedded videos can play
+     * javascript should only be enabled for wp blogs (not external feeds)
      */
-    private boolean hasEmbedsOrIframes() {
-        if (mPost == null) {
-            return false;
-        } else if (mPost.isVideoPress || mPost.hasFeaturedVideo()) {
-            return true;
-        } else {
-            return (mPost.getText().contains("<embed")
-                    || mPost.getText().contains("<iframe")
-                    || mPost.getText().contains("videos.files.wordpress.com"));
-        }
+    private boolean canEnableJavaScript() {
+        return (mPost != null && mPost.isWP());
     }
 
     private void showPost() {
@@ -1391,17 +1378,15 @@ public class ReaderPostDetailFragment extends Fragment
             // external blogs (feeds) don't support action icons
             mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
 
-            // enable JavaScript in the webView if the post content contains embeds or iframes
-            // so embedded videos will work
-            mWebView.getSettings().setJavaScriptEnabled(hasEmbedsOrIframes());
+            // enable JavaScript in the webView if it's safe to do so
+            mWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
 
             // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
             // https://code.google.com/p/android/issues/detail?id=4401
             mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
-            if (mPost.isWP() && mLayoutIcons.getVisibility() != View.VISIBLE)
-                animateIconBar(true);
+            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
             // make sure the adapter is assigned
             if (getListView().getAdapter() == null) {
