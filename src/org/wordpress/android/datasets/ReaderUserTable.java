@@ -152,11 +152,8 @@ public class ReaderUserTable {
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT avatar_url FROM tbl_users WHERE user_id=?", args);
     }
 
-    public static ReaderUserList getUsersWhoLikePost(ReaderPost post, int max) {
-        if (post==null)
-            return new ReaderUserList();
-
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+    public static ReaderUserList getUsersWhoLikePost(long blogId, long postId, int max) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
         String sql = "SELECT * from tbl_users WHERE user_id IN (SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
         if (max > 0)
             sql += " LIMIT " + Integer.toString(max);
