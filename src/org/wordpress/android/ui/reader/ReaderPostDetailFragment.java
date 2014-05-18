@@ -1215,8 +1215,7 @@ public class ReaderPostDetailFragment extends Fragment
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
-        TextView txtAuthorName;
-        TextView txtDate;
+        TextView txtDateAndAuthor;
         TextView txtFollow;
 
         ImageView imgBtnReblog;
@@ -1248,9 +1247,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtDate = (TextView) container.findViewById(R.id.text_date);
             txtFollow = (TextView) container.findViewById(R.id.text_follow);
-            txtAuthorName = (TextView) container.findViewById(R.id.text_author_name);
+            txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
@@ -1298,14 +1296,7 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
-            // set the activity title to the post's title if this is being shown in the reader
-            final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
-            if (hostIsReaderActivity()) {
-                getActivity().setTitle(postTitle);
-            }
-
-            txtTitle.setText(postTitle);
-            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
+            txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
             txtFollow.setOnClickListener(new View.OnClickListener() {
@@ -1315,24 +1306,22 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             });
 
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
-                mLayoutLikes.setVisibility(View.INVISIBLE);
-
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
+                txtBlogName.setVisibility(View.VISIBLE);
+            } else if (mPost.hasBlogUrl()) {
+                txtBlogName.setText(UrlUtils.getDomainFromUrl(mPost.getBlogUrl()));
                 txtBlogName.setVisibility(View.VISIBLE);
             } else {
                 txtBlogName.setVisibility(View.GONE);
             }
 
-            // show author name if it exists and is different than the blog name
+            // show date and author name if author name exists and is different than the blog name,
+            // otherwise just show the date
             if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtAuthorName.setText(mPost.getAuthorName());
-                txtAuthorName.setVisibility(View.VISIBLE);
+                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()) + " / " + mPost.getAuthorName());
             } else {
-                txtAuthorName.setVisibility(View.GONE);
+                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
             }
 
             if (mPost.hasPostAvatar()) {
@@ -1379,6 +1368,12 @@ public class ReaderPostDetailFragment extends Fragment
                 });
             } else {
                 imgBtnComment.setVisibility(View.GONE);
+            }
+
+            // if we know refreshLikes() is going to show the liking layout, force it to take up
+            // space right now
+            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
+                mLayoutLikes.setVisibility(View.INVISIBLE);
             }
 
             // external blogs (feeds) don't support action icons
