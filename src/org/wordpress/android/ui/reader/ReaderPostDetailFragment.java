@@ -92,7 +92,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
-    private boolean mWebViewIsPaused;
+    private boolean mWasPaused;
 
     private Parcelable mListState = null;
 
@@ -223,6 +223,14 @@ public class ReaderPostDetailFragment extends Fragment
         mWebView.setOnTouchListener(mWebViewTouchListener);
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mWebView != null) {
+            mWebView.destroy();
+        }
     }
 
     private WPListView getListView() {
@@ -418,16 +426,20 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onPause() {
+        super.onPause();
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
         pauseWebView();
-        super.onPause();
+        mWasPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        resumeWebView();
+        if (mWasPaused) {
+            resumeWebView();
+            mWasPaused = false;
+        }
     }
 
     /*
@@ -1495,16 +1507,14 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private void pauseWebView() {
-        if (mWebViewIsPaused && mWebView != null) {
-            mWebViewIsPaused = true;
+    protected void pauseWebView() {
+        if (mWebView != null) {
             mWebView.onPause();
         }
     }
 
-    private void resumeWebView() {
-        if (!mWebViewIsPaused && mWebView != null) {
-            mWebViewIsPaused = false;
+    protected void resumeWebView() {
+        if (mWebView != null) {
             mWebView.onResume();
         }
     }

@@ -65,7 +65,7 @@ public class ReaderPostPagerActivity extends Activity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mPageAdapter = new PostPagerAdapter(getFragmentManager(), new ReaderBlogIdPostIdList(serializedList));
         mViewPager.setAdapter(mPageAdapter);
-        if (position >= 0 || position < mPageAdapter.getCount()) {
+        if (mPageAdapter.isValidPosition(position)) {
             mViewPager.setCurrentItem(position);
         }
 
@@ -143,6 +143,10 @@ public class ReaderPostPagerActivity extends Activity
             if (mIdList.indexOf(END_ID, END_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
             }
+        }
+
+        protected boolean isValidPosition(int position) {
+            return (position >= 0 && position < getCount());
         }
 
         @Override
