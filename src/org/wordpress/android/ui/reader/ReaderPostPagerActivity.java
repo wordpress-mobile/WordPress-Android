@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -22,7 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ReaderPostPagerActivity extends Activity
-                                     implements ReaderUtils.FullScreenListener {
+        implements ReaderUtils.FullScreenListener {
 
     protected static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
     protected static final String ARG_POSITION = "position";
@@ -42,11 +41,8 @@ public class ReaderPostPagerActivity extends Activity
         setContentView(R.layout.reader_activity_post_pager);
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         final int position;
         final String title;
@@ -86,6 +82,7 @@ public class ReaderPostPagerActivity extends Activity
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
@@ -121,15 +118,10 @@ public class ReaderPostPagerActivity extends Activity
             return false;
         }
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return false;
-        }
-
         if (enableFullScreen) {
-            actionBar.hide();
+            getActionBar().hide();
         } else {
-            actionBar.show();
+            getActionBar().show();
         }
 
         mIsFullScreen = enableFullScreen;
@@ -146,14 +138,14 @@ public class ReaderPostPagerActivity extends Activity
         return true;
     }
 
-    class PostPagerAdapter extends FragmentStatePagerAdapter {
+    private class PostPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderBlogIdPostIdList mIdList;
         private final long END_ID = -1;
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList idList) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList) idList.clone();
-            // add a bogus entry to the end of the list so we can show the PostPagerEndFragment
+            // add a bogus entry to the end of the list so we can show PostPagerEndFragment
             // when the user scrolls beyond the last post
             if (mIdList.indexOf(END_ID, END_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
@@ -177,10 +169,14 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    /*
+     * fragment that appears when user scrolls beyond the last post
+     */
     public static class PostPagerEndFragment extends Fragment {
         private static PostPagerEndFragment newInstance() {
             return new PostPagerEndFragment();
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             return inflater.inflate(R.layout.reader_fragment_end, container, false);
