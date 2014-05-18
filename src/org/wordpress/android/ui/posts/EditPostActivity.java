@@ -153,7 +153,7 @@ public class EditPostActivity extends Activity {
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
                 if (position == PAGE_CONTENT) {
-                    setTitle(WordPress.getCurrentBlog().getBlogName());
+                    setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
                 } else if (position == PAGE_SETTINGS) {
                     setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
                 } else if (position == PAGE_PREVIEW) {
