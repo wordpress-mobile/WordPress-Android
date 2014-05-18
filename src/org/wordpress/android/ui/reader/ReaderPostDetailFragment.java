@@ -215,6 +215,7 @@ public class ReaderPostDetailFragment extends Fragment
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
         mWebView.setVisibility(View.INVISIBLE);
+        mLayoutIcons.setVisibility(View.INVISIBLE);
 
         // detect image taps so we can open images in the photo viewer activity
         mWebView.setOnTouchListener(new View.OnTouchListener() {
@@ -1378,6 +1379,9 @@ public class ReaderPostDetailFragment extends Fragment
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl());
                 }
             });
+
+            // external blogs (feeds) don't support action icons
+            mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
 
             // enable JavaScript in the webView if the post content contains embeds or iframes
             // so embedded videos will work
