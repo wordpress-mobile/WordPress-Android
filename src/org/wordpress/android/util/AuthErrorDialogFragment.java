@@ -44,7 +44,7 @@ public class AuthErrorDialogFragment extends DialogFragment {
                     Intent authIntent = new Intent(getActivity(), WPComLoginActivity.class);
                     authIntent.putExtra("wpcom", true);
                     authIntent.putExtra("auth-only", true);
-                    getActivity().startActivity(authIntent);
+                    getActivity().startActivityForResult(authIntent, WPComLoginActivity.REQUEST_CODE);
                 }
             });
         } else {
