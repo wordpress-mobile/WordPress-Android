@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -42,8 +43,11 @@ public class ReaderPostPagerActivity extends Activity
         // remove the window background since each fragment already has a background color
         getWindow().setBackgroundDrawable(null);
 
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         final int position;
         final String title;
@@ -90,8 +94,12 @@ public class ReaderPostPagerActivity extends Activity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARG_TITLE, (String) this.getTitle());
-        outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
-        outState.putSerializable(ARG_BLOG_POST_ID_LIST, mPageAdapter.mIdList);
+        if (mViewPager != null) {
+            outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
+        }
+        if (mPageAdapter != null) {
+            outState.putSerializable(ARG_BLOG_POST_ID_LIST, mPageAdapter.mIdList);
+        }
     }
 
     @Override
@@ -111,10 +119,15 @@ public class ReaderPostPagerActivity extends Activity
             return false;
         }
 
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            return false;
+        }
+
         if (enableFullScreen) {
-            getActionBar().hide();
+            actionBar.hide();
         } else {
-            getActionBar().show();
+            actionBar.show();
         }
 
         mIsFullScreen = enableFullScreen;
@@ -145,7 +158,7 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
-        protected boolean isValidPosition(int position) {
+        boolean isValidPosition(int position) {
             return (position >= 0 && position < getCount());
         }
 
@@ -176,7 +189,16 @@ public class ReaderPostPagerActivity extends Activity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.reader_fragment_end, container, false);
+            View view = inflater.inflate(R.layout.reader_fragment_end, container, false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                }
+            });
+            return view;
         }
     }
 }

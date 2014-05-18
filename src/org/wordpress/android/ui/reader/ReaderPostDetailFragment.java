@@ -92,7 +92,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
-    private boolean mWasPaused;
 
     private Parcelable mListState = null;
 
@@ -122,21 +121,19 @@ public class ReaderPostDetailFragment extends Fragment
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter == null) {
-            if (!hasActivity())
-                AppLog.w(T.READER, "reader post detail > comment adapter created before activity");
-
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (!hasActivity())
-                        return;
-                    // show footer below comments when comments exist
-                    mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-                    // restore listView state (scroll position) if it was saved during rotation
-                    if (mListState != null) {
-                        if (!isEmpty)
-                            getListView().onRestoreInstanceState(mListState);
-                        mListState = null;
+                    if (hasActivity()) {
+                        // show footer below comments when comments exist
+                        mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                        // restore listView state (scroll position) if it was saved during rotation
+                        if (mListState != null) {
+                            if (!isEmpty) {
+                                getListView().onRestoreInstanceState(mListState);
+                            }
+                            mListState = null;
+                        }
                     }
                 }
             };
@@ -158,10 +155,10 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
                 @Override
                 public void onRequestData(ReaderActions.RequestDataAction action) {
-                    if (mIsUpdatingComments)
-                        return;
-                    AppLog.i(T.READER, "reader post detail > requesting newer comments");
-                    updateComments();
+                    if (!mIsUpdatingComments) {
+                        AppLog.i(T.READER, "reader post detail > requesting newer comments");
+                        updateComments();
+                    }
                 }
             };
             mAdapter = new ReaderCommentAdapter(getActivity(), mPost, replyListener, dataLoadedListener, dataRequestedListener);
@@ -239,13 +236,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        // don't change fullscreen if user is typing a comment
-        if (mIsAddCommentBoxShowing) {
-            return;
-        }
-
-        // otherwise always disable fullscreen when scrolling up
-        if (isFullScreen()) {
+        // return from full screen when scrolling up unless user is typing a comment
+        if (isFullScreen() && !mIsAddCommentBoxShowing) {
             setIsFullScreen(false);
         }
     }
@@ -275,8 +267,9 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     void reloadPost() {
-        if (hasPost() && hasActivity())
+        if (hasPost() && hasActivity()) {
             showPost();
+        }
     }
 
     @Override
@@ -290,8 +283,9 @@ public class ReaderPostDetailFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_browse:
-                if (hasPost())
+                if (hasPost()) {
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+                }
                 return true;
             case R.id.menu_share:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
@@ -318,13 +312,12 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void setIsFullScreen(boolean enableFullScreen) {
-        if (mFullScreenListener == null)
-            return;
-        // this tells ReaderActivity to enable/disable fullscreen
-        if (!mFullScreenListener.onRequestFullScreen(enableFullScreen))
-            return;
-        if (mPost.isWP())
-            animateIconBar(!enableFullScreen);
+        // this tells the host activity to enable/disable fullscreen
+        if (mFullScreenListener != null && mFullScreenListener.onRequestFullScreen(enableFullScreen)) {
+            if (mPost.isWP()) {
+                animateIconBar(!enableFullScreen);
+            }
+        }
     }
 
     /*
@@ -427,19 +420,10 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
+
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
         pauseWebView();
-        mWasPaused = true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mWasPaused) {
-            resumeWebView();
-            mWasPaused = false;
-        }
     }
 
     /*
@@ -447,9 +431,9 @@ public class ReaderPostDetailFragment extends Fragment
      * change so it can tell the list fragment to reflect the change
      */
     private void doPostChanged(PostChangeType changeType) {
-        if (mPostChangeListener == null || !hasPost() || changeType == null)
-            return;
-        mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
+        if (mPostChangeListener != null && hasPost() && changeType == null) {
+            mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
+        }
     }
 
     /*
@@ -521,8 +505,9 @@ public class ReaderPostDetailFragment extends Fragment
      * called when user chooses to reblog the post
      */
     private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         if (post.isRebloggedByCurrentUser) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
@@ -1510,12 +1495,6 @@ public class ReaderPostDetailFragment extends Fragment
     protected void pauseWebView() {
         if (mWebView != null) {
             mWebView.onPause();
-        }
-    }
-
-    protected void resumeWebView() {
-        if (mWebView != null) {
-            mWebView.onResume();
         }
     }
 }
