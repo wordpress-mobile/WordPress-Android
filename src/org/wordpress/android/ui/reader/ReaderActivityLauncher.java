@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderFragmentType;
 import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
@@ -24,6 +25,13 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, postId);
         intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderFragmentType.POST_DETAIL);
+        context.startActivity(intent);
+    }
+
+    public static void showReaderPostPager(Context context, int position, ReaderBlogIdPostIdList idList) {
+        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
+        intent.putExtra(ReaderPostPagerActivity.ARG_POSITION, position);
+        intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
         context.startActivity(intent);
     }
 

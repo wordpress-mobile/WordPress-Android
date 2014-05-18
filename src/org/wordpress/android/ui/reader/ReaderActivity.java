@@ -430,7 +430,11 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onPostSelected(long blogId, long postId) {
-        showDetailFragment(blogId, postId);
+        //showDetailFragment(blogId, postId);
+        ReaderPostListFragment fragment = getListFragment();
+        if (fragment != null) {
+            ReaderActivityLauncher.showReaderPostPager(this, 0, fragment.getBlogIdPostIdList());
+        }
     }
 
     /*

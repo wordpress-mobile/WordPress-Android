@@ -165,6 +165,8 @@
             android:name=".ui.reader.ReaderActivity"
             android:label="@string/reader" />
         <activity
+            android:name=".ui.reader.ReaderPostPagerActivity" />
+        <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />
         <activity
