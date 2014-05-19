@@ -19,6 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 
 import java.io.Serializable;
 
@@ -32,6 +33,7 @@ public class ReaderPostPagerActivity extends Activity
     private ViewPager mViewPager;
     private PostPagerAdapter mPageAdapter;
     private boolean mIsFullScreen;
+    private ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +60,16 @@ public class ReaderPostPagerActivity extends Activity
             position = savedInstanceState.getInt(ARG_POSITION, 0);
             title = savedInstanceState.getString(ARG_TITLE);
             serializedList = savedInstanceState.getSerializable(ARG_BLOG_POST_ID_LIST);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
         } else {
             position = getIntent().getIntExtra(ARG_POSITION, 0);
             title = getIntent().getStringExtra(ARG_TITLE);
             serializedList = getIntent().getSerializableExtra(ARG_BLOG_POST_ID_LIST);
+            if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
         }
 
         if (!TextUtils.isEmpty(title)) {
@@ -112,6 +120,9 @@ public class ReaderPostPagerActivity extends Activity
         if (mPageAdapter != null) {
             outState.putSerializable(ARG_BLOG_POST_ID_LIST, mPageAdapter.mIdList);
         }
+        if (mPostListType != null) {
+            outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, mPostListType);
+        }
     }
 
     @Override
@@ -156,6 +167,10 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    public ReaderPostListType getPostListType() {
+        return mPostListType;
+    }
+
     @Override
     public boolean isFullScreen() {
         return mIsFullScreen;
@@ -196,7 +211,7 @@ public class ReaderPostPagerActivity extends Activity
             if (blogId == END_ID && postId == END_ID) {
                 return PostPagerEndFragment.newInstance();
             } else {
-                return ReaderPostDetailFragment.newInstance(blogId, postId);
+                return ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
             }
         }
     }

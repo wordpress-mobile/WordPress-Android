@@ -67,7 +67,6 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
-    static final String ARG_POST_LIST_TYPE  = "post_list_type";
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
@@ -92,8 +91,8 @@ public class ReaderActivity extends WPActionBarActivity
             return;
         }
 
-        if (intent.hasExtra(ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ARG_POST_LIST_TYPE);
+        if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
+            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
             mPostListType = ReaderPostListType.getDefaultType();
         }
@@ -348,7 +347,7 @@ public class ReaderActivity extends WPActionBarActivity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
+        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
@@ -459,7 +458,7 @@ public class ReaderActivity extends WPActionBarActivity
                     break;
             }
 
-            ReaderActivityLauncher.showReaderPostPager(this, title, position, idList);
+            ReaderActivityLauncher.showReaderPostPager(this, title, position, idList, getPostListType());
         }
     }
 

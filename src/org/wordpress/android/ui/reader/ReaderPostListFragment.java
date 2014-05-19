@@ -114,7 +114,7 @@ public class ReaderPostListFragment extends Fragment
 
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_TAG_NAME, tagName);
-        args.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, listType);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -131,7 +131,7 @@ public class ReaderPostListFragment extends Fragment
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putString(ReaderConstants.ARG_BLOG_URL, blogUrl);
-        args.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, ReaderActivity.ReaderPostListType.BLOG_PREVIEW);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderActivity.ReaderPostListType.BLOG_PREVIEW);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -147,8 +147,8 @@ public class ReaderPostListFragment extends Fragment
             mCurrentTag = args.getString(ReaderConstants.ARG_TAG_NAME);
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
-            if (args.containsKey(ReaderActivity.ARG_POST_LIST_TYPE)) {
-                mPostListType = (ReaderPostListType) args.getSerializable(ReaderActivity.ARG_POST_LIST_TYPE);
+            if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
         }
     }
@@ -171,8 +171,8 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.KEY_LIST_STATE)) {
                 mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
             }
-            if (savedInstanceState.containsKey(ReaderActivity.ARG_POST_LIST_TYPE)) {
-                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderActivity.ARG_POST_LIST_TYPE);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
@@ -213,7 +213,7 @@ public class ReaderPostListFragment extends Fragment
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
-        outState.putSerializable(ReaderActivity.ARG_POST_LIST_TYPE, getPostListType());
+        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548

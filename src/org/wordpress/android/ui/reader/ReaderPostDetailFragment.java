@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -80,6 +81,8 @@ public class ReaderPostDetailFragment extends Fragment
     private long mBlogId;
     private ReaderPost mPost;
 
+    private ReaderPostListType mPostListType;
+
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
     private WPListView mListView;
@@ -102,11 +105,20 @@ public class ReaderPostDetailFragment extends Fragment
     private PostChangeListener mPostChangeListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
+        return newInstance(blogId, postId, null);
+    }
+
+    public static ReaderPostDetailFragment newInstance(long blogId,
+                                                       long postId,
+                                                       ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
+        if (postListType != null) {
+            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
+        }
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -176,6 +188,9 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
         }
     }
 
@@ -318,6 +333,10 @@ public class ReaderPostDetailFragment extends Fragment
                 animateIconBar(!enableFullScreen);
             }
         }
+    }
+
+    private boolean isBlogPreview() {
+        return (mPostListType != null && mPostListType == ReaderPostListType.BLOG_PREVIEW);
     }
 
     /*
@@ -1215,6 +1234,8 @@ public class ReaderPostDetailFragment extends Fragment
         WPNetworkImageView imgAvatar;
         WPNetworkImageView imgFeatured;
 
+        ViewGroup layoutDetailHeader;
+
         String postHtml;
         String featuredImageUrl;
         boolean showFeaturedImage;
@@ -1251,6 +1272,8 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
+
+            layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
 
             postHtml = getPostHtml(container.getContext());
 
@@ -1322,6 +1345,11 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
+            }
+
+            // hide blog name, avatar & follow button if this fragment was shown from blog preview
+            if (isBlogPreview()) {
+                layoutDetailHeader.setVisibility(View.GONE);
             }
 
             if (showFeaturedImage) {

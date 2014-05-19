@@ -25,4 +25,5 @@ public class ReaderConstants {
     static final String KEY_ALREADY_REQUESTED = "already_requested";
     static final String KEY_LIST_STATE        = "list_state";
     static final String KEY_WAS_PAUSED        = "was_paused";
+    static final String ARG_POST_LIST_TYPE  = "post_list_type";
 }

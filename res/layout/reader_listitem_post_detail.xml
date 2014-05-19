@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_small">
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
@@ -55,8 +56,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_large">
+        android:layout_marginRight="@dimen/reader_list_margin">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
