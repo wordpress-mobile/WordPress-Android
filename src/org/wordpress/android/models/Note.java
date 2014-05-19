@@ -73,6 +73,9 @@ public class Note extends Syncable {
 
     private static final String TAG = "NoteModel";
 
+    // Maximum character length for a comment preview
+    static private final int MAX_COMMENT_PREVIEW_LENGTH = 256;
+
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
     public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
@@ -194,8 +197,15 @@ public class Note extends Syncable {
      * Removes HTML and cleans up newlines and whitespace
      */
     public String getCommentPreview() {
-        if (mCommentPreview == null)
+        if (mCommentPreview == null) {
             mCommentPreview = HtmlUtils.fastStripHtml(getCommentText());
+
+            // Trim down the comment preview if the comment text is too large.
+            if (mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+            }
+
+        }
         return mCommentPreview;
     }
 
