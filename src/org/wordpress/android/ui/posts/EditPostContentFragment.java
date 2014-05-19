@@ -577,9 +577,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         // network image has a mediaId
                         if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
                             postContentEditable.insert(tagStart, WPHtml.getContent(wpIS));
-
                         } else { // local image for upload
-                            postContentEditable.insert(tagStart, "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
+                            postContentEditable.insert(tagStart,
+                                    "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                         }
                     }
                 }
@@ -589,7 +589,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         if (!isAutoSave) {
             // Add gallery shortcode
-            MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(), MediaGalleryImageSpan.class);
+            MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(),
+                    MediaGalleryImageSpan.class);
             for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
                 int start = postContentEditable.getSpanStart(gallerySpan);
                 postContentEditable.removeSpan(gallerySpan);
@@ -899,18 +900,15 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     }
                 }
 
-                if (resizedBitmap == null)
-                    return;
+                if (resizedBitmap == null) return;
 
                 Editable s = mContentEditText.getText();
-                if (s == null)
-                    return;
+                if (s == null) return;
                 WPImageSpan[] spans = s.getSpans(0, s.length(), WPImageSpan.class);
                 if (spans.length != 0) {
                     for (WPImageSpan is : spans) {
                         MediaFile mediaFile = is.getMediaFile();
-                        if (mediaFile == null)
-                            continue;
+                        if (mediaFile == null) continue;
                         if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded() && hasActivity()) {
                             // replace the existing span with a new one with the correct image, re-add it to the same position.
                             int spanStart = s.getSpanStart(is);
@@ -924,7 +922,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         }
                     }
                 }
-
             }
         }, 0, 0);
     }

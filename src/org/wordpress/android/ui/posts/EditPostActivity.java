@@ -320,7 +320,9 @@ public class EditPostActivity extends Activity {
             WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
         } else {
-            // changes have been made, save the post and ask for the post list to refresh
+            // changes have been made, save the post and ask for the post list to refresh.
+            // We consider this being "manual save", it will replace some Android "spans" by an html
+            // or a shortcode replacement (for instance for images and galleries)
             savePost(false);
             WordPress.currentPost = mPost;
             Intent i = new Intent();
