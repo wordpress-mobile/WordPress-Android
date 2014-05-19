@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
@@ -220,6 +221,7 @@ public class StatsActivity extends WPActionBarActivity {
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
                 if (getBlogId() == null) {
+                    final Handler handler = new Handler();
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -245,14 +247,25 @@ public class StatsActivity extends WPActionBarActivity {
                         @Override
                         public void onFailure(long id, Exception error) {
                             AppLog.e(T.STATS,
-                                    "Cannot load blog options (wp.getOptions failed "
+                                    "Cannot load blog options (wp.getOptions failed) "
                                     + "and no jetpack_client_id is then available",
                                     error);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mPullToRefreshHelper.setRefreshing(false);
+                                    ToastUtils.showToast(StatsActivity.this,
+                                            StatsActivity.this.getString(R.string.error_refresh_stats),
+                                            Duration.LONG);
+                                }
+                            });
                         }
                     }, "wp.getOptions", params);
+                    mPullToRefreshHelper.setRefreshing(true);
+                } else {
+                    mPullToRefreshHelper.setRefreshing(true);
+                    refreshStats();
                 }
-                mPullToRefreshHelper.setRefreshing(true);
-                refreshStats();
             }
         }
     }
