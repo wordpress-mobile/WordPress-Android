@@ -172,15 +172,17 @@ public class EditPostActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAutoSaveHandler != null)
+        if (mAutoSaveHandler != null) {
             mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mAutoSaveHandler != null)
+        if (mAutoSaveHandler != null) {
             mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
+        }
     }
 
     @Override
@@ -281,10 +283,12 @@ public class EditPostActivity extends Activity {
 
     private void savePost(boolean isAutosave) {
         // Update post content from fragment fields
-        if (mEditPostContentFragment != null)
+        if (mEditPostContentFragment != null) {
             mEditPostContentFragment.savePostContent(isAutosave);
-        if (mEditPostSettingsFragment != null)
+        }
+        if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.savePostSettings();
+        }
     }
 
     @Override
