@@ -48,7 +48,8 @@ import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
-import org.xmlrpc.android.XMLRPCClient;
+import org.xmlrpc.android.XMLRPCClientInterface;
+import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -221,7 +222,7 @@ public class StatsActivity extends WPActionBarActivity {
                 if (getBlogId() == null) {
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
-                    XMLRPCClient xmlrpcClient = new XMLRPCClient(currentBlog.getUrl(), "", "");
+                    XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
                     Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
                     Object[] params = {
                             currentBlog.getRemoteBlogId(), currentBlog.getUsername(), currentBlog.getPassword(), args
