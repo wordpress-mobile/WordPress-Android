@@ -266,9 +266,6 @@ public class StatsActivity extends WPActionBarActivity {
                     mPullToRefreshHelper.setRefreshing(true);
                     refreshStats();
                 }
-            } else {
-                mPullToRefreshHelper.setRefreshing(true);
-                refreshStats();
             }
         }
     }
