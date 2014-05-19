@@ -74,7 +74,7 @@ public class Note extends Syncable {
     private static final String TAG = "NoteModel";
 
     // Maximum character length for a comment preview
-    static private final int MAX_COMMENT_PREVIEW_LENGTH = 256;
+    static private final int MAX_COMMENT_PREVIEW_LENGTH = 200;
 
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
