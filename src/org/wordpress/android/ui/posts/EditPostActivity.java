@@ -37,7 +37,7 @@ public class EditPostActivity extends Activity {
     private static int PAGE_SETTINGS = 1;
     private static int PAGE_PREVIEW = 2;
 
-    private static final int AUTOSAVE_INTERVAL_MILLIS = 30000;
+    private static final int AUTOSAVE_INTERVAL_MILLIS = 5000;
     private Handler mAutoSaveHandler;
 
     /**
