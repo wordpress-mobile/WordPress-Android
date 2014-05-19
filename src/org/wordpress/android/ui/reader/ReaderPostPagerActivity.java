@@ -99,15 +99,17 @@ public class ReaderPostPagerActivity extends Activity
             }
         });
 
-        // animate next/prev buttons after a short delay so user is aware they can swipe
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    animateNavButtons(mViewPager.getCurrentItem());
+        if (savedInstanceState == null) {
+            // animate next/prev buttons after a short delay so user is aware they can swipe
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing()) {
+                        animateNavButtons(mViewPager.getCurrentItem());
+                    }
                 }
-            }
-        }, 750);
+            }, 750);
+        }
     }
 
     @Override

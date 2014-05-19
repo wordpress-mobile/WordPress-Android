@@ -7,7 +7,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light"
+    android:background="@color/grey_extra_light"
     android:orientation="vertical"
     android:gravity="center">
 
@@ -16,13 +16,21 @@
         android:layout_height="wrap_content"
         android:text="@string/reader_label_reached_last_post"
         android:textSize="@dimen/text_sz_extra_large"
-        android:layout_marginBottom="@dimen/margin_small"
-        android:textColor="@color/grey_medium" />
+        android:textColor="@color/grey_medium_dark" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2714"
+        android:textSize="96sp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:textColor="@color/grey_medium_dark" />
 
     <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reader_label_tap_to_dismiss"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/grey_medium" />
+        android:textColor="@color/grey_medium_dark" />
 </LinearLayout>
