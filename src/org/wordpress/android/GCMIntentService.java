@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static Map<String, Bundle> activeNotificationsMap = new HashMap<String, Bundle>();
-    private int notificationId = 1337;
+    public static int PUSH_NOTIFICATION_ID = 1337;
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -232,7 +232,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         mBuilder.setContentIntent(pendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
+        mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
         broadcastNewNotification(context);
     }
 

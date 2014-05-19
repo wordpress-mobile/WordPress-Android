@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -101,6 +102,15 @@ public class NotificationsActivity extends WPActionBarActivity
         super.onNewIntent(intent);
         GCMIntentService.activeNotificationsMap.clear();
         launchWithNoteId();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Remove notification if it is showing when we resume this activity.
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
