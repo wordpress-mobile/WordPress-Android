@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.view.Window;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.util.AniUtils;
 
 import java.io.Serializable;
 
@@ -88,6 +90,16 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
+
+        // animate next/prev buttons after a short detail so user is aware they can swipe
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    animateNavButtons(mViewPager.getCurrentItem());
+                }
+            }
+        }, 500);
     }
 
     @Override
@@ -130,6 +142,18 @@ public class ReaderPostPagerActivity extends Activity
 
         mIsFullScreen = enableFullScreen;
         return true;
+    }
+
+    private void animateNavButtons(int position) {
+        boolean canGoPrev = (position > 0);
+        boolean canGoNext = (position < mPageAdapter.getCount() - 1);
+
+        if (canGoPrev) {
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.MEDIUM);
+        }
+        if (canGoNext) {
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.MEDIUM);
+        }
     }
 
     @Override

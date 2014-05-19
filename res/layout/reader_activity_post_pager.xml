@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,5 +9,30 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/image_previous_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#80dddddd"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:src="@drawable/ic_navigate_previous" />
+
+    <ImageView
+        android:id="@+id/image_next_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#80dddddd"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:src="@drawable/ic_navigate_next" />
 
 </RelativeLayout>

@@ -4,8 +4,13 @@ package org.wordpress.android.util;
  *  Reader animation utilities - these are backwards-compatible to Android 2.2
  */
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -16,7 +21,22 @@ import org.wordpress.android.R;
 
 
 public class AniUtils {
-    public static enum Duration { DEFAULT, SHORT, MEDIUM, LONG }
+    public static enum Duration {
+        SHORT,
+        MEDIUM,
+        LONG;
+
+        private long toMillis(Context context) {
+            switch (this) {
+                case LONG:
+                    return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                case MEDIUM:
+                    return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                default:
+                    return context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+            }
+        }
+    }
 
     private AniUtils() {
         throw new AssertionError();
@@ -26,7 +46,7 @@ public class AniUtils {
         fadeIn(target, null);
     }
     public static void fadeIn(View target, AnimationListener listener) {
-        startAnimation(target, android.R.anim.fade_in, listener, Duration.DEFAULT);
+        startAnimation(target, android.R.anim.fade_in, listener, null);
         if (target.getVisibility() != View.VISIBLE)
             target.setVisibility(View.VISIBLE);
     }
@@ -35,9 +55,35 @@ public class AniUtils {
         fadeOut(target, null);
     }
     public static void fadeOut(View target, AnimationListener listener) {
-        startAnimation(target, android.R.anim.fade_out, listener, Duration.DEFAULT);
+        startAnimation(target, android.R.anim.fade_out, listener, null);
         if (target.getVisibility() != View.GONE)
             target.setVisibility(View.GONE);
+    }
+
+    /*
+     * fades in the passed view then immediately fades it out - note that duration
+     * is required
+     */
+    public static void fadeInFadeOut(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
+        alpha.setRepeatCount(1);
+        alpha.setRepeatMode(ValueAnimator.REVERSE);
+        alpha.setDuration(duration.toMillis(target.getContext()));
+        alpha.setInterpolator(new AccelerateDecelerateInterpolator());
+        alpha.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                target.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                target.setVisibility(View.GONE);
+            }
+        });
+        alpha.start();
     }
 
     /*
@@ -79,7 +125,7 @@ public class AniUtils {
             @Override
             public void onAnimationRepeat(Animation animation) { }
         };
-        startAnimation(target, R.anim.reader_flyout, listener, Duration.DEFAULT);
+        startAnimation(target, R.anim.reader_flyout, listener, null);
     }
 
     /*
@@ -105,13 +151,13 @@ public class AniUtils {
     }
 
     public static void startAnimation(View target, int aniResId) {
-        startAnimation(target, aniResId, null, Duration.DEFAULT);
+        startAnimation(target, aniResId, null, null);
     }
     public static void startAnimation(View target, int aniResId, Duration duration) {
-        startAnimation(target, aniResId, null, Duration.DEFAULT);
+        startAnimation(target, aniResId, null, null);
     }
     public static void startAnimation(View target, int aniResId, AnimationListener listener) {
-        startAnimation(target, aniResId, listener, Duration.DEFAULT);
+        startAnimation(target, aniResId, listener, null);
     }
     public static void startAnimation(View target,
                                       int aniResId,
@@ -125,22 +171,9 @@ public class AniUtils {
         if (listener!=null)
             animation.setAnimationListener(listener);
 
-        // set duration if we're not using the default (default = duration defined in animation resource)
-        if (duration != Duration.DEFAULT) {
-            Context context = target.getContext();
-            final long durationMillis;
-            switch (duration) {
-                case LONG:
-                    durationMillis = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
-                    break;
-                case MEDIUM:
-                    durationMillis = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
-                    break;
-                default :
-                    durationMillis = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
-                    break;
-            }
-            animation.setDuration(durationMillis);
+        // if duration is null we'll use the duration defined in animation resource
+        if (duration != null) {
+            animation.setDuration(duration.toMillis(target.getContext()));
         }
 
         target.startAnimation(animation);
