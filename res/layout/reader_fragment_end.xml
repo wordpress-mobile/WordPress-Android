@@ -4,33 +4,25 @@
     shown by ReaderPostPagerActivity when the user scrolls beyond the last post
 -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_light">
+    android:background="@color/grey_light"
+    android:orientation="vertical"
+    android:gravity="center">
 
-    <LinearLayout
+    <org.wordpress.android.widgets.WPTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_gravity="center">
+        android:text="@string/reader_label_reached_last_post"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:textColor="@color/grey_medium" />
 
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reader_label_end_reached"
-            android:textSize="@dimen/text_sz_extra_large"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:textColor="@color/grey_medium" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reader_label_tap_to_dismiss"
-            android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/grey_medium" />
-    </LinearLayout>
-
-</FrameLayout>
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_label_tap_to_dismiss"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey_medium" />
+</LinearLayout>

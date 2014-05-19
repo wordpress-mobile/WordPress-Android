@@ -996,23 +996,21 @@ public class ReaderPostDetailFragment extends Fragment
         return true;
     }
 
-    /*
-     * touch listener for the webView - detects when an image is tapped and shows it in the
-     * photo viewer activity
-     */
     private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
-            if (event.getAction() != MotionEvent.ACTION_UP) {
-                return false;
-            }
-
-            HitTestResult hr = ((WebView)view).getHitTestResult();
-            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                String imageUrl = hr.getExtra();
-                return showPhotoViewer(imageUrl, view, (int)event.getX(), (int)event.getY());
-            } else {
-                return false;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    // detect when an image is tapped and shows it in the photo viewer activity
+                    HitTestResult hr = ((WebView) view).getHitTestResult();
+                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                        String imageUrl = hr.getExtra();
+                        return showPhotoViewer(imageUrl, view, (int) event.getX(), (int) event.getY());
+                    } else {
+                        return false;
+                    }
+                default:
+                    return false;
             }
         }
     };
@@ -1492,7 +1490,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    protected void pauseWebView() {
+    void pauseWebView() {
         if (mWebView != null) {
             mWebView.onPause();
         }

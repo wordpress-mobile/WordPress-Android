@@ -120,14 +120,12 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return false;
-        }
-
-        if (enableFullScreen) {
-            actionBar.hide();
-        } else {
-            actionBar.show();
+        if (actionBar != null) {
+            if (enableFullScreen) {
+                actionBar.hide();
+            } else {
+                actionBar.show();
+            }
         }
 
         mIsFullScreen = enableFullScreen;

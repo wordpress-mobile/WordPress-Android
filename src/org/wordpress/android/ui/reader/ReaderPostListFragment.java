@@ -188,6 +188,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+
         // if the fragment is resuming from a paused state, refresh the adapter to make sure
         // the follow status of all posts is accurate - this is necessary in case the user
         // returned from an activity where the follow status may have been changed
@@ -276,8 +277,9 @@ public class ReaderPostListFragment extends Fragment
 
                 // add a blank header to the listView that's the same height as the mshot with a fudge
                 // factor to account for the info container - global layout listener below will
-                // use the actual container height once it's known
-                int spacerHeight = mBlogInfoView.getMshotHeight() + DisplayUtils.dpToPx(container.getContext(), 86);
+                // use the actual container height once it's known - note that this "fudge factor"
+                // is based on the height of the info container with a two-line description
+                int spacerHeight = mBlogInfoView.getMshotHeight() + DisplayUtils.dpToPx(container.getContext(), 105);
                 mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, spacerHeight);
 
                 // tag the spacer so we can identify it later
