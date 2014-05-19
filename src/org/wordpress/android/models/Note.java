@@ -4,8 +4,6 @@
 package org.wordpress.android.models;
 
 import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -103,7 +101,6 @@ public class Note extends Syncable {
 
     private Map<String, JSONObject> mActions;
     private JSONObject mNoteJSON;
-    private SpannableStringBuilder mComment = new SpannableStringBuilder();
 
     private int mBlogId;
     private int mPostId;
@@ -198,15 +195,8 @@ public class Note extends Syncable {
      */
     public String getCommentPreview() {
         if (mCommentPreview == null)
-            mCommentPreview = getCommentBody().toString().replaceAll("\uFFFC", "").replace("\n", " ").replaceAll("[\\s]{2,}", " ").trim();
+            mCommentPreview = HtmlUtils.fastStripHtml(getCommentText());
         return mCommentPreview;
-    }
-
-    /**
-     * Gets the comment's text with getCommentText() and sends it through HTML.fromHTML
-     */
-    Spanned getCommentBody() {
-        return mComment;
     }
 
     /**
@@ -315,7 +305,6 @@ public class Note extends Syncable {
 
         // clear out the preloaded content
         mTimestamp = 0;
-        mComment = null;
         mCommentPreview = null;
         mSubject = null;
         mIconUrl = null;
@@ -371,8 +360,6 @@ public class Note extends Syncable {
         }
 
         if (isCommentType()) {
-            // pre-load the comment HTML for being displayed. Cleans up emoticons.
-            mComment = HtmlUtils.fromHtml(getCommentText());
             // pre-load the preview text
             getCommentPreview();
         }
