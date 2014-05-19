@@ -284,7 +284,7 @@ public class ReaderActivity extends WPActionBarActivity
         removeFragments();
     }
 
-    public ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return mPostListType;
     }
 

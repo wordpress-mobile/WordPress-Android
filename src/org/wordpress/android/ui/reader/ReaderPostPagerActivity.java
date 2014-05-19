@@ -169,7 +169,7 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
-    public ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return mPostListType;
     }
 
