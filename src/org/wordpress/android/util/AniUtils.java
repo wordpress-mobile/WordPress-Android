@@ -10,10 +10,10 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ListView;
 
@@ -61,18 +61,18 @@ public class AniUtils {
     }
 
     /*
-     * fades in the passed view then immediately fades it out - note that duration
-     * is required
+     * fades in the passed view then immediately fades it out
      */
     public static void fadeInFadeOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
+
         ObjectAnimator alpha = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
         alpha.setRepeatCount(1);
         alpha.setRepeatMode(ValueAnimator.REVERSE);
         alpha.setDuration(duration.toMillis(target.getContext()));
-        alpha.setInterpolator(new AccelerateDecelerateInterpolator());
+        alpha.setInterpolator(new LinearInterpolator());
         alpha.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {

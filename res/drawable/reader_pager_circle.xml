@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    background drawable for next/prev buttons in ReaderPostPagerActivity
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <stroke
+        android:color="@color/grey_light"
+        android:width="1px" />
+
+    <solid android:color="@color/grey_extra_light" />
+
+    <padding
+        android:bottom="@dimen/margin_medium"
+        android:top="@dimen/margin_medium"
+        android:left="@dimen/margin_medium"
+        android:right="@dimen/margin_medium" />
+
+</shape>

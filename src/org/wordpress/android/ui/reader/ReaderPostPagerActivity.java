@@ -99,7 +99,7 @@ public class ReaderPostPagerActivity extends Activity
             }
         });
 
-        // animate next/prev buttons after a short detail so user is aware they can swipe
+        // animate next/prev buttons after a short delay so user is aware they can swipe
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -107,7 +107,7 @@ public class ReaderPostPagerActivity extends Activity
                     animateNavButtons(mViewPager.getCurrentItem());
                 }
             }
-        }, 500);
+        }, 750);
     }
 
     @Override
@@ -160,10 +160,10 @@ public class ReaderPostPagerActivity extends Activity
         boolean canGoNext = (position < mPageAdapter.getCount() - 1);
 
         if (canGoPrev) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.MEDIUM);
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.LONG);
         }
         if (canGoNext) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.MEDIUM);
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.LONG);
         }
     }
 

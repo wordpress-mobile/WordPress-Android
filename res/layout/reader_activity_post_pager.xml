@@ -14,25 +14,21 @@
         android:id="@+id/image_previous_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#80dddddd"
+        android:background="@drawable/reader_pager_circle"
         android:layout_centerVertical="true"
         android:visibility="gone"
         tools:visibility="visible"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingBottom="@dimen/margin_medium"
         android:src="@drawable/ic_navigate_previous" />
 
     <ImageView
         android:id="@+id/image_next_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#80dddddd"
+        android:background="@drawable/reader_pager_circle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:visibility="gone"
         tools:visibility="visible"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingBottom="@dimen/margin_medium"
         android:src="@drawable/ic_navigate_next" />
 
 </RelativeLayout>
