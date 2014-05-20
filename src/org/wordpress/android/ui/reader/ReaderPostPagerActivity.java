@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -226,6 +227,8 @@ public class ReaderPostPagerActivity extends Activity
      * fragment that appears when user scrolls beyond the last post
      */
     public static class PostPagerEndFragment extends Fragment {
+        private TextView mTxtCheckmark;
+
         private static PostPagerEndFragment newInstance() {
             return new PostPagerEndFragment();
         }
@@ -241,35 +244,48 @@ public class ReaderPostPagerActivity extends Activity
                     }
                 }
             });
+
+            mTxtCheckmark = (TextView) view.findViewById(R.id.text_checkmark);
+
             return view;
         }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    animateCheckmark();
-                }
-            }, 500);
+        private boolean hasActivity() {
+            return (getActivity() != null && getView() != null && !isRemoving());
         }
 
-        private void animateCheckmark() {
-            if (getActivity() == null || getView() == null || isRemoving()) {
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            // setUserVisibleHint wasn't available until API 15 (ICE_CREAM_SANDWICH_MR1)
+            if (Build.VERSION.SDK_INT >= 15) {
+                super.setUserVisibleHint(isVisibleToUser);
+            }
+            if (isVisibleToUser) {
+                showCheckmark();
+            } else {
+                hideCheckmark();
+            }
+        }
+
+        private void showCheckmark() {
+            if (!hasActivity()) {
                 return;
             }
 
-            final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
-            txtCheckmark.setVisibility(View.VISIBLE);
+            mTxtCheckmark.setVisibility(View.VISIBLE);
 
             AnimatorSet set = new AnimatorSet();
             set.setDuration(750);
             set.setInterpolator(new OvershootInterpolator());
-            set.playTogether(ObjectAnimator.ofFloat(txtCheckmark, "scaleX", 0f, 1f),
-                             ObjectAnimator.ofFloat(txtCheckmark, "scaleY", 0f, 1f));
+            set.playTogether(ObjectAnimator.ofFloat(mTxtCheckmark, "scaleX", 0.25f, 1f),
+                             ObjectAnimator.ofFloat(mTxtCheckmark, "scaleY", 0.25f, 1f));
             set.start();
+        }
+
+        private void hideCheckmark() {
+            if (hasActivity()) {
+                mTxtCheckmark.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }
