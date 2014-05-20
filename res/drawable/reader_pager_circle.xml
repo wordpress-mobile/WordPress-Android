@@ -13,9 +13,9 @@
     <solid android:color="@color/grey_extra_light" />
 
     <padding
-        android:bottom="@dimen/margin_medium"
-        android:top="@dimen/margin_medium"
-        android:left="@dimen/margin_medium"
-        android:right="@dimen/margin_medium" />
+        android:bottom="@dimen/margin_small"
+        android:top="@dimen/margin_small"
+        android:left="@dimen/margin_small"
+        android:right="@dimen/margin_small" />
 
 </shape>

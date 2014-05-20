@@ -29,7 +29,7 @@ public class AniUtils {
         private long toMillis(Context context) {
             switch (this) {
                 case LONG:
-                    return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+                    return context.getResources().getInteger(android.R.integer.config_longAnimTime);
                 case MEDIUM:
                     return context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
                 default:

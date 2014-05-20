@@ -162,10 +162,10 @@ public class ReaderPostPagerActivity extends Activity
         boolean canGoNext = (position < mPageAdapter.getCount() - 1);
 
         if (canGoPrev) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.LONG);
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.MEDIUM);
         }
         if (canGoNext) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.LONG);
+            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.MEDIUM);
         }
     }
 
