@@ -57,7 +57,7 @@ public class HtmlUtils {
         }
         int start = 0;
         while (start != strLen
-                && (Character.isWhitespace(str.charAt(start))) || str.charAt(start) == 160) {
+                && (Character.isWhitespace(str.charAt(start)) || str.charAt(start) == 160)) {
             start++;
         }
         return str.substring(start);
