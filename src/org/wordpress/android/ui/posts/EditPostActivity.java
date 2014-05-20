@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -24,6 +23,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPViewPager;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class EditPostActivity extends Activity {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -38,7 +40,7 @@ public class EditPostActivity extends Activity {
     private static int PAGE_PREVIEW = 2;
 
     private static final int AUTOSAVE_INTERVAL_MILLIS = 5000;
-    private Handler mAutoSaveHandler;
+    private Timer mAutoSaveTimer;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -164,25 +166,25 @@ public class EditPostActivity extends Activity {
                 }
             }
         });
+    }
 
-        // Autosave handler
-        mAutoSaveHandler = new Handler();
+    class AutoSaveTask extends TimerTask {
+        public void run() {
+            savePost(true);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAutoSaveHandler != null) {
-            mAutoSaveHandler.postDelayed(autoSaveRunnable, AUTOSAVE_INTERVAL_MILLIS);
-        }
+        mAutoSaveTimer = new Timer();
+        mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (mAutoSaveHandler != null) {
-            mAutoSaveHandler.removeCallbacks(autoSaveRunnable);
-        }
+        mAutoSaveTimer.cancel();
     }
 
     @Override
@@ -268,14 +270,6 @@ public class EditPostActivity extends Activity {
         Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
         finish();
     }
-
-    private Runnable autoSaveRunnable = new Runnable() {
-        @Override
-        public void run() {
-            savePost(true);
-            mAutoSaveHandler.postDelayed(this, AUTOSAVE_INTERVAL_MILLIS);
-        }
-    };
 
     public Post getPost() {
         return mPost;
