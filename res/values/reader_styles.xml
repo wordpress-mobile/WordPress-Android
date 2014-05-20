@@ -2,7 +2,6 @@
 <!--
     styles used by the native reader - all margins & padding use margin_xxxx sizes
     and all font sizes use text_sz_xxxx sizes defined in dimens.xml for consistency
-    see also reader_styles in values-v14 for holo versions of some of these
 -->
 <resources>
     <!-- activity themes -->
@@ -15,6 +14,14 @@
 
     <style name="ReaderTheme.TranslucentActivity" parent="ReaderTheme">
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ReaderTheme.PhotoViewer" parent="@android:style/Theme.Holo.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <!-- window animations -->
