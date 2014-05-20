@@ -369,6 +369,12 @@ public class SetupBlog {
             Map<String, Object> blogMap = blogList.get(i);
             String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
             String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
+            if (!UrlUtils.isValidUrlAndHostNotNull(xmlrpcUrl)) {
+                // xmlrpcUrl is invalid, set the error message
+                mErrorMsgId = R.string.invalid_xmlrpc_url;
+                AppLog.e(T.NUX, "Invalid XMLRPC url: " + xmlrpcUrl);
+                return;
+            }
             String homeUrl = blogMap.get("url").toString();
             String blogId = blogMap.get("blogid").toString();
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");

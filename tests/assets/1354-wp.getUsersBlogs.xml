@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<methodResponse>
+    <params>
+        <param>
+            <value>
+                <array>
+                    <data>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>isAdmin</name>
+                                    <value>
+                                        <boolean>1</boolean>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>url</name>
+                                    <value>
+                                        <string>https://tataliwut.wordpress.com/</string>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>blogid</name>
+                                    <value>
+                                        <string>59073674</string>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>blogName</name>
+                                    <value>
+                                        <string>Empty blog stays empty</string>
+                                    </value>
+                                </member>
+                                <member>
+                                    <name>xmlrpc</name>
+                                    <value>
+                                        <string>pouët</string>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
+                    </data>
+                </array>
+            </value>
+        </param>
+    </params>
+</methodResponse>
