@@ -19,6 +19,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
@@ -265,13 +266,25 @@ public class ReaderActivity extends WPActionBarActivity
                         detailFragment.reloadPost();
                 }
                 break;
+
+            // user just returned from the login dialog, need to perform initial update again
+            // since creds have changed
+            case WPComLoginActivity.REQUEST_CODE:
+                if (isResultOK) {
+                    removeFragments();
+                    mHasPerformedInitialUpdate = false;
+                    performInitialUpdate();
+                }
+                break;
         }
     }
 
     @Override
     public void onSignout() {
         super.onSignout();
+
         mHasPerformedInitialUpdate = false;
+        AppLog.i(T.READER, "user signed out");
 
         // reader database will have been cleared by the time this is called, but the fragments must
         // be removed or else they will continue to show the same articles - onResume() will take care
@@ -388,13 +401,18 @@ public class ReaderActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
-                mHasPerformedInitialUpdate = true;
-
+                if (result != UpdateResult.FAILED) {
+                    mHasPerformedInitialUpdate = true;
+                }
                 if (result == UpdateResult.CHANGED) {
                     // if the post list fragment is viewing followed tags, tell it to refresh
                     // the list of tags
                     ReaderPostListFragment listFragment = getListFragment();
-                    if (listFragment != null && listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                    if (listFragment == null) {
+                        // list fragment doesn't exist yet (can happen if user signed out) - create
+                        // it now showing the default followed tag
+                        showListFragmentForTag(ReaderTag.TAG_NAME_DEFAULT, ReaderPostListType.TAG_FOLLOWED);
+                    } else if ( listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                         listFragment.refreshTags();
                         // if the tag and posts tables were empty (first run), tell the list
                         // fragment to get posts with the current tag now that we have tags

@@ -708,6 +708,7 @@
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="username_or_password_incorrect_selfhosted_hint">The username or password you entered is incorrect. Have a self-hosted site? Tap \"%s\" and add the URL.</string>
+    <string name="invalid_xmlrpc_url">XMLRPC url returned by your WordPress instance is invalid. Contact your site administrator.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_cannot_log_in">We can\'t log you in</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
