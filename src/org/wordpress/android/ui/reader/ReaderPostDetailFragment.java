@@ -41,7 +41,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -68,10 +68,9 @@ import java.util.ArrayList;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener {
-    protected static enum PostChangeType {LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT}
 
     static interface PostChangeListener {
-        public void onPostChanged(long blogId, long postId, PostChangeType changeType);
+        public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType);
     }
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
@@ -336,7 +335,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean isBlogPreview() {
-        return (mPostListType != null && mPostListType == ReaderPostListType.BLOG_PREVIEW);
+        return (mPostListType != null && mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
     }
 
     /*
@@ -449,7 +448,7 @@ public class ReaderPostDetailFragment extends Fragment
      * called by this fragment whenever the post is changed - notifies ReaderActivity of the
      * change so it can tell the list fragment to reflect the change
      */
-    private void doPostChanged(PostChangeType changeType) {
+    private void doPostChanged(ReaderTypes.PostChangeType changeType) {
         if (mPostChangeListener != null && hasPost() && changeType == null) {
             mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
         }
@@ -476,9 +475,9 @@ public class ReaderPostDetailFragment extends Fragment
         // fire listener so host knows about the change
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-            doPostChanged(PostChangeType.LIKED);
+            doPostChanged(ReaderTypes.PostChangeType.LIKED);
         } else {
-            doPostChanged(PostChangeType.UNLIKED);
+            doPostChanged(ReaderTypes.PostChangeType.UNLIKED);
         }
 
         // call returns before api completes, but local version of post will have been changed
@@ -513,7 +512,7 @@ public class ReaderPostDetailFragment extends Fragment
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
 
         // fire listener so host knows about the change
-        doPostChanged(isAskingToFollow ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
+        doPostChanged(isAskingToFollow ? ReaderTypes.PostChangeType.FOLLOWED : ReaderTypes.PostChangeType.UNFOLLOWED);
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
@@ -572,7 +571,7 @@ public class ReaderPostDetailFragment extends Fragment
                     case CHANGED:
                         // post has changed, so get latest version
                         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                        doPostChanged(PostChangeType.CONTENT);
+                        doPostChanged(ReaderTypes.PostChangeType.CONTENT);
                         break;
                     case FAILED:
                         // failed to get post, so do nothing here
@@ -629,7 +628,7 @@ public class ReaderPostDetailFragment extends Fragment
                     return;
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    doPostChanged(PostChangeType.CONTENT);
+                    doPostChanged(ReaderTypes.PostChangeType.CONTENT);
                     refreshComments();
                 }
             }
@@ -950,7 +949,7 @@ public class ReaderPostDetailFragment extends Fragment
                 replyToCommentId,
                 actionListener);
         if (newComment != null) {
-            doPostChanged(PostChangeType.CONTENT);
+            doPostChanged(ReaderTypes.PostChangeType.CONTENT);
             editComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted

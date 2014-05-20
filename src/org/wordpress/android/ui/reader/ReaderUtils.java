@@ -79,16 +79,6 @@ public class ReaderUtils {
     }
 
     /*
-     * set the top margin for the passed view
-     */
-    public static void setTopMargin(View view, int height) {
-        if (view != null && view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-            params.topMargin = height;
-        }
-    }
-
-    /*
      * adds a transparent header to the passed listView
      */
     public static View addListViewHeader(ListView listView, int height) {

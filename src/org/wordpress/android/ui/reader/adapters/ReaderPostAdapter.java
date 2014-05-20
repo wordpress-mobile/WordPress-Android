@@ -23,10 +23,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -120,7 +121,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     ReaderPostListType getPostListType() {
-        return (mPostListType != null ? mPostListType : ReaderPostListType.getDefaultType());
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
     public String getCurrentTag() {
@@ -507,7 +508,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
             // in a specific blog
-            if (postListType.equals(ReaderPostListType.BLOG_PREVIEW)) {
+            if (postListType.equals(ReaderTypes.ReaderPostListType.BLOG_PREVIEW)) {
                 layoutPostHeader.setVisibility(View.GONE);
             }
         }

@@ -19,16 +19,16 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
 import java.io.Serializable;
 
 public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
 
-    protected static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
-    protected static final String ARG_POSITION = "position";
-    protected static final String ARG_TITLE = "title";
+    static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
+    static final String ARG_POSITION = "position";
+    static final String ARG_TITLE = "title";
 
     private ViewPager mViewPager;
     private PostPagerAdapter mPageAdapter;

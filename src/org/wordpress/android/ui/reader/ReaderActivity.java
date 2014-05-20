@@ -46,33 +46,13 @@ public class ReaderActivity extends WPActionBarActivity
                                        ReaderPostDetailFragment.PostChangeListener,
                                        ReaderUtils.FullScreenListener {
 
-    public static enum ReaderFragmentType { POST_LIST, POST_DETAIL }
-
-    public static enum ReaderPostListType {
-        TAG_FOLLOWED,   // list posts in a followed tag (default)
-        TAG_PREVIEW,    // list posts in a specific tag
-        BLOG_PREVIEW;   // list posts in a specific blog
-
-        public boolean isTagType() {
-            return this.equals(TAG_FOLLOWED) || this.equals(TAG_PREVIEW);
-        }
-
-        public boolean isPreviewType() {
-            return this.equals(TAG_PREVIEW) || this.equals(BLOG_PREVIEW);
-        }
-
-        public static ReaderPostListType getDefaultType() {
-            return TAG_FOLLOWED;
-        }
-    }
-
     static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
     private boolean mIsFullScreen;
-    private ReaderPostListType mPostListType;
+    private ReaderTypes.ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,9 +72,9 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            mPostListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
-            mPostListType = ReaderPostListType.getDefaultType();
+            mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
         // no menu drawer if this is blog preview or tag preview
@@ -119,16 +99,16 @@ public class ReaderActivity extends WPActionBarActivity
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
             // determine which fragment to show (post list or detail), default to post list
-            final ReaderFragmentType fragmentType;
+            final ReaderTypes.ReaderFragmentType fragmentType;
             if (intent.hasExtra(ARG_READER_FRAGMENT_TYPE)) {
-                fragmentType = (ReaderFragmentType) intent.getSerializableExtra(ARG_READER_FRAGMENT_TYPE);
+                fragmentType = (ReaderTypes.ReaderFragmentType) intent.getSerializableExtra(ARG_READER_FRAGMENT_TYPE);
             } else {
-                fragmentType = ReaderFragmentType.POST_LIST;
+                fragmentType = ReaderTypes.ReaderFragmentType.POST_LIST;
             }
 
             switch (fragmentType) {
                 case POST_LIST:
-                    if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
+                    if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
                         long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                         String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
                         showListFragmentForBlog(blogId, blogUrl);
@@ -139,7 +119,7 @@ public class ReaderActivity extends WPActionBarActivity
                             tagName = UserPrefs.getReaderTag();
                         }
                         // if this is a followed tag and it doesn't exist, revert to default tag
-                        if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
+                        if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
                             tagName = ReaderTag.TAG_NAME_DEFAULT;
                         }
 
@@ -240,7 +220,7 @@ public class ReaderActivity extends WPActionBarActivity
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
                                     RequestDataAction.LOAD_NEWER,
-                                    ReaderPostListFragment.RefreshType.AUTOMATIC);
+                                    ReaderTypes.RefreshType.AUTOMATIC);
                         }
                     }
                 }
@@ -284,7 +264,7 @@ public class ReaderActivity extends WPActionBarActivity
         removeFragments();
     }
 
-    ReaderPostListType getPostListType() {
+    ReaderTypes.ReaderPostListType getPostListType() {
         return mPostListType;
     }
 
@@ -309,7 +289,7 @@ public class ReaderActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final String tagName, ReaderPostListType listType) {
+    private void showListFragmentForTag(final String tagName, ReaderTypes.ReaderPostListType listType) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
         getFragmentManager()
                 .beginTransaction()
@@ -403,8 +383,8 @@ public class ReaderActivity extends WPActionBarActivity
                     if (listFragment == null) {
                         // list fragment doesn't exist yet (can happen if user signed out) - create
                         // it now showing the default followed tag
-                        showListFragmentForTag(ReaderTag.TAG_NAME_DEFAULT, ReaderPostListType.TAG_FOLLOWED);
-                    } else if (listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                        showListFragmentForTag(ReaderTag.TAG_NAME_DEFAULT, ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
+                    } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
                         listFragment.refreshTags();
                         // if the tag and posts tables were empty (first run), tell the list
                         // fragment to get posts with the current tag now that we have tags
@@ -412,7 +392,7 @@ public class ReaderActivity extends WPActionBarActivity
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
                                     RequestDataAction.LOAD_NEWER,
-                                    ReaderPostListFragment.RefreshType.AUTOMATIC);
+                                    ReaderTypes.RefreshType.AUTOMATIC);
                         }
                     }
                 }
@@ -467,7 +447,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onTagSelected(String tagName) {
-        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
             getListFragment().setCurrentTag(tagName);
         } else {
@@ -514,7 +494,7 @@ public class ReaderActivity extends WPActionBarActivity
      * the post will already have been changed in SQLite
      */
     @Override
-    public void onPostChanged(long blogId, long postId, ReaderPostDetailFragment.PostChangeType changeType) {
+    public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType) {
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment == null) {
             return;
@@ -529,7 +509,7 @@ public class ReaderActivity extends WPActionBarActivity
             case FOLLOWED:
             case UNFOLLOWED:
                 // if follow state has changed, update the follow state on other posts in this blog
-                boolean isFollowed = (changeType == ReaderPostDetailFragment.PostChangeType.FOLLOWED);
+                boolean isFollowed = (changeType == ReaderTypes.PostChangeType.FOLLOWED);
                 listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.getBlogUrl(), isFollowed);
                 break;
             default:
