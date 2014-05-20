@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -14,12 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 
 import java.io.Serializable;
 
@@ -238,6 +242,34 @@ public class ReaderPostPagerActivity extends Activity
                 }
             });
             return view;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animateCheckmark();
+                }
+            }, 500);
+        }
+
+        private void animateCheckmark() {
+            if (getActivity() == null || getView() == null || isRemoving()) {
+                return;
+            }
+
+            final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
+            txtCheckmark.setVisibility(View.VISIBLE);
+
+            AnimatorSet set = new AnimatorSet();
+            set.setDuration(750);
+            set.setInterpolator(new OvershootInterpolator());
+            set.playTogether(ObjectAnimator.ofFloat(txtCheckmark, "scaleX", 0f, 1f),
+                             ObjectAnimator.ofFloat(txtCheckmark, "scaleY", 0f, 1f));
+            set.start();
         }
     }
 }

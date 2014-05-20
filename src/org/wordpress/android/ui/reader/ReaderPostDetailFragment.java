@@ -41,8 +41,8 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -95,7 +95,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
 
-    private Parcelable mListState = null;
+    private Parcelable mListState;
 
     private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
@@ -414,6 +414,10 @@ public class ReaderPostDetailFragment extends Fragment
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }
 
+        restoreState(savedInstanceState);
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
@@ -1469,8 +1473,9 @@ public class ReaderPostDetailFragment extends Fragment
         @Override
         public void onPageFinished(WebView view, String url) {
             // show the webView now that it has loaded
-            if (view.getVisibility() != View.VISIBLE)
+            if (view.getVisibility() != View.VISIBLE) {
                 view.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
