@@ -6,8 +6,8 @@ package org.wordpress.android.util;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
@@ -61,19 +61,27 @@ public class AniUtils {
     }
 
     /*
-     * fades in the passed view then immediately fades it out
+     * fades in the passed view then fades it out
      */
     public static void fadeInFadeOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
 
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
-        alpha.setRepeatCount(1);
-        alpha.setRepeatMode(ValueAnimator.REVERSE);
-        alpha.setDuration(duration.toMillis(target.getContext()));
-        alpha.setInterpolator(new LinearInterpolator());
-        alpha.addListener(new AnimatorListenerAdapter() {
+        long durationMillis = duration.toMillis(target.getContext());
+
+        ObjectAnimator fadeIn = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
+        fadeIn.setDuration(durationMillis);
+        fadeIn.setInterpolator(new LinearInterpolator());
+
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
+        fadeOut.setDuration(durationMillis);
+        fadeOut.setInterpolator(new LinearInterpolator());
+        fadeOut.setStartDelay(durationMillis);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(fadeOut).after(fadeIn);
+        set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 target.setVisibility(View.VISIBLE);
@@ -83,7 +91,8 @@ public class AniUtils {
                 target.setVisibility(View.GONE);
             }
         });
-        alpha.start();
+
+        set.start();
     }
 
     /*
