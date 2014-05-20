@@ -7,7 +7,6 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
     private String mSuperPropertyToIncrement;
     private String mPeoplePropertyToIncrement;
     private ArrayList<String> mSuperPropertiesToFlag;
-    private String mSuperPropertyToFlag;
     private AnalyticsTracker.Stat mStatToAttachProperty;
     private AnalyticsTracker.Stat mStat;
     private String mPropertyToIncrement;
@@ -100,6 +99,9 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
     }
 
     public void addSuperPropertyToFlag(String superPropertyToFlag) {
+        if( mSuperPropertiesToFlag == null) {
+            mSuperPropertiesToFlag = new ArrayList<String>();
+        }
         if (!mSuperPropertiesToFlag.contains(superPropertyToFlag)) {
             mSuperPropertiesToFlag.add(superPropertyToFlag);
         }
