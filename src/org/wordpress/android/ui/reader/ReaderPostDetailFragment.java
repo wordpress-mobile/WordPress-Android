@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -24,7 +23,6 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
-import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +30,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -68,7 +65,9 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements WPListView.OnScrollDirectionListener {
+        implements WPListView.OnScrollDirectionListener,
+                   ReaderCustomViewListener,
+                   ReaderWebView.ReaderWebViewImageClickListener {
 
     static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType);
@@ -88,7 +87,7 @@ public class ReaderPostDetailFragment extends Fragment
     private WPListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
-    private WebView mWebView;
+    private ReaderWebView mReaderWebView;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
@@ -221,19 +220,16 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
 
-        // setup the webView
-        mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setWebViewClient(mReaderWebViewClient);
-        mWebView.setWebChromeClient(mReaderChromeClient);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        // setup the ReaderWebView
+        mReaderWebView = (ReaderWebView) view.findViewById(R.id.webView);
+        mReaderWebView.setWebViewClient(mReaderWebViewClient);
+        mReaderWebView.setCustomViewListener(this);
+        mReaderWebView.setImageClickListener(this);
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
-        mWebView.setVisibility(View.INVISIBLE);
+        mReaderWebView.setVisibility(View.INVISIBLE);
         mLayoutIcons.setVisibility(View.INVISIBLE);
-
-        // detect image taps so we can open images in the photo viewer activity
-        mWebView.setOnTouchListener(mWebViewTouchListener);
 
         return view;
     }
@@ -241,8 +237,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mWebView != null) {
-            mWebView.destroy();
+        if (mReaderWebView != null) {
+            mReaderWebView.destroy();
         }
     }
 
@@ -444,8 +440,8 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        if (mReaderChromeClient != null && mReaderChromeClient.inCustomView()) {
-            mReaderChromeClient.onHideCustomView();
+        if (mReaderWebView != null) {
+            mReaderWebView.hideCustomView();
         }
     }
 
@@ -1033,25 +1029,6 @@ public class ReaderPostDetailFragment extends Fragment
         return true;
     }
 
-    private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_UP:
-                    // detect when an image is tapped and shows it in the photo viewer activity
-                    HitTestResult hr = ((WebView) view).getHitTestResult();
-                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                        String imageUrl = hr.getExtra();
-                        return showPhotoViewer(imageUrl, view, (int) event.getX(), (int) event.getY());
-                    } else {
-                        return false;
-                    }
-                default:
-                    return false;
-            }
-        }
-    };
-
     private boolean hasStaticMenuDrawer() {
         return (getActivity() instanceof WPActionBarActivity)
                 && (((WPActionBarActivity) getActivity()).isStaticMenuDrawer());
@@ -1420,11 +1397,11 @@ public class ReaderPostDetailFragment extends Fragment
             mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
 
             // enable JavaScript in the webView if it's safe to do so
-            mWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
+            mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
 
             // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
             // https://code.google.com/p/android/issues/detail?id=4401
-            mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
@@ -1443,7 +1420,7 @@ public class ReaderPostDetailFragment extends Fragment
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
             // right away, otherwise show them after a brief delay - this gives content time to
             // load before likes/comments appear
-            if (mWebView.getVisibility() == View.VISIBLE) {
+            if (mReaderWebView.getVisibility() == View.VISIBLE) {
                 showContent();
             } else {
                 showContentDelayed();
@@ -1460,7 +1437,7 @@ public class ReaderPostDetailFragment extends Fragment
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mWebView.getVisibility() != View.VISIBLE)
+                if (mReaderWebView.getVisibility() != View.VISIBLE)
                     AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
@@ -1471,7 +1448,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (!hasActivity())
             return;
 
-        mWebView.setVisibility(View.VISIBLE);
+        mReaderWebView.setVisibility(View.VISIBLE);
 
         // show likes & comments
         refreshLikes(false);
@@ -1509,33 +1486,39 @@ public class ReaderPostDetailFragment extends Fragment
     };
 
     /*
-    * custom WebChromeClient which enables fullscreen video
+    * called by ReaderWebView to enable fullscreen video
     */
-    private final ReaderWebChromeClient mReaderChromeClient = new ReaderWebChromeClient(new ReaderCustomViewListener() {
-        @Override
-        public ViewGroup onRequestCustomView() {
-            if (hasActivity()) {
-                return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
-            } else {
-                return null;
-            }
+    @Override
+    public ViewGroup onRequestCustomView() {
+        if (hasActivity()) {
+            return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
+        } else {
+            return null;
         }
-        @Override
-        public void onCustomViewShown() {
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.hide();
-            }
+    }
+    @Override
+    public void onCustomViewShown() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
         }
-        @Override
-        public void onCustomViewHidden() {
-            ActionBar actionBar = getActionBar();
-            if (actionBar != null) {
-                actionBar.show();
-            }
-            pauseWebView();
+    }
+    @Override
+    public void onCustomViewHidden() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.show();
         }
-    });
+        pauseWebView();
+    }
+
+    /*
+     * called when user taps an image in the ReaderWebView
+     */
+    @Override
+    public boolean onImageClick(String imageUrl, View view, int x, int y) {
+        return showPhotoViewer(imageUrl, view, x, y);
+    }
 
     /*
      * called when user taps a link in the webView
@@ -1567,8 +1550,8 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     void pauseWebView() {
-        if (mWebView != null) {
-            mWebView.onPause();
+        if (mReaderWebView != null) {
+            mReaderWebView.onPause();
         }
     }
 
