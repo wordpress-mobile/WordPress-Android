@@ -218,15 +218,20 @@ public class EditPostActivity extends Activity {
             previewMenuItem.setVisible(true);
         }
 
+        // Set text of the save button in the ActionBar
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
-            switch (mPost.getStatusEnum()) {
-                case PUBLISHED:
-                case UNKNOWN:
-                    saveMenuItem.setTitle(R.string.publish_post);
-                    break;
-                default:
-                    saveMenuItem.setTitle(R.string.save);
+            if (mPost.isLocalDraft()) {
+                switch (mPost.getStatusEnum()) {
+                    case PUBLISHED:
+                    case UNKNOWN:
+                        saveMenuItem.setTitle(R.string.publish_post);
+                        break;
+                    default:
+                        saveMenuItem.setTitle(R.string.save);
+                }
+            } else {
+                saveMenuItem.setTitle(R.string.update_location);
             }
         }
 
