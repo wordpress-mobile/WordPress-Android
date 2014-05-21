@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPViewPager;
@@ -281,6 +282,11 @@ public class EditPostActivity extends Activity {
     }
 
     private void savePost(boolean isAutosave) {
+        if (mPost == null) {
+            AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
+            return;
+        }
+
         // Update post content from fragment fields
         if (mEditPostContentFragment != null) {
             mEditPostContentFragment.savePostContent(isAutosave);
