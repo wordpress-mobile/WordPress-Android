@@ -235,7 +235,11 @@ public class EditPostActivity extends Activity {
                     }
                     break;
                 default:
-                    saveMenuItem.setTitle(R.string.save);
+                    if (mPost.isLocalDraft()) {
+                        saveMenuItem.setTitle(R.string.save);
+                    } else {
+                        saveMenuItem.setTitle(R.string.update_verb);
+                    }
             }
         }
 
