@@ -1,147 +1,106 @@
 package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.simperium.client.Bucket;
+import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
-class NotesAdapter extends BaseAdapter {
+class NotesAdapter extends CursorAdapter {
+
     private final int mAvatarSz;
-    private final LayoutInflater mInflater;
-    private final ArrayList<Note> mNotes = new ArrayList<Note>();
-    private boolean mIsAddingNotes;
-    private final DataLoadedListener mDataLoadedListener;
+    private final Query mQuery;
+    private final Context mContext;
 
-    public interface DataLoadedListener {
-        public void onDataLoaded(boolean isEmpty);
+    NotesAdapter(Context context, Bucket<Note> bucket) {
+        super(context, null, 0x0);
+
+        mContext = context;
+        // build a query that sorts by timestamp descending
+        mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
+
+        mAvatarSz = DisplayUtils.dpToPx(context, 48);
     }
 
-    NotesAdapter(Context context, DataLoadedListener dataLoadedListener) {
-        mInflater = LayoutInflater.from(context);
-        mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-        mDataLoadedListener = dataLoadedListener;
-    }
-
-    boolean isAddingNotes() {
-        return mIsAddingNotes;
-    }
-
-    @Override
-    public int getCount() {
-        return mNotes.size();
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    private boolean isValidPosition(int position) {
-        return (position >= 0 && position < mNotes.size());
-    }
-
-    @Override
-    public Note getItem(int position) {
-        if (isValidPosition(position))
-            return mNotes.get(position);
-        return null;
-    }
-
-    public int indexOfNote(Note note) {
-        if (note == null) {
-            return -1;
+    public void closeCursor() {
+        Cursor cursor = getCursor();
+        if (cursor != null) {
+            cursor.close();
         }
-        for (int i = 0; i < mNotes.size(); i++) {
-            if (StringUtils.equals(mNotes.get(i).getId(), note.getId())) {
-                return i;
-            }
-        }
-        return -1;
+    }
+
+    public void reloadNotes() {
+        changeCursor(mQuery.execute());
+    }
+
+    public Note getNote(int position) {
+        getCursor().moveToPosition(position);
+        return getNote();
+    }
+
+    private Note getNote() {
+        return ((Bucket.ObjectCursor<Note>) getCursor()).getObject();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final Note note = getItem(position);
-        final NoteViewHolder holder;
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.note_list_item, null);
-            holder = new NoteViewHolder(convertView);
-            convertView.setTag(holder);
-        } else {
-            holder = (NoteViewHolder) convertView.getTag();
-        }
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.note_list_item, parent, false);
+        NoteViewHolder holder = new NoteViewHolder(view);
+        view.setTag(holder);
 
+        return view;
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        if (cursor.isClosed())
+            return;
+
+        Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
+        Note note = bucketCursor.getObject();
+
+        NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
+
+        noteViewHolder.txtLabel.setText(note.getSubject());
         if (note.isCommentType()) {
-            holder.txtDetail.setText(note.getCommentPreview());
-            holder.txtDetail.setVisibility(View.VISIBLE);
+            noteViewHolder.txtDetail.setText(note.getCommentPreview());
+            noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
         } else {
-            holder.txtDetail.setVisibility(View.GONE);
+            noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
-        holder.txtLabel.setText(note.getSubject());
-        holder.txtDate.setText(note.getTimeSpan());
-        holder.imgNoteIcon.setImageDrawable(getDrawableForType(convertView.getContext(), note.getType()));
+        noteViewHolder.txtDate.setText(note.getTimeSpan());
 
         String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
-        holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
-        holder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
-        holder.placeholderLoading.setVisibility(note.isPlaceholder() ? View.VISIBLE : View.GONE);
+        noteViewHolder.imgNoteIcon.setImageDrawable(getDrawableForType(note.getType()));
 
-        return convertView;
-    }
-
-    public void addAll(List<Note> notes, boolean clearBeforeAdding) {
-        if (notes.size() > 0) {
-            Collections.sort(notes, new Note.TimeStampComparator());
-            mIsAddingNotes = true;
-            try {
-                if (clearBeforeAdding)
-                    mNotes.clear();
-                mNotes.addAll(notes);
-            } finally {
-                notifyDataSetChanged();
-                mIsAddingNotes = false;
-            }
-        }
-
-        if (mDataLoadedListener != null)
-            mDataLoadedListener.onDataLoaded(isEmpty());
-    }
-
-    /*
-     * called by activity when a note has changed - passed note will already contain the changes
-     * but will still have the same note id
-     */
-    protected void updateNote(Note updatedNote) {
-        int index = indexOfNote(updatedNote);
-        if (index == -1)
-            return;
-        mNotes.set(index, updatedNote);
-        notifyDataSetChanged();
+        noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
     }
 
     // HashMap of drawables for note types
     private final HashMap<String, Drawable> mNoteIcons = new HashMap<String, Drawable>();
-    private Drawable getDrawableForType(Context context, String noteType) {
-        if (context == null || noteType == null)
+
+    private Drawable getDrawableForType(String noteType) {
+        if (mContext == null || noteType == null)
             return null;
 
         // use like icon for comment likes
@@ -152,13 +111,13 @@ class NotesAdapter extends BaseAdapter {
         if (icon != null)
             return icon;
 
-        int imageId = context.getResources().getIdentifier("note_icon_" + noteType, "drawable", context.getPackageName());
+        int imageId = mContext.getResources().getIdentifier("note_icon_" + noteType, "drawable", mContext.getPackageName());
         if (imageId == 0) {
-            AppLog.i(AppLog.T.NOTIFS, "unknown note type - " + noteType);
+            Log.w(AppLog.TAG, "unknown note type - " + noteType);
             return null;
         }
 
-        icon = context.getResources().getDrawable(imageId);
+        icon = mContext.getResources().getDrawable(imageId);
         if (icon == null)
             return null;
 
@@ -171,7 +130,6 @@ class NotesAdapter extends BaseAdapter {
         private final TextView txtDetail;
         private final TextView unreadIndicator;
         private final TextView txtDate;
-        private final ProgressBar placeholderLoading;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgNoteIcon;
 
@@ -180,7 +138,6 @@ class NotesAdapter extends BaseAdapter {
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             unreadIndicator = (TextView) view.findViewById(R.id.unread_indicator);
             txtDate = (TextView) view.findViewById(R.id.text_date);
-            placeholderLoading = (ProgressBar) view.findViewById(R.id.placeholder_loading);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             imgNoteIcon = (ImageView) view.findViewById(R.id.note_icon);
         }

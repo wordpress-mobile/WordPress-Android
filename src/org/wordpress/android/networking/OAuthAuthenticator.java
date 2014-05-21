@@ -11,6 +11,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.util.SimperiumUtils;
 
 public class OAuthAuthenticator implements Authenticator {
     @Override
@@ -93,6 +94,10 @@ public class OAuthAuthenticator implements Authenticator {
                             blog.setApi_key(token.toString());
                             WordPress.wpDB.saveBlog(blog);
                         }
+
+                        // Once we have a token, start up Simperium
+                        SimperiumUtils.configureSimperium(WordPress.getContext(), token.toString());
+
                         request.sendWithAccessToken(token);
                     }
                 },

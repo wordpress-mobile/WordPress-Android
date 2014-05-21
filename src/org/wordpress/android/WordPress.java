@@ -44,6 +44,7 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -113,6 +114,8 @@ public class WordPress extends Application {
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
+        configureSimperium();
+
         // Volley networking setup
         setupVolleyQueue();
 
@@ -141,6 +144,13 @@ public class WordPress extends Application {
         registerActivityLifecycleCallbacks(pnBackendMonitor);
 
         updateCurrentBlogStatsInBackground(false);
+    }
+
+    // Configure Simperium and start buckets if we are signed in to WP.com
+    private void configureSimperium() {
+        if (!TextUtils.isEmpty(getWPComAuthToken(this))) {
+            SimperiumUtils.configureSimperium(this, getWPComAuthToken(this));
+        }
     }
 
     public static void setupVolleyQueue() {
@@ -444,6 +454,15 @@ public class WordPress extends Application {
         // reset all reader-related prefs & data
         UserPrefs.reset();
         ReaderDatabase.reset();
+
+        // Reset Simperium buckets (removes local data)
+        SimperiumUtils.resetBucketsAndDeauthorize();
+
+        // send broadcast that user is signing out - this is received by WPActionBarActivity
+        // descendants
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     public static boolean sendLocalBroadcast(Context context, String action) {

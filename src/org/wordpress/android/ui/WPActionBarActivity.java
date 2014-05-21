@@ -57,6 +57,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -1101,6 +1102,10 @@ public abstract class WPActionBarActivity extends Activity {
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
                 ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+            }
+            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED) &&
+                    WPActionBarActivity.this instanceof NotificationsActivity) {
+                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again, R.string.simperium_connection_error);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
                 // TODO: add a specific message like "you must use a specific app password"

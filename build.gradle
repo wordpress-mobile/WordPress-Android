@@ -15,6 +15,7 @@ repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'http://download.crashlytics.com/maven' }
+    maven { url "http://simperium.github.io/simperium-android" }
 }
 
 apply plugin: 'android'
@@ -78,7 +79,6 @@ android {
         // These are provided by the WordPress-Android Repository
         compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
         compile 'org.wordpress:gcm:1.0.0'
-        compile 'org.wordpress:volley:wp-0.0.1'
         compile 'com.automattic:wordpresscom-rest:0.0.5'
         compile 'org.wordpress:httpmime:4.1.2'
         compile 'org.wordpress:graphview:3.1.1'
@@ -90,6 +90,9 @@ android {
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
+
+        // Simperium
+        compile 'com.simperium:simperium-android:0.4.6'
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')

@@ -3,31 +3,32 @@ package org.wordpress.android.ui.notifications;
 import android.app.ListFragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObject;
+import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SimperiumUtils;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-public class NotificationsListFragment extends ListFragment implements NotesAdapter.DataLoadedListener {
-    private static final int LOAD_MORE_WITHIN_X_ROWS = 5;
-    private NoteProvider mNoteProvider;
+public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
+    private PullToRefreshHelper mFauxPullToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
-    private View mProgressFooterView;
-    private boolean mAllNotesLoaded;
-    private PullToRefreshHelper mPullToRefreshHelper;
+    private boolean mShouldLoadFirstNote;
+
+    Bucket<Note> mBucket;
 
     /**
      * For responding to tapping of notes
@@ -36,36 +37,25 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         public void onClickNote(Note note);
     }
 
-    /**
-     * For providing more notes data when getting to the end of the list
-     */
-    public interface NoteProvider {
-        public boolean canRequestMore();
-        public void onRequestMoreNotifications();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mProgressFooterView = View.inflate(getActivity(), R.layout.list_footer_progress, null);
-        mProgressFooterView.setVisibility(View.GONE);
-        return inflater.inflate(R.layout.empty_listview, container, false);
-    }
-
-    public void animateRefresh(boolean refresh) {
-        mPullToRefreshHelper.setRefreshing(refresh);
+        View v = inflater.inflate(R.layout.empty_listview, container, false);
+        return v;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // setup the initial notes adapter, starts listening to the bucket
+        mBucket = SimperiumUtils.getNotesBucket();
+        mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setOnScrollListener(new ListScrollListener());
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
-        listView.addFooterView(mProgressFooterView, null, false);
-        setListAdapter(getNotesAdapter());
+        setListAdapter(mNotesAdapter);
 
         // Set empty text if no notifications
         TextView textview = (TextView) listView.getEmptyView();
@@ -75,155 +65,118 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         initPullToRefreshHelper();
-        mPullToRefreshHelper.registerReceiver(getActivity());
+        mFauxPullToRefreshHelper.registerReceiver(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshNotes();
+
+        // start listening to bucket change events
+        mBucket.addListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        // unregister the listener and close the cursor
+        mBucket.removeListener(this);
+
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mNotesAdapter.closeCursor();
+
+        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
+        super.onDestroyView();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        boolean isRefreshing = mPullToRefreshHelper.isRefreshing();
+        boolean isRefreshing = mFauxPullToRefreshHelper.isRefreshing();
         super.onConfigurationChanged(newConfig);
         // Pull to refresh layout is destroyed onDetachedFromWindow,
         // so we have to re-init the layout, via the helper here
         initPullToRefreshHelper();
-        mPullToRefreshHelper.setRefreshing(isRefreshing);
+        mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
     }
 
     private void initPullToRefreshHelper() {
-        mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
+        mFauxPullToRefreshHelper = new PullToRefreshHelper(
+                getActivity(),
                 (PullToRefreshLayout) getActivity().findViewById(R.id.ptr_layout),
-                new RefreshListener() {
+                new PullToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
-                        if (getActivity() == null || !NetworkUtils.checkConnection(getActivity())) {
-                            mPullToRefreshHelper.setRefreshing(false);
-                            return;
-                        }
-                        if (getActivity() instanceof NotificationsActivity) {
-                            ((NotificationsActivity) getActivity()).refreshNotes();
-                        }
+                        // Show a fake refresh animation for a few seconds
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (hasActivity()) {
+                                    mFauxPullToRefreshHelper.setRefreshing(false);
+                                }
+                            }
+                        }, 2000);
                     }
-                }, TextView.class);
+                }, LinearLayout.class
+        );
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Note note = getNotesAdapter().getItem(position);
+        Note note = mNotesAdapter.getNote(position);
         l.setItemChecked(position, true);
-        if (note != null && !note.isPlaceholder() && mNoteClickListener != null) {
+        if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
         }
-    }
-
-    public void setNoteSelected(Note note, boolean scrollToNote) {
-        if (!hasActivity() || getView() == null) {
-            AppLog.w(T.NOTIFS, "notifications list, note selected when fragment is invalid");
-            return;
-        }
-        int position = getNotesAdapter().indexOfNote(note);
-        if (position >= 0) {
-            getListView().setItemChecked(position, true);
-            if (scrollToNote) {
-                getListView().setSelection(position);
-            }
-        }
-    }
-
-    NotesAdapter getNotesAdapter() {
-        if (mNotesAdapter == null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), this);
-        }
-        return mNotesAdapter;
-    }
-
-    boolean hasAdapter() {
-        return (mNotesAdapter != null);
-    }
-
-    /*
-     * update the passed note in the adapter
-     */
-    protected void updateNote(Note note) {
-        if (hasActivity() && hasAdapter())
-            getNotesAdapter().updateNote(note);
-    }
-
-    /*
-     * called by NotesAdapter after loading notes
-     */
-    @Override
-    public void onDataLoaded(boolean isEmpty) {
-        hideProgressFooter();
-    }
-
-    public void setNoteProvider(NoteProvider provider) {
-        mNoteProvider = provider;
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {
         mNoteClickListener = listener;
     }
 
-    private void requestMoreNotifications() {
-        if (getView() == null) {
-            AppLog.w(T.NOTIFS, "requestMoreNotifications called before view exists");
-            return;
-        }
-
-        if (!hasActivity()) {
-            AppLog.w(T.NOTIFS, "requestMoreNotifications called without activity");
-            return;
-        }
-
-        if (mNoteProvider != null && mNoteProvider.canRequestMore()) {
-            showProgressFooter();
-            mNoteProvider.onRequestMoreNotifications();
-        }
-    }
-
-    void setAllNotesLoaded(boolean allNotesLoaded) {
-        mAllNotesLoaded = allNotesLoaded;
-    }
-
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
-    /*
-     * show/hide the "Loading" footer
-     */
-    private void showProgressFooter() {
-        if (mProgressFooterView != null)
-            mProgressFooterView.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressFooter() {
-        if (mProgressFooterView != null)
-            mProgressFooterView.setVisibility(View.GONE);
-    }
-
-    private class ListScrollListener implements AbsListView.OnScrollListener {
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (visibleItemCount == 0 || totalItemCount == 0)
-                return;
-
-            // skip if all notes are loaded or notes are currently being added to the adapter
-            if (mAllNotesLoaded || getNotesAdapter().isAddingNotes())
-                return;
-
-            // if we're within 5 from the last item we should ask for more items
-            if (firstVisibleItem + visibleItemCount >= totalItemCount - LOAD_MORE_WITHIN_X_ROWS) {
-                requestMoreNotifications();
+    protected void updateLastSeenTime() {
+        // set the timestamp to now
+        try {
+            if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
+                Note newestNote = mNotesAdapter.getNote(0);
+                BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
+                meta.setProperty("last_seen", newestNote.getTimestamp());
+                meta.save();
             }
+        } catch (BucketObjectMissingException e) {
+            // try again later, meta is created by wordpress.com
+        }
+    }
+
+    public void refreshNotes() {
+        if (!hasActivity() || mNotesAdapter == null) {
+            return;
         }
 
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mNotesAdapter.reloadNotes();
+                updateLastSeenTime();
+
+                // Show first note if we're on a landscape tablet
+                if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
+                    mShouldLoadFirstNote = false;
+                    Note note = mNotesAdapter.getNote(0);
+                    if (note != null && mNoteClickListener != null) {
+                        mNoteClickListener.onClickNote(note);
+                        getListView().setItemChecked(0, true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -234,9 +187,34 @@ public class NotificationsListFragment extends ListFragment implements NotesAdap
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Simperium bucket listener methods
+     */
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+    public void onSaveObject(Bucket<Note> bucket, Note object) {
+        refreshNotes();
+    }
+
+    @Override
+    public void onDeleteObject(Bucket<Note> bucket, Note object) {
+        refreshNotes();
+    }
+
+    @Override
+    public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+        refreshNotes();
+    }
+
+    @Override
+    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+        //noop
+    }
+
+    public void setShouldLoadFirstNote(boolean shouldLoad) {
+        mShouldLoadFirstNote = shouldLoad;
+    }
+
+    private boolean hasActivity() {
+        return getActivity() != null;
     }
 }

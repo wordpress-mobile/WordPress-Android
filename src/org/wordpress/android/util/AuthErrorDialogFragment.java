@@ -16,10 +16,28 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
  * An alert dialog fragment for XML-RPC authentication failures
  */
 public class AuthErrorDialogFragment extends DialogFragment {
-    private static boolean mIsWPCom;
+    public static int DEFAULT_RESOURCE_ID = -1;
 
-    public static AuthErrorDialogFragment newInstance(boolean isWPCom) {
+    private static boolean mIsWPCom;
+    private static int mMessageId;
+    private static int mTitleId;
+
+    public static AuthErrorDialogFragment newInstance(boolean isWPCom, int titleResourceId, int messageResourceId) {
         mIsWPCom = isWPCom;
+
+        if (titleResourceId != DEFAULT_RESOURCE_ID) {
+            mTitleId = titleResourceId;
+        } else if (mIsWPCom) {
+            mTitleId = R.string.wpcom_signin_dialog_title;
+        } else {
+            mTitleId = R.string.connection_error;
+        }
+
+        if (messageResourceId != DEFAULT_RESOURCE_ID) {
+            mMessageId = messageResourceId;
+        } else {
+            mMessageId = R.string.incorrect_credentials;
+        }
         return new AuthErrorDialogFragment();
     }
 
@@ -34,10 +52,9 @@ public class AuthErrorDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-        b.setTitle(R.string.wpcom_signin_dialog_title);
+        b.setTitle(mTitleId);
+        b.setMessage(mMessageId);
         if (mIsWPCom) {
-            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(
-                    R.string.please_sign_in));
             b.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -48,8 +65,6 @@ public class AuthErrorDialogFragment extends DialogFragment {
                 }
             });
         } else {
-            b.setMessage(getResources().getText(R.string.incorrect_credentials) + " " + getResources().getText(
-                    R.string.load_settings));
             b.setCancelable(true);
             b.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
                 @Override

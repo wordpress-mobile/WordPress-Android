@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.notifications.NotificationUtils.NoteUpdatedListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -27,7 +26,7 @@ import java.lang.ref.WeakReference;
  * NoteCommentLikeFragment to display list of liking/following users which enables
  * following/unfollowing each of them
  */
-public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListener {
+public class NoteFollowAdapter extends BaseAdapter {
     private JSONArray mItems;
     private Note mNote;
     private final boolean mDiscardFirstItem;
@@ -44,17 +43,17 @@ public class NoteFollowAdapter extends BaseAdapter implements NoteUpdatedListene
         setNote(note);
 
         // request the latest version of this note to ensure follow statuses are correct
-        NotificationUtils.updateNotification(getNoteId(), this);
+        //NotificationUtils.updateNotification(getNoteId(), this);
     }
 
     /*
      * fired by NotificationUtils.updateNotification() when this note has been updated
      */
-    @Override
+    /*@Override
     public void onNoteUpdated(int noteId) {
         if (hasContext())
             setNote(WordPress.wpDB.getNoteById(noteId));
-    }
+    }*/
 
     private boolean hasContext() {
         return (mWeakContext.get() != null);

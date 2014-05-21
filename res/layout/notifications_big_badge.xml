@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableLeft="@drawable/note_icon_stats"
+            android:drawableLeft="@drawable/note_icon_traffic_surge"
             android:padding="@dimen/margin_large"
             android:text="@string/view_stats_activity"
             android:textColor="@color/reader_hyperlink"
