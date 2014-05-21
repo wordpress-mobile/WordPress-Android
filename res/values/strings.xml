@@ -439,6 +439,7 @@
     <string name="publish_date">Publish</string>
     <string name="edit">Edit</string>
     <string name="post_format">Post format</string>
+    <string name="schedule_verb">Schedule</string>
 
     <!-- post date selection -->
     <string name="select_date">Select date</string>

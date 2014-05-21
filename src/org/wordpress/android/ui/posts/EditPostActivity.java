@@ -222,17 +222,20 @@ public class EditPostActivity extends Activity {
         // Set text of the save button in the ActionBar
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
-            if (mPost.isLocalDraft()) {
-                switch (mPost.getStatusEnum()) {
-                    case PUBLISHED:
-                    case UNKNOWN:
+            switch (mPost.getStatusEnum()) {
+                case SCHEDULED:
+                    saveMenuItem.setTitle(getString(R.string.schedule_verb));
+                    break;
+                case PUBLISHED:
+                case UNKNOWN:
+                    if (mPost.isLocalDraft()) {
                         saveMenuItem.setTitle(R.string.publish_post);
-                        break;
-                    default:
-                        saveMenuItem.setTitle(R.string.save);
-                }
-            } else {
-                saveMenuItem.setTitle(R.string.update_verb);
+                    } else {
+                        saveMenuItem.setTitle(R.string.update_verb);
+                    }
+                    break;
+                default:
+                    saveMenuItem.setTitle(R.string.save);
             }
         }
 
@@ -287,12 +290,12 @@ public class EditPostActivity extends Activity {
             return;
         }
 
-        // Update post content from fragment fields
+        // Update post object from fragment fields
         if (mEditPostContentFragment != null) {
-            mEditPostContentFragment.savePostContent(isAutosave);
+            mEditPostContentFragment.updatePostContent(isAutosave);
         }
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.savePostSettings();
+            mEditPostSettingsFragment.updatePostSettings();
         }
 
         WordPress.wpDB.updatePost(mPost);

@@ -115,7 +115,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (mActivity != null) {
-                    mActivity.getPost().setPostStatus(getPostStatusForSpinnerPosition(position));
+                    updatePostSettings();
                     mActivity.invalidateOptionsMenu();
                 }
             }
@@ -425,6 +425,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
+
+                            if (mActivity != null) {
+                                updatePostSettings();
+                                mActivity.invalidateOptionsMenu();
+                            }
                             AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
@@ -440,7 +445,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                         }).setView(timePicker).show();
     }
 
-    public void savePostSettings() {
+    /**
+     * Updates post object with content of this fragment
+     */
+    public void updatePostSettings() {
         Post post = mActivity.getPost();
         if (post == null)
             return;

@@ -515,7 +515,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
     }
 
-    public void savePostContent(boolean isAutoSave) {
+    /**
+     * Updates post object with content of this fragment
+     */
+    public void updatePostContent(boolean isAutoSave) {
         Post post = mActivity.getPost();
 
         if (post == null || mContentEditText.getText() == null)
