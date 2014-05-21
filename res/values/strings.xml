@@ -536,8 +536,6 @@
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="manage">Manage</string>
-    <string name="discard">Discard</string>
-    <string name="prompt_save_changes">Would you like to save your changes?</string>
     <string name="error_downloading_image">Error downloading image</string>
 
     <!-- Passcode lock -->
@@ -596,12 +594,10 @@
     <string name="reader_btn_reblog">Reblog</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
-    <string name="reader_btn_ignore">Ignore</string>
 
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
-    <string name="reader_hint_add_tag">Enter a tag</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
     <string name="reader_hint_reblog_comment">Optional comment</string>
 
