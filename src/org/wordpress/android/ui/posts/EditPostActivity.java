@@ -231,7 +231,7 @@ public class EditPostActivity extends Activity {
                         saveMenuItem.setTitle(R.string.save);
                 }
             } else {
-                saveMenuItem.setTitle(R.string.update_location);
+                saveMenuItem.setTitle(R.string.update_verb);
             }
         }
 

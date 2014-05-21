@@ -254,6 +254,7 @@
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
+    <string name="update_verb">Update</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>
@@ -305,7 +306,6 @@
     <string name="geotag">Geotag posts</string>
     <string name="location_toast">Location data not yet available…</string>
     <string name="view_map">View map</string>
-    <string name="update_location">Update</string>
     <string name="location_not_found">Unknown location</string>
     <string name="remove_location">Remove</string>
 
