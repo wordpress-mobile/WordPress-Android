@@ -220,25 +220,7 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutIcons.setVisibility(View.GONE);
 
         // detect image taps so we can open images in the photo viewer activity
-        mWebView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_UP) {
-                    HitTestResult hr = ((WebView)v).getHitTestResult();
-                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                        String imageUrl = hr.getExtra();
-                        if (imageUrl == null)
-                            return false;
-                        // skip if image is a file: reference - this will be the video overlay, ie:
-                        // file:///android_res/drawable/ic_reader_video_overlay.png
-                        if (imageUrl.startsWith("file:"))
-                            return false;
-                        showPhotoViewer(imageUrl);
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        mWebView.setOnTouchListener(mWebViewTouchListener);
 
         return view;
     }
@@ -1006,21 +988,40 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
-     * called when user taps an image in the webView - shows the image full-screen
-     */
-    private void showPhotoViewer(final String imageUrl) {
-        if (TextUtils.isEmpty(imageUrl))
-            return;
-        if (!hasActivity())
-            return;
-        // images in private posts must use https for auth token to be sent with request
-        if (mPost.isPrivate) {
-            ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), UrlUtils.makeHttps(imageUrl));
-        } else {
-            ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl);
+    private boolean showPhotoViewer(String imageUrl, View source, int startX, int startY) {
+        if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
+            return false;
         }
+
+        // images in private posts must use https for auth token to be sent with request
+        if (hasPost() && mPost.isPrivate) {
+            imageUrl = UrlUtils.makeHttps(imageUrl);
+        }
+
+        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl, source, startX, startY);
+        return true;
     }
+
+    /*
+     * touch listener for the webView - detects when an image is tapped and shows it in the
+     * photo viewer activity
+     */
+    private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
+            if (event.getAction() != MotionEvent.ACTION_UP) {
+                return false;
+            }
+
+            HitTestResult hr = ((WebView)view).getHitTestResult();
+            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                String imageUrl = hr.getExtra();
+                return showPhotoViewer(imageUrl, view, (int)event.getX(), (int)event.getY());
+            } else {
+                return false;
+            }
+        }
+    };
 
     private boolean hasStaticMenuDrawer() {
         return (getActivity() instanceof WPActionBarActivity)
@@ -1100,6 +1101,11 @@ public class ReaderPostDetailFragment extends Fragment
               .append("        border: 1px solid ").append(greyLight).append("; ")
               .append("        background-color: ").append(greyExtraLight).append("; ")
               .append("        padding: ").append(marginSmall).append("px; }");
+
+        // add a left border to blockquotes
+        sbHtml.append("  blockquote { margin-left: ").append(marginSmall).append("px; ")
+              .append("               padding-left: ").append(marginSmall).append("px; ")
+              .append("               border-left: 3px solid ").append(greyLight).append("; }");
 
         // make sure links don't overflow and are shown in the same color they are elsewhere in the app
         sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
@@ -1341,8 +1347,10 @@ public class ReaderPostDetailFragment extends Fragment
                 imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
                 imgFeatured.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        showPhotoViewer(mPost.getFeaturedImage());
+                    public void onClick(View view) {
+                        int startX = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
+                        int startY = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
+                        showPhotoViewer(mPost.getFeaturedImage(), view, startX, startY);
                     }
                 });
             } else {

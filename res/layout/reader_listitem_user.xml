@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
+    android:background="@drawable/reader_transparent_selector"
     android:padding="@dimen/margin_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
@@ -35,7 +36,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_name"
-            android:background="@drawable/reader_transparent_selector"
             android:ellipsize="end"
             android:maxLines="1"
             tools:text="text_url"

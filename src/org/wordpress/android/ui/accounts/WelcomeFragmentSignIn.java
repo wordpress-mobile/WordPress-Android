@@ -455,8 +455,15 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         protected List doInBackground(Void... args) {
             List userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (mErrorMsgId != 0) {
+                return null;
+            }
             if (userBlogList != null) {
                 mSetupBlog.addBlogs(userBlogList);
+            }
+            mErrorMsgId = mSetupBlog.getErrorMsgId();
+            if (mErrorMsgId != 0) {
+                return null;
             }
             return userBlogList;
         }

@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
+import android.view.View;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -56,24 +58,34 @@ public class ReaderActivityLauncher {
 
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                    activity,
-                    R.anim.reader_flyin,
-                    0);
-            activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS, options.toBundle());
-        } else {
-            activity.startActivityForResult(intent, Constants.INTENT_READER_SUBS);
-        }
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.reader_flyin,
+                0);
+        ActivityCompat.startActivityForResult(activity, intent, Constants.INTENT_READER_SUBS, options.toBundle());
     }
 
-    public static void showReaderPhotoViewer(Context context, String imageUrl) {
+    public static void showReaderPhotoViewer(Activity activity,
+                                             String imageUrl,
+                                             View source,
+                                             int startX,
+                                             int startY) {
         if (TextUtils.isEmpty(imageUrl)) {
             return;
         }
-        Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
+
+        Intent intent = new Intent(activity, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderPhotoViewerActivity.ARG_IMAGE_URL, imageUrl);
-        context.startActivity(intent);
+
+        // use built-in scale animation on jb+, fall back to our own animation on pre-jb
+        if (source != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        } else {
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.reader_photo_in, 0);
+        }
     }
 
     public static void showReaderReblogForResult(Activity activity, ReaderPost post) {

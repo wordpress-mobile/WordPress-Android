@@ -8,7 +8,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
-        style="@style/ReaderTextView.DialogTitle"
+        style="@style/ReaderTextView.PopupTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/reader_title_reblog" />
@@ -19,7 +19,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_small"
-        android:background="@color/reader_divider_blue" />
+        android:background="@color/reader_divider_grey" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"

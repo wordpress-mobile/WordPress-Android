@@ -1,42 +1,40 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
-import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends Activity {
-    private ListView mListView;
-    private TextView mTxtTitle;
-    private ReaderPost mPost;
     private static final String LIST_STATE = "list_state";
     private Parcelable mListState = null;
+    private ListView mListView;
 
     private ListView getListView() {
-        if (mListView==null)
+        if (mListView == null) {
             mListView = (ListView) findViewById(android.R.id.list);
+        }
         return mListView;
     }
 
     private ReaderUserAdapter mAdapter;
     private ReaderUserAdapter getAdapter() {
-        if (mAdapter == null)
+        if (mAdapter == null) {
             mAdapter = new ReaderUserAdapter(this, mDataLoadedListener);
+        }
         return mAdapter;
     }
 
@@ -46,7 +44,7 @@ public class ReaderUserListActivity extends Activity {
     private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            // restore listView state - this returns to the previously scrolled-to item
+            // restore listView state so user returns to the previously scrolled-to item
             if (!isEmpty && mListState != null) {
                 getListView().onRestoreInstanceState(mListState);
                 mListState = null;
@@ -60,21 +58,23 @@ public class ReaderUserListActivity extends Activity {
 
         setContentView(R.layout.reader_activity_userlist);
 
-        // hide title until text set by updateTitle()
-        mTxtTitle = (TextView) findViewById(R.id.text_title);
-        mTxtTitle.setVisibility(View.INVISIBLE);
-
-        // for now this activity only supports showing users who like a specific post
         long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
-        mPost = ReaderPostTable.getPost(blogId, postId);
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
+        }
+
+        // use a fixed size for the root view so the activity won't change
+        // size as users are loaded
+        final ViewGroup rootView = (ViewGroup) findViewById(R.id.layout_container);
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        boolean isLandscape = DisplayUtils.isLandscape(this);
+        int maxHeight = displayHeight - (displayHeight / (isLandscape ? 5 : 3));
+        rootView.getLayoutParams().height = maxHeight;
 
         getListView().setAdapter(getAdapter());
-        loadUsers();
-        updateTitle();
+        loadUsers(blogId, postId);
     }
 
     @Override
@@ -86,75 +86,53 @@ public class ReaderUserListActivity extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (getListView().getFirstVisiblePosition() > 0)
+        if (getListView().getFirstVisiblePosition() > 0) {
             outState.putParcelable(LIST_STATE, getListView().onSaveInstanceState());
+        }
     }
 
-    private void updateTitle() {
+    private void loadUsers(final long blogId, final long postId) {
         new Thread() {
             @Override
             public void run() {
-                //int numLikes = ReaderLikeTable.getNumLikesForPost(mPost);
-                int numLikes = ReaderPostTable.getNumLikesForPost(mPost);
-                boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(mPost);
+                final String title = getTitleString(blogId, postId);
+                final TextView txtTitle = (TextView) findViewById(R.id.text_title);
 
-                final String title;
-                if (isLikedByCurrentUser) {
-                    switch (numLikes) {
-                        case 1 :
-                            title = getString(R.string.reader_likes_only_you);
-                            break;
-                        case 2 :
-                            title = getString(R.string.reader_likes_you_and_one);
-                            break;
-                        default :
-                            title = getString(R.string.reader_likes_you_and_multi, numLikes-1);
-                            break;
-                    }
-                } else {
-                    title = (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
-                }
+                final ReaderUserList users =
+                        ReaderUserTable.getUsersWhoLikePost(
+                                blogId,
+                                postId,
+                                ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mTxtTitle.setText(title);
-                        mTxtTitle.setVisibility(View.VISIBLE);
+                        if (!isFinishing()) {
+                            txtTitle.setText(title);
+                            getAdapter().setUsers(users);
+                        }
                     }
                 });
             }
         }.start();
     }
 
-    private void loadUsers() {
-        if (mIsTaskRunning) {
-            AppLog.w(AppLog.T.READER, "user task already running");
+    private String getTitleString(final long blogId, final long postId) {
+        int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
+        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+
+        if (isLikedByCurrentUser) {
+            switch (numLikes) {
+                case 1 :
+                    return getString(R.string.reader_likes_only_you);
+                case 2 :
+                    return getString(R.string.reader_likes_you_and_one);
+                default :
+                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
+            }
+        } else {
+            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
         }
-        new LoadUsersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private boolean mIsTaskRunning = false;
-    private class LoadUsersTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderUserList tmpUsers;
-        @Override
-        protected void onPreExecute() {
-            mIsTaskRunning = true;
-        }
-        @Override
-        protected void onCancelled() {
-            mIsTaskRunning = false;
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            tmpUsers = ReaderUserTable.getUsersWhoLikePost(mPost, ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
-            return true;
-        }
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (result) {
-                getAdapter().setUsers(tmpUsers);
-            }
-            mIsTaskRunning = false;
-        }
-    }
 }

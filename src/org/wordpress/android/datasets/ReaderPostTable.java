@@ -226,19 +226,15 @@ public class ReaderPostTable {
      * returns the #likes known to exist for this post (ie: #likes the server says this post has), which
      * may differ from ReaderPostTable.getNumLikesForPost (which returns # local likes for this post)
      */
-    public static int getNumLikesForPost(ReaderPost post) {
-        if (post == null)
-            return 0;
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+    public static int getNumLikesForPost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT num_likes FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
     }
 
-    public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        if (post == null)
-            return false;
-        String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
+    public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);

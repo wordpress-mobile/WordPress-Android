@@ -35,6 +35,7 @@
         android:id="@+id/text_new_posts"
         style="@style/ReaderTextView.MessageBar"
         android:text="@string/reader_label_new_posts"
+        android:layout_below="@+id/view_actionbar_spacer"
         android:visibility="gone"
         tools:visibility="visible" />
 

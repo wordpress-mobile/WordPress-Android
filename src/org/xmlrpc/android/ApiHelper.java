@@ -435,8 +435,7 @@ public class ApiHelper {
             boolean isPage = (Boolean) arguments.get(1);
             int recordCount = (Integer) arguments.get(2);
             boolean loadMore = (Boolean) arguments.get(3);
-            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Object[] result;
@@ -525,8 +524,7 @@ public class ApiHelper {
 
             String postId = (String) arguments.get(1);
             boolean isPage = (Boolean) arguments.get(2);
-            XMLRPCClient client = new XMLRPCClient(blog.getUrl(),
-                    blog.getHttpuser(),
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
             Object[] apiParams;

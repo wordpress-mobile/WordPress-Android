@@ -5,10 +5,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.posts.PostsActivity;
 
-public class LoginTest extends ActivityRobotiumTestCase<WelcomeActivity> {
+public class LoginTest extends ActivityRobotiumTestCase<PostsActivity> {
     public LoginTest() {
-        super(WelcomeActivity.class);
+        super(PostsActivity.class);
     }
 
     public void testGoodCredentials() throws Exception {
@@ -107,5 +108,15 @@ public class LoginTest extends ActivityRobotiumTestCase<WelcomeActivity> {
         mSolo.enterText(1, "test");
         mSolo.enterText(2, "==+--\\||##a");
         mSolo.clickOnText(mSolo.getString(R.string.sign_in));
+    }
+
+    // reproduce https://github.com/wordpress-mobile/WordPress-Android/issues/1354
+    public void testMalformedXMLRPCUrl() throws Exception {
+        RestClientFactoryTest.setPrefixAllInstances("default");
+        XMLRPCFactoryTest.setPrefixAllInstances("1354");
+        mSolo.enterText(0, "test");
+        mSolo.enterText(1, "test");
+        mSolo.clickOnText(mSolo.getString(R.string.sign_in));
+        mSolo.waitForActivity(WelcomeActivity.class);
     }
 }
