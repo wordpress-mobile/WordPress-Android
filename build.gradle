@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:0.9.+'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
-        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.0+'
     }
 }
 
@@ -21,7 +21,7 @@ apply plugin: 'android'
 apply plugin: 'android-cq'
 apply plugin: 'crashlytics'
 dependencies {
-    compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'com.crashlytics.android:crashlytics:1.0+'
 }
 
 android {

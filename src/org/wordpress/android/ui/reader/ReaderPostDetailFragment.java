@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
+
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -48,6 +49,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.ReaderWebChromeClient.ReaderCustomViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -88,6 +90,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private WebView mWebView;
+    private ReaderWebChromeClient mReaderChromeClient;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
@@ -222,8 +225,24 @@ public class ReaderPostDetailFragment extends Fragment
 
         // setup the webView
         mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setWebViewClient(readerWebViewClient);
+        mWebView.setWebViewClient(mReaderWebViewClient);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+
+        // setup the ReaderWebChromeClient so user can view fullscreen video
+        ReaderCustomViewListener customViewListener = new ReaderCustomViewListener() {
+            @Override
+            public void onCustomViewShown() {
+                setIsFullScreen(true);
+            }
+            @Override
+            public void onCustomViewHidden() {
+                setIsFullScreen(false);
+                pauseWebView();
+            }
+        };
+        ViewGroup customViewContainer = (ViewGroup) view.findViewById(R.id.layout_custom_view_container);
+        mReaderChromeClient = new ReaderWebChromeClient(customViewContainer, customViewListener);
+        mWebView.setWebChromeClient(mReaderChromeClient);
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
@@ -436,6 +455,14 @@ public class ReaderPostDetailFragment extends Fragment
         super.onStart();
         if (!hasPost()) {
             showPost();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mReaderChromeClient != null && mReaderChromeClient.inCustomView()) {
+            mReaderChromeClient.onHideCustomView();
         }
     }
 
@@ -1469,7 +1496,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private final WebViewClient readerWebViewClient = new WebViewClient() {
+    private final WebViewClient mReaderWebViewClient = new WebViewClient() {
         @Override
         public void onPageFinished(WebView view, String url) {
             // show the webView now that it has loaded
@@ -1527,4 +1554,5 @@ public class ReaderPostDetailFragment extends Fragment
             mWebView.onPause();
         }
     }
+
 }

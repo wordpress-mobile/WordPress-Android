@@ -63,6 +63,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
+    <!-- container for webView custom view - this is where fullscreen video will appear -->
+    <FrameLayout
+        android:id="@+id/layout_custom_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
     <ProgressBar
         android:id="@+id/progress_loading"
         style="@style/ReaderProgressBar"
