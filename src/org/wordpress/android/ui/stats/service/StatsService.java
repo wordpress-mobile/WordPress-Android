@@ -73,6 +73,7 @@ public class StatsService extends Service {
     private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
+    private Object mServiceBlogIdMonitor = new Object();
     private int mServiceStartId;
     private Serializable mErrorObject = null;
     private Request<JSONObject> mCurrentStatsNetworkRequest = null;
@@ -85,7 +86,9 @@ public class StatsService extends Service {
 
     @Override
     public void onDestroy() {
-        stopRefresh();
+        synchronized (mServiceBlogIdMonitor) {
+            stopRefresh();
+        }
         AppLog.i(T.STATS, "service destroyed");
         super.onDestroy();
     }
@@ -99,16 +102,18 @@ public class StatsService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
 
-        if (mServiceBlogId == null) {
-            startTasks(blogId, startId);
-        } else if (blogId.equals(mServiceBlogId)) {
-            // already running on the same blogID
-            // Do nothing
-            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
-        } else {
-            // stats is running on a different blogID
-            stopRefresh();
-            startTasks(blogId, startId);
+        synchronized (mServiceBlogIdMonitor) {
+            if (mServiceBlogId == null) {
+                startTasks(blogId, startId);
+            } else if (blogId.equals(mServiceBlogId)) {
+                // already running on the same blogID
+                // Do nothing
+                AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
+            } else {
+                // stats is running on a different blogID
+                stopRefresh();
+                startTasks(blogId, startId);
+            }
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -273,8 +278,10 @@ public class StatsService extends Service {
                     parseViewsByCountryResponse(response);
 
                     // Stop the service if this is the current response, or mServiceBlogId is null
-                    if (mServiceBlogId == null || mServiceBlogId.equals(mRequestBlogId)) {
-                        stopService();
+                    synchronized (mServiceBlogIdMonitor) {
+                        if (mServiceBlogId == null || mServiceBlogId.equals(mRequestBlogId)) {
+                            stopService();
+                        }
                     }
                 }
             });
