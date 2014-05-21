@@ -41,15 +41,14 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
-
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderWebChromeClient.ReaderCustomViewListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
-import org.wordpress.android.ui.reader.ReaderWebChromeClient.ReaderCustomViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -90,7 +89,6 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private WebView mWebView;
-    private ReaderWebChromeClient mReaderChromeClient;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
@@ -226,23 +224,8 @@ public class ReaderPostDetailFragment extends Fragment
         // setup the webView
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.setWebViewClient(mReaderWebViewClient);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
-
-        // setup the ReaderWebChromeClient so user can view fullscreen video
-        ReaderCustomViewListener customViewListener = new ReaderCustomViewListener() {
-            @Override
-            public void onCustomViewShown() {
-                setIsFullScreen(true);
-            }
-            @Override
-            public void onCustomViewHidden() {
-                setIsFullScreen(false);
-                pauseWebView();
-            }
-        };
-        ViewGroup customViewContainer = (ViewGroup) view.findViewById(R.id.layout_custom_view_container);
-        mReaderChromeClient = new ReaderWebChromeClient(customViewContainer, customViewListener);
         mWebView.setWebChromeClient(mReaderChromeClient);
+        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
@@ -1036,6 +1019,11 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
+        // make sure this is a valid web image (could be file: or data:)
+        if (!imageUrl.startsWith("http")) {
+            return false;
+        }
+
         // images in private posts must use https for auth token to be sent with request
         if (hasPost() && mPost.isPrivate) {
             imageUrl = UrlUtils.makeHttps(imageUrl);
@@ -1519,6 +1507,35 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
     };
+
+    /*
+    * custom WebChromeClient which enables fullscreen video
+    */
+    private final ReaderWebChromeClient mReaderChromeClient = new ReaderWebChromeClient(new ReaderCustomViewListener() {
+        @Override
+        public ViewGroup onRequestCustomView() {
+            if (hasActivity()) {
+                return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
+            } else {
+                return null;
+            }
+        }
+        @Override
+        public void onCustomViewShown() {
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.hide();
+            }
+        }
+        @Override
+        public void onCustomViewHidden() {
+            ActionBar actionBar = getActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            pauseWebView();
+        }
+    });
 
     /*
      * called when user taps a link in the webView

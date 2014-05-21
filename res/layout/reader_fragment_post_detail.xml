@@ -1,67 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:id="@+id/layout_post_detail_container">
-
-    <org.wordpress.android.widgets.WPListView
-        android:id="@id/android:list"
-        style="@style/ReaderListView.NoDivider"
-        android:layout_above="@+id/layout_comment_box"
-        tools:listheader="@layout/reader_listitem_post_detail"
-        tools:listitem="@layout/reader_listitem_comment" />
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/layout_actions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_comment_box"
-        android:layout_alignWithParentIfMissing="true"
-        android:background="#eeffffff">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:id="@+id/layout_post_detail_container">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/reader_divider_grey" />
+        <org.wordpress.android.widgets.WPListView
+            android:id="@id/android:list"
+            style="@style/ReaderListView.NoDivider"
+            android:layout_above="@+id/layout_comment_box"
+            tools:listheader="@layout/reader_listitem_post_detail"
+            tools:listitem="@layout/reader_listitem_comment" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/layout_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_list_margin"
-            android:layout_marginRight="@dimen/reader_list_margin"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_above="@+id/layout_comment_box"
+            android:layout_alignWithParentIfMissing="true"
+            android:background="#eeffffff">
 
-            <ImageView
-                android:id="@+id/image_reblog_btn"
-                style="@style/ReaderImageView.ButtonIcon"
-                android:layout_weight="1"
-                android:src="@drawable/reader_button_reblog" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/reader_divider_grey" />
 
-            <ImageView
-                android:id="@+id/image_comment_btn"
-                android:layout_weight="1"
-                style="@style/ReaderImageView.ButtonIcon"
-                android:src="@drawable/reader_button_comment" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/reader_list_margin"
+                android:layout_marginRight="@dimen/reader_list_margin"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/image_like_btn"
-                android:layout_weight="1"
-                style="@style/ReaderImageView.ButtonIcon"
-                android:src="@drawable/reader_button_like" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/image_reblog_btn"
+                    style="@style/ReaderImageView.ButtonIcon"
+                    android:layout_weight="1"
+                    android:src="@drawable/reader_button_reblog" />
 
+                <ImageView
+                    android:id="@+id/image_comment_btn"
+                    android:layout_weight="1"
+                    style="@style/ReaderImageView.ButtonIcon"
+                    android:src="@drawable/reader_button_comment" />
+
+                <ImageView
+                    android:id="@+id/image_like_btn"
+                    android:layout_weight="1"
+                    style="@style/ReaderImageView.ButtonIcon"
+                    android:src="@drawable/reader_button_like" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/layout_comment_box"
+            layout="@layout/reader_include_comment_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            style="@style/ReaderProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
     </RelativeLayout>
-
-    <include
-        android:id="@+id/layout_comment_box"
-        layout="@layout/reader_include_comment_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout
@@ -70,11 +82,4 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        style="@style/ReaderProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-</RelativeLayout>
+</FrameLayout>

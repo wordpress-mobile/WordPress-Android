@@ -15,15 +15,25 @@ class ReaderWebChromeClient extends WebChromeClient {
     public interface ReaderCustomViewListener {
         public void onCustomViewShown();
         public void onCustomViewHidden();
+        public ViewGroup onRequestCustomView();
     }
 
-    private final ViewGroup mTargetView;
     private View mCustomView;
     private CustomViewCallback mCustomViewCallback;
     private ReaderCustomViewListener mCustomViewListener;
 
-    protected ReaderWebChromeClient(ViewGroup TargetView, ReaderCustomViewListener listener) {
-        mTargetView = TargetView;
+    protected ReaderWebChromeClient(ReaderCustomViewListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("ReaderWebChromeClient requires a listener");
+        }
+        mCustomViewListener = listener;
+    }
+
+    /*
+     * request the view that will host the fullscreen video
+     */
+    private ViewGroup getTargetView() {
+        return mCustomViewListener.onRequestCustomView();
     }
 
     @Override
@@ -35,15 +45,19 @@ class ReaderWebChromeClient extends WebChromeClient {
             return;
         }
 
+        ViewGroup targetView = getTargetView();
+        if (targetView == null) {
+            return;
+        }
+
         mCustomViewCallback = callback;
         mCustomView = view;
-        mTargetView.addView(mCustomView);
-        mTargetView.setVisibility(View.VISIBLE);
-        mTargetView.bringToFront();
 
-        if (mCustomViewListener != null) {
-            mCustomViewListener.onCustomViewShown();
-        }
+        targetView.addView(mCustomView);
+        targetView.setVisibility(View.VISIBLE);
+        targetView.bringToFront();
+
+        mCustomViewListener.onCustomViewShown();
     }
 
     @Override
@@ -54,14 +68,17 @@ class ReaderWebChromeClient extends WebChromeClient {
             return;
         }
 
+        ViewGroup targetView = getTargetView();
+        if (targetView == null) {
+            return;
+        }
+
         mCustomView.setVisibility(View.GONE);
-        mTargetView.removeView(mCustomView);
-        mTargetView.setVisibility(View.GONE);
+        targetView.removeView(mCustomView);
+        targetView.setVisibility(View.GONE);
         mCustomViewCallback.onCustomViewHidden();
 
-        if (mCustomViewListener != null) {
-            mCustomViewListener.onCustomViewHidden();
-        }
+        mCustomViewListener.onCustomViewHidden();
     }
 
     protected boolean inCustomView() {

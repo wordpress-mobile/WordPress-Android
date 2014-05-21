@@ -256,7 +256,7 @@ public class WPNetworkImageView extends ImageView {
             if (getDrawable() == null) {
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.blue_extra_light)));
             }
-        } else if (mUrl != null) {
+        } else {
             loadImageIfNecessary(true);
         }
     }
