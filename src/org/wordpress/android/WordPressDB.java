@@ -5,21 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.Theme;
@@ -51,7 +48,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 26;
+    private static final int DATABASE_VERSION = 27;
 
     private static final String CREATE_TABLE_SETTINGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -137,11 +134,6 @@ public class WordPressDB {
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
-    // create table to store notifications
-    private static final String NOTES_TABLE = "notes";
-    private static final String CREATE_TABLE_NOTES = "create table if not exists notes (id integer primary key, "
-            + "note_id text, message text, type text, raw_note_data text, timestamp integer, placeholder boolean);";
-
     // add hidden flag to blog settings (accounts)
     private static final String ADD_ACCOUNTS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
 
@@ -162,7 +154,6 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
-        db.execSQL(CREATE_TABLE_NOTES);
         CommentTable.createTables(db);
 
         // Update tables for new installs and app updates
@@ -247,6 +238,10 @@ public class WordPressDB {
                 //SQLite supports a limited subset of ALTER TABLE.
                 //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
                 //It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+                currentVersion++;
+            case 26:
+                // Drop the notes table, no longer needed with Simperium.
+                db.execSQL("DROP TABLE IF EXISTS notes;");
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -1188,7 +1183,7 @@ public class WordPressDB {
             broadcastShortcutIntent.putExtra("duplicate", false);
             broadcastShortcutIntent
                     .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            ctx.sendBroadcast(broadcastShortcutIntent);
+            LocalBroadcastManager.getInstance(ctx).sendBroadcast(broadcastShortcutIntent);
 
             // remove from shortcuts table
             String shortcutId = shortcutHash.get("id").toString();
@@ -1697,92 +1692,6 @@ public class WordPressDB {
             cursor.close();
             return null;
         }
-    }
-
-    public ArrayList<Note> getLatestNotes() {
-        return getLatestNotes(20);
-    }
-
-    public ArrayList<Note> getLatestNotes(int limit) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"note_id", "raw_note_data", "placeholder"},
-                null, null, null, null, "timestamp DESC", "" + limit);
-        ArrayList<Note> notes = new ArrayList<Note>();
-        while (cursor.moveToNext()) {
-            String note_id = cursor.getString(0);
-            String raw_note_data = cursor.getString(1);
-            boolean placeholder = cursor.getInt(2) == 1;
-            try {
-                Note note = new Note(new JSONObject(raw_note_data));
-                note.setPlaceholder(placeholder);
-                notes.add(note);
-            } catch (JSONException e) {
-                AppLog.e(T.DB, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
-            }
-        }
-        cursor.close();
-        return notes;
-    }
-
-    public void removePlaceholderNotes() {
-        db.delete(NOTES_TABLE, "placeholder=1", null);
-    }
-
-    public void addNote(Note note, boolean placeholder) {
-        ContentValues values = new ContentValues();
-        values.put("type", note.getType());
-        values.put("timestamp", note.getTimestamp());
-        values.put("placeholder", placeholder);
-        values.put("raw_note_data", note.toJSONObject().toString()); // easiest way to store schema-less data
-
-        if (note.getId().equals("0") || note.getId().equals("")) {
-            values.put("id", generateIdFor(note));
-            values.put("note_id", "0");
-        } else {
-            values.put("id", note.getId());
-            values.put("note_id", note.getId());
-        }
-
-        db.insertWithOnConflict(NOTES_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
-    public static int generateIdFor(Note note) {
-        if (note == null) {
-            return 0;
-        }
-        return StringUtils.getMd5IntHash(note.getSubject() + note.getType()).intValue();
-    }
-
-    public void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
-        db.beginTransaction();
-        try {
-            if (clearBeforeSaving)
-                clearNotes();
-            for (Note note: notes)
-                addNote(note, false);
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public Note getNoteById(int id) {
-        Cursor cursor = db.query(NOTES_TABLE, new String[] {"raw_note_data"},  "id=" + id, null, null, null, null);
-        cursor.moveToFirst();
-
-        try {
-            JSONObject jsonNote = new JSONObject(cursor.getString(0));
-            return new Note(jsonNote);
-        } catch (JSONException e) {
-            AppLog.e(T.DB, "Can't parse JSON Note: " + e);
-            return null;
-        } catch (CursorIndexOutOfBoundsException e) {
-            AppLog.v(T.DB, "No Note with this id: " + e);
-            return null;
-        }
-    }
-
-    protected void clearNotes() {
-        db.delete(NOTES_TABLE, null, null);
     }
 
     /*

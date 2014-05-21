@@ -1,7 +1,6 @@
 
 package org.wordpress.android;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,16 +11,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.wordpress.rest.RestRequest;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -33,14 +28,13 @@ import org.wordpress.android.util.ImageHelper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static Map<String, Bundle> activeNotificationsMap = new HashMap<String, Bundle>();
-    private int notificationId = 1337;
+    public static int PUSH_NOTIFICATION_ID = 1337;
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -94,25 +88,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
         String note_id = extras.getString("note_id");
 
-        Note note = null;
-        if (extras.getString("note_full_data") != null) {
-            byte[] decode = Base64.decode(intent.getStringExtra("note_full_data"), Base64.DEFAULT);
-            String unzippedString = NotificationUtils.unzipString(decode);
-            JSONObject jsonObject = null;
-            try {
-                jsonObject = new JSONObject(unzippedString);
-                JSONArray notesJSON = jsonObject.getJSONArray("notes");
-                note = new Note(notesJSON.getJSONObject(0));
-                WordPress.wpDB.addNote(note, false);
-            } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: ", e);
-            }
-        } else { // create a placeholder note
-            note = new Note(extras);
-            WordPress.wpDB.addNote(note, true);
-            refreshNotes();
-        }
-
         /*
          * if this has the same note_id as the previous notification, and the previous notification
          * was received within the last second, then skip showing it - this handles duplicate
@@ -164,7 +139,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         vibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
         light = prefs.getBoolean("wp_pref_notification_light", false);
 
-        Notification.Builder mBuilder;
+        NotificationCompat.Builder mBuilder;
 
         Intent resultIntent = new Intent(this, PostsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -174,9 +149,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (activeNotificationsMap.size() <= 1) {
-            mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
+            mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
                                                      .setContentText(message).setTicker(message).setAutoCancel(true)
-                                                     .setStyle(new Notification.BigTextStyle().bigText(message));
+                                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
@@ -206,7 +181,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 mBuilder.setLargeIcon(largeIconBitmap);
             }
         } else {
-            Notification.InboxStyle inboxStyle = new Notification.InboxStyle();
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
             int noteCtr = 1;
             for (Bundle wpPN : activeNotificationsMap.values()) {
@@ -232,7 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications),
                     activeNotificationsMap.size());
 
-            mBuilder = new Notification.Builder(this)
+            mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
                             .setSmallIcon(R.drawable.notification_icon)
                             .setContentTitle("WordPress")
@@ -257,29 +232,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         mBuilder.setContentIntent(pendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notificationId, mBuilder.build());
-        broadcastNewNotification();
+        mNotificationManager.notify(PUSH_NOTIFICATION_ID, mBuilder.build());
+        broadcastNewNotification(context);
     }
 
-    public void broadcastNewNotification() {
+    public void broadcastNewNotification(Context context) {
         Intent msgIntent = new Intent();
         msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
-        sendBroadcast(msgIntent);
-    }
-
-    public void refreshNotes() {
-        NotificationUtils.refreshNotifications(new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                try {
-                    List<Note> notes = NotificationUtils.parseNotes(jsonObject);
-                    WordPress.wpDB.saveNotes(notes, true);
-                    broadcastNewNotification();
-                } catch (JSONException e) {
-                    AppLog.e(T.NOTIFS, "Can't parse restRequest JSON response, notifications: " + e);
-                }
-            }
-        }, null);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 
     @Override
