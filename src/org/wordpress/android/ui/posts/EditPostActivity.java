@@ -288,6 +288,8 @@ public class EditPostActivity extends Activity {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.savePostSettings();
         }
+
+        WordPress.wpDB.updatePost(mPost);
     }
 
     @Override

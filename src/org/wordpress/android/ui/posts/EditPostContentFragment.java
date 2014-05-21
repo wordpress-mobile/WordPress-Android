@@ -612,8 +612,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
         if (!post.isLocalDraft())
             post.setLocalChange(true);
-
-        WordPress.wpDB.updatePost(post);
     }
 
     public boolean hasEmptyContentFields() {

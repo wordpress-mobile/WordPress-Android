@@ -499,8 +499,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         post.setLatitude(latitude);
         post.setLongitude(longitude);
         post.setPostFormat(postFormat);
-
-        WordPress.wpDB.updatePost(post);
     }
 
     /**
