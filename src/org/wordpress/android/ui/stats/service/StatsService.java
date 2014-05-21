@@ -86,9 +86,7 @@ public class StatsService extends Service {
 
     @Override
     public void onDestroy() {
-        synchronized (mServiceBlogIdMonitor) {
-            stopRefresh();
-        }
+        stopRefresh();
         AppLog.i(T.STATS, "service destroyed");
         super.onDestroy();
     }
@@ -101,19 +99,18 @@ public class StatsService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
+        final String currentServiceBlogId = getServiceBlogId();
 
-        synchronized (mServiceBlogIdMonitor) {
-            if (mServiceBlogId == null) {
-                startTasks(blogId, startId);
-            } else if (blogId.equals(mServiceBlogId)) {
-                // already running on the same blogID
-                // Do nothing
-                AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
-            } else {
-                // stats is running on a different blogID
-                stopRefresh();
-                startTasks(blogId, startId);
-            }
+        if (currentServiceBlogId == null) {
+            startTasks(blogId, startId);
+        } else if (blogId.equals(currentServiceBlogId)) {
+            // already running on the same blogID
+            // Do nothing
+            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + currentServiceBlogId);
+        } else {
+            // stats is running on a different blogID
+            stopRefresh();
+            startTasks(blogId, startId);
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -121,18 +118,36 @@ public class StatsService extends Service {
         return START_NOT_STICKY;
     }
 
+    /**
+     * Returns a copy of the current mServiceBlogId value, or null.
+     */
+    private String getServiceBlogId() {
+        synchronized (mServiceBlogIdMonitor) {
+            if (mServiceBlogId == null) {
+                return null;
+            }
+            return new String(mServiceBlogId);
+        }
+    }
+
+    private void setServiceBlogId(String value) {
+        synchronized (mServiceBlogIdMonitor) {
+            mServiceBlogId = value;
+        }
+    }
+
     private void stopRefresh() {
         if (mCurrentStatsNetworkRequest != null && !mCurrentStatsNetworkRequest.hasHadResponseDelivered()
                 && !mCurrentStatsNetworkRequest.isCanceled()) {
             mCurrentStatsNetworkRequest.cancel();
         }
-        this.mServiceBlogId = null;
+        setServiceBlogId(null);
         this.mErrorObject = null;
         this.mServiceStartId = 0;
     }
 
     private void startTasks(final String blogId, final int startId) {
-        this.mServiceBlogId = blogId;
+        setServiceBlogId(blogId);
         this.mServiceStartId = startId;
         this.mErrorObject = null;
 
@@ -278,17 +293,17 @@ public class StatsService extends Service {
                     parseViewsByCountryResponse(response);
 
                     // Stop the service if this is the current response, or mServiceBlogId is null
-                    synchronized (mServiceBlogIdMonitor) {
-                        if (mServiceBlogId == null || mServiceBlogId.equals(mRequestBlogId)) {
-                            stopService();
-                        }
+                    String currentServiceBlogId = getServiceBlogId();
+                    if (currentServiceBlogId == null || currentServiceBlogId.equals(mRequestBlogId)) {
+                        stopService();
                     }
                 }
             });
         }
 
         private void parseViewsByCountryResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] viewsByCountryPaths = {mViewByCountryTodayPath, mViewByCountryYesterdayPath};
@@ -343,7 +358,8 @@ public class StatsService extends Service {
         }
 
         private void parseSearchEngineTermsResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] searchEngineTermsPaths = {mSearchEngineTermsTodayPath, mSearchEngineTermsYesterdayPath};
@@ -400,7 +416,8 @@ public class StatsService extends Service {
         }
 
         private void parseClicksResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] clicksPaths = {mClicksTodayPath, mClicksYesterdayPath};
@@ -478,7 +495,8 @@ public class StatsService extends Service {
         }
 
         private void parseReferrersResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] referrersPaths = {mReferrersTodayPath, mReferrersYesterdayPath};
@@ -553,7 +571,8 @@ public class StatsService extends Service {
         }
 
         private void parseTopPostsAndPagesResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] topPostsAndPagesPaths = {mTopPostsAndPagesTodayPath, mTopPostsAndPagesYesterdayPath};
@@ -609,7 +628,8 @@ public class StatsService extends Service {
         }
 
         private void parseBarChartResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             String[] barChartPaths = {mBarChartWeekPath, mBarChartMonthPath};
@@ -667,7 +687,8 @@ public class StatsService extends Service {
         }
 
         private void parseSummaryResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            String currentServiceBlogId = getServiceBlogId();
+            if (currentServiceBlogId == null || !currentServiceBlogId.equals(mRequestBlogId)) {
                 return;
             }
             final String currentPath = mSummaryAPICallPath;
