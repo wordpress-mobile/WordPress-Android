@@ -165,7 +165,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:lines="1"
-                    android:text="@string/update_location" />
+                    android:text="@string/update_verb" />
 
                 <Button
                     android:id="@+id/removeLocation"
