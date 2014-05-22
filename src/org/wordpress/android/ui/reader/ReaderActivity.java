@@ -15,7 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
@@ -43,7 +42,6 @@ public class ReaderActivity extends WPActionBarActivity
                             implements OnPostSelectedListener,
                                        OnTagSelectedListener,
                                        FragmentManager.OnBackStackChangedListener,
-                                       ReaderPostDetailFragment.PostChangeListener,
                                        ReaderUtils.FullScreenListener {
 
     static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
@@ -420,8 +418,6 @@ public class ReaderActivity extends WPActionBarActivity
      */
     @Override
     public void onPostSelected(long blogId, long postId) {
-        //showDetailFragment(blogId, postId);
-
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
             ReaderBlogIdPostIdList idList = listFragment.getBlogIdPostIdList();
@@ -488,33 +484,4 @@ public class ReaderActivity extends WPActionBarActivity
         return !isStaticMenuDrawer();
     }
 
-    /*
-     * called from post detail when user changes a post (like/unlike/follow/unfollow) so we can
-     * update the list fragment to reflect the change - note that by the time this has been called,
-     * the post will already have been changed in SQLite
-     */
-    @Override
-    public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType) {
-        ReaderPostListFragment listFragment = getListFragment();
-        if (listFragment == null) {
-            return;
-        }
-
-        final ReaderPost updatedPost = ReaderPostTable.getPost(blogId, postId);
-        if (updatedPost == null) {
-            return;
-        }
-
-        switch (changeType) {
-            case FOLLOWED:
-            case UNFOLLOWED:
-                // if follow state has changed, update the follow state on other posts in this blog
-                boolean isFollowed = (changeType == ReaderTypes.PostChangeType.FOLLOWED);
-                listFragment.updateFollowStatusOnPostsForBlog(blogId, updatedPost.getBlogUrl(), isFollowed);
-                break;
-            default:
-                // otherwise, reload the updated post so that changes are reflected
-                listFragment.reloadPost(updatedPost);
-        }
-    }
 }

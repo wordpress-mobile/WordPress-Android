@@ -68,10 +68,6 @@ public class ReaderPostDetailFragment extends Fragment
                    ReaderCustomViewListener,
                    ReaderWebViewUrlClickListener {
 
-    static interface PostChangeListener {
-        public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType);
-    }
-
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
 
@@ -100,7 +96,6 @@ public class ReaderPostDetailFragment extends Fragment
     private final Handler mHandler = new Handler();
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
-    private PostChangeListener mPostChangeListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, null);
@@ -393,9 +388,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (activity instanceof ReaderUtils.FullScreenListener) {
             mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
         }
-        if (activity instanceof PostChangeListener) {
-            mPostChangeListener = (PostChangeListener) activity;
-        }
     }
 
     @Override
@@ -436,27 +428,12 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
 
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
         pauseWebView();
-    }
-
-    /*
-     * called by this fragment whenever the post is changed - notifies ReaderActivity of the
-     * change so it can tell the list fragment to reflect the change
-     */
-    private void doPostChanged(ReaderTypes.PostChangeType changeType) {
-        if (mPostChangeListener != null && hasPost() && changeType == null) {
-            mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
-        }
     }
 
     /*
@@ -480,9 +457,6 @@ public class ReaderPostDetailFragment extends Fragment
         // fire listener so host knows about the change
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-            doPostChanged(ReaderTypes.PostChangeType.LIKED);
-        } else {
-            doPostChanged(ReaderTypes.PostChangeType.UNLIKED);
         }
 
         // call returns before api completes, but local version of post will have been changed
@@ -515,9 +489,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         // get the post again, since it has changed
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-
-        // fire listener so host knows about the change
-        doPostChanged(isAskingToFollow ? ReaderTypes.PostChangeType.FOLLOWED : ReaderTypes.PostChangeType.UNFOLLOWED);
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
@@ -576,7 +547,6 @@ public class ReaderPostDetailFragment extends Fragment
                     case CHANGED:
                         // post has changed, so get latest version
                         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                        doPostChanged(ReaderTypes.PostChangeType.CONTENT);
                         break;
                     case FAILED:
                         // failed to get post, so do nothing here
@@ -633,7 +603,6 @@ public class ReaderPostDetailFragment extends Fragment
                     return;
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    doPostChanged(ReaderTypes.PostChangeType.CONTENT);
                     refreshComments();
                 }
             }
@@ -954,7 +923,6 @@ public class ReaderPostDetailFragment extends Fragment
                 replyToCommentId,
                 actionListener);
         if (newComment != null) {
-            doPostChanged(ReaderTypes.PostChangeType.CONTENT);
             editComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted

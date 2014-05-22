@@ -21,7 +21,5 @@ public class ReaderTypes {
         }
     }
 
-    protected static enum PostChangeType {LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT}
-
     protected static enum RefreshType {AUTOMATIC, MANUAL}
 }
