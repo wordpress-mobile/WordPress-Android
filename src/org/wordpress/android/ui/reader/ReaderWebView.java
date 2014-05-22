@@ -13,8 +13,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 
 /*
- * WebView descendant used by ReaderPostDetailFragment - uses a custom WebChromeClient to handle
- * displaying fullscreen video and detecting image clicks
+ * WebView descendant used by ReaderPostDetailFragment - handles
+ * displaying fullscreen video and detecting url/image clicks
  */
 class ReaderWebView extends WebView {
 
@@ -75,7 +75,7 @@ class ReaderWebView extends WebView {
         mCustomViewListener = listener;
     }
 
-    protected void hideCustomView() {
+    void hideCustomView() {
         if (mReaderChromeClient.isCustomViewShowing()) {
             mReaderChromeClient.onHideCustomView();
         }
@@ -90,6 +90,7 @@ class ReaderWebView extends WebView {
     }
 
     private static boolean isValidClickedUrl(String url) {
+        // only return true for http(s) urls so we avoid file: and data: clicks
         return (url != null || url.startsWith("http"));
     }
 

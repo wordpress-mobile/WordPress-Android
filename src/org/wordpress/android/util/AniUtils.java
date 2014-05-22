@@ -77,7 +77,7 @@ public class AniUtils {
         ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
         fadeOut.setDuration(durationMillis);
         fadeOut.setInterpolator(new LinearInterpolator());
-        fadeOut.setStartDelay(durationMillis);
+        fadeOut.setStartDelay(durationMillis / 2);
 
         AnimatorSet set = new AnimatorSet();
         set.play(fadeOut).after(fadeIn);

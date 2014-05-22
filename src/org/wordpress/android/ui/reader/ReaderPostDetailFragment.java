@@ -1459,9 +1459,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
-    * called by ReaderWebView to enable fullscreen video
-    */
     @Override
     public ViewGroup onRequestCustomView() {
         if (hasActivity()) {
@@ -1471,6 +1468,7 @@ public class ReaderPostDetailFragment extends Fragment
             return null;
         }
     }
+
     @Override
     public void onCustomViewShown() {
         // fullscreen video has just been shown so hide the ActionBar
@@ -1479,6 +1477,7 @@ public class ReaderPostDetailFragment extends Fragment
             actionBar.hide();
         }
     }
+
     @Override
     public void onCustomViewHidden() {
         // user returned from fullscreen video so re-display the ActionBar
