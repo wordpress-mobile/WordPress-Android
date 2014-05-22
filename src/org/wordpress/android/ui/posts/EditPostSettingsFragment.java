@@ -114,10 +114,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         mStatusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mActivity != null) {
-                    mActivity.getPost().setPostStatus(getPostStatusForSpinnerPosition(position));
-                    mActivity.invalidateOptionsMenu();
-                }
+                updatePostSettingsAndSaveButton();
             }
 
             @Override
@@ -293,6 +290,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         return rootView;
     }
 
+
+
     private String getPostStatusForSpinnerPosition(int position) {
         switch (position) {
             case 0:
@@ -386,6 +385,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                                                 int i) {
                                 mIsCustomPubDate = true;
                                 mPubDateText.setText(R.string.immediately);
+                                updatePostSettingsAndSaveButton();
                             }
                         })
                 .setNegativeButton(android.R.string.cancel,
@@ -394,7 +394,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                             public void onClick(DialogInterface dialog,
                                                 int which) {
                             }
-                        }).setView(datePicker).show();
+                        }
+                ).setView(datePicker).show();
 
     }
 
@@ -425,6 +426,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                             mCustomPubDate = timestamp;
                             mPubDateText.setText(formattedDate);
                             mIsCustomPubDate = true;
+
+                            updatePostSettingsAndSaveButton();
                             AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST);
                         } catch (RuntimeException e) {
                             AppLog.e(T.POSTS, e);
@@ -440,7 +443,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                         }).setView(timePicker).show();
     }
 
-    public void savePostSettings() {
+    /**
+     * Updates post object with content of this fragment
+     */
+    public void updatePostSettings() {
         Post post = mActivity.getPost();
         if (post == null)
             return;
@@ -499,8 +505,16 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         post.setLatitude(latitude);
         post.setLongitude(longitude);
         post.setPostFormat(postFormat);
+    }
 
-        WordPress.wpDB.updatePost(post);
+    /*
+     * Saves settings to post object and updates save button text in the ActionBar
+     */
+    private void updatePostSettingsAndSaveButton() {
+        if (mActivity != null) {
+            updatePostSettings();
+            mActivity.invalidateOptionsMenu();
+        }
     }
 
     /**

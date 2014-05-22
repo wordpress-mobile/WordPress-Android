@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPViewPager;
@@ -218,15 +219,27 @@ public class EditPostActivity extends Activity {
             previewMenuItem.setVisible(true);
         }
 
+        // Set text of the save button in the ActionBar
         if (mPost != null) {
             MenuItem saveMenuItem = menu.findItem(R.id.menu_save_post);
             switch (mPost.getStatusEnum()) {
+                case SCHEDULED:
+                    saveMenuItem.setTitle(getString(R.string.schedule_verb));
+                    break;
                 case PUBLISHED:
                 case UNKNOWN:
-                    saveMenuItem.setTitle(R.string.publish_post);
+                    if (mPost.isLocalDraft()) {
+                        saveMenuItem.setTitle(R.string.publish_post);
+                    } else {
+                        saveMenuItem.setTitle(R.string.update_verb);
+                    }
                     break;
                 default:
-                    saveMenuItem.setTitle(R.string.save);
+                    if (mPost.isLocalDraft()) {
+                        saveMenuItem.setTitle(R.string.save);
+                    } else {
+                        saveMenuItem.setTitle(R.string.update_verb);
+                    }
             }
         }
 
@@ -276,13 +289,20 @@ public class EditPostActivity extends Activity {
     }
 
     private void savePost(boolean isAutosave) {
-        // Update post content from fragment fields
+        if (mPost == null) {
+            AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
+            return;
+        }
+
+        // Update post object from fragment fields
         if (mEditPostContentFragment != null) {
-            mEditPostContentFragment.savePostContent(isAutosave);
+            mEditPostContentFragment.updatePostContent(isAutosave);
         }
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.savePostSettings();
+            mEditPostSettingsFragment.updatePostSettings();
         }
+
+        WordPress.wpDB.updatePost(mPost);
     }
 
     @Override
