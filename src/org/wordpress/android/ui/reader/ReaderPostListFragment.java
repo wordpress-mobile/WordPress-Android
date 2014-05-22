@@ -692,6 +692,7 @@ public class ReaderPostListFragment extends Fragment
         getPostAdapter().setCurrentTag(tagName);
         hideNewPostsBar();
         updateTagPreviewHeader();
+        hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
         if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
