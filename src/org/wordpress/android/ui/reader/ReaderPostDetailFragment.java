@@ -22,8 +22,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -40,7 +38,8 @@ import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.ReaderWebChromeClient.ReaderCustomViewListener;
+import org.wordpress.android.ui.reader.ReaderWebView.ReaderCustomViewListener;
+import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -67,7 +66,7 @@ import java.util.ArrayList;
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener,
                    ReaderCustomViewListener,
-                   ReaderWebView.ReaderWebViewImageClickListener {
+                   ReaderWebViewUrlClickListener {
 
     static interface PostChangeListener {
         public void onPostChanged(long blogId, long postId, ReaderTypes.PostChangeType changeType);
@@ -222,9 +221,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.webView);
-        mReaderWebView.setWebViewClient(mReaderWebViewClient);
         mReaderWebView.setCustomViewListener(this);
-        mReaderWebView.setImageClickListener(this);
+        mReaderWebView.setUrlClickListener(this);
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
@@ -1461,36 +1459,13 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private final WebViewClient mReaderWebViewClient = new WebViewClient() {
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            // show the webView now that it has loaded
-            if (view.getVisibility() != View.VISIBLE) {
-                view.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            // open clicked urls in default browser or else urls will open in this webView,
-            // but only do this when webView has loaded (is visible) - have seen some posts
-            // containing iframes automatically try to open urls (without being clicked)
-            // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE) {
-                openUrl(url);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
     /*
     * called by ReaderWebView to enable fullscreen video
     */
     @Override
     public ViewGroup onRequestCustomView() {
         if (hasActivity()) {
+            // return the container view that should host the fullscreen video
             return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
         } else {
             return null;
@@ -1498,6 +1473,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
     @Override
     public void onCustomViewShown() {
+        // fullscreen video has just been shown so hide the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -1505,6 +1481,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
     @Override
     public void onCustomViewHidden() {
+        // user returned from fullscreen video so re-display the ActionBar
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.show();
@@ -1512,32 +1489,23 @@ public class ReaderPostDetailFragment extends Fragment
         pauseWebView();
     }
 
-    /*
-     * called when user taps an image in the ReaderWebView
-     */
     @Override
-    public boolean onImageClick(String imageUrl, View view, int x, int y) {
-        return showPhotoViewer(imageUrl, view, x, y);
-    }
-
-    /*
-     * called when user taps a link in the webView
-     */
-    private void openUrl(String url) {
-        if (!hasActivity() || TextUtils.isEmpty(url)) {
-            return;
-        }
-
+    public boolean onUrlClick(String url) {
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
-        final OpenUrlType openUrlType;
+        final ReaderActivityLauncher.OpenUrlType openUrlType;
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            openUrlType = OpenUrlType.EXTERNAL;
+            openUrlType = ReaderActivityLauncher.OpenUrlType.EXTERNAL;
         } else {
-            openUrlType = OpenUrlType.INTERNAL;
+            openUrlType = ReaderActivityLauncher.OpenUrlType.INTERNAL;
         }
-
         ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
+        return true;
+    }
+
+    @Override
+    public boolean onImageUrlClick(String imageUrl, View view, int x, int y) {
+        return showPhotoViewer(imageUrl, view, x, y);
     }
 
     private ActionBar getActionBar() {
