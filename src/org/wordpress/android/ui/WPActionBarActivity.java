@@ -3,7 +3,6 @@ package org.wordpress.android.ui;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -71,7 +71,7 @@ import java.util.Map;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends Activity {
+public abstract class WPActionBarActivity extends FragmentActivity {
     public static final int NEW_BLOG_CANCELED = 10;
 
     /**

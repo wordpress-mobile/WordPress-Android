@@ -1,15 +1,15 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Window;
 
 import org.wordpress.android.R;
 
 // TODO: this will probably be merged with New Account Activity (maybe add a tab bar)
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends FragmentActivity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
     public static final int CREATE_ACCOUNT_REQUEST = 3;
@@ -23,7 +23,7 @@ public class WelcomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         mWelcomeFragmentSignIn = (WelcomeFragmentSignIn) fragmentManager.
                 findFragmentById(R.id.sign_in_fragment);
         actionMode(getIntent().getExtras());

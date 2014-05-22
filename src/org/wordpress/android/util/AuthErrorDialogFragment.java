@@ -2,10 +2,10 @@ package org.wordpress.android.util;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
