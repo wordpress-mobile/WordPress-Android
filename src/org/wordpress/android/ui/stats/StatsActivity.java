@@ -3,8 +3,8 @@ package org.wordpress.android.ui.stats;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -248,7 +248,7 @@ public class StatsActivity extends WPActionBarActivity {
     }
 
     private void loadStatsFragments() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbsViewFragment fragment;
@@ -474,7 +474,7 @@ public class StatsActivity extends WPActionBarActivity {
         stopStatsService();
         scrollToTop();
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbsViewFragment fragment;

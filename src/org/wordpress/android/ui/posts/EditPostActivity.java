@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,7 +27,7 @@ import org.wordpress.android.util.stats.AnalyticsTracker;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class EditPostActivity extends Activity {
+public class EditPostActivity extends FragmentActivity {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -49,7 +49,7 @@ public class EditPostActivity extends Activity {
      * {@link FragmentPagerAdapter} derivative, which will keep every
      * loaded fragment in memory. If this becomes too memory intensive, it
      * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -140,7 +140,7 @@ public class EditPostActivity extends Activity {
 
         setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (WPViewPager) findViewById(R.id.pager);

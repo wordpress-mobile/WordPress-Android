@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.media;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;

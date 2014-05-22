@@ -265,14 +265,12 @@ public class PostUploadService extends Service {
                         String imgPath = m.group(1);
                         if (!imgPath.equals("")) {
                             MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
-
-                            if (mf.isVideo()) {
-                                hasVideo = true;
-                            } else {
-                                hasImage = true;
-                            }
-
                             if (mf != null) {
+                                if (mf.isVideo()) {
+                                    hasVideo = true;
+                                } else {
+                                    hasImage = true;
+                                }
                                 String imgHTML = uploadMediaFile(mf, blog);
                                 if (imgHTML != null) {
                                     if (x == 0) {

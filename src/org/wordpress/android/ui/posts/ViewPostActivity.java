@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public class ViewPostActivity extends Activity {
+public class ViewPostActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -11,7 +11,7 @@ public class ViewPostActivity extends Activity {
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.
             ViewPostFragment postFragment = new ViewPostFragment();
-            getFragmentManager().beginTransaction().add(
+            getSupportFragmentManager().beginTransaction().add(
                     android.R.id.content, postFragment).commitAllowingStateLoss();
         }
     }

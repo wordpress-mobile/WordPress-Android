@@ -3,8 +3,8 @@ package org.wordpress.android.ui.posts;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -115,7 +115,7 @@ public class PostsActivity extends WPActionBarActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
@@ -202,7 +202,7 @@ public class PostsActivity extends WPActionBarActivity
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
-            if (getFragmentManager().getBackStackEntryCount() == 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
         }
     };
@@ -254,7 +254,7 @@ public class PostsActivity extends WPActionBarActivity
             return;
         }
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f == null) {
             try {
@@ -324,7 +324,7 @@ public class PostsActivity extends WPActionBarActivity
             newPost();
             return true;
         } else if (itemId == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 popPostDetail();
                 return true;
@@ -347,7 +347,7 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     protected void attemptToSelectPost() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
             mPostList.setShouldSelectFirstPost(true);
@@ -356,7 +356,7 @@ public class PostsActivity extends WPActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         ViewPostFragment f = (ViewPostFragment) fm
                 .findFragmentById(R.id.postDetail);
 
@@ -578,7 +578,7 @@ public class PostsActivity extends WPActionBarActivity
                     .getText(R.string.share_url)));
             AppLockManager.getInstance().setExtendedTimeout();
         } else if (action == POST_CLEAR) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             ViewPostFragment f = (ViewPostFragment) fm
                     .findFragmentById(R.id.postDetail);
             if (f != null) {
