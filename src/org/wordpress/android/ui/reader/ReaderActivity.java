@@ -2,9 +2,9 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,7 +89,7 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         super.onCreate(savedInstanceState);
-        getFragmentManager().addOnBackStackChangedListener(this);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         readIntent(getIntent(), savedInstanceState);
     }
@@ -200,7 +200,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (hasListFragment() && hasDetailFragment()) {
-            getFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -220,7 +220,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void checkMenuDrawer() {
         if (mMenuDrawer != null) {
-            int entryCount = getFragmentManager().getBackStackEntryCount();
+            int entryCount = getSupportFragmentManager().getBackStackEntryCount();
             mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
         }
     }
@@ -305,7 +305,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment == null && detailFragment == null)
             return;
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (detailFragment != null)
             ft.remove(detailFragment);
         if (listFragment != null)
@@ -319,7 +319,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragmentForTag(final String tagName, ReaderPostListType listType) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
@@ -330,14 +330,14 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
-        getFragmentManager()
+        getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null) {
             return null;
         }
@@ -356,7 +356,7 @@ public class ReaderActivity extends WPActionBarActivity
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // add to the backstack if list fragment exists
@@ -371,7 +371,7 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_reader_post_detail));
         if (fragment == null) {
             return null;

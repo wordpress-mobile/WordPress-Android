@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -126,7 +126,7 @@ public class ThemePreviewFragment extends Fragment {
         String previewURL = getPreviewURL();
 
         if (previewURL == null || mBlog == null)
-            getActivity().getFragmentManager().beginTransaction().remove(this).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 
         View view = inflater.inflate(R.layout.webview, container, false);
 

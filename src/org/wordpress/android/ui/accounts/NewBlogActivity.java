@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Window;
 
 import org.wordpress.android.R;
 
-public class NewBlogActivity extends Activity {
+public class NewBlogActivity extends FragmentActivity {
     public static final String KEY_START_MODE = "start-mode";
     public static final int CREATE_BLOG = 1;
     public static final int CREATE_BLOG_LOGOUT_ON_CANCEL = 2;
@@ -20,7 +20,7 @@ public class NewBlogActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_new_blog);
 
-        FragmentManager fragmentManager = getFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         mNewBlogFragment = (NewBlogFragment) fragmentManager.
                 findFragmentById(R.id.new_blog_fragment);
         if (getActionMode() == CREATE_BLOG_LOGOUT_ON_CANCEL) {

@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.themes;
 
 import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,7 +80,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
         createMenuDrawer(R.layout.theme_browser_activity);
 
-        mThemePagerAdapter = new ThemePagerAdapter(getFragmentManager());
+        mThemePagerAdapter = new ThemePagerAdapter(getSupportFragmentManager());
 
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -108,7 +108,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
         mTabView.setSelectedTab(0);
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         setupBaseLayout();
         mPreviewFragment = (ThemePreviewFragment) fm.findFragmentByTag(ThemePreviewFragment.TAG);
@@ -134,7 +134,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     };
 
     private void setupBaseLayout() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             mMenuDrawer.setDrawerIndicatorEnabled(true);
             mViewPager.setVisibility(View.VISIBLE);
             mTabView.setVisibility(View.VISIBLE);
@@ -209,7 +209,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                             String errorMsg = getString(R.string.theme_auth_error_message);
 
                             if (mIsRunning) {
-                                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                                 WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
                                         errorTitle);
                                 ft.add(fragment, "alert");
@@ -265,14 +265,14 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
-            FragmentManager fm = getFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
                 setupBaseLayout();
                 return true;
             }
         } else if (itemId == R.id.menu_search) {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             if (mSearchFragment == null) {
                 mSearchFragment = ThemeSearchFragment.newInstance();
             }
@@ -288,7 +288,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (fm.getBackStackEntryCount() > 0) {
@@ -307,7 +307,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onThemeSelected(String themeId) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
 
         if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
             // show details as a fragment on top
@@ -326,8 +326,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         } else {
             // show details as a dialog
             mDetailsFragment = ThemeDetailsFragment.newInstance(themeId);
-            mDetailsFragment.show(getFragmentManager(), ThemeDetailsFragment.TAG);
-            getFragmentManager().executePendingTransactions();
+            mDetailsFragment.show(getSupportFragmentManager(), ThemeDetailsFragment.TAG);
+            getSupportFragmentManager().executePendingTransactions();
             int minWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int height = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_height);
             int width = Math.max((int) (DisplayUtils.getDisplayPixelWidth(this) * 0.6), minWidth);
@@ -449,7 +449,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
                         setRefreshing(false, page);
 
                         if (ref.get() != null && mIsRunning && fragment instanceof ThemePreviewFragment) {
-                            FragmentManager fm = ref.get().getFragmentManager();
+                            FragmentManager fm = ref.get().getSupportFragmentManager();
 
                             if (fm.getBackStackEntryCount() > 0) {
                                 fm.popBackStack();
@@ -483,7 +483,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onLivePreviewClicked(String themeId, String previewURL) {
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
         if (mPreviewFragment == null) {

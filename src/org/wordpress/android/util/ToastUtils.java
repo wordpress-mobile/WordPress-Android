@@ -1,7 +1,8 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
+import android.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -93,20 +94,20 @@ public class ToastUtils {
     }
 
 
-    public static void showAuthErrorDialog(Activity activity) {
+    public static void showAuthErrorDialog(FragmentActivity activity) {
         showAuthErrorDialog(activity, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID);
     }
 
-    public static void showAuthErrorDialog(Activity activity, int titleResId, int messageResId) {
+    public static void showAuthErrorDialog(FragmentActivity activity, int titleResId, int messageResId) {
         final String ALERT_TAG = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
         // abort if the dialog is already visible
-        if (activity.getFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
+        if (activity.getSupportFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
             return;
         }
-        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+        FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert;
         if (WordPress.getCurrentBlog() == null) {
             // No blogs found, so the user is logged in wpcom and doesn't own any blog
