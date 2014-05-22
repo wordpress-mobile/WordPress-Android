@@ -59,12 +59,12 @@ class ReaderWebView extends WebView {
         }
     }
 
-    void setUrlClickListener(ReaderWebViewUrlClickListener listener) {
-        mUrlClickListener = listener;
-    }
-
     private ReaderWebViewUrlClickListener getUrlClickListener() {
         return mUrlClickListener;
+    }
+
+    void setUrlClickListener(ReaderWebViewUrlClickListener listener) {
+        mUrlClickListener = listener;
     }
 
     private boolean hasUrlClickListener() {
@@ -73,16 +73,6 @@ class ReaderWebView extends WebView {
 
     void setCustomViewListener(ReaderCustomViewListener listener) {
         mCustomViewListener = listener;
-    }
-
-    void hideCustomView() {
-        if (mReaderChromeClient.isCustomViewShowing()) {
-            mReaderChromeClient.onHideCustomView();
-        }
-    }
-
-    boolean isCustomViewShowing () {
-        return mReaderChromeClient.isCustomViewShowing();
     }
 
     private boolean hasCustomViewListener() {
@@ -95,7 +85,15 @@ class ReaderWebView extends WebView {
 
     private static boolean isValidClickedUrl(String url) {
         // only return true for http(s) urls so we avoid file: and data: clicks
-        return (url != null || url.startsWith("http"));
+        return (url != null && url.startsWith("http"));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mReaderChromeClient.isCustomViewShowing()) {
+            mReaderChromeClient.onHideCustomView();
+        }
     }
 
     /*
@@ -210,15 +208,21 @@ class ReaderWebView extends WebView {
         public void onHideCustomView() {
             AppLog.i(AppLog.T.READER, "onHideCustomView");
 
-            ViewGroup targetView = getTargetView();
-            if (mCustomView == null || targetView == null) {
+            if (mCustomView == null) {
                 return;
             }
-
             mCustomView.setVisibility(View.GONE);
+
+            ViewGroup targetView = getTargetView();
+            if (targetView == null) {
+                return;
+            }
             targetView.removeView(mCustomView);
             targetView.setVisibility(View.GONE);
-            mCustomViewCallback.onCustomViewHidden();
+
+            if (mCustomViewCallback != null) {
+                mCustomViewCallback.onCustomViewHidden();
+            }
 
             if (mReaderWebView.hasCustomViewListener()) {
                 mReaderWebView.getCustomViewListener().onCustomViewHidden();
