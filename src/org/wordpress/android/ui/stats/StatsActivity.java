@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Display;
@@ -146,31 +147,9 @@ public class StatsActivity extends WPActionBarActivity {
         super.onResume();
         mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
-
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
-
-        // for self-hosted sites; launch the user into an activity where they can provide their credentials
-        if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()
-                && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
-            if (WordPress.hasValidWPComCredentials(this)) {
-                // Let's try the global wpcom credentials them first
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                String password = WordPressDB.decryptPassword(
-                        settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                        );
-                WordPress.getCurrentBlog().setDotcom_username(username);
-                WordPress.getCurrentBlog().setDotcom_password(password);
-                WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
-                mPullToRefreshHelper.setRefreshing(true);
-                refreshStats();
-            } else {
-                startWPComLoginActivity();
-            }
-            return;
-        }
 
         if (!mIsRestoredFromState) {
             mPullToRefreshHelper.setRefreshing(true);
@@ -220,6 +199,7 @@ public class StatsActivity extends WPActionBarActivity {
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
                 if (getBlogId() == null) {
+                    final Handler handler = new Handler();
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
@@ -245,14 +225,24 @@ public class StatsActivity extends WPActionBarActivity {
                         @Override
                         public void onFailure(long id, Exception error) {
                             AppLog.e(T.STATS,
-                                    "Cannot load blog options (wp.getOptions failed "
+                                    "Cannot load blog options (wp.getOptions failed) "
                                     + "and no jetpack_client_id is then available",
                                     error);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mPullToRefreshHelper.setRefreshing(false);
+                                    ToastUtils.showToast(StatsActivity.this,
+                                            StatsActivity.this.getString(R.string.error_refresh_stats),
+                                            Duration.LONG);
+                                }
+                            });
                         }
                     }, "wp.getOptions", params);
+                } else {
+                    refreshStats();
                 }
                 mPullToRefreshHelper.setRefreshing(true);
-                refreshStats();
             }
         }
     }
@@ -547,17 +537,57 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         }
 
-        final String blogId;
-        if (WordPress.getCurrentBlog().isDotcomFlag() && dotComCredentialsMatch()) {
-            blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
-        } else {
-            blogId = getBlogId();
-            if (blogId == null) {
-                // Refresh Jetpack Settings
-                new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(),
-                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
-                return;
+        final Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null) {
+            mPullToRefreshHelper.setRefreshing(false);
+            AppLog.w(T.STATS, "Current blog is null. This should nevver happen here.");
+            return;
+        }
+
+        final String blogId = getBlogId();
+
+        // Make sure the blogId is available.
+        if (blogId != null) {
+            // for self-hosted sites; launch the user into an activity where they can provide their credentials
+            if (!WordPress.getCurrentBlog().isDotcomFlag()
+                    && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
+                if (WordPress.hasValidWPComCredentials(this)) {
+                    // Let's try the global wpcom credentials them first
+                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+                    String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                    String password = WordPressDB.decryptPassword(
+                            settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+                            );
+                    WordPress.getCurrentBlog().setDotcom_username(username);
+                    WordPress.getCurrentBlog().setDotcom_password(password);
+                    WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
+                    mPullToRefreshHelper.setRefreshing(true);
+                } else {
+                    startWPComLoginActivity();
+                    return;
+                }
             }
+        } else {
+            // blogId is null at this point.
+            if (!currentBlog.isDotcomFlag()) {
+                // Refresh blog settings/options that includes 'jetpack_client_id'needed here
+                new ApiHelper.RefreshBlogContentTask(this, currentBlog,
+                        new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
+            } else {
+                // blodID cannot be null on dotcom blogs.
+                Toast.makeText(this, R.string.error_refresh_stats, Toast.LENGTH_LONG).show();
+                AppLog.e(T.STATS, "blogID is null for a wpcom blog!! " + currentBlog.getHomeURL());
+            }
+            return;
+        }
+
+        // check again that we've valid credentials for a Jetpack site
+        if (!currentBlog.isDotcomFlag()
+                && !currentBlog.hasValidJetpackCredentials()
+                && !WordPress.hasValidWPComCredentials(this)) {
+            mPullToRefreshHelper.setRefreshing(false);
+            AppLog.w(T.STATS, "Jetpack blog with no wpcom credentials");
+            return;
         }
 
         // start service to get stats
@@ -566,14 +596,21 @@ public class StatsActivity extends WPActionBarActivity {
         startService(intent);
     }
 
+    /**
+     * Return the remote blogId as stored on the wpcom backend.
+     * <p>
+     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
+     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
+     * </p>
+     * @return String  blogId or null
+     */
     String getBlogId() {
         Blog currentBlog = WordPress.getCurrentBlog();
-        // for dotcom blogs that were added manually
-        if (currentBlog.isDotcomFlag() && !dotComCredentialsMatch()) {
+        if (currentBlog.isDotcomFlag()) {
             return String.valueOf(currentBlog.getRemoteBlogId());
+        } else {
+            return currentBlog.getApi_blogid();
         }
-        // Can return null
-        return currentBlog.getApi_blogid();
     }
 
     private void stopStatsService() {
