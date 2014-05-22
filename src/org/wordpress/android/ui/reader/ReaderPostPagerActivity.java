@@ -25,8 +25,11 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 public class ReaderPostPagerActivity extends FragmentActivity
         implements ReaderUtils.FullScreenListener {
@@ -99,7 +102,14 @@ public class ReaderPostPagerActivity extends FragmentActivity
             public void onPageScrollStateChanged(int state) {
                 super.onPageScrollStateChanged(state);
                 if (state == ViewPager.SCROLL_STATE_DRAGGING) {
+                    // return from fullscreen and pause the active web view when the user
+                    // starts scrolling - important because otherwise embedded content in
+                    // the web view will continue to play
                     onRequestFullScreen(false);
+                    ReaderPostDetailFragment fragment = getActiveDetailFragment();
+                    if (fragment != null) {
+                        fragment.pauseWebView();
+                    }
                 }
             }
         });
@@ -188,9 +198,29 @@ public class ReaderPostPagerActivity extends FragmentActivity
         return true;
     }
 
+    private ReaderPostDetailFragment getActiveDetailFragment() {
+        if (mViewPager == null || mPageAdapter == null) {
+            return null;
+        }
+
+        Fragment fragment = mPageAdapter.getFragmentAtPosition(mViewPager.getCurrentItem());
+        if (fragment instanceof ReaderPostDetailFragment) {
+            return (ReaderPostDetailFragment) fragment;
+        } else {
+            return null;
+        }
+    }
+
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderBlogIdPostIdList mIdList;
         private final long END_ID = -1;
+
+        // this is used to retain a weak reference to created fragments so we can access them
+        // in getFragmentAtPosition() - necessary because we need to pause the web view in
+        // the active fragment when the user swipes away from it, but the adapter provides
+        // no way to access the active fragment
+        private final HashMap<String, WeakReference<Fragment>> mFragmentMap =
+                new HashMap<String, WeakReference<Fragment>>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList idList) {
             super(fm);
@@ -215,11 +245,38 @@ public class ReaderPostPagerActivity extends FragmentActivity
         public Fragment getItem(int position) {
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
+
+            Fragment fragment;
             if (blogId == END_ID && postId == END_ID) {
-                return PostPagerEndFragment.newInstance();
+                fragment = PostPagerEndFragment.newInstance();
             } else {
-                return ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
+                fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
             }
+
+            mFragmentMap.put(getItemKey(position), new WeakReference<Fragment>(fragment));
+
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            mFragmentMap.remove(getItemKey(position));
+            super.destroyItem(container, position, object);
+        }
+
+        private String getItemKey(int position) {
+            return mIdList.get(position).getBlogId() + ":" + mIdList.get(position).getPostId();
+        }
+
+        private Fragment getFragmentAtPosition(int position) {
+            if (!isValidPosition(position)) {
+                return null;
+            }
+            String key = getItemKey(position);
+            if (!mFragmentMap.containsKey(key)) {
+                return null;
+            }
+            return mFragmentMap.get(key).get();
         }
     }
 

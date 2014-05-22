@@ -81,6 +81,10 @@ class ReaderWebView extends WebView {
         }
     }
 
+    boolean isCustomViewShowing () {
+        return mReaderChromeClient.isCustomViewShowing();
+    }
+
     private boolean hasCustomViewListener() {
         return (mCustomViewListener != null);
     }

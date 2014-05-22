@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -438,9 +438,6 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
-        if (mReaderWebView != null) {
-            mReaderWebView.hideCustomView();
-        }
     }
 
     @Override
@@ -1435,8 +1432,6 @@ public class ReaderPostDetailFragment extends Fragment
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mReaderWebView.getVisibility() != View.VISIBLE)
-                    AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
         }, 1000L);
@@ -1485,7 +1480,6 @@ public class ReaderPostDetailFragment extends Fragment
         if (actionBar != null) {
             actionBar.show();
         }
-        pauseWebView();
     }
 
     @Override
@@ -1518,7 +1512,12 @@ public class ReaderPostDetailFragment extends Fragment
 
     void pauseWebView() {
         if (mReaderWebView != null) {
+            if (mReaderWebView.isCustomViewShowing()) {
+                mReaderWebView.hideCustomView();
+            }
             mReaderWebView.onPause();
+        } else {
+            AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
         }
     }
 
