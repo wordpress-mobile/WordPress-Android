@@ -521,7 +521,10 @@ public class ReaderSubsActivity extends FragmentActivity
         }
     }
 
-    // TODO: that's ugly, we mix android.app.FragmentTransaction with support Fragment
+    // Note: Make sure we don't mix android.app.FragmentTransaction with support Fragment.
+    // As long as the android.app.FragmentTransaction passed to the tab handlers isn't used, we should be fine.
+    // If at some point we do want to make use of the transaction, the solution suggested here
+    // http://stackoverflow.com/a/14685927/1673548  would work.
     @Override
     public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
