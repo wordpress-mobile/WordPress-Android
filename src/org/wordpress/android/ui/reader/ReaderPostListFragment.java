@@ -233,7 +233,7 @@ public class ReaderPostListFragment extends Fragment
         mNewPostsBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reloadPosts(true);
+                reloadPosts();
                 hideNewPostsBar();
             }
         });
@@ -753,8 +753,8 @@ public class ReaderPostListFragment extends Fragment
     /*
      * reload the list of posts
      */
-    private void reloadPosts(boolean animateRows) {
-        getPostAdapter().reload(animateRows);
+    private void reloadPosts() {
+        getPostAdapter().reload();
     }
 
     private boolean hasActivity() {

@@ -104,9 +104,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
-        // when animating rows in, start from this y-position near the bottom using medium animation duration
+        // when animating rows in, start from this y-position near the bottom using short animation duration
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
-        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         // enable preloading of images
         mEnableImagePreload = true;
@@ -133,7 +133,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         tagName = StringUtils.notNullStr(tagName);
         if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
             mCurrentTag = tagName;
-            reload(false);
+            reload();
         }
     }
 
@@ -141,7 +141,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     public void setCurrentBlog(long blogId) {
         if (blogId != mCurrentBlogId) {
             mCurrentBlogId = blogId;
-            reload(false);
+            reload();
         }
     }
 
@@ -153,27 +153,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    /*
-     * briefly animate the appearance of new rows when reloading
-     */
-    private void enableRowAnimation() {
-        mAnimateRows = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateRows = false;
-            }
-        }, 1000);
-    }
-
     public void refresh() {
         //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
         loadPosts();
     }
 
-    public void reload(boolean animate) {
-        if (animate)
-            enableRowAnimation();
+    /*
+     * same as refresh() above but first clears the existing posts - this will cause the
+     * adapter to animate in the new posts
+     */
+    public void reload() {
         clear();
         loadPosts();
     }
@@ -636,15 +625,25 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                boolean wasEmpty = mPosts.isEmpty();
                 mPosts = (ReaderPostList)(tmpPosts.clone());
 
-                // preload images in the first few posts
-                if (mEnableImagePreload && mPosts.size() >= PRELOAD_OFFSET) {
-                    for (int i = 0; i <= PRELOAD_OFFSET; i++) {
-                        preloadPostImages(i);
+                // preload images in the first few posts, skipping the first two since they'll
+                // likely already be on screen and loading images before preload completes
+                if (mEnableImagePreload) {
+                    int preloadStart = 2;
+                    int preloadEnd = preloadStart +  PRELOAD_OFFSET;
+                    if (mPosts.size() > preloadEnd) {
+                        for (int i = preloadStart; i <= preloadEnd; i++) {
+                            preloadPostImages(i);
+                        }
                     }
                 }
 
+                // if list was previously empty, animate in the new posts
+                if (wasEmpty) {
+                    enableRowAnimation();
+                }
                 notifyDataSetChanged();
             }
 
@@ -654,6 +653,19 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             mIsTaskRunning = false;
         }
+    }
+
+    /*
+     * briefly animate the appearance of new rows
+     */
+    private void enableRowAnimation() {
+        mAnimateRows = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAnimateRows = false;
+            }
+        }, 500);
     }
 
     /*
