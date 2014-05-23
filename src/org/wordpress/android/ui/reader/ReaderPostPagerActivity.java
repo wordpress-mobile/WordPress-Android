@@ -24,7 +24,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.util.AniUtils;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -176,10 +175,10 @@ public class ReaderPostPagerActivity extends FragmentActivity
         boolean canGoNext = (position < mPageAdapter.getCount() - 1);
 
         if (canGoPrev) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_previous_page), AniUtils.Duration.MEDIUM);
+            ReaderAnim.fadeInFadeOut(findViewById(R.id.image_previous_page), ReaderAnim.Duration.MEDIUM);
         }
         if (canGoNext) {
-            AniUtils.fadeInFadeOut(findViewById(R.id.image_next_page), AniUtils.Duration.MEDIUM);
+            ReaderAnim.fadeInFadeOut(findViewById(R.id.image_next_page), ReaderAnim.Duration.MEDIUM);
         }
     }
 

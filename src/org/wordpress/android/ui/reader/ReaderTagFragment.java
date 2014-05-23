@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
 /**
@@ -172,7 +171,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 }
             };
             int aniResId = (action == TagAction.ADD ? R.anim.reader_tag_add : R.anim.reader_tag_delete);
-            AniUtils.removeListItem(mListView, index, aniListener, aniResId);
+            ReaderAnim.animateListItemRemoval(mListView, index, aniListener, aniResId);
         } else {
             refresh();
         }
