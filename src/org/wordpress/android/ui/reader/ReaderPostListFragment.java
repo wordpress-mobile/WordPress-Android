@@ -2,10 +2,10 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -78,7 +78,6 @@ public class ReaderPostListFragment extends Fragment
     private ReaderPostAdapter mPostAdapter;
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
-    private ReaderUtils.FullScreenListener mFullScreenListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private WPListView mListView;
@@ -223,8 +222,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
-        boolean hasTransparentActionBar = isFullScreenSupported();
-
         mListView = (WPListView) rootView.findViewById(android.R.id.list);
 
         // bar that appears at top when new posts are downloaded
@@ -238,40 +235,24 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        // show empty view at the top that's the same height as the ActionBar if transparent
-        // ActionBar is enabled
-        if (hasTransparentActionBar) {
-            View actionBarSpacer = rootView.findViewById(R.id.view_actionbar_spacer);
-            actionBarSpacer.setVisibility(View.VISIBLE);
-        }
-
         switch (getPostListType()) {
             case TAG_FOLLOWED:
-                // tell the ptr layout to appear below the action bar spacer
-                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, R.id.view_actionbar_spacer);
                 break;
 
             case TAG_PREVIEW:
-                // add the tag header to the view, tell it to appear below the action bar spacer,
-                // and tell the ptr layout to appear below the header
+                // add the tag header to the view, then tell the ptr layout to appear below the header
                 mTagInfoView = (ViewGroup) inflater.inflate(R.layout.reader_tag_info_view, container, false);
                 rootView.addView(mTagInfoView);
-                ReaderUtils.layoutBelow(rootView, mTagInfoView.getId(), R.id.view_actionbar_spacer);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mTagInfoView.getId());
                 break;
 
             case BLOG_PREVIEW:
-                // tell the ptr layout to appear below the action bar spacer
-                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, R.id.view_actionbar_spacer);
-
-                // inflate the blog info, make it full size, and tell it to appear below the
-                // action bar spacer
+                // inflate the blog info and make it full size
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
                 rootView.addView(mBlogInfoView);
                 mBlogInfoView.setLayoutParams(new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.MATCH_PARENT));
-                ReaderUtils.layoutBelow(rootView, mBlogInfoView.getId(), R.id.view_actionbar_spacer);
 
                 // add a blank header to the listView that's the same height as the mshot with a fudge
                 // factor to account for the info container - global layout listener below will
@@ -377,9 +358,6 @@ public class ReaderPostListFragment extends Fragment
         }
         if (activity instanceof OnTagSelectedListener) {
             mOnTagSelectedListener = (OnTagSelectedListener) activity;
-        }
-        if (activity instanceof ReaderUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
         }
     }
 
@@ -1117,10 +1095,6 @@ public class ReaderPostListFragment extends Fragment
         AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
 
         return true;
-    }
-
-    private boolean isFullScreenSupported() {
-        return (mFullScreenListener != null && mFullScreenListener.isFullScreenSupported());
     }
 
     @Override

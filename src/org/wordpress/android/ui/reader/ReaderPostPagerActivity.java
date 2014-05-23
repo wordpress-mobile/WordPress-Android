@@ -224,8 +224,9 @@ public class ReaderPostPagerActivity extends FragmentActivity
             super(fm);
             mIdList = (ReaderBlogIdPostIdList) idList.clone();
             // add a bogus entry to the end of the list so we can show PostPagerEndFragment
-            // when the user scrolls beyond the last post
-            if (mIdList.indexOf(END_ID, END_ID) == -1) {
+            // when the user scrolls beyond the last post - note that this is only done
+            // if there's more than one post
+            if (mIdList.size() > 1 && mIdList.indexOf(END_ID, END_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
             }
         }

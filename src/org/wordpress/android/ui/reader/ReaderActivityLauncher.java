@@ -16,16 +16,16 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
+
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
-        Intent intent = new Intent(context, ReaderActivity.class);
-        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
-        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderTypes.ReaderFragmentType.POST_DETAIL);
-        context.startActivity(intent);
+        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+        idList.add(new ReaderBlogIdPostId(blogId, postId));
+        showReaderPostPager(context, null, 0, idList, null);
     }
 
     public static void showReaderPostPager(Context context,
@@ -34,9 +34,11 @@ public class ReaderActivityLauncher {
                                            ReaderBlogIdPostIdList idList,
                                            ReaderPostListType postListType) {
         Intent intent = new Intent(context, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderPostPagerActivity.ARG_TITLE, title);
         intent.putExtra(ReaderPostPagerActivity.ARG_POSITION, position);
         intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
+        if (!TextUtils.isEmpty(title)) {
+            intent.putExtra(ReaderPostPagerActivity.ARG_TITLE, title);
+        }
         if (postListType != null) {
             intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -44,19 +46,17 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderBlogPreview(Context context, long blogId, String blogUrl) {
-        Intent intent = new Intent(context, ReaderActivity.class);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_BLOG_URL, blogUrl);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderTypes.ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }
 
     public static void showReaderTagPreview(Context context, String tagName) {
-        Intent intent = new Intent(context, ReaderActivity.class);
+        Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG_NAME, tagName);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.TAG_PREVIEW);
-        intent.putExtra(ReaderActivity.ARG_READER_FRAGMENT_TYPE, ReaderTypes.ReaderFragmentType.POST_LIST);
         context.startActivity(intent);
     }
 

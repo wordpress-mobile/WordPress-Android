@@ -1,15 +1,11 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -35,32 +31,21 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 /*
- * this activity serves as the host for ReaderPostListFragment and ReaderPostDetailFragment
+ * this activity serves as the host for ReaderPostListFragment
  */
 
-public class ReaderActivity extends WPActionBarActivity
-                            implements OnPostSelectedListener,
-                                       OnTagSelectedListener,
-                                       FragmentManager.OnBackStackChangedListener,
-                                       ReaderUtils.FullScreenListener {
-
-    static final String ARG_READER_FRAGMENT_TYPE = "reader_fragment_type";
+public class ReaderPostListActivity extends WPActionBarActivity
+                                    implements OnPostSelectedListener,
+                                               OnTagSelectedListener {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
-    private boolean mIsFullScreen;
     private ReaderTypes.ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (isFullScreenSupported()) {
-            getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        }
-
         super.onCreate(savedInstanceState);
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
-
         readIntent(getIntent(), savedInstanceState);
     }
 
@@ -77,9 +62,9 @@ public class ReaderActivity extends WPActionBarActivity
 
         // no menu drawer if this is blog preview or tag preview
         if (mPostListType.isPreviewType()) {
-            setContentView(R.layout.reader_activity_main);
+            setContentView(R.layout.reader_activity_post_list);
         } else {
-            createMenuDrawer(R.layout.reader_activity_main);
+            createMenuDrawer(R.layout.reader_activity_post_list);
         }
 
         switch (mPostListType) {
@@ -96,49 +81,24 @@ public class ReaderActivity extends WPActionBarActivity
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-            // determine which fragment to show (post list or detail), default to post list
-            final ReaderTypes.ReaderFragmentType fragmentType;
-            if (intent.hasExtra(ARG_READER_FRAGMENT_TYPE)) {
-                fragmentType = (ReaderTypes.ReaderFragmentType) intent.getSerializableExtra(ARG_READER_FRAGMENT_TYPE);
+            if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+                long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+                String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
+                showListFragmentForBlog(blogId, blogUrl);
             } else {
-                fragmentType = ReaderTypes.ReaderFragmentType.POST_LIST;
-            }
+                // get the tag name from the intent, if not there get it from prefs
+                String tagName = intent.getStringExtra(ReaderConstants.ARG_TAG_NAME);
+                if (TextUtils.isEmpty(tagName)) {
+                    tagName = UserPrefs.getReaderTag();
+                }
+                // if this is a followed tag and it doesn't exist, revert to default tag
+                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
+                    tagName = ReaderTag.TAG_NAME_DEFAULT;
+                }
 
-            switch (fragmentType) {
-                case POST_LIST:
-                    if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                        long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                        String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
-                        showListFragmentForBlog(blogId, blogUrl);
-                    } else {
-                        // get the tag name from the intent, if not there get it from prefs
-                        String tagName = intent.getStringExtra(ReaderConstants.ARG_TAG_NAME);
-                        if (TextUtils.isEmpty(tagName)) {
-                            tagName = UserPrefs.getReaderTag();
-                        }
-                        // if this is a followed tag and it doesn't exist, revert to default tag
-                        if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
-                            tagName = ReaderTag.TAG_NAME_DEFAULT;
-                        }
-
-                        showListFragmentForTag(tagName, mPostListType);
-                    }
-                    break;
-
-                case POST_DETAIL:
-                    long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-                    long postId = intent.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    showDetailFragment(blogId, postId);
-                    break;
+                showListFragmentForTag(tagName, mPostListType);
             }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        // TODO: this was previously done in onResumeFragments(), make sure it still works
-        super.onResume();
-        checkMenuDrawer();
     }
 
     @Override
@@ -157,41 +117,11 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onBackStackChanged() {
-        checkMenuDrawer();
-        // return from full-screen when backstack changes
-        if (isFullScreen()) {
-            onRequestFullScreen(false);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
-        } else if (hasListFragment() && hasDetailFragment()) {
-            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home && hasDetailFragment()) {
-            onBackPressed();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*
-     * show the drawer indicator if there isn't a detail fragment
-     */
-    private void checkMenuDrawer() {
-        if (mMenuDrawer != null) {
-            int entryCount = getSupportFragmentManager().getBackStackEntryCount();
-            mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
         }
     }
 
@@ -201,7 +131,6 @@ public class ReaderActivity extends WPActionBarActivity
 
         boolean isResultOK = (resultCode == Activity.RESULT_OK);
         final ReaderPostListFragment listFragment = getListFragment();
-        final ReaderPostDetailFragment detailFragment = getDetailFragment();
 
         switch (requestCode) {
             // user just returned from the tag editor
@@ -230,10 +159,9 @@ public class ReaderActivity extends WPActionBarActivity
                 if (isResultOK && data != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    if (listFragment != null)
+                    if (listFragment != null) {
                         listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
-                    if (detailFragment != null)
-                        detailFragment.reloadPost();
+                    }
                 }
                 break;
 
@@ -241,7 +169,7 @@ public class ReaderActivity extends WPActionBarActivity
             // since creds have changed
             case WPComLoginActivity.REQUEST_CODE:
                 if (isResultOK) {
-                    removeFragments();
+                    removeListFragment();
                     mHasPerformedInitialUpdate = false;
                     performInitialUpdate();
                 }
@@ -256,10 +184,10 @@ public class ReaderActivity extends WPActionBarActivity
         AppLog.i(T.READER, "user signed out");
         mHasPerformedInitialUpdate = false;
 
-        // reader database will have been cleared by the time this is called, but the fragments must
-        // be removed or else they will continue to show the same articles - onResume() will take care
-        // of re-displaying the correct fragment if necessary
-        removeFragments();
+        // reader database will have been cleared by the time this is called, but the fragment must
+        // be removed or else they will continue to show the same articles - onResume() will take
+        // care of re-displaying the correct fragment if necessary
+        removeListFragment();
     }
 
     ReaderTypes.ReaderPostListType getPostListType() {
@@ -267,21 +195,15 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     /*
-     * remove both the list & detail fragments
+     * remove both the list fragments
      */
-    private void removeFragments() {
+    private void removeListFragment() {
         Fragment listFragment = getListFragment();
-        Fragment detailFragment = getDetailFragment();
-        if (listFragment == null && detailFragment == null)
-            return;
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (detailFragment != null)
-            ft.remove(detailFragment);
-        if (listFragment != null)
+        if (listFragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.remove(listFragment);
-
-        ft.commit();
+            ft.commit();
+        }
     }
 
     /*
@@ -316,41 +238,6 @@ public class ReaderActivity extends WPActionBarActivity
 
     private boolean hasListFragment() {
         return (getListFragment() != null);
-    }
-
-    /*
-     * show fragment containing detail for passed post
-     */
-    private void showDetailFragment(long blogId, long postId) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-
-        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
-        // add to the backstack if list fragment exists
-        if (hasListFragment()) {
-            ft.replace(R.id.fragment_container, fragment, tagForFragment);
-            ft.addToBackStack(tagForFragment);
-        } else {
-            ft.add(R.id.fragment_container, fragment, tagForFragment);
-        }
-
-        ft.commit();
-    }
-
-    private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
-                R.string.fragment_tag_reader_post_detail));
-        if (fragment == null) {
-            return null;
-        }
-        return ((ReaderPostDetailFragment) fragment);
-    }
-
-    private boolean hasDetailFragment() {
-        return (getDetailFragment() != null);
     }
 
     /*
@@ -407,7 +294,7 @@ public class ReaderActivity extends WPActionBarActivity
 
                 // update cookies so that we can show authenticated images in WebViews
                 AppLog.i(T.READER, "reader activity > updating cookies");
-                ReaderAuthActions.updateCookies(ReaderActivity.this);
+                ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
             }
         };
         ReaderTagActions.updateTags(listener);
@@ -433,7 +320,6 @@ public class ReaderActivity extends WPActionBarActivity
                     title = (String)this.getTitle();
                     break;
             }
-
             ReaderActivityLauncher.showReaderPostPager(this, title, position, idList, getPostListType());
         }
     }
@@ -451,37 +337,4 @@ public class ReaderActivity extends WPActionBarActivity
             ReaderActivityLauncher.showReaderTagPreview(this, tagName);
         }
     }
-
-    /*
-     * post detail is requesting fullscreen mode
-     */
-    @Override
-    public boolean onRequestFullScreen(boolean enableFullScreen) {
-        if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen)
-            return false;
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return false;
-        }
-
-        if (enableFullScreen) {
-            actionBar.hide();
-        } else {
-            actionBar.show();
-        }
-
-        mIsFullScreen = enableFullScreen;
-        return true;
-    }
-
-    @Override
-    public boolean isFullScreen() {
-        return mIsFullScreen;
-    }
-
-    public boolean isFullScreenSupported() {
-        return !isStaticMenuDrawer();
-    }
-
 }
