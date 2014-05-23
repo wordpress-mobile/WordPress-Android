@@ -63,6 +63,13 @@ class ReaderAnim {
         getFadeInAnim(target, duration).start();
     }
 
+    static void fadeOut(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+        getFadeOutAnim(target, duration).start();
+    }
+
     static void fadeInFadeOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
@@ -80,10 +87,10 @@ class ReaderAnim {
         set.start();
     }
 
-    static void animateListItemRemoval(ListView listView,
-                                       int positionAbsolute,
-                                       Animation.AnimationListener listener,
-                                       int animResId) {
+    static void animateListItem(ListView listView,
+                                int positionAbsolute,
+                                Animation.AnimationListener listener,
+                                int animResId) {
         if (listView == null) {
             return;
         }

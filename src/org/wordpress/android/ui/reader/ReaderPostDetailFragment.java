@@ -333,10 +333,12 @@ public class ReaderPostDetailFragment extends Fragment
      * animate in/out the layout containing the reblog/comment/like icons
      */
     private void animateIconBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE)
+        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE) {
             return;
-        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE)
+        }
+        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE) {
             return;
+        }
 
         final Animation animation;
         if (isAnimatingIn) {
@@ -1422,11 +1424,25 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    /*
+     * return the container view that should host the fullscreen video
+     */
     @Override
     public ViewGroup onRequestCustomView() {
         if (hasActivity()) {
-            // return the container view that should host the fullscreen video
             return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
+        } else {
+            return null;
+        }
+    }
+
+    /*
+     * return the container view that should be hidden when fullscreen video is shown
+     */
+    @Override
+    public ViewGroup onRequestContentView() {
+        if (hasActivity()) {
+            return (ViewGroup) getView().findViewById(R.id.layout_post_detail_container);
         } else {
             return null;
         }
@@ -1480,6 +1496,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     void pauseWebView() {
         if (mReaderWebView != null) {
+            mReaderWebView.hideCustomView();
             mReaderWebView.onPause();
         } else {
             AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");

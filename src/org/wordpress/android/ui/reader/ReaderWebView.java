@@ -27,6 +27,7 @@ class ReaderWebView extends WebView {
         public void onCustomViewShown();
         public void onCustomViewHidden();
         public ViewGroup onRequestCustomView();
+        public ViewGroup onRequestContentView();
     }
 
     private ReaderWebChromeClient mReaderChromeClient;
@@ -88,14 +89,15 @@ class ReaderWebView extends WebView {
         return (url != null && url.startsWith("http"));
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mReaderChromeClient.isCustomViewShowing()) {
+    boolean isCustomViewShowing() {
+        return mReaderChromeClient.isCustomViewShowing();
+    }
+
+    void hideCustomView() {
+        if (isCustomViewShowing()) {
             mReaderChromeClient.onHideCustomView();
         }
     }
-
     /*
      * detect when an image is tapped
      */
@@ -178,30 +180,46 @@ class ReaderWebView extends WebView {
             }
         }
 
+        /*
+         * request the view that should be hidden when showing fullscreen video
+         */
+        private ViewGroup getContentView() {
+            if (mReaderWebView.hasCustomViewListener()) {
+                return mReaderWebView.getCustomViewListener().onRequestContentView();
+            } else {
+                return null;
+            }
+        }
+
         @Override
         public void onShowCustomView(View view, CustomViewCallback callback) {
             AppLog.i(AppLog.T.READER, "onShowCustomView");
 
             if (mCustomView != null) {
+                AppLog.w(AppLog.T.READER, "customView already showing");
                 onHideCustomView();
                 return;
             }
 
-            ViewGroup targetView = getTargetView();
-            if (targetView == null) {
-                return;
+            // hide the post detail content
+            ViewGroup contentView = getContentView();
+            if (contentView != null) {
+                contentView.setVisibility(View.INVISIBLE);
             }
 
-            mCustomViewCallback = callback;
-            mCustomView = view;
-
-            targetView.addView(mCustomView);
-            targetView.setVisibility(View.VISIBLE);
-            targetView.bringToFront();
+            // show the full screen view
+            ViewGroup targetView = getTargetView();
+            if (targetView != null) {
+                targetView.addView(view);
+                targetView.setVisibility(View.VISIBLE);
+            }
 
             if (mReaderWebView.hasCustomViewListener()) {
                 mReaderWebView.getCustomViewListener().onCustomViewShown();
             }
+
+            mCustomView = view;
+            mCustomViewCallback = callback;
         }
 
         @Override
@@ -209,24 +227,34 @@ class ReaderWebView extends WebView {
             AppLog.i(AppLog.T.READER, "onHideCustomView");
 
             if (mCustomView == null) {
+                AppLog.w(AppLog.T.READER, "customView does not exist");
                 return;
             }
-            mCustomView.setVisibility(View.GONE);
 
+            // hide the target view
             ViewGroup targetView = getTargetView();
-            if (targetView == null) {
-                return;
+            if (targetView != null) {
+                targetView.removeView(mCustomView);
+                targetView.setVisibility(View.GONE);
             }
-            targetView.removeView(mCustomView);
-            targetView.setVisibility(View.GONE);
+
+            // redisplay the post detail content
+            ViewGroup contentView = getContentView();
+            if (contentView != null) {
+                contentView.setVisibility(View.VISIBLE);
+            }
 
             if (mCustomViewCallback != null) {
                 mCustomViewCallback.onCustomViewHidden();
             }
-
             if (mReaderWebView.hasCustomViewListener()) {
                 mReaderWebView.getCustomViewListener().onCustomViewHidden();
             }
+
+            mCustomView = null;
+            mCustomViewCallback = null;
+
+            mReaderWebView.onPause();
         }
 
         boolean isCustomViewShowing() {
