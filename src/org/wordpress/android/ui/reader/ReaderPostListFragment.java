@@ -58,9 +58,6 @@ import java.util.Map;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-/**
- * Fragment hosted by ReaderActivity to show posts with a specific tag or in a specific blog
- */
 public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
         ViewTreeObserver.OnScrollChangedListener,
@@ -237,6 +234,7 @@ public class ReaderPostListFragment extends Fragment
 
         switch (getPostListType()) {
             case TAG_FOLLOWED:
+                // this is the default, nothing extra needed
                 break;
 
             case TAG_PREVIEW:

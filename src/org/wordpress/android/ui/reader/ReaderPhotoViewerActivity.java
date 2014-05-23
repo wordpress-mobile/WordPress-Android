@@ -19,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-/**
+/*
  * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {

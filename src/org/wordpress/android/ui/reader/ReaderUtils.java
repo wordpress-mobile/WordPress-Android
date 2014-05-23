@@ -14,10 +14,13 @@ import org.wordpress.android.R;
 import java.util.List;
 
 public class ReaderUtils {
-    public static interface FullScreenListener {
-        public boolean onRequestFullScreen(boolean enable);
-        public boolean isFullScreen();
-        public boolean isFullScreenSupported();
+    /*
+     * used by ReaderPostDetailFragment to enter/exit full screen mode
+     */
+    static interface FullScreenListener {
+        boolean onRequestFullScreen(boolean enable);
+        boolean isFullScreen();
+        boolean isFullScreenSupported();
     }
 
     /*
@@ -81,23 +84,23 @@ public class ReaderUtils {
     /*
      * adds a transparent header to the passed listView
      */
-    public static View addListViewHeader(ListView listView, int height) {
+    static View addListViewHeader(ListView listView, int height) {
         if (listView == null) {
             return null;
         }
-        RelativeLayout headerFake = new RelativeLayout(listView.getContext());
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(
-                AbsListView.LayoutParams.MATCH_PARENT,
-                height));
-        listView.addHeaderView(headerFake, null, false);
-        return headerFake;
+        RelativeLayout header = new RelativeLayout(listView.getContext());
+        header.setLayoutParams(new AbsListView.LayoutParams(
+                               AbsListView.LayoutParams.MATCH_PARENT,
+                               height));
+        listView.addHeaderView(header, null, false);
+        return header;
     }
 
     /*
      * adds a rule which tells the view with targetId to be placed below layoutBelowId - only
      * works if viewParent is a RelativeLayout
      */
-    public static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
+    static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
         if (viewParent == null || !(viewParent instanceof RelativeLayout)) {
             return;
         }

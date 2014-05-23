@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -156,12 +155,10 @@ public class ReaderPostListActivity extends WPActionBarActivity
             // user just returned from reblogging activity, reload the displayed post if reblogging
             // succeeded
             case ReaderConstants.INTENT_READER_REBLOG:
-                if (isResultOK && data != null) {
+                if (isResultOK && data != null && listFragment != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    if (listFragment != null) {
-                        listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
-                    }
+                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
                 }
                 break;
 
@@ -191,18 +188,16 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     ReaderTypes.ReaderPostListType getPostListType() {
-        return mPostListType;
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
-    /*
-     * remove both the list fragments
-     */
     private void removeListFragment() {
         Fragment listFragment = getListFragment();
         if (listFragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.remove(listFragment);
-            ft.commit();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(listFragment)
+                    .commit();
         }
     }
 
@@ -301,7 +296,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
-     * user tapped a post in the post list fragment
+     * user tapped a post in the list fragment
      */
     @Override
     public void onPostSelected(long blogId, long postId) {
@@ -325,7 +320,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
-     * user tapped a tag in the post list fragment
+     * user tapped a tag in the list fragment
      */
     @Override
     public void onTagSelected(String tagName) {

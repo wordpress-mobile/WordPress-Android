@@ -22,12 +22,19 @@ import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
 
+    /*
+     * show a single reader post in the detail view - simply calls showReaderPostPager
+     * with a single post
+     */
     public static void showReaderPostDetail(Context context, long blogId, long postId) {
         ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
         idList.add(new ReaderBlogIdPostId(blogId, postId));
         showReaderPostPager(context, null, 0, idList, null);
     }
 
+    /*
+     * show a list of posts in the post pager with the post at the passed position made active
+     */
     public static void showReaderPostPager(Context context,
                                            String title,
                                            int position,
@@ -45,6 +52,9 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    /*
+     * show a list of posts in a specific blog
+     */
     public static void showReaderBlogPreview(Context context, long blogId, String blogUrl) {
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
@@ -53,6 +63,9 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    /*
+     * show a list of posts with a specific tag
+     */
     public static void showReaderTagPreview(Context context, String tagName) {
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG_NAME, tagName);
@@ -60,6 +73,9 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    /*
+     * show users who liked the passed post
+     */
     public static void showReaderLikingUsers(Context context, ReaderPost post) {
         if (post == null) {
             return;
@@ -70,6 +86,9 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    /*
+     * show followed tags & blogs
+     */
     public static void showReaderSubsForResult(Activity activity) {
         Intent intent = new Intent(activity, ReaderSubsActivity.class);
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
@@ -79,6 +98,9 @@ public class ReaderActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, ReaderConstants.INTENT_READER_SUBS, options.toBundle());
     }
 
+    /*
+     * show the passed imageUrl in the fullscreen photo activity
+     */
     public static void showReaderPhotoViewer(Activity activity,
                                              String imageUrl,
                                              View source,
@@ -102,6 +124,9 @@ public class ReaderActivityLauncher {
         }
     }
 
+    /*
+     * show the reblog activity for the passed post
+     */
     public static void showReaderReblogForResult(Activity activity, ReaderPost post) {
         if (post == null) {
             return;

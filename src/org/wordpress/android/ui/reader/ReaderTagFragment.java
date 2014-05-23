@@ -18,7 +18,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
 import org.wordpress.android.util.AppLog;
 
-/**
+/*
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
  */
 public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {

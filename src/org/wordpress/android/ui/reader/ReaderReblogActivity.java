@@ -26,7 +26,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-/**
+/*
  * displayed when user taps to reblog a post in the Reader
  *
  * note that this activity uses android:configChanges="orientation|keyboardHidden|screenSize"

@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.util.DisplayUtils;
 
-/**
+/*
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends Activity {
