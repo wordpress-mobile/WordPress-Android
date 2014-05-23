@@ -679,7 +679,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         // show the liking layout if it's not already showing
         if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLayoutLikes);
+            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
         }
     }
 

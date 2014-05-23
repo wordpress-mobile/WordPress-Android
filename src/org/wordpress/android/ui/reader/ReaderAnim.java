@@ -11,9 +11,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
 
-public class ReaderAnim {
+class ReaderAnim {
 
-    public static enum Duration {
+    static enum Duration {
         SHORT,
         MEDIUM,
         LONG;
@@ -30,53 +30,66 @@ public class ReaderAnim {
         }
     }
 
-    /*
-     * fades in the passed view then fades it out
-     */
-    public static void fadeInFadeOut(final View target, Duration duration) {
-        if (target == null || duration == null) {
-            return;
-        }
-
-        long durationMillis = duration.toMillis(target.getContext());
-
+    private static ObjectAnimator getFadeInAnim(final View target, Duration duration) {
         ObjectAnimator fadeIn = ObjectAnimator.ofFloat(target, View.ALPHA, 0.0f, 1.0f);
-        fadeIn.setDuration(durationMillis);
+        fadeIn.setDuration(duration.toMillis(target.getContext()));
         fadeIn.setInterpolator(new LinearInterpolator());
-
-        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
-        fadeOut.setDuration(durationMillis);
-        fadeOut.setInterpolator(new LinearInterpolator());
-        fadeOut.setStartDelay(durationMillis / 2);
-
-        AnimatorSet set = new AnimatorSet();
-        set.play(fadeOut).after(fadeIn);
-        set.addListener(new AnimatorListenerAdapter() {
+        fadeIn.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 target.setVisibility(View.VISIBLE);
             }
+        });
+        return fadeIn;
+    }
+
+    private static ObjectAnimator getFadeOutAnim(final View target, Duration duration) {
+        ObjectAnimator fadeOut = ObjectAnimator.ofFloat(target, View.ALPHA, 1.0f, 0.0f);
+        fadeOut.setDuration(duration.toMillis(target.getContext()));
+        fadeOut.setInterpolator(new LinearInterpolator());
+        fadeOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 target.setVisibility(View.GONE);
             }
         });
+        return fadeOut;
+    }
 
+    static void fadeIn(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+        getFadeInAnim(target, duration).start();
+    }
+
+    static void fadeInFadeOut(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        ObjectAnimator fadeIn = getFadeInAnim(target, duration);
+        ObjectAnimator fadeOut = getFadeOutAnim(target, duration);
+
+        // keep view visible for 1/2 duration before fading it out
+        long durationMillis = duration.toMillis(target.getContext());
+        fadeOut.setStartDelay(durationMillis / 2);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(fadeOut).after(fadeIn);
         set.start();
     }
 
-    /*
-     * animate the removal of a listview item
-     */
-    public static void animateListItemRemoval(ListView listView,
-                                              int positionAbsolute,
-                                              Animation.AnimationListener listener,
-                                              int animResId) {
+    static void animateListItemRemoval(ListView listView,
+                                       int positionAbsolute,
+                                       Animation.AnimationListener listener,
+                                       int animResId) {
         if (listView == null) {
             return;
         }
 
-        // passed value is the absolute position of this item, convert to relative or else we'll remove the wrong item if list is scrolled
+        // passed value is the absolute position of this item, convert to relative or else we'll
+        // remove the wrong item if list is scrolled
         int firstVisible = listView.getFirstVisiblePosition();
         int positionRelative = positionAbsolute - firstVisible;
 
