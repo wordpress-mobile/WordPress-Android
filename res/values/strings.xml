@@ -600,7 +600,7 @@
     <string name="reader_hint_comment_on_post">Add your comment</string>
     <string name="reader_hint_comment_on_comment">Reply to comment</string>
     <string name="reader_hint_add_tag_or_url">Enter a tag or URL to follow</string>
-    <string name="reader_hint_reblog_comment">Optional comment</string>
+    <string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
 
     <!-- TextView labels -->
     <string name="reader_label_new_posts">Show new posts</string>

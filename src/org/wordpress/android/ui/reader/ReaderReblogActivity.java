@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,9 +24,11 @@ import org.wordpress.android.ui.prefs.PreferencesActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 /**
  * displayed when user taps to reblog a post in the Reader
@@ -53,8 +57,13 @@ public class ReaderReblogActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_reblog);
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
@@ -204,19 +213,64 @@ public class ReaderReblogActivity extends Activity {
     }
 
     /*
-     * AsyncTask to load post from db
+     * AsyncTask to load and display post
      */
     private class LoadPostTask extends AsyncTask<Void, Void, Boolean> {
         ReaderPost tmpPost;
+
+        ViewGroup layoutExcerpt;
+        TextView txtBlogName;
+        TextView txtTitle;
+        TextView txtExcerpt;
+        WPNetworkImageView imgAvatar;
+        WPNetworkImageView imgFeatured;
+
         @Override
         protected Boolean doInBackground(Void... voids) {
+            layoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
+            txtBlogName = (TextView) layoutExcerpt.findViewById(R.id.text_blog_name);
+            txtTitle = (TextView) layoutExcerpt.findViewById(R.id.text_title);
+            txtExcerpt = (TextView) layoutExcerpt.findViewById(R.id.text_excerpt);
+            imgAvatar = (WPNetworkImageView) layoutExcerpt.findViewById(R.id.image_avatar);
+            imgFeatured = (WPNetworkImageView) layoutExcerpt.findViewById(R.id.image_featured);
+
             tmpPost = ReaderPostTable.getPost(mBlogId, mPostId);
             return (tmpPost != null);
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
-            if (result)
+            if (result) {
                 mPost = tmpPost;
+
+                txtTitle.setText(mPost.getTitle());
+
+                if (mPost.hasBlogName()) {
+                    txtBlogName.setText(mPost.getBlogName());
+                } else if (mPost.hasAuthorName()) {
+                    txtBlogName.setText(mPost.getAuthorName());
+                }
+
+                if (mPost.hasExcerpt()) {
+                    txtExcerpt.setText(mPost.getExcerpt());
+                } else {
+                    txtExcerpt.setVisibility(View.GONE);
+                }
+
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+
+                if (mPost.hasFeaturedImage()) {
+                    int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderReblogActivity.this);
+                    int listMargin = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
+                    int photonWidth = displayWidth - (listMargin * 2);
+                    int photonHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
+                    final String imageUrl = mPost.getFeaturedImageForDisplay(photonWidth, photonHeight);
+                    imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                } else {
+                    imgFeatured.setVisibility(View.GONE);
+                }
+            }
         }
     }
 }

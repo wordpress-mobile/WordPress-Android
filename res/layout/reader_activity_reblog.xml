@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
-
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_title"
-        style="@style/ReaderTextView.PopupTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/reader_title_reblog" />
-
-    <View
-        android:id="@+id/divider_title"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_small"
-        android:background="@color/reader_divider_grey" />
+    android:background="@color/white">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -35,44 +20,41 @@
         android:layout_height="wrap_content"
         android:text="@string/reader_label_reblog_empty" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_large">
+        android:orientation="vertical">
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layout_post_excerpt"
+            layout="@layout/reader_reblog_post_excerpt" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_reblog_label"
             style="@style/ReaderTextView.Label.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/reader_label_reblog_to" />
 
         <Spinner
             android:id="@+id/spinner_reblog"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_reblog_label" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_label"
-            style="@style/ReaderTextView.Label.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_reblog"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/reader_hint_reblog_comment" />
+            android:layout_height="wrap_content" />
 
         <EditText
             android:id="@+id/edit_comment"
             style="@style/ReaderEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_comment_label"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_small"
             android:background="@drawable/reader_edittext_frame"
             android:gravity="top"
+            android:hint="@string/reader_hint_reblog_comment"
             android:inputType="textCapSentences|textMultiLine"
             android:minLines="3"
             android:padding="@dimen/margin_medium" />
@@ -81,18 +63,17 @@
             android:id="@+id/btn_reblog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_comment"
             android:text="@string/reader_btn_reblog" />
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@style/ReaderProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/edit_comment"
-            android:layout_centerHorizontal="true"
-            android:visibility="invisible" />
-    </RelativeLayout>
+    </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        tools:visibility="visible"
+        android:visibility="gone" />
 
-</LinearLayout>
+</RelativeLayout>

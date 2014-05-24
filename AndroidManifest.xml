@@ -177,7 +177,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
-            android:theme="@style/ReaderTheme.PopupPanel"
+            android:label="@string/reader_title_reblog"
+            android:theme="@style/ReaderTheme.TranslucentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity
