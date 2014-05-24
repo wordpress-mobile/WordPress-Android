@@ -326,8 +326,12 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    private ReaderPostListType getPostListType() {
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
+    }
+
     private boolean isBlogPreview() {
-        return (mPostListType != null && mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
+        return (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
     }
 
     /*
@@ -369,6 +373,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
+        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         if (mIsAddCommentBoxShowing) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
@@ -417,6 +422,9 @@ public class ReaderPostDetailFragment extends Fragment
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
+            }
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
             mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
         }
