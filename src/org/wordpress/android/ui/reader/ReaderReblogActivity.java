@@ -7,11 +7,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Html;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -43,7 +44,6 @@ public class ReaderReblogActivity extends Activity {
     private ReaderPost mPost;
 
     private ReaderReblogAdapter mAdapter;
-    private Button mBtnReblog;
     private EditText mEditComment;
     private ProgressBar mProgress;
     private Spinner mSpinner;
@@ -58,15 +58,13 @@ public class ReaderReblogActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_reblog);
-
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        setupActionBar();
 
         mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mEditComment = (EditText) findViewById(R.id.edit_comment);
 
         mSpinner = (Spinner) findViewById(R.id.spinner_reblog);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -81,17 +79,17 @@ public class ReaderReblogActivity extends Activity {
         });
         mSpinner.setAdapter(getReblogAdapter());
 
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mEditComment = (EditText) findViewById(R.id.edit_comment);
-        mBtnReblog = (Button) findViewById(R.id.btn_reblog);
-        mBtnReblog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitReblog();
-            }
-        });
 
         loadPost();
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            return;
+        }
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -102,9 +100,24 @@ public class ReaderReblogActivity extends Activity {
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.reader_reblog, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.menu_publish:
+                submitReblog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void loadPost() {
@@ -159,15 +172,13 @@ public class ReaderReblogActivity extends Activity {
     private void setIsSubmittingReblog(boolean value) {
         mIsSubmittingReblog = value;
         if (mIsSubmittingReblog) {
-            mProgress.setVisibility(View.VISIBLE);
-            mBtnReblog.setVisibility(View.INVISIBLE);
-            mEditComment.setEnabled(false);
             mSpinner.setEnabled(false);
+            mProgress.setVisibility(View.VISIBLE);
+            mEditComment.setEnabled(false);
         } else {
-            mProgress.setVisibility(View.INVISIBLE);
-            mBtnReblog.setVisibility(View.VISIBLE);
-            mEditComment.setEnabled(true);
             mSpinner.setEnabled(true);
+            mProgress.setVisibility(View.INVISIBLE);
+            mEditComment.setEnabled(true);
         }
     }
 
@@ -267,6 +278,8 @@ public class ReaderReblogActivity extends Activity {
                     int photonHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
                     final String imageUrl = mPost.getFeaturedImageForDisplay(photonWidth, photonHeight);
                     imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+                } else if (mPost.hasFeaturedVideo()) {
+                    imgFeatured.setVideoUrl(mPost.postId, mPost.getFeaturedVideo());
                 } else {
                     imgFeatured.setVisibility(View.GONE);
                 }
