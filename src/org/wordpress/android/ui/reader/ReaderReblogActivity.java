@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -132,6 +133,10 @@ public class ReaderReblogActivity extends Activity {
         }
     }
 
+    private boolean hasReblogAdapter() {
+        return (mAdapter != null);
+    }
+
     private ReaderReblogAdapter getReblogAdapter() {
         if (mAdapter == null) {
             mAdapter = new ReaderReblogAdapter(this, mBlogId, new ReaderActions.DataLoadedListener() {
@@ -160,10 +165,7 @@ public class ReaderReblogActivity extends Activity {
 
                     // restore the previously selected destination blog id
                     if (!isEmpty && mDestinationBlogId != 0) {
-                        int index = getReblogAdapter().indexOfBlogId(mDestinationBlogId);
-                        if (index > -1) {
-                            getActionBar().setSelectedNavigationItem(index);
-                        }
+                        selectBlogInActionbar(mDestinationBlogId);
                     }
                 }
             });
@@ -172,21 +174,33 @@ public class ReaderReblogActivity extends Activity {
         return mAdapter;
     }
 
+    private void selectBlogInActionbar(long blogId) {
+        if (!hasReblogAdapter() || getActionBar() == null) {
+            return;
+        }
+        int index = getReblogAdapter().indexOfBlogId(blogId);
+        if (index > -1
+                && index < getActionBar().getNavigationItemCount()
+                && index != getActionBar().getSelectedNavigationIndex()) {
+            getActionBar().setSelectedNavigationItem(index);
+        }
+    }
+
     private void showProgress() {
-        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
 
         mEditComment.setEnabled(false);
-        layoutProgress.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
         layoutContent.setAlpha(0.25f);
     }
 
     private void hideProgress() {
-        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
 
         mEditComment.setEnabled(true);
-        layoutProgress.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
         layoutContent.setAlpha(1f);
     }
 

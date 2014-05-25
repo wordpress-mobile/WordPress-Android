@@ -20,48 +20,48 @@
         android:layout_height="wrap_content"
         android:text="@string/reader_label_reblog_empty" />
 
-    <LinearLayout
-        android:id="@+id/layout_content"
+    <!-- content is wrapped in a scrollView so it will scroll up when the keyboard is shown -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <include
+        <LinearLayout
+            android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/layout_post_excerpt"
-            layout="@layout/reader_reblog_post_excerpt" />
+            android:orientation="vertical">
 
-        <org.wordpress.android.widgets.OpenSansEditText
-            android:id="@+id/edit_comment"
-            style="@style/ReaderEditText"
-            android:background="@color/white"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/reader_list_margin_normal"
-            android:layout_marginRight="@dimen/reader_list_margin_normal"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_small"
-            android:gravity="top"
-            android:hint="@string/reader_hint_reblog_comment"
-            android:inputType="textCapSentences|textMultiLine"
-            android:padding="@dimen/margin_large" />
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_post_excerpt"
+                layout="@layout/reader_reblog_post_excerpt" />
 
-    </LinearLayout>
+            <org.wordpress.android.widgets.OpenSansEditText
+                android:id="@+id/edit_comment"
+                style="@style/ReaderEditText"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/reader_list_margin_normal"
+                android:layout_marginRight="@dimen/reader_list_margin_normal"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_small"
+                android:gravity="top"
+                android:hint="@string/reader_hint_reblog_comment"
+                android:inputType="textCapSentences|textMultiLine"
+                android:padding="@dimen/margin_large" />
 
-    <LinearLayout
-        android:id="@+id/layout_progress"
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/ReaderProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         tools:visibility="visible"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@style/ReaderProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:visibility="gone" />
 
 </RelativeLayout>

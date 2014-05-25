@@ -90,7 +90,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup parent) {
         view = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
         TextView text = (TextView) view.findViewById(R.id.text);
-        text.setText(mReblogTo + "\n" + mAccounts.get(position).blogName);
+        text.setText(mReblogTo + " " + mAccounts.get(position).blogName);
         return view;
     }
 
