@@ -26,13 +26,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Spinner
-            android:id="@+id/spinner_reblog"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/reader_list_margin_normal"
-            android:layout_marginRight="@dimen/reader_list_margin_normal" />
-
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

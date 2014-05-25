@@ -12,9 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -41,7 +39,6 @@ public class ReaderReblogActivity extends Activity {
 
     private ReaderReblogAdapter mAdapter;
     private EditText mEditComment;
-    private Spinner mSpinner;
 
     private long mDestinationBlogId;
     private boolean mIsSubmittingReblog = false;
@@ -57,27 +54,22 @@ public class ReaderReblogActivity extends Activity {
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            actionBar.setListNavigationCallbacks(getReblogAdapter(), new ActionBar.OnNavigationListener() {
+                @Override
+                public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                    mDestinationBlogId = itemId;
+                    return true;
+                }
+            });
         }
 
         mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
 
         mEditComment = (EditText) findViewById(R.id.edit_comment);
-
-        mSpinner = (Spinner) findViewById(R.id.spinner_reblog);
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mDestinationBlogId = id;
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mDestinationBlogId = 0;
-            }
-        });
-        mSpinner.setAdapter(getReblogAdapter());
 
         loadPost();
     }
@@ -170,7 +162,7 @@ public class ReaderReblogActivity extends Activity {
                     if (!isEmpty && mDestinationBlogId != 0) {
                         int index = getReblogAdapter().indexOfBlogId(mDestinationBlogId);
                         if (index > -1) {
-                            mSpinner.setSelection(index);
+                            getActionBar().setSelectedNavigationItem(index);
                         }
                     }
                 }
@@ -184,7 +176,6 @@ public class ReaderReblogActivity extends Activity {
         final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
         final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
 
-        mSpinner.setEnabled(false);
         mEditComment.setEnabled(false);
         layoutProgress.setVisibility(View.VISIBLE);
         layoutContent.setAlpha(0.25f);
@@ -194,7 +185,6 @@ public class ReaderReblogActivity extends Activity {
         final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
         final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
 
-        mSpinner.setEnabled(true);
         mEditComment.setEnabled(true);
         layoutProgress.setVisibility(View.GONE);
         layoutContent.setAlpha(1f);

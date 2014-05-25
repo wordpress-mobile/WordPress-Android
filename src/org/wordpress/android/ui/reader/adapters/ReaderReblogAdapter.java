@@ -88,16 +88,16 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-        TextView text = (TextView) view.findViewById(android.R.id.text1);
-        text.setText(mReblogTo + " " + mAccounts.get(position).blogName);
+        view = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
+        TextView text = (TextView) view.findViewById(R.id.text);
+        text.setText(mReblogTo + "\n" + mAccounts.get(position).blogName);
         return view;
     }
 
     @Override
     public View getDropDownView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(R.layout.reader_listitem_reblog, parent, false);
-        TextView text = (TextView) view.findViewById(android.R.id.text1);
+        view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
+        TextView text = (TextView) view.findViewById(R.id.text);
         text.setText(mAccounts.get(position).blogName);
         return view;
     }
