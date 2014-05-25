@@ -570,7 +570,7 @@
 
     <!-- activity titles -->
     <string name="reader_title_applog">Application log</string>
-    <string name="reader_title_reblog">Reblog</string>
+    <string name="reader_title_reblog">Reblog Post</string>
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
@@ -606,7 +606,7 @@
     <string name="reader_label_new_posts">Show new posts</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
-    <string name="reader_label_reblog_to">Reblog this post to</string>
+    <string name="reader_label_reblog_to">Reblog to</string>
     <string name="reader_label_reply">Reply</string>
     <string name="reader_label_reblog_empty">You have no visible WordPress.com blogs this post can be reblogged to</string>
     <string name="reader_label_reblog_empty_link">Change blog visibility</string>

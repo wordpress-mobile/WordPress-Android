@@ -27,16 +27,13 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderReblogAdapter;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
+/*
  * displayed when user taps to reblog a post in the Reader
- *
- * note that this activity uses android:configChanges="orientation|keyboardHidden|screenSize"
- * in the manifest to prevent re-creation when the device is rotated - important since we
- * don't want the activity re-created while the reblog is being submitted
  */
 public class ReaderReblogActivity extends Activity {
     private long mBlogId;
@@ -45,25 +42,29 @@ public class ReaderReblogActivity extends Activity {
 
     private ReaderReblogAdapter mAdapter;
     private EditText mEditComment;
-    private ProgressBar mProgress;
     private Spinner mSpinner;
 
     private long mDestinationBlogId;
     private boolean mIsSubmittingReblog = false;
 
     private static final int INTENT_SETTINGS = 200;
+    private static final String KEY_DESTINATION_BLOG_ID = "destination_blog_id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_reblog);
-        setupActionBar();
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
         mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
 
-        mProgress = (ProgressBar) findViewById(R.id.progress);
         mEditComment = (EditText) findViewById(R.id.edit_comment);
 
         mSpinner = (Spinner) findViewById(R.id.spinner_reblog);
@@ -79,24 +80,31 @@ public class ReaderReblogActivity extends Activity {
         });
         mSpinner.setAdapter(getReblogAdapter());
 
-
         loadPost();
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mDestinationBlogId != 0) {
+            outState.putLong(KEY_DESTINATION_BLOG_ID, mDestinationBlogId);
         }
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState.containsKey(KEY_DESTINATION_BLOG_ID)) {
+            mDestinationBlogId = savedInstanceState.getLong(KEY_DESTINATION_BLOG_ID);
+        }
     }
 
     @Override
     public void onBackPressed() {
         // don't allow backing out if we're still submitting the reblog
-        if (!mIsSubmittingReblog)
+        if (!mIsSubmittingReblog) {
             super.onBackPressed();
+        }
     }
 
     @Override
@@ -124,35 +132,6 @@ public class ReaderReblogActivity extends Activity {
         new LoadPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    /*
-     * called by adapter when data has been loaded
-     */
-    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
-        @Override
-        public void onDataLoaded(boolean isEmpty) {
-            // show empty message and hide other views if there are no visible blogs to reblog to
-            final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
-            final View contentView = findViewById(R.id.layout_content);
-
-            // empty message includes a link to settings so user can change blog visibility
-            if (isEmpty) {
-                String emptyMsg = getString(R.string.reader_label_reblog_empty);
-                String emptyLink = "<a href='settings'>" + getString(R.string.reader_label_reblog_empty_link) + "</a>";
-                txtEmpty.setText(Html.fromHtml(emptyMsg + "<br /><br />" + emptyLink));
-                txtEmpty.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent i = new Intent(ReaderReblogActivity.this, PreferencesActivity.class);
-                        startActivityForResult(i, INTENT_SETTINGS);
-                    }
-                });
-            }
-
-            txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-            contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        }
-    };
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,27 +143,70 @@ public class ReaderReblogActivity extends Activity {
 
     private ReaderReblogAdapter getReblogAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ReaderReblogAdapter(this, mBlogId, mDataLoadedListener);
+            mAdapter = new ReaderReblogAdapter(this, mBlogId, new ReaderActions.DataLoadedListener() {
+                @Override
+                public void onDataLoaded(boolean isEmpty) {
+                    // show empty message and hide other views if there are no visible blogs to reblog to
+                    final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
+                    final View contentView = findViewById(R.id.layout_content);
+
+                    // empty message includes a link to settings so user can change blog visibility
+                    if (isEmpty) {
+                        String emptyMsg = getString(R.string.reader_label_reblog_empty);
+                        String emptyLink = "<a href='settings'>" + getString(R.string.reader_label_reblog_empty_link) + "</a>";
+                        txtEmpty.setText(Html.fromHtml(emptyMsg + "<br /><br />" + emptyLink));
+                        txtEmpty.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(ReaderReblogActivity.this, PreferencesActivity.class);
+                                startActivityForResult(i, INTENT_SETTINGS);
+                            }
+                        });
+                    }
+
+                    txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+                    contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+
+                    // restore the previously selected destination blog id
+                    if (!isEmpty && mDestinationBlogId != 0) {
+                        int index = getReblogAdapter().indexOfBlogId(mDestinationBlogId);
+                        if (index > -1) {
+                            mSpinner.setSelection(index);
+                        }
+                    }
+                }
+            });
         }
+
         return mAdapter;
     }
 
     private void setIsSubmittingReblog(boolean value) {
+        ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
+
         mIsSubmittingReblog = value;
+
         if (mIsSubmittingReblog) {
             mSpinner.setEnabled(false);
-            mProgress.setVisibility(View.VISIBLE);
             mEditComment.setEnabled(false);
+            layoutProgress.setVisibility(View.VISIBLE);
+            layoutContent.setAlpha(0.5f);
         } else {
             mSpinner.setEnabled(true);
-            mProgress.setVisibility(View.INVISIBLE);
             mEditComment.setEnabled(true);
+            layoutProgress.setVisibility(View.GONE);
+            layoutContent.setAlpha(0f);
         }
     }
 
     private void submitReblog() {
         if (mDestinationBlogId == 0) {
             ToastUtils.showToast(this, R.string.reader_toast_err_reblog_requires_blog);
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
@@ -268,17 +290,21 @@ public class ReaderReblogActivity extends Activity {
                     txtExcerpt.setVisibility(View.GONE);
                 }
 
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+                // actual avatar size is avatar_sz_small but use avatar_sz_medium since we know
+                // that will be cached already
+                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
 
-                if (mPost.hasFeaturedImage()) {
+                // featured image is hidden in landscape so it doesn't obscure the comment text
+                boolean isLandscape = DisplayUtils.isLandscape(ReaderReblogActivity.this);
+                if (!isLandscape && mPost.hasFeaturedImage()) {
                     int displayWidth = DisplayUtils.getDisplayPixelWidth(ReaderReblogActivity.this);
                     int listMargin = getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
                     int photonWidth = displayWidth - (listMargin * 2);
                     int photonHeight = getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
                     final String imageUrl = mPost.getFeaturedImageForDisplay(photonWidth, photonHeight);
                     imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-                } else if (mPost.hasFeaturedVideo()) {
+                } else if (!isLandscape && mPost.hasFeaturedVideo()) {
                     imgFeatured.setVideoUrl(mPost.postId, mPost.getFeaturedVideo());
                 } else {
                     imgFeatured.setVisibility(View.GONE);
