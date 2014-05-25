@@ -210,6 +210,10 @@ public class ReaderReblogActivity extends Activity {
             return;
         }
 
+        if (mIsSubmittingReblog) {
+            return;
+        }
+
         String commentText = EditTextUtils.getText(mEditComment);
         mIsSubmittingReblog = true;
         showProgress();
@@ -217,8 +221,8 @@ public class ReaderReblogActivity extends Activity {
         final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
+                mIsSubmittingReblog = false;
                 if (!isFinishing()) {
-                    mIsSubmittingReblog = false;
                     hideProgress();
                     if (succeeded) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_REBLOGGED_ARTICLE);

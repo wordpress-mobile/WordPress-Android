@@ -30,8 +30,8 @@
             android:id="@+id/spinner_reblog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium" />
+            android:layout_marginLeft="@dimen/reader_list_margin_normal"
+            android:layout_marginRight="@dimen/reader_list_margin_normal" />
 
         <include
             android:layout_width="match_parent"
@@ -39,20 +39,20 @@
             android:id="@+id/layout_post_excerpt"
             layout="@layout/reader_reblog_post_excerpt" />
 
-        <EditText
+        <org.wordpress.android.widgets.OpenSansEditText
             android:id="@+id/edit_comment"
             style="@style/ReaderEditText"
             android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/reader_list_margin_normal"
+            android:layout_marginRight="@dimen/reader_list_margin_normal"
             android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_small"
             android:gravity="top"
             android:hint="@string/reader_hint_reblog_comment"
             android:inputType="textCapSentences|textMultiLine"
-            android:padding="@dimen/margin_medium" />
+            android:padding="@dimen/margin_large" />
 
     </LinearLayout>
 
