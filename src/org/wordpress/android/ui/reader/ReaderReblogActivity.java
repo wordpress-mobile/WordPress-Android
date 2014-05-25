@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -181,23 +180,24 @@ public class ReaderReblogActivity extends Activity {
         return mAdapter;
     }
 
-    private void setIsSubmittingReblog(boolean value) {
-        ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
-        ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
+    private void showProgress() {
+        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
 
-        mIsSubmittingReblog = value;
+        mSpinner.setEnabled(false);
+        mEditComment.setEnabled(false);
+        layoutProgress.setVisibility(View.VISIBLE);
+        layoutContent.setAlpha(0.25f);
+    }
 
-        if (mIsSubmittingReblog) {
-            mSpinner.setEnabled(false);
-            mEditComment.setEnabled(false);
-            layoutProgress.setVisibility(View.VISIBLE);
-            layoutContent.setAlpha(0.5f);
-        } else {
-            mSpinner.setEnabled(true);
-            mEditComment.setEnabled(true);
-            layoutProgress.setVisibility(View.GONE);
-            layoutContent.setAlpha(0f);
-        }
+    private void hideProgress() {
+        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
+
+        mSpinner.setEnabled(true);
+        mEditComment.setEnabled(true);
+        layoutProgress.setVisibility(View.GONE);
+        layoutContent.setAlpha(1f);
     }
 
     private void submitReblog() {
@@ -211,17 +211,21 @@ public class ReaderReblogActivity extends Activity {
         }
 
         String commentText = EditTextUtils.getText(mEditComment);
-        setIsSubmittingReblog(true);
+        mIsSubmittingReblog = true;
+        showProgress();
 
         final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                setIsSubmittingReblog(false);
-                if (succeeded) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_REBLOGGED_ARTICLE);
-                    reblogSucceeded();
-                } else {
-                    ToastUtils.showToast(ReaderReblogActivity.this, R.string.reader_toast_err_reblog_failed);
+                if (!isFinishing()) {
+                    mIsSubmittingReblog = false;
+                    hideProgress();
+                    if (succeeded) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_REBLOGGED_ARTICLE);
+                        reblogSucceeded();
+                    } else {
+                        ToastUtils.showToast(ReaderReblogActivity.this, R.string.reader_toast_err_reblog_failed);
+                    }
                 }
             }
         };

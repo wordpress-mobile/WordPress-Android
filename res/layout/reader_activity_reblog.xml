@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/grey_extra_light">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -23,7 +23,7 @@
     <LinearLayout
         android:id="@+id/layout_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <Spinner
@@ -42,9 +42,9 @@
         <EditText
             android:id="@+id/edit_comment"
             style="@style/ReaderEditText"
-            android:background="@color/transparent"
+            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginBottom="@dimen/margin_large"
