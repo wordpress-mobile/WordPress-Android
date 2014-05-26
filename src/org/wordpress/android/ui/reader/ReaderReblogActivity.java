@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -91,17 +90,17 @@ public class ReaderReblogActivity extends Activity {
 
     void animateCommentView() {
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        ObjectAnimator commentAnim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
-        commentAnim.addListener(new AnimatorListenerAdapter() {
+        ObjectAnimator anim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
+        anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mEditComment.setVisibility(View.VISIBLE);
             }
         });
-        commentAnim.setInterpolator(new DecelerateInterpolator());
-        commentAnim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
-        commentAnim.start();
+        anim.setInterpolator(new DecelerateInterpolator());
+        anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
+        anim.start();
     }
 
     @Override
@@ -204,33 +203,46 @@ public class ReaderReblogActivity extends Activity {
     }
 
     private void selectBlogInActionbar(long blogId) {
-        if (!hasReblogAdapter() || getActionBar() == null) {
+        ActionBar actionBar = getActionBar();
+        if (!hasReblogAdapter() || actionBar == null) {
             return;
         }
         int index = getReblogAdapter().indexOfBlogId(blogId);
         if (index > -1
-                && index < getActionBar().getNavigationItemCount()
-                && index != getActionBar().getSelectedNavigationIndex()) {
-            getActionBar().setSelectedNavigationItem(index);
+                && index < actionBar.getNavigationItemCount()
+                && index != actionBar.getSelectedNavigationIndex()) {
+            actionBar.setSelectedNavigationItem(index);
         }
     }
 
     private void showProgress() {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
-
-        mEditComment.setEnabled(false);
-        progress.setVisibility(View.VISIBLE);
-        layoutContent.setAlpha(0.25f);
+        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(layoutProgress, View.ALPHA, 0f, 1f);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                layoutProgress.setVisibility(View.VISIBLE);
+            }
+        });
+        anim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        anim.start();
     }
 
     private void hideProgress() {
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        final ViewGroup layoutContent = (ViewGroup) findViewById(R.id.layout_content);
+        final ViewGroup layoutProgress = (ViewGroup) findViewById(R.id.layout_progress);
+        layoutProgress.clearAnimation();
 
-        mEditComment.setEnabled(true);
-        progress.setVisibility(View.GONE);
-        layoutContent.setAlpha(1f);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(layoutProgress, View.ALPHA, 1f, 0f);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                layoutProgress.setVisibility(View.GONE);
+            }
+        });
+        anim.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+        anim.start();
     }
 
     private void submitReblog() {
@@ -249,6 +261,7 @@ public class ReaderReblogActivity extends Activity {
 
         String commentText = EditTextUtils.getText(mEditComment);
         mIsSubmittingReblog = true;
+        EditTextUtils.hideSoftInput(mEditComment);
         showProgress();
 
         final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {

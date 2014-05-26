@@ -178,6 +178,7 @@
         <activity
             android:name=".ui.reader.ReaderReblogActivity"
             android:label="@string/reader_title_reblog"
+            android:theme="@style/ReaderTheme.TranslucentActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.reader.ReaderPhotoViewerActivity"
