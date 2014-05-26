@@ -23,7 +23,8 @@
     <!-- content is wrapped in a scrollView so it will scroll up when the keyboard is shown -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/layout_content"

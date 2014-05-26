@@ -473,9 +473,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
 
+        private final View rootView;
         private final ViewGroup layoutPostHeader;
 
         PostViewHolder(View view, ReaderPostListType postListType) {
+            rootView = view;
+
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtText = (TextView) view.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);

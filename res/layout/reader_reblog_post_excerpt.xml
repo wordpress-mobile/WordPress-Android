@@ -51,13 +51,12 @@
             android:id="@+id/image_featured"
             style="@style/ReaderImageView.Featured"
             android:layout_marginBottom="@dimen/margin_large"
-            android:layout_height="100dp" />
+            android:layout_height="140dp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
             android:maxLines="1"
-            android:textSize="@dimen/text_sz_large"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
             tools:text="text_title" />
@@ -65,7 +64,6 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt"
-            android:textSize="@dimen/text_sz_small"
             android:maxLines="2"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
