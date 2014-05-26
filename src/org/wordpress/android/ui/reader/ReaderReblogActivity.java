@@ -15,7 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -76,26 +76,32 @@ public class ReaderReblogActivity extends Activity {
 
         mEditComment = (EditText) findViewById(R.id.edit_comment);
 
-        loadPost();
-
         if (savedInstanceState == null) {
             mEditComment.setVisibility(View.INVISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ObjectAnimator rotateComment = ObjectAnimator.ofFloat(mEditComment, View.ROTATION_X, 45f, 0f);
-                    rotateComment.setInterpolator(new AccelerateDecelerateInterpolator());
-                    rotateComment.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
-                    rotateComment.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mEditComment.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    rotateComment.start();
+                    animateCommentView();
                 }
-            }, 300);
+            }, 250);
         }
+
+        loadPost();
+    }
+
+    void animateCommentView() {
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        ObjectAnimator commentAnim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
+        commentAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mEditComment.setVisibility(View.VISIBLE);
+            }
+        });
+        commentAnim.setInterpolator(new DecelerateInterpolator());
+        commentAnim.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        commentAnim.start();
     }
 
     @Override
@@ -286,16 +292,16 @@ public class ReaderReblogActivity extends Activity {
     private class LoadPostTask extends AsyncTask<Void, Void, Boolean> {
         ReaderPost tmpPost;
 
-        ViewGroup layoutExcerpt;
         TextView txtBlogName;
         TextView txtTitle;
         TextView txtExcerpt;
+
         WPNetworkImageView imgAvatar;
         WPNetworkImageView imgFeatured;
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            layoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
+            ViewGroup layoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
             txtBlogName = (TextView) layoutExcerpt.findViewById(R.id.text_blog_name);
             txtTitle = (TextView) layoutExcerpt.findViewById(R.id.text_title);
             txtExcerpt = (TextView) layoutExcerpt.findViewById(R.id.text_excerpt);
