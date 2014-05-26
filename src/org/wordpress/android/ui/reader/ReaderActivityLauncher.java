@@ -96,12 +96,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(activity, ReaderReblogActivity.class);
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_flyin,
-                0);
-        ActivityCompat.startActivityForResult(activity, intent, Constants.INTENT_READER_REBLOG, options.toBundle());
+        activity.startActivityForResult(intent, Constants.INTENT_READER_REBLOG);
     }
 
     public static enum OpenUrlType { INTERNAL, EXTERNAL }

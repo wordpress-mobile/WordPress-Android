@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.reader;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -73,6 +77,25 @@ public class ReaderReblogActivity extends Activity {
         mEditComment = (EditText) findViewById(R.id.edit_comment);
 
         loadPost();
+
+        if (savedInstanceState == null) {
+            mEditComment.setVisibility(View.INVISIBLE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ObjectAnimator rotateComment = ObjectAnimator.ofFloat(mEditComment, View.ROTATION_X, 45f, 0f);
+                    rotateComment.setInterpolator(new AccelerateDecelerateInterpolator());
+                    rotateComment.setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime));
+                    rotateComment.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            mEditComment.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    rotateComment.start();
+                }
+            }, 300);
+        }
     }
 
     @Override
