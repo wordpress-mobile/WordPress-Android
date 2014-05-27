@@ -2,9 +2,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/grey_extra_light"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_extra_light">
+    android:layout_height="match_parent">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/reader_label_reblog_empty" />
 
-    <!-- content is wrapped in a scrollView so it will scroll up when the keyboard is shown -->
+    <!-- content is wrapped in a scrollView so it will scroll up when the soft keyboard is shown -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,11 +43,9 @@
                 style="@style/ReaderEditText"
                 android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/reader_list_margin_normal"
-                android:layout_marginRight="@dimen/reader_list_margin_normal"
-                android:layout_marginBottom="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
                 android:gravity="top"
                 android:hint="@string/reader_hint_reblog_comment"
                 android:inputType="textCapSentences|textMultiLine"
@@ -61,7 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#80000000"
-        tools:visibility="visible"
         android:visibility="gone">
 
         <ProgressBar
