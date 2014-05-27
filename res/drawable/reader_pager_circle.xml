@@ -7,15 +7,9 @@
     android:shape="oval">
 
     <stroke
-        android:color="@color/grey_light"
+        android:color="@color/blue_light"
         android:width="1px" />
 
-    <solid android:color="@color/grey_extra_light" />
-
-    <padding
-        android:bottom="@dimen/margin_small"
-        android:top="@dimen/margin_small"
-        android:left="@dimen/margin_small"
-        android:right="@dimen/margin_small" />
+    <solid android:color="@color/blue_extra_light" />
 
 </shape>

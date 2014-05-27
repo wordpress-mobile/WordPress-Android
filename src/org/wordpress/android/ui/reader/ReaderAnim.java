@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -84,6 +86,57 @@ class ReaderAnim {
 
         AnimatorSet set = new AnimatorSet();
         set.play(fadeOut).after(fadeIn);
+        set.start();
+    }
+
+    static void scaleInScaleOut(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 0f, 1f);
+        animX.setRepeatMode(ValueAnimator.REVERSE);
+        animX.setRepeatCount(1);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 0f, 1f);
+        animY.setRepeatMode(ValueAnimator.REVERSE);
+        animY.setRepeatCount(1);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(animX).with(animY);
+        set.setDuration(duration.toMillis(target.getContext()));
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                target.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                target.setVisibility(View.GONE);
+            }
+        });
+        set.start();
+    }
+
+    static void zoomAction(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.5f);
+        animX.setRepeatMode(ValueAnimator.REVERSE);
+        animX.setRepeatCount(1);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.5f);
+        animY.setRepeatMode(ValueAnimator.REVERSE);
+        animY.setRepeatCount(1);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(animX).with(animY);
+        set.setDuration(duration.toMillis(target.getContext()));
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+
         set.start();
     }
 

@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/reader_pager_circle"
         android:layout_centerVertical="true"
+        android:tint="@color/blue_medium"
         android:visibility="gone"
         tools:visibility="visible"
         android:src="@drawable/ic_navigate_previous" />
@@ -27,6 +28,7 @@
         android:background="@drawable/reader_pager_circle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:tint="@color/blue_medium"
         android:visibility="gone"
         tools:visibility="visible"
         android:src="@drawable/ic_navigate_next" />
