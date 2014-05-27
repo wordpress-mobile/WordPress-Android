@@ -165,7 +165,8 @@
             android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader" />
         <activity
-            android:name=".ui.reader.ReaderPostPagerActivity" />
+            android:name=".ui.reader.ReaderPostPagerActivity"
+            android:theme="@style/ReaderTheme.TranslucentActivity" />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />

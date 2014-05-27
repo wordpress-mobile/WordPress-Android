@@ -26,21 +26,21 @@ public class ReaderActivityLauncher {
      * show a single reader post in the detail view - simply calls showReaderPostPager
      * with a single post
      */
-    public static void showReaderPostDetail(Context context, long blogId, long postId) {
+    public static void showReaderPostDetail(Activity activity, long blogId, long postId) {
         ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
         idList.add(new ReaderBlogIdPostId(blogId, postId));
-        showReaderPostPager(context, null, 0, idList, null);
+        showReaderPostPager(activity, null, 0, idList, null);
     }
 
     /*
      * show a list of posts in the post pager with the post at the passed position made active
      */
-    public static void showReaderPostPager(Context context,
+    public static void showReaderPostPager(Activity activity,
                                            String title,
                                            int position,
                                            ReaderBlogIdPostIdList idList,
                                            ReaderPostListType postListType) {
-        Intent intent = new Intent(context, ReaderPostPagerActivity.class);
+        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderPostPagerActivity.ARG_POSITION, position);
         intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
         if (!TextUtils.isEmpty(title)) {
@@ -49,7 +49,11 @@ public class ReaderActivityLauncher {
         if (postListType != null) {
             intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
-        context.startActivity(intent);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                activity,
+                R.anim.reader_post_in,
+                0);
+        ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
     /*
