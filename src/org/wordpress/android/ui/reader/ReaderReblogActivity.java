@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -43,6 +45,7 @@ public class ReaderReblogActivity extends Activity {
 
     private ReaderReblogAdapter mAdapter;
     private EditText mEditComment;
+    private ViewGroup mLayoutExcerpt;
 
     private long mDestinationBlogId;
     private boolean mIsSubmittingReblog = false;
@@ -74,13 +77,17 @@ public class ReaderReblogActivity extends Activity {
         mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
 
         mEditComment = (EditText) findViewById(R.id.edit_comment);
+        mLayoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
 
         if (savedInstanceState == null) {
             mEditComment.setVisibility(View.INVISIBLE);
+            mLayoutExcerpt.setVisibility(View.INVISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    animateCommentView();
+                    if (!isFinishing()) {
+                        animateViews();
+                    }
                 }
             }, 250);
         }
@@ -88,19 +95,42 @@ public class ReaderReblogActivity extends Activity {
         loadPost();
     }
 
-    void animateCommentView() {
+    /*
+     * first quickly scale in the post excerpt then move in the comment editText from the bottom
+     */
+    void animateViews() {
+        int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+
+        ObjectAnimator excerptAnimX = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_X, 0.5f, 1f);
+        excerptAnimX.setDuration(duration);
+        excerptAnimX.setInterpolator(new OvershootInterpolator());
+        excerptAnimX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mLayoutExcerpt.setVisibility(View.VISIBLE);
+            }
+        });
+
+        ObjectAnimator excerptAnimY = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_Y, 0.5f, 1f);
+        excerptAnimY.setDuration(excerptAnimX.getDuration());
+        excerptAnimY.setInterpolator(excerptAnimX.getInterpolator());
+
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        ObjectAnimator anim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
-        anim.addListener(new AnimatorListenerAdapter() {
+        ObjectAnimator commentAnim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
+        commentAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mEditComment.setVisibility(View.VISIBLE);
             }
         });
-        anim.setInterpolator(new DecelerateInterpolator());
-        anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
-        anim.start();
+        commentAnim.setInterpolator(new DecelerateInterpolator());
+        commentAnim.setDuration(duration);
+
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(excerptAnimX).with(excerptAnimY).before(commentAnim);
+        animSet.start();
     }
 
     @Override
@@ -314,12 +344,11 @@ public class ReaderReblogActivity extends Activity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            ViewGroup layoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
-            txtBlogName = (TextView) layoutExcerpt.findViewById(R.id.text_blog_name);
-            txtTitle = (TextView) layoutExcerpt.findViewById(R.id.text_title);
-            txtExcerpt = (TextView) layoutExcerpt.findViewById(R.id.text_excerpt);
-            imgAvatar = (WPNetworkImageView) layoutExcerpt.findViewById(R.id.image_avatar);
-            imgFeatured = (WPNetworkImageView) layoutExcerpt.findViewById(R.id.image_featured);
+            txtBlogName = (TextView) mLayoutExcerpt.findViewById(R.id.text_blog_name);
+            txtTitle = (TextView) mLayoutExcerpt.findViewById(R.id.text_title);
+            txtExcerpt = (TextView) mLayoutExcerpt.findViewById(R.id.text_excerpt);
+            imgAvatar = (WPNetworkImageView) mLayoutExcerpt.findViewById(R.id.image_avatar);
+            imgFeatured = (WPNetworkImageView) mLayoutExcerpt.findViewById(R.id.image_featured);
 
             tmpPost = ReaderPostTable.getPost(mBlogId, mPostId);
             return (tmpPost != null);
