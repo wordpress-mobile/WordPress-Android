@@ -89,7 +89,7 @@ public class ReaderReblogActivity extends Activity {
                         animateViews();
                     }
                 }
-            }, 250);
+            }, 300);
         }
 
         loadPost();
@@ -99,9 +99,9 @@ public class ReaderReblogActivity extends Activity {
      * first quickly scale in the post excerpt then move in the comment editText from the bottom
      */
     void animateViews() {
-        int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
+        int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        ObjectAnimator excerptAnimX = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_X, 0.5f, 1f);
+        ObjectAnimator excerptAnimX = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_X, 0.75f, 1f);
         excerptAnimX.setDuration(duration);
         excerptAnimX.setInterpolator(new OvershootInterpolator());
         excerptAnimX.addListener(new AnimatorListenerAdapter() {
@@ -112,7 +112,7 @@ public class ReaderReblogActivity extends Activity {
             }
         });
 
-        ObjectAnimator excerptAnimY = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_Y, 0.5f, 1f);
+        ObjectAnimator excerptAnimY = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_Y, 0.75f, 1f);
         excerptAnimY.setDuration(excerptAnimX.getDuration());
         excerptAnimY.setInterpolator(excerptAnimX.getInterpolator());
 

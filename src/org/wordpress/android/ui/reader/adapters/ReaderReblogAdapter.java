@@ -87,19 +87,38 @@ public class ReaderReblogAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
-        TextView text = (TextView) view.findViewById(R.id.text);
-        text.setText(mReblogTo + " " + mAccounts.get(position).blogName);
-        return view;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ReblogHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
+            holder = new ReblogHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ReblogHolder)convertView.getTag();
+        }
+        holder.text.setText(mReblogTo + " " + mAccounts.get(position).blogName);
+        return convertView;
     }
 
     @Override
-    public View getDropDownView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
-        TextView text = (TextView) view.findViewById(R.id.text);
-        text.setText(mAccounts.get(position).blogName);
-        return view;
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        final ReblogHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
+            holder = new ReblogHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ReblogHolder)convertView.getTag();
+        }
+        holder.text.setText(mAccounts.get(position).blogName);
+        return convertView;
+    }
+
+    static class ReblogHolder {
+        final TextView text;
+        ReblogHolder(View view) {
+            text = (TextView) view.findViewById(R.id.text);
+        }
     }
 
     private class SimpleAccountItem {
