@@ -6,10 +6,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <stroke
-        android:color="@color/blue_light"
-        android:width="1px" />
-
-    <solid android:color="@color/blue_extra_light" />
+    <solid android:color="#80c8eefc" />
 
 </shape>

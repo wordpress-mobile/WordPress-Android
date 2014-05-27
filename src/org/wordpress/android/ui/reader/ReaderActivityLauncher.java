@@ -51,7 +51,7 @@ public class ReaderActivityLauncher {
         }
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
-                R.anim.reader_post_in,
+                R.anim.reader_detail_in,
                 0);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
