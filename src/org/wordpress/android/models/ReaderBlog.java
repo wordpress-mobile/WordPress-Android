@@ -62,9 +62,9 @@ public class ReaderBlog {
             blog.numSubscribers = jsonSite.optInt("subscribers_count");
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
-            blog.setName(JSONUtil.getStringDecoded(jsonFeed, "title"));
-            blog.setUrl(JSONUtil.getString(jsonFeed, "url"));
-            blog.numSubscribers = jsonFeed.optInt("subscribers");
+            blog.setName(JSONUtil.getStringDecoded(jsonFeed, "name"));
+            blog.setUrl(JSONUtil.getString(jsonFeed, "URL"));
+            blog.numSubscribers = jsonFeed.optInt("subscribers_count");
             // TODO: read/following/mine doesn't include is_following for feeds, so assume to be true
             blog.isFollowing = true;
         } else {

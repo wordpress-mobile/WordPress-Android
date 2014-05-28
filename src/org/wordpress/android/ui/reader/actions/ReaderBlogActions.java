@@ -186,7 +186,7 @@ public class ReaderBlogActions {
                 }
             }
         };
-        // request using meta=site,feed to get extra info
+        // request using ?meta=site,feed to get extra info
         WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
