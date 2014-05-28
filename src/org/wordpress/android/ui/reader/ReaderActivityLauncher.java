@@ -88,8 +88,10 @@ public class ReaderActivityLauncher {
         }
     }
 
-    public static void showReaderReblogForResult(Activity activity, ReaderPost post) {
-        if (post == null) {
+    public static void showReaderReblogForResult(Activity activity,
+                                                 ReaderPost post,
+                                                 View source) {
+        if (activity == null || post == null) {
             return;
         }
 
@@ -97,10 +99,14 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderActivity.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderActivity.ARG_POST_ID, post.postId);
 
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
-                activity,
-                R.anim.reader_flyin,
-                0);
+        ActivityOptionsCompat options;
+        if (source != null) {
+            int startX = source.getLeft();
+            int startY = source.getTop();
+            options = ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
+        } else {
+            options = ActivityOptionsCompat.makeCustomAnimation(activity, R.anim.reader_flyin, 0);
+        }
         ActivityCompat.startActivityForResult(activity, intent, Constants.INTENT_READER_REBLOG, options.toBundle());
     }
 

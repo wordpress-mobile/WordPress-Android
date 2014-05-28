@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -81,12 +79,11 @@ public class ReaderReblogActivity extends Activity {
 
         if (savedInstanceState == null) {
             mEditComment.setVisibility(View.INVISIBLE);
-            mLayoutExcerpt.setVisibility(View.INVISIBLE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     if (!isFinishing()) {
-                        animateViews();
+                        animateCommentView();
                     }
                 }
             }, 300);
@@ -95,28 +92,10 @@ public class ReaderReblogActivity extends Activity {
         loadPost();
     }
 
-    /*
-     * first quickly scale in the post excerpt then move in the comment editText from the bottom
-     */
-    void animateViews() {
-        int duration = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        ObjectAnimator excerptAnimX = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_X, 0.75f, 1f);
-        excerptAnimX.setDuration(duration);
-        excerptAnimX.setInterpolator(new OvershootInterpolator());
-        excerptAnimX.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                mLayoutExcerpt.setVisibility(View.VISIBLE);
-            }
-        });
-
-        ObjectAnimator excerptAnimY = ObjectAnimator.ofFloat(mLayoutExcerpt, View.SCALE_Y, 0.75f, 1f);
-        excerptAnimY.setDuration(excerptAnimX.getDuration());
-        excerptAnimY.setInterpolator(excerptAnimX.getInterpolator());
-
+    void animateCommentView() {
+        int duration = getResources().getInteger(android.R.integer.config_mediumAnimTime);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+
         ObjectAnimator commentAnim = ObjectAnimator.ofFloat(mEditComment, View.TRANSLATION_Y, displayHeight, 0f);
         commentAnim.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -127,10 +106,7 @@ public class ReaderReblogActivity extends Activity {
         });
         commentAnim.setInterpolator(new DecelerateInterpolator());
         commentAnim.setDuration(duration);
-
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.play(excerptAnimX).with(excerptAnimY).before(commentAnim);
-        animSet.start();
+        commentAnim.start();
     }
 
     @Override

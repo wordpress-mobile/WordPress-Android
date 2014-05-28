@@ -385,7 +385,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                     public void onClick(View v) {
                         AniUtils.zoomAction(holder.imgBtnReblog);
                         if (mReblogListener != null) {
-                            mReblogListener.onRequestReblog(post);
+                            mReblogListener.onRequestReblog(post, v);
                         }
                     }
                 });

@@ -525,9 +525,8 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        imgBtnReblog.setSelected(true);
         AniUtils.zoomAction(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, imgBtnReblog);
     }
 
     /*
