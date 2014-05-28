@@ -449,8 +449,7 @@ public class ReaderPost {
         return StringUtils.notNullStr(blogUrl);
     }
     public void setBlogUrl(String blogUrl) {
-        // normalize the blogUrl for easier comparison
-        this.blogUrl = UrlUtils.normalizeUrl(StringUtils.notNullStr(blogUrl));
+        this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
 
     public String getPostAvatar() {

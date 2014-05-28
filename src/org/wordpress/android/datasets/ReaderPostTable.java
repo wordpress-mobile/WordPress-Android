@@ -9,7 +9,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.UrlUtils;
 
 /**
  * tbl_posts contains all reader posts
@@ -324,12 +323,12 @@ public class ReaderPostTable {
             // otherwise use url
             if (blogId != 0) {
                 String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                        + " WHERE blog_id=?";
+                          + " WHERE blog_id=?";
                 db.execSQL(sql, new String[]{Long.toString(blogId)});
             } else {
                 String sql = "UPDATE tbl_posts SET is_followed=" + SqlUtils.boolToSql(isFollowed)
-                        + " WHERE blog_url=?";
-                db.execSQL(sql, new String[]{UrlUtils.normalizeUrl(blogUrl)});
+                          + " WHERE blog_url=?";
+                db.execSQL(sql, new String[]{blogUrl});
             }
 
             // if blog is no longer followed, remove its posts tagged with "Blogs I Follow" in

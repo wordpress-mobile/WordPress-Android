@@ -47,7 +47,7 @@ public class ReaderBlog {
 
         // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
         // if meta/data/feed exists then JSON is for a read/following/mine?meta=feed subscription,
-        // otherwise it's the response for a single site/$siteId
+        // otherwise JSON the response for a single site/$siteId
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         JSONObject jsonFeed = JSONUtil.getJSONChild(json, "meta/data/feed");
         if (jsonSite != null) {
@@ -61,9 +61,9 @@ public class ReaderBlog {
             blog.isFollowing = JSONUtil.getBool(jsonSite, "is_following");
             blog.numSubscribers = jsonSite.optInt("subscribers_count");
         } else if (jsonFeed != null) {
-            blog.feedId = jsonFeed.optLong("feed_id");
-            blog.setName(JSONUtil.getStringDecoded(jsonFeed, "blog_title"));
-            blog.setUrl(JSONUtil.getString(jsonFeed, "blog_url"));
+            blog.feedId = jsonFeed.optLong("feed_ID");
+            blog.setName(JSONUtil.getStringDecoded(jsonFeed, "title"));
+            blog.setUrl(JSONUtil.getString(jsonFeed, "url"));
             blog.numSubscribers = jsonFeed.optInt("subscribers");
             // TODO: read/following/mine doesn't include is_following for feeds, so assume to be true
             blog.isFollowing = true;

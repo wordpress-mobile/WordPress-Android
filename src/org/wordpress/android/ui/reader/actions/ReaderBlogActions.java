@@ -155,14 +155,14 @@ public class ReaderBlogActions {
                 return "/sites/" + blogId + "/follows/new";
             } else {
                 AppLog.w(T.READER, "following blog by url rather than id");
-                return "/read/following/mine/new?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                return "/read/following/mine/new?url=" + getEncodedDomainFromUrl(blogUrl);
             }
         } else {
             if (blogId != 0) {
                 return "/sites/" + blogId + "/follows/mine/delete";
             } else {
                 AppLog.w(T.READER, "unfollowing blog by url rather than id");
-                return "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                return "/read/following/mine/delete?url=" + getEncodedDomainFromUrl(blogUrl);
             }
         }
     }
@@ -267,8 +267,7 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
         } else {
-            String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(blogUrl));
-            WordPress.getRestClientUtils().get("/sites/" + domain, listener, errorListener);
+            WordPress.getRestClientUtils().get("/sites/" + getEncodedDomainFromUrl(blogUrl), listener, errorListener);
         }
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
@@ -350,7 +349,7 @@ public class ReaderBlogActions {
      * tests whether the passed url can be reached - does NOT use authentication, and does not
      * account for 404 replacement pages used by ISPs such as Charter
      */
-    public static void testBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
+    public static void checkBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
         // ActionListener is required
         if (actionListener == null) {
             return;
@@ -381,5 +380,9 @@ public class ReaderBlogActions {
                 listener,
                 errorListener);
         WordPress.requestQueue.add(request);
+    }
+
+    private static String getEncodedDomainFromUrl(final String url) {
+        return UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(url));
     }
 }
