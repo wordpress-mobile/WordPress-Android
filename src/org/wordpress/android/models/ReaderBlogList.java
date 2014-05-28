@@ -13,10 +13,18 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
             return blogs;
         }
 
+        // read/following/mine response
         JSONArray jsonBlogs = json.optJSONArray("subscriptions");
         if (jsonBlogs != null) {
-            for (int i = 0; i < jsonBlogs.length(); i++)
-                blogs.add(ReaderBlog.fromJson(jsonBlogs.optJSONObject(i)));
+            for (int i = 0; i < jsonBlogs.length(); i++) {
+                ReaderBlog blog = ReaderBlog.fromJson(jsonBlogs.optJSONObject(i));
+                // make sure blog is valid before adding to the list - this can happen if user
+                // added a URL that isn't a feed or a blog since as of 29-May-2014 the API
+                // will let you follow any URL regardless if it's valid
+                if (blog.hasName() || blog.hasDescription() || blog.hasUrl()) {
+                    blogs.add(blog);
+                }
+            }
         }
 
         return blogs;

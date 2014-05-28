@@ -169,13 +169,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 blogId = blogInfo.blogId;
                 blogUrl = blogInfo.getUrl();
                 isFollowing = blogInfo.isFollowing;
+                String domain = UrlUtils.getDomainFromUrl(blogUrl);
                 if (blogInfo.hasName()) {
                     holder.txtTitle.setText(blogInfo.getName());
-                    holder.txtTitle.setVisibility(View.VISIBLE);
                 } else {
-                    holder.txtTitle.setVisibility(View.GONE);
+                    holder.txtTitle.setText(domain);
                 }
-                holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
+                holder.txtUrl.setText(domain);
                 break;
 
             default:
@@ -314,12 +314,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    // get all followed blogs, then remove incomplete/external blogs
-                    // TODO: we can stop removing incomplete info once the
-                    // read/following/mine endpoint returns full blog info
                     tmpFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
-                    tmpFollowedBlogs.removeIncomplete();
-                    tmpFollowedBlogs.removeExternal();
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:

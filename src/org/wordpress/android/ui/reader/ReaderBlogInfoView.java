@@ -78,8 +78,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private void showBlogInfo(final ReaderBlog blogInfo) {
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
-        // hide the inner container until we have complete blogInfo
-        if (blogInfo == null || blogInfo.isIncomplete()) {
+        if (blogInfo == null) {
             layoutInner.setVisibility(View.INVISIBLE);
             return;
         }

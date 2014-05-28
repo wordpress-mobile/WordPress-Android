@@ -10,13 +10,10 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;

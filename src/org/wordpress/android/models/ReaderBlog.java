@@ -51,7 +51,6 @@ public class ReaderBlog {
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         JSONObject jsonFeed = JSONUtil.getJSONChild(json, "meta/data/feed");
         if (jsonSite != null) {
-
             blog.blogId = jsonSite.optLong("ID");
             blog.setName(JSONUtil.getStringDecoded(jsonSite, "name"));
             blog.setDescription(JSONUtil.getStringDecoded(jsonSite, "description"));
@@ -60,12 +59,14 @@ public class ReaderBlog {
             blog.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
             blog.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
             blog.isFollowing = JSONUtil.getBool(jsonSite, "is_following");
-            blog.numSubscribers = json.optInt("subscribers_count");
+            blog.numSubscribers = jsonSite.optInt("subscribers_count");
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_id");
             blog.setName(JSONUtil.getStringDecoded(jsonFeed, "blog_title"));
             blog.setUrl(JSONUtil.getString(jsonFeed, "blog_url"));
-            blog.numSubscribers = json.optInt("subscribers");
+            blog.numSubscribers = jsonFeed.optInt("subscribers");
+            // TODO: read/following/mine doesn't include is_following for feeds, so assume to be true
+            blog.isFollowing = true;
         } else {
             blog.blogId = json.optLong("ID");
             blog.setName(JSONUtil.getStringDecoded(json, "name"));
@@ -99,7 +100,7 @@ public class ReaderBlog {
         return StringUtils.notNullStr(url);
     }
     public void setUrl(String url) {
-        this.url = UrlUtils.normalizeUrl(StringUtils.notNullStr(url));
+        this.url = StringUtils.notNullStr(url);
     }
 
     public boolean hasUrl() {
@@ -112,6 +113,7 @@ public class ReaderBlog {
         return !TextUtils.isEmpty(description);
     }
 
+    // returns true if this is a feed rather than wp blog
     public boolean isExternal() {
         return (feedId != 0 || blogId == 0);
     }

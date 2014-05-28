@@ -35,16 +35,9 @@ public class ReaderBlogActions {
      * solely by url may cause the blog to be followed as a feed
      */
     public static boolean performFollowAction(final long blogId,
-                                              final String blogUrl,
-                                              final boolean isAskingToFollow,
-                                              final ReaderActions.ActionListener actionListener) {
-        return performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener, true);
-    }
-    private static boolean performFollowAction(final long blogId,
                                                final String blogUrl,
                                                final boolean isAskingToFollow,
-                                               final ReaderActions.ActionListener actionListener,
-                                               boolean canLookupBlogInfo) {
+                                               final ReaderActions.ActionListener actionListener) {
         // either blogId or blogUrl are required
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
@@ -59,13 +52,6 @@ public class ReaderBlogActions {
         // update local db
         ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, isAskingToFollow);
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, blogUrl, isAskingToFollow);
-
-        // if we have the url but not the id, and a lookup hasn't already been performed,
-        // lookup the blogInfo to get the id then try again
-        if (!hasBlogId && canLookupBlogInfo) {
-            lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
-            return true;
-        }
 
         if (isAskingToFollow) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
@@ -182,29 +168,6 @@ public class ReaderBlogActions {
     }
 
     /*
-     * used when following/unfollowing when the blogId isn't known to attempt to look it up
-     * using the blogUrl, then retries following/unfollowing
-     */
-    private static void lookupBlogIdAndRetryFollow(final String blogUrl,
-                                                   final boolean isAskingToFollow,
-                                                   final ReaderActions.ActionListener actionListener) {
-        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlog blogInfo) {
-                if (blogInfo != null) {
-                    // we have blogInfo, so follow using id & url from info
-                    performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
-                } else {
-                    // blogInfo lookup failed, follow using passed url only
-                    performFollowAction(0, blogUrl, isAskingToFollow, actionListener, false);
-                }
-            }
-        };
-        AppLog.d(T.READER, "looking up blogId for follow by url");
-        ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
-    }
-
-    /*
      * request the list of blogs the current user is following
      */
     public static void updateFollowedBlogs(final UpdateResultListener resultListener) {
@@ -317,18 +280,11 @@ public class ReaderBlogActions {
         }
 
         ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
-        ReaderBlogTable.setBlogInfo(blogInfo);
+        ReaderBlogTable.addOrUpdateBlog(blogInfo);
 
         if (infoListener != null) {
             infoListener.onResult(blogInfo);
         }
-    }
-
-    /*
-     * request blogInfo by url only
-     */
-    private static void updateBlogInfoByUrl(final String blogUrl, final UpdateBlogInfoListener infoListener) {
-        updateBlogInfo(0, blogUrl, infoListener);
     }
 
     /*

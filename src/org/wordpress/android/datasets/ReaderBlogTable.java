@@ -13,21 +13,16 @@ import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
-import org.wordpress.android.util.UrlUtils;
 
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
  * user is following. Note that this table is populated from two endpoints:
  *
  *      1. sites/{$siteId}
- *      2. read/following/mine
+ *      2. read/following/mine?meta=site,feed
  *
- *  The first endpoint is called when the user views blog preview, and it returns all the fields
- *  stored in tbl_blog_info. The second endpoint is called at startup to get the full list of
- *  blogs the user is following, and it only returns blog_id and blog_url.
- *
- *  This means that many of the fields in tbl_blog_info will be empty. Note also that blog_id
- *  may be zero if the blog is actually a feed.
+ *  The first endpoint is called when the user views blog preview, the second endpoint is called
+ *  at startup to get the full list of blogs the user is following
  */
 public class ReaderBlogTable {
 
@@ -80,9 +75,8 @@ public class ReaderBlogTable {
             String[] args = {Long.toString(blogId)};
             cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_id=?", args);
         } else {
-            String normUrl = UrlUtils.normalizeUrl(blogUrl);
-            String[] args = {normUrl, reverseWww(normUrl)};
-            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=? OR blog_url=?", args);
+            String[] args = {blogUrl};
+            cursor = db.rawQuery("SELECT * FROM tbl_blog_info WHERE blog_url=?", args);
         }
 
         try {
@@ -103,7 +97,7 @@ public class ReaderBlogTable {
         ReaderBlog blogInfo = new ReaderBlog();
         blogInfo.blogId = c.getLong(c.getColumnIndex("blog_id"));
         blogInfo.feedId = c.getLong(c.getColumnIndex("feed_id"));
-        blogInfo.setUrl(UrlUtils.normalizeUrl(c.getString(c.getColumnIndex("blog_url"))));
+        blogInfo.setUrl(c.getString(c.getColumnIndex("blog_url")));
         blogInfo.setName(c.getString(c.getColumnIndex("name")));
         blogInfo.setDescription(c.getString(c.getColumnIndex("description")));
         blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
@@ -114,7 +108,7 @@ public class ReaderBlogTable {
         return blogInfo;
     }
 
-    public static void setBlogInfo(ReaderBlog blogInfo) {
+    public static void addOrUpdateBlog(ReaderBlog blogInfo) {
         if (blogInfo == null) {
             return;
         }
@@ -125,7 +119,7 @@ public class ReaderBlogTable {
         try {
             stmt.bindLong  (1, blogInfo.blogId);
             stmt.bindLong  (2, blogInfo.feedId);
-            stmt.bindString(3, UrlUtils.normalizeUrl(blogInfo.getUrl()));
+            stmt.bindString(3, blogInfo.getUrl());
             stmt.bindString(4, blogInfo.getName());
             stmt.bindString(5, blogInfo.getDescription());
             stmt.bindLong  (6, SqlUtils.boolToSql(blogInfo.isPrivate));
@@ -170,10 +164,10 @@ public class ReaderBlogTable {
             // first set all existing blogs to not followed
             db.execSQL("UPDATE tbl_blog_info SET is_following=0");
 
-            // then set passed ones as followed
+            // then insert passed ones
             if (followedBlogs != null) {
                 for (ReaderBlog blog: followedBlogs) {
-                    setIsFollowedBlog(blog.blogId, blog.getUrl(), true);
+                    addOrUpdateBlog(blog);
                 }
             }
 
@@ -214,14 +208,14 @@ public class ReaderBlogTable {
             // blogInfo doesn't exist, create it with just the passed id & url
             blogInfo = new ReaderBlog();
             blogInfo.blogId = blogId;
-            blogInfo.setUrl(UrlUtils.normalizeUrl(url));
+            blogInfo.setUrl(url);
         } else if (blogInfo.isFollowing == isFollowed) {
             // blogInfo already has passed following status, so nothing more to do
             return;
         }
 
         blogInfo.isFollowing = isFollowed;
-        setBlogInfo(blogInfo);
+        addOrUpdateBlog(blogInfo);
     }
 
     public static boolean isFollowedBlogUrl(String blogUrl) {
@@ -236,15 +230,11 @@ public class ReaderBlogTable {
             return false;
         }
 
-        // when matching on url, try with both the passed url and the passed url with www. reversed
-        String normUrl = UrlUtils.normalizeUrl(blogUrl);
-        String reverseUrl = reverseWww(normUrl);
-
         String sql;
         if (hasBlogId && hasBlogUrl) {
             // both id and url were passed, match on either
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_id=? OR blog_url=? OR blog_url=?)";
-            String[] args = {Long.toString(blogId), normUrl, reverseUrl};
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_id=? OR blog_url=?)";
+            String[] args = {Long.toString(blogId), blogUrl};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         } else if (hasBlogId) {
             // only id passed, match on id
@@ -253,8 +243,8 @@ public class ReaderBlogTable {
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         } else {
             // only url passed, match on url
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND (blog_url=? OR blog_url=?)";
-            String[] args = {normUrl, reverseUrl};
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?)";
+            String[] args = {blogUrl};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         }
     }
@@ -328,21 +318,6 @@ public class ReaderBlogTable {
         } finally {
             SqlUtils.closeStatement(stmt);
             db.endTransaction();
-        }
-    }
-
-    /*
-     * returns the passed url without "www." if it contains it, otherwise returns the
-     * passed url with "www." - used when matching on stored url
-     */
-    private static String reverseWww(String blogUrl) {
-        if (blogUrl == null) {
-            return null;
-        }
-        if (blogUrl.contains("://www.")) {
-            return blogUrl.replace("://www.", "://");
-        } else {
-            return blogUrl.replace("://", "://www.");
         }
     }
 }
