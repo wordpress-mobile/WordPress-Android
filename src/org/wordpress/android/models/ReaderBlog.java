@@ -7,8 +7,10 @@ import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
-public class ReaderBlogInfo {
+public class ReaderBlog {
     public long blogId;
+    public long feedId;
+
     public boolean isPrivate;
     public boolean isJetpack;
     public boolean isFollowing;
@@ -37,40 +39,46 @@ public class ReaderBlogInfo {
     }
     }*/
 
-    public static ReaderBlogInfo fromJson(JSONObject json) {
-        ReaderBlogInfo blog = new ReaderBlogInfo();
+    public static ReaderBlog fromJson(JSONObject json) {
+        ReaderBlog blog = new ReaderBlog();
         if (json == null) {
             return blog;
         }
 
-        blog.blogId = json.optLong("ID");
+        // if meta/data/site exists then JSON is for a read/following/mine?meta=site subscription,
+        // if meta/data/feed exists then JSON is for a read/following/mine?meta=feed subscription,
+        // otherwise it's the response for a single site/$siteId
+        JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
+        JSONObject jsonFeed = JSONUtil.getJSONChild(json, "meta/data/feed");
+        if (jsonSite != null) {
 
-        blog.setName(JSONUtil.getStringDecoded(json, "name"));
-        blog.setDescription(JSONUtil.getStringDecoded(json, "description"));
-        blog.setUrl(JSONUtil.getString(json, "URL"));
+            blog.blogId = jsonSite.optLong("ID");
+            blog.setName(JSONUtil.getStringDecoded(jsonSite, "name"));
+            blog.setDescription(JSONUtil.getStringDecoded(jsonSite, "description"));
+            blog.setUrl(JSONUtil.getString(jsonSite, "URL"));
 
-        blog.isJetpack = JSONUtil.getBool(json, "jetpack");
-        blog.isPrivate = JSONUtil.getBool(json, "is_private");
-        blog.isFollowing = JSONUtil.getBool(json, "is_following");
-        blog.numSubscribers = json.optInt("subscribers_count");
+            blog.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
+            blog.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            blog.isFollowing = JSONUtil.getBool(jsonSite, "is_following");
+            blog.numSubscribers = json.optInt("subscribers_count");
+        } else if (jsonFeed != null) {
+            blog.feedId = jsonFeed.optLong("feed_id");
+            blog.setName(JSONUtil.getStringDecoded(jsonFeed, "blog_title"));
+            blog.setUrl(JSONUtil.getString(jsonFeed, "blog_url"));
+            blog.numSubscribers = json.optInt("subscribers");
+        } else {
+            blog.blogId = json.optLong("ID");
+            blog.setName(JSONUtil.getStringDecoded(json, "name"));
+            blog.setDescription(JSONUtil.getStringDecoded(json, "description"));
+            blog.setUrl(JSONUtil.getString(json, "URL"));
+
+            blog.isJetpack = JSONUtil.getBool(json, "jetpack");
+            blog.isPrivate = JSONUtil.getBool(json, "is_private");
+            blog.isFollowing = JSONUtil.getBool(json, "is_following");
+            blog.numSubscribers = json.optInt("subscribers_count");
+        }
 
         return blog;
-    }
-
-    /*
-     * info is considered incomplete if it's missing both the name and description - used
-     * used by ReaderBlogAction.updateIncompleteBlogInfo() to fill in incomplete blogInfo,
-     * and by ReaderBlogInfoList.removeIncomplete()
-     */
-    public boolean isIncomplete() {
-        return (!hasName() && !hasDescription());
-    }
-
-    /*
-     * info is considered to external (ie: it's a feed) if it doesn't have a blogId
-     */
-    public boolean isExternal() {
-        return (blogId == 0);
     }
 
     public String getName() {
@@ -94,9 +102,6 @@ public class ReaderBlogInfo {
         this.url = UrlUtils.normalizeUrl(StringUtils.notNullStr(url));
     }
 
-    public boolean hasBlogId() {
-        return (blogId != 0);
-    }
     public boolean hasUrl() {
         return !TextUtils.isEmpty(url);
     }
@@ -107,6 +112,9 @@ public class ReaderBlogInfo {
         return !TextUtils.isEmpty(description);
     }
 
+    public boolean isExternal() {
+        return (feedId != 0 || blogId == 0);
+    }
     /*
      * returns the mshot url to use for this blog, ex:
      *   http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
@@ -120,9 +128,10 @@ public class ReaderBlogInfo {
              + String.format("?w=%d", width);
     }
 
-    public boolean isSameAs(ReaderBlogInfo blogInfo) {
+    public boolean isSameAs(ReaderBlog blogInfo) {
         return blogInfo != null
             && this.blogId == blogInfo.blogId
+            && this.feedId == blogInfo.feedId
             && this.isFollowing == blogInfo.isFollowing
             && this.isPrivate == blogInfo.isPrivate
             && this.numSubscribers == blogInfo.numSubscribers

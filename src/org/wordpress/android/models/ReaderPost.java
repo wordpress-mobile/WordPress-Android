@@ -111,9 +111,6 @@ public class ReaderPost {
             post.timestamp = DateTimeUtils.iso8601ToTimestamp(post.published);
         }
 
-        // parse the attachments section
-        assignAttachmentsFromJson(post, json.optJSONObject("attachments"));
-
         // if there's no featured thumbnail, check if featured media has been set - this is sometimes
         // a YouTube or Vimeo video, in which case store it as the featured video so we can treat
         // it as a video
@@ -235,35 +232,6 @@ public class ReaderPost {
 
         post.setTags(sbAllTags.toString());
     }
-
-    /*
-     * assigns attachment-related info to the passed post from the passed JSON "attachments" object
-     */
-    private static void assignAttachmentsFromJson(ReaderPost post, JSONObject jsonAttachments) {
-        if (jsonAttachments == null) {
-            return;
-        }
-
-        Iterator<String> it = jsonAttachments.keys();
-        if (it != null && it.hasNext()) {
-            JSONObject jsonFirstAttachment = jsonAttachments.optJSONObject(it.next());
-            if (jsonFirstAttachment != null) {
-                String thumbnail = JSONUtil.getString(jsonFirstAttachment, "videopress_thumbnail");
-                if (!TextUtils.isEmpty(thumbnail)) {
-                    post.featuredImage = thumbnail;
-                }
-                JSONObject jsonVideoPress = jsonFirstAttachment.optJSONObject("videopress_files");
-                if (jsonVideoPress != null) {
-                    JSONObject jsonStdVideo = jsonVideoPress.optJSONObject("std");
-                    if (jsonStdVideo != null) {
-                        post.featuredVideo = JSONUtil.getString(jsonStdVideo, "url");
-                        post.isVideoPress = true;
-                    }
-                }
-            }
-        }
-    }
-
 
     /*
      * extracts a title from a post's excerpt

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -14,15 +13,12 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderBlogInfo;
-import org.wordpress.android.models.ReaderBlogInfoList;
-import org.wordpress.android.models.ReaderFollowedBlogList;
+import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
@@ -31,8 +27,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
-
-import java.util.ArrayList;
 
 public class ReaderBlogActions {
 
@@ -196,7 +190,7 @@ public class ReaderBlogActions {
                                                    final ReaderActions.ActionListener actionListener) {
         ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
-            public void onResult(ReaderBlogInfo blogInfo) {
+            public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null) {
                     // we have blogInfo, so follow using id & url from info
                     performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
@@ -229,7 +223,8 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().get("/read/following/mine", listener, errorListener);
+        // request using meta=site,feed to get extra info
+        WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -243,15 +238,12 @@ public class ReaderBlogActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderFollowedBlogList serverBlogs = ReaderFollowedBlogList.fromJson(jsonObject);
-                ReaderFollowedBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
+                ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
+                ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                    // followed blogs have changed, fill in incomplete blogInfos to make sure we have
-                    // full info about new blogs
-                    updateIncompleteBlogInfo();
                 }
 
                 if (resultListener != null) {
@@ -324,7 +316,7 @@ public class ReaderBlogActions {
             return;
         }
 
-        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonObject);
+        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
         ReaderBlogTable.setBlogInfo(blogInfo);
 
         if (infoListener != null) {
@@ -433,85 +425,5 @@ public class ReaderBlogActions {
                 listener,
                 errorListener);
         WordPress.requestQueue.add(request);
-    }
-
-    /*
-     * fills in information about followed blogs - requests missing info in batches of 25
-     */
-    private static final int MAX_BATCH_URLS = 25;
-    private static void updateIncompleteBlogInfo() {
-        // get list of all blogInfos that are incomplete, then remove external (feed) blogs
-        // since we know looking them up will fail
-        ReaderBlogInfoList incompleteBlogs = ReaderBlogTable.getAllFollowedBlogInfo().getIncompleteList();
-        incompleteBlogs.removeExternal();
-        if (incompleteBlogs.size() == 0) {
-            return;
-        }
-
-        // lookup full info in batches
-        ArrayList<String> requestUrls = new ArrayList<String>();
-        for (ReaderBlogInfo info: incompleteBlogs) {
-            requestUrls.add("/sites/" + info.blogId);
-            if (requestUrls.size() >= MAX_BATCH_URLS) {
-                batchUpdateIncompleteBlogInfo(requestUrls);
-                requestUrls.clear();
-            }
-        }
-
-        // perform the remaining requests
-        if (requestUrls.size() > 0) {
-            batchUpdateIncompleteBlogInfo(requestUrls);
-        }
-    }
-
-    private static void batchUpdateIncompleteBlogInfo(ArrayList<String> requestUrls) {
-        if (requestUrls == null || requestUrls.size() == 0) {
-            return;
-        }
-
-        // work with a clone of the passed list so changes to it don't impact us
-        final ArrayList<String> copyOfUrls = (ArrayList<String>) requestUrls.clone();
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (jsonObject == null) {
-                    return;
-                }
-
-                SQLiteDatabase db = ReaderDatabase.getWritableDb();
-                db.beginTransaction();
-                try {
-                    int numUpdated = 0;
-                    for (String url : copyOfUrls) {
-                        // the /batch/ endpoint identifies each response by the requested url
-                        JSONObject jsonSite = jsonObject.optJSONObject(url);
-                        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonSite);
-                        // make sure blogInfo isn't still incomplete before saving it
-                        if (!blogInfo.isIncomplete()) {
-                            ReaderBlogTable.setBlogInfo(blogInfo);
-                            numUpdated++;
-                        }
-                    }
-
-                    AppLog.d(T.READER, String.format("updated info for %d incomplete blogs", numUpdated));
-                    db.setTransactionSuccessful();
-
-                } finally {
-                    db.endTransaction();
-                }
-            }
-        };
-
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-            }
-        };
-
-        AppLog.d(T.READER, String.format("requesting info for %d incomplete blogs", copyOfUrls.size()));
-        String path = ReaderUtils.getBatchEndpointForRequests(copyOfUrls);
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 }
