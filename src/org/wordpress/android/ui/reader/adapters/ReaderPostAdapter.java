@@ -378,8 +378,20 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
 
+            holder.imgBtnLike.setVisibility(View.VISIBLE);
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
+            showCounts(holder, post);
+        } else {
+            holder.imgBtnLike.setVisibility(View.INVISIBLE);
+            holder.imgBtnComment.setVisibility(View.INVISIBLE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.txtCommentCount.setVisibility(View.GONE);
+        }
+
+        if (post.canReblog()) {
             showReblogStatus(holder.imgBtnReblog, post.isRebloggedByCurrentUser);
-            if (!post.isRebloggedByCurrentUser && post.isWP()) {
+            holder.imgBtnReblog.setVisibility(View.VISIBLE);
+            if (!post.isRebloggedByCurrentUser) {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -390,17 +402,8 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 });
             }
-
-            holder.imgBtnLike.setVisibility(View.VISIBLE);
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
-            holder.imgBtnReblog.setVisibility(View.VISIBLE);
-            showCounts(holder, post);
         } else {
-            holder.imgBtnLike.setVisibility(View.INVISIBLE);
-            holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            holder.txtLikeCount.setVisibility(View.GONE);
-            holder.txtCommentCount.setVisibility(View.GONE);
         }
 
         // animate the appearance of this row while new posts are being loaded
