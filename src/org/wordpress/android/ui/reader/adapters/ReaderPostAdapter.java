@@ -23,18 +23,18 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -282,7 +282,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.txtBlogName.setText(null);
             }
 
-            // follow/following - supported by both wp and non-wp (rss) posts
+            // follow/following
             ReaderUtils.showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -316,21 +316,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         final int titleMargin;
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            // skip loading image if the imageView is already tagged with this url
-            if (!ReaderUtils.viewHasTag(holder.imgFeatured, imageUrl)) {
-                holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-                holder.imgFeatured.setTag(imageUrl);
-            }
+            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             holder.imgFeatured.setVisibility(View.VISIBLE);
             titleMargin = mMarginLarge;
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            holder.imgFeatured.setTag(null);
             titleMargin = mMarginLarge;
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-            holder.imgFeatured.setTag(null);
             titleMargin = (holder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
         }
 
@@ -383,7 +377,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AniUtils.zoomAction(holder.imgBtnReblog);
+                        ReaderAnim.zoomAction(holder.imgBtnReblog);
                         if (mReblogListener != null) {
                             mReblogListener.onRequestReblog(post);
                         }
@@ -508,7 +502,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
-        AniUtils.zoomAction(holder.imgBtnLike);
+        ReaderAnim.zoomAction(holder.imgBtnLike);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
@@ -535,7 +529,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * triggered when user taps the follow button
      */
     private void toggleFollow(final PostViewHolder holder, int position, ReaderPost post) {
-        AniUtils.zoomAction(holder.txtFollow);
+        ReaderAnim.zoomAction(holder.txtFollow);
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {

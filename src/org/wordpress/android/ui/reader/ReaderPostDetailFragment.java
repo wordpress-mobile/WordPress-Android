@@ -453,7 +453,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostLike(ReaderPost post, View likeButton) {
         boolean isSelected = likeButton.isSelected();
         likeButton.setSelected(!isSelected);
-        AniUtils.zoomAction(likeButton);
+        ReaderAnim.zoomAction(likeButton);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
 
@@ -481,7 +481,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostFollowed(ReaderPost post, View followButton) {
         boolean isSelected = followButton.isSelected();
         followButton.setSelected(!isSelected);
-        AniUtils.zoomAction(followButton);
+        ReaderAnim.zoomAction(followButton);
 
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
@@ -520,7 +520,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         imgBtnReblog.setSelected(true);
-        AniUtils.zoomAction(imgBtnReblog);
+        ReaderAnim.zoomAction(imgBtnReblog);
         ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
     }
 

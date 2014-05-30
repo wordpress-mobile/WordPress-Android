@@ -15,7 +15,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlogInfo;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -180,7 +179,7 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
-        AniUtils.zoomAction(txtFollow);
+        ReaderAnim.zoomAction(txtFollow);
 
         boolean isAskingToFollow = !blogInfo.isFollowing;
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {

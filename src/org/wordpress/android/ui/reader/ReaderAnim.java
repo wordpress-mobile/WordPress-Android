@@ -13,9 +13,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
 
-class ReaderAnim {
+public class ReaderAnim {
 
-    static enum Duration {
+    public static enum Duration {
         SHORT,
         MEDIUM,
         LONG;
@@ -58,21 +58,21 @@ class ReaderAnim {
         return fadeOut;
     }
 
-    static void fadeIn(final View target, Duration duration) {
+    public static void fadeIn(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
         getFadeInAnim(target, duration).start();
     }
 
-    static void fadeOut(final View target, Duration duration) {
+    public static void fadeOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
         getFadeOutAnim(target, duration).start();
     }
 
-    static void fadeInFadeOut(final View target, Duration duration) {
+    public static void fadeInFadeOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
@@ -80,16 +80,15 @@ class ReaderAnim {
         ObjectAnimator fadeIn = getFadeInAnim(target, duration);
         ObjectAnimator fadeOut = getFadeOutAnim(target, duration);
 
-        // keep view visible for 1/2 duration before fading it out
-        long durationMillis = duration.toMillis(target.getContext());
-        fadeOut.setStartDelay(durationMillis / 2);
+        // keep view visible for passed duration before fading it out
+        fadeOut.setStartDelay(duration.toMillis(target.getContext()));
 
         AnimatorSet set = new AnimatorSet();
         set.play(fadeOut).after(fadeIn);
         set.start();
     }
 
-    static void scaleInScaleOut(final View target, Duration duration) {
+    public static void scaleInScaleOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
@@ -120,27 +119,38 @@ class ReaderAnim {
         set.start();
     }
 
-    static void zoomAction(final View target, Duration duration) {
+    /*
+     * animation when user taps a like/follow/comment button
+     */
+    public static void zoomAction(final View target) {
+        zoomAction(target, Duration.SHORT);
+    }
+    public static void zoomAction(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.5f);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 2f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.5f);
+
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 2f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 60f);
+        animRotate.setRepeatMode(ValueAnimator.REVERSE);
+        animRotate.setRepeatCount(1);
+
         AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY);
+        set.play(animX).with(animY).with(animRotate);
         set.setDuration(duration.toMillis(target.getContext()));
         set.setInterpolator(new AccelerateDecelerateInterpolator());
 
         set.start();
     }
 
-    static void animateListItem(ListView listView,
+    public static void animateListItem(ListView listView,
                                 int positionAbsolute,
                                 Animation.AnimationListener listener,
                                 int animResId) {

@@ -46,19 +46,6 @@ public class ReaderUtils {
     }
 
     /*
-     * returns true if the passed view's tag is the same as the passed string - this is used
-     * with imageViews that show network images, to avoid reloading the image if the imageView
-     * is already tagged with the image url
-     */
-    public static boolean viewHasTag(final View view, final String tag) {
-        if (view == null || tag == null) {
-            return false;
-        } else {
-            return tag.equals(view.getTag());
-        }
-    }
-
-    /*
      * return the path to use for the /batch/ endpoint from the list of request urls
      * https://developer.wordpress.com/docs/api/1/get/batch/
      */

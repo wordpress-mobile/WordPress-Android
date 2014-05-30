@@ -697,7 +697,7 @@ public class ReaderPostListFragment extends Fragment
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AniUtils.zoomAction(txtFollow);
+                ReaderAnim.zoomAction(txtFollow);
                 boolean isAskingToFollow = !ReaderTagTable.isFollowedTag(getCurrentTag());
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
                 if (ReaderTagActions.performTagAction(action, getCurrentTag(), null)) {
