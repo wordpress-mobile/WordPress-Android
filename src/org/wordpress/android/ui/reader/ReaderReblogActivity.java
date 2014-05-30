@@ -178,7 +178,7 @@ public class ReaderReblogActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     // show empty message and hide other views if there are no visible blogs to reblog to
                     final TextView txtEmpty = (TextView) findViewById(R.id.text_empty);
-                    final View contentView = findViewById(R.id.layout_content);
+                    final View scrollView = findViewById(R.id.scroll_view);
 
                     // empty message includes a link to settings so user can change blog visibility
                     if (isEmpty) {
@@ -195,7 +195,7 @@ public class ReaderReblogActivity extends Activity {
                     }
 
                     txtEmpty.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-                    contentView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                    scrollView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 
                     // restore the previously selected destination blog id
                     if (!isEmpty && mDestinationBlogId != 0) {

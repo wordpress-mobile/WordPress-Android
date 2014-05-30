@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final DataLoadedListener mDataLoadedListener;
     private final long mExcludeBlogId;
-    private final String mReblogTo;
+    private final boolean mIsLandscape;
     private SimpleAccountList mAccounts = new SimpleAccountList();
 
     public ReaderReblogAdapter(Context context,
@@ -34,7 +36,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mExcludeBlogId = excludeBlogId;
         mDataLoadedListener = dataLoadedListener;
-        mReblogTo = context.getString(R.string.reader_label_reblog_to);
+        mIsLandscape = DisplayUtils.isLandscape(context);
         loadAccounts();
     }
 
@@ -90,13 +92,13 @@ public class ReaderReblogAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReblogHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.reader_actionbar_item, parent, false);
-            holder = new ReblogHolder(convertView);
+            convertView = mInflater.inflate(R.layout.reader_actionbar_reblog_item, parent, false);
+            holder = new ReblogHolder(convertView, mIsLandscape);
             convertView.setTag(holder);
         } else {
             holder = (ReblogHolder)convertView.getTag();
         }
-        holder.text.setText(mReblogTo + " " + mAccounts.get(position).blogName);
+        holder.text.setText(mAccounts.get(position).blogName);
         return convertView;
     }
 
@@ -105,7 +107,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
         final ReblogHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
-            holder = new ReblogHolder(convertView);
+            holder = new ReblogHolder(convertView, mIsLandscape);
             convertView.setTag(holder);
         } else {
             holder = (ReblogHolder)convertView.getTag();
@@ -116,8 +118,11 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
     static class ReblogHolder {
         final TextView text;
-        ReblogHolder(View view) {
+        ReblogHolder(View view, boolean isLandscape) {
             text = (TextView) view.findViewById(R.id.text);
+            if (isLandscape) {
+                ((LinearLayout) view).setOrientation(LinearLayout.HORIZONTAL);
+            }
         }
     }
 
