@@ -179,7 +179,7 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
-        ReaderAnim.zoomAction(txtFollow);
+        ReaderAnim.animateFollowButton(txtFollow);
 
         boolean isAskingToFollow = !blogInfo.isFollowing;
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {

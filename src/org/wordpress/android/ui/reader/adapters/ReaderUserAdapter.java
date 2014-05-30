@@ -94,7 +94,7 @@ public class ReaderUserAdapter extends BaseAdapter {
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReaderAnim.zoomAction(holder.txtFollow);
+                    ReaderAnim.animateFollowButton(holder.txtFollow);
                     toggleFollowUser(user, holder.txtFollow);
                 }
             });

@@ -120,31 +120,43 @@ public class ReaderAnim {
     }
 
     /*
-     * animation when user taps a like/follow/comment button
+     * animation when user taps a like/follow/reblog button
      */
-    public static void zoomAction(final View target) {
-        zoomAction(target, Duration.SHORT);
+    public static void animateLikeButton(final View target) {
+        animateButton(target, true);
     }
-    public static void zoomAction(final View target, Duration duration) {
-        if (target == null || duration == null) {
+    public static void animateReblogButton(final View target) {
+        animateButton(target, true);
+    }
+    public static void animateFollowButton(final View target) {
+        animateButton(target, false);
+    }
+    private static void animateButton(final View target, boolean rotate) {
+        if (target == null) {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 2f);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.5f);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 2f);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.5f);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
-        ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 60f);
-        animRotate.setRepeatMode(ValueAnimator.REVERSE);
-        animRotate.setRepeatCount(1);
-
         AnimatorSet set = new AnimatorSet();
-        set.play(animX).with(animY).with(animRotate);
-        set.setDuration(duration.toMillis(target.getContext()));
+
+        if (rotate) {
+            ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 60f);
+            animRotate.setRepeatMode(ValueAnimator.REVERSE);
+            animRotate.setRepeatCount(1);
+            set.play(animX).with(animY).with(animRotate);
+        } else {
+            set.play(animX).with(animY);
+        }
+
+        long durationMillis = Duration.SHORT.toMillis(target.getContext());
+        set.setDuration(durationMillis);
         set.setInterpolator(new AccelerateDecelerateInterpolator());
 
         set.start();

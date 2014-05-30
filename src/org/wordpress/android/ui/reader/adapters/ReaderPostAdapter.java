@@ -377,7 +377,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ReaderAnim.zoomAction(holder.imgBtnReblog);
+                        ReaderAnim.animateReblogButton(holder.imgBtnReblog);
                         if (mReblogListener != null) {
                             mReblogListener.onRequestReblog(post);
                         }
@@ -502,7 +502,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
-        ReaderAnim.zoomAction(holder.imgBtnLike);
+        ReaderAnim.animateLikeButton(holder.imgBtnLike);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
@@ -529,7 +529,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * triggered when user taps the follow button
      */
     private void toggleFollow(final PostViewHolder holder, int position, ReaderPost post) {
-        ReaderAnim.zoomAction(holder.txtFollow);
+        ReaderAnim.animateFollowButton(holder.txtFollow);
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {

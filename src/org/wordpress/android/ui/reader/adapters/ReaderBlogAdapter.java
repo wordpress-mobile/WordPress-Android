@@ -190,7 +190,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
         holder.txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReaderAnim.zoomAction(holder.txtFollow);
+                ReaderAnim.animateFollowButton(holder.txtFollow);
                 changeFollowStatus(holder.txtFollow, position, !isFollowing);
             }
         });
