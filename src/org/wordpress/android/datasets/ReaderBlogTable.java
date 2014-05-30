@@ -243,7 +243,7 @@ public class ReaderBlogTable {
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         } else {
             // only url passed, match on url
-            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?)";
+            sql = "SELECT 1 FROM tbl_blog_info WHERE is_following!=0 AND blog_url=?";
             String[] args = {blogUrl};
             return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), sql, args);
         }
