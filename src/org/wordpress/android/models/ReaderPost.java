@@ -661,4 +661,16 @@ public class ReaderPost {
         }
         return tagForDisplay;
     }
+
+    /*
+     * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
+     */
+    private transient long stableId;
+    public long getStableId() {
+        if (stableId == 0) {
+            stableId = (pseudoId != null ? pseudoId.hashCode() : 0);
+        }
+        return stableId;
+    }
+
 }
