@@ -1419,8 +1419,9 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void showContent() {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         mReaderWebView.setVisibility(View.VISIBLE);
 

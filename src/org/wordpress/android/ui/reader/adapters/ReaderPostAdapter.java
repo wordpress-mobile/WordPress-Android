@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -374,7 +375,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
-            showCounts(holder, post);
+            showCounts(holder, post, false);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
@@ -421,7 +422,13 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * shows like & comment count
      */
-    private void showCounts(final PostViewHolder holder, final ReaderPost post) {
+    private void showCounts(final PostViewHolder holder,
+                            final ReaderPost post,
+                            boolean animateChanges) {
+        if (animateChanges) {
+            holder.layoutBottom.setLayoutTransition(new LayoutTransition());
+        }
+
         if (post.numLikes > 0) {
             holder.txtLikeCount.setText(FormatUtils.formatInt(post.numLikes));
             holder.txtLikeCount.setVisibility(View.VISIBLE);
@@ -438,6 +445,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
             holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
+        }
+
+        if (animateChanges) {
+            holder.layoutBottom.setLayoutTransition(null);
         }
     }
 
@@ -470,12 +481,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
 
-        private final View rootView;
+        private final ViewGroup layoutBottom;
         private final ViewGroup layoutPostHeader;
 
         PostViewHolder(View view, ReaderPostListType postListType) {
-            rootView = view;
-
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtText = (TextView) view.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
@@ -493,6 +502,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
 
+            layoutBottom = (ViewGroup) view.findViewById(R.id.layout_bottom);
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
@@ -523,7 +533,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showLikeStatus(holder.imgBtnLike, updatedPost.isLikedByCurrentUser);
-        showCounts(holder, post);
+        showCounts(holder, post, true);
     }
 
     private void showLikeStatus(ImageView imgBtnLike, boolean isLikedByCurrentUser) {
