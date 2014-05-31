@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
@@ -120,6 +121,29 @@ public class ReaderUtils {
         if (target.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) target.getLayoutParams();
             params.addRule(RelativeLayout.BELOW, layoutBelowId);
+        }
+    }
+
+    /*
+     * returns a bitmap of the passed view - note that the view must be visible and laid
+     * out for this to work
+     */
+    public static Bitmap createBitmapFromView(View view) {
+        if (view == null) {
+            return null;
+        }
+
+        view.buildDrawingCache();
+        try {
+            Bitmap bmp = view.getDrawingCache();
+            if (bmp == null) {
+                return null;
+            }
+            // return a copy of this bitmap since original will be destroyed when the
+            // cache is destroyed
+            return bmp.copy(Bitmap.Config.ARGB_8888, false);
+        } finally {
+            view.destroyDrawingCache();
         }
     }
 }

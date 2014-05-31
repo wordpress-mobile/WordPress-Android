@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.view.View;
+
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -77,7 +79,7 @@ public class ReaderActions {
      * used by post list & post list adapter when user asks to reblog a post
      */
     public interface RequestReblogListener {
-        public void onRequestReblog(ReaderPost post);
+        public void onRequestReblog(ReaderPost post, View sourceView);
     }
 
     /*
