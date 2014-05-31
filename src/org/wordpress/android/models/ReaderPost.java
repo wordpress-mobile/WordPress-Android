@@ -580,6 +580,13 @@ public class ReaderPost {
     }
 
     /*
+     * only public wp posts can be reblogged
+     */
+    public boolean canReblog() {
+        return !isExternal && !isPrivate;
+    }
+
+    /*
      * returns true if this post is from a WordPress blog
      */
     public boolean isWP() {

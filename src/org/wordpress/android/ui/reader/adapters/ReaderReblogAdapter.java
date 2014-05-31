@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
     private final DataLoadedListener mDataLoadedListener;
     private final long mExcludeBlogId;
+    private final boolean mIsLandscape;
     private SimpleAccountList mAccounts = new SimpleAccountList();
 
     public ReaderReblogAdapter(Context context,
@@ -33,11 +36,21 @@ public class ReaderReblogAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mExcludeBlogId = excludeBlogId;
         mDataLoadedListener = dataLoadedListener;
+        mIsLandscape = DisplayUtils.isLandscape(context);
         loadAccounts();
     }
 
     private void loadAccounts() {
         new LoadAccountsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public int indexOfBlogId(long blogId) {
+        for (int i = 0; i < mAccounts.size(); i++) {
+            if (mAccounts.get(i).remoteBlogId == blogId) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void reload() {
@@ -64,8 +77,9 @@ public class ReaderReblogAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        if (position == -1)
+        if (position == -1) {
             return position;
+        }
         return mAccounts.get(position).remoteBlogId;
     }
 
@@ -75,19 +89,41 @@ public class ReaderReblogAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-        TextView text = (TextView) view.findViewById(android.R.id.text1);
-        text.setText(mAccounts.get(position).blogName);
-        return view;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ReblogHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_reblog_item, parent, false);
+            holder = new ReblogHolder(convertView, mIsLandscape);
+            convertView.setTag(holder);
+        } else {
+            holder = (ReblogHolder)convertView.getTag();
+        }
+        holder.text.setText(mAccounts.get(position).blogName);
+        return convertView;
     }
 
     @Override
-    public View getDropDownView(int position, View view, ViewGroup parent) {
-        view = mInflater.inflate(R.layout.reader_listitem_reblog, parent, false);
-        TextView text = (TextView) view.findViewById(android.R.id.text1);
-        text.setText(mAccounts.get(position).blogName);
-        return view;
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        final ReblogHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.reader_actionbar_dropdown_item, parent, false);
+            holder = new ReblogHolder(convertView, mIsLandscape);
+            convertView.setTag(holder);
+        } else {
+            holder = (ReblogHolder)convertView.getTag();
+        }
+        holder.text.setText(mAccounts.get(position).blogName);
+        return convertView;
+    }
+
+    static class ReblogHolder {
+        final TextView text;
+        ReblogHolder(View view, boolean isLandscape) {
+            text = (TextView) view.findViewById(R.id.text);
+            if (isLandscape) {
+                ((LinearLayout) view).setOrientation(LinearLayout.HORIZONTAL);
+            }
+        }
     }
 
     private class SimpleAccountItem {
@@ -112,8 +148,9 @@ public class ReaderReblogAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... voids) {
             // only .com blogs support reblogging
             List<Map<String, Object>> accounts = WordPress.wpDB.getVisibleDotComAccounts();
-            if (accounts == null || accounts.size() == 0)
+            if (accounts == null || accounts.size() == 0) {
                 return false;
+            }
 
             int currentRemoteBlogId = WordPress.getCurrentRemoteBlogId();
 
@@ -123,8 +160,9 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 // the same blog the post is from)
                 if (blogId != mExcludeBlogId) {
                     String blogName = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                    if (TextUtils.isEmpty(blogName))
+                    if (TextUtils.isEmpty(blogName)) {
                         blogName = curHash.get("url").toString();
+                    }
 
                     SimpleAccountItem item = new SimpleAccountItem(blogId, blogName);
 
@@ -146,8 +184,9 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 notifyDataSetChanged();
             }
 
-            if (mDataLoadedListener != null)
+            if (mDataLoadedListener != null) {
                 mDataLoadedListener.onDataLoaded(isEmpty());
+            }
         }
     }
 }
