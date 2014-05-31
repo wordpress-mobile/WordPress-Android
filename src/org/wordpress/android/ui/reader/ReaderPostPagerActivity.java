@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -111,18 +110,6 @@ public class ReaderPostPagerActivity extends FragmentActivity
                 }
             }
         });
-
-        if (savedInstanceState == null) {
-            // animate next/prev buttons after a short delay so user is aware they can swipe
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isFinishing()) {
-                        animateNavButtons(mViewPager.getCurrentItem());
-                    }
-                }
-            }, 750);
-        }
     }
 
     @Override
@@ -168,18 +155,6 @@ public class ReaderPostPagerActivity extends FragmentActivity
 
         mIsFullScreen = enableFullScreen;
         return true;
-    }
-
-    private void animateNavButtons(int position) {
-        boolean canGoPrev = (position > 0);
-        boolean canGoNext = (position < mPageAdapter.getCount() - 1);
-
-        if (canGoPrev) {
-            ReaderAnim.fadeInFadeOut(findViewById(R.id.image_previous_page), ReaderAnim.Duration.MEDIUM);
-        }
-        if (canGoNext) {
-            ReaderAnim.fadeInFadeOut(findViewById(R.id.image_next_page), ReaderAnim.Duration.MEDIUM);
-        }
     }
 
     ReaderPostListType getPostListType() {
