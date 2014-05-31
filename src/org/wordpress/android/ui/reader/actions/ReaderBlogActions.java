@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -14,15 +13,12 @@ import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderBlogInfo;
-import org.wordpress.android.models.ReaderBlogInfoList;
-import org.wordpress.android.models.ReaderFollowedBlogList;
+import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
@@ -32,8 +28,6 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-import java.util.ArrayList;
-
 public class ReaderBlogActions {
 
     /*
@@ -41,16 +35,9 @@ public class ReaderBlogActions {
      * solely by url may cause the blog to be followed as a feed
      */
     public static boolean performFollowAction(final long blogId,
-                                              final String blogUrl,
-                                              final boolean isAskingToFollow,
-                                              final ReaderActions.ActionListener actionListener) {
-        return performFollowAction(blogId, blogUrl, isAskingToFollow, actionListener, true);
-    }
-    private static boolean performFollowAction(final long blogId,
                                                final String blogUrl,
                                                final boolean isAskingToFollow,
-                                               final ReaderActions.ActionListener actionListener,
-                                               boolean canLookupBlogInfo) {
+                                               final ReaderActions.ActionListener actionListener) {
         // either blogId or blogUrl are required
         final boolean hasBlogId = (blogId != 0);
         final boolean hasBlogUrl = !TextUtils.isEmpty(blogUrl);
@@ -65,13 +52,6 @@ public class ReaderBlogActions {
         // update local db
         ReaderBlogTable.setIsFollowedBlog(blogId, blogUrl, isAskingToFollow);
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, blogUrl, isAskingToFollow);
-
-        // if we have the url but not the id, and a lookup hasn't already been performed,
-        // lookup the blogInfo to get the id then try again
-        if (!hasBlogId && canLookupBlogInfo) {
-            lookupBlogIdAndRetryFollow(blogUrl, isAskingToFollow, actionListener);
-            return true;
-        }
 
         if (isAskingToFollow) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
@@ -175,39 +155,16 @@ public class ReaderBlogActions {
                 return "/sites/" + blogId + "/follows/new";
             } else {
                 AppLog.w(T.READER, "following blog by url rather than id");
-                return "/read/following/mine/new?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                return "/read/following/mine/new?url=" + getEncodedDomainFromUrl(blogUrl);
             }
         } else {
             if (blogId != 0) {
                 return "/sites/" + blogId + "/follows/mine/delete";
             } else {
                 AppLog.w(T.READER, "unfollowing blog by url rather than id");
-                return "/read/following/mine/delete?url=" + UrlUtils.getDomainFromUrl(blogUrl);
+                return "/read/following/mine/delete?url=" + getEncodedDomainFromUrl(blogUrl);
             }
         }
-    }
-
-    /*
-     * used when following/unfollowing when the blogId isn't known to attempt to look it up
-     * using the blogUrl, then retries following/unfollowing
-     */
-    private static void lookupBlogIdAndRetryFollow(final String blogUrl,
-                                                   final boolean isAskingToFollow,
-                                                   final ReaderActions.ActionListener actionListener) {
-        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
-            @Override
-            public void onResult(ReaderBlogInfo blogInfo) {
-                if (blogInfo != null) {
-                    // we have blogInfo, so follow using id & url from info
-                    performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, actionListener, false);
-                } else {
-                    // blogInfo lookup failed, follow using passed url only
-                    performFollowAction(0, blogUrl, isAskingToFollow, actionListener, false);
-                }
-            }
-        };
-        AppLog.d(T.READER, "looking up blogId for follow by url");
-        ReaderBlogActions.updateBlogInfoByUrl(blogUrl, infoListener);
     }
 
     /*
@@ -229,7 +186,8 @@ public class ReaderBlogActions {
                 }
             }
         };
-        WordPress.getRestClientUtils().get("/read/following/mine", listener, errorListener);
+        // request using ?meta=site,feed to get extra info
+        WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
     private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -243,15 +201,12 @@ public class ReaderBlogActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderFollowedBlogList serverBlogs = ReaderFollowedBlogList.fromJson(jsonObject);
-                ReaderFollowedBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
+                ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
+                ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
                 final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
                 if (hasChanges) {
                     ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                    // followed blogs have changed, fill in incomplete blogInfos to make sure we have
-                    // full info about new blogs
-                    updateIncompleteBlogInfo();
                 }
 
                 if (resultListener != null) {
@@ -312,8 +267,7 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
         } else {
-            String domain = UrlUtils.getDomainFromUrl(UrlUtils.normalizeUrl(blogUrl));
-            WordPress.getRestClientUtils().get("/sites/" + domain, listener, errorListener);
+            WordPress.getRestClientUtils().get("/sites/" + getEncodedDomainFromUrl(blogUrl), listener, errorListener);
         }
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
@@ -324,19 +278,12 @@ public class ReaderBlogActions {
             return;
         }
 
-        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonObject);
-        ReaderBlogTable.setBlogInfo(blogInfo);
+        ReaderBlog blogInfo = ReaderBlog.fromJson(jsonObject);
+        ReaderBlogTable.addOrUpdateBlog(blogInfo);
 
         if (infoListener != null) {
             infoListener.onResult(blogInfo);
         }
-    }
-
-    /*
-     * request blogInfo by url only
-     */
-    private static void updateBlogInfoByUrl(final String blogUrl, final UpdateBlogInfoListener infoListener) {
-        updateBlogInfo(0, blogUrl, infoListener);
     }
 
     /*
@@ -402,7 +349,7 @@ public class ReaderBlogActions {
      * tests whether the passed url can be reached - does NOT use authentication, and does not
      * account for 404 replacement pages used by ISPs such as Charter
      */
-    public static void testBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
+    public static void checkBlogUrlReachable(final String blogUrl, final ReaderActions.ActionListener actionListener) {
         // ActionListener is required
         if (actionListener == null) {
             return;
@@ -435,83 +382,7 @@ public class ReaderBlogActions {
         WordPress.requestQueue.add(request);
     }
 
-    /*
-     * fills in information about followed blogs - requests missing info in batches of 25
-     */
-    private static final int MAX_BATCH_URLS = 25;
-    private static void updateIncompleteBlogInfo() {
-        // get list of all blogInfos that are incomplete, then remove external (feed) blogs
-        // since we know looking them up will fail
-        ReaderBlogInfoList incompleteBlogs = ReaderBlogTable.getAllFollowedBlogInfo().getIncompleteList();
-        incompleteBlogs.removeExternal();
-        if (incompleteBlogs.size() == 0) {
-            return;
-        }
-
-        // lookup full info in batches
-        ArrayList<String> requestUrls = new ArrayList<String>();
-        for (ReaderBlogInfo info: incompleteBlogs) {
-            requestUrls.add("/sites/" + info.blogId);
-            if (requestUrls.size() >= MAX_BATCH_URLS) {
-                batchUpdateIncompleteBlogInfo(requestUrls);
-                requestUrls.clear();
-            }
-        }
-
-        // perform the remaining requests
-        if (requestUrls.size() > 0) {
-            batchUpdateIncompleteBlogInfo(requestUrls);
-        }
-    }
-
-    private static void batchUpdateIncompleteBlogInfo(ArrayList<String> requestUrls) {
-        if (requestUrls == null || requestUrls.size() == 0) {
-            return;
-        }
-
-        // work with a clone of the passed list so changes to it don't impact us
-        final ArrayList<String> copyOfUrls = (ArrayList<String>) requestUrls.clone();
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                if (jsonObject == null) {
-                    return;
-                }
-
-                SQLiteDatabase db = ReaderDatabase.getWritableDb();
-                db.beginTransaction();
-                try {
-                    int numUpdated = 0;
-                    for (String url : copyOfUrls) {
-                        // the /batch/ endpoint identifies each response by the requested url
-                        JSONObject jsonSite = jsonObject.optJSONObject(url);
-                        ReaderBlogInfo blogInfo = ReaderBlogInfo.fromJson(jsonSite);
-                        // make sure blogInfo isn't still incomplete before saving it
-                        if (!blogInfo.isIncomplete()) {
-                            ReaderBlogTable.setBlogInfo(blogInfo);
-                            numUpdated++;
-                        }
-                    }
-
-                    AppLog.d(T.READER, String.format("updated info for %d incomplete blogs", numUpdated));
-                    db.setTransactionSuccessful();
-
-                } finally {
-                    db.endTransaction();
-                }
-            }
-        };
-
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-            }
-        };
-
-        AppLog.d(T.READER, String.format("requesting info for %d incomplete blogs", copyOfUrls.size()));
-        String path = ReaderUtils.getBatchEndpointForRequests(copyOfUrls);
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+    private static String getEncodedDomainFromUrl(final String url) {
+        return UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(url));
     }
 }

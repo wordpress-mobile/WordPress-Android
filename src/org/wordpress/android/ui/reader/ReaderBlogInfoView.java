@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderBlogInfo;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.FormatUtils;
@@ -39,7 +39,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private final int mMshotDefaultHeight;
 
     private float mCurrentMshotScale = 1.0f;
-    private ReaderBlogInfo mBlogInfo;
+    private ReaderBlog mBlogInfo;
 
     public ReaderBlogInfoView(Context context){
         super(context);
@@ -72,11 +72,10 @@ class ReaderBlogInfoView extends FrameLayout {
     /*
      * show blog header with info from passed blog filled in
      */
-    private void showBlogInfo(final ReaderBlogInfo blogInfo) {
+    private void showBlogInfo(final ReaderBlog blogInfo) {
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_container_inner);
 
-        // hide the inner container until we have complete blogInfo
-        if (blogInfo == null || blogInfo.isIncomplete()) {
+        if (blogInfo == null) {
             layoutInner.setVisibility(View.INVISIBLE);
             return;
         }
@@ -159,7 +158,7 @@ class ReaderBlogInfoView extends FrameLayout {
     private void requestBlogInfo(long blogId, String blogUrl) {
         ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
             @Override
-            public void onResult(ReaderBlogInfo blogInfo) {
+            public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
                 } else {
@@ -174,7 +173,7 @@ class ReaderBlogInfoView extends FrameLayout {
         ReaderBlogActions.updateBlogInfo(blogId, blogUrl, listener);
     }
 
-    private void toggleBlogFollowStatus(TextView txtFollow, ReaderBlogInfo blogInfo) {
+    private void toggleBlogFollowStatus(TextView txtFollow, ReaderBlog blogInfo) {
         if (blogInfo == null || txtFollow == null) {
             return;
         }
@@ -187,7 +186,7 @@ class ReaderBlogInfoView extends FrameLayout {
         }
     }
 
-    private void loadMshotImage(final ReaderBlogInfo blogInfo) {
+    private void loadMshotImage(final ReaderBlog blogInfo) {
         if (blogInfo == null || !blogInfo.hasUrl()) {
             hideProgress();
             return;

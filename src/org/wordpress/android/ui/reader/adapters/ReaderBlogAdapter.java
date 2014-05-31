@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
-import org.wordpress.android.models.ReaderBlogInfo;
-import org.wordpress.android.models.ReaderBlogInfoList;
+import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -47,7 +47,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private final WeakReference<Context> mWeakContext;
 
     private ReaderRecommendBlogList mRecommendedBlogs = new ReaderRecommendBlogList();
-    private ReaderBlogInfoList mFollowedBlogs = new ReaderBlogInfoList();
+    private ReaderBlogList mFollowedBlogs = new ReaderBlogList();
 
     public ReaderBlogAdapter(Context context,
                              ReaderBlogType blogType,
@@ -165,17 +165,17 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 break;
 
             case FOLLOWED:
-                final ReaderBlogInfo blogInfo = (ReaderBlogInfo) getItem(position);
+                final ReaderBlog blogInfo = (ReaderBlog) getItem(position);
                 blogId = blogInfo.blogId;
                 blogUrl = blogInfo.getUrl();
                 isFollowing = blogInfo.isFollowing;
+                String domain = UrlUtils.getDomainFromUrl(blogUrl);
                 if (blogInfo.hasName()) {
                     holder.txtTitle.setText(blogInfo.getName());
-                    holder.txtTitle.setVisibility(View.VISIBLE);
                 } else {
-                    holder.txtTitle.setVisibility(View.GONE);
+                    holder.txtTitle.setText(domain);
                 }
-                holder.txtUrl.setText(UrlUtils.getDomainFromUrl(blogUrl));
+                holder.txtUrl.setText(domain);
                 break;
 
             default:
@@ -252,7 +252,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                 blogUrl = blog.getBlogUrl();
                 break;
             case FOLLOWED:
-                ReaderBlogInfo info = mFollowedBlogs.get(position);
+                ReaderBlog info = mFollowedBlogs.get(position);
                 blogId = info.blogId;
                 blogUrl = info.getUrl();
                 break;
@@ -286,7 +286,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
     private boolean mIsTaskRunning = false;
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
-        ReaderBlogInfoList tmpFollowedBlogs;
+        ReaderBlogList tmpFollowedBlogs;
 
         @Override
         protected void onPreExecute() {
@@ -314,12 +314,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);
 
                 case FOLLOWED:
-                    // get all followed blogs, then remove incomplete/external blogs
-                    // TODO: we can stop removing incomplete info once the
-                    // read/following/mine endpoint returns full blog info
-                    tmpFollowedBlogs = ReaderBlogTable.getAllFollowedBlogInfo();
-                    tmpFollowedBlogs.removeIncomplete();
-                    tmpFollowedBlogs.removeExternal();
+                    tmpFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
                     return !mFollowedBlogs.isSameList(tmpFollowedBlogs);
 
                 default:
@@ -335,7 +330,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                         mRecommendedBlogs = (ReaderRecommendBlogList) (tmpRecommendedBlogs.clone());
                         break;
                     case FOLLOWED:
-                        mFollowedBlogs = (ReaderBlogInfoList) (tmpFollowedBlogs.clone());
+                        mFollowedBlogs = (ReaderBlogList) (tmpFollowedBlogs.clone());
                         break;
                 }
                 notifyDataSetChanged();

@@ -378,7 +378,7 @@ public class ReaderSubsActivity extends FragmentActivity
                 }
             }
         };
-        ReaderBlogActions.testBlogUrlReachable(normUrl, urlActionListener);
+        ReaderBlogActions.checkBlogUrlReachable(normUrl, urlActionListener);
     }
 
     /*

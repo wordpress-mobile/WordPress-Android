@@ -521,7 +521,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         imgBtnReblog.setSelected(true);
         ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, imgBtnReblog);
     }
 
     /*
@@ -1337,15 +1337,17 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             // enable reblogging wp posts
-            imgBtnReblog.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-            if (mPost.isWP()) {
+            if (mPost.canReblog()) {
+                imgBtnReblog.setVisibility(View.VISIBLE);
+                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
                 imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         doPostReblog(imgBtnReblog, mPost);
                     }
                 });
+            } else {
+                imgBtnReblog.setVisibility(View.GONE);
             }
 
             // enable adding a comment if comments are open on this post

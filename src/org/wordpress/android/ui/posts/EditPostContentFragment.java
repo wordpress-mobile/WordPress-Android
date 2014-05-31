@@ -525,7 +525,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             return;
 
         String title = (mTitleEditText.getText() != null) ? mTitleEditText.getText().toString() : "";
-        String content;
 
         Editable postContentEditable;
         try {
@@ -539,6 +538,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         if (postContentEditable == null)
             return;
 
+        String content;
         if (post.isLocalDraft()) {
             // remove suggestion spans, they cause craziness in WPHtml.toHTML().
             CharacterStyle[] characterStyles = postContentEditable.getSpans(0, postContentEditable.length(),
@@ -557,11 +557,20 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             content = content.replace("</strong><strong>", "").replace("</em><em>", "").replace("</u><u>", "")
                     .replace("</strike><strike>", "").replace("</blockquote><blockquote>", "");
         } else {
-            //content = (mContentEditText.getText() != null) ? mContentEditText.getText().toString() : "";
+            if (!isAutoSave) {
+                // Add gallery shortcode
+                MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(),
+                        MediaGalleryImageSpan.class);
+                for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
+                    int start = postContentEditable.getSpanStart(gallerySpan);
+                    postContentEditable.removeSpan(gallerySpan);
+                    postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
+                }
+            }
+
             WPImageSpan[] imageSpans = postContentEditable.getSpans(0, postContentEditable.length(), WPImageSpan.class);
             if (imageSpans.length != 0) {
                 for (WPImageSpan wpIS : imageSpans) {
-                    //images += wpIS.getImageSource().toString() + ",";
                     MediaFile mediaFile = wpIS.getMediaFile();
                     if (mediaFile == null)
                         continue;
@@ -580,7 +589,8 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         // network image has a mediaId
                         if (mediaFile.getMediaId() != null && mediaFile.getMediaId().length() > 0) {
                             postContentEditable.insert(tagStart, WPHtml.getContent(wpIS));
-                        } else { // local image for upload
+                        } else {
+                            // local image for upload
                             postContentEditable.insert(tagStart,
                                     "<img android-uri=\"" + wpIS.getImageSource().toString() + "\" />");
                         }
@@ -588,17 +598,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
             }
             content = postContentEditable.toString();
-        }
-
-        if (!isAutoSave) {
-            // Add gallery shortcode
-            MediaGalleryImageSpan[] gallerySpans = postContentEditable.getSpans(0, postContentEditable.length(),
-                    MediaGalleryImageSpan.class);
-            for (MediaGalleryImageSpan gallerySpan : gallerySpans) {
-                int start = postContentEditable.getSpanStart(gallerySpan);
-                postContentEditable.removeSpan(gallerySpan);
-                postContentEditable.insert(start, WPHtml.getGalleryShortcode(gallerySpan));
-            }
         }
 
         String moreTag = "<!--more-->";

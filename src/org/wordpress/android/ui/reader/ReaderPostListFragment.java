@@ -593,9 +593,9 @@ public class ReaderPostListFragment extends Fragment
      */
     private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
         @Override
-        public void onRequestReblog(ReaderPost post) {
+        public void onRequestReblog(ReaderPost post, View view) {
             if (hasActivity()) {
-                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+                ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
             }
         }
     };
