@@ -28,7 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -91,8 +90,6 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsUpdatingComments;
 
     private Parcelable mListState;
-
-    private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
     private final Handler mHandler = new Handler();
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
@@ -462,17 +459,13 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        // get the post again, since it has changed
+        // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        refreshLikes();
 
-        // fire listener so host knows about the change
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
         }
-
-        // call returns before api completes, but local version of post will have been changed
-        // so refresh to show those changes
-        refreshLikes(true);
     }
 
     /*
@@ -554,39 +547,17 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                switch (result) {
-                    case CHANGED:
-                        // post has changed, so get latest version
-                        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                        break;
-                    case FAILED:
-                        // failed to get post, so do nothing here
-                        return;
-                    default:
-                        // unchanged
-                        break;
-                }
-
-                // updating the post will get its liking users, so refresh likes here if any exist
-                // to make sure the correct liking avatars are shown
-                if (origNumLikes > 0 || mPost.numLikes > 0)
-                    refreshLikes(false);
-
-                // determine whether we need to make a separate request to update comments
-                new Thread() {
-                    @Override
-                    public void run() {
-                        final boolean isCommentsChanged = (mPost.numReplies != origNumReplies
-                                || mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost));
-                        if (isCommentsChanged) {
-                            mHandler.post(new Runnable() {
-                                public void run() {
-                                    updateComments();
-                                }
-                            });
-                        }
+                if (result == ReaderActions.UpdateResult.CHANGED) {
+                    // post has changed, so get latest version then refresh likes/comments
+                    // if they've changed
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+                    if (origNumLikes != mPost.numLikes) {
+                        refreshLikes();
                     }
-                }.start();
+                    if (mPost.numReplies != origNumReplies) {
+                        updateComments();
+                    }
+                }
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -610,8 +581,9 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
-                if (!hasActivity())
+                if (!hasActivity()) {
                     return;
+                }
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     refreshComments();
@@ -625,18 +597,18 @@ public class ReaderPostDetailFragment extends Fragment
      * show progress bar at the bottom of the screen - used when getting newer comments
      */
     private void showProgressFooter() {
-        if (mProgressFooter == null || mProgressFooter.getVisibility() == View.VISIBLE)
-            return;
-        mProgressFooter.setVisibility(View.VISIBLE);
+        if (mProgressFooter != null || mProgressFooter.getVisibility() != View.VISIBLE) {
+            mProgressFooter.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
      * hide the footer progress bar if it's showing
      */
     private void hideProgressFooter() {
-        if (mProgressFooter == null || mProgressFooter.getVisibility() != View.VISIBLE)
-            return;
-        mProgressFooter.setVisibility(View.INVISIBLE);
+        if (mProgressFooter != null || mProgressFooter.getVisibility() == View.VISIBLE) {
+            mProgressFooter.setVisibility(View.INVISIBLE);
+        }
     }
 
     /*
@@ -647,62 +619,13 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
-     * display (never called when there are no likes) - note that the passed list of avatar urls
-     * has already been Photon-ized, so there's no need to do that here
-     */
-    private void showLikingAvatars(final ArrayList<String> avatarUrls,
-                                   int maxAvatars,
-                                   boolean forceReload) {
-        final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
-
-        // determine whether avatars need to be shown - goal is to avoid reloading them when
-        // they're already displayed to prevent flicker
-        final boolean reloadAvatars;
-        if (forceReload) {
-            // always reload avatars if force reload requested
-            reloadAvatars = true;
-        } else if (mPrevAvatarUrls.size() == avatarUrls.size()
-                && mPrevAvatarUrls.containsAll(avatarUrls)) {
-            // don't reload if these avatars are the same as last time
-            reloadAvatars = false;
-        } else {
-            // avatars aren't the same as last time, but we can still skip showing
-            // them if the view's child count indicates that we've already added
-            // the max on a previous call to this routine
-            reloadAvatars = (layoutLikingAvatars.getChildCount() < maxAvatars);
-        }
-
-        if (reloadAvatars) {
-            AppLog.d(T.READER, "reader post detail > displaying liking avatars");
-            layoutLikingAvatars.removeAllViews();
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            for (final String url : avatarUrls) {
-                WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                layoutLikingAvatars.addView(imgAvatar);
-                imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
-            }
-
-            // remember these avatars for next comparison
-            mPrevAvatarUrls.clear();
-            mPrevAvatarUrls.addAll(avatarUrls);
-        }
-
-        // show the liking layout if it's not already showing
-        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
-        }
-    }
-
-    /*
      * show latest likes for this post - pass true to force reloading avatars (used when user clicks
      * the like button, to ensure the current user's avatar appears first)
      */
-    private void refreshLikes(final boolean forceReload) {
-        if (!hasActivity())
+    private void refreshLikes() {
+        if (!hasActivity() || !hasPost() || !mPost.isWP()) {
             return;
-        if (!hasPost() || !mPost.isWP())
-            return;
+        }
 
         new Thread() {
             @Override
@@ -710,6 +633,7 @@ public class ReaderPostDetailFragment extends Fragment
                 if (getView() == null) {
                     return;
                 }
+
                 final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
@@ -729,8 +653,9 @@ public class ReaderPostDetailFragment extends Fragment
 
                 mHandler.post(new Runnable() {
                     public void run() {
-                        if (!hasActivity())
+                        if (!hasActivity()) {
                             return;
+                        }
 
                         imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
@@ -766,11 +691,30 @@ public class ReaderPostDetailFragment extends Fragment
                         });
 
                         // now show the liking avatars
-                        showLikingAvatars(avatars, maxAvatars, forceReload);
+                        mLayoutLikes.setVisibility(View.VISIBLE);
+                        showLikingAvatars(avatars);
                     }
                 });
             }
         }.start();
+    }
+
+    /*
+     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
+     * display (never called when there are no likes) - note that the passed list of avatar urls
+     * has already been Photon-ized, so there's no need to do that here
+     */
+    private void showLikingAvatars(final ArrayList<String> avatarUrls) {
+        final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+
+        layoutLikingAvatars.removeAllViews();
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        for (final String url : avatarUrls) {
+            WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+            layoutLikingAvatars.addView(imgAvatar);
+            imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+        }
     }
 
     /*
@@ -1426,7 +1370,7 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView.setVisibility(View.VISIBLE);
 
         // show likes & comments
-        refreshLikes(false);
+        refreshLikes();
         refreshComments();
 
         // request the latest info for this post if we haven't updated it already
