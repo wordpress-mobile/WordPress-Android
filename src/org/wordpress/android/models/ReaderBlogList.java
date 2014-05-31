@@ -32,16 +32,18 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
 
     private int indexOfBlogId(long blogId) {
         for (int i = 0; i < size(); i++) {
-            if (this.get(i).blogId == blogId)
+            if (this.get(i).blogId == blogId) {
                 return i;
+            }
         }
         return -1;
     }
 
     private int indexOfFeedId(long feedId) {
         for (int i = 0; i < size(); i++) {
-            if (this.get(i).feedId == feedId)
+            if (this.get(i).feedId == feedId) {
                 return i;
+            }
         }
         return -1;
     }
