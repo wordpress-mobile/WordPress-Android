@@ -16,7 +16,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.util.AppLog;
 
 /**
- * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
+ * fragment hosted by ReaderSubsActivity which shows either recommended blogs or followed blogs
  */
 public class ReaderBlogFragment extends Fragment
                                 implements BlogFollowChangeListener {
