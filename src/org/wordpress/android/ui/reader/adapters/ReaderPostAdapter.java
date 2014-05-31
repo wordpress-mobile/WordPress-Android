@@ -650,7 +650,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * briefly animate the appearance of new rows
+     * briefly enable animating the appearance of new rows
      */
     private void enableRowAnimation() {
         mAnimateRows = true;
@@ -659,7 +659,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             public void run() {
                 mAnimateRows = false;
             }
-        }, 500);
+        }, 250);
     }
 
     /*
