@@ -269,12 +269,6 @@ public class ReaderPostDetailFragment extends Fragment
         return (mPost != null);
     }
 
-    void reloadPost() {
-        if (hasPost() && hasActivity()) {
-            showPost();
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -597,7 +591,7 @@ public class ReaderPostDetailFragment extends Fragment
      * show progress bar at the bottom of the screen - used when getting newer comments
      */
     private void showProgressFooter() {
-        if (mProgressFooter != null || mProgressFooter.getVisibility() != View.VISIBLE) {
+        if (mProgressFooter != null && mProgressFooter.getVisibility() != View.VISIBLE) {
             mProgressFooter.setVisibility(View.VISIBLE);
         }
     }
@@ -606,7 +600,7 @@ public class ReaderPostDetailFragment extends Fragment
      * hide the footer progress bar if it's showing
      */
     private void hideProgressFooter() {
-        if (mProgressFooter != null || mProgressFooter.getVisibility() == View.VISIBLE) {
+        if (mProgressFooter != null && mProgressFooter.getVisibility() == View.VISIBLE) {
             mProgressFooter.setVisibility(View.INVISIBLE);
         }
     }
