@@ -727,21 +727,19 @@ public class ReaderPostDetailFragment extends Fragment
         if (!hasActivity())
             return;
 
-        // skip if it's already showing
-        if (mIsAddCommentBoxShowing)
+        // skip if it's already showing or if a comment is currently being submitted
+        if (mIsAddCommentBoxShowing || mIsSubmittingComment) {
             return;
-
-        // don't show comment box if a comment is currently being submitted
-        if (mIsSubmittingComment)
-            return;
+        }
 
         final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
 
         // disable full-screen when comment box is showing
-        if (isFullScreen())
+        if (isFullScreen()) {
             setIsFullScreen(false);
+        }
 
         // different hint depending on whether user is replying to a comment or commenting on the post
         editComment.setHint(replyToCommentId == 0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
@@ -753,8 +751,9 @@ public class ReaderPostDetailFragment extends Fragment
         editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment(replyToCommentId);
+                }
                 return false;
             }
         });
@@ -790,10 +789,9 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void hideAddCommentBox() {
-        if (!hasActivity())
+        if (!hasActivity() || !mIsAddCommentBoxShowing) {
             return;
-        if (!mIsAddCommentBoxShowing)
-            return;
+        }
 
         final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
@@ -822,9 +820,9 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void scrollToCommentId(long commentId) {
         int position = getCommentAdapter().indexOfCommentId(commentId);
-        if (position == -1)
-            return;
-        getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), 0);
+        if (position > -1) {
+            getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), 0);
+        }
     }
 
     /*
@@ -835,8 +833,9 @@ public class ReaderPostDetailFragment extends Fragment
     private void submitComment(final long replyToCommentId) {
         final EditText editComment = (EditText) getView().findViewById(R.id.edit_comment);
         final String commentText = EditTextUtils.getText(editComment);
-        if (TextUtils.isEmpty(commentText))
+        if (TextUtils.isEmpty(commentText)) {
             return;
+        }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
@@ -853,8 +852,9 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded, ReaderComment newComment) {
                 mIsSubmittingComment = false;
-                if (!hasActivity())
+                if (!hasActivity()) {
                     return;
+                }
                 if (succeeded) {
                     // comment posted successfully so stop highlighting the fake one and replace
                     // it with the real one
@@ -892,8 +892,9 @@ public class ReaderPostDetailFragment extends Fragment
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
