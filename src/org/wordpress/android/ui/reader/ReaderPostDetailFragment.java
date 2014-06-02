@@ -661,7 +661,9 @@ public class ReaderPostDetailFragment extends Fragment
 
                         // nothing more to do if no likes or liking avatars haven't been retrieved yet
                         if (avatars.size() == 0 || mPost.numLikes == 0) {
-                            mLayoutLikes.setVisibility(View.GONE);
+                            if (mLayoutLikes.getVisibility() != View.GONE) {
+                                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                            }
                             return;
                         }
 
@@ -684,8 +686,10 @@ public class ReaderPostDetailFragment extends Fragment
                             }
                         });
 
-                        // now show the liking avatars
-                        mLayoutLikes.setVisibility(View.VISIBLE);
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+                            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                        }
+
                         showLikingAvatars(avatars);
                     }
                 });
@@ -699,15 +703,28 @@ public class ReaderPostDetailFragment extends Fragment
      * has already been Photon-ized, so there's no need to do that here
      */
     private void showLikingAvatars(final ArrayList<String> avatarUrls) {
-        final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
-
-        layoutLikingAvatars.removeAllViews();
+        ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        for (final String url : avatarUrls) {
-            WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-            layoutLikingAvatars.addView(imgAvatar);
+        // remove excess existing views
+        int numExistingViews = layoutLikingAvatars.getChildCount();
+        if (numExistingViews > avatarUrls.size()) {
+            int numToRemove = avatarUrls.size() - numExistingViews;
+            layoutLikingAvatars.removeViews(numExistingViews, numToRemove);
+        }
+
+        int index = 0;
+        for (String url : avatarUrls) {
+            WPNetworkImageView imgAvatar;
+            // reuse existing view when possible, otherwise inflate a new one
+            if (index < numExistingViews) {
+                imgAvatar = (WPNetworkImageView) layoutLikingAvatars.getChildAt(index);
+            } else {
+                imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                layoutLikingAvatars.addView(imgAvatar);
+            }
             imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+            index++;
         }
     }
 
