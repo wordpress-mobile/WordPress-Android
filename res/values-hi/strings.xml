@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="update_verb">अपडेट करे</string>
+	<string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
+	<string name="reader_label_unfollowed_blog">अनुसरण नहीं किये गए ब्लॉग</string>
+	<string name="reader_label_followers">%s प्रशंसक</string>
+	<string name="reader_page_popular_tags">लोकप्रिय टैग</string>
+	<string name="reader_toast_err_already_follow_blog">आप पहले से ही इस ब्लॉग का अनुसरण कर रहे है</string>
+	<string name="reader_title_blog_preview">ब्लॉग पूर्वावलोकन</string>
+	<string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
+	<string name="reader_page_recommended_blogs">अनुशंसित ब्लॉग</string>
+	<string name="blogs_visibility">ब्लॉग</string>
+	<string name="stats_empty_clicks_title">क्लिकें दर्ज नही.</string>
+	<string name="ssl_certificate_details">प्रमाणपत्र विवरण</string>
+	<string name="need_help_signin_wpcom">मदद की ज़रूरत है?</string>
+	<string name="media_empty_list">कोई मीडिया नहीं</string>
+	<string name="saving">सहेजा जा रहा…</string>
 	<string name="help_center">सहायता केंद्र</string>
 	<string name="help">सहायता</string>
 	<string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>
@@ -8,7 +23,6 @@
 	<string name="loading_pages">पृष्ठों को लोड किया जा रहा...</string>
 	<string name="loading_posts">पोस्टो को लोड किया जा रहा...</string>
 	<string name="reader_label_reblog_empty_link">ब्लॉग दृश्यता बदलें</string>
-	<string name="nux_help_description">सामान्य प्रश्नों के उत्तर पाने के लिए सहायता केंद्र पर जाएं. या नए प्रश्न पूछने के लिए फोरम पर जाए.</string>
 	<string name="reader_label_reblog_empty">इस पोस्ट को फिर से ब्लॉग करने के लिए आपके पास को भी प्रत्यक्ष वर्डप्रेस डॉट कॉम ब्लॉग नहीं है </string>
 	<string name="ssl_certificate_ask_trust">आप आमतौर पर समस्याओं के बिना इस साइट से कनेक्ट करते हैं, तो यह त्रुटि किसी साइट को प्रतिरूपित करने की कोशिश कर रहा है कि अर्थ हो सकता है, और यदि आप जारी नहीं किया जाना चाहिए. क्या आप फिर भी प्रमाण पत्र पर विश्वास करना चाहेंगे?</string>
 	<string name="mnu_comment_edit">संपादित करें</string>
@@ -22,7 +36,6 @@
 	<string name="error_downloading_image">छवि डाउनलोड करते समय त्रुटि </string>
 	<string name="comments_empty_list">कोई टिप्पणी नहीं</string>
 	<string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
-	<string name="media_empty_list">कोई मीडिया नहीं</string>
 	<string name="media_empty_list_custom_date">इस समय अन्तराल में कोई मीडिया नहीं</string>
 	<string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
 	<string name="stats_empty_geoviews">कोई पोस्ट देखा नहीं गया</string>
@@ -53,11 +66,9 @@
 	<string name="error_upload">%s को अपलोड करने के दौरान एक त्रुटि हुई</string>
 	<string name="blog_name_cant_be_used">आप उस साइट पते का उपयोग नहीं कर सकते</string>
 	<string name="invalid_url_message">दर्ज किया गये ब्लॉग यूआरएल की वैधता की जाँच करे</string>
-	<string name="adding_cat_failed_check">अपनी सेटिंग्स की जाँच करें और पुन: प्रयास करे</string>
 	<string name="error_refresh_comments">टिप्पणिया इस समय रिफ्रेश नहीं हो सकती</string>
 	<string name="error_refresh_pages">पृष्ठे इस समय रिफ्रेश नहीं हो सकती</string>
 	<string name="theme_fetch_failed">थीम को प्राप्त करने में असफल</string>
-	<string name="username_password_required">जमा करने से पहले सभी फ़ील्ड्स भरें</string>
 	<string name="cat_name_required">श्रेणी नाम फ़ील्ड आवश्यक है</string>
 	<string name="username_exists">उपयोगकर्ता नाम पहले से मौजूद है</string>
 	<string name="blog_name_reserved">वह साइट आरक्षित है</string>
@@ -161,8 +172,6 @@
 	<string name="trash">कचरा पेटी</string>
 	<string name="comment_status_trash">कचरा पेटी में डाला गया</string>
 	<string name="trash_no">कचरा पेटी में नहीं डाले</string>
-	<string name="reader_title_followed_tags">अनुसरण किये गए टैग्स</string>
-	<string name="reader_title_popular_tags">लोकप्रिय टैग्स</string>
 	<string name="remove_account">ब्लॉग हटाये</string>
 	<string name="upload_failed">अपलोड असफल हो गया</string>
 	<string name="location_not_found">अज्ञात स्थान</string>
@@ -181,7 +190,6 @@
 	<string name="reader_toast_err_reblog_requires_blog">एक ब्लॉग को चुने </string>
 	<string name="select_categories">श्रेणियों को चुने</string>
 	<string name="share_action_media">मीडिया संग्रह</string>
-	<string name="please_sign_in">फिर से साइन इन करे</string>
 	<string name="required_field">आवश्यक फ़ील्ड</string>
 	<string name="saving_changes">परिवर्तन सहेजे जा रहा</string>
 	<string name="stats_visitors_and_views_header_all_time">सभी समय</string>
@@ -228,15 +236,12 @@
 	<string name="stats_view_totals_followers_and_shares">कुल योग, प्रशंसक, और साझा किया</string>
 	<string name="http_credentials">HTTP क्रेडेंशियल्स (वैकल्पिक)</string>
 	<string name="email_cant_be_used_to_signup">आप पंजीकरण करने के लिए कि उस ईमेल पते का उपयोग नहीं कर सकते हैं. हमें उनके साथ समस्या हो रही है क्योंकि वे  हमारे ईमेल को ब्लॉक कर रहे है. एक अन्य ईमेल प्रदाता का प्रयोग करें.</string>
-	<string name="jetpack_stats_switch_user">यह WordPress.com खाता इस ब्लॉग के आँकड़े को नहीं दिखा सकता है. क्या आप एक अलग खाते में साइन इन करना चाहेंगे?</string>
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
 	<string name="deleting_page">पृष्ठ हटाया जा रहा है</string>
 	<string name="deleting_post">पोस्ट हटाया जा रहा है</string>
-	<string name="cat_adding_category">श्रेणी जोड़ जा रहा</string>
 	<string name="share_link">कड़ी साझा करे</string>
 	<string name="share_url_page">पृष्ठ साझा करे</string>
 	<string name="share_url_post">पोस्ट साझा करे</string>
-	<string name="refreshing_categories">श्रेणियों को रिफ्रेश किया जा रहा</string>
 	<string name="creating_your_account">आपका खाता बनाया जा रहा</string>
 	<string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
 	<string name="create_account_wpcom">वर्डप्रेस डॉट कॉम पर एक खाता बनाएं</string>
@@ -254,10 +259,7 @@
 	<string name="share_preference_title">वर्डप्रेस पर साझा करे</string>
 	<string name="cant_share_no_visible_blog"> आप एक प्रत्यक्ष ब्लॉग के बिना वर्डप्रेस में साझा नहीं कर सकते</string>
 	<string name="reset_auto_share_preference">स्वत: साझा सेटिंग रीसेट करें</string>
-	<string name="reader_label_new_posts_multi">%d नए पोस्ट</string>
-	<string name="reader_label_new_posts_one">एक नया पोस्ट</string>
 	<string name="reader_empty_followed_blogs_description">खोज शुरू करने के लिए टैग आइकॉन पर टैप करे,चिंता नहीं करे!</string>
-	<string name="reader_toast_err_no_connection">संपर्क स्थापित करने में असमर्थ</string>
 	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
 	<string name="validating_user_data">उपयोगकर्ता डेटा को सत्यापित किया जा रहा</string>
@@ -267,15 +269,12 @@
 	<string name="select_time">समय चुने</string>
 	<string name="pick_video">विडियो को चुने</string>
 	<string name="add_self_hosted_blog">अपने से होस्ट किया हुआ ब्लॉग जोड़े</string>
-	<string name="blogs_visibility">ब्लॉग दृश्यता</string>
 	<string name="account_two_step_auth_enabled">इस खाते में दो स्टेप प्रमाणीकरण सक्षम किया गया है.  WordPress.com पर अपनी सुरक्षा सेटिंग में जाएं और एक ऐप्लिकेशन विशिष्ट पासवर्ड उत्पन्न करे.</string>
 	<string name="nux_tap_continue">जारी रखे</string>
 	<string name="nux_welcome_create_account">खाता बनाएं</string>
 	<string name="nux_oops_not_selfhosted_blog">वर्डप्रेस डॉट कॉम पर साइन इन करे</string>
 	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
-	<string name="stats_empty_top_posts">कोई शीर्ष पोस्ट या पृष्ठ अभी तक नहीं मिला. यह आकड़ा आपको सबसे ज्यादा देखी गयी पोस्ट और पृष्ठों को दिखाता है.</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
-	<string name="reader_hint_add_tag">टैग दर्ज करें</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
 	<string name="reader_hint_comment_on_post">अपनी टिप्पणी जोड़ें</string>
 	<string name="reader_label_added_tag">जोड़ा गया %s</string>
@@ -286,8 +285,6 @@
 	<string name="reader_empty_popular_tags">कोई लोकप्रिय टैग नहीं</string>
 	<string name="reader_timespan_now">अब</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
-	<string name="reader_hint_reblog_comment">वैकल्पिक टिप्पणी</string>
-	<string name="reader_title_userlist_default">लोग</string>
 	<string name="reader_toast_reblog_success">पोस्ट पुनः पोस्ट किया गया है</string>
 	<string name="reader_btn_share">साझा करे</string>
 	<string name="reader_menu_tags">टैग्स</string>
@@ -303,7 +300,6 @@
 	<string name="reader_toast_err_reblog_failed">इस पोस्ट को फिर से ब्लॉग नहीं कर सके</string>
 	<string name="reader_toast_err_already_reblogged">आपने पहले ही इस पोस्ट को ब्लॉग कर दिया है </string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
-	<string name="reader_title_reblog">फिर से ब्लॉग करे</string>
 	<string name="reader_btn_reblog">फिर से ब्लॉग करे</string>
 	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
 	<string name="reader_share_subject">%s द्वारा साझा किया गया</string>
@@ -311,7 +307,6 @@
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
 	<string name="connecting_wpcom">WordPress.com से कनेक्ट हो रहा</string>
-	<string name="reader_label_reblog_to">इस पोस्ट को फिर से ब्लॉग करे</string>
 	<string name="jetpack_message">Jetpack प्लगइन आँकड़ों के लिए आवश्यक है. आप Jetpack इनस्टॉल करना चाहते हैं?</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="stats_totals_followers_shares_header_includes_publicize">%sPublicize शामिल</string>
@@ -408,14 +403,9 @@
 	<string name="passcode_manage">पिन का प्रबंधन करे</string>
 	<string name="passcode_preference_title">पिन लॉक</string>
 	<string name="media_gallery_type_tiled">टाइल किया हुआ</string>
-	<string name="stats_empty_search_engine_terms"> कोई खोज शब्द नहीं. खोज शब्द वे शब्द या वाक्यांश है जिसके द्वारा उपयोगकर्ता जब खोजते है तो आपको पाते है.</string>
-	<string name="stats_empty_clicks">क्लिक दर्ज नहीं की गई. "क्लिक" वे दर्शक है जो बाहर जाने वाली कड़ी पर क्लिक कर रहे हैं.</string>
-	<string name="stats_empty_referrers">कोई रेफ़रर नहीं. एक  रेफ़रर दुसरे साईट से क्लिक है जो आपके साईट से जुड़ा हुआ है.</string>
 	<string name="remote_changes">आपने जिस पोस्ट में परिवर्तन किया है वह अभी अपलोड नहीं किया गया है.रिफ्रेश करे और स्थानीय परिवर्तन को अधिलेखित करें</string>
 	<string name="upload">अपलोड</string>
 	<string name="manage">प्रबंधन</string>
-	<string name="prompt_save_changes">क्या आप अपने परिवर्तनों को सहेजना चाहेंगे?</string>
-	<string name="discard">नज़रअंदाज़ करे</string>
 	<string name="notifications">सूचनाएं</string>
 	<string name="options">विकल्प</string>
 	<string name="sign_out_confirm">क्या आप साइन आउट होना चाहते हैं?</string>
@@ -460,9 +450,7 @@
 	<string name="upload_scaled_image">अपलोड करें और बढाये गए छवि से जोड़े</string>
 	<string name="scaled_image">बढाये गए छवि की चौड़ाई</string>
 	<string name="remove_location">हटाये</string>
-	<string name="update_location">अपडेट</string>
 	<string name="scheduled">	नियत किया गया</string>
-	<string name="help_stats">मदद की ज़रूरत है?</string>
 	<string name="link_enter_url">यूआरएल</string>
 	<string name="posted_from">एंड्राइड के लिए वर्डप्रेस से प्रकाशित किया गया</string>
 	<string name="uploading">अपलोड किया जा रहा</string>
@@ -489,11 +477,8 @@
 	<string name="post_private">प्राइवेट</string>
 	<string name="draft">प्रारूप</string>
 	<string name="upload_full_size_image">अपलोड करें और पूर्ण छवि से जोड़े</string>
-	<string name="load_settings">अब सेटिंग लोड करे?</string>
 	<string name="categories">श्रेणिया</string>
 	<string name="title">शीर्षक</string>
-	<string name="stats_username">उपयोगकर्ता नाम</string>
-	<string name="stats_password">कूटशब्द</string>
 	<string name="tags_separate_with_commas">टैग (अल्पविराम से अलग किये जाये टैग)</string>
 	<string name="tab_stats">आँकड़े</string>
 	<string name="delete_sure_post">क्या आप पोस्ट हटाना चाहते हैं</string>
@@ -522,7 +507,6 @@
 	<string name="save">सहेजें</string>
 	<string name="yes">हां</string>
 	<string name="delete_sure">क्या आप प्रारूप हटाना चाहते हैं</string>
-	<string name="categories_refreshed">श्रेणिया रिफ्रेश की गयी</string>
 	<string name="category_refresh_error">श्रेणी रिफ्रेश त्रुटि</string>
 	<string-array name="alignment_array">
 		<item>कुछ भी नहीं</item>

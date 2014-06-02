@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_hint_reblog_comment">ひとことどうぞ (オプション)</string>
+	<string name="reader_label_reblog_to">リブログ先:</string>
+	<string name="reader_title_reblog">リブログ</string>
+	<string name="update_verb">更新</string>
+	<string name="schedule_verb">予約</string>
+	<string name="sign_in_again">最ログイン</string>
+	<string name="simperium_connection_error">通知取得のためのログインができませんでした。</string>
+	<string name="invalid_xmlrpc_url">あなたの WordPress インストールから返された XMLRPC URL は無効です。サイト管理者に連絡してください。</string>
+	<string name="reader_label_followers">%s人のフォロワー</string>
+	<string name="reader_label_tag_preview">%s タグの付いた投稿</string>
+	<string name="reader_label_unfollowed_blog">ブログのフォローを解除しました</string>
+	<string name="reader_label_followed_blog">ブログをフォローしました</string>
+	<string name="reader_toast_err_already_follow_blog">このブログをすでにフォローしています</string>
+	<string name="reader_title_blog_preview">ブログをプレビュー</string>
+	<string name="reader_label_more_recommendations">さらにおすすめ</string>
+	<string name="reader_toast_err_unfollow_blog">このブログをフォローできませんでした</string>
+	<string name="reader_page_popular_tags">人気のタグ</string>
+	<string name="reader_toast_err_get_blog_info">このブログを表示できません</string>
+	<string name="reader_page_followed_blogs">フォロー中のブログ</string>
+	<string name="reader_hint_add_tag_or_url">タグまたはフォローしたい URL を入力</string>
+	<string name="reader_title_subs">タグ・ブログ</string>
+	<string name="reader_toast_err_follow_blog">このブログをフォローできません</string>
+	<string name="reader_page_followed_tags">フォロー中のタグ</string>
+	<string name="reader_page_recommended_blogs">おすすめブログ</string>
+	<string name="reader_label_new_posts">新しい投稿を表示</string>
+	<string name="reader_empty_recommended_blogs">おすすめブログはありません</string>
+	<string name="reader_title_tag_preview">タグをプレビュー</string>
+	<string name="blogs_visibility">ブログ</string>
+	<string name="stats_empty_referrers_title">リファラがありません。</string>
+	<string name="stats_empty_top_posts_title">まだ人気の投稿・ページがありません。</string>
+	<string name="stats_empty_clicks_title">クリックが記録されていません。</string>
+	<string name="stats_empty_search_engine_terms_title">検索キーワードがありません。</string>
+	<string name="stats_empty_search_engine_terms_desc">検索キーワードとは、読者が検索エンジンであなたのサイトを見つけるために使った単語または文章のことです。</string>
+	<string name="stats_empty_clicks_desc">「クリック」とは読者がサイト上でクリックした外部リンクのことです。</string>
+	<string name="stats_empty_referrers_desc">リファラとは、他サイトからあなたのサイトへ来るためにクリックされたリンクのことです。</string>
+	<string name="stats_empty_top_posts_desc">ここでは最も表示回数の多い投稿・ページを表示しています。</string>
+	<string name="saving">保存中…</string>
+	<string name="media_empty_list">メディアなし</string>
+	<string name="need_help_signin_wpcom">ヘルプが必要ですか ?</string>
+	<string name="wpcom_signin_dialog_title">WordPress.com ログイン</string>
+	<string name="ssl_certificate_trust">信頼する</string>
+	<string name="ssl_certificate_details">証明書詳細</string>
+	<string name="ssl_certificate_do_not_trust">信頼しない</string>
+	<string name="ptr_tip_message">ヒント: 再読み込みするにはプルダウン</string>
+	<string name="load_settings">設定画面でユーザー名とパスワードを変更できます。</string>
+	<string name="jetpack_stats_switch_user">現在の WordPress.com アカウント (%s) はこのブログの統計情報へのアクセス権がありません。他のアカウントにログインしますか ?</string>
+	<string name="username_or_password_incorrect_selfhosted_hint">入力したユーザー名またはパスワードが間違っています。インストール型サイトをお持ちの場合は "%s" をタップして URL を追加してください。</string>
+	<string name="nux_help_description">ヘルプセンターでよくある質問をチェックしたり、フォーラムで新しい質問を尋ねてみてください。</string>
 	<string name="loading_posts">投稿を読込中...</string>
 	<string name="loading_pages">ページを読込中...</string>
 	<string name="forgot_password">パスワードを忘れた場合</string>
@@ -8,7 +56,6 @@
 	<string name="help_center">ヘルプセンター</string>
 	<string name="reader_label_reblog_empty_link">ブログのプライバシー設定を変更</string>
 	<string name="ssl_certificate_error">無効な SSL 証明書</string>
-	<string name="nux_help_description">よくある質問についてはヘルプセンターをご覧ください。または、フォーラムで新たに質問を投稿してください。</string>
 	<string name="reader_label_reblog_empty">この投稿をリブログできる WordPress.com がありません</string>
 	<string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
 	<string name="reader_empty_posts_liked">まだ投稿に「いいね」をつけていません</string>
@@ -18,7 +65,6 @@
 	<string name="comments_empty_list">コメントはありません</string>
 	<string name="could_not_remove_account">ブログを削除できませんでした</string>
 	<string name="gallery_error">メディア項目を読み込めませんでした。</string>
-	<string name="media_empty_list">メディアがありません</string>
 	<string name="media_empty_list_custom_date">ご指定の期間に一致するメディアがありません</string>
 	<string name="mnu_comment_edit">編集</string>
 	<string name="mnu_comment_unspam">スパムはありません</string>
@@ -29,7 +75,6 @@
 	<string name="theme_no_search_result_found">一致する結果が見つかりません</string>
 	<string name="theme_set_failed">テーマの設定に失敗しました</string>
 	<string name="adding_cat_failed">カテゴリーの追加に失敗しました</string>
-	<string name="adding_cat_failed_check">設定を確認して再度お試しください</string>
 	<string name="adding_cat_success">カテゴリーを追加しました</string>
 	<string name="auto_sharing_preference_reset">自動共有設定リセット</string>
 	<string name="blog_name_cant_be_used">そのサイトアドレスは使えません</string>
@@ -76,7 +121,6 @@
 	<string name="username_exists">このユーザー名はすでに使われています</string>
 	<string name="username_must_be_at_least_four_characters">ユーザー名は4文字以上にしてください</string>
 	<string name="username_not_allowed">使用できないユーザー名です</string>
-	<string name="username_password_required">送信前にすべての欄に記入してください</string>
 	<string name="username_required">ユーザー名を入力してください</string>
 	<string name="blog_name_exists">そのサイトはすでに存在しています</string>
 	<string name="blog_name_reserved">そのサイトは予約済みです</string>
@@ -144,7 +188,6 @@
 	<string name="horizontal_alignment">横配置</string>
 	<string name="http_authorization_required">認証が必要です</string>
 	<string name="http_credentials">HTTP ログイン情報 (オプション)</string>
-	<string name="jetpack_stats_switch_user">現在の WordPress.com アカウントはこのブログの統計情報へのアクセス権限がないようです。他のアカウントにログインしますか ?</string>
 	<string name="jetpack_stats_unauthorized">統計情報にアクセスできません</string>
 	<string name="learn_more">さらに詳しく</string>
 	<string name="link_enter_url_text">リンク​​テキスト (オプション)</string>
@@ -167,7 +210,6 @@
 	<string name="page_settings">ページ設定</string>
 	<string name="pages_empty_list">まだページがありません。作成してみませんか ?</string>
 	<string name="pending_review">レビュー待ち</string>
-	<string name="please_sign_in">もう一度ログインしてください。</string>
 	<string name="post_deleted">投稿を削除しました</string>
 	<string name="post_format">投稿フォーマット</string>
 	<string name="post_not_published">この投稿はまだ公開されていません</string>
@@ -178,8 +220,6 @@
 	<string name="privacy_policy">個人情報保護方針</string>
 	<string name="reader_share_link">リンクを共有</string>
 	<string name="reader_title_applog">アプリケーションログ</string>
-	<string name="reader_title_followed_tags">フォロー中のタグ</string>
-	<string name="reader_title_popular_tags">人気のタグ</string>
 	<string name="reader_toast_err_add_tag">このブログを追加できません</string>
 	<string name="reader_toast_err_reblog_requires_blog">ブログを選択</string>
 	<string name="reader_toast_err_remove_tag">このタグを削除できません</string>
@@ -230,13 +270,11 @@
 	<string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>
 	<string name="blog_name_must_include_letters">サイトアドレスには必ず英小文字 (a-z) を1つ以上含めてください</string>
 	<string name="email_cant_be_used_to_signup">こちらから送信するメールがブロックされる問題が発生しているため、そのメールアドレスは登録の際にお使いいただけません。他のメールプロバイダをご利用ください。</string>
-	<string name="refreshing_categories">カテゴリーを再読み込み中</string>
 	<string name="deleting_page">ページを削除中</string>
 	<string name="deleting_post">投稿を削除中</string>
 	<string name="share_link">リンクを共有</string>
 	<string name="share_url_post">投稿を共有</string>
 	<string name="share_url_page">ページを共有</string>
-	<string name="cat_adding_category">カテゴリーを追加中</string>
 	<string name="creating_your_site">サイトを作成しています</string>
 	<string name="creating_your_account">アカウントを作成しています</string>
 	<string name="reader_empty_posts_in_tag_updating">投稿を取得中…</string>
@@ -254,17 +292,13 @@
 	<string name="always_use_these_settings_to_share">常にこの設定を使用</string>
 	<string name="reader_likes_you_and_multi">あなたと%,d人が「いいね」をしています。</string>
 	<string name="reader_likes_multi">%,d 人が「いいね」しています。</string>
-	<string name="reader_label_new_posts_multi">%d件の新規投稿</string>
-	<string name="reader_label_new_posts_one">1件の新規投稿</string>
 	<string name="reader_empty_followed_blogs_description">タグアイコンをタップすればスタートできます。</string>
-	<string name="blogs_visibility">ブログ表示設定</string>
 	<string name="pick_photo">画像を選択</string>
 	<string name="pick_video">動画を選択</string>
 	<string name="select_date">日付を選択</string>
 	<string name="select_time">時間を選択</string>
 	<string name="validating_site_data">サイトのデータをチェックしています</string>
 	<string name="validating_user_data">ユーザーのデータをチェックしています</string>
-	<string name="reader_toast_err_no_connection">接続できません</string>
 	<string name="reader_toast_err_get_post">この投稿を読み込みできません</string>
 	<string name="add_self_hosted_blog">インストール型ブログを追加</string>
 	<string name="reader_likes_you_and_one">あなたと他1人が「いいね」をつけました</string>
@@ -273,7 +307,6 @@
 	<string name="nux_oops_not_selfhosted_blog">WordPress.com にログイン</string>
 	<string name="nux_tap_continue">次へ</string>
 	<string name="nux_welcome_create_account">アカウントを作成</string>
-	<string name="stats_empty_top_posts">まだ人気の投稿またはページがありません。この画面にはサイト内で最も頻繁に閲覧された投稿とページが表示されます。</string>
 	<string name="password_invalid">セキュリティ強度の高いパスワードが必要です。7文字以上の大文字・小文字・数字・記号を含むものにすることをおすすめします。</string>
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
@@ -281,7 +314,6 @@
 	<string name="empty_list_default">リストが空です</string>
 	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
-	<string name="reader_title_reblog">リブログ</string>
 	<string name="reader_menu_tags">タグ</string>
 	<string name="reader_btn_share">共有</string>
 	<string name="reader_btn_reblog">リブログ</string>
@@ -294,8 +326,6 @@
 	<string name="username_invalid">無効なユーザー名</string>
 	<string name="reader_share_subject">%s から共有</string>
 	<string name="reader_hint_comment_on_post">コメントを追加</string>
-	<string name="reader_hint_add_tag">タグを入力</string>
-	<string name="reader_hint_reblog_comment">コメント (オプション)</string>
 	<string name="jetpack_not_found">Jetpack プラグインが見つかりません</string>
 	<string name="reader_toast_err_view_image">画像を表示できません</string>
 	<string name="reader_empty_popular_tags">人気のタグはありません</string>
@@ -305,13 +335,11 @@
 	<string name="reader_toast_err_url_intent">%sを開けませんでした</string>
 	<string name="jetpack_message">統計情報を表示するには Jetpack プラグインが必要です。Jetpack をインストールしますか ?</string>
 	<string name="reader_timespan_now">今</string>
-	<string name="reader_title_userlist_default">人</string>
 	<string name="reader_likes_one">1人がいいねをつけました</string>
 	<string name="reader_toast_err_reblog_failed">この投稿をリブログできませんでした</string>
 	<string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
 	<string name="reader_toast_err_already_reblogged">この投稿はすでにリブログ済みです</string>
 	<string name="connecting_wpcom">WordPress.com に接続中</string>
-	<string name="reader_label_reblog_to">この投稿をリブログする: </string>
 	<string name="reader_toast_reblog_success">投稿をリブログしました</string>
 	<string name="limit_reached">上限に達しました。1分後にもう一度お試しいただけます。それより前にログインしようとすると、制限解除までの時間がさらに長くなります。エラーだと思われる場合はサポートにご連絡ください。</string>
 	<string name="stats_totals_followers_shares_header_includes_publicize">%sPublicize を含む</string>
@@ -407,15 +435,10 @@
 	<string name="theme_auth_error_title">テーマ情報の取得に失敗しました</string>
 	<string name="confirm_delete_multi_media">本当にこの項目を削除しますか ?</string>
 	<string name="media_no_video_message">動画をアップロードするには VideoPress アップグレードを追加してください。</string>
-	<string name="stats_empty_referrers">リファラが見つかりません。リファラとは、あなたのサイトへのリンクがクリックされたサイトの情報です。</string>
-	<string name="stats_empty_clicks">記録されたクリックがありません。「クリック」とは、あなたのサイト上で訪問者がクリックした外部リンクの情報です。</string>
-	<string name="stats_empty_search_engine_terms">検索キーワードが見つかりません。検索キーワードとは、ユーザーがあなたのサイトを訪問する際に検索エンジンで使ったキーワードのことです。</string>
 	<string name="custom_date">カスタム日付</string>
 	<string name="remote_changes">まだアップロードしていない投稿に変更を加えました。再読み込みしてローカルでの変更を上書きしますか ?</string>
 	<string name="upload">アップロード</string>
 	<string name="manage">管理</string>
-	<string name="discard">削除</string>
-	<string name="prompt_save_changes">変更を保存しますか ?</string>
 	<string name="notifications_turn_off">無効化</string>
 	<string name="notifications_turn_off_1hr">1時間無効化</string>
 	<string name="notifications_turn_off_8hr">8時間無効化</string>
@@ -459,10 +482,8 @@
 	<string name="ok">OK</string>
 	<string name="scaled_image">変更後の画像幅</string>
 	<string name="upload_scaled_image">アップロードしてサイズを変更した画像にリンク</string>
-	<string name="update_location">更新</string>
 	<string name="remove_location">削除</string>
 	<string name="scheduled">予約済み</string>
-	<string name="help_stats">ヘルプが必要ですか ?</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">WordPress for Android から投稿</string>
 	<string name="uploading">アップロード中</string>
@@ -489,9 +510,6 @@
 	<string name="draft">下書き</string>
 	<string name="post_private">非公開</string>
 	<string name="upload_full_size_image">アップロードしてフルサイズの画像にリンクする</string>
-	<string name="load_settings">設定を読み込みますか ?</string>
-	<string name="stats_password">パスワード</string>
-	<string name="stats_username">ユーザー名</string>
 	<string name="title">タイトル</string>
 	<string name="tags_separate_with_commas">タグ (コンマ区切り)</string>
 	<string name="categories">カテゴリー</string>
@@ -523,7 +541,6 @@
 	<string name="no">いいえ</string>
 	<string name="error">エラー</string>
 	<string name="category_refresh_error">カテゴリーの再読み込みエラー</string>
-	<string name="categories_refreshed">カテゴリーの再読み込みが完了しました</string>
 	<string-array name="alignment_array">
 		<item>なし</item>
 		<item>左</item>
