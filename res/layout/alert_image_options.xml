@@ -35,7 +35,7 @@
       android:text="@string/horizontal_alignment"
       android:textStyle="bold"
       android:textColor="@color/image_options_label" />
-    <Spinner 
+    <Spinner
         android:id="@+id/alignment_spinner"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -63,7 +63,6 @@
       android:layout_gravity="left"
       android:text="@string/featured"
       android:id="@+id/featuredImage"
-      android:textColor="@color/image_options_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone" />
@@ -71,7 +70,6 @@
       android:layout_gravity="left"
       android:text="@string/featured_in_post"
       android:id="@+id/featuredInPost"
-      android:textColor="@color/image_options_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone" />
