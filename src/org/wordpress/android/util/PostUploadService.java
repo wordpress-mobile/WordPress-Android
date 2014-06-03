@@ -29,6 +29,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
@@ -400,9 +401,10 @@ public class PostUploadService extends Service {
                         hPublic.put("key", "geo_public");
                     }
 
-                    if (post.getLatitude() > 0) {
-                        hLatitude.put("value", post.getLatitude());
-                        hLongitude.put("value", post.getLongitude());
+                    if (post.hasLocation()) {
+                        PostLocation location = post.getLocation();
+                        hLatitude.put("value", location.getLatitude());
+                        hLongitude.put("value", location.getLongitude());
                         hPublic.put("value", 1);
                     }
                 } catch (JSONException e) {
