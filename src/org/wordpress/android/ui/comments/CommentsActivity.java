@@ -168,6 +168,9 @@ public class CommentsActivity extends WPActionBarActivity
                             }
                             break;
                         case 0:
+                            if (!mDualPane) {
+                                getListFragment().setHighlightedCommentId(-1);
+                            }
                             mMenuDrawer.setDrawerIndicatorEnabled(true);
                             mSelectedCommentId = 0;
                             mSelectedReaderPost = null;
