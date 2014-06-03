@@ -194,7 +194,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
                 if (post.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(post.getContent().replaceAll("\uFFFC", ""), mActivity, post));
+                    mContentEditText.setText(
+                            WPHtml.fromHtml(
+                                post.getContent().replaceAll("\uFFFC", ""),
+                                mActivity,
+                                post,
+                                getMaximumThumbnailWidth()
+                            )
+                    );
                 else
                     mContentEditText.setText(post.getContent().replaceAll("\uFFFC", ""));
             }
@@ -484,7 +491,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             } else {
                 // add link tag around URLs, trac #64
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost()));
+                mContentEditText.setText(
+                        WPHtml.fromHtml(
+                                StringUtils.addPTags(text),
+                                getActivity(),
+                                mActivity.getPost(),
+                                getMaximumThumbnailWidth()
+                        )
+                );
             }
         }
 

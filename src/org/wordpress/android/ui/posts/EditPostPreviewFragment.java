@@ -42,7 +42,14 @@ public class EditPostPreviewFragment extends Fragment {
         if (post.isLocalDraft()) {
             mTextView.setVisibility(View.VISIBLE);
             mWebView.setVisibility(View.GONE);
-            mTextView.setText(WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post));
+            mTextView.setText(
+                    WPHtml.fromHtml(
+                            postContent.replaceAll("\uFFFC", ""),
+                            getActivity(),
+                            post,
+                            mTextView.getWidth()
+                    )
+            );
         } else {
             mTextView.setVisibility(View.GONE);
             mWebView.setVisibility(View.VISIBLE);
