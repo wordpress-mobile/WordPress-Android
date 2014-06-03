@@ -3,9 +3,6 @@ package org.wordpress.android.ui.media;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -13,6 +10,9 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -651,7 +651,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.media_multiselect, menu);
-        mMediaGridFragment.setPullToRefreshEnabled(false);
+        if (mMediaGridFragment != null) {
+            mMediaGridFragment.setPullToRefreshEnabled(false);
+        }
         return true;
     }
 
