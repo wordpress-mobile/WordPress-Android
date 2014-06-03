@@ -571,18 +571,15 @@ public class ReaderPost {
      */
     private transient String featuredImageForDisplay;
     public String getFeaturedImageForDisplay(int width, int height) {
-        if (featuredImageForDisplay==null) {
-            if (!hasFeaturedImage())
-                return "";
-            if (isPrivate) {
+        if (featuredImageForDisplay == null) {
+            if (!hasFeaturedImage()) {
+                featuredImageForDisplay = "";
+            } else if (isPrivate) {
                 // can't use photon on images in private posts since they require authentication, and must
                 // use https: in order for AuthToken to work when requesting them
                 featuredImageForDisplay = UrlUtils.makeHttps(featuredImage);
-            } else if (UrlUtils.isHttps(featuredImage)) {
-                // skip photon for https images since we can't authenticate them
-                featuredImageForDisplay = featuredImage;
             } else {
-                // not private or https, so set to correctly sized photon url
+                // not private, so set to correctly sized photon url
                 featuredImageForDisplay = PhotonUtils.getPhotonImageUrl(featuredImage, width, height);
             }
         }
