@@ -19,6 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.SimperiumUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -49,13 +50,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = SimperiumUtils.getNotesBucket();
-        mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
 
         ListView listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
-        setListAdapter(mNotesAdapter);
+        if (mBucket != null) {
+            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+            setListAdapter(mNotesAdapter);
+        } else {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+        }
 
         // Set empty text if no notifications
         TextView textview = (TextView) listView.getEmptyView();
@@ -78,21 +83,25 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         refreshNotes();
 
         // start listening to bucket change events
-        mBucket.addListener(this);
+        if (mBucket != null) {
+            mBucket.addListener(this);
+        }
     }
 
     @Override
     public void onPause() {
         // unregister the listener and close the cursor
-        mBucket.removeListener(this);
-
+        if (mBucket != null) {
+            mBucket.removeListener(this);
+        }
         super.onPause();
     }
 
     @Override
     public void onDestroyView() {
-        mNotesAdapter.closeCursor();
-
+        if (mNotesAdapter != null) {
+            mNotesAdapter.closeCursor();
+        }
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroyView();
     }
