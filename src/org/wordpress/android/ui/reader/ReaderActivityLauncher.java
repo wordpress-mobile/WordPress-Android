@@ -67,6 +67,7 @@ public class ReaderActivityLauncher {
 
     public static void showReaderPhotoViewer(Activity activity,
                                              String imageUrl,
+                                             boolean isPrivate,
                                              View source,
                                              int startX,
                                              int startY) {
@@ -76,6 +77,7 @@ public class ReaderActivityLauncher {
 
         Intent intent = new Intent(activity, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderPhotoViewerActivity.ARG_IMAGE_URL, imageUrl);
+        intent.putExtra(ReaderPhotoViewerActivity.ARG_IS_PRIVATE, isPrivate);
 
         // use built-in scale animation on jb+, fall back to our own animation on pre-jb
         if (source != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

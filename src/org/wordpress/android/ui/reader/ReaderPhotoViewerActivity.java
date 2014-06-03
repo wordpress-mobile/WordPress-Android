@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -23,7 +24,10 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ReaderPhotoViewerActivity extends Activity {
     static final String ARG_IMAGE_URL = "image_url";
+    static final String ARG_IS_PRIVATE = "is_private";
+
     private String mImageUrl;
+    private boolean mIsPrivate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +35,12 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(ARG_IMAGE_URL)) {
+        if (savedInstanceState != null) {
             mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
-        } else if (getIntent().hasExtra(ARG_IMAGE_URL)) {
+            mIsPrivate = savedInstanceState.getBoolean(ARG_IS_PRIVATE);
+        } else if (getIntent() != null) {
             mImageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
+            mIsPrivate = getIntent().getBooleanExtra(ARG_IS_PRIVATE, false);
         }
 
         loadImage(mImageUrl);
@@ -43,9 +49,8 @@ public class ReaderPhotoViewerActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mImageUrl != null) {
-            outState.putString(ARG_IMAGE_URL, mImageUrl);
-        }
+        outState.putString(ARG_IMAGE_URL, mImageUrl);
+        outState.putBoolean(ARG_IS_PRIVATE, mIsPrivate);
     }
 
     private void loadImage(String imageUrl) {
@@ -54,10 +59,14 @@ public class ReaderPhotoViewerActivity extends Activity {
             return;
         }
 
-        // use photon to enforce max size
-        Point pt = DisplayUtils.getDisplayPixelSize(this);
-        int maxWidth = Math.max(pt.x, pt.y);
-        imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
+        // use https: if this is an image from a private post, otherwise use photon to enforce max size
+        if (mIsPrivate) {
+            imageUrl = UrlUtils.makeHttps(imageUrl);
+        } else {
+            Point pt = DisplayUtils.getDisplayPixelSize(this);
+            int maxWidth = Math.max(pt.x, pt.y);
+            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
+        }
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
