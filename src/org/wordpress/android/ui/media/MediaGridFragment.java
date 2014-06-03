@@ -206,7 +206,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                 mPullToRefreshHelper.setEnabled(false);
             }
             mGridView.setMultiSelectModeActive(isInMultiSelectMode);
-
         }
 
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
