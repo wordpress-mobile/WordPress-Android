@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -268,13 +269,12 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                     mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
                 }
 
-                Double latitude = post.getLatitude();
-                Double longitude = post.getLongitude();
-
                 // if this post has location attached to it, look up the location address
-                if (latitude != 0.0) {
+                if (post.hasLocation()) {
+                    PostLocation location = post.getLocation();
+
                     setLocationStatus(LocationStatus.SEARCHING);
-                    new GetAddressTask().execute(latitude, longitude);
+                    new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
                 }
             }
             String tags = post.getKeywords();
@@ -488,14 +488,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             post.setChangedFromLocalDraftToPublished(true);
         }
 
-        double latitude = 0.0;
-        double longitude = 0.0;
+        PostLocation location = null;
         if (mCurrentLocation == null) {
-            latitude = post.getLatitude();
-            longitude = post.getLongitude();
+            location = post.getLocation();
         } else if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
-            latitude = mCurrentLocation.getLatitude();
-            longitude = mCurrentLocation.getLongitude();
+            location = new PostLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
 
         post.setPostExcerpt(excerpt);
@@ -504,8 +501,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         post.setKeywords(tags);
         post.setPostStatus(status);
         post.setPassword(password);
-        post.setLatitude(latitude);
-        post.setLongitude(longitude);
+        post.setLocation(location);
         post.setPostFormat(postFormat);
     }
 
@@ -667,10 +663,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             mCurrentLocation.setLatitude(0.0);
             mCurrentLocation.setLongitude(0.0);
         }
+
         if (mActivity.getPost() != null) {
-            mActivity.getPost().setLatitude(0.0);
-            mActivity.getPost().setLongitude(0.0);
+            mActivity.getPost().unsetLocation();
         }
+
         mLocationText.setText("");
         setLocationStatus(LocationStatus.NONE);
     }

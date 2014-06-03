@@ -45,14 +45,13 @@ public class Post implements Serializable {
     private boolean localDraft;
     private boolean uploaded;
     private boolean mChangedFromLocalDraftToPublished;
-    private double latitude;
-    private double longitude;
     private boolean isPage;
     private String pageParentId;
     private String pageParentTitle;
     private boolean isLocalChange;
     private String mediaPaths;
     private String quickPostType;
+    private PostLocation mPostLocation;
 
     public Post() {
     }
@@ -312,20 +311,34 @@ public class Post implements Serializable {
         this.mediaPaths = mediaPaths;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public boolean supportsLocation() {
+        // Right now, we only disable for pages.
+        return !isPage();
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public boolean hasLocation() {
+        return mPostLocation != null && mPostLocation.isValid();
     }
 
-    public double getLongitude() {
-        return longitude;
+    public PostLocation getLocation() {
+        return mPostLocation;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLocation(PostLocation location) {
+        mPostLocation = location;
+    }
+
+    public void unsetLocation() {
+        mPostLocation = null;
+    }
+
+    public void setLocation(double latitude, double longitude) {
+        try {
+            mPostLocation = new PostLocation(latitude, longitude);
+        } catch (IllegalArgumentException e) {
+            mPostLocation = null;
+            AppLog.e(T.POSTS, e);
+        }
     }
 
     public boolean isPage() {
@@ -410,8 +423,7 @@ public class Post implements Serializable {
                                       StringUtils.equals(password, otherPost.password) &&
                                       StringUtils.equals(postFormat, otherPost.postFormat) &&
                                       this.dateCreatedGmt == otherPost.dateCreatedGmt &&
-                                      this.latitude == otherPost.latitude &&
-                                      this.longitude == otherPost.longitude);
+                                      this.mPostLocation.equals(otherPost.getLocation()));
     }
 
     @Override
