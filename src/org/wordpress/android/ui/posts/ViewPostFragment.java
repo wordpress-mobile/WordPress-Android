@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -41,7 +42,9 @@ public class ViewPostFragment extends Fragment {
 
     private ViewGroup mLayoutCommentBox;
     private EditText mEditComment;
-    private ImageButton mAddCommentButton;
+    private ImageButton mAddCommentButton, mShareUrlButton, mViewPostButton;
+    private TextView mTitleTextView, mContentTextView;
+    private boolean mShouldLoadPost = true;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -53,8 +56,11 @@ public class ViewPostFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        if (WordPress.currentPost != null)
+        // Don't load the post until we know the width of mContentTextView
+        // GlobalLayoutListener on mContentTextView will load the post once it gets laid out
+        if (WordPress.currentPost != null && !mContentTextView.isLayoutRequested()) {
             loadPost(WordPress.currentPost);
+        }
 
         parentActivity = (PostsActivity) getActivity();
     }
@@ -63,10 +69,23 @@ public class ViewPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.viewpost, container, false);
 
+        mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
+        mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
+        mShareUrlButton = (ImageButton) v.findViewById(R.id.sharePostLink);
+        mViewPostButton = (ImageButton) v.findViewById(R.id.viewPost);
+
         // comment views
         mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
         mEditComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
+
+        mContentTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                loadPost(WordPress.currentPost);
+                mContentTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+        });
 
         // button listeners here
         ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
@@ -82,8 +101,8 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        ImageButton shareURLButton = (ImageButton) v.findViewById(R.id.sharePostLink);
-        shareURLButton.setOnClickListener(new ImageButton.OnClickListener() {
+
+        mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!parentActivity.isRefreshing()) {
                     onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_SHARE, WordPress.currentPost);
@@ -100,8 +119,7 @@ public class ViewPostFragment extends Fragment {
             }
         });
 
-        ImageButton viewPostButton = (ImageButton) v.findViewById(R.id.viewPost);
-        viewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
+        mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 onDetailPostActionListener.onDetailPostAction(PostsActivity.POST_VIEW, WordPress.currentPost);
                 if (!parentActivity.isRefreshing()) {
@@ -162,11 +180,6 @@ public class ViewPostFragment extends Fragment {
         new Thread() {
             @Override
             public void run() {
-                final TextView txtTitle = (TextView) getView().findViewById(R.id.postTitle);
-                final TextView txtContent = (TextView) getView().findViewById(R.id.viewPostTextView);
-                final ImageButton btnShareUrl = (ImageButton) getView().findViewById(R.id.sharePostLink);
-                final ImageButton btnViewPost = (ImageButton) getView().findViewById(R.id.viewPost);
-                final ImageButton btnAddComment = (ImageButton) getView().findViewById(R.id.addComment);
 
                 final String title = (TextUtils.isEmpty(post.getTitle())
                                         ? "(" + getResources().getText(R.string.untitled) + ")"
@@ -177,7 +190,7 @@ public class ViewPostFragment extends Fragment {
                 final Spanned draftContent;
                 final String htmlContent;
                 if (post.isLocalDraft()) {
-                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post);
+                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post, mContentTextView.getWidth());
                     htmlContent = null;
                 } else {
                     draftContent = null;
@@ -195,21 +208,21 @@ public class ViewPostFragment extends Fragment {
                         if (!hasActivity())
                             return;
 
-                        txtTitle.setText(title);
+                        mTitleTextView.setText(title);
 
                         if (post.isLocalDraft()) {
-                            txtContent.setVisibility(View.VISIBLE);
+                            mContentTextView.setVisibility(View.VISIBLE);
                             webView.setVisibility(View.GONE);
-                            btnShareUrl.setVisibility(View.GONE);
-                            btnViewPost.setVisibility(View.GONE);
-                            btnAddComment.setVisibility(View.GONE);
-                            txtContent.setText(draftContent);
+                            mShareUrlButton.setVisibility(View.GONE);
+                            mViewPostButton.setVisibility(View.GONE);
+                            mAddCommentButton.setVisibility(View.GONE);
+                            mContentTextView.setText(draftContent);
                         } else {
-                            txtContent.setVisibility(View.GONE);
+                            mContentTextView.setVisibility(View.GONE);
                             webView.setVisibility(View.VISIBLE);
-                            btnShareUrl.setVisibility(View.VISIBLE);
-                            btnViewPost.setVisibility(View.VISIBLE);
-                            btnAddComment.setVisibility(post.isAllowComments() ? View.VISIBLE : View.GONE);
+                            mShareUrlButton.setVisibility(View.VISIBLE);
+                            mViewPostButton.setVisibility(View.VISIBLE);
+                            mAddCommentButton.setVisibility(post.isAllowComments() ? View.VISIBLE : View.GONE);
                             webView.loadDataWithBaseURL("file:///android_asset/",
                                                         htmlContent,
                                                         "text/html",
