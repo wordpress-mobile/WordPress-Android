@@ -61,6 +61,9 @@ public class ImageHelper {
         Uri curStream;
         int orientation = 0;
 
+        // Remove file protocol
+        filePath = filePath.replace("file://", "");
+
         if (!filePath.contains("content://"))
             curStream = Uri.parse("content://media" + filePath);
         else
@@ -392,7 +395,7 @@ public class ImageHelper {
                                                 int maxWidth,
                                                 String fileExtension,
                                                 int rotation) {
-        if (context == null || imageUri == null)
+        if (context == null || imageUri == null || maxWidth <= 0)
             return null;
 
         String filePath = null;
