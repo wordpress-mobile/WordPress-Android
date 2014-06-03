@@ -373,7 +373,7 @@ public class PostUploadService extends Service {
             contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
             contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
-            if (!post.isPage()) {
+            if (post.supportsLocation()) {
                 JSONObject remoteGeoLatitude = post.getCustomField("geo_latitude");
                 JSONObject remoteGeoLongitude = post.getCustomField("geo_longitude");
                 JSONObject remoteGeoPublic = post.getCustomField("geo_public");

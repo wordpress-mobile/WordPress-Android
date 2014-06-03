@@ -491,7 +491,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         PostLocation location = null;
         if (mCurrentLocation == null) {
             location = post.getLocation();
-        } else if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
+        } else if (WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
             location = new PostLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
         }
 
@@ -613,7 +613,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
+        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
             rootView.findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
             Button viewMap = (Button) rootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) rootView.findViewById(R.id.updateLocation);
