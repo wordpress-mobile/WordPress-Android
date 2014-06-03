@@ -344,18 +344,25 @@ public class ImageHelper {
             byte[] bytes = createThumbnailFromUri(context, curUri, targetWidth, null, rotation);
 
             if (bytes != null && bytes.length > 0) {
-                return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            } else {
-                return null;
+                try {
+                    Bitmap resizedBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    if (resizedBitmap != null) {
+                        return getScaledBitmapAtLongestSide(resizedBitmap, targetWidth);
+                    }
+                } catch (OutOfMemoryError e) {
+                    return null;
+                }
             }
         }
+
+        return null;
     }
 
     /*
      Resize a bitmap to the targetSize on its longest side.
      */
     public static Bitmap getScaledBitmapAtLongestSide(Bitmap bitmap, int targetSize) {
-        if (bitmap.getWidth() < targetSize && bitmap.getHeight() < targetSize) {
+        if (bitmap.getWidth() <= targetSize && bitmap.getHeight() <= targetSize) {
             // Do not resize.
             return bitmap;
         }
