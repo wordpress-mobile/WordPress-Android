@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
@@ -881,23 +881,17 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
 
                 Bitmap resizedBitmap;
-                if (downloadedBitmap.getWidth() <= getMaximumThumbnailWidth()) {
-                    //bitmap is already small in size, do not resize.
-                    resizedBitmap = downloadedBitmap;
-                } else {
-                    //resize the downloaded bitmap
-                    int targetWidth = getMaximumThumbnailWidth();
-                    try {
-                        ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
-                    } catch (OutOfMemoryError er) {
-                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
-                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
-                        CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
-                                ((float) targetWidth) / downloadedBitmap.getWidth());
-                        CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
-                        return;
-                    }
+                int maxWidth = getMaximumThumbnailWidth();
+                //resize the downloaded bitmap
+                try {
+                    resizedBitmap = ImageHelper.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
+                } catch (OutOfMemoryError er) {
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                    CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                            ((float) maxWidth) / downloadedBitmap.getWidth());
+                    CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
+                    return;
                 }
 
                 if (resizedBitmap == null) return;
@@ -1016,13 +1010,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            ImageHelper ih = new ImageHelper();
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath(),
+            thumbnailBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(getActivity(), imageUri.getEncodedPath(),
                     getMaximumThumbnailWidth());
             if (thumbnailBitmap == null) {
                 return false;
             }
-            mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            mediaTitle = ImageHelper.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
@@ -1098,6 +1091,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             int screenWidth = size.x;
             int screenHeight = size.y;
             mMaximumThumbnailWidth = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+            // 48dp of padding on each side so you can still place the cursor next to the image.
+            int padding = DisplayUtils.dpToPx(getActivity(), 48) * 2;
+            mMaximumThumbnailWidth -= padding;
         }
 
         return mMaximumThumbnailWidth;

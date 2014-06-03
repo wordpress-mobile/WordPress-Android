@@ -6,12 +6,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Point;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -20,9 +18,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
-import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -38,11 +33,11 @@ public class ImageHelper {
         options.inJustDecodeBounds = true;
 
         if (uri.toString().contains("content:")) {
-            String[] projection = new String[] { Images.Media._ID, Images.Media.DATA };
+            String[] projection = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
             Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
             if (cur != null) {
                 if (cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     path = cur.getString(dataColumn);
                 }
                 cur.close();
@@ -62,7 +57,7 @@ public class ImageHelper {
     }
 
     // Read the orientation from ContentResolver. If it fails, read from EXIF.
-    public int getImageOrientation(Context ctx, String filePath) {
+    public static int getImageOrientation(Context ctx, String filePath) {
         Uri curStream;
         int orientation = 0;
 
@@ -72,15 +67,15 @@ public class ImageHelper {
             curStream = Uri.parse(filePath);
 
         try {
-            Cursor cur = ctx.getContentResolver().query(curStream, new String[]{Images.Media.ORIENTATION}, null, null, null);
+            Cursor cur = ctx.getContentResolver().query(curStream, new String[]{MediaStore.Images.Media.ORIENTATION}, null, null, null);
             if (cur != null) {
                 if (cur.moveToFirst()) {
-                    orientation = cur.getInt(cur.getColumnIndex(Images.Media.ORIENTATION));
+                    orientation = cur.getInt(cur.getColumnIndex(MediaStore.Images.Media.ORIENTATION));
                 }
                 cur.close();
             }
         } catch (Exception errReadingContentResolver) {
-            AppLog.e(T.UTILS, errReadingContentResolver);
+            AppLog.e(AppLog.T.UTILS, errReadingContentResolver);
         }
 
         if (orientation == 0) {
@@ -91,12 +86,12 @@ public class ImageHelper {
     }
 
 
-    public int getExifOrientation(String path) {
+    public static int getExifOrientation(String path) {
         ExifInterface exif;
         try {
             exif = new ExifInterface(path);
         } catch (IOException e) {
-            AppLog.e(T.UTILS, e);
+            AppLog.e(AppLog.T.UTILS, e);
             return 0;
         }
 
@@ -125,7 +120,7 @@ public class ImageHelper {
             HttpResponse response = client.execute(getRequest);
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != HttpStatus.SC_OK) {
-                AppLog.w(T.UTILS, "ImageDownloader Error " + statusCode
+                AppLog.w(AppLog.T.UTILS, "ImageDownloader Error " + statusCode
                         + " while retrieving bitmap from " + url);
                 return null;
             }
@@ -147,7 +142,7 @@ public class ImageHelper {
             // Could provide a more explicit error message for IOException or
             // IllegalStateException
             getRequest.abort();
-            AppLog.w(T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
+            AppLog.w(AppLog.T.UTILS, "ImageDownloader Error while retrieving bitmap from " + url);
         }
         return null;
     }
@@ -229,21 +224,21 @@ public class ImageHelper {
                 try {
                     Bitmap bmp = BitmapFactory.decodeStream(new FileInputStream(f), null, bfo);
                     if (bmp == null) {
-                        AppLog.e(T.UTILS, "can't decode bitmap: " + f.getPath());
+                        AppLog.e(AppLog.T.UTILS, "can't decode bitmap: " + f.getPath());
                         return null;
                     }
                     bitmapWidth = bmp.getWidth();
                     bitmapHeight = bmp.getHeight();
                     return Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), mat, true);
                 } catch (OutOfMemoryError oom) {
-                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_ANGLE, angle);
-                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, bitmapWidth);
-                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, bitmapHeight);
-                    CrashlyticsUtils.logException(oom, ExceptionType.SPECIFIC, T.UTILS);
-                    AppLog.e(T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
+                    CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_ANGLE, angle);
+                    CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_WIDTH, bitmapWidth);
+                    CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_HEIGHT, bitmapHeight);
+                    CrashlyticsUtils.logException(oom, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
+                    AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + oom);
                 }
             } catch (IOException e) {
-                AppLog.e(T.UTILS, "Error in setting image", e);
+                AppLog.e(AppLog.T.UTILS, "Error in setting image", e);
             }
 
             return null;
@@ -264,7 +259,7 @@ public class ImageHelper {
     }
 
 
-    public  String getTitleForWPImageSpan(Context ctx, String filePath) {
+    public static String getTitleForWPImageSpan(Context ctx, String filePath) {
         if (filePath == null)
             return null;
 
@@ -279,20 +274,20 @@ public class ImageHelper {
         if (filePath.contains("video")) {
             return "Video";
         } else {
-            String[] projection = new String[] { Images.Thumbnails.DATA };
+            String[] projection = new String[] { MediaStore.Images.Thumbnails.DATA };
 
             Cursor cur;
             try {
                 cur = ctx.getContentResolver().query(curStream, projection, null, null, null);
             } catch (Exception e1) {
-                AppLog.e(T.UTILS, e1);
+                AppLog.e(AppLog.T.UTILS, e1);
                 return null;
             }
             File jpeg;
             if (cur != null) {
                 String thumbData = "";
                 if (cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     thumbData = cur.getString(dataColumn);
                 }
                 cur.close();
@@ -309,35 +304,15 @@ public class ImageHelper {
         }
     }
 
-    private int getThumbnailWidth(Context context, int targetWidth) {
-        final int DEFAULT_WIDTH = 600;
-        int width;
-        if (targetWidth != 0) {
-            width = targetWidth;
-        } else {
-            // Get the display width
-            if (context == null) {
-                return DEFAULT_WIDTH;
-            }
-            Point size = DisplayUtils.getDisplayPixelSize(context);
-            width = size.x;
-            if (size.y < width) {
-                width = size.y;
-            }
-        }
-        return width;
-    }
-
     /**
      * Resizes an image to be placed in the Post Content Editor
      *
      * @return resized bitmap
      */
-    public Bitmap getThumbnailForWPImageSpan(Context context, String filePath, int targetWidth) {
+    public static Bitmap getWPImageSpanThumbnailFromFilePath(Context context, String filePath, int targetWidth) {
         if (filePath == null || context == null) {
             return null;
         }
-        int width = getThumbnailWidth(context, targetWidth);
 
         Uri curUri;
         if (!filePath.contains("content://")) {
@@ -347,6 +322,7 @@ public class ImageHelper {
         }
 
         if (filePath.contains("video")) {
+            // Load the video thumbnail from the MediaStore
             int videoId = 0;
             try {
                 videoId = Integer.parseInt(curUri.getLastPathSegment());
@@ -355,20 +331,18 @@ public class ImageHelper {
             ContentResolver crThumb = context.getContentResolver();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 1;
-            return MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
+            Bitmap videoThumbnail = MediaStore.Video.Thumbnails.getThumbnail(crThumb, videoId, MediaStore.Video.Thumbnails.MINI_KIND,
                     options);
+            if (videoThumbnail != null) {
+                return getScaledBitmapAtLongestSide(videoThumbnail, targetWidth);
+            } else {
+                return null;
+            }
         } else {
-            int[] dimensions = getImageSize(curUri, context);
-            float conversionFactor = 0.60f;
-            if (dimensions[0] > dimensions[1]) //width > height
-                conversionFactor = 0.80f;
-            int resizedWidth = (int) (width * conversionFactor);
-
-            // create resized picture
+            // Create resized bitmap
             int rotation = getImageOrientation(context, filePath);
-            byte[] bytes = createThumbnailFromUri(context, curUri, resizedWidth, null, rotation);
+            byte[] bytes = createThumbnailFromUri(context, curUri, targetWidth, null, rotation);
 
-            // upload resized picture
             if (bytes != null && bytes.length > 0) {
                 return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             } else {
@@ -377,36 +351,50 @@ public class ImageHelper {
         }
     }
 
-    public Bitmap getThumbnailForWPImageSpan(Bitmap largeBitmap, int resizeWidth) {
-        if (largeBitmap.getWidth() < resizeWidth)
-            return largeBitmap; //Do not resize.
+    /*
+     Resize a bitmap to the targetSize on its longest side.
+     */
+    public static Bitmap getScaledBitmapAtLongestSide(Bitmap bitmap, int targetSize) {
+        if (bitmap.getWidth() < targetSize && bitmap.getHeight() < targetSize) {
+            // Do not resize.
+            return bitmap;
+        }
 
-        float percentage = (float) resizeWidth / largeBitmap.getWidth();
-        float proportionateHeight = largeBitmap.getHeight() * percentage;
-        int resizeHeight = (int) Math.rint(proportionateHeight);
+        int targetWidth, targetHeight;
+        if (bitmap.getHeight() > bitmap.getWidth()) {
+            // Resize portrait bitmap
+            targetHeight = targetSize;
+            float percentage = (float) targetSize / bitmap.getHeight();
+            targetWidth = (int)(bitmap.getWidth() * percentage);
+        } else {
+            // Resize landscape or square image
+            targetWidth = targetSize;
+            float percentage = (float) targetSize / bitmap.getWidth();
+            targetHeight = (int)(bitmap.getHeight() * percentage);
+        }
 
-        return Bitmap.createScaledBitmap(largeBitmap, resizeWidth, resizeHeight, true);
+        return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
     }
 
     /**
      * nbradbury - 21-Feb-2014 - similar to createThumbnail but more efficient since it doesn't
      * require passing the full-size image as an array of bytes[]
      */
-    public byte[] createThumbnailFromUri(Context context,
-            Uri imageUri,
-            int maxWidth,
-            String fileExtension,
-            int rotation) {
+    public static byte[] createThumbnailFromUri(Context context,
+                                                Uri imageUri,
+                                                int maxWidth,
+                                                String fileExtension,
+                                                int rotation) {
         if (context == null || imageUri == null)
             return null;
 
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
-            String[] projection = new String[] { Images.Media.DATA };
+            String[] projection = new String[] { MediaStore.Images.Media.DATA };
             Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
             if (cur != null) {
                 if (cur.moveToFirst()) {
-                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    int dataColumn = cur.getColumnIndex(MediaStore.Images.Media.DATA);
                     filePath = cur.getString(dataColumn);
                 }
                 cur.close();
@@ -426,7 +414,7 @@ public class ImageHelper {
         try {
             BitmapFactory.decodeFile(filePath, optBounds);
         } catch (OutOfMemoryError e) {
-            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
+            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
             return null;
         }
 
@@ -446,8 +434,8 @@ public class ImageHelper {
         try {
             bmpResized = BitmapFactory.decodeFile(filePath, optActual);
         } catch (OutOfMemoryError e) {
-            CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE, scale);
-            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
+            CrashlyticsUtils.setFloat(CrashlyticsUtils.ExtraKey.IMAGE_RESIZE_SCALE, scale);
+            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
             return null;
         }
 
@@ -487,11 +475,11 @@ public class ImageHelper {
             bmpRotated = Bitmap.createBitmap(bmpResized, 0, 0, bmpResized.getWidth(), bmpResized.getHeight(), matrix,
                     true);
         } catch (OutOfMemoryError e) {
-            CrashlyticsUtils.setInt(ExtraKey.IMAGE_ANGLE, rotation);
-            CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, bmpResized.getWidth());
-            CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, bmpResized.getHeight());
-            CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE, scaleBy);
-            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC, T.UTILS);
+            CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_ANGLE, rotation);
+            CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_WIDTH, bmpResized.getWidth());
+            CrashlyticsUtils.setInt(CrashlyticsUtils.ExtraKey.IMAGE_HEIGHT, bmpResized.getHeight());
+            CrashlyticsUtils.setFloat(CrashlyticsUtils.ExtraKey.IMAGE_RESIZE_SCALE, scaleBy);
+            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
             return null;
         }
         bmpRotated.compress(fmt, 100, stream);

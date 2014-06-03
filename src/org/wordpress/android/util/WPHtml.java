@@ -834,9 +834,8 @@ class HtmlToSpannedConverter implements ContentHandler {
     private static void startImg(SpannableStringBuilder text,
             Attributes attributes, WPHtml.ImageGetter img) {
         String src = attributes.getValue("android-uri");
-        ImageHelper ih = new ImageHelper();
 
-        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, src, 0);
+        Bitmap resizedBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(ctx, src, 0);
         if (resizedBitmap == null && src != null) {
             if (src.contains("video")) {
                 resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
