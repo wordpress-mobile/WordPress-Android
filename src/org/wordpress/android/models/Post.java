@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -137,6 +138,26 @@ public class Post implements Serializable {
             AppLog.e(T.POSTS, e);
         }
         return jArray;
+    }
+
+    public JSONObject getCustomField(String key) {
+        JSONArray customFields = getCustomFields();
+        if (customFields == null) {
+            return null;
+        }
+
+        for (int i = 0; i < customFields.length(); i++) {
+            try {
+                JSONObject jsonObject = new JSONObject(customFields.getString(i));
+                String curentKey = jsonObject.getString("key");
+                if (key.equals(curentKey)) {
+                    return jsonObject;
+                }
+            } catch (JSONException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+        return null;
     }
 
     public void setCustomFields(JSONArray customFields) {
