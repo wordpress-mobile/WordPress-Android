@@ -172,9 +172,6 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
 
         });
 
-        restoreState(savedInstanceState);
-        setupSpinnerAdapter();
-
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(getActivity(),
                 (PullToRefreshLayout) view.findViewById(R.id.ptr_layout),
@@ -188,6 +185,9 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
                         refreshMediaFromServer(0, false);
                     }
                 }, LinearLayout.class);
+
+        restoreState(savedInstanceState);
+        setupSpinnerAdapter();
 
         return view;
     }
@@ -203,8 +203,10 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
             if (isInMultiSelectMode) {
                 mListener.onMultiSelectChange(mCheckedItems.size());
                 onMultiSelectChange(mCheckedItems.size());
+                mPullToRefreshHelper.setEnabled(false);
             }
             mGridView.setMultiSelectModeActive(isInMultiSelectMode);
+
         }
 
         mGridView.setSelection(savedInstanceState.getInt(BUNDLE_SCROLL_POSITION, 0));
