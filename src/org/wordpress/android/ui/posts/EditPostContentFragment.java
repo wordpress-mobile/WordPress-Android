@@ -21,6 +21,7 @@ import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
@@ -193,17 +194,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         Post post = mActivity.getPost();
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
-                if (post.isLocalDraft())
-                    mContentEditText.setText(
-                            WPHtml.fromHtml(
-                                post.getContent().replaceAll("\uFFFC", ""),
-                                mActivity,
-                                post,
-                                getMaximumThumbnailWidth()
-                            )
-                    );
-                else
+                if (post.isLocalDraft()) {
+                    // Load local post content in the background, as it may take time to generate images
+                    new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            post.getContent().replaceAll("\uFFFC", ""));
+                }
+                else {
                     mContentEditText.setText(post.getContent().replaceAll("\uFFFC", ""));
+                }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
                 mTitleEditText.setText(post.getTitle());
@@ -1577,4 +1575,32 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         width = Math.min(max, Math.max(width, min));
         return width;
     }
+
+    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
+
+        @Override
+        protected Spanned doInBackground(String... params) {
+            if (params.length < 1 || mActivity == null || mActivity.getPost() == null) {
+                return null;
+            }
+
+            String content = StringUtils.notNullStr(params[0]);
+
+            return WPHtml.fromHtml(
+                    content,
+                    mActivity,
+                    mActivity.getPost(),
+                    getMaximumThumbnailWidth()
+            );
+        }
+
+        @Override
+        protected void onPostExecute(Spanned spanned) {
+            if (mActivity != null && mContentEditText != null && spanned != null) {
+                mContentEditText.setText(spanned);
+            }
+        }
+    }
+
+
 }

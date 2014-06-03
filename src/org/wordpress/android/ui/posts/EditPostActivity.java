@@ -162,8 +162,10 @@ public class EditPostActivity extends FragmentActivity {
                 } else if (position == PAGE_PREVIEW) {
                     setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
                     savePost(true);
-                    if (mEditPostPreviewFragment != null)
-                        mEditPostPreviewFragment.loadPost(mPost);
+                    if (mEditPostPreviewFragment != null) {
+                        mEditPostPreviewFragment.loadPost();
+                    }
+
                 }
             }
         });

@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -58,7 +58,7 @@ public class ViewPostFragment extends Fragment {
 
         // Don't load the post until we know the width of mContentTextView
         // GlobalLayoutListener on mContentTextView will load the post once it gets laid out
-        if (WordPress.currentPost != null && !mContentTextView.isLayoutRequested()) {
+        if (WordPress.currentPost != null && !getView().isLayoutRequested()) {
             loadPost(WordPress.currentPost);
         }
 
@@ -67,7 +67,14 @@ public class ViewPostFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.viewpost, container, false);
+        final View v = inflater.inflate(R.layout.viewpost, container, false);
+        v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                loadPost(WordPress.currentPost);
+                v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            }
+        });
 
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
@@ -78,14 +85,6 @@ public class ViewPostFragment extends Fragment {
         mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
         mEditComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         mEditComment.setHint(R.string.reader_hint_comment_on_post);
-
-        mContentTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                loadPost(WordPress.currentPost);
-                mContentTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-            }
-        });
 
         // button listeners here
         ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
@@ -190,7 +189,10 @@ public class ViewPostFragment extends Fragment {
                 final Spanned draftContent;
                 final String htmlContent;
                 if (post.isLocalDraft()) {
-                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post, mContentTextView.getWidth());
+                    View view = getView();
+                    int maxWidth = Math.min(view.getWidth(), view.getHeight());
+
+                    draftContent = WPHtml.fromHtml(postContent.replaceAll("\uFFFC", ""), getActivity(), post, maxWidth);
                     htmlContent = null;
                 } else {
                     draftContent = null;
