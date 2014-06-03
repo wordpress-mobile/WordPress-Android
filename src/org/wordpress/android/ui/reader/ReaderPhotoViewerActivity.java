@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -55,12 +54,10 @@ public class ReaderPhotoViewerActivity extends Activity {
             return;
         }
 
-        // use photon to enforce max size unless this is https
-        if (!UrlUtils.isHttps(imageUrl)) {
-            Point pt = DisplayUtils.getDisplayPixelSize(this);
-            int maxWidth = Math.max(pt.x, pt.y);
-            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
-        }
+        // use photon to enforce max size
+        Point pt = DisplayUtils.getDisplayPixelSize(this);
+        int maxWidth = Math.max(pt.x, pt.y);
+        imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
