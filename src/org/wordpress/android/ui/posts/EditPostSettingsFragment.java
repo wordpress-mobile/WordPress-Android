@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -108,7 +109,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
         mExcerptEditText = (EditText) rootView.findViewById(R.id.postExcerpt);
         mPasswordEditText = (EditText) rootView.findViewById(R.id.post_password);
-        mLocationText = (TextView) rootView.findViewById(R.id.locationText);
         Button mPubDateButton = (Button) rootView.findViewById(R.id.pubDateButton);
         mPubDateText = (TextView) rootView.findViewById(R.id.pubDate);
         mStatusSpinner = (Spinner) rootView.findViewById(R.id.status);
@@ -133,13 +133,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         ((TextView) rootView.findViewById(R.id.statusLabel)).setText(getResources().getString(R.string.status).toUpperCase());
         ((TextView) rootView.findViewById(R.id.postFormatLabel)).setText(getResources().getString(R.string.post_format).toUpperCase());
         ((TextView) rootView.findViewById(R.id.pubDateLabel)).setText(getResources().getString(R.string.publish_date).toUpperCase());
-        ((TextView) rootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
 
         if (mActivity.getPost().isPage()) { // remove post specific views
             mExcerptEditText.setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionTags)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.sectionCategories)).setVisibility(View.GONE);
-            (rootView.findViewById(R.id.sectionLocation)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormatLabel)).setVisibility(View.GONE);
             (rootView.findViewById(R.id.postFormat)).setVisibility(View.GONE);
         } else {
@@ -589,6 +587,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
+
         boolean hasLocationProvider = false;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
@@ -602,10 +601,15 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
-            rootView.findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
-            Button viewMap = (Button) rootView.findViewById(R.id.viewMap);
-            Button updateLocation = (Button) rootView.findViewById(R.id.updateLocation);
-            Button removeLocation = (Button) rootView.findViewById(R.id.removeLocation);
+            View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
+
+            ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
+
+            mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
+
+            Button viewMap = (Button) locationRootView.findViewById(R.id.viewMap);
+            Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
+            Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
             updateLocation.setOnClickListener(this);
             removeLocation.setOnClickListener(this);
             viewMap.setOnClickListener(this);
