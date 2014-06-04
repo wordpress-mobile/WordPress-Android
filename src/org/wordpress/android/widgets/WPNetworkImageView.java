@@ -185,9 +185,6 @@ public class WPNetworkImageView extends ImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        if (mImageType == ImageType.PHOTO || mImageType == ImageType.PHOTO_FULL) {
-            AppLog.i(AppLog.T.READER, mUrl);
-        }
         ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
                 new ImageLoader.ImageListener() {
                     @Override

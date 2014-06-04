@@ -146,9 +146,8 @@ public class ReaderPost {
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
-        // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
-        // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
-        // added to the request)
+        // the single-post sites/$site/posts/$post endpoint returns all site metadata
+        // under meta/data/site (assuming ?meta=site was added to the request)
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         if (jsonSite != null) {
             post.blogId = jsonSite.optInt("ID");
