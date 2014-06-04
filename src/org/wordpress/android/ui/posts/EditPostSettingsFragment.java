@@ -595,19 +595,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     private void initLocation(ViewGroup rootView) {
         Post post = mActivity.getPost();
 
-        boolean hasLocationProvider = false;
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        if (providers != null) {
-            for (String providerName : providers) {
-                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                    hasLocationProvider = true;
-                }
-            }
-        }
-
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && post.supportsLocation()) {
+        if (hasLocationProvider() && WordPress.getCurrentBlog().isLocation() && post.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
@@ -646,6 +635,20 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                 new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
             }
         }
+    }
+
+    private boolean hasLocationProvider() {
+        boolean hasLocationProvider = false;
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        if (providers != null) {
+            for (String providerName : providers) {
+                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+                    hasLocationProvider = true;
+                }
+            }
+        }
+        return hasLocationProvider;
     }
 
     private void showLocationSearch() {
