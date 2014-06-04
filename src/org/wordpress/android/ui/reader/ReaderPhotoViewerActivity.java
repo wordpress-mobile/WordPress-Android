@@ -12,7 +12,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -59,12 +58,11 @@ public class ReaderPhotoViewerActivity extends Activity {
             return;
         }
 
-        // use https: if this is an image from a private post, otherwise use photon to enforce max size
+        Point pt = DisplayUtils.getDisplayPixelSize(this);
+        int maxWidth = Math.max(pt.x, pt.y);
         if (mIsPrivate) {
-            imageUrl = UrlUtils.makeHttps(imageUrl);
+            imageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, maxWidth, 0);
         } else {
-            Point pt = DisplayUtils.getDisplayPixelSize(this);
-            int maxWidth = Math.max(pt.x, pt.y);
             imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
         }
 
