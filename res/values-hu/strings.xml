@@ -64,7 +64,6 @@
 	<string name="stats_video_summary_label_bandwidth">Szávszélesség</string>
 	<string name="stats_comments_summary_label_most_commented">A legtöbb hozzászólásos bejegyzés</string>
 	<string name="stats_comments_summary_footer">* a legutóbbi 1000 hozzászólás alapján</string>
-	<string name="stats_empty_referrers">Nincsenek hivatkozók. A hivatkozó egy másik oldalról a sajátunkra érkező kattintás</string>
 	<string name="passcode_manage">Azonosító kód kezelése</string>
 	<string name="passcode_enter_passcode">Azonosító kód megadása</string>
 	<string name="passcode_enter_old_passcode">Régi azonosító kód megadása</string>
@@ -73,8 +72,6 @@
 	<string name="passcode_set">Azonosító kód megadva</string>
 	<string name="passcode_turn_off">Azonosító kódos védelem kikapcsolása</string>
 	<string name="passcode_turn_on">Azonosító kódos védelem bekapcsolása</string>
-	<string name="stats_empty_search_engine_terms">Nincsenek keresési kifejezések. A keresési kifejezések szavak, amelyek használatával az olvasók ránk találtak.</string>
-	<string name="stats_empty_clicks">Nincsenek kattintások. A kattintások az olvasók kattintásai az oldalról kivezető hivatkozásokra.</string>
 	<string name="stats_entry_posts_and_pages">Fejléc</string>
 	<string name="media_gallery_type_slideshow">Diavetítés</string>
 	<string name="media_gallery_type_tiled">Mozaik</string>
@@ -99,8 +96,6 @@
 	<string name="remote_changes">A bejegyzés már módosításra került, csak még nem lett feltöltve. Folytatjuk a frissítést, és írjuk felül a helyi változatot?</string>
 	<string name="upload">Feltöltés</string>
 	<string name="manage">Kezelés</string>
-	<string name="discard">Elvetés</string>
-	<string name="prompt_save_changes">Mentsük a módosításokat?</string>
 	<string name="sign_in">Bejelentkezés</string>
 	<string name="sign_out">Kijelentkezés</string>
 	<string name="attempting_configure">Bejelentkezés...</string>
@@ -145,9 +140,7 @@
 	<string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
 	<string name="scaled_image">Átméretezett kép szélessége</string>
 	<string name="remove_location">Eltávolítás</string>
-	<string name="update_location">Frissítés</string>
 	<string name="scheduled">Időzítve</string>
-	<string name="help_stats">Segítség?</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Ez a bejegyzés WordPress for Android alkalmazással készült</string>
 	<string name="uploading">Feltöltés</string>
@@ -174,9 +167,6 @@
 	<string name="post_private">Magánjellegű</string>
 	<string name="publish_post">Közzétéve</string>
 	<string name="upload_full_size_image">Feltöltés és hivatkozás a teljes képhez</string>
-	<string name="load_settings">Beállítások beolvasása most?</string>
-	<string name="stats_password">Jelszó</string>
-	<string name="stats_username">Felhasználónév</string>
 	<string name="tags_separate_with_commas">Címkék (vesszővel elválasztva)</string>
 	<string name="categories">Kategóriák</string>
 	<string name="title">Címsor</string>
@@ -200,7 +190,6 @@
 	<string name="cancel">Megszakítás</string>
 	<string name="save">Mentés</string>
 	<string name="add">Hozzáad</string>
-	<string name="categories_refreshed">Kategóriák frissítve</string>
 	<string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
 	<string name="tab_comments">Hozzászólások</string>
 	<string name="on"> -</string>

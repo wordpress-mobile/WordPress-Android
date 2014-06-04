@@ -2,6 +2,7 @@
 <resources>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="media_add_new_media_gallery">創建藝廊</string>
+	<string name="empty_list_default">清單是空的</string>
 	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="jetpack_message">Jetpack 外掛需要統計資訊。你想要安裝 Jetpack 嗎？</string>
@@ -10,21 +11,18 @@
 	<string name="reader_share_subject">從 %s 分享</string>
 	<string name="reader_btn_unfollow">追蹤</string>
 	<string name="reader_hint_comment_on_post">新增你的迴響</string>
-	<string name="reader_hint_add_tag">輸入一個標籤</string>
 	<string name="reader_hint_comment_on_comment">回應該迴響</string>
-	<string name="reader_hint_reblog_comment">選用迴響</string>
 	<string name="reader_label_added_tag">新增 %s</string>
 	<string name="reader_label_removed_tag">移除 %s</string>
 	<string name="reader_btn_reblog">轉載</string>
 	<string name="reader_toast_reblog_success">文章已被轉載</string>
 	<string name="reader_toast_err_reblog_failed">無法轉載該文章</string>
 	<string name="reader_toast_err_already_reblogged">你已經轉載該文章</string>
-	<string name="reader_label_reblog_to">轉載該文章至</string>
-	<string name="reader_title_reblog">轉載</string>
 	<string name="reader_menu_tags">標籤</string>
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
 	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
+	<string name="reader_empty_popular_tags">沒有受歡迎的標籤</string>
 	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="username_invalid">無效的使用者名稱</string>
 	<string name="themes">佈景主題</string>
@@ -60,8 +58,6 @@
 	<string name="remote_changes">你修改的文章尚未上傳。要繼續重新整理，並覆蓋本機的更動嗎？</string>
 	<string name="upload">上傳</string>
 	<string name="manage">管理</string>
-	<string name="discard">放棄</string>
-	<string name="prompt_save_changes">你想要儲存變更嗎？</string>
 	<string name="sign_out_confirm">您確定要登出？</string>
 	<string name="sign_in">登入</string>
 	<string name="sign_out">登出</string>
@@ -105,10 +101,8 @@
 	<string name="blogusername">網誌使用者帳號</string>
 	<string name="upload_scaled_image">上傳並建立縮圖連結</string>
 	<string name="scaled_image">圖片縮放寬度</string>
-	<string name="update_location">更新</string>
 	<string name="remove_location">移除</string>
 	<string name="scheduled">定時</string>
-	<string name="help_stats">需要幫助？</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">發自 WordPress for Android</string>
 	<string name="uploading">正在上傳</string>
@@ -134,12 +128,9 @@
 	<string name="draft">草稿</string>
 	<string name="post_private">私密</string>
 	<string name="upload_full_size_image">上傳並連結到完整圖片</string>
-	<string name="load_settings">立即載入設定？</string>
-	<string name="stats_password">密碼</string>
 	<string name="title">標題</string>
 	<string name="tags_separate_with_commas">標籤（多個標籤請以英文逗號“,”隔開）</string>
 	<string name="categories">分類</string>
-	<string name="stats_username">帳號</string>
 	<string name="tab_stats">統計</string>
 	<string name="delete_sure_post">是否確定要刪除這篇文章</string>
 	<string name="delete_sure_page">是否確定要刪除該頁面</string>
@@ -160,7 +151,6 @@
 	<string name="cancel">取消</string>
 	<string name="save">儲存</string>
 	<string name="add">新增</string>
-	<string name="categories_refreshed">分類已更新</string>
 	<string name="category_refresh_error">分類更新錯誤</string>
 	<string name="on">於</string>
 	<string name="delete_sure">您確定要刪除草稿</string>
