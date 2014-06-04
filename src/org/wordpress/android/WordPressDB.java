@@ -1037,7 +1037,13 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-                post.setLocation(c.getDouble(c.getColumnIndex("latitude")), c.getDouble(c.getColumnIndex("longitude")));
+
+                int latColumnIndex = c.getColumnIndex("latitude");
+                int lngColumnIndex = c.getColumnIndex("longitude");
+                if (!c.isNull(latColumnIndex) && !c.isNull(lngColumnIndex)) {
+                    post.setLocation(c.getDouble(latColumnIndex), c.getDouble(lngColumnIndex));
+                }
+
                 post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
                 post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
                 post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
