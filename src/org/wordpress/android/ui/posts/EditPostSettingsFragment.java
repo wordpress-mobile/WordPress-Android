@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -45,13 +44,13 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,7 +70,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
     private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
-    private TextView mLocationText, mPubDateText;
+    private TextView mPubDateText;
     private ViewGroup mSectionCategories;
 
     private ArrayList<String> mCategories;
@@ -266,14 +265,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                 if (post.getJSONCategories() != null) {
                     mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
                 }
-
-                // if this post has location attached to it, look up the location address
-                if (post.hasLocation()) {
-                    PostLocation location = post.getLocation();
-
-                    setLocationStatus(LocationStatus.SEARCHING);
-                    new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
-                }
             }
             String tags = post.getKeywords();
             if (!tags.equals("")) {
@@ -343,9 +334,14 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         } else if (id == R.id.viewMap) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
-            getLocation();
+            showLocationSearch();
         } else if (id == R.id.removeLocation) {
             removeLocation();
+            showLocationAdd();
+        } else if (id == R.id.addLocation) {
+            showLocationSearch();
+        } else if (id == R.id.searchLocation) {
+            searchLocation();
         }
     }
 
@@ -508,62 +504,66 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     /*
      * retrieves and displays the friendly address for a lat/long location
      */
-    private class GetAddressTask extends AsyncTask<Double, Void, String> {
+    private class GetAddressTask extends AsyncTask<Double, Void, Address> {
         double latitude;
         double longitude;
 
         @Override
-        protected String doInBackground(Double... args) {
+        protected void onPreExecute() {
+            setLocationStatus(LocationStatus.SEARCHING);
+            showLocationView();
+        }
+
+        @Override
+        protected Address doInBackground(Double... args) {
             // args will be the latitude, longitude to look up
             latitude = args[0];
             longitude = args[1];
 
-            // first make sure a Geocoder service exists on this device (requires API 9)
-            if (!Geocoder.isPresent())
-                return null;
-
-            Geocoder gcd;
-            try {
-                gcd = new Geocoder(getActivity(), Locale.getDefault());
-            } catch (NullPointerException cannotIstantiateEx) {
-                AppLog.e(T.EDITOR, "Cannot Istantiate Geocoder", cannotIstantiateEx);
-                return null;
-            }
-
-            List<Address> addresses;
-            try {
-                addresses = gcd.getFromLocation(latitude, longitude, 1);
-
-                // addresses may be null or empty if network isn't connected
-                if (addresses == null || addresses.size() == 0)
-                    return null;
-
-                String locality = "", adminArea = "", country = "";
-                if (addresses.get(0).getLocality() != null)
-                    locality = addresses.get(0).getLocality();
-                if (addresses.get(0).getAdminArea() != null)
-                    adminArea = addresses.get(0).getAdminArea();
-                if (addresses.get(0).getCountryName() != null)
-                    country = addresses.get(0).getCountryName();
-
-                return ((locality.equals("")) ? locality : locality + ", ")
-                        + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
-            } catch (IOException e) {
-                // may get "Unable to parse response from server" IOException here if Geocoder
-                // service is hit too frequently
-                AppLog.e(T.EDITOR, "Unable to parse response from server. Is Geocoder service hitting the server too frequently?", e);
-                return null;
-            }
+            return GeocoderUtils.getAddressFromCoords(getActivity(), latitude, longitude);
         }
 
-        protected void onPostExecute(String result) {
+        protected void onPostExecute(Address address) {
             setLocationStatus(LocationStatus.FOUND);
-            if (result == null || result.isEmpty()) {
+            if (address == null) {
                 // show lat/long when Geocoder fails (ugly, but better than not showing anything
                 // or showing an error since the location has been assigned to the post already)
-                mLocationText.setText(Double.toString(latitude) + ", " + Double.toString(longitude));
+                updateLocationText(Double.toString(latitude) + ", " + Double.toString(longitude));
             } else {
-                mLocationText.setText(result);
+                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
+                updateLocationText(locationName);
+            }
+        }
+    }
+
+    private class GetCoordsTask extends AsyncTask<String, Void, Address> {
+        @Override
+        protected void onPreExecute() {
+            setLocationStatus(LocationStatus.SEARCHING);
+            showLocationView();
+        }
+
+        @Override
+        protected Address doInBackground(String... args) {
+            String locationName = args[0];
+
+            return GeocoderUtils.getAddressFromLocationName(getActivity(), locationName);
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            setLocationStatus(LocationStatus.FOUND);
+            showLocationView();
+
+            if (address != null) {
+                double[] coordinates = GeocoderUtils.getCoordsFromAddress(address);
+                setLocation(coordinates[0], coordinates[1]);
+
+                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
+                updateLocationText(locationName);
+            } else {
+                showLocationNotAvailableError();
+                showLocationSearch();
             }
         }
     }
@@ -582,11 +582,18 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         }
     };
 
+    private View mLocationAddSection;
+    private View mLocationSearchSection;
+    private View mLocationViewSection;
+    private TextView mLocationText;
+    private EditText mLocationEditText;
+
     /*
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation(ViewGroup rootView) {
+        Post post = mActivity.getPost();
 
         boolean hasLocationProvider = false;
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Activity.LOCATION_SERVICE);
@@ -600,12 +607,30 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
+        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && post.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
 
             mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
+
+            mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
+            mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
+            mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
+
+            if (mActivity.getPost().hasLocation()) {
+                showLocationView();
+            } else {
+                showLocationAdd();
+            }
+
+            Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
+            addLocation.setOnClickListener(this);
+
+            Button searchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
+            searchLocation.setOnClickListener(this);
+
+            mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
 
             Button viewMap = (Button) locationRootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
@@ -614,25 +639,62 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             removeLocation.setOnClickListener(this);
             viewMap.setOnClickListener(this);
 
-            // if the post doesn't have a location, get the user's current location
-            if (!mActivity.getPost().hasLocation()) {
-                getLocation();
+            // if this post has location attached to it, look up the location address
+            if (post.hasLocation()) {
+                PostLocation location = post.getLocation();
+
+                new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
             }
+        }
+    }
+
+    private void showLocationSearch() {
+        mLocationAddSection.setVisibility(View.GONE);
+        mLocationSearchSection.setVisibility(View.VISIBLE);
+        mLocationViewSection.setVisibility(View.GONE);
+
+        mLocationEditText.requestFocus();
+    }
+
+    private void showLocationAdd() {
+        mLocationAddSection.setVisibility(View.VISIBLE);
+        mLocationSearchSection.setVisibility(View.GONE);
+        mLocationViewSection.setVisibility(View.GONE);
+    }
+
+    private void showLocationView() {
+        mLocationAddSection.setVisibility(View.GONE);
+        mLocationSearchSection.setVisibility(View.GONE);
+        mLocationViewSection.setVisibility(View.VISIBLE);
+    }
+
+    private void searchLocation() {
+        String location = mLocationEditText.getText().toString();
+
+        removeLocation();
+
+        if (location.isEmpty()) {
+            fetchCurrentLocation();
+        } else {
+            new GetCoordsTask().execute(location);
         }
     }
 
     /*
      * get the current location
      */
-    private void getLocation() {
+    private void fetchCurrentLocation() {
         if (mLocationHelper == null)
             mLocationHelper = new LocationHelper();
         boolean canGetLocation = mLocationHelper.getLocation(getActivity(), locationResult);
+
         if (canGetLocation) {
             setLocationStatus(LocationStatus.SEARCHING);
-            mLocationText.setText(getString(R.string.loading));
+            showLocationView();
         } else {
             setLocation(null);
+            showLocationNotAvailableError();
+            showLocationAdd();
         }
     }
 
@@ -642,19 +704,23 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
      */
     private void setLocation(Location location) {
         if (location != null) {
-            mPostLocation = new PostLocation(location.getLatitude(), location.getLongitude());
-            new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
+            setLocation(location.getLatitude(), location.getLongitude());
         } else {
-            mLocationText.setText(getString(R.string.location_not_found));
+            updateLocationText(getString(R.string.location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
         }
+    }
+
+    private void setLocation(double latitude, double longitude) {
+        mPostLocation = new PostLocation(latitude, longitude);
+        new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
     }
 
     private void removeLocation() {
         mPostLocation = null;
         mActivity.getPost().unsetLocation();
 
-        mLocationText.setText("");
+        updateLocationText("");
         setLocationStatus(LocationStatus.NONE);
     }
 
@@ -663,8 +729,17 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
             startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
         } else {
-            Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+            showLocationNotAvailableError();
+            showLocationAdd();
         }
+    }
+
+    private void showLocationNotAvailableError() {
+        Toast.makeText(getActivity(), getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateLocationText(String locationName) {
+        mLocationText.setText(locationName);
     }
 
     /*
@@ -673,6 +748,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     private void setLocationStatus(LocationStatus status) {
         // animate location text when searching
         if (status == LocationStatus.SEARCHING) {
+            updateLocationText(getString(R.string.loading));
+
             Animation aniBlink = AnimationUtils.loadAnimation(getActivity(), R.anim.blink);
             if (aniBlink != null)
                 mLocationText.startAnimation(aniBlink);
