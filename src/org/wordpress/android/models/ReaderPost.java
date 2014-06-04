@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -145,17 +146,14 @@ public class ReaderPost {
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
-        // the single-post sites/$site/posts/$post endpoint doesn't return the blog_id/site_ID,
-        // instead all site metadata is returned under meta/data/site (assuming ?meta=site was
-        // added to the request) - check for this metadata if the blogId wasn't set above
-        if (post.blogId == 0) {
-            JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
-            if (jsonSite != null) {
-                post.blogId = jsonSite.optInt("ID");
-                post.blogName = JSONUtil.getString(jsonSite, "name");
-                post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
-                post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
-            }
+        // the single-post sites/$site/posts/$post endpoint returns all site metadata
+        // under meta/data/site (assuming ?meta=site was added to the request)
+        JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
+        if (jsonSite != null) {
+            post.blogId = jsonSite.optInt("ID");
+            post.blogName = JSONUtil.getString(jsonSite, "name");
+            post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
+            post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
         }
 
         return post;
@@ -571,18 +569,14 @@ public class ReaderPost {
      */
     private transient String featuredImageForDisplay;
     public String getFeaturedImageForDisplay(int width, int height) {
-        if (featuredImageForDisplay==null) {
-            if (!hasFeaturedImage())
-                return "";
-            if (isPrivate) {
-                // can't use photon on images in private posts since they require authentication, and must
-                // use https: in order for AuthToken to work when requesting them
-                featuredImageForDisplay = UrlUtils.makeHttps(featuredImage);
-            } else if (UrlUtils.isHttps(featuredImage)) {
-                // skip photon for https images since we can't authenticate them
-                featuredImageForDisplay = featuredImage;
+        if (featuredImageForDisplay == null) {
+            if (!hasFeaturedImage()) {
+                featuredImageForDisplay = "";
+            } else if (isPrivate) {
+                // images in private posts can't use photon, so handle separately
+                featuredImageForDisplay = ReaderUtils.getPrivateImageForDisplay(featuredImage, width, height);
             } else {
-                // not private or https, so set to correctly sized photon url
+                // not private, so set to correctly sized photon url
                 featuredImageForDisplay = PhotonUtils.getPhotonImageUrl(featuredImage, width, height);
             }
         }
