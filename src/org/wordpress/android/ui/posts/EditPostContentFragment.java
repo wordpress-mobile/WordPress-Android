@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,11 +15,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ArrowKeyMovementMethod;
@@ -193,10 +194,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         Post post = mActivity.getPost();
         if (post != null) {
             if (!TextUtils.isEmpty(post.getContent())) {
-                if (post.isLocalDraft())
-                    mContentEditText.setText(WPHtml.fromHtml(post.getContent().replaceAll("\uFFFC", ""), mActivity, post));
-                else
+                if (post.isLocalDraft()) {
+                    // Load local post content in the background, as it may take time to generate images
+                    new LoadPostContentTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                            post.getContent().replaceAll("\uFFFC", ""));
+                }
+                else {
                     mContentEditText.setText(post.getContent().replaceAll("\uFFFC", ""));
+                }
             }
             if (!TextUtils.isEmpty(post.getTitle())) {
                 mTitleEditText.setText(post.getTitle());
@@ -484,7 +489,14 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             } else {
                 // add link tag around URLs, trac #64
                 text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost()));
+                mContentEditText.setText(
+                        WPHtml.fromHtml(
+                                StringUtils.addPTags(text),
+                                getActivity(),
+                                mActivity.getPost(),
+                                getMaximumThumbnailWidth()
+                        )
+                );
             }
         }
 
@@ -881,23 +893,17 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 }
 
                 Bitmap resizedBitmap;
-                if (downloadedBitmap.getWidth() <= getMaximumThumbnailWidth()) {
-                    //bitmap is already small in size, do not resize.
-                    resizedBitmap = downloadedBitmap;
-                } else {
-                    //resize the downloaded bitmap
-                    int targetWidth = getMaximumThumbnailWidth();
-                    try {
-                        ImageHelper ih = new ImageHelper();
-                        resizedBitmap = ih.getThumbnailForWPImageSpan(downloadedBitmap, targetWidth);
-                    } catch (OutOfMemoryError er) {
-                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
-                        CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
-                        CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
-                                ((float) targetWidth) / downloadedBitmap.getWidth());
-                        CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
-                        return;
-                    }
+                int maxWidth = getMaximumThumbnailWidth();
+                //resize the downloaded bitmap
+                try {
+                    resizedBitmap = ImageHelper.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
+                } catch (OutOfMemoryError er) {
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
+                    CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
+                    CrashlyticsUtils.setFloat(ExtraKey.IMAGE_RESIZE_SCALE,
+                            ((float) maxWidth) / downloadedBitmap.getWidth());
+                    CrashlyticsUtils.logException(er, ExceptionType.SPECIFIC, T.POSTS);
+                    return;
                 }
 
                 if (resizedBitmap == null) return;
@@ -1016,13 +1022,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            ImageHelper ih = new ImageHelper();
-            thumbnailBitmap = ih.getThumbnailForWPImageSpan(getActivity(), imageUri.getEncodedPath(),
+            thumbnailBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(getActivity(), imageUri.getEncodedPath(),
                     getMaximumThumbnailWidth());
             if (thumbnailBitmap == null) {
                 return false;
             }
-            mediaTitle = ih.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            mediaTitle = ImageHelper.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
@@ -1098,6 +1103,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             int screenWidth = size.x;
             int screenHeight = size.y;
             mMaximumThumbnailWidth = (screenWidth > screenHeight) ? screenHeight : screenWidth;
+            // 48dp of padding on each side so you can still place the cursor next to the image.
+            int padding = DisplayUtils.dpToPx(getActivity(), 48) * 2;
+            mMaximumThumbnailWidth -= padding;
         }
 
         return mMaximumThumbnailWidth;
@@ -1567,4 +1575,32 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         width = Math.min(max, Math.max(width, min));
         return width;
     }
+
+    private class LoadPostContentTask extends AsyncTask<String, Spanned, Spanned> {
+
+        @Override
+        protected Spanned doInBackground(String... params) {
+            if (params.length < 1 || mActivity == null || mActivity.getPost() == null) {
+                return null;
+            }
+
+            String content = StringUtils.notNullStr(params[0]);
+
+            return WPHtml.fromHtml(
+                    content,
+                    mActivity,
+                    mActivity.getPost(),
+                    getMaximumThumbnailWidth()
+            );
+        }
+
+        @Override
+        protected void onPostExecute(Spanned spanned) {
+            if (mActivity != null && mContentEditText != null && spanned != null) {
+                mContentEditText.setText(spanned);
+            }
+        }
+    }
+
+
 }

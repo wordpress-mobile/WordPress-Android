@@ -51,9 +51,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="#FFFFFF"
-                android:padding="10dp"
-                android:textSize="@dimen/text_sz_extra_large"
-                android:visibility="gone" />
+                android:padding="@dimen/margin_extra_large"
+                android:textSize="@dimen/text_sz_extra_large" />
         </FrameLayout>
     </ScrollView>
 
