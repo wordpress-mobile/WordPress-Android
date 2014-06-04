@@ -612,7 +612,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             viewMap.setOnClickListener(this);
 
             // if this is a new post, get the user's current location
-            if (mActivity.getPost().isNew()) {
+            if (!mActivity.getPost().hasLocation()) {
                 getLocation();
             }
         }
