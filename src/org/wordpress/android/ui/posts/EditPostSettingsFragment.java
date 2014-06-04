@@ -343,18 +343,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
         } else if (id == R.id.viewMap) {
-            Double latitude = 0.0;
-            try {
-                latitude = mCurrentLocation.getLatitude();
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-            if (latitude != 0.0) {
-                String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
-                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-            } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
-            }
+            viewLocation();
         } else if (id == R.id.updateLocation) {
             getLocation();
         } else if (id == R.id.removeLocation) {
@@ -668,6 +657,17 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
         mLocationText.setText("");
         setLocationStatus(LocationStatus.NONE);
+    }
+
+
+    private void viewLocation() {
+        PostLocation location = mActivity.getPost().getLocation();
+        if (location != null) {
+            String uri = "geo:" + location.getLatitude() + "," + location.getLongitude();
+            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+        } else {
+            Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*
