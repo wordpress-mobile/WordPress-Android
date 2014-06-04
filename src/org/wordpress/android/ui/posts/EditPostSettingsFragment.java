@@ -75,7 +75,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
     private ArrayList<String> mCategories;
 
-    private Location mCurrentLocation;
+    private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -477,11 +477,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             post.setChangedFromLocalDraftToPublished(true);
         }
 
-        PostLocation location = null;
-        if (mCurrentLocation == null) {
-            location = post.getLocation();
-        } else if (WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
-            location = new PostLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        if (WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
+            if (mPostLocation == null && post.hasLocation()) {
+                mPostLocation = post.getLocation();
+            }
+            post.setLocation(mPostLocation);
         }
 
         post.setPostExcerpt(excerpt);
@@ -490,7 +490,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         post.setKeywords(tags);
         post.setPostStatus(status);
         post.setPassword(password);
-        post.setLocation(location);
         post.setPostFormat(postFormat);
     }
 
@@ -639,8 +638,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
      */
     private void setLocation(Location location) {
         if (location != null) {
-            mCurrentLocation = location;
-            new GetAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            mPostLocation = new PostLocation(location.getLatitude(), location.getLongitude());
+            new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
         } else {
             mLocationText.setText(getString(R.string.location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
@@ -648,24 +647,16 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     }
 
     private void removeLocation() {
-        if (mCurrentLocation != null) {
-            mCurrentLocation.setLatitude(0.0);
-            mCurrentLocation.setLongitude(0.0);
-        }
-
-        if (mActivity.getPost() != null) {
-            mActivity.getPost().unsetLocation();
-        }
+        mPostLocation = null;
+        mActivity.getPost().unsetLocation();
 
         mLocationText.setText("");
         setLocationStatus(LocationStatus.NONE);
     }
 
-
     private void viewLocation() {
-        PostLocation location = mActivity.getPost().getLocation();
-        if (location != null) {
-            String uri = "geo:" + location.getLatitude() + "," + location.getLongitude();
+        if (mPostLocation != null && mPostLocation.isValid()) {
+            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
             startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
         } else {
             Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
