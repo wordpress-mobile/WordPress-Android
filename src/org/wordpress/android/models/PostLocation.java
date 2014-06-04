@@ -1,6 +1,8 @@
 package org.wordpress.android.models;
 
-public class PostLocation {
+import java.io.Serializable;
+
+public class PostLocation implements Serializable {
     static final double INVALID_LATITUDE = 9999;
     static final double INVALID_LONGITUDE = 9999;
     static final double MIN_LATITUDE = -90;
