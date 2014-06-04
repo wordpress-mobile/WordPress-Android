@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.List;
 
@@ -125,8 +126,7 @@ public class ReaderUtils {
     }
 
     /*
-     * returns a bitmap of the passed view - note that the view must be visible and laid
-     * out for this to work
+     * returns a bitmap of the passed view - note that the view must have layout for this to work
      */
     public static Bitmap createBitmapFromView(View view) {
         if (view == null) {
@@ -145,5 +145,28 @@ public class ReaderUtils {
         } finally {
             view.destroyDrawingCache();
         }
+    }
+
+    /*
+     * use this to request a reduced size image from a private post - images in private posts can't
+     * use photon but these are usually wp images so they support the h= and w= query params
+     */
+    public static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return "";
+        }
+
+        final String query;
+        if (width > 0 && height > 0) {
+            query = String.format("?w=%d&h=%d", width, height);
+        } else if (width > 0) {
+            query = String.format("?w=%d", width);
+        } else if (height > 0) {
+            query = String.format("?h=%d", height);
+        } else {
+            query = "";
+        }
+        // remove the existing query string, add the new one, and make sure the url is https:
+        return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
     }
 }
