@@ -561,7 +561,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     private WPHtml.ImageGetter mImageGetter;
     private String mysteryTagContent;
     private boolean mysteryTagFound;
-    private static int mMaxImageWidth;
+    private int mMaxImageWidth;
     private static Context ctx;
     private static Post post;
 
@@ -833,7 +833,7 @@ class HtmlToSpannedConverter implements ContentHandler {
         return;
     }
 
-    private static void startImg(SpannableStringBuilder text,
+    private void startImg(SpannableStringBuilder text,
             Attributes attributes, WPHtml.ImageGetter img) {
         String src = attributes.getValue("android-uri");
 
