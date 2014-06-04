@@ -378,29 +378,32 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
 
+            holder.imgBtnLike.setVisibility(View.VISIBLE);
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
+            showCounts(holder, post);
+        } else {
+            holder.imgBtnLike.setVisibility(View.INVISIBLE);
+            holder.imgBtnComment.setVisibility(View.INVISIBLE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.txtCommentCount.setVisibility(View.GONE);
+        }
+
+        if (post.canReblog()) {
             showReblogStatus(holder.imgBtnReblog, post.isRebloggedByCurrentUser);
-            if (!post.isRebloggedByCurrentUser && post.isWP()) {
+            holder.imgBtnReblog.setVisibility(View.VISIBLE);
+            if (!post.isRebloggedByCurrentUser) {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         AniUtils.zoomAction(holder.imgBtnReblog);
                         if (mReblogListener != null) {
-                            mReblogListener.onRequestReblog(post);
+                            mReblogListener.onRequestReblog(post, v);
                         }
                     }
                 });
             }
-
-            holder.imgBtnLike.setVisibility(View.VISIBLE);
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
-            holder.imgBtnReblog.setVisibility(View.VISIBLE);
-            showCounts(holder, post);
         } else {
-            holder.imgBtnLike.setVisibility(View.INVISIBLE);
-            holder.imgBtnComment.setVisibility(View.INVISIBLE);
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
-            holder.txtLikeCount.setVisibility(View.GONE);
-            holder.txtCommentCount.setVisibility(View.GONE);
         }
 
         // animate the appearance of this row while new posts are being loaded
@@ -473,9 +476,12 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
 
+        private final View rootView;
         private final ViewGroup layoutPostHeader;
 
         PostViewHolder(View view, ReaderPostListType postListType) {
+            rootView = view;
+
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtText = (TextView) view.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);

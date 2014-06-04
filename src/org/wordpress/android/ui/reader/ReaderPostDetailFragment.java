@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -525,9 +525,8 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        imgBtnReblog.setSelected(true);
         AniUtils.zoomAction(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post);
+        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, imgBtnReblog);
     }
 
     /*
@@ -1358,15 +1357,17 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             // enable reblogging wp posts
-            imgBtnReblog.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
-            if (mPost.isWP()) {
+            if (mPost.canReblog()) {
+                imgBtnReblog.setVisibility(View.VISIBLE);
+                imgBtnReblog.setSelected(mPost.isRebloggedByCurrentUser);
                 imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         doPostReblog(imgBtnReblog, mPost);
                     }
                 });
+            } else {
+                imgBtnReblog.setVisibility(View.GONE);
             }
 
             // enable adding a comment if comments are open on this post

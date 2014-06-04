@@ -37,7 +37,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         createMenuDrawer(R.layout.comment_activity);
         View detailView = findViewById(R.id.fragment_comment_detail);
         mDualPane = detailView != null && detailView.getVisibility() == View.VISIBLE;
@@ -168,6 +168,9 @@ public class CommentsActivity extends WPActionBarActivity
                             }
                             break;
                         case 0:
+                            if (!mDualPane) {
+                                getListFragment().setHighlightedCommentId(-1);
+                            }
                             mMenuDrawer.setDrawerIndicatorEnabled(true);
                             mSelectedCommentId = 0;
                             mSelectedReaderPost = null;

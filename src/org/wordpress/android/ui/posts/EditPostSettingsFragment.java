@@ -68,7 +68,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
     private EditPostActivity mActivity;
 
-    private Spinner mStatusSpinner;
+    private Spinner mStatusSpinner, mPostFormatSpinner;
     private EditText mPasswordEditText, mTagsEditText, mExcerptEditText;
     private TextView mLocationText, mPubDateText;
     private ViewGroup mSectionCategories;
@@ -172,10 +172,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                     AppLog.e(T.POSTS, e);
                 }
             }
-            Spinner postFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
+            mPostFormatSpinner = (Spinner) rootView.findViewById(R.id.postFormat);
             ArrayAdapter<String> pfAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, mPostFormatTitles);
             pfAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            postFormatSpinner.setAdapter(pfAdapter);
+            mPostFormatSpinner.setAdapter(pfAdapter);
             String activePostFormat = "standard";
 
 
@@ -185,10 +185,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
             for (int i = 0; i < mPostFormats.length; i++) {
                 if (mPostFormats[i].equals(activePostFormat))
-                    postFormatSpinner.setSelection(i);
+                    mPostFormatSpinner.setSelection(i);
             }
 
-            postFormatSpinner.setOnTouchListener(
+            mPostFormatSpinner.setOnTouchListener(
                     new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -461,15 +461,17 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         String tags = "", postFormat = "";
         if (!post.isPage()) {
             tags = (mTagsEditText.getText() != null) ? mTagsEditText.getText().toString() : "";
+
             // post format
-            Spinner postFormatSpinner = (Spinner) getActivity().findViewById(R.id.postFormat);
-            postFormat = mPostFormats[postFormatSpinner.getSelectedItemPosition()];
+            if (mPostFormats != null && mPostFormatSpinner.getSelectedItemPosition() < mPostFormats.length) {
+                postFormat = mPostFormats[mPostFormatSpinner.getSelectedItemPosition()];
+            }
         }
 
         String status = getPostStatusForSpinnerPosition(mStatusSpinner.getSelectedItemPosition());
 
         // We want to flag this post as having changed statuses from draft to published so that we
-        // propertly track stats we care about for when users first publish posts.
+        // properly track stats we care about for when users first publish posts.
         if (post.isUploaded() && post.getPostStatus().equals(PostStatus.toString(PostStatus.DRAFT))
                 && status.equals(PostStatus.toString(PostStatus.PUBLISHED))) {
             post.setChangedFromLocalDraftToPublished(true);
