@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -44,6 +46,7 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
@@ -61,7 +64,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditPostSettingsFragment extends Fragment implements View.OnClickListener {
+public class EditPostSettingsFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -345,6 +348,17 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    @Override
+    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+        boolean handled = false;
+        int id = view.getId();
+        if (id == R.id.searchLocationText && actionId == EditorInfo.IME_ACTION_SEARCH) {
+            searchLocation();
+            handled = true;
+        }
+        return handled;
+    }
+
     private void showPostDateSelectionDialog() {
         final DatePicker datePicker = new DatePicker(getActivity());
         datePicker.init(mYear, mMonth, mDay, null);
@@ -620,6 +634,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             searchLocation.setOnClickListener(this);
 
             mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
+            mLocationEditText.setOnEditorActionListener(this);
 
             Button viewMap = (Button) locationRootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
@@ -656,7 +671,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         mLocationSearchSection.setVisibility(View.VISIBLE);
         mLocationViewSection.setVisibility(View.GONE);
 
-        mLocationEditText.requestFocus();
+        EditTextUtils.showSoftInput(mLocationEditText, true);
     }
 
     private void showLocationAdd() {
@@ -672,7 +687,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     }
 
     private void searchLocation() {
-        String location = mLocationEditText.getText().toString();
+        EditTextUtils.hideSoftInput(mLocationEditText);
+        String location = EditTextUtils.getText(mLocationEditText);
 
         removeLocation();
 
