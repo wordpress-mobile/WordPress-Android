@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ReaderVideoUtils;
 import org.wordpress.android.util.VolleyUtils;
 
@@ -177,6 +179,10 @@ public class WPNetworkImageView extends ImageView {
             }
         }
 
+        // enforce a max size to reduce memory usage
+        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
+        int maxSize = Math.max(pt.x, pt.y);
+
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
         ImageLoader.ImageContainer newContainer = WordPress.imageLoader.get(mUrl,
@@ -218,7 +224,7 @@ public class WPNetworkImageView extends ImageView {
                             handleResponse(response, isImmediate, true);
                         }
                     }
-                });
+                }, maxSize, maxSize);
 
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;

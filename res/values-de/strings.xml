@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_label_reblog_to">Rebloggen auf</string>
+	<string name="reader_hint_reblog_comment">Füge deine Gedanken hinzu (optional)</string>
+	<string name="update_verb">Update</string>
+	<string name="reader_page_recommended_blogs">Empfohlene Blogs</string>
+	<string name="reader_page_followed_blogs">Abonnierte Blogs</string>
+	<string name="reader_page_popular_tags">Beliebte Tags</string>
+	<string name="reader_page_followed_tags">Abonnierte Tags</string>
+	<string name="reader_title_subs">Tags &amp; Blogs</string>
+	<string name="reader_title_blog_preview">Blogvorschau</string>
+	<string name="reader_empty_recommended_blogs">Keine empfohlenen Blogs</string>
+	<string name="reader_toast_err_unfollow_blog">Blog konnte nicht entfolgt werden</string>
+	<string name="reader_toast_err_follow_blog">Blog konnte nicht gefolgt werden </string>
+	<string name="reader_toast_err_already_follow_blog">Du folgst diesem Blog bereits</string>
+	<string name="reader_label_tag_preview">Beiträge getaggt mit %s</string>
+	<string name="reader_label_followers">%s Follower</string>
+	<string name="reader_label_new_posts">Zeige neue Beiträge</string>
+	<string name="reader_label_more_recommendations">Mehr Empfehlungen</string>
+	<string name="blogs_visibility">Blogs</string>
+	<string name="stats_empty_referrers_title">Keine Referrer.</string>
+	<string name="stats_empty_search_engine_terms_title">Keine Suchbegriffe.</string>
+	<string name="stats_empty_clicks_title">Keine Klicks aufgezeichnet.</string>
+	<string name="load_settings">In den Einstellungen kannst Du Deinen Benutzernamen und Dein Passwort ändern.</string>
+	<string name="saving">Wird gespeichert…</string>
+	<string name="media_empty_list">Keine Medien</string>
+	<string name="need_help_signin_wpcom">Du benötigst Hilfe?</string>
+	<string name="wpcom_signin_dialog_title">Anmelden auf WordPress.com</string>
+	<string name="jetpack_stats_switch_user">Das aktuelle Konto auf WordPress.com (%s) hat keine Zugriffsrechte auf die Statistiken für diesen Blog. Willst du Dich mit einem anderen Konto anmelden?</string>
+	<string name="username_or_password_incorrect_selfhosted_hint">Der Benutzername oder das Passwort ist nicht korrekt. Du hast eine selbst gehostete Website? Gib bitte "%s" und die URL ein.</string>
+	<string name="nux_help_description">Antworten auf häufige Fragen findest Du im Hilfecenter. Neue Fragen kannst Du in den Foren stellen.</string>
+	<string name="ssl_certificate_trust">Vertrauen</string>
+	<string name="ssl_certificate_details">Zertifikatsdetails</string>
+	<string name="ssl_certificate_do_not_trust">Nicht vertrauen</string>
+	<string name="ptr_tip_message">Tipp: Nach unten ziehen, um die Seite neu zu laden.</string>
 	<string name="help">Hilfe</string>
 	<string name="forgot_password">Passwort vergessen?</string>
 	<string name="forums">Forums</string>
@@ -8,7 +41,6 @@
 	<string name="loading_pages">Lädt Seiten...</string>
 	<string name="loading_posts">Lädt Beiträge...</string>
 	<string name="reader_label_reblog_empty">Du hast keine sichtbaren WordPress.com-Blogs um diesen Beitrag zu rebloggen.</string>
-	<string name="nux_help_description">Besuche das Hilfecenter um Antworten auf deine Fragen zu erhalten oder besuche das Forum.</string>
 	<string name="reader_label_reblog_empty_link">Blog-Sichtbarkeit ändern</string>
 	<string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
 	<string name="reader_empty_followed_blogs_title">Du folgst aktuell keinen Blogs</string>
@@ -18,10 +50,8 @@
 	<string name="mnu_comment_unspam">Kein Spam</string>
 	<string name="comments_empty_list">Keine Kommentare</string>
 	<string name="theme_no_search_result_found">Keine Ergebnisse gefunden</string>
-	<string name="media_empty_list">Keine Medien</string>
 	<string name="mnu_comment_edit">Bearbeiten</string>
 	<string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
-	<string name="adding_cat_failed_check">Überprüfe deine Einstellungen und versuche es erneut</string>
 	<string name="stats_empty_comments">Bisher keine Kommentare</string>
 	<string name="stats_bar_graph_empty">Keine Statistiken verfügbar</string>
 	<string name="notifications_empty_list">Keine Benachrichtigungen</string>
@@ -70,7 +100,6 @@
 	<string name="error_refresh_comments">Kommentare konnten nicht aktualisiert werden</string>
 	<string name="cat_name_required">Das Feld Kategorie-Name ist erforderlich</string>
 	<string name="auto_sharing_preference_reset">Auto-Teilen Einstellungen zurücksetzen</string>
-	<string name="username_password_required">Fülle alle Felder vorm Senden aus</string>
 	<string name="blog_not_found">Beim Aufrufen des Blogs ist ein Fehler aufgetreten</string>
 	<string name="error_parsing_response">Beim Empfangen der Daten ist ein Fehler aufgetreten</string>
 	<string name="invalid_password_message">Passwort muss aus mindestens 4 Zeichen bestehen</string>
@@ -135,7 +164,6 @@
 	<string name="comment_added">Kommentar erfolgreich hinzugefügt</string>
 	<string name="blog_removed_successfully">Blog erfolgreich entfernt</string>
 	<string name="stats_visitors_and_views_header_all_time">Gesamte Zeit</string>
-	<string name="reader_title_popular_tags">Beliebte Tags</string>
 	<string name="select_a_blog">Blog auswählen</string>
 	<string name="content_required">Kommentar wird benötigt</string>
 	<string name="view_admin">Admin ansehen</string>
@@ -171,7 +199,6 @@
 	<string name="sure_to_cancel_edit_comment">Bearbeiten des Kommentars abbrechen?</string>
 	<string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktivierte ihn erneut in den Einstellungen und versuche es nochmal.</string>
 	<string name="scaled_image_error">Gib eine gültige Breite ein</string>
-	<string name="please_sign_in">Erneut anmelden.</string>
 	<string name="media_gallery_settings_title">Galerie-Einstellungen</string>
 	<string name="delete_page">Seite löschen</string>
 	<string name="dlg_spamming_comments">Als Spam markieren</string>
@@ -216,7 +243,6 @@
 	<string name="quick_photo">Schnelles Foto</string>
 	<string name="jetpack_message_not_admin">Das Jetpack-Plugin wird für die Statistiken benötigt. Kontaktiere den Webseiten-Administrator.</string>
 	<string name="blog_title_invalid">Ungültiger Webseiten-Titel</string>
-	<string name="jetpack_stats_switch_user">Dieses WordPress.com-Konto hat keinen Zugriff auf die Statistiken dieses Blogs. Möchtest du dich mich einem anderen Konto anmelden?</string>
 	<string name="post_not_found">Beim Abrufen des Beitrags trat ein Fehler auf. Lade deine Beiträge erneut und versuche es nochmal.</string>
 	<string name="cannot_delete_multi_media_items">Einige Mediendateien konnten nicht gelöscht werden. Versuche es später erneut.</string>
 	<string name="media_gallery_type_thumbnail_grid">Vorschaubild-Raster</string>
@@ -226,16 +252,13 @@
 	<string name="stats_view_top_posts_and_pages">Top-Beiträge und Seiten</string>
 	<string name="posts_empty_list">Bisher keine Beiträge. Jetzt einen erstellen?</string>
 	<string name="category_slug">Kategorie-Titelform (optional)</string>
-	<string name="reader_title_followed_tags">Gefolgte Schlagwörter</string>
 	<string name="stats_view_video_plays">Video-Ansichten</string>
 	<string name="pending_review">Ausstehender Review</string>
 	<string name="author_name">Autor-Name</string>
 	<string name="deleting_page">Lösche Seite</string>
 	<string name="share_url_post">Beitrag teilen</string>
 	<string name="share_link">Link teilen</string>
-	<string name="cat_adding_category">Füge Kategorie hinzu</string>
 	<string name="share_url_page">Seite teilen</string>
-	<string name="refreshing_categories">Aktualisiere Kategorien</string>
 	<string name="deleting_post">Lösche Beitrag</string>
 	<string name="creating_your_account">Erstelle dein Konto</string>
 	<string name="creating_your_site">Erstelle deine Webseite</string>
@@ -254,16 +277,12 @@
 	<string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
 	<string name="reset_auto_share_preference">Einstellungen zum Auto-Teilen resetten</string>
 	<string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
-	<string name="reader_label_new_posts_multi">%d neue Beiträge</string>
-	<string name="reader_label_new_posts_one">Ein neuer Beitrag</string>
 	<string name="reader_empty_followed_blogs_description">Aber keine Sorge, tippe einfach auf das Schlagwort-Icon um loszustöbern!</string>
 	<string name="select_time">Zeit auswählen</string>
 	<string name="select_date">Datum auswählen</string>
 	<string name="pick_photo">Foto auswählen</string>
-	<string name="blogs_visibility">Blog-Sichtbarkeit</string>
 	<string name="add_self_hosted_blog">Selbst-gehosteten Blog hinzufügen</string>
 	<string name="pick_video">Video auswählen</string>
-	<string name="reader_toast_err_no_connection">Verbindung fehlgeschlagen</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
 	<string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
 	<string name="account_two_step_auth_enabled">Dieses Konto hat Zwei-Schritt-Authentifizierung aktiviert. Besuche deine Sicherheitseinstellungen auf WordPress.com und generiere ein App-spezifisches Passwort.</string>
@@ -274,11 +293,9 @@
 	<string name="nux_add_selfhosted_blog">Selbs-gehostete Webseite hinzufügen</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
-	<string name="stats_empty_top_posts">Bisher keine Top-Beiträge oder -Seiten gefunden. Diese Anzeige zeigt deine meist-besuchten Beiträge und Seiten.</string>
 	<string name="media_add_new_media_gallery">Erstelle Galerie</string>
 	<string name="reader_label_added_tag">%s hinzugefügt</string>
 	<string name="reader_label_removed_tag">%s entfernt</string>
-	<string name="reader_label_reblog_to">Diesen Beitrag rebloggen auf</string>
 	<string name="reader_likes_one">Einer Person gefällt das</string>
 	<string name="reader_likes_only_you">Dir gefällt das</string>
 	<string name="connecting_wpcom">Verbinde zu WordPress.com</string>
@@ -286,8 +303,6 @@
 	<string name="nux_tutorial_get_started_title">Los geht\'s!</string>
 	<string name="reader_hint_comment_on_post">Deinen Kommentar hinzufügen </string>
 	<string name="reader_hint_comment_on_comment">Auf Kommentar antworten </string>
-	<string name="reader_hint_add_tag">Ein Schlagwort eintragen</string>
-	<string name="reader_hint_reblog_comment">Optionaler Kommentar</string>
 	<string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>
 	<string name="reader_toast_err_view_image">Kann das Bild nicht anzeigen</string>
 	<string name="jetpack_message">Das Jetpack-Plugin ist erforderlich für Statistiken. Möchtest Du Jetpack installieren?</string>
@@ -306,8 +321,6 @@
 	<string name="reader_timespan_now">jetzt</string>
 	<string name="empty_list_default">Diese Liste ist leer</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
-	<string name="reader_title_userlist_default">Leute</string>
-	<string name="reader_title_reblog">Reblog</string>
 	<string name="reader_btn_reblog">Reblog</string>
 	<string name="reader_btn_follow">Folgen</string>
 	<string name="reader_btn_unfollow">Folge ich</string>
@@ -400,9 +413,6 @@
 	<string name="stats_video_summary_label_plays">Abgespielt</string>
 	<string name="stats_video_summary_header">Aggregierte Statistik für %s</string>
 	<string name="stats_video_summary_label_impressions">Aufrufe</string>
-	<string name="stats_empty_referrers">Keine Referrer. Ein Referrer ist ein Klick von einer anderen Seite, die auf deine verlinkt. </string>
-	<string name="stats_empty_clicks">Keine Klicks aufgezeichnet. "Klicks" sind Besucher, die auf externe Links auf deiner Seite klicken.</string>
-	<string name="stats_empty_search_engine_terms">Keine Suchbegriffe. Suchbegriffe sind Wörter oder Ausdrücke, mit denen Benutzer dich bei eine Suche finden.</string>
 	<string name="passcode_re_enter_passcode">PIN erneut eingeben</string>
 	<string name="passcode_set">PIN gesetzt</string>
 	<string name="passcode_preference_title">PIN-Sperre</string>
@@ -414,8 +424,6 @@
 	<string name="remote_changes">Du hast Änderungen an einem Beitrag vorgenommen, welcher noch nicht hochgeladen wurde. Neu laden und alle lokalen Änderungen überschreiben?</string>
 	<string name="upload">Hochladen</string>
 	<string name="manage">Verwalten</string>
-	<string name="prompt_save_changes">Möchtest du deine Änderungen speichern?</string>
-	<string name="discard">Verwerfen</string>
 	<string name="sign_in">Anmelden</string>
 	<string name="sign_out">Abmelden</string>
 	<string name="notifications">Benachrichtigungen</string>
@@ -459,10 +467,8 @@
 	<string name="blogusername">blogusername</string>
 	<string name="scaled_image">Skalierte Bildbreite</string>
 	<string name="upload_scaled_image">Hochladen und zum skalierten Bild verlinken</string>
-	<string name="update_location">Aktualisieren</string>
 	<string name="remove_location">Entfernen</string>
 	<string name="scheduled">Geplant</string>
-	<string name="help_stats">Benötigst Du Hilfe?</string>
 	<string name="link_enter_url">URL</string>
 	<string name="posted_from">Veröffentlicht mit WordPress für Android</string>
 	<string name="uploading">Lädt hoch</string>
@@ -489,11 +495,8 @@
 	<string name="post_private">Privater Eintrag</string>
 	<string name="publish_post">Veröffentlichen</string>
 	<string name="upload_full_size_image">Hochladen und zu Vollbild verlinken</string>
-	<string name="load_settings">Einstellungen jetzt laden?</string>
 	<string name="tags_separate_with_commas">Tags (durch Kommas getrennt)</string>
 	<string name="categories">Kategorien</string>
-	<string name="stats_username">Nutzername</string>
-	<string name="stats_password">Passwort</string>
 	<string name="title">Titel</string>
 	<string name="tab_stats">Statistiken</string>
 	<string name="delete_sure_page">Bist Du sicher, dass diese Seite gelöscht werden soll</string>
@@ -522,7 +525,6 @@
 	<string name="yes">Ja</string>
 	<string name="no">Nein</string>
 	<string name="error">Fehler</string>
-	<string name="categories_refreshed">Kategorien aktualsiert</string>
 	<string name="category_refresh_error">Fehler beim Aktualisieren der Kategorien</string>
 	<string-array name="alignment_array">
 		<item>Keine</item>

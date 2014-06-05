@@ -153,8 +153,8 @@ public class WPHtml {
      * This uses TagSoup to handle real HTML, including all of the brokenness
      * found in the wild.
      */
-    public static Spanned fromHtml(String source, Context ctx, Post p) {
-        return fromHtml(source, null, null, ctx, p);
+    public static Spanned fromHtml(String source, Context ctx, Post post, int maxImageWidth) {
+        return fromHtml(source, null, null, ctx, post, maxImageWidth);
     }
 
     /**
@@ -177,7 +177,7 @@ public class WPHtml {
      * found in the wild.
      */
     public static Spanned fromHtml(String source, ImageGetter imageGetter,
-            TagHandler tagHandler, Context ctx, Post post) {
+            TagHandler tagHandler, Context ctx, Post post, int maxImageWidth) {
         Parser parser = new Parser();
         try {
             parser.setProperty(Parser.schemaProperty, HtmlParser.schema);
@@ -190,7 +190,7 @@ public class WPHtml {
         }
 
         HtmlToSpannedConverter converter = new HtmlToSpannedConverter(source,
-                imageGetter, tagHandler, parser, ctx, post);
+                imageGetter, tagHandler, parser, ctx, post, maxImageWidth);
         return converter.convert();
     }
 
@@ -561,6 +561,7 @@ class HtmlToSpannedConverter implements ContentHandler {
     private WPHtml.ImageGetter mImageGetter;
     private String mysteryTagContent;
     private boolean mysteryTagFound;
+    private int mMaxImageWidth;
     private static Context ctx;
     private static Post post;
 
@@ -568,7 +569,7 @@ class HtmlToSpannedConverter implements ContentHandler {
 
     public HtmlToSpannedConverter(String source,
             WPHtml.ImageGetter imageGetter, WPHtml.TagHandler tagHandler,
-            Parser parser, Context context, Post p) {
+            Parser parser, Context context, Post p, int maxImageWidth) {
         mSource = source;
         mSpannableStringBuilder = new SpannableStringBuilder();
         mImageGetter = imageGetter;
@@ -577,6 +578,7 @@ class HtmlToSpannedConverter implements ContentHandler {
         mysteryTagName = null;
         ctx = context;
         post = p;
+        mMaxImageWidth = maxImageWidth;
     }
 
     public Spanned convert() {
@@ -831,12 +833,11 @@ class HtmlToSpannedConverter implements ContentHandler {
         return;
     }
 
-    private static void startImg(SpannableStringBuilder text,
+    private void startImg(SpannableStringBuilder text,
             Attributes attributes, WPHtml.ImageGetter img) {
         String src = attributes.getValue("android-uri");
-        ImageHelper ih = new ImageHelper();
 
-        Bitmap resizedBitmap = ih.getThumbnailForWPImageSpan(ctx, src, 0);
+        Bitmap resizedBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
         if (resizedBitmap == null && src != null) {
             if (src.contains("video")) {
                 resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
