@@ -6,6 +6,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,7 +51,7 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
         AppLog.v(T.TESTS, "XMLRPCClientCustomizableXMLMock call: " + method);
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
-            throw new XMLRPCException("code 403");
+            throw new XMLRPCFault("code 403", 403);
         }
 
         Object retValue = readFile(method, mPrefix);
