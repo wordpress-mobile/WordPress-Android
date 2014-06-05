@@ -334,7 +334,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
-        } else if (id == R.id.viewMap) {
+        } else if (id == R.id.locationText) {
             viewLocation();
         } else if (id == R.id.updateLocation) {
             showLocationSearch();
@@ -616,6 +616,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
 
             mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
+            mLocationText.setOnClickListener(this);
 
             mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
             mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
@@ -636,12 +637,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
             mLocationEditText.setOnEditorActionListener(this);
 
-            Button viewMap = (Button) locationRootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
             Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
             updateLocation.setOnClickListener(this);
             removeLocation.setOnClickListener(this);
-            viewMap.setOnClickListener(this);
 
             // if this post has location attached to it, look up the location address
             if (post.hasLocation()) {
