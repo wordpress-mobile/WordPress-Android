@@ -12,18 +12,19 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-/*
+/**
  * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {
+
     private String mImageUrl;
+    private boolean mIsPrivate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,12 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(ReaderConstants.ARG_IMAGE_URL)) {
+        if (savedInstanceState != null) {
             mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
-        } else if (getIntent().hasExtra(ReaderConstants.ARG_IMAGE_URL)) {
+            mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+        } else if (getIntent() != null) {
             mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
+            mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
         }
 
         loadImage(mImageUrl);
@@ -43,9 +46,8 @@ public class ReaderPhotoViewerActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mImageUrl != null) {
-            outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
-        }
+        outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
+        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
     }
 
     private void loadImage(String imageUrl) {
@@ -54,10 +56,11 @@ public class ReaderPhotoViewerActivity extends Activity {
             return;
         }
 
-        // use photon to enforce max size unless this is https
-        if (!UrlUtils.isHttps(imageUrl)) {
-            Point pt = DisplayUtils.getDisplayPixelSize(this);
-            int maxWidth = Math.max(pt.x, pt.y);
+        Point pt = DisplayUtils.getDisplayPixelSize(this);
+        int maxWidth = Math.max(pt.x, pt.y);
+        if (mIsPrivate) {
+            imageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, maxWidth, 0);
+        } else {
             imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
         }
 

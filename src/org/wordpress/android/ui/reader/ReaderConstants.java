@@ -20,6 +20,7 @@ public class ReaderConstants {
     static final String ARG_BLOG_URL          = "blog_url";
     static final String ARG_POST_ID           = "post_id";
     static final String ARG_IMAGE_URL         = "image_url";
+    static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
 
     static final String KEY_ALREADY_UPDATED   = "already_updated";
