@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}.
@@ -82,11 +83,12 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
+        /*try {
             mCallback = (StatsCursorInterface) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
         }
+        */
     }
 
     @Override
@@ -152,7 +154,11 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mCallback.onCursorLoaded(getUri(), data);
+        if (mCallback != null)
+            mCallback.onCursorLoaded(getUri(), data);
+        else
+            AppLog.e(AppLog.T.STATS, "mCallback is null");
+
         if (mAdapter != null)
             mAdapter.changeCursor(data);
         configureEmptyLabel();
@@ -165,6 +171,10 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
             mAdapter.changeCursor(null);
         configureEmptyLabel();
         reloadLinearLayout();
+    }
+
+    public void setCallback(StatsCursorInterface callback) {
+        mCallback = callback;
     }
 
     public void setListAdapter(CursorAdapter adapter) {

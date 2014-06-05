@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.stats;
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,33 +28,6 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     public static final String TAG = StatsReferrersFragment.class.getSimpleName();
 
     @Override
-    protected FragmentStatePagerAdapter getAdapter() {
-        return new CustomPagerAdapter(getChildFragmentManager());
-    }
-
-    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-        public CustomPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return getFragment(position);
-        }
-
-        @Override
-        public int getCount() {
-            return TIMEFRAMES.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TIMEFRAMES[position].getLabel();
-        }
-
-    }
-
-    @Override
     protected Fragment getFragment(int position) {
         Uri groupUri = Uri.parse(STATS_REFERRER_GROUP_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
         Uri childrenUri = STATS_REFERRERS_URI;
@@ -67,6 +38,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
         fragment.setListAdapter(adapter);
+        fragment.setCallback(this);
         return fragment;
     }
 
@@ -155,5 +127,10 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
     @Override
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
+    }
+
+    @Override
+    protected int getInnerFragmentID() {
+        return R.id.stats_referrers;
     }
 }

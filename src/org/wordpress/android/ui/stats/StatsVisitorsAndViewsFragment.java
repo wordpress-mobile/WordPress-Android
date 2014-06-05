@@ -106,7 +106,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     private void loadBarChartFragmentForIndex(int index) {
-        if (getChildFragmentManager().findFragmentByTag(CHILD_TAG + ":" + index) == null) {
+        String childTag = CHILD_TAG + ":" + this.getClass().getSimpleName() + ":" + index;
+        if (getFragmentManager().findFragmentByTag(childTag) == null) {
             final StatsBarChartUnit unit;
             switch (index) {
                 case 1:
@@ -120,9 +121,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             }
 
             StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
-            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, CHILD_TAG + ":" + index);
+            ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, childTag);
             ft.commit();
         }
     }

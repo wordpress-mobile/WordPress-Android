@@ -101,11 +101,12 @@ public class StatsCursorTreeFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
+      /*  try {
             mCallback = (StatsCursorInterface) getParentFragment();
         } catch (ClassCastException e) {
             throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
         }
+        */
     }
 
     @Override
@@ -238,6 +239,10 @@ public class StatsCursorTreeFragment extends Fragment
             mAdapter.changeCursor(null);
         configureEmptyLabel();
         reloadGroupViews();
+    }
+
+    public void setCallback(StatsCursorInterface callback) {
+        mCallback = callback;
     }
 
     public void setListAdapter(CursorTreeAdapter adapter) {

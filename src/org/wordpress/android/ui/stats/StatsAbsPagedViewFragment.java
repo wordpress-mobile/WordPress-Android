@@ -4,13 +4,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -54,6 +54,16 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
+        FrameLayout layout = new FrameLayout(getActivity());
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
+        layout.setLayoutParams(layoutParams);
+        layout.setId(getInnerFragmentID());
+
+        LinearLayout internalLL = (LinearLayout) view.findViewById(R.id.stats_pager_ll_container);
+        internalLL.addView(layout);
+
         setRetainInstance(true);
         initLayout(view);
         restoreState(savedInstanceState);
@@ -71,7 +81,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         final TextView titleView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
-        mFragmentContainer = (FrameLayout) view.findViewById(R.id.stats_pager_container);
+        mFragmentContainer = (FrameLayout) view.findViewById(getInnerFragmentID());
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
         int dp8 = (int) Utils.dpToPx(8);
@@ -121,16 +131,16 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             return;
         }
 
-        String childTag = CHILD_TAG + ":" + index;
-        if (getChildFragmentManager().findFragmentByTag(childTag) == null) {
+        String childTag = CHILD_TAG + ":" + this.getClass().getSimpleName() + ":" + index;
+        if (getFragmentManager().findFragmentByTag(childTag) == null) {
             //set minimum height for container, so we don't get a janky fragment transaction
             mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
             Fragment fragment = getFragment(index);
-            FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(R.id.stats_pager_container, fragment, childTag);
+            ft.replace(getInnerFragmentID(), fragment, childTag);
             ft.commit();
-        }
+       }
     }
 
     @Override
@@ -139,7 +149,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         outState.putInt(SELECTED_BUTTON_INDEX, mSelectedButtonIndex);
     }
 
-    protected abstract FragmentStatePagerAdapter getAdapter();
+    protected abstract int getInnerFragmentID();
 
     protected abstract String[] getTabTitles();
 
