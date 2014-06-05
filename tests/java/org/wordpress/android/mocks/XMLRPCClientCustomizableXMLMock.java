@@ -2,9 +2,11 @@ package org.wordpress.android.mocks;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCException;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,7 +28,7 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
     public void setAuthorizationHeader(String authToken) {
     }
 
-    private Object readFile(String method, String prefix) {
+    private Object readFile(String method, String prefix) throws IOException, XMLRPCException, XmlPullParserException {
         // method example: wp.getUsersBlogs
         // Filename: default-wp.getUsersBlogs.xml
         String filename = prefix + "-" + method + ".xml";
@@ -35,13 +37,11 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
             return XMLRPCClient.parseXMLRPCResponse(is, null);
         } catch (FileNotFoundException e) {
             AppLog.e(T.TESTS, "file not found: " + filename);
-        } catch (Exception e) {
-            AppLog.e(T.TESTS, "can't read file: " + filename, e);
         }
         return null;
     }
 
-    public Object call(String method, Object[] params) throws XMLRPCException {
+    public Object call(String method, Object[] params) throws XMLRPCException, IOException, XmlPullParserException {
         try {
             mXmlRpcClient.preparePostMethod(method, params, null);
         } catch (IOException e) {
@@ -51,7 +51,7 @@ public class XMLRPCClientCustomizableXMLMock extends XMLRPCClientCustomizableMoc
         AppLog.v(T.TESTS, "XMLRPCClientCustomizableXMLMock call: " + method);
         if ("login-failure".equals(mPrefix)) {
             // Wrong login
-            throw new XMLRPCException("code 403");
+            throw new XMLRPCFault("code 403", 403);
         }
 
         Object retValue = readFile(method, mPrefix);
