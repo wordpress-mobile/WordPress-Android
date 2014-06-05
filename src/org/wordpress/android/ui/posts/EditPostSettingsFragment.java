@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -74,7 +75,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
     private ArrayList<String> mCategories;
 
-    private Location mCurrentLocation;
+    private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -268,13 +269,12 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
                     mCategories = JSONUtil.fromJSONArrayToStringList(post.getJSONCategories());
                 }
 
-                Double latitude = post.getLatitude();
-                Double longitude = post.getLongitude();
-
                 // if this post has location attached to it, look up the location address
-                if (latitude != 0.0) {
+                if (post.hasLocation()) {
+                    PostLocation location = post.getLocation();
+
                     setLocationStatus(LocationStatus.SEARCHING);
-                    new GetAddressTask().execute(latitude, longitude);
+                    new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
                 }
             }
             String tags = post.getKeywords();
@@ -343,18 +343,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         } else if (id == R.id.categoryButton) {
             onCategoryButtonClick(v);
         } else if (id == R.id.viewMap) {
-            Double latitude = 0.0;
-            try {
-                latitude = mCurrentLocation.getLatitude();
-            } catch (RuntimeException e) {
-                AppLog.e(T.POSTS, e);
-            }
-            if (latitude != 0.0) {
-                String uri = "geo:" + latitude + "," + mCurrentLocation.getLongitude();
-                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
-            } else {
-                Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
-            }
+            viewLocation();
         } else if (id == R.id.updateLocation) {
             getLocation();
         } else if (id == R.id.removeLocation) {
@@ -488,14 +477,11 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             post.setChangedFromLocalDraftToPublished(true);
         }
 
-        double latitude = 0.0;
-        double longitude = 0.0;
-        if (mCurrentLocation == null) {
-            latitude = post.getLatitude();
-            longitude = post.getLongitude();
-        } else if (WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
-            latitude = mCurrentLocation.getLatitude();
-            longitude = mCurrentLocation.getLongitude();
+        if (WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
+            if (mPostLocation == null && post.hasLocation()) {
+                mPostLocation = post.getLocation();
+            }
+            post.setLocation(mPostLocation);
         }
 
         post.setPostExcerpt(excerpt);
@@ -504,8 +490,6 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         post.setKeywords(tags);
         post.setPostStatus(status);
         post.setPassword(password);
-        post.setLatitude(latitude);
-        post.setLongitude(longitude);
         post.setPostFormat(postFormat);
     }
 
@@ -617,7 +601,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && !mActivity.getPost().isPage()) {
+        if (hasLocationProvider && WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
             rootView.findViewById(R.id.sectionLocation).setVisibility(View.VISIBLE);
             Button viewMap = (Button) rootView.findViewById(R.id.viewMap);
             Button updateLocation = (Button) rootView.findViewById(R.id.updateLocation);
@@ -626,8 +610,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             removeLocation.setOnClickListener(this);
             viewMap.setOnClickListener(this);
 
-            // if this is a new post, get the user's current location
-            if (mActivity.getPost().isNew()) {
+            // if the post doesn't have a location, get the user's current location
+            if (!mActivity.getPost().hasLocation()) {
                 getLocation();
             }
         }
@@ -654,8 +638,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
      */
     private void setLocation(Location location) {
         if (location != null) {
-            mCurrentLocation = location;
-            new GetAddressTask().execute(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+            mPostLocation = new PostLocation(location.getLatitude(), location.getLongitude());
+            new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
         } else {
             mLocationText.setText(getString(R.string.location_not_found));
             setLocationStatus(LocationStatus.NOT_FOUND);
@@ -663,16 +647,20 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     }
 
     private void removeLocation() {
-        if (mCurrentLocation != null) {
-            mCurrentLocation.setLatitude(0.0);
-            mCurrentLocation.setLongitude(0.0);
-        }
-        if (mActivity.getPost() != null) {
-            mActivity.getPost().setLatitude(0.0);
-            mActivity.getPost().setLongitude(0.0);
-        }
+        mPostLocation = null;
+        mActivity.getPost().unsetLocation();
+
         mLocationText.setText("");
         setLocationStatus(LocationStatus.NONE);
+    }
+
+    private void viewLocation() {
+        if (mPostLocation != null && mPostLocation.isValid()) {
+            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+        } else {
+            Toast.makeText(getActivity(), getResources().getText(R.string.location_toast), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*

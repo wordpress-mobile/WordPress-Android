@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -901,8 +902,11 @@ public class WordPressDB {
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
-            values.put("latitude", post.getLatitude());
-            values.put("longitude", post.getLongitude());
+            if (post.hasLocation()) {
+                PostLocation location = post.getLocation();
+                values.put("latitude", location.getLatitude());
+                values.put("longitude", location.getLongitude());
+            }
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 
@@ -1033,8 +1037,13 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-                post.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
-                post.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
+
+                int latColumnIndex = c.getColumnIndex("latitude");
+                int lngColumnIndex = c.getColumnIndex("longitude");
+                if (!c.isNull(latColumnIndex) && !c.isNull(lngColumnIndex)) {
+                    post.setLocation(c.getDouble(latColumnIndex), c.getDouble(lngColumnIndex));
+                }
+
                 post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
                 post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
                 post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
