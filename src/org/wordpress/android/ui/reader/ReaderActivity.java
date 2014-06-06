@@ -180,16 +180,18 @@ public class ReaderActivity extends WPActionBarActivity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        // purge the database of older data
+
+        // purge the database of older data if we haven't yet
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
-        // perform the first update - note  that we do this in onPostResume()
-        // rather than onResume() or onStart() to ensure that the activity's
-        // state has been restored - failing to do this could cause the dreaded
-        // "Can not perform this action after onSaveInstanceState" exception if
-        // a fragment transaction occurs due to the update
+
+        // perform the first update if we haven't yet - note  that we do this in
+        // onPostResume() rather than onResume() or onStart() to ensure that the
+        // activity's state has been restored - failing to do this could cause the
+        // dreaded "Can not perform this action after onSaveInstanceState" exception
+        // if a fragment transaction occurs due to the update
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }
@@ -320,7 +322,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment != null)
             ft.remove(listFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     /*
@@ -331,7 +333,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /*
@@ -342,7 +344,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private ReaderPostListFragment getListFragment() {
@@ -376,7 +378,7 @@ public class ReaderActivity extends WPActionBarActivity
             ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
