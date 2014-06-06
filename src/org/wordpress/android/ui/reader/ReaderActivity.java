@@ -2,11 +2,11 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.Window;
@@ -165,8 +165,14 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // https://code.google.com/p/android/issues/detail?id=19917
+        outState.putBoolean("bug_19917_fix", true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onResume() {
-        // TODO: this was previously done in onResumeFragments(), make sure it still works
         super.onResume();
         checkMenuDrawer();
     }
