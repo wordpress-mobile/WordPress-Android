@@ -114,7 +114,6 @@ public class ReaderPostPagerActivity extends FragmentActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putString(ARG_TITLE, (String) this.getTitle());
         if (mViewPager != null) {
             outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
@@ -125,6 +124,7 @@ public class ReaderPostPagerActivity extends FragmentActivity
         if (mPostListType != null) {
             outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, mPostListType);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
