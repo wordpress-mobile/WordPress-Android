@@ -232,12 +232,17 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPullToRefreshHelper.registerReceiver(getActivity());
+        // mPullToRefreshHelper is null when current fragment is a ThemeSearchFragment
+        if (mPullToRefreshHelper != null) {
+            mPullToRefreshHelper.registerReceiver(getActivity());
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPullToRefreshHelper.unregisterReceiver(getActivity());
+        if (mPullToRefreshHelper != null) {
+            mPullToRefreshHelper.unregisterReceiver(getActivity());
+        }
     }
 }
