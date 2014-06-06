@@ -26,14 +26,11 @@ import java.util.Locale;
 /**
  * For stats that have multiple pages (e.g. Today, Yesterday).
  * <p>
- * This fragment appears as a viewpager on phone and as a frame layout with buttons on tablet.
+ * This fragment appears as a frame layout with buttons.
  * Each page is a child fragment.
  * </p>
  * <p>
- * The viewpager's fragments are provided by subclasses implementing {@code getAdapter()}.
- * </p>
- * <p>
- * The tablet fragments are provided by subclasses implementing {@code getFragment(int)}
+ * Fragments are provided by subclasses implementing {@code getFragment(int)}
  * </p>
  */
 public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
@@ -44,7 +41,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     private static final String SELECTED_BUTTON_INDEX = "SELECTED_BUTTON_INDEX";
     private int mSelectedButtonIndex = 0;
 
-    // the active fragment has the tag CHILD_TAG:<mChildIndex>
+    // the active fragment has the CHILD_TAG:class.getSimpleName():<mChildIndex>
     private static final String CHILD_TAG = "CHILD_TAG";
 
     private RadioGroup mRadioGroup;
@@ -54,15 +51,16 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
-        FrameLayout layout = new FrameLayout(getActivity());
+        // Create the frame layout that will be used to add/replace the inner fragment
+        FrameLayout frameLayoutForInnerFragment = new FrameLayout(getActivity());
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
-        layout.setLayoutParams(layoutParams);
-        layout.setId(getInnerFragmentID());
+        frameLayoutForInnerFragment.setLayoutParams(layoutParams);
+        frameLayoutForInnerFragment.setId(getInnerFragmentID());
 
-        LinearLayout internalLL = (LinearLayout) view.findViewById(R.id.stats_pager_ll_container);
-        internalLL.addView(layout);
+        LinearLayout statsPagerInnerContainer = (LinearLayout) view.findViewById(R.id.stats_pager_inner_container);
+        statsPagerInnerContainer.addView(frameLayoutForInnerFragment);
 
         setRetainInstance(true);
         initLayout(view);
@@ -132,15 +130,13 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         }
 
         String childTag = CHILD_TAG + ":" + this.getClass().getSimpleName() + ":" + index;
-        if (getFragmentManager().findFragmentByTag(childTag) == null) {
-            //set minimum height for container, so we don't get a janky fragment transaction
-            mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
-            Fragment fragment = getFragment(index);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(getInnerFragmentID(), fragment, childTag);
-            ft.commit();
-       }
+        //set minimum height for container, so we don't get a janky fragment transaction
+        mFragmentContainer.setMinimumHeight(mFragmentContainer.getHeight());
+        Fragment fragment = getFragment(index);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
+        ft.replace(getInnerFragmentID(), fragment, childTag);
+        ft.commit();
     }
 
     @Override

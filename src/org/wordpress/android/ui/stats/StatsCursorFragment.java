@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -29,11 +28,8 @@ import org.wordpress.android.util.AppLog;
  * The fragment has a {@link ContentObserver} to listen for changes in the supplied URIs.
  * By implementing {@link LoaderCallbacks}, it asynchronously fetches new data to update itself.
  * <p>
- * For phone layouts, this fragment appears as a listview, with the CursorAdapter supplying the cells.
- * </p>
- * <p>
- * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries.
- * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the tablet's root layout.
+ * This fragment appears as a linearlayout, with a maximum of 10 entries.
+ * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the root layout.
  * The linearlayout also gets its views from the CursorAdapter.
  * </p>
  */
@@ -77,18 +73,6 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
 
     private Uri getUri() {
         return Uri.parse(getArguments().getString(ARGS_URI));
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        /*try {
-            mCallback = (StatsCursorInterface) getParentFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
-        }
-        */
     }
 
     @Override

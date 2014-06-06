@@ -43,6 +43,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     private TextView mViewsBestEver;
     private TextView mViewsAllTime;
     private TextView mCommentsAllTime;
+    private RadioGroup mRadioGroup;
 
     private static final String CHILD_TAG = "CHILD_TAG";
 
@@ -62,7 +63,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
         mCommentsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_comment_count);
 
-        RadioGroup mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
+        mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
         mRadioGroup.setVisibility(View.VISIBLE);
         mRadioGroup.setOnCheckedChangeListener(this);
 
@@ -93,6 +94,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     public void onResume() {
         super.onResume();
 
+        mRadioGroup.setOnCheckedChangeListener(this);
+
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_SUMMARY_UPDATED));
 
@@ -107,25 +110,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
 
     private void loadBarChartFragmentForIndex(int index) {
         String childTag = CHILD_TAG + ":" + this.getClass().getSimpleName() + ":" + index;
-        if (getFragmentManager().findFragmentByTag(childTag) == null) {
-            final StatsBarChartUnit unit;
-            switch (index) {
-                case 1:
-                    unit = StatsBarChartUnit.WEEK;
-                    break;
-                case 2:
-                    unit = StatsBarChartUnit.MONTH;
-                    break;
-                default:
-                    unit = StatsBarChartUnit.DAY;
-            }
-
-            StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
-            ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, childTag);
-            ft.commit();
+        final StatsBarChartUnit unit;
+        switch (index) {
+            case 1:
+                unit = StatsBarChartUnit.WEEK;
+                break;
+            case 2:
+                unit = StatsBarChartUnit.MONTH;
+                break;
+            default:
+                unit = StatsBarChartUnit.DAY;
         }
+
+        StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
+        ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, childTag);
+        ft.commit();
     }
 
     private void refreshSummary() {
