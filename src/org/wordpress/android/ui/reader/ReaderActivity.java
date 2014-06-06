@@ -178,15 +178,18 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        // at startup, purge the database of older data and perform an initial update - note that
-        // these booleans are static
+    protected void onPostResume() {
+        super.onPostResume();
+        // purge the database of older data
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
+        // perform the first update - note  that we do this in onPostResume()
+        // rather than onResume() or onStart() to ensure that the activity's
+        // state has been restored - failing to do this could cause the dreaded
+        // "Can not perform this action after onSaveInstanceState" exception if
+        // a fragment transaction occurs due to the update
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }
