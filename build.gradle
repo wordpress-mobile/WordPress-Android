@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -26,6 +26,8 @@ dependencies {
 }
 
 android {
+    useOldManifestMerger = true
+
     lintOptions {
         quiet true
         abortOnError false
@@ -48,15 +50,15 @@ android {
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
-            packageNameSuffix ".beta"
+            applicationIdSuffix ".beta"
         }
     }
 
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
-        packageName "org.wordpress.android"
+        applicationId "org.wordpress.android"
         versionName "2.9"
         versionCode 116
         minSdkVersion 14
@@ -69,6 +71,7 @@ android {
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
+        compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -76,7 +79,6 @@ android {
         androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
-        compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
         compile 'org.wordpress:gcm:1.0.0'
         compile 'com.automattic:wordpresscom-rest:0.0.5'
         compile 'org.wordpress:httpmime:4.1.2'
