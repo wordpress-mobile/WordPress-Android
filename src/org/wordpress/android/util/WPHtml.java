@@ -838,12 +838,16 @@ class HtmlToSpannedConverter implements ContentHandler {
         String src = attributes.getValue("android-uri");
 
         Bitmap resizedBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
-        if (resizedBitmap == null && src != null) {
-            if (src.contains("video")) {
-                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
-            } else {
-                resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
+        try {
+            if (resizedBitmap == null && src != null) {
+                if (src.contains("video")) {
+                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
+                } else {
+                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
+                }
             }
+        } catch (OutOfMemoryError e) {
+            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
         }
 
         if (resizedBitmap != null) {
