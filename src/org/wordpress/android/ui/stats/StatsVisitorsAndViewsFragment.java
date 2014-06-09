@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

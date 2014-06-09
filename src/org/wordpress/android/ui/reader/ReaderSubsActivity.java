@@ -1,13 +1,13 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
-import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -49,7 +49,7 @@ import java.util.List;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, popular tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends FragmentActivity
+public class ReaderSubsActivity extends Activity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {
@@ -175,7 +175,7 @@ public class ReaderSubsActivity extends FragmentActivity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
-            mPageAdapter = new SubsPageAdapter(getSupportFragmentManager(), fragments);
+            mPageAdapter = new SubsPageAdapter(getFragmentManager(), fragments);
         }
         return mPageAdapter;
     }
@@ -521,21 +521,17 @@ public class ReaderSubsActivity extends FragmentActivity
         }
     }
 
-    // Note: Make sure we don't mix android.app.FragmentTransaction with support Fragment.
-    // As long as the android.app.FragmentTransaction passed to the tab handlers isn't used, we should be fine.
-    // If at some point we do want to make use of the transaction, the solution suggested here
-    // http://stackoverflow.com/a/14685927/1673548  would work.
     @Override
-    public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
-    }
-
-    @Override
-    public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) {
-    }
-
-    @Override
-    public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
     }
 
 

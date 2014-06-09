@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.media;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.os.Bundle;

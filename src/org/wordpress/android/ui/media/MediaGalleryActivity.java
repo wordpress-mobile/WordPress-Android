@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.media;
 
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 /**
  * An activity where the user can manage a media gallery
  */
-public class MediaGalleryActivity extends FragmentActivity implements MediaGallerySettingsCallback {
+public class MediaGalleryActivity extends Activity implements MediaGallerySettingsCallback {
     public static final int REQUEST_CODE = 3000;
 
     // params for the gallery
@@ -64,7 +64,7 @@ public class MediaGalleryActivity extends FragmentActivity implements MediaGalle
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         mMediaGallery = (MediaGallery) getIntent().getSerializableExtra(PARAMS_MEDIA_GALLERY);
         if (mMediaGallery == null) {
