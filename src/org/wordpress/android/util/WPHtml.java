@@ -833,17 +833,18 @@ class HtmlToSpannedConverter implements ContentHandler {
         return;
     }
 
-    private void startImg(SpannableStringBuilder text,
-            Attributes attributes, WPHtml.ImageGetter img) {
+    private void startImg(SpannableStringBuilder text, Attributes attributes, WPHtml.ImageGetter img) {
         String src = attributes.getValue("android-uri");
 
-        Bitmap resizedBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
+        Bitmap resizedBitmap = null;
         try {
+            resizedBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(ctx, src, mMaxImageWidth);
             if (resizedBitmap == null && src != null) {
                 if (src.contains("video")) {
                     resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_movieclip);
                 } else {
-                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.media_image_placeholder);
+                    resizedBitmap = BitmapFactory.decodeResource(ctx.getResources(),
+                            R.drawable.media_image_placeholder);
                 }
             }
         } catch (OutOfMemoryError e) {
