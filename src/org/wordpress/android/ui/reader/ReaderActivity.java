@@ -2,11 +2,11 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.Window;
@@ -165,22 +165,33 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // https://code.google.com/p/android/issues/detail?id=19917
+        outState.putBoolean("bug_19917_fix", true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onResume() {
-        // TODO: this was previously done in onResumeFragments(), make sure it still works
         super.onResume();
         checkMenuDrawer();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPostResume() {
+        super.onPostResume();
 
-        // at startup, purge the database of older data and perform an initial update - note that
-        // these booleans are static
+        // purge the database of older data if we haven't yet
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
+
+        // perform the first update if we haven't yet - note  that we do this in
+        // onPostResume() rather than onResume() or onStart() to ensure that the
+        // activity's state has been restored - failing to do this could cause the
+        // dreaded "Can not perform this action after onSaveInstanceState" exception
+        // if a fragment transaction occurs due to the update
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }
@@ -311,7 +322,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment != null)
             ft.remove(listFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     /*
@@ -322,7 +333,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /*
@@ -333,7 +344,7 @@ public class ReaderActivity extends WPActionBarActivity
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private ReaderPostListFragment getListFragment() {
@@ -367,7 +378,7 @@ public class ReaderActivity extends WPActionBarActivity
             ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
