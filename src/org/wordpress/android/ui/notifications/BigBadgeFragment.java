@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spanned;

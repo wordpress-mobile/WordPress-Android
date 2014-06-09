@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;

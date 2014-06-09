@@ -107,7 +107,7 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        getActivity().getSupportFragmentManager().popBackStack();
+        getActivity().getFragmentManager().popBackStack();
         return true;
     }
 

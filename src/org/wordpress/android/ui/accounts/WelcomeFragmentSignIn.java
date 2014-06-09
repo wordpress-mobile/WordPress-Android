@@ -2,7 +2,7 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;

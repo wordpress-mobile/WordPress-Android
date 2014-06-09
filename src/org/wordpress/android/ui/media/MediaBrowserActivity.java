@@ -10,9 +10,9 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -98,7 +98,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         FragmentTransaction ft = fm.beginTransaction();
         setupBaseLayout();
@@ -162,7 +162,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     private void setupBaseLayout() {
         // hide access to the drawer when there are fragments in the back stack
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
             mMenuDrawer.setDrawerIndicatorEnabled(true);
         } else {
             mMenuDrawer.setDrawerIndicatorEnabled(false);
@@ -227,7 +227,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     }
 
     private void showVideoPressUpgradeDialog() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         String title = getString(R.string.media_no_video_title);
         String message = getString(R.string.media_no_video_message);
         String infoTitle = getString(R.string.learn_more);
@@ -281,15 +281,15 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
             // hide if in phone
             if (!mMediaEditFragment.isInLayout() && mMediaEditFragment.isVisible()) {
-                getSupportFragmentManager().popBackStack();
+                getFragmentManager().popBackStack();
             }
         }
 
-        getSupportFragmentManager().executePendingTransactions();
+        getFragmentManager().executePendingTransactions();
 
         // clear item fragment (only visible on phone)
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         }
 
         // reset the media fragment
@@ -316,7 +316,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mSearchMenuItem != null && !Utils.isTablet())
             mSearchMenuItem.collapseActionView();
 
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
             // phone: hide the grid and show the item details
@@ -354,7 +354,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             if (fm.getBackStackEntryCount() > 0) {
                 fm.popBackStack();
                 setupBaseLayout();
@@ -390,7 +390,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             return true;
         } else if (itemId == R.id.menu_edit_media) {
             String mediaId = mMediaItemFragment.getMediaId();
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
 
             if (mMediaEditFragment == null || !mMediaEditFragment.isInLayout()) {
                 // phone layout: hide item details, show and update edit fragment
@@ -529,7 +529,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
         if (mMediaItemFragment != null && mMediaItemFragment.isVisible()) {
             // phone layout: pop the item fragment if it's visible
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         }
 
         //Make sure there are no media in "uploading"
@@ -566,7 +566,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     public void onSavedEdit(String mediaId, boolean result) {
         if (mMediaEditFragment != null && mMediaEditFragment.isVisible() && result) {
-            FragmentManager fm = getSupportFragmentManager();
+            FragmentManager fm = getFragmentManager();
             fm.popBackStack();
 
             // refresh media item details (phone-only)
@@ -605,7 +605,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (fm.getBackStackEntryCount() > 0) {
@@ -631,7 +631,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 if (mMediaEditFragment.isInLayout()) {
                     mMediaEditFragment.loadMedia(null);
                 } else {
-                    getSupportFragmentManager().popBackStack();
+                    getFragmentManager().popBackStack();
                 }
             }
         } else {
