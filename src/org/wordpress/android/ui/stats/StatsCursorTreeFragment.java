@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
 
 /**
  * A fragment that appears as a 'page' in the {@link StatsAbsPagedViewFragment}. Similar to {@link StatsCursorFragment},
@@ -40,11 +40,8 @@ import org.wordpress.android.WordPress;
  * It then restarts loaders on the children URI for each group id, which results in the children views being updated.
  * </p>
  * <p>
- * For phone layouts, this fragment appears as an expandable listview, with a CursorTreeAdapter supplying the group and children views.
- * </p>
- * <p>
- * For tablet layouts, this fragment appears as a linearlayout, with a maximum of 10 entries.
- * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the tablet's root layout.
+ * This fragment appears as a linearlayout, with a maximum of 10 entries.
+ * A linearlayout is necessary because a listview cannot be placed inside the scrollview of the root layout.
  * The linearlayout also gets its group and children views from the CursorTreeAdapter.
  * </p>
  */
@@ -95,17 +92,6 @@ public class StatsCursorTreeFragment extends Fragment
 
     private Uri getChildrenUri() {
         return Uri.parse(getArguments().getString(ARGS_CHILDREN_URI));
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        try {
-            mCallback = (StatsCursorInterface) getParentFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getParentFragment().toString() + " must implement " + StatsCursorInterface.class.getSimpleName());
-        }
     }
 
     @Override
@@ -202,7 +188,11 @@ public class StatsCursorTreeFragment extends Fragment
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
 
-            mCallback.onCursorLoaded(getGroupUri(), data);
+            if (mCallback != null) {
+                mCallback.onCursorLoaded(getGroupUri(), data);
+            } else {
+                AppLog.e(AppLog.T.STATS, "mCallback is null");
+            }
 
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
@@ -238,6 +228,10 @@ public class StatsCursorTreeFragment extends Fragment
             mAdapter.changeCursor(null);
         configureEmptyLabel();
         reloadGroupViews();
+    }
+
+    public void setCallback(StatsCursorInterface callback) {
+        mCallback = callback;
     }
 
     public void setListAdapter(CursorTreeAdapter adapter) {

@@ -353,6 +353,7 @@ public class ImageHelper {
                         return getScaledBitmapAtLongestSide(resizedBitmap, targetWidth);
                     }
                 } catch (OutOfMemoryError e) {
+                    CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC, AppLog.T.UTILS);
                     return null;
                 }
             }
