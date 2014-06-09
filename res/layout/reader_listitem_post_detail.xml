@@ -102,7 +102,8 @@
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/reader_list_selector"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_like_count"

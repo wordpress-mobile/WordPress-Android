@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -529,21 +530,22 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get the latest version of this post - used to get latest like/comment counts
+     * get the latest version of this post so we can show the latest likes/comments
      */
     private void updatePost() {
-        if (!hasPost() || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP()) {
             return;
+        }
 
-        final int origNumLikes = mPost.numLikes;
-        final int origNumReplies = mPost.numReplies;
+        // remember the original like/comment count for this post - note that these values
+        // come from the stored likes/comments and NOT from the like/comment count itself
+        final int origNumLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+        final int origNumReplies = ReaderCommentTable.getNumCommentsForPost(mPost);
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
-                    // post has changed, so get latest version then refresh likes/comments
-                    // if they've changed
+                if (result != ReaderActions.UpdateResult.FAILED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
                     if (origNumLikes != mPost.numLikes) {
                         refreshLikes();
@@ -561,15 +563,20 @@ public class ReaderPostDetailFragment extends Fragment
      * request comments for this post
      */
     private void updateComments() {
-        if (!hasPost() || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP()) {
             return;
-        if (mIsUpdatingComments)
+        }
+        if (mIsUpdatingComments) {
+            AppLog.w(T.READER, "reader post detail > already updating comments");
             return;
+        }
 
+        AppLog.d(T.READER, "reader post detail > updateComments");
         mIsUpdatingComments = true;
 
-        if (!isCommentAdapterEmpty())
+        if (!isCommentAdapterEmpty()) {
             showProgressFooter();
+        }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
@@ -609,14 +616,15 @@ public class ReaderPostDetailFragment extends Fragment
      * refresh adapter so latest comments appear
      */
     private void refreshComments() {
+        AppLog.d(T.READER, "reader post detail > refreshComments");
         getCommentAdapter().refreshComments();
     }
 
     /*
-     * show latest likes for this post - pass true to force reloading avatars (used when user clicks
-     * the like button, to ensure the current user's avatar appears first)
+     * show latest likes for this post
      */
     private void refreshLikes() {
+        AppLog.d(T.READER, "reader post detail > refreshLikes");
         if (!hasActivity() || !hasPost() || !mPost.isWP()) {
             return;
         }
