@@ -1,9 +1,9 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -194,7 +194,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     private void removeListFragment() {
         Fragment listFragment = getListFragment();
         if (listFragment != null) {
-            getSupportFragmentManager()
+            getFragmentManager()
                     .beginTransaction()
                     .remove(listFragment)
                     .commit();
@@ -206,7 +206,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
      */
     private void showListFragmentForTag(final String tagName, ReaderTypes.ReaderPostListType listType) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
@@ -217,14 +217,14 @@ public class ReaderPostListActivity extends WPActionBarActivity
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
                 .commit();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null) {
             return null;
         }

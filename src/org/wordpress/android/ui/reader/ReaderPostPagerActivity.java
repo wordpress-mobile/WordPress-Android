@@ -3,12 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-public class ReaderPostPagerActivity extends FragmentActivity
+public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
 
     static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
@@ -82,7 +82,7 @@ public class ReaderPostPagerActivity extends FragmentActivity
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mPageAdapter = new PostPagerAdapter(getSupportFragmentManager(), new ReaderBlogIdPostIdList(serializedList));
+        mPageAdapter = new PostPagerAdapter(getFragmentManager(), new ReaderBlogIdPostIdList(serializedList));
         mViewPager.setAdapter(mPageAdapter);
         if (mPageAdapter.isValidPosition(position)) {
             mViewPager.setCurrentItem(position);

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.comments;
 
 import android.app.ActionBar;
 import android.app.Dialog;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -46,7 +46,7 @@ public class CommentsActivity extends WPActionBarActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
         setTitle(getString(R.string.tab_comments));
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         restoreSavedInstance(savedInstanceState);
     }
@@ -99,7 +99,7 @@ public class CommentsActivity extends WPActionBarActivity
         super.onBlogChanged();
 
         // clear the backstack
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         // clear and update the comment list
@@ -132,7 +132,7 @@ public class CommentsActivity extends WPActionBarActivity
                     // let WPActionBarActivity handle it (toggles menu drawer)
                     return super.onOptionsItemSelected(item);
                 } else {
-                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentManager fm = getFragmentManager();
                     if (fm.getBackStackEntryCount() > 0) {
                         fm.popBackStack();
                         return true;
@@ -146,7 +146,7 @@ public class CommentsActivity extends WPActionBarActivity
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+                    int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     // This is ugly, but onBackStackChanged is not called just after a fragment commit.
                     // In a 2 commits in a row case, onBackStackChanged is called twice but after the
                     // 2 commits. That's why mSelectedReaderPost can't be affected correctly after the first commit.
@@ -202,7 +202,7 @@ public class CommentsActivity extends WPActionBarActivity
                     case TRASHED:
                         updateCommentList();
                         // remove the detail view since comment was deleted
-                        FragmentManager fm = getSupportFragmentManager();
+                        FragmentManager fm = getFragmentManager();
                         if (fm.getBackStackEntryCount() > 0) {
                             fm.popBackStack();
                         }
@@ -219,7 +219,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_detail));
         if (fragment == null) {
             return null;
@@ -232,7 +232,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private CommentsListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_comment_list));
         if (fragment == null) {
             return null;
@@ -245,7 +245,7 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     private ReaderPostDetailFragment getReaderFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_detail));
         if (fragment == null)
             return null;
         return (ReaderPostDetailFragment)fragment;
@@ -257,7 +257,7 @@ public class CommentsActivity extends WPActionBarActivity
 
     void showReaderFragment(long remoteBlogId, long postId) {
         mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         fm.executePendingTransactions();
 
         Fragment fragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
@@ -277,7 +277,7 @@ public class CommentsActivity extends WPActionBarActivity
     @Override
     public void onCommentSelected(long commentId) {
         mSelectedCommentId = commentId;
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         if (fm == null) {
             return;
         }

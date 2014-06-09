@@ -2,12 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -49,7 +49,7 @@ import java.util.List;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, popular tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends FragmentActivity
+public class ReaderSubsActivity extends Activity
                                 implements ReaderTagAdapter.TagActionListener,
                                            ReaderBlogAdapter.BlogFollowChangeListener,
                                            ActionBar.TabListener {
@@ -174,7 +174,7 @@ public class ReaderSubsActivity extends FragmentActivity
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.FOLLOWED));
             fragments.add(ReaderBlogFragment.newInstance(ReaderBlogType.RECOMMENDED));
 
-            mPageAdapter = new SubsPageAdapter(getSupportFragmentManager(), fragments);
+            mPageAdapter = new SubsPageAdapter(getFragmentManager(), fragments);
         }
         return mPageAdapter;
     }
