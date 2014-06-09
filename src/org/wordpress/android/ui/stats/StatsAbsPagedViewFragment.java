@@ -52,7 +52,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
         // Create the frame layout that will be used to add/replace the inner fragment
-        FrameLayout frameLayoutForInnerFragment = new FrameLayout(getActivity());
+        FrameLayout frameLayoutForInnerFragment = new FrameLayout(container.getContext());
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT,
                 Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);

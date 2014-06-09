@@ -138,10 +138,11 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (mCallback != null)
+        if (mCallback != null) {
             mCallback.onCursorLoaded(getUri(), data);
-        else
+        } else {
             AppLog.e(AppLog.T.STATS, "mCallback is null");
+        }
 
         if (mAdapter != null)
             mAdapter.changeCursor(data);

@@ -188,10 +188,11 @@ public class StatsCursorTreeFragment extends Fragment
                 getLoaderManager().restartLoader(data.getPosition(), bundle, StatsCursorTreeFragment.this);
             }
 
-            if (mCallback != null)
+            if (mCallback != null) {
                 mCallback.onCursorLoaded(getGroupUri(), data);
-            else
+            } else {
                 AppLog.e(AppLog.T.STATS, "mCallback is null");
+            }
 
             if (mAdapter != null)
                 mAdapter.changeCursor(data);
