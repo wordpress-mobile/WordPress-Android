@@ -40,7 +40,7 @@ public class AppLog {
         mEnableCrashlytics = enable;
     }
 
-    public static void crashlyticsLog(T tag, Throwable throwable, String message) {
+    private static void crashlyticsLog(T tag, Throwable throwable, String message) {
         if (mEnableCrashlytics) {
             CrashlyticsUtils.logException(throwable, ExceptionType.USUAL, tag, message);
         }
