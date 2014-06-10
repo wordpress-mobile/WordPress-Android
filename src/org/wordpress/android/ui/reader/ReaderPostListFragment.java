@@ -55,6 +55,7 @@ import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -100,6 +101,9 @@ public class ReaderPostListFragment extends Fragment
 
     private Parcelable mListState = null;
 
+    private final Stack<String> mTagPreviewHistory = new Stack<String>();
+    private static final String KEY_TAG_PREVIEW_HISTORY = "tag_preview_history";
+
     /*
      * show posts with a specific tag
      */
@@ -143,6 +147,9 @@ public class ReaderPostListFragment extends Fragment
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+                if (mPostListType == ReaderPostListType.TAG_PREVIEW) {
+                    mTagPreviewHistory.push(mCurrentTag);
+                }
             }
         }
     }
@@ -167,6 +174,11 @@ public class ReaderPostListFragment extends Fragment
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
+                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
+                mTagPreviewHistory.clear();
+                mTagPreviewHistory.addAll(backStack);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
@@ -208,6 +220,10 @@ public class ReaderPostListFragment extends Fragment
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
+
+        if (!mTagPreviewHistory.empty()) {
+            outState.putSerializable(KEY_TAG_PREVIEW_HISTORY, mTagPreviewHistory);
+        }
 
         // retain list state so we can return to this position
         // http://stackoverflow.com/a/5694441/1673548
@@ -645,6 +661,10 @@ public class ReaderPostListFragment extends Fragment
     }
 
     void setCurrentTag(final String tagName) {
+        setCurrentTag(tagName, true);
+    }
+
+    private void setCurrentTag(final String tagName, boolean allowAutoUpdate) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
@@ -660,9 +680,14 @@ public class ReaderPostListFragment extends Fragment
 
         mCurrentTag = tagName;
 
-        // remember this as the current tag if viewing followed tag
-        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)) {
-            UserPrefs.setReaderTag(tagName);
+        switch (getPostListType()) {
+            case TAG_FOLLOWED:
+                // remember this as the current tag if viewing followed tag
+                UserPrefs.setReaderTag(tagName);
+                break;
+            case TAG_PREVIEW:
+                mTagPreviewHistory.push(mCurrentTag);
+                break;
         }
 
         getPostAdapter().setCurrentTag(tagName);
@@ -671,7 +696,7 @@ public class ReaderPostListFragment extends Fragment
         hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
+        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tagName)) {
             updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
         }
     }
@@ -705,6 +730,28 @@ public class ReaderPostListFragment extends Fragment
                 }
             }
         });
+    }
+
+    /*
+     * when previewing posts with a specific tag, a history of previewed tags is retained so
+     * the user can navigate back through them - this is faster and requires less memory
+     * than creating a new fragment for each previewed tag
+     */
+    boolean goBackInTagHistory() {
+        if (mTagPreviewHistory.empty()) {
+            return false;
+        }
+
+        String tag = mTagPreviewHistory.pop();
+        if (isCurrentTag(tag)) {
+            if (mTagPreviewHistory.empty()) {
+                return false;
+            }
+            tag = mTagPreviewHistory.pop();
+        }
+
+        setCurrentTag(tag, false);
+        return true;
     }
 
     /*
