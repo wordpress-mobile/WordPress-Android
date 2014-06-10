@@ -1,0 +1,3 @@
+[submodule "email-checker"]
+	path = email-checker
+	url = git@github.com:wordpress-mobile/EmailChecker.git
