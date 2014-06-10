@@ -70,6 +70,9 @@ android {
         compile 'com.android.support:support-v13:19.0.+'
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
+        compile 'org.apache.httpcomponents:httpmime:4.1.+'
+        compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
+        compile 'commons-lang:commons-lang:2.6'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -77,15 +80,12 @@ android {
         androidTestCompile 'org.mockito:mockito-core:+'
 
         // These are provided by the WordPress-Android Repository
-        compile 'org.wordpress:menudrawer:3.0.5-SNAPSHOT'
-        compile 'org.wordpress:gcm:1.0.0'
-        compile 'com.automattic:wordpresscom-rest:0.0.5'
-        compile 'org.wordpress:httpmime:4.1.2'
-        compile 'org.wordpress:graphview:3.1.1'
-        compile 'org.wordpress:drag-sort-listview:0.6.1'
-        compile 'org.wordpress:slidinguppanel:1.0.0'
-        compile 'org.wordpress:commons-lang:2.6'
-        compile 'org.wordpress:pulltorefresh-main:+'
+        compile 'org.wordpress:gcm:1.0.0' // not found in maven central
+        compile 'org.wordpress:graphview:3.1.1' // not found in maven central
+        compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
+        compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
+        compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
+        compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest not public
         compile project(':email-checker/android/')
         compile project(':android-passcodelock/library/')
 
