@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.LayoutInflater;

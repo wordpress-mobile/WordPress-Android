@@ -57,8 +57,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "2.9"
-        versionCode 116
+        versionName "2.9.1"
+        versionCode 117
         minSdkVersion 14
         targetSdkVersion 19
     }
@@ -67,6 +67,7 @@ android {
         // Provided by maven central
         compile 'com.google.code.gson:gson:2.2.2'
         compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+        compile 'com.android.support:support-v13:19.0.+'
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'

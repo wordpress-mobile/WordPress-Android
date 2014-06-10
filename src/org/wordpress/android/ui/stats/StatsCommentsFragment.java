@@ -1,13 +1,11 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,39 +36,12 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     private static final int MOST_COMMENTED = 1;
 
     @Override
-    protected FragmentStatePagerAdapter getAdapter() {
-        return new CustomPagerAdapter(getChildFragmentManager());
-    }
-
-    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-        public CustomPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return getFragment(position);
-        }
-
-        @Override
-        public int getCount() {
-            return TITLES.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TITLES[position];
-        }
-
-    }
-
-
-    @Override
     protected Fragment getFragment(int position) {
         if (position == 0) {
             StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI,
                     R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
+            fragment.setCallback(this);
             return fragment;
         } else if (position == 1) {
             int entryLabelResId = R.string.stats_entry_most_commented;
@@ -78,6 +49,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI,
                     R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments);
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
+            fragment.setCallback(this);
             return fragment;
         } else {
             return new CommentsSummaryFragment();
@@ -137,6 +109,11 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     @Override
     protected String[] getTabTitles() {
         return TITLES;
+    }
+
+    @Override
+    protected int getInnerFragmentID() {
+        return R.id.stats_comments;
     }
 
     /** Fragment used for summary view **/

@@ -3,7 +3,7 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.support.v4.app.ListFragment;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;

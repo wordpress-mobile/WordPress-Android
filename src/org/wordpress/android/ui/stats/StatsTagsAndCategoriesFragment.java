@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,13 +38,14 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
             tv.setText(getTitle().toUpperCase(Locale.getDefault()));
         }
 
-        FragmentManager fm = getChildFragmentManager();
+        FragmentManager fm = getFragmentManager();
 
         int entryLabelResId = R.string.stats_entry_tags_and_categories;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_tags_and_categories;
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        fragment.setCallback(this);
 
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.stats_pager_container, fragment, StatsCursorFragment.TAG);

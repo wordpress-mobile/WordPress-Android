@@ -2,9 +2,9 @@ package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -89,7 +89,7 @@ public class ReaderActivity extends WPActionBarActivity
         }
 
         super.onCreate(savedInstanceState);
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
+        getFragmentManager().addOnBackStackChangedListener(this);
 
         readIntent(getIntent(), savedInstanceState);
     }
@@ -165,22 +165,33 @@ public class ReaderActivity extends WPActionBarActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // https://code.google.com/p/android/issues/detail?id=19917
+        outState.putBoolean("bug_19917_fix", true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onResume() {
-        // TODO: this was previously done in onResumeFragments(), make sure it still works
         super.onResume();
         checkMenuDrawer();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onPostResume() {
+        super.onPostResume();
 
-        // at startup, purge the database of older data and perform an initial update - note that
-        // these booleans are static
+        // purge the database of older data if we haven't yet
         if (!mHasPerformedPurge) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
+
+        // perform the first update if we haven't yet - note  that we do this in
+        // onPostResume() rather than onResume() or onStart() to ensure that the
+        // activity's state has been restored - failing to do this could cause the
+        // dreaded "Can not perform this action after onSaveInstanceState" exception
+        // if a fragment transaction occurs due to the update
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }
@@ -200,7 +211,7 @@ public class ReaderActivity extends WPActionBarActivity
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else if (hasListFragment() && hasDetailFragment()) {
-            getSupportFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
@@ -220,7 +231,7 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void checkMenuDrawer() {
         if (mMenuDrawer != null) {
-            int entryCount = getSupportFragmentManager().getBackStackEntryCount();
+            int entryCount = getFragmentManager().getBackStackEntryCount();
             mMenuDrawer.setDrawerIndicatorEnabled(entryCount == 0);
         }
     }
@@ -305,13 +316,13 @@ public class ReaderActivity extends WPActionBarActivity
         if (listFragment == null && detailFragment == null)
             return;
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (detailFragment != null)
             ft.remove(detailFragment);
         if (listFragment != null)
             ft.remove(listFragment);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     /*
@@ -319,10 +330,10 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragmentForTag(final String tagName, ReaderPostListType listType) {
         Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /*
@@ -330,14 +341,14 @@ public class ReaderActivity extends WPActionBarActivity
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
-        getSupportFragmentManager()
+        getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     private ReaderPostListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(R.string.fragment_tag_reader_post_list));
         if (fragment == null) {
             return null;
         }
@@ -356,7 +367,7 @@ public class ReaderActivity extends WPActionBarActivity
 
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         Fragment fragment = ReaderPostDetailFragment.newInstance(blogId, postId);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         // add to the backstack if list fragment exists
@@ -367,11 +378,11 @@ public class ReaderActivity extends WPActionBarActivity
             ft.add(R.id.fragment_container, fragment, tagForFragment);
         }
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     private ReaderPostDetailFragment getDetailFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(getString(
+        Fragment fragment = getFragmentManager().findFragmentByTag(getString(
                 R.string.fragment_tag_reader_post_detail));
         if (fragment == null) {
             return null;

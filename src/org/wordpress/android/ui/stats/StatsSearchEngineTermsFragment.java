@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.stats;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,33 +24,6 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     public static final String TAG = StatsSearchEngineTermsFragment.class.getSimpleName();
 
     @Override
-    protected FragmentStatePagerAdapter getAdapter() {
-        return new CustomPagerAdapter(getChildFragmentManager());
-    }
-
-    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
-        public CustomPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return getFragment(position);
-        }
-
-        @Override
-        public int getCount() {
-            return TIMEFRAMES.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return TIMEFRAMES[position].getLabel();
-        }
-
-    }
-
-    @Override
     protected Fragment getFragment(int position) {
         Uri uri = Uri.parse(STATS_SEARCH_ENGINE_TERMS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
 
@@ -60,6 +31,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
                 R.string.stats_totals_views, R.string.stats_empty_search_engine_terms_title,
                 R.string.stats_empty_search_engine_terms_desc);
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
+        fragment.setCallback(this);
         return fragment;
     }
 
@@ -99,5 +71,10 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
     @Override
     protected String[] getTabTitles() {
         return StatsTimeframe.toStringArray(TIMEFRAMES);
+    }
+
+    @Override
+    protected int getInnerFragmentID() {
+        return R.id.stats_search;
     }
 }
