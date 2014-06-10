@@ -139,6 +139,17 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     @Override
+    public void onBackPressed() {
+        // if fullscreen video is showing, hide the custom view rather than navigate back
+        ReaderPostDetailFragment fragment = getActiveDetailFragment();
+        if (fragment != null && fragment.isCustomViewShowing()) {
+            fragment.hideCustomView();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onRequestFullScreen(boolean enableFullScreen) {
         if (!isFullScreenSupported() || enableFullScreen == mIsFullScreen) {
             return false;

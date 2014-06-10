@@ -1442,6 +1442,16 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
+    boolean isCustomViewShowing() {
+        return mReaderWebView != null && mReaderWebView.isCustomViewShowing();
+    }
+
+    void hideCustomView() {
+        if (mReaderWebView != null) {
+            mReaderWebView.hideCustomView();
+        }
+    }
+
     @Override
     public boolean onUrlClick(String url) {
         // open YouTube videos in external app so they launch the YouTube player, open all other
