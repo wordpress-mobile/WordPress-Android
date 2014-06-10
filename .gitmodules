@@ -1,3 +1,6 @@
 [submodule "email-checker"]
 	path = email-checker
 	url = git@github.com:wordpress-mobile/EmailChecker.git
+[submodule "android-passcodelock"]
+	path = android-passcodelock
+	url = git@github.com:wordpress-mobile/Android-PasscodeLock.git

@@ -86,8 +86,9 @@ android {
         compile 'org.wordpress:slidinguppanel:1.0.0'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
-        compile 'org.wordpress:android-passcodelock:0.0.5'
         compile project(':email-checker/android/')
+        compile project(':android-passcodelock/library/')
+
 
         // Simperium
         compile 'com.simperium:simperium-android:0.4.6'
