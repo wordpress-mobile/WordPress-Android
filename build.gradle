@@ -84,12 +84,10 @@ android {
         compile 'org.wordpress:graphview:3.1.1'
         compile 'org.wordpress:drag-sort-listview:0.6.1'
         compile 'org.wordpress:slidinguppanel:1.0.0'
-        compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
-        releaseCompile 'org.wordpress:emailchecker:0.2'
-        debugCompile 'org.wordpress:emailchecker-debug:0.2'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
+        compile 'org.wordpress:android-passcodelock:0.0.5'
+        compile project(':email-checker/android/')
 
         // Simperium
         compile 'com.simperium:simperium-android:0.4.6'

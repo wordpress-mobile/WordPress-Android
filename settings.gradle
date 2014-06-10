@@ -1,1 +1,1 @@
-include "email-checker/android/", "android-passcodelock"
+include "email-checker/android/"
