@@ -313,6 +313,9 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
+    <string name="preference_privacy">Privacy</string>
+    <string name="preference_send_usage_stats">Send statistics</string>
+    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to Automattic</string>
 
     <!-- wpcom sign in dialog -->
     <string name="need_help_signin_wpcom">Need help?</string>
