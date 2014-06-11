@@ -14,8 +14,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
 
 public class ReaderTagAdapter extends BaseAdapter {
     public interface TagActionListener {
-        public void onTagAction(TagAction action, String tagName);
+        public void onTagAction(ReaderTag tag, TagAction action);
     }
 
     private final WeakReference<Context> mWeakContext;
@@ -71,10 +71,8 @@ public class ReaderTagAdapter extends BaseAdapter {
         refresh(null);
     }
 
-    public int indexOfTagName(String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return -1;
-        return mTags.indexOfTag(tagName);
+    public int indexOfTag(ReaderTag tag) {
+        return mTags.indexOfTag(tag);
     }
 
     @Override
@@ -174,10 +172,10 @@ public class ReaderTagAdapter extends BaseAdapter {
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         switch (action) {
             case ADD:
-                success = ReaderTagActions.performTagAction(TagAction.ADD, tag, actionListener);
+                success = ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener);
                 break;
             case DELETE:
-                success = ReaderTagActions.performTagAction(TagAction.DELETE, tag, actionListener);
+                success = ReaderTagActions.performTagAction(tag, TagAction.DELETE, actionListener);
                 break;
             default:
                 success = false;
@@ -185,7 +183,7 @@ public class ReaderTagAdapter extends BaseAdapter {
         }
 
         if (success && mTagListener != null) {
-            mTagListener.onTagAction(action, tagName);
+            mTagListener.onTagAction(tag, action);
         }
     }
 

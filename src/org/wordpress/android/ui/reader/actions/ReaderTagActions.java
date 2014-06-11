@@ -31,8 +31,8 @@ public class ReaderTagActions {
     /**
      * perform the passed action on the passed tag - this is optimistic (returns before API call completes)
      **/
-    public static boolean performTagAction(final TagAction action,
-                                           final ReaderTag tag,
+    public static boolean performTagAction(final ReaderTag tag,
+                                           final TagAction action,
                                            final ReaderActions.ActionListener actionListener) {
         if (tag == null) {
             if (actionListener != null) {

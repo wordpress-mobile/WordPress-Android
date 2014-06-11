@@ -61,12 +61,12 @@ public class ReaderSubsActivity extends Activity
 
     private boolean mTagsChanged;
     private boolean mBlogsChanged;
-    private String mLastAddedTag;
+    private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_BLOGS_CHANGED  = "blogs_changed";
-    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
@@ -157,7 +157,7 @@ public class ReaderSubsActivity extends Activity
         if (state != null) {
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
             mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
-            mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
+            mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
@@ -189,8 +189,8 @@ public class ReaderSubsActivity extends Activity
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
-        if (mLastAddedTag != null) {
-            outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+        if (mLastAddedTagName != null) {
+            outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
     }
 
@@ -201,8 +201,8 @@ public class ReaderSubsActivity extends Activity
             Bundle bundle = new Bundle();
             if (mTagsChanged) {
                 bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTag != null && ReaderTagTable.isFollowedTagName(mLastAddedTag)) {
-                    bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
+                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
                 }
             }
             if (mBlogsChanged) {
@@ -315,17 +315,18 @@ public class ReaderSubsActivity extends Activity
                 if (!succeeded && !isFinishing()) {
                     getPageAdapter().refreshTagFragments();
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
-                    mLastAddedTag = null;
+                    mLastAddedTagName = null;
                 }
             }
         };
 
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        if (ReaderTagActions.performTagAction(TagAction.ADD, tag, actionListener)) {
+
+        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             String msgText = getString(R.string.reader_label_added_tag, tagName);
             MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
             getPageAdapter().refreshTagFragments(null, tagName);
-            onTagAction(TagAction.ADD, tagName);
+            onTagAction(tag, TagAction.ADD);
         }
     }
 
@@ -416,7 +417,7 @@ public class ReaderSubsActivity extends Activity
      * after user adds a tag - note that network request has been made by the time this is called
      */
     @Override
-    public void onTagAction(TagAction action, String tagName) {
+    public void onTagAction(ReaderTag tag, TagAction action) {
         mTagsChanged = true;
 
         final String msgText;
@@ -425,19 +426,19 @@ public class ReaderSubsActivity extends Activity
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_added_tag, tagName);
+                msgText = getString(R.string.reader_label_added_tag, tag.getTagName());
                 msgType = MessageBarType.INFO;
-                mLastAddedTag = tagName;
+                mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_removed_tag, tagName);
+                msgText = getString(R.string.reader_label_removed_tag, tag.getTagName());
                 msgType = MessageBarType.ALERT;
-                if (mLastAddedTag != null && mLastAddedTag.equals(tagName)) {
-                    mLastAddedTag = null;
+                if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
+                    mLastAddedTagName = null;
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);

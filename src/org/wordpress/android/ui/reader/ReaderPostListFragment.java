@@ -712,7 +712,7 @@ public class ReaderPostListFragment extends Fragment
                 ReaderAnim.animateFollowButton(txtFollow);
                 boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                if (ReaderTagActions.performTagAction(action, getCurrentTag(), null)) {
+                if (ReaderTagActions.performTagAction(getCurrentTag(), action, null)) {
                     ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
                 }
             }

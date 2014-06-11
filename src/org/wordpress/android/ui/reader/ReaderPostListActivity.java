@@ -139,7 +139,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 if (isResultOK && listFragment != null && data != null) {
                     if (data.getBooleanExtra(ReaderSubsActivity.KEY_TAGS_CHANGED, false)) {
                         // reload tags if they were changed, and set the last tag added as the current one
-                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG);
+                        String lastAddedTag = data.getStringExtra(ReaderSubsActivity.KEY_LAST_ADDED_TAG_NAME);
                         listFragment.doTagsChanged(lastAddedTag);
                     } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
                         // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
