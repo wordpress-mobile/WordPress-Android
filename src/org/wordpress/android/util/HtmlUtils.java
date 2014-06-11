@@ -27,20 +27,40 @@ public class HtmlUtils {
      * this is much faster than stripHtml() but should only be used when we know the html is valid
      * since the regex will be unpredictable with invalid html
      */
-    public static String fastStripHtml(String text) {
-        if (TextUtils.isEmpty(text))
-            return text;
+    public static String fastStripHtml(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
 
         // insert a line break before P tags unless the only one is at the start
-        if (text.lastIndexOf("<p") > 0)
-            text = text.replaceAll("<p(.|\n)*?>","\n<p>");
+        if (str.lastIndexOf("<p") > 0) {
+            str = str.replaceAll("<p(.|\n)*?>", "\n<p>");
+        }
 
         // convert BR tags to line breaks
-        if (text.contains("<br"))
-            text = text.replaceAll("<br(.|\n)*?>","\n");
+        if (str.contains("<br")) {
+            str = str.replaceAll("<br(.|\n)*?>", "\n");
+        }
 
         // use regex to strip tags, then convert entities in the result
-        return fastUnescapeHtml(text.replaceAll("<(.|\n)*?>", "").trim());
+        return trimStart(fastUnescapeHtml(str.replaceAll("<(.|\n)*?>", "")));
+    }
+
+    /*
+     * same as apache.commons.lang.StringUtils.stripStart() but also removes non-breaking
+     * space (160) chars
+     */
+    private static String trimStart(final String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0) {
+            return "";
+        }
+        int start = 0;
+        while (start != strLen
+                && (Character.isWhitespace(str.charAt(start)) || str.charAt(start) == 160)) {
+            start++;
+        }
+        return str.substring(start);
     }
 
     /*

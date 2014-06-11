@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -67,7 +67,6 @@ public class ReaderSubsActivity extends Activity
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_BLOGS_CHANGED  = "blogs_changed";
     static final String KEY_LAST_ADDED_TAG = "last_added_tag";
-    private static final String KEY_HAS_UPDATED = "is_updated";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
@@ -159,7 +158,7 @@ public class ReaderSubsActivity extends Activity
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
             mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
-            mHasPerformedUpdate = state.getBoolean(KEY_HAS_UPDATED);
+            mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
 
@@ -189,7 +188,7 @@ public class ReaderSubsActivity extends Activity
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
-        outState.putBoolean(KEY_HAS_UPDATED, mHasPerformedUpdate);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTag != null) {
             outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
         }
@@ -521,18 +520,22 @@ public class ReaderSubsActivity extends Activity
         }
     }
 
+    /*
+     * Note: Make sure we don't mix android.app.FragmentTransaction with support Fragment.
+     * As long as the android.app.FragmentTransaction passed to the tab handlers isn't used, we should be fine.
+     * If at some point we do want to make use of the transaction, the solution suggested here
+     * http://stackoverflow.com/a/14685927/1673548  would work.
+     */
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
-
-    @Override
-    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+    public void onTabSelected(Tab tab, android.app.FragmentTransaction ft) {
         mViewPager.setCurrentItem(tab.getPosition());
     }
+
+    @Override
+    public void onTabUnselected(Tab tab, android.app.FragmentTransaction ft) { }
+
+    @Override
+    public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) { }
 
 
     private class SubsPageAdapter extends FragmentPagerAdapter {

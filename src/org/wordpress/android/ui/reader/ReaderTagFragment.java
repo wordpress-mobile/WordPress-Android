@@ -16,10 +16,9 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 
-/**
+/*
  * fragment hosted by ReaderSubsActivity which shows either followed or popular tags
  */
 public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagActionListener {
@@ -172,7 +171,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 }
             };
             int aniResId = (action == TagAction.ADD ? R.anim.reader_tag_add : R.anim.reader_tag_delete);
-            AniUtils.removeListItem(mListView, index, aniListener, aniResId);
+            ReaderAnim.animateListItem(mListView, index, aniListener, aniResId);
         } else {
             refresh();
         }

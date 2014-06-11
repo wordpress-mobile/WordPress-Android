@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    shown by ReaderPostPagerActivity when the user scrolls beyond the last post
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_label_reached_last_post"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:textColor="@color/grey_medium_dark" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_checkmark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2714"
+        android:textSize="96sp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:textColor="@color/grey_medium_dark" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reader_label_tap_to_dismiss"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey_medium_dark" />
+</LinearLayout>

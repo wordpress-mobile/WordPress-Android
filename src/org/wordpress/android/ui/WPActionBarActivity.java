@@ -50,7 +50,7 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.PreferencesActivity;
-import org.wordpress.android.ui.reader.ReaderActivity;
+import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
@@ -587,7 +587,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private void showReader() {
         Intent intent;
-        intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+        intent = new Intent(WPActionBarActivity.this, ReaderPostListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
@@ -793,14 +793,14 @@ public abstract class WPActionBarActivity extends Activity {
 
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof ReaderActivity;
+            return WPActionBarActivity.this instanceof ReaderPostListActivity;
         }
         @Override
         public void onSelectItem(){
             if (!isSelected())
                 mShouldFinish = true;
             Intent intent;
-            intent = new Intent(WPActionBarActivity.this, ReaderActivity.class);
+            intent = new Intent(WPActionBarActivity.this, ReaderPostListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

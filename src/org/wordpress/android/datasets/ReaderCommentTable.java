@@ -70,15 +70,17 @@ public class ReaderCommentTable {
      * (which is the #comments the server says exist for this post)
      */
     public static int getNumCommentsForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return 0;
+        }
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
     }
 
     public static ReaderCommentList getCommentsForPost(ReaderPost post) {
-        if (post==null)
+        if (post == null) {
             return new ReaderCommentList();
+        }
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
@@ -96,16 +98,18 @@ public class ReaderCommentTable {
     }
 
     public static void addOrUpdateComment(ReaderComment comment) {
-        if (comment==null)
+        if (comment == null) {
             return;
+        }
         ReaderCommentList comments = new ReaderCommentList();
         comments.add(comment);
         addOrUpdateComments(comments);
     }
 
     public static void addOrUpdateComments(ReaderCommentList comments) {
-        if (comments==null || comments.size()==0)
+        if (comments == null || comments.size() == 0) {
             return;
+        }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
@@ -148,15 +152,17 @@ public class ReaderCommentTable {
     }
 
     public static void deleteComment(ReaderPost post, long commentId) {
-        if (post==null)
+        if (post == null) {
             return;
+        }
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(commentId)};
         ReaderDatabase.getWritableDb().delete("tbl_comments", "blog_id=? AND post_id=? AND comment_id=?", args);
     }
 
     public static ReaderComment getCommentFromCursor(Cursor c) {
-        if (c==null)
+        if (c == null) {
             throw new IllegalArgumentException("null comment cursor");
+        }
 
         ReaderComment comment = new ReaderComment();
 

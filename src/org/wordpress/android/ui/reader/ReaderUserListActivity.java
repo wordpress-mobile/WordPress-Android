@@ -15,7 +15,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.util.DisplayUtils;
 
-/**
+/*
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends Activity {
@@ -58,8 +58,8 @@ public class ReaderUserListActivity extends Activity {
 
         setContentView(R.layout.reader_activity_userlist);
 
-        long blogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-        long postId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+        long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+        long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
 
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);

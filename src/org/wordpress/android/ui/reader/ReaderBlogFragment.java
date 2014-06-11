@@ -15,8 +15,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChan
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.util.AppLog;
 
-/**
- * fragment hosted by ReaderSubsActivity which shows either recommended blogs or followed blogs
+/*
+ * fragment hosted by ReaderSubsActivity which shows either recommended blogs and followed blogs
  */
 public class ReaderBlogFragment extends Fragment
                                 implements BlogFollowChangeListener {
@@ -91,12 +91,12 @@ public class ReaderBlogFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
-        outState.putBoolean(ReaderActivity.KEY_WAS_PAUSED, mWasPaused);
+        outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
     }
 
     private void restoreState(Bundle args) {
         if (args != null) {
-            mWasPaused = args.getBoolean(ReaderActivity.KEY_WAS_PAUSED);
+            mWasPaused = args.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
             if (args.containsKey(ARG_BLOG_TYPE)) {
                 mBlogType = (ReaderBlogType) args.getSerializable(ARG_BLOG_TYPE);
             }

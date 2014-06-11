@@ -16,23 +16,18 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
-import android.webkit.WebView.HitTestResult;
-import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -42,6 +37,9 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderWebView.ReaderCustomViewListener;
+import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
@@ -66,49 +64,53 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 
 public class ReaderPostDetailFragment extends Fragment
-                                      implements WPListView.OnScrollDirectionListener {
-    protected static enum PostChangeType { LIKED, UNLIKED, FOLLOWED, UNFOLLOWED, CONTENT }
-    static interface PostChangeListener {
-        public void onPostChanged(long blogId, long postId, PostChangeType changeType);
-    }
+        implements WPListView.OnScrollDirectionListener,
+                   ReaderCustomViewListener,
+                   ReaderWebViewUrlClickListener {
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String KEY_ALREADY_UPDATED = "already_updated";
-    private static final String KEY_ALREADY_REQUESTED = "already_requested";
 
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
+
+    private ReaderPostListType mPostListType;
 
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
     private WPListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
-    private WebView mWebView;
+    private ReaderWebView mReaderWebView;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
-    private boolean mWebViewIsPaused;
 
-    private Parcelable mListState = null;
-
-    private final ArrayList<String> mPrevAvatarUrls = new ArrayList<String>();
+    private Parcelable mListState;
     private final Handler mHandler = new Handler();
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
-    private PostChangeListener mPostChangeListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
+        return newInstance(blogId, postId, null);
+    }
+
+    public static ReaderPostDetailFragment newInstance(long blogId,
+                                                       long postId,
+                                                       ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         Bundle args = new Bundle();
-        args.putLong(ReaderActivity.ARG_BLOG_ID, blogId);
-        args.putLong(ReaderActivity.ARG_POST_ID, postId);
+        args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
+        args.putLong(ReaderConstants.ARG_POST_ID, postId);
+        if (postListType != null) {
+            args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
+        }
 
         ReaderPostDetailFragment fragment = new ReaderPostDetailFragment();
         fragment.setArguments(args);
@@ -120,23 +122,22 @@ public class ReaderPostDetailFragment extends Fragment
      * adapter containing comments for this post
      */
     private ReaderCommentAdapter mAdapter;
+
     private ReaderCommentAdapter getCommentAdapter() {
         if (mAdapter == null) {
-            if (!hasActivity())
-                AppLog.w(T.READER, "reader post detail > comment adapter created before activity");
-
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (!hasActivity())
-                        return;
-                    // show footer below comments when comments exist
-                    mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-                    // restore listView state (scroll position) if it was saved during rotation
-                    if (mListState != null) {
-                        if (!isEmpty)
-                            getListView().onRestoreInstanceState(mListState);
-                        mListState = null;
+                    if (hasActivity()) {
+                        // show footer below comments when comments exist
+                        mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                        // restore listView state (scroll position) if it was saved during rotation
+                        if (mListState != null) {
+                            if (!isEmpty) {
+                                getListView().onRestoreInstanceState(mListState);
+                            }
+                            mListState = null;
+                        }
                     }
                 }
             };
@@ -158,10 +159,10 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
                 @Override
                 public void onRequestData(ReaderActions.RequestDataAction action) {
-                    if (mIsUpdatingComments)
-                        return;
-                    AppLog.i(T.READER, "reader post detail > requesting newer comments");
-                    updateComments();
+                    if (!mIsUpdatingComments) {
+                        AppLog.i(T.READER, "reader post detail > requesting newer comments");
+                        updateComments();
+                    }
                 }
             };
             mAdapter = new ReaderCommentAdapter(getActivity(), mPost, replyListener, dataLoadedListener, dataRequestedListener);
@@ -170,15 +171,18 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean isCommentAdapterEmpty() {
-        return (mAdapter==null || mAdapter.isEmpty());
+        return (mAdapter == null || mAdapter.isEmpty());
     }
 
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
         if (args != null) {
-            mBlogId = args.getLong(ReaderActivity.ARG_BLOG_ID);
-            mPostId = args.getLong(ReaderActivity.ARG_POST_ID);
+            mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
         }
     }
 
@@ -209,20 +213,25 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
 
-        // setup the webView
-        mWebView = (WebView) view.findViewById(R.id.webView);
-        mWebView.setWebViewClient(readerWebViewClient);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        // setup the ReaderWebView
+        mReaderWebView = (ReaderWebView) view.findViewById(R.id.webView);
+        mReaderWebView.setCustomViewListener(this);
+        mReaderWebView.setUrlClickListener(this);
 
         // hide these views until the post is loaded
         mListView.setVisibility(View.INVISIBLE);
-        mWebView.setVisibility(View.INVISIBLE);
-        mLayoutIcons.setVisibility(View.GONE);
-
-        // detect image taps so we can open images in the photo viewer activity
-        mWebView.setOnTouchListener(mWebViewTouchListener);
+        mReaderWebView.setVisibility(View.INVISIBLE);
+        mLayoutIcons.setVisibility(View.INVISIBLE);
 
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mReaderWebView != null) {
+            mReaderWebView.destroy();
+        }
     }
 
     private WPListView getListView() {
@@ -231,13 +240,8 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        // don't change fullscreen if user is typing a comment
-        if (mIsAddCommentBoxShowing) {
-            return;
-        }
-
-        // otherwise always disable fullscreen when scrolling up
-        if (isFullScreen()) {
+        // return from full screen when scrolling up unless user is typing a comment
+        if (isFullScreen() && !mIsAddCommentBoxShowing) {
             setIsFullScreen(false);
         }
     }
@@ -266,11 +270,6 @@ public class ReaderPostDetailFragment extends Fragment
         return (mPost != null);
     }
 
-    void reloadPost() {
-        if (hasPost() && hasActivity())
-            showPost();
-    }
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -282,24 +281,21 @@ public class ReaderPostDetailFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_browse:
-                if (hasPost())
+                if (hasPost()) {
                     ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl(), OpenUrlType.EXTERNAL);
+                }
                 return true;
             case R.id.menu_share:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SHARED_ITEM);
                 sharePage();
                 return true;
-            default :
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     private boolean hasActivity() {
         return isAdded() && !isRemoving();
-    }
-
-    private boolean hostIsReaderActivity() {
-        return (getActivity() instanceof ReaderActivity);
     }
 
     /*
@@ -314,23 +310,32 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void setIsFullScreen(boolean enableFullScreen) {
-        if (mFullScreenListener == null)
-            return;
-        // this tells ReaderActivity to enable/disable fullscreen
-        if (!mFullScreenListener.onRequestFullScreen(enableFullScreen))
-            return;
-        if (mPost.isWP())
-            animateIconBar(!enableFullScreen);
+        // this tells the host activity to enable/disable fullscreen
+        if (mFullScreenListener != null && mFullScreenListener.onRequestFullScreen(enableFullScreen)) {
+            if (mPost.isWP()) {
+                animateIconBar(!enableFullScreen);
+            }
+        }
+    }
+
+    private ReaderPostListType getPostListType() {
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
+    }
+
+    private boolean isBlogPreview() {
+        return (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
     }
 
     /*
      * animate in/out the layout containing the reblog/comment/like icons
      */
     private void animateIconBar(boolean isAnimatingIn) {
-        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE)
+        if (isAnimatingIn && mLayoutIcons.getVisibility() == View.VISIBLE) {
             return;
-        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE)
+        }
+        if (!isAnimatingIn && mLayoutIcons.getVisibility() != View.VISIBLE) {
             return;
+        }
 
         final Animation animation;
         if (isAnimatingIn) {
@@ -354,12 +359,13 @@ public class ReaderPostDetailFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putLong(ReaderActivity.ARG_BLOG_ID, mBlogId);
-        outState.putLong(ReaderActivity.ARG_POST_ID, mPostId);
+        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
+        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
-        outState.putBoolean(KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
-        outState.putBoolean(KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
+        outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
+        outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
         if (mIsAddCommentBoxShowing) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
@@ -369,7 +375,7 @@ public class ReaderPostDetailFragment extends Fragment
         // the scroll position after comment data is reloaded
         if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
             mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(ReaderActivity.KEY_LIST_STATE, mListState);
+            outState.putParcelable(ReaderConstants.KEY_LIST_STATE, mListState);
         } else {
             mListState = null;
         }
@@ -381,9 +387,6 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (activity instanceof ReaderUtils.FullScreenListener) {
             mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
-        }
-        if (activity instanceof PostChangeListener) {
-            mPostChangeListener = (PostChangeListener) activity;
         }
     }
 
@@ -399,16 +402,23 @@ public class ReaderPostDetailFragment extends Fragment
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }
 
+        restoreState(savedInstanceState);
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mBlogId = savedInstanceState.getLong(ReaderActivity.ARG_BLOG_ID);
-            mPostId = savedInstanceState.getLong(ReaderActivity.ARG_POST_ID);
-            mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(KEY_ALREADY_UPDATED);
-            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(KEY_ALREADY_REQUESTED);
+            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
+            mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
             }
-            mListState = savedInstanceState.getParcelable(ReaderActivity.KEY_LIST_STATE);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
+                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
         }
     }
 
@@ -422,30 +432,11 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onPause() {
+        super.onPause();
+
         // this ensures embedded videos don't continue to play when the fragment is no longer
         // active or has been detached
-        if (hasEmbedsOrIframes()) {
-            pauseWebView();
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (hasEmbedsOrIframes()) {
-            resumeWebView();
-        }
-    }
-
-    /*
-     * called by this fragment whenever the post is changed - notifies ReaderActivity of the
-     * change so it can tell the list fragment to reflect the change
-     */
-    private void doPostChanged(PostChangeType changeType) {
-        if (mPostChangeListener == null || !hasPost() || changeType == null)
-            return;
-        mPostChangeListener.onPostChanged(mPost.blogId, mPost.postId, changeType);
+        pauseWebView();
     }
 
     /*
@@ -454,7 +445,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostLike(ReaderPost post, View likeButton) {
         boolean isSelected = likeButton.isSelected();
         likeButton.setSelected(!isSelected);
-        AniUtils.zoomAction(likeButton);
+        ReaderAnim.animateLikeButton(likeButton);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
 
@@ -463,20 +454,13 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        // get the post again, since it has changed
+        // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        refreshLikes();
 
-        // fire listener so host knows about the change
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
-            doPostChanged(PostChangeType.LIKED);
-        } else {
-            doPostChanged(PostChangeType.UNLIKED);
         }
-
-        // call returns before api completes, but local version of post will have been changed
-        // so refresh to show those changes
-        refreshLikes(true);
     }
 
     /*
@@ -485,7 +469,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostFollowed(ReaderPost post, View followButton) {
         boolean isSelected = followButton.isSelected();
         followButton.setSelected(!isSelected);
-        AniUtils.zoomAction(followButton);
+        ReaderAnim.animateFollowButton(followButton);
 
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
@@ -505,9 +489,6 @@ public class ReaderPostDetailFragment extends Fragment
         // get the post again, since it has changed
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
 
-        // fire listener so host knows about the change
-        doPostChanged(isAskingToFollow ? PostChangeType.FOLLOWED : PostChangeType.UNFOLLOWED);
-
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
         refreshFollowed();
@@ -517,15 +498,17 @@ public class ReaderPostDetailFragment extends Fragment
      * called when user chooses to reblog the post
      */
     private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         if (post.isRebloggedByCurrentUser) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
             return;
         }
 
-        AniUtils.zoomAction(imgBtnReblog);
+        imgBtnReblog.setSelected(true);
+        ReaderAnim.animateReblogButton(imgBtnReblog);
         ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, imgBtnReblog);
     }
 
@@ -547,52 +530,30 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get the latest version of this post - used to get latest like/comment counts
+     * get the latest version of this post so we can show the latest likes/comments
      */
     private void updatePost() {
-        if (!hasPost() || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP()) {
             return;
+        }
 
-        final int origNumLikes = mPost.numLikes;
-        final int origNumReplies = mPost.numReplies;
+        // remember the original like/comment count for this post - note that these values
+        // come from the stored likes/comments and NOT from the like/comment count itself
+        final int origNumLikes = ReaderLikeTable.getNumLikesForPost(mPost);
+        final int origNumReplies = ReaderCommentTable.getNumCommentsForPost(mPost);
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                switch (result) {
-                    case CHANGED :
-                        // post has changed, so get latest version
-                        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                        doPostChanged(PostChangeType.CONTENT);
-                        break;
-                    case FAILED:
-                        // failed to get post, so do nothing here
-                        return;
-                    default :
-                        // unchanged
-                        break;
-                }
-
-                // updating the post will get its liking users, so refresh likes here if any exist
-                // to make sure the correct liking avatars are shown
-                if (origNumLikes > 0 || mPost.numLikes > 0)
-                    refreshLikes(false);
-
-                // determine whether we need to make a separate request to update comments
-                new Thread() {
-                    @Override
-                    public void run() {
-                        final boolean isCommentsChanged = (mPost.numReplies != origNumReplies
-                                                        || mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost));
-                        if (isCommentsChanged) {
-                            mHandler.post(new Runnable() {
-                                public void run() {
-                                    updateComments();
-                                }
-                            });
-                        }
+                if (result != ReaderActions.UpdateResult.FAILED) {
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+                    if (origNumLikes != mPost.numLikes) {
+                        refreshLikes();
                     }
-                }.start();
+                    if (mPost.numReplies != origNumReplies) {
+                        updateComments();
+                    }
+                }
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
@@ -602,25 +563,30 @@ public class ReaderPostDetailFragment extends Fragment
      * request comments for this post
      */
     private void updateComments() {
-        if (!hasPost() || !mPost.isWP())
+        if (!hasPost() || !mPost.isWP()) {
             return;
-        if (mIsUpdatingComments)
+        }
+        if (mIsUpdatingComments) {
+            AppLog.w(T.READER, "reader post detail > already updating comments");
             return;
+        }
 
+        AppLog.d(T.READER, "reader post detail > updateComments");
         mIsUpdatingComments = true;
 
-        if (!isCommentAdapterEmpty())
+        if (!isCommentAdapterEmpty()) {
             showProgressFooter();
+        }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
-                if (!hasActivity())
+                if (!hasActivity()) {
                     return;
+                }
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
-                    doPostChanged(PostChangeType.CONTENT);
                     refreshComments();
                 }
             }
@@ -632,83 +598,36 @@ public class ReaderPostDetailFragment extends Fragment
      * show progress bar at the bottom of the screen - used when getting newer comments
      */
     private void showProgressFooter() {
-        if (mProgressFooter == null || mProgressFooter.getVisibility() == View.VISIBLE )
-            return;
-        mProgressFooter.setVisibility(View.VISIBLE);
+        if (mProgressFooter != null && mProgressFooter.getVisibility() != View.VISIBLE) {
+            mProgressFooter.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
      * hide the footer progress bar if it's showing
      */
     private void hideProgressFooter() {
-        if (mProgressFooter == null || mProgressFooter.getVisibility() != View.VISIBLE )
-            return;
-        mProgressFooter.setVisibility(View.INVISIBLE);
+        if (mProgressFooter != null && mProgressFooter.getVisibility() == View.VISIBLE) {
+            mProgressFooter.setVisibility(View.INVISIBLE);
+        }
     }
 
     /*
      * refresh adapter so latest comments appear
      */
     private void refreshComments() {
+        AppLog.d(T.READER, "reader post detail > refreshComments");
         getCommentAdapter().refreshComments();
     }
 
     /*
-     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
-     * display (never called when there are no likes) - note that the passed list of avatar urls
-     * has already been Photon-ized, so there's no need to do that here
+     * show latest likes for this post
      */
-    private void showLikingAvatars(final ArrayList<String> avatarUrls,
-                                   int maxAvatars,
-                                   boolean forceReload) {
-        final ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
-
-        // determine whether avatars need to be shown - goal is to avoid reloading them when
-        // they're already displayed to prevent flicker
-        final boolean reloadAvatars;
-        if (forceReload) {
-            // always reload avatars if force reload requested
-            reloadAvatars = true;
-        } else if (mPrevAvatarUrls.size() == avatarUrls.size()
-                && mPrevAvatarUrls.containsAll(avatarUrls)) {
-            // don't reload if these avatars are the same as last time
-            reloadAvatars = false;
-        } else {
-            // avatars aren't the same as last time, but we can still skip showing
-            // them if the view's child count indicates that we've already added
-            // the max on a previous call to this routine
-            reloadAvatars = (layoutLikingAvatars.getChildCount() < maxAvatars);
-        }
-
-        if (reloadAvatars) {
-            AppLog.d(T.READER, "reader post detail > displaying liking avatars");
-            layoutLikingAvatars.removeAllViews();
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            for (final String url: avatarUrls) {
-                WPNetworkImageView imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                layoutLikingAvatars.addView(imgAvatar);
-                imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
-            }
-
-            // remember these avatars for next comparison
-            mPrevAvatarUrls.clear();
-            mPrevAvatarUrls.addAll(avatarUrls);
-        }
-
-        // show the liking layout if it's not already showing
-        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(mLayoutLikes);
-        }
-    }
-    /*
-     * show latest likes for this post - pass true to force reloading avatars (used when user clicks
-     * the like button, to ensure the current user's avatar appears first)
-     */
-    private void refreshLikes(final boolean forceReload) {
-        if (!hasActivity())
+    private void refreshLikes() {
+        AppLog.d(T.READER, "reader post detail > refreshLikes");
+        if (!hasActivity() || !hasPost() || !mPost.isWP()) {
             return;
-        if (!hasPost() || !mPost.isWP())
-            return;
+        }
 
         new Thread() {
             @Override
@@ -716,6 +635,7 @@ public class ReaderPostDetailFragment extends Fragment
                 if (getView() == null) {
                     return;
                 }
+
                 final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
 
@@ -735,8 +655,9 @@ public class ReaderPostDetailFragment extends Fragment
 
                 mHandler.post(new Runnable() {
                     public void run() {
-                        if (!hasActivity())
+                        if (!hasActivity()) {
                             return;
+                        }
 
                         imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
                         imgBtnLike.setOnClickListener(new View.OnClickListener() {
@@ -747,20 +668,22 @@ public class ReaderPostDetailFragment extends Fragment
                         });
 
                         // nothing more to do if no likes or liking avatars haven't been retrieved yet
-                        if (avatars.size()==0 || mPost.numLikes==0) {
-                            mLayoutLikes.setVisibility(View.GONE);
+                        if (avatars.size() == 0 || mPost.numLikes == 0) {
+                            if (mLayoutLikes.getVisibility() != View.GONE) {
+                                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                            }
                             return;
                         }
 
                         // set the like count text
                         if (mPost.isLikedByCurrentUser) {
-                            if (mPost.numLikes==1) {
+                            if (mPost.numLikes == 1) {
                                 txtLikeCount.setText(R.string.reader_likes_only_you);
                             } else {
-                                txtLikeCount.setText(mPost.numLikes==2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes-1));
+                                txtLikeCount.setText(mPost.numLikes == 2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes - 1));
                             }
                         } else {
-                            txtLikeCount.setText(mPost.numLikes==1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
+                            txtLikeCount.setText(mPost.numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
                         }
 
                         // clicking likes view shows activity displaying all liking users
@@ -771,12 +694,46 @@ public class ReaderPostDetailFragment extends Fragment
                             }
                         });
 
-                        // now show the liking avatars
-                        showLikingAvatars(avatars, maxAvatars, forceReload);
+                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+                            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
+                        }
+
+                        showLikingAvatars(avatars);
                     }
                 });
             }
         }.start();
+    }
+
+    /*
+     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
+     * display (never called when there are no likes) - note that the passed list of avatar urls
+     * has already been Photon-ized, so there's no need to do that here
+     */
+    private void showLikingAvatars(final ArrayList<String> avatarUrls) {
+        ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+
+        // remove excess existing views
+        int numExistingViews = layoutLikingAvatars.getChildCount();
+        if (numExistingViews > avatarUrls.size()) {
+            int numToRemove = avatarUrls.size() - numExistingViews;
+            layoutLikingAvatars.removeViews(numExistingViews, numToRemove);
+        }
+
+        int index = 0;
+        for (String url : avatarUrls) {
+            WPNetworkImageView imgAvatar;
+            // reuse existing view when possible, otherwise inflate a new one
+            if (index < numExistingViews) {
+                imgAvatar = (WPNetworkImageView) layoutLikingAvatars.getChildAt(index);
+            } else {
+                imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
+                layoutLikingAvatars.addView(imgAvatar);
+            }
+            imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+            index++;
+        }
     }
 
     /*
@@ -789,24 +746,22 @@ public class ReaderPostDetailFragment extends Fragment
         if (!hasActivity())
             return;
 
-        // skip if it's already showing
-        if (mIsAddCommentBoxShowing)
+        // skip if it's already showing or if a comment is currently being submitted
+        if (mIsAddCommentBoxShowing || mIsSubmittingComment) {
             return;
-
-        // don't show comment box if a comment is currently being submitted
-        if (mIsSubmittingComment)
-            return;
+        }
 
         final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
         final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
 
         // disable full-screen when comment box is showing
-        if (isFullScreen())
+        if (isFullScreen()) {
             setIsFullScreen(false);
+        }
 
         // different hint depending on whether user is replying to a comment or commenting on the post
-        editComment.setHint(replyToCommentId==0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
+        editComment.setHint(replyToCommentId == 0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
         imgBtnComment.setSelected(true);
         AniUtils.flyIn(layoutCommentBox);
@@ -815,8 +770,9 @@ public class ReaderPostDetailFragment extends Fragment
         editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId==EditorInfo.IME_ACTION_DONE || actionId==EditorInfo.IME_ACTION_SEND)
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
                     submitComment(replyToCommentId);
+                }
                 return false;
             }
         });
@@ -836,7 +792,7 @@ public class ReaderPostDetailFragment extends Fragment
         // if user is replying to another comment, highlight the comment being replied to and scroll
         // it to the top so the user can see which comment they're replying to - note that scrolling
         // is delayed to give time for listView to reposition due to soft keyboard appearing
-        if (replyToCommentId!=0) {
+        if (replyToCommentId != 0) {
             getCommentAdapter().setHighlightCommentId(replyToCommentId, false);
             getListView().postDelayed(new Runnable() {
                 @Override
@@ -852,10 +808,9 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void hideAddCommentBox() {
-        if (!hasActivity())
+        if (!hasActivity() || !mIsAddCommentBoxShowing) {
             return;
-        if (!mIsAddCommentBoxShowing)
-            return;
+        }
 
         final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
         final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
@@ -884,20 +839,22 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void scrollToCommentId(long commentId) {
         int position = getCommentAdapter().indexOfCommentId(commentId);
-        if (position == -1)
-            return;
-        getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), 0);
+        if (position > -1) {
+            getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), 0);
+        }
     }
 
     /*
      * submit the text typed into the comment box as a comment on the current post
      */
     private boolean mIsSubmittingComment = false;
+
     private void submitComment(final long replyToCommentId) {
         final EditText editComment = (EditText) getView().findViewById(R.id.edit_comment);
         final String commentText = EditTextUtils.getText(editComment);
-        if (TextUtils.isEmpty(commentText))
+        if (TextUtils.isEmpty(commentText)) {
             return;
+        }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
@@ -914,8 +871,9 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded, ReaderComment newComment) {
                 mIsSubmittingComment = false;
-                if (!hasActivity())
+                if (!hasActivity()) {
                     return;
+                }
                 if (succeeded) {
                     // comment posted successfully so stop highlighting the fake one and replace
                     // it with the real one
@@ -934,12 +892,11 @@ public class ReaderPostDetailFragment extends Fragment
         };
 
         final ReaderComment newComment = ReaderCommentActions.submitPostComment(mPost,
-                                                                                fakeCommentId,
-                                                                                commentText,
-                                                                                replyToCommentId,
-                                                                                actionListener);
-        if (newComment!=null) {
-            doPostChanged(PostChangeType.CONTENT);
+                fakeCommentId,
+                commentText,
+                replyToCommentId,
+                actionListener);
+        if (newComment != null) {
             editComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
@@ -954,8 +911,9 @@ public class ReaderPostDetailFragment extends Fragment
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
         final TextView txtFollow = (TextView) getView().findViewById(R.id.text_follow);
         final boolean isFollowed = ReaderPostTable.isPostFollowed(mPost);
@@ -967,13 +925,16 @@ public class ReaderPostDetailFragment extends Fragment
      * creates formatted div for passed video with passed (optional) thumbnail
      */
     private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
+
     private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(videoUrl))
+        if (TextUtils.isEmpty(videoUrl)) {
             return "";
+        }
 
         // sometimes we get src values like "//player.vimeo.com/video/70534716" - prefix these with http:
-        if (videoUrl.startsWith("//"))
+        if (videoUrl.startsWith("//")) {
             videoUrl = "http:" + videoUrl;
+        }
 
         int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
 
@@ -992,40 +953,23 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
-        boolean isPrivate = hasPost() && mPost.isPrivate;
-        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(),
-                                                     imageUrl,
-                                                     isPrivate,
-                                                     source,
-                                                     startX,
-                                                     startY);
+        // make sure this is a valid web image (could be file: or data:)
+        if (!imageUrl.startsWith("http")) {
+            return false;
+        }
+
+        // images in private posts must use https for auth token to be sent with request
+        if (hasPost() && mPost.isPrivate) {
+            imageUrl = UrlUtils.makeHttps(imageUrl);
+        }
+
+        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl, source, startX, startY);
         return true;
     }
 
-    /*
-     * touch listener for the webView - detects when an image is tapped and shows it in the
-     * photo viewer activity
-     */
-    private final View.OnTouchListener mWebViewTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            if (event.getAction() != MotionEvent.ACTION_UP) {
-                return false;
-            }
-
-            HitTestResult hr = ((WebView)view).getHitTestResult();
-            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                String imageUrl = hr.getExtra();
-                return showPhotoViewer(imageUrl, view, (int)event.getX(), (int)event.getY());
-            } else {
-                return false;
-            }
-        }
-    };
-
     private boolean hasStaticMenuDrawer() {
         return (getActivity() instanceof WPActionBarActivity)
-            && (((WPActionBarActivity) getActivity()).isStaticMenuDrawer());
+                && (((WPActionBarActivity) getActivity()).isStaticMenuDrawer());
     }
 
     /*
@@ -1055,8 +999,9 @@ public class ReaderPostDetailFragment extends Fragment
             // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
             content = mPost.getText().replace("src=\"//", "src=\"http://");
             // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (mPost.isVideoPress)
+            if (mPost.isVideoPress) {
                 content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
+            }
         } else if (mPost.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content
@@ -1087,9 +1032,12 @@ public class ReaderPostDetailFragment extends Fragment
 
         sbHtml.append("<style type='text/css'>")
               .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { max-width: 100% !important;}")
+              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               .append("  p, div { line-height: 1.6em; font-size: 1em; }")
               .append("  h1, h2 { line-height: 1.2em; }");
+
+        // make sure long strings don't force the user to scroll horizontally
+        sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
@@ -1107,13 +1055,14 @@ public class ReaderPostDetailFragment extends Fragment
               .append("               padding-left: ").append(marginSmall).append("px; ")
               .append("               border-left: 3px solid ").append(greyLight).append("; }");
 
-        // make sure links don't overflow and are shown in the same color they are elsewhere in the app
-        sbHtml.append("  a { word-wrap: break-word; text-decoration: none; color: ").append(linkColor).append("; }");
+        // show links in the same color they are elsewhere in the app
+        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
 
-        if (hasEmbedsOrIframes()) {
-            // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
-            int videoWidth =  DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
-            int videoHeight = (int)(videoWidth * 0.5625f);
+        // if javascript is allowed, make sure embedded videos fit the browser width and
+        // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
+        if (canEnableJavaScript()) {
+            int videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
+            int videoHeight = (int) (videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
         } else {
@@ -1142,7 +1091,7 @@ public class ReaderPostDetailFragment extends Fragment
                   .append("     width: auto !important; height: auto !important;")
                   .append("     margin-top: ").append(marginExtraSmall).append("px; ")
                   .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
-                  .append(" }")
+                  .append("  }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
@@ -1187,19 +1136,10 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * returns true if content contains embed or iframe tags - if so then JavaScript is enabled
-     * and CSS is customized so embedded videos can play
+     * javascript should only be enabled for wp blogs (not external feeds)
      */
-    private boolean hasEmbedsOrIframes() {
-        if (mPost == null) {
-            return false;
-        } else if (mPost.isVideoPress || mPost.hasFeaturedVideo()) {
-            return true;
-        } else {
-            return (mPost.getText().contains("<embed")
-                 || mPost.getText().contains("<iframe")
-                 || mPost.getText().contains("videos.files.wordpress.com"));
-        }
+    private boolean canEnableJavaScript() {
+        return (mPost != null && mPost.isWP());
     }
 
     private void showPost() {
@@ -1214,11 +1154,11 @@ public class ReaderPostDetailFragment extends Fragment
      * AsyncTask to retrieve this post from SQLite and display it
      */
     private boolean mIsPostTaskRunning = false;
+
     private class ShowPostTask extends AsyncTask<Void, Void, Boolean> {
         TextView txtTitle;
         TextView txtBlogName;
-        TextView txtAuthorName;
-        TextView txtDate;
+        TextView txtDateAndAuthor;
         TextView txtFollow;
 
         ImageView imgBtnReblog;
@@ -1226,6 +1166,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         WPNetworkImageView imgAvatar;
         WPNetworkImageView imgFeatured;
+
+        ViewGroup layoutDetailHeader;
 
         String postHtml;
         String featuredImageUrl;
@@ -1235,10 +1177,12 @@ public class ReaderPostDetailFragment extends Fragment
         protected void onPreExecute() {
             mIsPostTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsPostTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             final View container = getView();
@@ -1246,11 +1190,15 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
+            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+            if (mPost == null) {
+                return false;
+            }
+
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
-            txtDate = (TextView) container.findViewById(R.id.text_date);
             txtFollow = (TextView) container.findViewById(R.id.text_follow);
-            txtAuthorName = (TextView) container.findViewById(R.id.text_author_name);
+            txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
@@ -1258,10 +1206,8 @@ public class ReaderPostDetailFragment extends Fragment
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-            if (mPost == null) {
-                return false;
-            }
+            layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
+
             postHtml = getPostHtml(container.getContext());
 
             // detect whether the post has a featured image that's not in the content - if so,
@@ -1279,6 +1225,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             return true;
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
@@ -1297,14 +1244,7 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
-            // set the activity title to the post's title if this is being shown in the reader
-            final String postTitle = mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post);
-            if (hostIsReaderActivity()) {
-                getActivity().setTitle(postTitle);
-            }
-
-            txtTitle.setText(postTitle);
-            txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
+            txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
             txtFollow.setOnClickListener(new View.OnClickListener() {
@@ -1314,24 +1254,22 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             });
 
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE)
-                mLayoutLikes.setVisibility(View.INVISIBLE);
-
             if (mPost.hasBlogName()) {
                 txtBlogName.setText(mPost.getBlogName());
+                txtBlogName.setVisibility(View.VISIBLE);
+            } else if (mPost.hasBlogUrl()) {
+                txtBlogName.setText(UrlUtils.getDomainFromUrl(mPost.getBlogUrl()));
                 txtBlogName.setVisibility(View.VISIBLE);
             } else {
                 txtBlogName.setVisibility(View.GONE);
             }
 
-            // show author name if it exists and is different than the blog name
+            // show date and author name if author name exists and is different than the blog name,
+            // otherwise just show the date
             if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtAuthorName.setText(mPost.getAuthorName());
-                txtAuthorName.setVisibility(View.VISIBLE);
+                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()) + " / " + mPost.getAuthorName());
             } else {
-                txtAuthorName.setVisibility(View.GONE);
+                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
             }
 
             if (mPost.hasPostAvatar()) {
@@ -1340,6 +1278,11 @@ public class ReaderPostDetailFragment extends Fragment
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
+            }
+
+            // hide blog name, avatar & follow button if this fragment was shown from blog preview
+            if (isBlogPreview()) {
+                layoutDetailHeader.setVisibility(View.GONE);
             }
 
             if (showFeaturedImage) {
@@ -1384,25 +1327,24 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnComment.setVisibility(View.GONE);
             }
 
-            // tapping title opens post in browser
-            txtTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mPost.getUrl());
-                }
-            });
+            // if we know refreshLikes() is going to show the liking layout, force it to take up
+            // space right now
+            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
+                mLayoutLikes.setVisibility(View.INVISIBLE);
+            }
 
-            // enable JavaScript in the webView if the post content contains embeds or iframes
-            // so embedded videos will work
-            mWebView.getSettings().setJavaScriptEnabled(hasEmbedsOrIframes());
+            // external blogs (feeds) don't support action icons
+            mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
+
+            // enable JavaScript in the webView if it's safe to do so
+            mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
 
             // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
             // https://code.google.com/p/android/issues/detail?id=4401
-            mWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
-            if (mPost.isWP() && mLayoutIcons.getVisibility() != View.VISIBLE)
-                animateIconBar(true);
+            mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
 
             // make sure the adapter is assigned
             if (getListView().getAdapter() == null) {
@@ -1418,7 +1360,7 @@ public class ReaderPostDetailFragment extends Fragment
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
             // right away, otherwise show them after a brief delay - this gives content time to
             // load before likes/comments appear
-            if (mWebView.getVisibility() == View.VISIBLE) {
+            if (mReaderWebView.getVisibility() == View.VISIBLE) {
                 showContent();
             } else {
                 showContentDelayed();
@@ -1435,21 +1377,20 @@ public class ReaderPostDetailFragment extends Fragment
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mWebView.getVisibility() != View.VISIBLE)
-                    AppLog.d(T.READER, "reader post detail > webView shown before page finished");
                 showContent();
             }
         }, 1000L);
     }
 
     private void showContent() {
-        if (!hasActivity())
+        if (!hasActivity()) {
             return;
+        }
 
-        mWebView.setVisibility(View.VISIBLE);
+        mReaderWebView.setVisibility(View.VISIBLE);
 
         // show likes & comments
-        refreshLikes(false);
+        refreshLikes();
         refreshComments();
 
         // request the latest info for this post if we haven't updated it already
@@ -1459,46 +1400,75 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private final WebViewClient readerWebViewClient = new WebViewClient() {
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            // show the webView now that it has loaded
-            if (view.getVisibility() != View.VISIBLE)
-                view.setVisibility(View.VISIBLE);
+    /*
+     * return the container view that should host the fullscreen video
+     */
+    @Override
+    public ViewGroup onRequestCustomView() {
+        if (hasActivity()) {
+            return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
+        } else {
+            return null;
         }
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            // open clicked urls in default browser or else urls will open in this webView,
-            // but only do this when webView has loaded (is visible) - have seen some posts
-            // containing iframes automatically try to open urls (without being clicked)
-            // before the page has loaded
-            if (view.getVisibility() == View.VISIBLE) {
-                openUrl(url);
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
+    }
 
     /*
-     * called when user taps a link in the webView
+     * return the container view that should be hidden when fullscreen video is shown
      */
-    private void openUrl(String url) {
-        if (!hasActivity() || TextUtils.isEmpty(url)) {
-            return;
+    @Override
+    public ViewGroup onRequestContentView() {
+        if (hasActivity()) {
+            return (ViewGroup) getView().findViewById(R.id.layout_post_detail_container);
+        } else {
+            return null;
         }
+    }
 
+    @Override
+    public void onCustomViewShown() {
+        // fullscreen video has just been shown so hide the ActionBar
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+    }
+
+    @Override
+    public void onCustomViewHidden() {
+        // user returned from fullscreen video so re-display the ActionBar
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.show();
+        }
+    }
+
+    boolean isCustomViewShowing() {
+        return mReaderWebView != null && mReaderWebView.isCustomViewShowing();
+    }
+
+    void hideCustomView() {
+        if (mReaderWebView != null) {
+            mReaderWebView.hideCustomView();
+        }
+    }
+
+    @Override
+    public boolean onUrlClick(String url) {
         // open YouTube videos in external app so they launch the YouTube player, open all other
         // urls using an AuthenticatedWebViewActivity
-        final OpenUrlType openUrlType;
+        final ReaderActivityLauncher.OpenUrlType openUrlType;
         if (ReaderVideoUtils.isYouTubeVideoLink(url)) {
-            openUrlType = OpenUrlType.EXTERNAL;
+            openUrlType = ReaderActivityLauncher.OpenUrlType.EXTERNAL;
         } else {
-            openUrlType = OpenUrlType.INTERNAL;
+            openUrlType = ReaderActivityLauncher.OpenUrlType.INTERNAL;
         }
-
         ReaderActivityLauncher.openUrl(getActivity(), url, openUrlType);
+        return true;
+    }
+
+    @Override
+    public boolean onImageUrlClick(String imageUrl, View view, int x, int y) {
+        return showPhotoViewer(imageUrl, view, x, y);
     }
 
     private ActionBar getActionBar() {
@@ -1510,17 +1480,13 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private void pauseWebView() {
-        if (mWebViewIsPaused && mWebView != null) {
-            mWebViewIsPaused = true;
-            mWebView.onPause();
+    void pauseWebView() {
+        if (mReaderWebView != null) {
+            mReaderWebView.hideCustomView();
+            mReaderWebView.onPause();
+        } else {
+            AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
         }
     }
 
-    private void resumeWebView() {
-        if (!mWebViewIsPaused && mWebView != null) {
-            mWebViewIsPaused = false;
-            mWebView.onResume();
-        }
-    }
 }

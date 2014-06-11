@@ -162,8 +162,13 @@
 
         <!-- Reader Activities -->
         <activity
-            android:name=".ui.reader.ReaderActivity"
+            android:name=".ui.reader.ReaderPostListActivity"
             android:label="@string/reader" />
+        <activity
+            android:name=".ui.reader.ReaderPostPagerActivity"
+            android:theme="@style/ReaderTheme.TranslucentActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />

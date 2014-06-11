@@ -15,8 +15,6 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -58,9 +56,8 @@ class ReaderBlogInfoView extends FrameLayout {
 
         // position the progressBar halfway down the mshot - done this way to avoid it
         // moving when the mshot container is resized
-        int actionBarHeight = DisplayUtils.getActionBarHeight(context);
         mMshotProgress = (ProgressBar) view.findViewById(R.id.progress_mshot);
-        mMshotProgress.setTranslationY((mMshotDefaultHeight / 2) - (actionBarHeight / 2));
+        mMshotProgress.setTranslationY(mMshotDefaultHeight / 2);
     }
 
     /*
@@ -181,7 +178,7 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
-        AniUtils.zoomAction(txtFollow);
+        ReaderAnim.animateFollowButton(txtFollow);
 
         boolean isAskingToFollow = !blogInfo.isFollowing;
         if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {

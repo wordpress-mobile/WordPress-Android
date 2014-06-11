@@ -56,8 +56,9 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     public void refreshTags() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader tag adapter > Load tags task already running");
+        } else {
+            new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        new LoadTagsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void reloadTags() {

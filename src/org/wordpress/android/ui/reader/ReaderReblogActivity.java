@@ -71,8 +71,8 @@ public class ReaderReblogActivity extends Activity {
             });
         }
 
-        mBlogId = getIntent().getLongExtra(ReaderActivity.ARG_BLOG_ID, 0);
-        mPostId = getIntent().getLongExtra(ReaderActivity.ARG_POST_ID, 0);
+        mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+        mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
 
         mEditComment = (EditText) findViewById(R.id.edit_comment);
         mLayoutExcerpt = (ViewGroup) findViewById(R.id.layout_post_excerpt);
@@ -297,8 +297,8 @@ public class ReaderReblogActivity extends Activity {
             @Override
             public void run() {
                 Intent data = new Intent();
-                data.putExtra(ReaderActivity.ARG_BLOG_ID, mBlogId);
-                data.putExtra(ReaderActivity.ARG_POST_ID, mPostId);
+                data.putExtra(ReaderConstants.ARG_BLOG_ID, mBlogId);
+                data.putExtra(ReaderConstants.ARG_POST_ID, mPostId);
                 setResult(RESULT_OK, data);
                 finish();
             }

@@ -16,10 +16,13 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.List;
 
 public class ReaderUtils {
-    public static interface FullScreenListener {
-        public boolean onRequestFullScreen(boolean enable);
-        public boolean isFullScreen();
-        public boolean isFullScreenSupported();
+    /*
+     * used by ReaderPostDetailFragment to enter/exit full screen mode
+     */
+    static interface FullScreenListener {
+        boolean onRequestFullScreen(boolean enable);
+        boolean isFullScreen();
+        boolean isFullScreenSupported();
     }
 
     /*
@@ -42,19 +45,6 @@ public class ReaderUtils {
         txtFollow.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
 
         txtFollow.setSelected(isFollowed);
-    }
-
-    /*
-     * returns true if the passed view's tag is the same as the passed string - this is used
-     * with imageViews that show network images, to avoid reloading the image if the imageView
-     * is already tagged with the image url
-     */
-    public static boolean viewHasTag(final View view, final String tag) {
-        if (view == null || tag == null) {
-            return false;
-        } else {
-            return tag.equals(view.getTag());
-        }
     }
 
     /*
@@ -81,35 +71,25 @@ public class ReaderUtils {
     }
 
     /*
-     * set the top margin for the passed view
-     */
-    public static void setTopMargin(View view, int height) {
-        if (view != null && view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
-            params.topMargin = height;
-        }
-    }
-
-    /*
      * adds a transparent header to the passed listView
      */
-    public static View addListViewHeader(ListView listView, int height) {
+    static View addListViewHeader(ListView listView, int height) {
         if (listView == null) {
             return null;
         }
-        RelativeLayout headerFake = new RelativeLayout(listView.getContext());
-        headerFake.setLayoutParams(new AbsListView.LayoutParams(
-                AbsListView.LayoutParams.MATCH_PARENT,
-                height));
-        listView.addHeaderView(headerFake, null, false);
-        return headerFake;
+        RelativeLayout header = new RelativeLayout(listView.getContext());
+        header.setLayoutParams(new AbsListView.LayoutParams(
+                               AbsListView.LayoutParams.MATCH_PARENT,
+                               height));
+        listView.addHeaderView(header, null, false);
+        return header;
     }
 
     /*
      * adds a rule which tells the view with targetId to be placed below layoutBelowId - only
      * works if viewParent is a RelativeLayout
      */
-    public static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
+    static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
         if (viewParent == null || !(viewParent instanceof RelativeLayout)) {
             return;
         }

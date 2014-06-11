@@ -22,8 +22,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {
-    static final String ARG_IMAGE_URL = "image_url";
-    static final String ARG_IS_PRIVATE = "is_private";
 
     private String mImageUrl;
     private boolean mIsPrivate;
@@ -35,11 +33,11 @@ public class ReaderPhotoViewerActivity extends Activity {
         setContentView(R.layout.reader_activity_photo_viewer);
 
         if (savedInstanceState != null) {
-            mImageUrl = savedInstanceState.getString(ARG_IMAGE_URL);
-            mIsPrivate = savedInstanceState.getBoolean(ARG_IS_PRIVATE);
+            mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
+            mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
         } else if (getIntent() != null) {
-            mImageUrl = getIntent().getStringExtra(ARG_IMAGE_URL);
-            mIsPrivate = getIntent().getBooleanExtra(ARG_IS_PRIVATE, false);
+            mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
+            mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
         }
 
         loadImage(mImageUrl);
@@ -48,8 +46,8 @@ public class ReaderPhotoViewerActivity extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(ARG_IMAGE_URL, mImageUrl);
-        outState.putBoolean(ARG_IS_PRIVATE, mIsPrivate);
+        outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
+        outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
     }
 
     private void loadImage(String imageUrl) {

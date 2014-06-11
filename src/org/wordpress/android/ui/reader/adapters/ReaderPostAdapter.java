@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -23,15 +24,18 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.ui.reader.ReaderActivity.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderTypes;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -101,9 +105,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
-        // when animating rows in, start from this y-position near the bottom using medium animation duration
+        // when animating rows in, start from this y-position near the bottom using short animation duration
         mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
-        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_mediumAnimTime);
+        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         // enable preloading of images
         mEnableImagePreload = true;
@@ -118,7 +122,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     ReaderPostListType getPostListType() {
-        return (mPostListType != null ? mPostListType : ReaderPostListType.getDefaultType());
+        return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
     public String getCurrentTag() {
@@ -130,7 +134,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         tagName = StringUtils.notNullStr(tagName);
         if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
             mCurrentTag = tagName;
-            reload(false);
+            reload();
         }
     }
 
@@ -138,7 +142,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     public void setCurrentBlog(long blogId) {
         if (blogId != mCurrentBlogId) {
             mCurrentBlogId = blogId;
-            reload(false);
+            reload();
         }
     }
 
@@ -150,27 +154,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
     }
 
-    /*
-     * briefly animate the appearance of new rows when reloading
-     */
-    private void enableRowAnimation() {
-        mAnimateRows = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateRows = false;
-            }
-        }, 1000);
-    }
-
     public void refresh() {
         //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
         loadPosts();
     }
 
-    public void reload(boolean animate) {
-        if (animate)
-            enableRowAnimation();
+    /*
+     * same as refresh() above but first clears the existing posts - this will cause the
+     * adapter to animate in the new posts
+     */
+    public void reload() {
         clear();
         loadPosts();
     }
@@ -235,6 +228,14 @@ public class ReaderPostAdapter extends BaseAdapter {
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public ReaderBlogIdPostIdList getBlogIdPostIdList() {
+        ReaderBlogIdPostIdList ids = new ReaderBlogIdPostIdList();
+        for (ReaderPost post: mPosts) {
+            ids.add(new ReaderBlogIdPostId(post.blogId, post.postId));
+        }
+        return ids;
+    }
+
     @Override
     public int getCount() {
         return mPosts.size();
@@ -247,12 +248,12 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return mPosts.get(position).getStableId();
     }
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
@@ -282,7 +283,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.txtBlogName.setText(null);
             }
 
-            // follow/following - supported by both wp and non-wp (rss) posts
+            // follow/following
             ReaderUtils.showFollowStatus(holder.txtFollow, post.isFollowedByCurrentUser);
             holder.txtFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -316,21 +317,15 @@ public class ReaderPostAdapter extends BaseAdapter {
         final int titleMargin;
         if (post.hasFeaturedImage()) {
             final String imageUrl = post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
-            // skip loading image if the imageView is already tagged with this url
-            if (!ReaderUtils.viewHasTag(holder.imgFeatured, imageUrl)) {
-                holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
-                holder.imgFeatured.setTag(imageUrl);
-            }
+            holder.imgFeatured.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
             holder.imgFeatured.setVisibility(View.VISIBLE);
             titleMargin = mMarginLarge;
         } else if (post.hasFeaturedVideo()) {
             holder.imgFeatured.setVideoUrl(post.postId, post.getFeaturedVideo());
             holder.imgFeatured.setVisibility(View.VISIBLE);
-            holder.imgFeatured.setTag(null);
             titleMargin = mMarginLarge;
         } else {
             holder.imgFeatured.setVisibility(View.GONE);
-            holder.imgFeatured.setTag(null);
             titleMargin = (holder.layoutPostHeader.getVisibility() == View.VISIBLE ? 0 : mMarginLarge);
         }
 
@@ -380,7 +375,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnComment.setVisibility(View.VISIBLE);
-            showCounts(holder, post);
+            showCounts(holder, post, false);
         } else {
             holder.imgBtnLike.setVisibility(View.INVISIBLE);
             holder.imgBtnComment.setVisibility(View.INVISIBLE);
@@ -395,7 +390,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AniUtils.zoomAction(holder.imgBtnReblog);
+                        ReaderAnim.animateReblogButton(holder.imgBtnReblog);
                         if (mReblogListener != null) {
                             mReblogListener.onRequestReblog(post, v);
                         }
@@ -427,7 +422,13 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * shows like & comment count
      */
-    private void showCounts(final PostViewHolder holder, final ReaderPost post) {
+    private void showCounts(final PostViewHolder holder,
+                            final ReaderPost post,
+                            boolean animateChanges) {
+        if (animateChanges) {
+            holder.layoutBottom.setLayoutTransition(new LayoutTransition());
+        }
+
         if (post.numLikes > 0) {
             holder.txtLikeCount.setText(FormatUtils.formatInt(post.numLikes));
             holder.txtLikeCount.setVisibility(View.VISIBLE);
@@ -444,6 +445,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             holder.txtCommentCount.setVisibility(View.GONE);
             holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
+        }
+
+        if (animateChanges) {
+            holder.layoutBottom.setLayoutTransition(null);
         }
     }
 
@@ -476,12 +481,10 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
 
-        private final View rootView;
+        private final ViewGroup layoutBottom;
         private final ViewGroup layoutPostHeader;
 
         PostViewHolder(View view, ReaderPostListType postListType) {
-            rootView = view;
-
             txtTitle = (TextView) view.findViewById(R.id.text_title);
             txtText = (TextView) view.findViewById(R.id.text_excerpt);
             txtBlogName = (TextView) view.findViewById(R.id.text_blog_name);
@@ -499,11 +502,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
 
+            layoutBottom = (ViewGroup) view.findViewById(R.id.layout_bottom);
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
             // in a specific blog
-            if (postListType.equals(ReaderPostListType.BLOG_PREVIEW)) {
+            if (postListType.equals(ReaderTypes.ReaderPostListType.BLOG_PREVIEW)) {
                 layoutPostHeader.setVisibility(View.GONE);
             }
         }
@@ -514,7 +518,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         // start animation immediately so user knows they did something
-        AniUtils.zoomAction(holder.imgBtnLike);
+        ReaderAnim.animateLikeButton(holder.imgBtnLike);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
@@ -529,7 +533,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         showLikeStatus(holder.imgBtnLike, updatedPost.isLikedByCurrentUser);
-        showCounts(holder, post);
+        showCounts(holder, post, true);
     }
 
     private void showLikeStatus(ImageView imgBtnLike, boolean isLikedByCurrentUser) {
@@ -541,7 +545,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * triggered when user taps the follow button
      */
     private void toggleFollow(final PostViewHolder holder, int position, ReaderPost post) {
-        AniUtils.zoomAction(holder.txtFollow);
+        ReaderAnim.animateFollowButton(holder.txtFollow);
         final boolean isAskingToFollow = !post.isFollowedByCurrentUser;
 
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
@@ -631,15 +635,25 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
+                boolean wasEmpty = mPosts.isEmpty();
                 mPosts = (ReaderPostList)(tmpPosts.clone());
 
-                // preload images in the first few posts
-                if (mEnableImagePreload && mPosts.size() >= PRELOAD_OFFSET) {
-                    for (int i = 0; i <= PRELOAD_OFFSET; i++) {
-                        preloadPostImages(i);
+                // preload images in the first few posts, skipping the first two since they'll
+                // likely already be on screen and loading images before preload completes
+                if (mEnableImagePreload) {
+                    int preloadStart = 2;
+                    int preloadEnd = preloadStart +  PRELOAD_OFFSET;
+                    if (mPosts.size() > preloadEnd) {
+                        for (int i = preloadStart; i <= preloadEnd; i++) {
+                            preloadPostImages(i);
+                        }
                     }
                 }
 
+                // if list was previously empty, animate in the new posts
+                if (wasEmpty) {
+                    enableRowAnimation();
+                }
                 notifyDataSetChanged();
             }
 
@@ -649,6 +663,19 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             mIsTaskRunning = false;
         }
+    }
+
+    /*
+     * briefly enable animating the appearance of new rows
+     */
+    private void enableRowAnimation() {
+        mAnimateRows = true;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAnimateRows = false;
+            }
+        }, 250);
     }
 
     /*

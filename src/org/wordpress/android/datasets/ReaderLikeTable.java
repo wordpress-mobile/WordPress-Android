@@ -61,12 +61,13 @@ public class ReaderLikeTable {
         }
     }
 
-    /*public static int getNumLikesForPost(ReaderPost post) {
-        if (post==null)
+    public static int getNumLikesForPost(ReaderPost post) {
+        if (post == null) {
             return 0;
+        }
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
-    }*/
+    }
 
     /*
      * returns true if the passed user likes the passed post
