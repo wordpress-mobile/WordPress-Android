@@ -277,15 +277,16 @@ public class ReaderPostTable {
         return isChanged;
     }
 
-    public static int deletePostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static int deletePostsWithTag(final ReaderTag tag) {
+        if (tag == null) {
             return 0;
         }
 
         // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags",
-                "tag_name=?",
-                new String[]{tagName});
+                "tag_name=? AND tag_type=?",
+                args);
 
         if (numDeleted > 0)
             ReaderDatabase.getWritableDb().delete("tbl_posts",

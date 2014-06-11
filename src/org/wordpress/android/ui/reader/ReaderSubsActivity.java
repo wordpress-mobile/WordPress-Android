@@ -201,7 +201,7 @@ public class ReaderSubsActivity extends Activity
             Bundle bundle = new Bundle();
             if (mTagsChanged) {
                 bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTag != null && ReaderTagTable.isFollowedTag(mLastAddedTag)) {
+                if (mLastAddedTag != null && ReaderTagTable.isFollowedTagName(mLastAddedTag)) {
                     bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
                 }
             }
@@ -253,7 +253,7 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        if (ReaderTagTable.isFollowedTag(entry)) {
+        if (ReaderTagTable.isFollowedTagName(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
@@ -320,7 +320,8 @@ public class ReaderSubsActivity extends Activity
             }
         };
 
-        if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        if (ReaderTagActions.performTagAction(TagAction.ADD, tag, actionListener)) {
             String msgText = getString(R.string.reader_label_added_tag, tagName);
             MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
             getPageAdapter().refreshTagFragments(null, tagName);

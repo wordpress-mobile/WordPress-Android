@@ -169,11 +169,11 @@ public class ReaderTagTable {
         }
     }
 
-    public static boolean isFollowedTag(String tagName) {
+    public static boolean isFollowedTagName(String tagName) {
         return tagExistsOfType(tagName, ReaderTagType.FOLLOWED);
     }
 
-    public static boolean isDefaultTag(String tagName) {
+    public static boolean isDefaultTagName(String tagName) {
         return tagExistsOfType(tagName, ReaderTagType.DEFAULT);
     }
 
@@ -238,13 +238,13 @@ public class ReaderTagTable {
         }
     }
 
-    public static void deleteTag(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static void deleteTag(ReaderTag tag) {
+        if (tag == null) {
             return;
         }
-        String[] args = {tagName};
-        ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_name=?", args);
-        ReaderDatabase.getWritableDb().delete("tbl_tag_updates", "tag_name=?", args);
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_name=? AND tag_type=?", args);
+        ReaderDatabase.getWritableDb().delete("tbl_tag_updates", "tag_name=? AND tag_type=?", args);
     }
 
     /**

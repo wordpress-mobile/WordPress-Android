@@ -171,12 +171,13 @@ public class ReaderTagAdapter extends BaseAdapter {
         };
 
         final boolean success;
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         switch (action) {
             case ADD:
-                success = ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener);
+                success = ReaderTagActions.performTagAction(TagAction.ADD, tag, actionListener);
                 break;
             case DELETE:
-                success = ReaderTagActions.performTagAction(TagAction.DELETE, tagName, actionListener);
+                success = ReaderTagActions.performTagAction(TagAction.DELETE, tag, actionListener);
                 break;
             default:
                 success = false;

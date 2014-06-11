@@ -704,15 +704,15 @@ public class ReaderPostListFragment extends Fragment
         txtTagName.setText(Html.fromHtml(htmlLabel));
 
         final TextView txtFollow = (TextView) mTagInfoView.findViewById(R.id.text_follow_blog);
-        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTag(getCurrentTagName()));
+        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTagName(getCurrentTagName()));
 
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ReaderAnim.animateFollowButton(txtFollow);
-                boolean isAskingToFollow = !ReaderTagTable.isFollowedTag(getCurrentTagName());
+                boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                if (ReaderTagActions.performTagAction(action, getCurrentTagName(), null)) {
+                if (ReaderTagActions.performTagAction(action, getCurrentTag(), null)) {
                     ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
                 }
             }

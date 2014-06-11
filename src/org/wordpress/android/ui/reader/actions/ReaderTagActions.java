@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.text.TextUtils;
 
@@ -32,14 +33,14 @@ public class ReaderTagActions {
      * perform the passed action on the passed tag - this is optimistic (returns before API call completes)
      **/
     public static boolean performTagAction(final TagAction action,
-                                           final String tagName,
+                                           final ReaderTag tag,
                                            final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(tagName)) {
+        if (tag == null) {
             return false;
         }
 
         // don't allow actions on default tags
-        if (ReaderTagTable.isDefaultTag(tagName)) {
+        if (tag.tagType == ReaderTagType.DEFAULT) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
             }
@@ -48,21 +49,21 @@ public class ReaderTagActions {
 
         final ReaderTag originalTopic;
         final String path;
-        final String tagNameForApi = sanitizeTitle(tagName);
+        final String tagNameForApi = sanitizeTitle(tag.getTagName());
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTagTable.getTag(tagName, ReaderTagType.FOLLOWED);
+                originalTopic = ReaderTagTable.getTag(tag.getTagName(), ReaderTagType.FOLLOWED);
                 // delete tag & all related posts
-                ReaderTagTable.deleteTag(tagName);
-                ReaderPostTable.deletePostsWithTag(tagName);
+                ReaderTagTable.deleteTag(tag);
+                ReaderPostTable.deletePostsWithTag(tag);
                 path = "read/tags/" + tagNameForApi + "/mine/delete";
                 break;
 
             case ADD :
                 originalTopic = null; // prevent compiler warning
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.FOLLOWED);
+                ReaderTag newTopic = new ReaderTag(tag.getTagName(), endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
@@ -111,7 +112,7 @@ public class ReaderTagActions {
                         break;
                     case ADD:
                         // remove new topic
-                        ReaderTagTable.deleteTag(tagName);
+                        ReaderTagTable.deleteTag(tag);
                         break;
                 }
 
@@ -251,20 +252,21 @@ public class ReaderTagActions {
         return topics;
     }
 
-    private static void deleteTags(ReaderTagList topics) {
-        if (topics == null || topics.size() == 0) {
+    private static void deleteTags(ReaderTagList tagList) {
+        if (tagList == null || tagList.size() == 0) {
             return;
         }
 
-        ReaderDatabase.getWritableDb().beginTransaction();
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
         try {
-            for (ReaderTag topic: topics) {
-                ReaderTagTable.deleteTag(topic.getTagName());
-                ReaderPostTable.deletePostsWithTag(topic.getTagName());
+            for (ReaderTag tag: tagList) {
+                ReaderTagTable.deleteTag(tag);
+                ReaderPostTable.deletePostsWithTag(tag);
             }
-            ReaderDatabase.getWritableDb().setTransactionSuccessful();
+            db.setTransactionSuccessful();
         } finally {
-            ReaderDatabase.getWritableDb().endTransaction();
+            db.endTransaction();
         }
     }
 
