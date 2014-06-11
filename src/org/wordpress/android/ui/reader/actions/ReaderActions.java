@@ -72,7 +72,7 @@ public class ReaderActions {
      */
     public static enum RequestDataAction {LOAD_NEWER, LOAD_OLDER}
     public interface DataRequestedListener {
-        public void onRequestData(RequestDataAction action);
+        public void onRequestData();
     }
 
     /*

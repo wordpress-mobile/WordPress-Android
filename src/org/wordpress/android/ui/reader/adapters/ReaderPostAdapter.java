@@ -125,10 +125,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
-    public ReaderTag getCurrentTag() {
-        return mCurrentTag;
-    }
-
     // used when the viewing tagged posts
     public void setCurrentTag(ReaderTag tag) {
         if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
@@ -411,7 +407,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
-            mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
+            mDataRequestedListener.onRequestData();
         }
 
         // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one

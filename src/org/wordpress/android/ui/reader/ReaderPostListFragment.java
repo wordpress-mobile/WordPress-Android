@@ -566,7 +566,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
         @Override
-        public void onRequestData(RequestDataAction action) {
+        public void onRequestData() {
             // skip if update is already in progress
             if (isUpdating()) {
                 return;
@@ -747,12 +747,6 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean hasActivity() {
         return (getActivity() != null && !isRemoving());
-    }
-
-    void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
-        if (hasPostAdapter()) {
-            getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, blogUrl, followStatus);
-        }
     }
 
     /*

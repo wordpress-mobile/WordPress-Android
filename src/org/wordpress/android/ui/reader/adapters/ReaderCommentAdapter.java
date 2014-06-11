@@ -174,7 +174,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
         if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1)) {
-            mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_NEWER);
+            mDataRequestedListener.onRequestData();
         }
 
         // hide divider if this is the last comment
