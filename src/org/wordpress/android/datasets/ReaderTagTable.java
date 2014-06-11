@@ -195,6 +195,16 @@ public class ReaderTagTable {
         }
     }
 
+    public static String getEndpointForTag(ReaderTag tag) {
+        if (tag == null) {
+            return null;
+        }
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+               "SELECT endpoint FROM tbl_tags WHERE tag_name=? AND tag_type=?",
+               args);
+    }
+
     public static ReaderTagList getDefaultTags() {
         return getTagsOfType(ReaderTagType.DEFAULT);
     }

@@ -8,7 +8,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
@@ -23,7 +22,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
 
@@ -533,15 +531,13 @@ public class ReaderPostActions {
             return null;
         }
 
+        // if passed tag has an assigned endpoint, return it and be done
         if (!TextUtils.isEmpty(tag.getEndpoint())) {
             return tag.getEndpoint();
         }
 
-
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        String endpoint = SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT endpoint FROM tbl_tags WHERE tag_name=? AND tag_type=?",
-                args);
+        // check the db for the endpoint
+        String endpoint = ReaderTagTable.getEndpointForTag(tag);
         if (!TextUtils.isEmpty(endpoint)) {
             return endpoint;
         }
@@ -550,9 +546,9 @@ public class ReaderPostActions {
         // using their stored endpoints
         if (tag.tagType == ReaderTagType.DEFAULT) {
             return null;
-        } else {
-            return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tag.getTagName()));
         }
+
+        return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tag.getTagName()));
     }
 
     /*
