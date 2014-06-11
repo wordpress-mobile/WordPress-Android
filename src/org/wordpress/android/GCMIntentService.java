@@ -220,7 +220,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         // Call broadcast receiver when notification is dismissed
         Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
-        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notificationDeletedIntent, 0);
+        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(context, 0, notificationDeletedIntent, 0);
         mBuilder.setDeleteIntent(pendingDeleteIntent);
 
         if (sound)
