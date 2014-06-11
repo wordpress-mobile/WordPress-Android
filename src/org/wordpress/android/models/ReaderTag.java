@@ -4,9 +4,10 @@ import android.text.TextUtils;
 
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public class ReaderTag {
+public class ReaderTag implements Serializable {
     private String tagName;
     private String endpoint;
     public ReaderTagType tagType;
@@ -18,7 +19,7 @@ public class ReaderTag {
     public static final String TAG_NAME_LIKED = "Posts I Like";
     public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
     public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
-    public static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
+    private static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
@@ -28,6 +29,15 @@ public class ReaderTag {
         }
         this.setEndpoint(endpoint);
         this.tagType = tagType;
+    }
+
+    public ReaderTag(String tagName, ReaderTagType tagType) {
+        this.setTagName(tagName);
+        this.tagType = tagType;
+    }
+
+    public static ReaderTag getDefaultTag() {
+        return new ReaderTag(TAG_NAME_DEFAULT, ReaderTagType.DEFAULT);
     }
 
     public String getEndpoint() {
@@ -113,5 +123,13 @@ public class ReaderTag {
         return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
              || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
              || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+    }
+
+    public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
+        if (tag1 == null || tag2 == null) {
+            return false;
+        }
+        return (tag1.getTagName().equalsIgnoreCase(tag2.getTagName())
+             && tag1.tagType.equals(tag2.tagType));
     }
 }

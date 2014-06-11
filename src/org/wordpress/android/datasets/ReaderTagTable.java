@@ -138,11 +138,14 @@ public class ReaderTagTable {
     /*
      * returns true if the passed tag exists, regardless of type
      */
-    public static boolean tagExists(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static boolean tagExists(ReaderTag tag) {
+        if (tag == null) {
             return false;
         }
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_tags WHERE tag_name=?1", new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
+                args);
     }
 
     /*
@@ -154,12 +157,16 @@ public class ReaderTagTable {
         }
         // look for any tag with this name if tagType isn't passed
         if (tagType == null) {
-            return tagExists(tagName);
+            String[] args = {tagName};
+            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                    "SELECT 1 FROM tbl_tags WHERE tag_name=?1",
+                    args);
+        } else {
+            String[] args = {tagName, Integer.toString(tagType.toInt())};
+            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                    "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
+                    args);
         }
-        String[] args = {tagName, Integer.toString(tagType.toInt())};
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
-                args);
     }
 
     public static boolean isFollowedTag(String tagName) {
@@ -243,19 +250,23 @@ public class ReaderTagTable {
     /**
      * tbl_tag_updates routines
      **/
-    public static String getTagNewestDate(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static String getTagNewestDate(ReaderTag tag) {
+        if (tag == null) {
             return "";
         }
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_newest FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT date_newest FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                args);
     }
-    public static void setTagNewestDate(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static void setTagNewestDate(ReaderTag tag, String date) {
+        if (tag == null) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put("tag_name", tagName);
+        values.put("tag_name", tag.getTagName());
+        values.put("tag_type", tag.tagType.toInt());
         values.put("date_newest", date);
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -264,19 +275,23 @@ public class ReaderTagTable {
         }
     }
 
-    public static String getTagOldestDate(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static String getTagOldestDate(ReaderTag tag) {
+        if (tag == null) {
             return "";
         }
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_oldest FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT date_oldest FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                args);
     }
-    public static void setTagOldestDate(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static void setTagOldestDate(ReaderTag tag, String date) {
+        if (tag == null) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put("tag_name", tagName);
+        values.put("tag_name", tag.getTagName());
+        values.put("tag_type", tag.tagType.toInt());
         values.put("date_oldest", date);
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -285,20 +300,24 @@ public class ReaderTagTable {
         }
     }
 
-    private static String getTagLastUpdated(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    private static String getTagLastUpdated(ReaderTag tag) {
+        if (tag == null) {
             return "";
         }
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), "SELECT date_updated FROM tbl_tag_updates WHERE tag_name=?", new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT date_updated FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                args);
     }
 
-    public static void setTagLastUpdated(String tagName, String date) {
-        if (TextUtils.isEmpty(tagName)) {
+    public static void setTagLastUpdated(ReaderTag tag, String date) {
+        if (tag == null) {
             return;
         }
 
         ContentValues values = new ContentValues();
-        values.put("tag_name", tagName);
+        values.put("tag_name", tag.getTagName());
+        values.put("tag_type", tag.tagType.toInt());
         values.put("date_updated", date);
         try {
             ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -310,8 +329,8 @@ public class ReaderTagTable {
     /*
      * determine whether the passed tag should be auto-updated based on when it was last updated
      */
-    public static boolean shouldAutoUpdateTag(String tagName) {
-        int minutes = minutesSinceLastUpdate(tagName);
+    public static boolean shouldAutoUpdateTag(ReaderTag tag) {
+        int minutes = minutesSinceLastUpdate(tag);
         if (minutes == NEVER_UPDATED) {
             return true;
         }
@@ -319,12 +338,12 @@ public class ReaderTagTable {
     }
 
     private static final int NEVER_UPDATED = -1;
-    private static int minutesSinceLastUpdate(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
+    private static int minutesSinceLastUpdate(ReaderTag tag) {
+        if (tag == null) {
             return 0;
         }
 
-        String updated = getTagLastUpdated(tagName);
+        String updated = getTagLastUpdated(tag);
         if (TextUtils.isEmpty(updated)) {
             return NEVER_UPDATED;
         }

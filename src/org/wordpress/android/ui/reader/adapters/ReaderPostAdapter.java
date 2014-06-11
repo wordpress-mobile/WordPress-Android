@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -41,7 +42,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -52,7 +52,7 @@ import java.lang.ref.WeakReference;
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
-    private String mCurrentTag;
+    private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
     private final int mPhotonWidth;
@@ -125,17 +125,20 @@ public class ReaderPostAdapter extends BaseAdapter {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
-    public String getCurrentTag() {
-        return StringUtils.notNullStr(mCurrentTag);
+    public ReaderTag getCurrentTag() {
+        return mCurrentTag;
     }
 
     // used when the viewing tagged posts
-    public void setCurrentTag(String tagName) {
-        tagName = StringUtils.notNullStr(tagName);
-        if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
-            mCurrentTag = tagName;
+    public void setCurrentTag(ReaderTag tag) {
+        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
+            mCurrentTag = tag;
             reload();
         }
+    }
+
+    public boolean isCurrentTag(ReaderTag tag) {
+        return ReaderTag.isSameTag(tag, mCurrentTag);
     }
 
     // used when the list type is ReaderPostListType.BLOG_PREVIEW
@@ -334,7 +337,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         params.topMargin = titleMargin;
 
         // show the best tag for this post
-        final String tagToDisplay = post.getTagForDisplay(mCurrentTag);
+        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(tagToDisplay);
             holder.txtTag.setVisibility(View.VISIBLE);
@@ -623,11 +626,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             // post - these values are all cached by the post after the first time they're
             // computed, so calling these getters ensures the values are immediately available
             // when accessed from getView
+            String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
                 post.getDatePublished();
-                post.getTagForDisplay(mCurrentTag);
+                post.getTagForDisplay(currentTagName);
             }
 
             return true;

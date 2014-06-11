@@ -5,10 +5,15 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 
 public class UserPrefs {
     private static final String PREFKEY_USER_ID         = "wp_userid";        // id of the current user
-    private static final String PREFKEY_READER_TAG      = "reader_tag";       // last selected tag in the reader
+
+    // last selected tag in the reader
+    private static final String PREFKEY_READER_TAG_NAME = "reader_tag_name";
+    private static final String PREFKEY_READER_TAG_TYPE = "reader_tag_type";
 
     // title of the last active page in ReaderSubsActivity
     private static final String PREFKEY_READER_SUBS_PAGE_TITLE = "reader_subs_page_title";
@@ -26,7 +31,8 @@ public class UserPrefs {
     public static void reset() {
         prefs().edit()
                .remove(PREFKEY_USER_ID)
-               .remove(PREFKEY_READER_TAG)
+               .remove(PREFKEY_READER_TAG_NAME)
+               .remove(PREFKEY_READER_TAG_TYPE)
                .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
                .remove(PREFKEY_READER_SUBS_PAGE_TITLE)
                .commit();
@@ -88,11 +94,24 @@ public class UserPrefs {
         }
     }
 
-    public static String getReaderTag() {
-        return getString(PREFKEY_READER_TAG);
+    public static ReaderTag getReaderTag() {
+        String tagName = getString(PREFKEY_READER_TAG_NAME);
+        if (TextUtils.isEmpty(tagName)) {
+            return null;
+        }
+        ReaderTagType tagType = ReaderTagType.fromInt(getInt(PREFKEY_READER_TAG_TYPE));
+        return new ReaderTag(tagName, tagType);
     }
-    public static void setReaderTag(String tagName) {
-        setString(PREFKEY_READER_TAG, tagName);
+    public static void setReaderTag(ReaderTag tag) {
+        SharedPreferences.Editor editor = prefs().edit();
+        if (tag != null) {
+            editor.putString(PREFKEY_READER_TAG_NAME, tag.getTagName());
+            editor.putInt(PREFKEY_READER_TAG_TYPE, tag.tagType.toInt());
+        } else {
+            editor.remove(PREFKEY_READER_TAG_NAME);
+            editor.remove(PREFKEY_READER_TAG_TYPE);
+        }
+        editor.commit();
     }
 
     /*

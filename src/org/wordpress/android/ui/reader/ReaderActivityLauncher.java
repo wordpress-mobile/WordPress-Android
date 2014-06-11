@@ -14,6 +14,7 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
@@ -70,9 +71,12 @@ public class ReaderActivityLauncher {
     /*
      * show a list of posts with a specific tag
      */
-    public static void showReaderTagPreview(Context context, String tagName) {
+    public static void showReaderTagPreview(Context context, ReaderTag tag) {
+        if (tag == null) {
+            return;
+        }
         Intent intent = new Intent(context, ReaderPostListActivity.class);
-        intent.putExtra(ReaderConstants.ARG_TAG_NAME, tagName);
+        intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
     }

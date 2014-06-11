@@ -43,12 +43,12 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         refreshTags();
     }
 
-    public int getIndexOfTagName(String tagName) {
-        if (tagName == null) {
+    public int getIndexOfTag(ReaderTag tag) {
+        if (tag == null) {
             return -1;
         }
-        for (int i=0; i < mTags.size(); i++) {
-            if (tagName.equalsIgnoreCase(mTags.get(i).getTagName())) {
+        for (int i = 0; i < mTags.size(); i++) {
+            if (ReaderTag.isSameTag(tag, mTags.get(i))) {
                 return i;
             }
         }

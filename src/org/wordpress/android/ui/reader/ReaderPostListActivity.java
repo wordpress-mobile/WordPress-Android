@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -86,16 +86,18 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 showListFragmentForBlog(blogId, blogUrl);
             } else {
                 // get the tag name from the intent, if not there get it from prefs
-                String tagName = intent.getStringExtra(ReaderConstants.ARG_TAG_NAME);
-                if (TextUtils.isEmpty(tagName)) {
-                    tagName = UserPrefs.getReaderTag();
+                ReaderTag tag;
+                if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
+                    tag = (ReaderTag) intent.getSerializableExtra(ReaderConstants.ARG_TAG);
+                } else  {
+                    tag = UserPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tagName)) {
-                    tagName = ReaderTag.TAG_NAME_DEFAULT;
+                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                    tag = ReaderTag.getDefaultTag();
                 }
 
-                showListFragmentForTag(tagName, mPostListType);
+                showListFragmentForTag(tag, mPostListType);
             }
         }
     }
@@ -204,8 +206,8 @@ public class ReaderPostListActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final String tagName, ReaderTypes.ReaderPostListType listType) {
-        Fragment fragment = ReaderPostListFragment.newInstance(tagName, listType);
+    private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+        Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment, getString(R.string.fragment_tag_reader_post_list))
@@ -262,8 +264,8 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     ReaderPostListFragment listFragment = getListFragment();
                     if (listFragment == null) {
                         // list fragment doesn't exist yet (can happen if user signed out) - create
-                        // it now showing the default followed tag
-                        showListFragmentForTag(ReaderTag.TAG_NAME_DEFAULT, ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
+                        // it now showing the default tag
+                        showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
                     } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
                         listFragment.refreshTags();
                         // if the tag and posts tables were empty (first run), tell the list
@@ -309,7 +311,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
-                    title = listFragment.getCurrentTag();
+                    title = listFragment.getCurrentTagName();
                     break;
                 default:
                     title = (String)this.getTitle();
@@ -324,12 +326,13 @@ public class ReaderPostListActivity extends WPActionBarActivity
      */
     @Override
     public void onTagSelected(String tagName) {
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
         if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
-            getListFragment().setCurrentTag(tagName);
+            getListFragment().setCurrentTag(tag);
         } else {
             // user isn't previewing a tag, so open in tag preview
-            ReaderActivityLauncher.showReaderTagPreview(this, tagName);
+            ReaderActivityLauncher.showReaderTagPreview(this, tag);
         }
     }
 }
