@@ -12,7 +12,7 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -184,8 +184,8 @@ public class ReaderTagActions {
             public void run() {
                 // get server topics, both default & followed
                 ReaderTagList serverTopics = new ReaderTagList();
-                serverTopics.addAll(parseTags(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.FOLLOWED));
+                serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -202,7 +202,7 @@ public class ReaderTagActions {
                 }
 
                 // save changes to recommended topics
-                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
+                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
                 ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(T.READER, "recommended topics changed");
@@ -224,7 +224,7 @@ public class ReaderTagActions {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTag.ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
         ReaderTagList topics = new ReaderTagList();
 
         if (jsonObject==null)

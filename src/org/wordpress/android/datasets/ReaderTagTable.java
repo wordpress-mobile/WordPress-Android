@@ -8,8 +8,8 @@ import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -111,7 +111,7 @@ public class ReaderTagTable {
         addOrUpdateTags(tags);
     }
 
-    public static void addOrUpdateTags(ReaderTagList tagList) {
+    private static void addOrUpdateTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
@@ -177,7 +177,7 @@ public class ReaderTagTable {
 
         String tagName = c.getString(c.getColumnIndex("tag_name"));
         String endpoint = c.getString(c.getColumnIndex("endpoint"));
-        ReaderTagType tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
+        ReaderTagType tagType = ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
 
         return new ReaderTag(tagName, endpoint, tagType);
     }
@@ -285,16 +285,7 @@ public class ReaderTagTable {
         }
     }
 
-    /*
-     * returns true if the passed tag has ever been updated - used to determine whether a tag
-     * has no posts because it has never been updated in the app, or it has been updated and just
-     * doesn't have any posts
-     */
-    public static boolean hasEverUpdatedTag(String tagName) {
-        return !TextUtils.isEmpty(getTagLastUpdated(tagName));
-    }
-
-    public static String getTagLastUpdated(String tagName) {
+    private static String getTagLastUpdated(String tagName) {
         if (TextUtils.isEmpty(tagName)) {
             return "";
         }

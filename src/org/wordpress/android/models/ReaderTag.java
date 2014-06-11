@@ -7,9 +7,9 @@ import org.wordpress.android.util.StringUtils;
 import java.util.regex.Pattern;
 
 public class ReaderTag {
-    private static final int INT_DEFAULT = 0;
-    private static final int INT_FOLLOWED = 1;
-    private static final int INT_RECOMMENDED = 2;
+    private String tagName;
+    private String endpoint;
+    public ReaderTagType tagType;
 
     public static String TAG_ID_FOLLOWING = "following";
     public static String TAG_ID_LIKED = "liked";
@@ -19,35 +19,6 @@ public class ReaderTag {
     public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
     public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
     public static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
-
-    public static enum ReaderTagType {FOLLOWED,
-                                      DEFAULT,
-                                      RECOMMENDED;
-        public static ReaderTagType fromInt(int value) {
-            switch (value) {
-                case INT_RECOMMENDED :
-                    return RECOMMENDED;
-                case INT_FOLLOWED :
-                    return FOLLOWED;
-                default :
-                    return DEFAULT;
-            }
-        }
-        public int toInt() {
-            switch (this) {
-                case FOLLOWED:
-                    return INT_FOLLOWED;
-                case RECOMMENDED:
-                    return INT_RECOMMENDED;
-                default :
-                    return INT_DEFAULT;
-            }
-        }
-    }
-
-    private String tagName;
-    private String endpoint;
-    public ReaderTagType tagType;
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {

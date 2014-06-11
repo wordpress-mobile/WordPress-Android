@@ -1,10 +1,8 @@
 package org.wordpress.android.datasets;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;

@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
