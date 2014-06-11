@@ -34,8 +34,11 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
-    public static Map<String, Bundle> activeNotificationsMap = new HashMap<String, Bundle>();
-    public static int PUSH_NOTIFICATION_ID = 1337;
+    public static final int PUSH_NOTIFICATION_ID = 1337;
+
+    private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<String, Bundle>();
+    private static String mPreviousNoteId = null;
+    private static long mPreviousNoteTime = 0L;
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -48,9 +51,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     protected void onError(Context context, String errorId) {
         AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
-
-    private static String mPreviousNoteId = null;
-    private static long mPreviousNoteTime = 0L;
 
     @Override
     protected void onMessage(Context context, Intent intent) {
@@ -114,9 +114,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         mPreviousNoteId = note_id;
         mPreviousNoteTime = thisTime;
 
-        if (note_id != null) {
-            if (!activeNotificationsMap.containsKey(note_id))
-                activeNotificationsMap.put(note_id, extras);
+        if (note_id != null && !mActiveNotificationsMap.containsKey(note_id)) {
+            mActiveNotificationsMap.put(note_id, extras);
         }
 
         String iconURL = extras.getString("icon");
@@ -149,7 +148,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
-        if (activeNotificationsMap.size() <= 1) {
+        if (mActiveNotificationsMap.size() <= 1) {
             mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
                                                      .setContentText(message).setTicker(message).setAutoCancel(true)
                                                      .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
@@ -169,8 +168,9 @@ public class GCMIntentService extends GCMBaseIntentService {
                 commentReplyIntent.addCategory("comment-reply");
                 commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
                 commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
-                if (note_id != null)
+                if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
+                }
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
                         commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
@@ -185,7 +185,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
             int noteCtr = 1;
-            for (Bundle wpPN : activeNotificationsMap.values()) {
+            for (Bundle wpPN : mActiveNotificationsMap.values()) {
                 if (noteCtr > 5) // InboxStyle notification is limited to 5 lines
                     break;
                 if (wpPN.getString("msg") == null)
@@ -198,15 +198,16 @@ public class GCMIntentService extends GCMBaseIntentService {
                     String pnMessage = StringEscapeUtils.unescapeHtml((wpPN.getString("msg")));
                     inboxStyle.addLine(pnMessage);
                 }
+
                 noteCtr++;
             }
 
-            if (activeNotificationsMap.size() > 5)
+            if (mActiveNotificationsMap.size() > 5) {
                 inboxStyle.setSummaryText(String.format(getString(R.string.more_notifications),
-                        activeNotificationsMap.size() - 5));
+                        mActiveNotificationsMap.size() - 5));
+            }
 
-            String subject = String.format(getString(R.string.new_notifications),
-                    activeNotificationsMap.size());
+            String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
@@ -223,15 +224,15 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(context, 0, notificationDeletedIntent, 0);
         mBuilder.setDeleteIntent(pendingDeleteIntent);
 
-        if (sound)
-            mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/"
-                    + R.raw.notification));
-        if (vibrate)
-            mBuilder.setVibrate(new long[]{
-                    500, 500, 500
-            });
-        if (light)
+        if (sound) {
+            mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification));
+        }
+        if (vibrate) {
+            mBuilder.setVibrate(new long[]{500, 500, 500});
+        }
+        if (light) {
             mBuilder.setLights(0xff0000ff, 1000, 5000);
+        }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
@@ -271,8 +272,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     public static void clearNotificationsMap() {
-        if (activeNotificationsMap != null) {
-            activeNotificationsMap.clear();
-        }
+        mActiveNotificationsMap.clear();
     }
 }
