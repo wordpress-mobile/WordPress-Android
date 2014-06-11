@@ -9,7 +9,8 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 
 public class UserPrefs {
-    private static final String PREFKEY_USER_ID         = "wp_userid";        // id of the current user
+    // id of the current user
+    private static final String PREFKEY_USER_ID = "wp_userid";
 
     // last selected tag in the reader
     private static final String PREFKEY_READER_TAG_NAME = "reader_tag_name";
@@ -99,19 +100,19 @@ public class UserPrefs {
         if (TextUtils.isEmpty(tagName)) {
             return null;
         }
-        ReaderTagType tagType = ReaderTagType.fromInt(getInt(PREFKEY_READER_TAG_TYPE));
-        return new ReaderTag(tagName, tagType);
+        int tagType = getInt(PREFKEY_READER_TAG_TYPE);
+        return new ReaderTag(tagName, ReaderTagType.fromInt(tagType));
     }
     public static void setReaderTag(ReaderTag tag) {
-        SharedPreferences.Editor editor = prefs().edit();
-        if (tag != null) {
-            editor.putString(PREFKEY_READER_TAG_NAME, tag.getTagName());
-            editor.putInt(PREFKEY_READER_TAG_TYPE, tag.tagType.toInt());
+        if (tag != null && !TextUtils.isEmpty(tag.getTagName())) {
+            setString(PREFKEY_READER_TAG_NAME, tag.getTagName());
+            setInt(PREFKEY_READER_TAG_TYPE, tag.tagType.toInt());
         } else {
-            editor.remove(PREFKEY_READER_TAG_NAME);
-            editor.remove(PREFKEY_READER_TAG_TYPE);
+            prefs().edit()
+                   .remove(PREFKEY_READER_TAG_NAME)
+                   .remove(PREFKEY_READER_TAG_TYPE)
+                   .commit();
         }
-        editor.commit();
     }
 
     /*

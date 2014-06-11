@@ -43,9 +43,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     private static ReaderDatabase mReaderDb;
     private final static Object mDbLock = new Object();
     public static ReaderDatabase getDatabase() {
-        if (mReaderDb==null) {
+        if (mReaderDb == null) {
             synchronized(mDbLock) {
-                if (mReaderDb==null) {
+                if (mReaderDb == null) {
                     mReaderDb = new ReaderDatabase(WordPress.getContext());
                     // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
@@ -151,23 +151,27 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
                 // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
-                if (numCommentsDeleted > 0)
+                if (numCommentsDeleted > 0) {
                     AppLog.i(T.READER, String.format("%d comments purged", numCommentsDeleted));
+                }
 
                 // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
-                if (numLikesDeleted > 0)
+                if (numLikesDeleted > 0) {
                     AppLog.i(T.READER, String.format("%d likes purged", numLikesDeleted));
+                }
 
                 // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
-                if (numThumbsPurged > 0)
+                if (numThumbsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d thumbnails purged", numThumbsPurged));
+                }
 
                 // purge unattached tags
                 int numTagsPurged = ReaderTagTable.purge(db);
-                if (numTagsPurged > 0)
+                if (numTagsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d tags purged", numTagsPurged));
+                }
             }
             db.setTransactionSuccessful();
         } finally {
@@ -200,8 +204,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = input.read(buffer)) > 0)
+            while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
+            }
 
             output.flush();
             output.close();

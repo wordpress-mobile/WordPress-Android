@@ -141,8 +141,9 @@ public class ReaderTagActions {
                                   .replace(".", "-");
 
         // replace double dashes with single dash (may have been added above)
-        while (sanitized.contains("--"))
+        while (sanitized.contains("--")) {
             sanitized = sanitized.replace("--", "-");
+        }
 
         return sanitized.trim();
     }
@@ -227,12 +228,14 @@ public class ReaderTagActions {
     private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
         ReaderTagList topics = new ReaderTagList();
 
-        if (jsonObject==null)
+        if (jsonObject == null) {
             return topics;
+        }
 
         JSONObject jsonTopics = jsonObject.optJSONObject(name);
-        if (jsonTopics==null)
+        if (jsonTopics == null) {
             return topics;
+        }
 
         Iterator<String> it = jsonTopics.keys();
         while (it.hasNext()) {
@@ -249,8 +252,10 @@ public class ReaderTagActions {
     }
 
     private static void deleteTags(ReaderTagList topics) {
-        if (topics==null || topics.size()==0)
+        if (topics == null || topics.size() == 0) {
             return;
+        }
+
         ReaderDatabase.getWritableDb().beginTransaction();
         try {
             for (ReaderTag topic: topics) {

@@ -145,8 +145,9 @@ public class ReaderPostTable {
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
-        if (post == null)
+        if (post == null) {
             return;
+        }
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
         addOrUpdatePosts(null, posts);
@@ -156,8 +157,9 @@ public class ReaderPostTable {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1", args);
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
+            }
             return getPostFromCursor(c, null);
         } finally {
             SqlUtils.closeCursor(c);
@@ -219,8 +221,9 @@ public class ReaderPostTable {
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
     public static int getNumCommentsForPost(ReaderPost post) {
-        if (post == null)
+        if (post == null) {
             return 0;
+        }
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
@@ -275,8 +278,9 @@ public class ReaderPostTable {
     }
 
     public static int deletePostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return 0;
+        }
 
         // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags",
@@ -475,14 +479,16 @@ public class ReaderPostTable {
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts) {
         String sql = "SELECT * FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
 
-        if (maxPosts > 0)
+        if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
+        }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
         try {
             ReaderPostList posts = new ReaderPostList();
-            if (cursor == null || !cursor.moveToFirst())
+            if (cursor == null || !cursor.moveToFirst()) {
                 return posts;
+            }
 
             final PostColumnIndexes cols = new PostColumnIndexes(cursor);
             do {
@@ -497,8 +503,9 @@ public class ReaderPostTable {
 
 
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
-        if (post == null)
+        if (post == null) {
             return;
+        }
 
         String sql = "UPDATE tbl_posts SET is_reblogged=" + SqlUtils.boolToSql(isReblogged)
                   + " WHERE blog_id=? AND post_id=?";
@@ -588,14 +595,16 @@ public class ReaderPostTable {
     }
 
     private static ReaderPost getPostFromCursor(Cursor c, PostColumnIndexes cols) {
-        if (c == null)
+        if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
+        }
 
         ReaderPost post = new ReaderPost();
 
         // if column index object wasn't passed, create it now
-        if (cols == null)
+        if (cols == null) {
             cols = new PostColumnIndexes(c);
+        }
 
         post.postId = c.getLong(cols.idx_post_id);
         post.blogId = c.getLong(cols.idx_blog_id);
