@@ -97,4 +97,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     public void setPressed(boolean isPressed) {
         this.mPressed = isPressed;
     }
+
+    public boolean shouldShowBlogPreview() {
+        return mType == NoteBlockIdType.USER || mType == NoteBlockIdType.SITE;
+    }
 }

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,10 +147,20 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
-            if (clickedSpan.getType() == NoteBlockIdType.SITE) {
-                // Launch Reader view for site
+            if (!hasActivity()) return;
+
+            if (clickedSpan.shouldShowBlogPreview()) {
+                // Show blog preview
+                long siteId = (clickedSpan.getType() == NoteBlockIdType.USER) ? clickedSpan.getId() : clickedSpan.getSiteId();
+                NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
+                notificationsActivity.showBlogPreviewForSiteId(siteId);
+            } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
+                // Show post detail
+                NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
+                long siteId = clickedSpan.getSiteId();
+                long postId = clickedSpan.getId();
+                notificationsActivity.showPostForSiteAndPostId(siteId, postId);
             }
-            Toast.makeText(getActivity(), "Clicked: " + clickedSpan.getId(), Toast.LENGTH_SHORT).show();
         }
     };
 

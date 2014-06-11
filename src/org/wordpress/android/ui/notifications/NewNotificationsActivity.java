@@ -26,6 +26,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -291,6 +292,26 @@ public class NewNotificationsActivity extends WPActionBarActivity
                 ft.hide(mNotesList);
             }
         }
+        ft.commitAllowingStateLoss();
+    }
+
+    public void showBlogPreviewForSiteId(long siteId) {
+        ReaderPostListFragment readerPostListFragment = ReaderPostListFragment.newInstance(siteId, null);
+        FragmentManager fm = getFragmentManager();
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.addToBackStack(null);
+        ft.commitAllowingStateLoss();
+    }
+
+    public void showPostForSiteAndPostId(long siteId, long postId) {
+        ReaderPostDetailFragment readerPostDetailFragment = ReaderPostDetailFragment.newInstance(siteId, postId);
+        FragmentManager fm = getFragmentManager();
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
 
