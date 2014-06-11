@@ -269,5 +269,7 @@
 
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
+
+        <receiver android:name=".util.NotificationDismissBroadcastReceiver" />
     </application>
 </manifest>

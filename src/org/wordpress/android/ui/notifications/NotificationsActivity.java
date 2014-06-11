@@ -76,7 +76,7 @@ public class NotificationsActivity extends WPActionBarActivity
         mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
-        GCMIntentService.activeNotificationsMap.clear();
+        GCMIntentService.clearNotificationsMap();
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
@@ -100,7 +100,7 @@ public class NotificationsActivity extends WPActionBarActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        GCMIntentService.activeNotificationsMap.clear();
+        GCMIntentService.clearNotificationsMap();
         launchWithNoteId();
     }
 

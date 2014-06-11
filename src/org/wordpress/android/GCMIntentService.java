@@ -24,6 +24,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -217,6 +218,11 @@ public class GCMIntentService extends GCMBaseIntentService {
                             .setStyle(inboxStyle);
         }
 
+        // Call broadcast receiver when notification is dismissed
+        Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
+        PendingIntent pendingDeleteIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notificationDeletedIntent, 0);
+        mBuilder.setDeleteIntent(pendingDeleteIntent);
+
         if (sound)
             mBuilder.setSound(Uri.parse("android.resource://" + getPackageName() + "/"
                     + R.raw.notification));
@@ -262,5 +268,11 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onUnregistered(Context context, String regId) {
         AppLog.v(T.NOTIFS, "GCM Unregistered ID: " + regId);
+    }
+
+    public static void clearNotificationsMap() {
+        if (activeNotificationsMap != null) {
+            activeNotificationsMap.clear();
+        }
     }
 }
