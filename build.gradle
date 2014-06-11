@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.11.+'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -48,15 +48,15 @@ android {
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
-            packageNameSuffix ".beta"
+            applicationIdSuffix ".beta"
         }
     }
 
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
-        packageName "org.wordpress.android"
+        applicationId "org.wordpress.android"
         versionName "2.9.1"
         versionCode 117
         minSdkVersion 14
@@ -73,28 +73,26 @@ android {
         compile 'org.apache.httpcomponents:httpmime:4.1.+'
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
         compile 'commons-lang:commons-lang:2.6'
+        compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
+        compile "com.mixpanel.android:mixpanel-android:4.2.1"
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
         androidTestCompile 'org.objenesis:objenesis:2.1'
         androidTestCompile 'org.mockito:mockito-core:+'
 
-        // These are provided by the WordPress-Android Repository
+        // Provided by the WordPress-Android Repository
         compile 'org.wordpress:gcm:1.0.0' // not found in maven central
         compile 'org.wordpress:graphview:3.1.1' // not found in maven central
         compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
         compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
         compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
-        compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest not public
-        compile project(':email-checker/android/')
-        compile project(':android-passcodelock/library/')
-
-
-        // Simperium
-        compile 'com.simperium:simperium-android:0.4.6'
+        compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
+        compile 'com.simperium:simperium-android:0.4.6' //simperium-android repo is not public
 
         // Local dependencies
-        compile files('libs/MixpanelAPI.jar')
+        compile project(':email-checker/android/') // local dependency via git submodule
+        compile project(':android-passcodelock/library/')  // local dependency via git submodule
     }
 
     sourceSets {
