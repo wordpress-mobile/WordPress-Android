@@ -1,9 +1,10 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.view.View;
-import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
+import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -21,9 +23,16 @@ import org.wordpress.android.widgets.WPTextView;
  * Will display an action button if available (e.g. follow button)
  */
 public class UserNoteBlock extends NoteBlock {
+    private boolean mIsFollowing;
+    private OnSiteFollowListener mSiteFollowListener;
 
-    public UserNoteBlock(JSONObject noteObject) {
+    public interface OnSiteFollowListener {
+        public void onSiteFollow(boolean success);
+    }
+
+    public UserNoteBlock(JSONObject noteObject, OnSiteFollowListener listener) {
         super(noteObject, null);
+        mSiteFollowListener = listener;
     }
 
     @Override
@@ -58,8 +67,8 @@ public class UserNoteBlock extends NoteBlock {
     private void configureActionButton(WPTextView actionButton) {
         // For now we will support the follow action
         try {
-            boolean isFollowing = getNoteData().getJSONObject("actions").getBoolean("follow");
-            ReaderUtils.showFollowStatus(actionButton, isFollowing);
+            mIsFollowing = getNoteData().getJSONObject("actions").getBoolean("follow");
+            ReaderUtils.showFollowStatus(actionButton, mIsFollowing);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.NOTIFS, "Unexpected action button value: " + e.getMessage());
         }
@@ -83,10 +92,36 @@ public class UserNoteBlock extends NoteBlock {
             mActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Sweet", Toast.LENGTH_SHORT).show();
+                    toggleFollow(mActionButton);
                 }
             });
             mAvatarImageView = (NetworkImageView) view.findViewById(R.id.avatar);
+        }
+    }
+
+    // Follow/unfollow a site
+    private void toggleFollow(final WPTextView followButton) {
+        mIsFollowing = !mIsFollowing;
+
+        ReaderUtils.showFollowStatus(followButton, mIsFollowing);
+
+        long siteId = JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0);
+        if (siteId > 0 && mSiteFollowListener != null) {
+            WordPress.getRestClientUtils().followSite(String.valueOf(siteId), new RestRequest.Listener() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    mSiteFollowListener.onSiteFollow(true);
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    mIsFollowing = !mIsFollowing;
+                    if (followButton != null) {
+                        ReaderUtils.showFollowStatus(followButton, mIsFollowing);
+                        mSiteFollowListener.onSiteFollow(false);
+                    }
+                }
+            });
         }
     }
 

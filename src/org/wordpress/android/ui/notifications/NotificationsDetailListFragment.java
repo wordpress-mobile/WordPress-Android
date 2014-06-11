@@ -24,6 +24,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -76,6 +77,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         // Loop through the body items in this note, and create blocks for each.
+        // TODO asynctask this work
         JSONArray bodyArray = mNote.getBody();
         if (bodyArray != null && bodyArray.length() > 0) {
             for (int i=0; i < bodyArray.length(); i++) {
@@ -85,7 +87,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     NoteBlock noteBlock;
                     String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
                     if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
-                        noteBlock = new UserNoteBlock(noteObject);
+                        noteBlock = new UserNoteBlock(noteObject, mOnSiteFollowListener);
                     } else {
                         noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                     }
@@ -150,6 +152,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 // Launch Reader view for site
             }
             Toast.makeText(getActivity(), "Clicked: " + clickedSpan.getId(), Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    private UserNoteBlock.OnSiteFollowListener mOnSiteFollowListener = new UserNoteBlock.OnSiteFollowListener() {
+        @Override
+        public void onSiteFollow(boolean success) {
+            if (hasActivity() && !success) {
+                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_follow_blog);
+            }
         }
     };
 
