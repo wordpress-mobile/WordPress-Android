@@ -3,7 +3,7 @@
  */
 package org.wordpress.android.models;
 
-import android.text.Html;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +13,7 @@ import com.simperium.client.Syncable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -78,16 +79,7 @@ public class Note extends Syncable {
 
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
-    public static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
-    public static final String NOTE_LIKE_TYPE = "like";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
-    private static final String NOTE_ACHIEVEMENT_TYPE = "achievement";
-
-    // Notes have different types of "templates" for displaying differently
-    // this is not a canonical list but covers all the types currently in use
-    private static final String SINGLE_LINE_LIST_TEMPLATE = "single-line-list";
-    private static final String MULTI_LINE_LIST_TEMPLATE = "multi-line-list";
-    private static final String BIG_BADGE_TEMPLATE = "big-badge";
 
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
@@ -112,7 +104,7 @@ public class Note extends Syncable {
     private long mTimestamp;
 
     private transient String mCommentPreview;
-    private transient String mSubject;
+    private Spannable mSubject;
     private transient String mIconUrl;
     private transient String mSnippet;
     private transient String mNoteType;
@@ -146,15 +138,12 @@ public class Note extends Syncable {
     }
 
     public String getId() {
-        return queryJSON("id", "0");
+        return String.valueOf(queryJSON("id", 0));
     }
 
     public String getType() {
         if (mNoteType == null) {
             mNoteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
-            if (mNoteType.contains(NOTE_ACHIEVEMENT_TYPE)) {
-                mNoteType = NOTE_ACHIEVEMENT_TYPE;
-            }
         }
 
         return mNoteType;
@@ -168,28 +157,27 @@ public class Note extends Syncable {
         return isType(NOTE_COMMENT_TYPE);
     }
 
-    public Boolean isCommentLikeType() {
-        return isType(NOTE_COMMENT_LIKE_TYPE);
-    }
-
     public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
     }
 
-    public String getSubject() {
+    public Spannable getSubject() {
         if (mSubject == null) {
-            String text = queryJSON("subject.text", "").trim();
-            if (text.equals("")) {
-                text = queryJSON("subject.html", "");
+            try {
+                JSONObject subject = mNoteJSON.getJSONObject("subject");
+                mSubject = NotificationUtils.getSpannableTextFromIndices(subject, false, null);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            mSubject = Html.fromHtml(text).toString();
+
         }
         return mSubject;
     }
 
     public String getIconURL() {
-        if (mIconUrl == null)
-            mIconUrl = queryJSON("subject.icon", "");
+        if (mIconUrl==null)
+            mIconUrl = queryJSON("icon", "");
+
         return mIconUrl;
     }
 
@@ -224,29 +212,23 @@ public class Note extends Syncable {
         return !isRead();
     }
 
-    /**
-     * A note can have an "unread" of 0 or more ("likes" can have unread of 2+) to indicate the
-     * quantity of likes that are "unread" within the single note. So for a note to be "read" it
-     * should have 0
-     */
+
     Boolean isRead() {
-        return queryJSON("unread", 0) == 0;
+        return queryJSON("read", 0) == 1;
     }
 
-    /**
-     * Sets the note's 'unread' to 0 and saves it to sync with Simperium
-     */
     public void markAsRead() {
         try {
-            mNoteJSON.put("unread", 0);
+            mNoteJSON.put("read", 1);
         } catch (JSONException e) {
-            Log.e(TAG, "Unable to update note unread property", e);
+            Log.e(TAG, "Unable to update note read property", e);
             return;
         }
         save();
     }
 
-    public Reply buildReply(String content) {
+
+    public Reply buildReply(String content){
         JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
@@ -272,20 +254,17 @@ public class Note extends Syncable {
         return DateTimeUtils.timestampToTimeSpan(getTimestamp());
     }
 
-    String getTemplate() {
-        return queryJSON("body.template", "");
+    public JSONArray getBody() {
+        try {
+            return mNoteJSON.getJSONArray("body");
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
-    public Boolean isMultiLineListTemplate() {
-        return getTemplate().equals(MULTI_LINE_LIST_TEMPLATE);
-    }
-
-    public Boolean isSingleLineListTemplate() {
-        return getTemplate().equals(SINGLE_LINE_LIST_TEMPLATE);
-    }
-
-    public Boolean isBigBadgeTemplate() {
-        return getTemplate().equals(BIG_BADGE_TEMPLATE);
+    // returns character code for notification font
+    public String getNoticonCharacter() {
+        return queryJSON("noticon", "");
     }
 
     Map<String, JSONObject> getActions() {
@@ -369,7 +348,10 @@ public class Note extends Syncable {
             return;
         }
 
-        if (isCommentType()) {
+        /*if (isCommentType()) {
+            // pre-load the comment HTML for being displayed. Cleans up emoticons.
+            mComment = HtmlUtils.fromHtml(getCommentText());
+
             // pre-load the preview text
             getCommentPreview();
         }
@@ -380,7 +362,7 @@ public class Note extends Syncable {
         getType();
 
         // pre-load site/post/comment IDs
-        preloadMetaIds();
+        preloadMetaIds();*/
     }
 
     /*

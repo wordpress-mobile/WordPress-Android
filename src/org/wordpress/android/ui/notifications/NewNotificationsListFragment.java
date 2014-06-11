@@ -12,8 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
-import com.simperium.client.BucketObject;
-import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
@@ -21,11 +19,14 @@ import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
+public class NewNotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private PullToRefreshHelper mFauxPullToRefreshHelper;
-    private NotesAdapter mNotesAdapter;
+    private TestNotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private boolean mShouldLoadFirstNote;
 
@@ -44,6 +45,41 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         return v;
     }
 
+    /*@Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // setup the initial notes adapter, starts listening to the bucket
+        mBucket = SimperiumUtils.getNotesBucket();
+
+        try {
+            JSONArray notesArray = new JSONArray(loadJSONFromAsset());
+            List<Note> notesArrayList = new ArrayList<Note>();
+            for (int i=0; i < notesArray.length(); i++) {
+                Note note = new Note(notesArray.getJSONObject(i));
+                notesArrayList.add(note);
+            }
+
+            mNotesAdapter = new TestNotesAdapter(getActivity(), R.layout.notifications_list_item, notesArrayList);
+
+            ListView listView = getListView();
+            listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
+            listView.setDividerHeight(1);
+            listView.setBackgroundColor(getResources().getColor(R.color.white));
+            setListAdapter(mNotesAdapter);
+
+            // Set empty text if no notifications
+            TextView textview = (TextView) listView.getEmptyView();
+            if (textview != null) {
+                textview.setText(getText(R.string.notifications_empty_list));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }*/
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -56,7 +92,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
         if (mBucket != null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+            mNotesAdapter = new TestNotesAdapter(getActivity(), mBucket);
             setListAdapter(mNotesAdapter);
         } else {
             ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
@@ -83,25 +119,21 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         refreshNotes();
 
         // start listening to bucket change events
-        if (mBucket != null) {
-            mBucket.addListener(this);
-        }
+        mBucket.addListener(this);
     }
 
     @Override
     public void onPause() {
         // unregister the listener and close the cursor
-        if (mBucket != null) {
-            mBucket.removeListener(this);
-        }
+        mBucket.removeListener(this);
+
         super.onPause();
     }
 
     @Override
-    public void onDestroyView() {
-        if (mNotesAdapter != null) {
-            mNotesAdapter.closeCursor();
-        }
+    public void onDestroy() {
+        //mNotesAdapter.closeCursor();
+
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroyView();
     }
@@ -151,7 +183,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     protected void updateLastSeenTime() {
-        // set the timestamp to now
+       /* // set the timestamp to now
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
                 Note newestNote = mNotesAdapter.getNote(0);
@@ -161,7 +193,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             }
         } catch (BucketObjectMissingException e) {
             // try again later, meta is created by wordpress.com
-        }
+        }*/
     }
 
     public void refreshNotes() {
@@ -173,7 +205,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             @Override
             public void run() {
                 mNotesAdapter.reloadNotes();
-                updateLastSeenTime();
+                /*updateLastSeenTime();
 
                 // Show first note if we're on a landscape tablet
                 if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
@@ -183,7 +215,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                         mNoteClickListener.onClickNote(note);
                         getListView().setItemChecked(0, true);
                     }
-                }
+                }*/
             }
         });
     }
@@ -225,5 +257,31 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     private boolean hasActivity() {
         return getActivity() != null;
+    }
+
+    // FOR NEW MODEL TESTING, REMOVE L8R!!!
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+
+            InputStream is = getActivity().getAssets().open("test.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
     }
 }

@@ -2,9 +2,15 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
+import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
@@ -12,10 +18,13 @@ import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.notifications.blocks.NoteBlock;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -131,9 +140,9 @@ public class NotificationUtils {
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
-        contentStruct.put("os_version",  android.os.Build.VERSION.RELEASE);
+        contentStruct.put("os_version",  Build.VERSION.RELEASE);
         contentStruct.put("device_uuid", uuid);
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.NOTIFS, "Register token action succeeded");
@@ -166,7 +175,7 @@ public class NotificationUtils {
     }
 
     public static void unregisterDevicePushNotifications(final Context ctx) {
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.NOTIFS, "Unregister token action succeeded");
@@ -200,5 +209,41 @@ public class NotificationUtils {
             return "org.wordpress.android.debug.build";
 
         return "org.wordpress.android.playstore";
+    }
+
+    public static Spannable getSpannableTextFromIndices(JSONObject subject, boolean shouldLinkify,
+                                                        final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+
+        String text = subject.optString("text", "");
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+
+        try {
+            JSONArray idsArray = subject.getJSONArray("ids");
+
+            for (int i=0; i < idsArray.length(); i++) {
+                JSONObject idObject = (JSONObject) idsArray.get(i);
+                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject) {
+                    @Override
+                    public void onClick(View widget) {
+                        onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                    }
+                };
+                int[] indices = clickableSpan.getIndices();
+                if (indices.length == 2 && indices[0] <= spannableStringBuilder.length() &&
+                        indices[1] <= spannableStringBuilder.length()) {
+                    spannableStringBuilder.setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+                    // Add additional styling if the id wants it
+                    if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
+                        StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
+                        spannableStringBuilder.setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return spannableStringBuilder;
     }
 }

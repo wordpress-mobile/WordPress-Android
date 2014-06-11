@@ -99,8 +99,8 @@
     <dimen name="nux_width">600dp</dimen>
 
     <!-- notifications -->
-    <dimen name="note_icon_sz">20dp</dimen>
-    <dimen name="note_avatar_sz">48dp</dimen>
+    <dimen name="note_icon_sz">28dp</dimen>
+    <dimen name="note_avatar_sz">70dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="ptr_tip_margin_top">8dp</dimen>

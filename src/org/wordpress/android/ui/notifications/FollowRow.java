@@ -204,7 +204,7 @@ public class FollowRow extends LinearLayout {
         followButton.setText(isFollowing ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
     }
 
-    private class ClickListener implements View.OnClickListener {
+    private class ClickListener implements OnClickListener {
         public void onClick(View v) {
             if (!hasFollowListener()) {
                 return;
@@ -227,7 +227,7 @@ public class FollowRow extends LinearLayout {
         }
     }
 
-    private class LongClickListener implements View.OnLongClickListener {
+    private class LongClickListener implements OnLongClickListener {
         @Override
         public boolean onLongClick(View v) {
             Toast.makeText(getContext(), getResources().getString(R.string.tooltip_follow), Toast.LENGTH_SHORT).show();

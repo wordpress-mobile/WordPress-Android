@@ -96,7 +96,7 @@ public class NoteFollowAdapter extends BaseAdapter {
     public View getView(int position, View cachedView, ViewGroup parent){
         View view;
         if (cachedView == null) {
-            view = mInflater.inflate(R.layout.notifications_follow_row, null);
+            view = mInflater.inflate(R.layout.note_block_user, null);
         } else {
             view = cachedView;
         }

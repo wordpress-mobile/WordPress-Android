@@ -66,6 +66,16 @@ public class UrlUtils {
         return url;
     }
 
+    // Formats a URL for display
+    public static String removeUrlScheme(String url) {
+        if (url == null) {
+            return null;
+        }
+
+        url = normalizeUrl(url);
+        return url.replace("http://", "").replace("https://", "");
+    }
+
     /**
      * normalizes a URL, primarily for comparison purposes, for example so that
      * normalizeUrl("http://google.com/") = normalizeUrl("http://google.com")

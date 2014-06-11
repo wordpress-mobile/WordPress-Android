@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.ui.notifications.DetailHeader xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_extra_large"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+    <org.wordpress.android.widgets.NoticonTextView
+        android:id="@+id/notification_header_icon"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:background="@drawable/shape_oval_grey"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textSize="26sp"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:textColor="@color/white" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/label"
-        android:layout_width="match_parent"
+        android:id="@+id/notification_header_subject"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/reader_transparent_selector"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:paddingLeft="@dimen/margin_large"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingBottom="@dimen/margin_medium"
-        android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_large" />
-    
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/reader_hyperlink"
-        android:layout_marginBottom="@dimen/margin_medium"/>
+        android:textSize="@dimen/text_sz_medium"
+        android:textColor="@color/notifications_blue" />
 
-</org.wordpress.android.ui.notifications.DetailHeader>
+</LinearLayout>

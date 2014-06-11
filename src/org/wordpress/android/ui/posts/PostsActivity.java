@@ -26,7 +26,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NewNotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
@@ -77,7 +77,7 @@ public class PostsActivity extends WPActionBarActivity
 
         // Check if we came from a notification, if so let's launch NotificationsActivity
         Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
+        if (extras != null && extras.getBoolean(NewNotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
             startNotificationsActivity(extras);
             return;
         }
@@ -168,7 +168,7 @@ public class PostsActivity extends WPActionBarActivity
         Bundle extras = intent.getExtras();
         if (extras != null) {
             // Check if we came from a notification, if so let's launch NotificationsActivity
-            if (extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
+            if (extras.getBoolean(NewNotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
                 startNotificationsActivity(extras);
                 return;
             }
@@ -194,7 +194,7 @@ public class PostsActivity extends WPActionBarActivity
         editor.putInt(LAST_ACTIVITY_PREFERENCE, NOTIFICATIONS_ACTIVITY);
         editor.commit();
 
-        Intent i = new Intent(this, NotificationsActivity.class);
+        Intent i = new Intent(this, NewNotificationsActivity.class);
         i.putExtras(extras);
         startActivity(i);
         finish();

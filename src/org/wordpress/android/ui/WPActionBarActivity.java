@@ -45,7 +45,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.NewNotificationsActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -1056,13 +1056,13 @@ public abstract class WPActionBarActivity extends Activity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof NotificationsActivity;
+            return WPActionBarActivity.this instanceof NewNotificationsActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof NotificationsActivity))
+            if (!(WPActionBarActivity.this instanceof NewNotificationsActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
+            Intent intent = new Intent(WPActionBarActivity.this, NewNotificationsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -1104,7 +1104,7 @@ public abstract class WPActionBarActivity extends Activity {
                 ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED) &&
-                    WPActionBarActivity.this instanceof NotificationsActivity) {
+                    WPActionBarActivity.this instanceof NewNotificationsActivity) {
                 ToastUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again, R.string.simperium_connection_error);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {

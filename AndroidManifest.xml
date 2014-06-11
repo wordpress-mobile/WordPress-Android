@@ -229,7 +229,7 @@
 
         <!-- Notifications activities -->
         <activity
-            android:name=".ui.notifications.NotificationsActivity"/>
+            android:name=".ui.notifications.NewNotificationsActivity"/>
 
         <activity
             android:name=".ui.notifications.NotificationsWebViewActivity"

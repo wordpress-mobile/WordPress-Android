@@ -34,7 +34,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-public class NotificationsActivity extends WPActionBarActivity
+public class NewNotificationsActivity extends WPActionBarActivity
         implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
         NotificationFragment.OnCommentClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
@@ -45,7 +45,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
 
-    private NotificationsListFragment mNotesList;
+    private NewNotificationsListFragment mNotesList;
     private boolean mDualPane;
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
@@ -63,7 +63,7 @@ public class NotificationsActivity extends WPActionBarActivity
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
         }
 
-        createMenuDrawer(R.layout.notifications);
+        createMenuDrawer(R.layout.notifications_activity);
         View fragmentContainer = findViewById(R.id.layout_fragment_container);
         mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
@@ -73,7 +73,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mNotesList = (NotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
+        mNotesList = (NewNotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
         mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         GCMIntentService.clearNotificationsMap();
@@ -228,16 +228,15 @@ public class NotificationsActivity extends WPActionBarActivity
 
     /**
      * Tries to pick the correct fragment detail type for a given note
+     * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note){
+    private Fragment getDetailFragmentForNote(Note note) {
         if (note == null)
             return null;
 
         if (note.isCommentType()) {
             // show comment detail for comment notifications
             return CommentDetailFragment.newInstance(note);
-        } else if (note.isCommentLikeType()) {
-            return new NoteCommentLikeFragment();
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
@@ -245,16 +244,11 @@ public class NotificationsActivity extends WPActionBarActivity
             if (isPost) {
                 return ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
             } else {
-                // right now we'll never get here
-                return new NoteMatcherFragment();
+                return NotificationsDetailListFragment.newInstance(note);
             }
-        } else if (note.isSingleLineListTemplate()) {
-            return new NoteSingleLineListFragment();
-        } else if (note.isBigBadgeTemplate()) {
-            return new BigBadgeFragment();
+        } else {
+            return NotificationsDetailListFragment.newInstance(note);
         }
-
-        return null;
     }
 
     /**
@@ -267,11 +261,12 @@ public class NotificationsActivity extends WPActionBarActivity
 
         mSelectedNoteId = StringUtils.stringToInt(note.getId());
 
+        // TODO
         // mark the note as read if it's unread
-        if (note.isUnread()) {
+        /*if (note.isUnread()) {
             // mark as read which syncs with simperium
             note.markAsRead();
-        }
+        }*/
         FragmentManager fm = getFragmentManager();
 
         // remove the note detail if it's already on there
@@ -281,16 +276,6 @@ public class NotificationsActivity extends WPActionBarActivity
 
         // create detail fragment for this note type
         Fragment detailFragment = getDetailFragmentForNote(note);
-        if (detailFragment == null) {
-            AppLog.d(T.NOTIFS, String.format("No fragment found for %s", note.toJSONObject()));
-            return;
-        }
-
-        // set the note if this is a NotificationFragment (ReaderPostDetailFragment is the only
-        // fragment used here that is not a NotificationFragment)
-        if (detailFragment instanceof NotificationFragment) {
-            ((NotificationFragment) detailFragment).setNote(note);
-        }
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
@@ -309,7 +294,7 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.commitAllowingStateLoss();
     }
 
-    private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
+    private class NoteClickListener implements NewNotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note){
             if (note == null)

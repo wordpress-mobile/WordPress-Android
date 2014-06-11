@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/WordPressListRowBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_medium"
+    android:orientation="horizontal">
+
+    <View
+        android:id="@+id/unread_indicator"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="-5dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/shape_oval_blue" />
+
+    <FrameLayout
+        android:id="@+id/avatar_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="6dp">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/note_avatar"
+            android:layout_width="@dimen/note_avatar_sz"
+            android:layout_height="@dimen/note_avatar_sz"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small" />
+
+        <org.wordpress.android.widgets.NoticonTextView
+            android:id="@+id/note_icon"
+            android:layout_width="@dimen/note_icon_sz"
+            android:layout_height="@dimen/note_icon_sz"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="52dp"
+            android:background="@drawable/shape_oval_blue"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:text="\uf814" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/note_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textColor="@color/notifications_blue_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="Bob Ross commented on your post Happy Trees" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/note_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/notifications_blue"
+            android:textSize="@dimen/text_sz_medium"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="What an amazing post!" />
+    </LinearLayout>
+
+</LinearLayout>
