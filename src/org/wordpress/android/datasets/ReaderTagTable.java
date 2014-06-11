@@ -86,7 +86,7 @@ public class ReaderTagTable {
         db.beginTransaction();
         try {
             try {
-                // first delete all existing topics
+                // first delete all existing tags
                 db.execSQL("DELETE FROM tbl_tags");
 
                 // then insert the passed ones
@@ -111,8 +111,8 @@ public class ReaderTagTable {
         addOrUpdateTags(tags);
     }
 
-    public static void addOrUpdateTags(ReaderTagList tags) {
-        if (tags == null || tags.size() == 0) {
+    public static void addOrUpdateTags(ReaderTagList tagList) {
+        if (tagList == null || tagList.size() == 0) {
             return;
         }
         SQLiteStatement stmt = null;
@@ -122,10 +122,10 @@ public class ReaderTagTable {
                             + COLUMN_NAMES
                             + ") VALUES (?1,?2,?3)");
 
-            for (ReaderTag topic: tags) {
-                stmt.bindString(1, topic.getTagName());
-                stmt.bindLong  (2, topic.tagType.toInt());
-                stmt.bindString(3, topic.getEndpoint());
+            for (ReaderTag tag: tagList) {
+                stmt.bindString(1, tag.getTagName());
+                stmt.bindLong  (2, tag.tagType.toInt());
+                stmt.bindString(3, tag.getEndpoint());
                 stmt.execute();
                 stmt.clearBindings();
             }
@@ -172,7 +172,7 @@ public class ReaderTagTable {
 
     private static ReaderTag getTagFromCursor(Cursor c) {
         if (c == null) {
-            throw new IllegalArgumentException("null topic cursor");
+            throw new IllegalArgumentException("null tag cursor");
         }
 
         String tagName = c.getString(c.getColumnIndex("tag_name"));
@@ -219,13 +219,13 @@ public class ReaderTagTable {
         String[] args = {Integer.toString(tagType.toInt())};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_type=? ORDER BY tag_name", args);
         try {
-            ReaderTagList topics = new ReaderTagList();
+            ReaderTagList tagList = new ReaderTagList();
             if (c.moveToFirst()) {
                 do {
-                    topics.add(getTagFromCursor(c));
+                    tagList.add(getTagFromCursor(c));
                 } while (c.moveToNext());
             }
-            return topics;
+            return tagList;
         } finally {
             SqlUtils.closeCursor(c);
         }
@@ -286,7 +286,7 @@ public class ReaderTagTable {
     }
 
     /*
-     * returns true if the passed topic has ever been updated - used to determine whether a topic
+     * returns true if the passed tag has ever been updated - used to determine whether a tag
      * has no posts because it has never been updated in the app, or it has been updated and just
      * doesn't have any posts
      */
@@ -317,7 +317,7 @@ public class ReaderTagTable {
     }
 
     /*
-     * determine whether the passed topic should be auto-updated based on when it was last updated
+     * determine whether the passed tag should be auto-updated based on when it was last updated
      */
     public static boolean shouldAutoUpdateTag(String tagName) {
         int minutes = minutesSinceLastUpdate(tagName);
@@ -348,7 +348,7 @@ public class ReaderTagTable {
     }
 
     /**
-     * recommended topics - stored in a separate table from default/subscribed topics, but have the same column names
+     * recommended tags - stored in a separate table from default/subscribed tags, but have the same column names
      **/
     public static ReaderTagList getRecommendedTags(boolean excludeSubscribed) {
         Cursor c;
@@ -358,20 +358,20 @@ public class ReaderTagTable {
             c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags_recommended ORDER BY tag_name", null);
         }
         try {
-            ReaderTagList topics = new ReaderTagList();
+            ReaderTagList tagList = new ReaderTagList();
             if (c.moveToFirst()) {
                 do {
-                    topics.add(getTagFromCursor(c));
+                    tagList.add(getTagFromCursor(c));
                 } while (c.moveToNext());
             }
-            return topics;
+            return tagList;
         } finally {
             SqlUtils.closeCursor(c);
         }
     }
 
-    public static void setRecommendedTags(ReaderTagList topics) {
-        if (topics == null) {
+    public static void setRecommendedTags(ReaderTagList tagList) {
+        if (tagList == null) {
             return;
         }
 
@@ -380,14 +380,14 @@ public class ReaderTagTable {
         db.beginTransaction();
         try {
             try {
-                // first delete all recommended topics
+                // first delete all recommended tags
                 db.execSQL("DELETE FROM tbl_tags_recommended");
 
                 // then insert the passed ones
-                for (ReaderTag topic: topics) {
-                    stmt.bindString(1, topic.getTagName());
-                    stmt.bindLong  (2, topic.tagType.toInt());
-                    stmt.bindString(3, topic.getEndpoint());
+                for (ReaderTag tag: tagList) {
+                    stmt.bindString(1, tag.getTagName());
+                    stmt.bindLong  (2, tag.tagType.toInt());
+                    stmt.bindString(3, tag.getEndpoint());
                     stmt.execute();
                     stmt.clearBindings();
                 }
