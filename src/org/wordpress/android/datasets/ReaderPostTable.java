@@ -85,7 +85,8 @@ public class ReaderPostTable {
                 + "   blog_id     INTEGER NOT NULL,"
                 + "   pseudo_id   TEXT NOT NULL,"
                 + "   tag_name    TEXT NOT NULL COLLATE NOCASE,"
-                + "   PRIMARY KEY (post_id, blog_id, tag_name)"
+                + "   tag_type    INTEGER DEFAULT 0,"
+                + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
     }
 
@@ -135,11 +136,7 @@ public class ReaderPostTable {
     }
 
     public static boolean hasPostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return false;
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_post_tags WHERE tag_name=? LIMIT 1",
-                new String[]{tagName});
+        return (getNumPostsWithTag(tagName) > 0);
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
@@ -416,28 +413,31 @@ public class ReaderPostTable {
     }
 
     public static ReaderPostList getPostsWithTag(String tagName, int maxPosts) {
-        if (TextUtils.isEmpty(tagName))
+        if (TextUtils.isEmpty(tagName)) {
             return new ReaderPostList();
+        }
 
         String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=?";
 
+        // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
+        // longer followed if this is "Blogs I Follow"
         if (tagName.equals(ReaderTag.TAG_NAME_LIKED)) {
-            // skip posts that are no longer liked if this is "Posts I Like"
             sql += " AND tbl_posts.is_liked != 0";
         } else if (tagName.equals(ReaderTag.TAG_NAME_FOLLOWING)) {
-            // skip posts that are no longer followed if this is "Blogs I Follow"
             sql += " AND tbl_posts.is_followed != 0";
         }
 
         sql += " ORDER BY tbl_posts.timestamp DESC";
 
-        if (maxPosts > 0)
+        if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
+        }
 
-        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{tagName});
+        String[] args = {tagName};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             ReaderPostList posts = new ReaderPostList();
             if (cursor != null && cursor.moveToFirst()) {
