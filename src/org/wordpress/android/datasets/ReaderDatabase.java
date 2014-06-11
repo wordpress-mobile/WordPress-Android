@@ -21,7 +21,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 76;
+    private static final int DB_VERSION = 77;
 
     /*
      * version history
@@ -35,6 +35,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   74 - added primary_tag to ReaderPostTable
      *   75 - added secondary_tag to ReaderPostTable
      *   76 - added feed_id to ReaderBlogTable
+     *   77 - restructured tag tables (ReaderTagTable)
      */
 
     /*

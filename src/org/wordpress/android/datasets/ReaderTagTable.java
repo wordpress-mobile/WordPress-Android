@@ -19,40 +19,50 @@ import org.wordpress.android.util.SqlUtils;
 import java.util.Date;
 
 /**
- *  tbl_tags stores the list of topics the user subscribed to or has by default
- *  tbl_recommended_tags stores the list of recommended topics returned by the api
- *  tbl_tags_updates stores the iso8601 dates each topic was updated by the app as follows:
- *      date_updated is the date the topic was last updated
+ *  tbl_tags stores the list of tags the user subscribed to or has by default
+ *  tbl_tags_recommended stores the list of recommended tags returned by the api
+ *  tbl_tag_updates stores the iso8601 dates each tag was updated by the app as follows:
+ *      date_updated is the date the tag was last updated
  *      date_newest is used when retrieving new posts - only get posts newer than date_newest
  *      date_oldest is used when retrieving old posts - only get posts older than date_oldest
  */
 public class ReaderTagTable {
-    private static final String COLUMN_NAMES = "tag_name, endpoint, topic_type";
+    private static final String COLUMN_NAMES = "tag_name, tag_type, endpoint";
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_tags ("
-                 + "	tag_name	    TEXT COLLATE NOCASE PRIMARY KEY,"
-                 + "    endpoint        TEXT,"
-                 + "    topic_type      INTEGER DEFAULT 0)");
+                 + "	tag_name    TEXT COLLATE NOCASE,"
+                 + "    tag_type    INTEGER DEFAULT 0,"
+                 + "    endpoint    TEXT,"
+                 + "    PRIMARY KEY (tag_name, tag_type)"
+                 + ")");
 
-        db.execSQL("CREATE TABLE tbl_recommended_tags ("
-                 + "	tag_name	    TEXT COLLATE NOCASE PRIMARY KEY,"
-                 + "    endpoint        TEXT,"
-                 + "    topic_type      INTEGER DEFAULT 0)");
+        db.execSQL("CREATE TABLE tbl_tags_recommended ("
+                 + "	tag_name	TEXT COLLATE NOCASE,"
+                 + "    tag_type    INTEGER DEFAULT 0,"
+                 + "    endpoint    TEXT,"
+                 + "    PRIMARY KEY (tag_name, tag_type)"
+                 + ")");
 
         db.execSQL("CREATE TABLE tbl_tag_updates ("
-                + "	    tag_name	 TEXT COLLATE NOCASE PRIMARY KEY,"
+                + "	    tag_name	 TEXT COLLATE NOCASE,"
+                + "     tag_type     INTEGER DEFAULT 0,"
                 + " 	date_updated TEXT,"
                 + " 	date_oldest	 TEXT,"
-                + " 	date_newest	 TEXT)");
+                + " 	date_newest	 TEXT,"
+                + "     PRIMARY KEY (tag_name, tag_type)"
+                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_tags");
-        db.execSQL("DROP TABLE IF EXISTS tbl_recommended_tags");
+        db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended");
         db.execSQL("DROP TABLE IF EXISTS tbl_tag_updates");
     }
 
+    /*
+     * remove update data for tags that no longer exist
+     */
     protected static int purge(SQLiteDatabase db) {
         return db.delete("tbl_tag_updates", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
     }
@@ -114,8 +124,8 @@ public class ReaderTagTable {
 
             for (ReaderTag topic: tags) {
                 stmt.bindString(1, topic.getTagName());
-                stmt.bindString(2, topic.getEndpoint());
-                stmt.bindLong  (3, topic.tagType.toInt());
+                stmt.bindLong  (2, topic.tagType.toInt());
+                stmt.bindString(3, topic.getEndpoint());
                 stmt.execute();
                 stmt.clearBindings();
             }
@@ -148,7 +158,7 @@ public class ReaderTagTable {
         }
         String[] args = {tagName, Integer.toString(tagType.toInt())};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND topic_type=?2",
+                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
                 args);
     }
 
@@ -167,7 +177,7 @@ public class ReaderTagTable {
 
         String tagName = c.getString(c.getColumnIndex("tag_name"));
         String endpoint = c.getString(c.getColumnIndex("endpoint"));
-        ReaderTagType tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("topic_type")));
+        ReaderTagType tagType = ReaderTag.ReaderTagType.fromInt(c.getInt(c.getColumnIndex("tag_type")));
 
         return new ReaderTag(tagName, endpoint, tagType);
     }
@@ -178,7 +188,7 @@ public class ReaderTagTable {
         }
 
         String[] args = {tagName, Integer.toString(tagType.toInt())};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_name=? AND topic_type=? LIMIT 1", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_name=? AND tag_type=? LIMIT 1", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -207,7 +217,7 @@ public class ReaderTagTable {
 
     private static ReaderTagList getTagsOfType(ReaderTagType tagType) {
         String[] args = {Integer.toString(tagType.toInt())};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE topic_type=? ORDER BY tag_name", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags WHERE tag_type=? ORDER BY tag_name", args);
         try {
             ReaderTagList topics = new ReaderTagList();
             if (c.moveToFirst()) {
@@ -343,9 +353,9 @@ public class ReaderTagTable {
     public static ReaderTagList getRecommendedTags(boolean excludeSubscribed) {
         Cursor c;
         if (excludeSubscribed) {
-            c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_recommended_tags WHERE tag_name NOT IN (SELECT tag_name FROM tbl_tags) ORDER BY tag_name", null);
+            c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags_recommended WHERE tag_name NOT IN (SELECT tag_name FROM tbl_tags) ORDER BY tag_name", null);
         } else {
-            c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_recommended_tags ORDER BY tag_name", null);
+            c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags_recommended ORDER BY tag_name", null);
         }
         try {
             ReaderTagList topics = new ReaderTagList();
@@ -366,18 +376,18 @@ public class ReaderTagTable {
         }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_recommended_tags (" + COLUMN_NAMES + ") VALUES (?1,?2,?3)");
+        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_tags_recommended (" + COLUMN_NAMES + ") VALUES (?1,?2,?3)");
         db.beginTransaction();
         try {
             try {
                 // first delete all recommended topics
-                db.execSQL("DELETE FROM tbl_recommended_tags");
+                db.execSQL("DELETE FROM tbl_tags_recommended");
 
                 // then insert the passed ones
                 for (ReaderTag topic: topics) {
                     stmt.bindString(1, topic.getTagName());
-                    stmt.bindString(2, topic.getEndpoint());
-                    stmt.bindLong  (3, topic.tagType.toInt());
+                    stmt.bindLong  (2, topic.tagType.toInt());
+                    stmt.bindString(3, topic.getEndpoint());
                     stmt.execute();
                     stmt.clearBindings();
                 }

@@ -44,11 +44,13 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
     }
 
     public int getIndexOfTagName(String tagName) {
-        if (tagName==null)
+        if (tagName == null) {
             return -1;
+        }
         for (int i=0; i < mTags.size(); i++) {
-            if (tagName.equalsIgnoreCase(mTags.get(i).getTagName()))
+            if (tagName.equalsIgnoreCase(mTags.get(i).getTagName())) {
                 return i;
+            }
         }
         return -1;
     }
