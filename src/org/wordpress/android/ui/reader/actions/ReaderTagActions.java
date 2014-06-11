@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.actions;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -13,8 +12,8 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -36,24 +35,26 @@ public class ReaderTagActions {
                                            final ReaderTag tag,
                                            final ReaderActions.ActionListener actionListener) {
         if (tag == null) {
-            return false;
-        }
-
-        // don't allow actions on default tags
-        if (tag.tagType == ReaderTagType.DEFAULT) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
             }
             return false;
         }
 
-        final ReaderTag originalTopic;
+        // don't allow actions on default tags
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            AppLog.w(T.READER, "cannot add or delete default tag");
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
+
         final String path;
         final String tagNameForApi = sanitizeTitle(tag.getTagName());
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTagTable.getTag(tag.getTagName(), ReaderTagType.FOLLOWED);
                 // delete tag & all related posts
                 ReaderTagTable.deleteTag(tag);
                 ReaderPostTable.deletePostsWithTag(tag);
@@ -61,7 +62,6 @@ public class ReaderTagActions {
                 break;
 
             case ADD :
-                originalTopic = null; // prevent compiler warning
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
                 ReaderTag newTopic = new ReaderTag(tag.getTagName(), endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
@@ -105,10 +105,8 @@ public class ReaderTagActions {
                 // revert on failure
                 switch (action) {
                     case DELETE:
-                        // add back original topic
-                        if (originalTopic != null) {
-                            ReaderTagTable.addOrUpdateTag(originalTopic);
-                        }
+                        // add back original tag
+                        ReaderTagTable.addOrUpdateTag(tag);
                         break;
                     case ADD:
                         // remove new topic

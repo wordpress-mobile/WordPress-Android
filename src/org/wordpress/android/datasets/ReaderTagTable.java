@@ -86,14 +86,10 @@ public class ReaderTagTable {
         db.beginTransaction();
         try {
             try {
-                // first delete all existing tags
+                // first delete all existing tags, then insert the passed ones
                 db.execSQL("DELETE FROM tbl_tags");
-
-                // then insert the passed ones
                 addOrUpdateTags(tags);
-
                 db.setTransactionSuccessful();
-
             } catch (SQLException e) {
                 AppLog.e(T.READER, e);
             }
@@ -152,21 +148,14 @@ public class ReaderTagTable {
      * returns true if the passed tag exists and it has the passed type
      */
     private static boolean tagExistsOfType(String tagName, ReaderTagType tagType) {
-        if (TextUtils.isEmpty(tagName)) {
+        if (TextUtils.isEmpty(tagName) || tagType == null) {
             return false;
         }
-        // look for any tag with this name if tagType isn't passed
-        if (tagType == null) {
-            String[] args = {tagName};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT 1 FROM tbl_tags WHERE tag_name=?1",
-                    args);
-        } else {
-            String[] args = {tagName, Integer.toString(tagType.toInt())};
-            return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
-                    args);
-        }
+
+        String[] args = {tagName, Integer.toString(tagType.toInt())};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_tags WHERE tag_name=?1 AND tag_type=?2",
+                args);
     }
 
     public static boolean isFollowedTagName(String tagName) {
