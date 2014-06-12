@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -60,10 +57,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final int mAvatarSz;
     private final int mMarginLarge;
 
-    private final float mRowAnimationFromYDelta;
-    private final int mRowAnimationDuration;
     private boolean mCanRequestMorePosts = false;
-    private boolean mAnimateRows = false;
     private boolean mIsFlinging = false;
 
     private final LayoutInflater mInflater;
@@ -104,10 +98,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         int listMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
         mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
-
-        // when animating rows in, start from this y-position near the bottom using short animation duration
-        mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
-        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         // enable preloading of images
         mEnableImagePreload = true;
@@ -160,8 +150,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * same as refresh() above but first clears the existing posts - this will cause the
-     * adapter to animate in the new posts
+     * same as refresh() above but first clears the existing posts
      */
     public void reload() {
         clear();
@@ -173,12 +162,14 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     public void reloadPost(ReaderPost post) {
         int index = mPosts.indexOfPost(post);
-        if (index == -1)
+        if (index == -1) {
             return;
+        }
 
         final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
-        if (updatedPost==null)
+        if (updatedPost == null) {
             return;
+        }
 
         mPosts.set(index, updatedPost);
         notifyDataSetChanged();
@@ -401,11 +392,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
-        // animate the appearance of this row while new posts are being loaded
-        if (mAnimateRows) {
-            animateRow(convertView);
-        }
-
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
@@ -450,17 +436,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (animateChanges) {
             holder.layoutBottom.setLayoutTransition(null);
         }
-    }
-
-    /*
-     * animate in the passed listView item
-     */
-    private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
-    private void animateRow(View view) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
-        animator.setDuration(mRowAnimationDuration);
-        animator.setInterpolator(mRowInterpolator);
-        animator.start();
     }
 
     private static class PostViewHolder {
@@ -650,10 +625,6 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 }
 
-                // if list was previously empty, animate in the new posts
-                if (wasEmpty) {
-                    enableRowAnimation();
-                }
                 notifyDataSetChanged();
             }
 
@@ -663,19 +634,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             mIsTaskRunning = false;
         }
-    }
-
-    /*
-     * briefly enable animating the appearance of new rows
-     */
-    private void enableRowAnimation() {
-        mAnimateRows = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateRows = false;
-            }
-        }, 250);
     }
 
     /*
