@@ -122,7 +122,10 @@ public class ReaderPostListActivity extends WPActionBarActivity
         if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
         } else {
-            super.onBackPressed();
+            ReaderPostListFragment fragment = getListFragment();
+            if (fragment == null || !fragment.goBackInTagHistory()) {
+                super.onBackPressed();
+            }
         }
     }
 

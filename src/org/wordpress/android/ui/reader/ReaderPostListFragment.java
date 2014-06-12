@@ -55,6 +55,7 @@ import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -99,6 +100,9 @@ public class ReaderPostListFragment extends Fragment
     private boolean mWasPaused;
 
     private Parcelable mListState = null;
+
+    private final Stack<String> mTagPreviewHistory = new Stack<String>();
+    private static final String KEY_TAG_PREVIEW_HISTORY = "tag_preview_history";
 
     /*
      * show posts with a specific tag
@@ -146,6 +150,10 @@ public class ReaderPostListFragment extends Fragment
             }
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
+
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
+                mTagPreviewHistory.push(getCurrentTagName());
+            }
         }
     }
 
@@ -169,6 +177,11 @@ public class ReaderPostListFragment extends Fragment
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
+                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
+                mTagPreviewHistory.clear();
+                mTagPreviewHistory.addAll(backStack);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
@@ -207,6 +220,9 @@ public class ReaderPostListFragment extends Fragment
 
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
+        }
+        if (!mTagPreviewHistory.empty()) {
+            outState.putSerializable(KEY_TAG_PREVIEW_HISTORY, mTagPreviewHistory);
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
@@ -637,6 +653,9 @@ public class ReaderPostListFragment extends Fragment
     private boolean isCurrentTag(final ReaderTag tag) {
         return ReaderTag.isSameTag(tag, mCurrentTag);
     }
+    private boolean isCurrentTagName(String tagName) {
+        return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
+    }
 
     ReaderTag getCurrentTag() {
         return mCurrentTag;
@@ -651,12 +670,18 @@ public class ReaderPostListFragment extends Fragment
     }
 
     void setCurrentTagName(String tagName) {
+        setCurrentTagName(tagName, true);
+    }
+    void setCurrentTagName(String tagName, boolean allowAutoUpdate) {
         if (TextUtils.isEmpty(tagName)) {
             return;
         }
-        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED));
+        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
     }
     void setCurrentTag(final ReaderTag tag) {
+        setCurrentTag(tag, true);
+    }
+    void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
         if (tag == null) {
             return;
         }
@@ -672,9 +697,14 @@ public class ReaderPostListFragment extends Fragment
 
         mCurrentTag = tag;
 
-        // remember this as the current tag if viewing followed tag
-        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)) {
-            UserPrefs.setReaderTag(tag);
+        switch (getPostListType()) {
+            case TAG_FOLLOWED:
+                // remember this as the current tag if viewing followed tag
+                UserPrefs.setReaderTag(tag);
+                break;
+            case TAG_PREVIEW:
+                mTagPreviewHistory.push(tag.getTagName());
+                break;
         }
 
         getPostAdapter().setCurrentTag(tag);
@@ -683,9 +713,31 @@ public class ReaderPostListFragment extends Fragment
         hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(tag)) {
+        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
             updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
         }
+    }
+
+    /*
+    * when previewing posts with a specific tag, a history of previewed tags is retained so
+    * the user can navigate back through them - this is faster and requires less memory
+    * than creating a new fragment for each previewed tag
+    */
+    boolean goBackInTagHistory() {
+        if (mTagPreviewHistory.empty()) {
+            return false;
+        }
+
+        String tag = mTagPreviewHistory.pop();
+        if (isCurrentTagName(tag)) {
+            if (mTagPreviewHistory.empty()) {
+                return false;
+            }
+            tag = mTagPreviewHistory.pop();
+        }
+
+        setCurrentTagName(tag, false);
+        return true;
     }
 
     /*
@@ -699,7 +751,7 @@ public class ReaderPostListFragment extends Fragment
 
         final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
         String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.grey_extra_dark);
-        String htmlTag = "<font color=" + color + ">" + getCurrentTag() + "</font>";
+        String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
         String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
         txtTagName.setText(Html.fromHtml(htmlLabel));
 
