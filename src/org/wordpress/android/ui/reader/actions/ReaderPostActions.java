@@ -325,7 +325,7 @@ public class ReaderPostActions {
                     String dateNewest = ReaderTagTable.getTagNewestDate(tag);
                     if (!TextUtils.isEmpty(dateNewest)) {
                         sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                        AppLog.d(T.READER, String.format("requesting newer posts in tag (%s)", dateNewest));
+                        AppLog.d(T.READER, String.format("requesting newer posts in tag %s (%s)", tag.getTagNameForLog(), dateNewest));
                     }
                     break;
 
@@ -338,12 +338,12 @@ public class ReaderPostActions {
                     }
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                        AppLog.d(T.READER, String.format("requesting older posts in tag (%s)", dateOldest));
+                        AppLog.d(T.READER, String.format("requesting older posts in tag %s (%s)", tag.getTagNameForLog(), dateOldest));
                     }
                     break;
             }
         } else {
-            AppLog.d(T.READER, "requesting posts in empty tag");
+            AppLog.d(T.READER, "requesting posts in empty tag " + tag.getTagNameForLog());
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -391,7 +391,7 @@ public class ReaderPostActions {
 
                 // go no further if the response didn't contain any posts
                 if (serverPosts.size() == 0) {
-                    AppLog.d(T.READER, "no new posts in tag");
+                    AppLog.d(T.READER, "no new posts in tag " + tag.getTagNameForLog());
                     if (resultListener != null) {
                         handler.post(new Runnable() {
                             public void run() {
@@ -439,7 +439,8 @@ public class ReaderPostActions {
                 }
                 ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
-                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag", serverPosts.size(), numNewPosts));
+                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag %s",
+                        serverPosts.size(), numNewPosts, tag.getTagNameForLog()));
 
                 handler.post(new Runnable() {
                     public void run() {
@@ -584,7 +585,7 @@ public class ReaderPostActions {
                     + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
                     + "&order=DESC"
                     + "&before=" + UrlUtils.urlEncode(strDateBefore);
-        AppLog.i(T.READER, String.format("backfilling tag, recursion %d", recursionCounter));
+        AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tag.getTagNameForLog(), recursionCounter));
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
     private static void handleBackfillResponse(final JSONObject jsonObject,
@@ -606,7 +607,7 @@ public class ReaderPostActions {
                     return;
                 }
 
-                AppLog.i(T.READER, String.format("backfilling tag found %d new posts", numNewPosts));
+                AppLog.i(T.READER, String.format("backfilling tag %s found %d new posts", tag.getTagNameForLog(), numNewPosts));
                 ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
                 handler.post(new Runnable() {

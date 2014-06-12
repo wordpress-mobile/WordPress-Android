@@ -70,12 +70,34 @@ public class ReaderTag implements Serializable {
         this.tagName = StringUtils.notNullStr(name);
     }
     public String getCapitalizedTagName() {
-        if (tagName == null)
+        if (tagName == null) {
             return "";
+        }
         // HACK to allow iPhone, iPad, iEverything else
-        if (tagName.startsWith("iP"))
+        if (tagName.startsWith("iP")) {
             return tagName;
+        }
         return StringUtils.capitalize(tagName);
+    }
+
+    /*
+     * returns the tag name for use in the application log - if this is a default tag it returns
+     * the full tag name, otherwise it abbreviates the tag name since exposing followed tags
+     * in the log could be considered a privacy issue
+     */
+    public String getTagNameForLog() {
+        String tagName = getTagName();
+        if (tagType == ReaderTagType.DEFAULT) {
+            return tagName;
+        } else if (tagName.length() >= 6) {
+            return tagName.substring(0, 3) + "...";
+        } else if (tagName.length() >= 4) {
+            return tagName.substring(0, 2) + "...";
+        } else if (tagName.length() >= 2) {
+            return tagName.substring(0, 1) + "...";
+        } else {
+            return "...";
+        }
     }
 
     /*
