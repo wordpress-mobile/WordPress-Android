@@ -4,7 +4,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -14,6 +18,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -84,24 +89,24 @@ public class NoteBlock {
 
         // Note image
         if (hasImageMediaItem()) {
-            noteBlockHolder.mImageView.setImageUrl(mMediaItem.optString("url", ""), WordPress.imageLoader);
-            noteBlockHolder.mImageView.setVisibility(View.VISIBLE);
-        } else {
-            noteBlockHolder.mImageView.setVisibility(View.GONE);
+            noteBlockHolder.getImageView().setImageUrl(mMediaItem.optString("url", ""), WordPress.imageLoader);
+            noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
+        } else if (noteBlockHolder.getImageView() != null) {
+            noteBlockHolder.getImageView().setVisibility(View.GONE);
         }
 
         // Note video
         if (hasVideoMediaItem()) {
-            noteBlockHolder.mVideoView.setVideoURI(Uri.parse(mMediaItem.optString("url", "")));
-            noteBlockHolder.mVideoView.setVisibility(View.VISIBLE);
+            noteBlockHolder.getVideoView().setVideoURI(Uri.parse(mMediaItem.optString("url", "")));
+            noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
 
             // Attach a mediaController if we are displaying a video.
             final MediaController mediaController = new MediaController(noteBlockHolder.mVideoView.getContext());
             mediaController.setMediaPlayer(noteBlockHolder.mVideoView);
 
-            noteBlockHolder.mVideoView.setMediaController(mediaController);
+            noteBlockHolder.getVideoView().setMediaController(mediaController);
             mediaController.requestFocus();
-            noteBlockHolder.mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            noteBlockHolder.getVideoView().setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -109,16 +114,16 @@ public class NoteBlock {
                     mediaController.show(0);
                 }
             });
-        } else {
-            noteBlockHolder.mVideoView.setVisibility(View.GONE);
+        } else if (noteBlockHolder.getVideoView() != null) {
+            noteBlockHolder.getVideoView().setVisibility(View.GONE);
         }
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
-            noteBlockHolder.mTextView.setText(getNoteText());
-            noteBlockHolder.mTextView.setVisibility(View.VISIBLE);
+            noteBlockHolder.getTextView().setText(getNoteText());
+            noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
-            noteBlockHolder.mTextView.setVisibility(View.GONE);
+            noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
 
         return view;
@@ -129,15 +134,46 @@ public class NoteBlock {
     }
 
     private static class BasicNoteBlockHolder {
+        private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
-        private final NetworkImageView mImageView;
-        private final VideoView mVideoView;
+        private NetworkImageView mImageView;
+        private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
+            mRootLayout = (LinearLayout)view;
             mTextView = (WPTextView) view.findViewById(R.id.note_text);
             mTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            mImageView = (NetworkImageView) view.findViewById(R.id.note_image);
-            mVideoView = (VideoView) view.findViewById(R.id.note_video);
+        }
+
+        public WPTextView getTextView() {
+            return mTextView;
+        }
+
+        public NetworkImageView getImageView() {
+            if (mImageView == null) {
+                mImageView = new NetworkImageView(mRootLayout.getContext());
+                int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 220);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
+                layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+                layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
+                mImageView.setLayoutParams(layoutParams);
+                mRootLayout.addView(mImageView);
+            }
+
+            return mImageView;
+        }
+
+        public VideoView getVideoView() {
+            if (mVideoView == null) {
+                mVideoView = new VideoView(mRootLayout.getContext());
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
+                layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
+                mVideoView.setLayoutParams(layoutParams);
+                mRootLayout.addView(mVideoView);
+            }
+
+            return mVideoView;
         }
     }
 }
