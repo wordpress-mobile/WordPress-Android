@@ -240,7 +240,7 @@ public class PreferencesActivity extends PreferenceActivity {
         }
         data.putExtra(CURRENT_BLOG_CHANGED, currentBlogChanged);
         setResult(RESULT_OK, data);
-        AnalyticsTracker.loadPrefHasUserOptedOut();
+        AnalyticsTracker.loadPrefHasUserOptedOut(true);
         super.finish();
     }
 

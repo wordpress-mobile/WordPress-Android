@@ -76,12 +76,20 @@ public final class AnalyticsTracker {
     }
 
     public static void init() {
-        loadPrefHasUserOptedOut();
+        loadPrefHasUserOptedOut(false);
     }
 
-    public static void loadPrefHasUserOptedOut() {
+    public static void loadPrefHasUserOptedOut(boolean manageSession) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         mHasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (manageSession) {
+            if (mHasUserOptedOut) {
+                // End session and clear data
+                clearAllData();
+            } else {
+                beginSession();
+            }
+        }
     }
 
     public static void registerTracker(Tracker tracker) {
