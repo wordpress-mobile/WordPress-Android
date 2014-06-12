@@ -315,7 +315,7 @@
     <string name="self_hosted_blogs">Self-hosted blogs</string>
     <string name="preference_privacy">Privacy</string>
     <string name="preference_send_usage_stats">Send statistics</string>
-    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to Automattic</string>
+    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 
     <!-- wpcom sign in dialog -->
     <string name="need_help_signin_wpcom">Need help?</string>
