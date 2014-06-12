@@ -1090,7 +1090,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         setCurrentTag(tag.getTagName());
-        AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
+        AppLog.d(T.READER, "reader post list > tag chosen from actionbar");
 
         return true;
     }
