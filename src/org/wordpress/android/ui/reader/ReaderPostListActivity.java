@@ -147,7 +147,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     } else if (data.getBooleanExtra(ReaderSubsActivity.KEY_BLOGS_CHANGED, false)) {
                         // update posts if any blog was followed or unfollowed and user is viewing "Blogs I Follow"
                         if (listFragment.getPostListType().isTagType()
-                                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTag())) {
+                                && ReaderTag.TAG_NAME_FOLLOWING.equals(listFragment.getCurrentTagName())) {
                             listFragment.updatePostsWithTag(
                                     listFragment.getCurrentTag(),
                                     RequestDataAction.LOAD_NEWER,
