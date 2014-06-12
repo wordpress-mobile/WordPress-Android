@@ -650,8 +650,9 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 }
 
-                // if list was previously empty, animate in the new posts
-                if (wasEmpty) {
+                // animate in the new posts if list was previously empty and we're
+                // showing a followed tag
+                if (wasEmpty && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                     enableRowAnimation();
                 } else if (mAnimateRows) {
                     mAnimateRows = false;
