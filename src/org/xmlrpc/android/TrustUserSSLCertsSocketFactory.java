@@ -5,8 +5,8 @@ import android.net.SSLCertificateSocketFactory;
 import android.os.Build;
 
 import org.apache.http.conn.scheme.SocketFactory;
+import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.networking.WPTrustManager;
@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.security.GeneralSecurityException;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
@@ -35,7 +38,7 @@ import javax.net.ssl.TrustManager;
  */
 public class TrustUserSSLCertsSocketFactory extends SSLSocketFactory {
     private SSLCertificateSocketFactory mFactory;
-    private static final StrictHostnameVerifier mHostnameVerifier = new StrictHostnameVerifier();
+    private static final BrowserCompatHostnameVerifier mHostnameVerifier = new BrowserCompatHostnameVerifier();
 
     public TrustUserSSLCertsSocketFactory() throws IOException, GeneralSecurityException {
         super(null);
@@ -94,7 +97,37 @@ public class TrustUserSSLCertsSocketFactory extends SSLSocketFactory {
         // verify hostname and certificate
         SSLSession session = ssl.getSession();
         if (!mHostnameVerifier.verify(host, session)) {
-            throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+            // the verify failed. We need to check if the current certificate is in Trusted Store.
+            try {
+                Certificate[] errorChain = ssl.getSession().getPeerCertificates();
+                X509Certificate[] X509CertificateChain = new X509Certificate[errorChain.length];
+                for (int i = 0; i < errorChain.length; i++) {
+                    X509Certificate x509Certificate = (X509Certificate) errorChain[0];
+                    X509CertificateChain[i] = x509Certificate;
+                }
+
+                if (X509CertificateChain.length == 0) {
+                    throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+                }
+
+                if (!SelfSignedSSLCertsManager.getInstance(null).isCertificateTrusted(X509CertificateChain[0])) {
+                    SelfSignedSSLCertsManager.getInstance(null).setLastFailureChain(X509CertificateChain);
+                    throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+                }
+            } catch (GeneralSecurityException e) {
+                AppLog.e(T.API, "GeneralSecurityException occurred when trying to verify a certificate that has failed" +
+                        " the host name verifier check", e);
+                throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+            } catch (IOException e) {
+                AppLog.e(T.API, "IOException occurred when trying to verify a certificate that has failed" +
+                        " the host name verifier check", e);
+                throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+            } catch (Exception e) {
+                // We don't want crash the app here for an unexpected error
+                AppLog.e(T.API, "An Exception occurred when trying to verify a certificate that has failed" +
+                        " the host name verifier check", e);
+                throw new SSLPeerUnverifiedException("Cannot verify hostname: " + host);
+            }
         }
 
         AppLog.i(T.API, "Established " + session.getProtocol()

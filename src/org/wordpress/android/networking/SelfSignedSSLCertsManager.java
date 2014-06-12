@@ -244,6 +244,10 @@ public class SelfSignedSSLCertsManager {
             }
         }
 
+        return isCertificateTrusted(x509Certificate);
+    }
+
+    public boolean isCertificateTrusted(X509Certificate x509Certificate){
         if (x509Certificate==null)
             return false;
 

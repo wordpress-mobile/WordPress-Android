@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 /**
  * A WordPress XMLRPC Client.
@@ -542,6 +543,14 @@ public class XMLRPCClient implements XMLRPCClientInterface {
                     AppLog.e(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected on wordpress.com");
                 } else {
                     AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+                    broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
+                }
+                throw e;
+            } catch (SSLPeerUnverifiedException e) {
+                if (mIsWpcom) {
+                    AppLog.e(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected on wordpress.com");
+                } else {
+                    AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
                     broadcastAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
                 }
                 throw e;
