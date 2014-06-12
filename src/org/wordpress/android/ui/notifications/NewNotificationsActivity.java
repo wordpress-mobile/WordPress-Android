@@ -45,15 +45,12 @@ public class NewNotificationsActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
+    private static final String FRAGMENT_TAG_LIST = "notes_list";
 
     private NewNotificationsListFragment mNotesList;
     private boolean mDualPane;
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
-    private BlogPairId mTmpSelectedComment;
-    private BlogPairId mTmpSelectedReaderPost;
-    private BlogPairId mSelectedComment;
-    private BlogPairId mSelectedReaderPost;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +71,16 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mNotesList = (NewNotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
-        mNotesList.setOnNoteClickListener(new NoteClickListener());
+
+        if (savedInstanceState == null) {
+            mNotesList = new NewNotificationsListFragment();
+            mNotesList.setOnNoteClickListener(new NoteClickListener());
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, FRAGMENT_TAG_LIST);
+            fragmentTransaction.commitAllowingStateLoss();
+        } else {
+            mNotesList = (NewNotificationsListFragment) fm.findFragmentByTag(FRAGMENT_TAG_LIST);
+        }
 
         GCMIntentService.clearNotificationsMap();
 
@@ -118,30 +123,10 @@ public class NewNotificationsActivity extends WPActionBarActivity
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-                    // This is ugly, but onBackStackChanged is not called just after a fragment commit.
-                    // In a 2 commits in a row case, onBackStackChanged is called twice but after the
-                    // 2 commits. That's why mSelectedPostId can't be affected correctly after the first commit.
-                    switch (backStackEntryCount) {
-                        case 2:
-                            mSelectedReaderPost = mTmpSelectedReaderPost;
-                            mSelectedComment = mTmpSelectedComment;
-                            mTmpSelectedReaderPost = null;
-                            mTmpSelectedComment = null;
-                            break;
-                        case 1:
-                            if (mDualPane) {
-                                mSelectedReaderPost = mTmpSelectedReaderPost;
-                                mSelectedComment = mTmpSelectedComment;
-                            } else {
-                                mSelectedReaderPost = null;
-                                mSelectedComment = null;
-                            }
-                            break;
-                        case 0:
-                            mMenuDrawer.setDrawerIndicatorEnabled(true);
-                            mSelectedReaderPost = null;
-                            mSelectedComment = null;
-                            break;
+                    if (backStackEntryCount == 0) {
+                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                    } else {
+                        mMenuDrawer.setDrawerIndicatorEnabled(false);
                     }
                 }
             };
@@ -283,15 +268,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
-        // only add to backstack if we're removing the list view from the fragment container
-        View container = findViewById(R.id.layout_fragment_container);
-        if (container.findViewById(R.id.fragment_notes_list) != null) {
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
-            ft.addToBackStack(null);
-            if (mNotesList != null) {
-                ft.hide(mNotesList);
-            }
-        }
+        ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
 
@@ -300,7 +277,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -310,7 +287,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }

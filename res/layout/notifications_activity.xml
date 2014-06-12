@@ -3,14 +3,8 @@
 <!--
     non-tablet layout for notifications
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <fragment
-        android:name="org.wordpress.android.ui.notifications.NewNotificationsListFragment"
-        android:id="@+id/fragment_notes_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+</FrameLayout>
