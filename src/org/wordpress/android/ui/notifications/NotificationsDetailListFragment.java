@@ -86,7 +86,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                     NoteBlock noteBlock;
                     String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
                     if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
-                        noteBlock = new UserNoteBlock(noteObject, mOnSiteFollowListener);
+                        noteBlock = new UserNoteBlock(noteObject, mOnNoteBlockTextClickListener, mOnSiteFollowListener);
                     } else {
                         noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                     }

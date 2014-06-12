@@ -11,10 +11,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -25,13 +25,14 @@ import org.wordpress.android.widgets.WPTextView;
 public class UserNoteBlock extends NoteBlock {
     private boolean mIsFollowing;
     private OnSiteFollowListener mSiteFollowListener;
+    private long mUserSiteId;
 
     public interface OnSiteFollowListener {
         public void onSiteFollow(boolean success);
     }
 
-    public UserNoteBlock(JSONObject noteObject, OnSiteFollowListener listener) {
-        super(noteObject, null);
+    public UserNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener, OnSiteFollowListener listener) {
+        super(noteObject, onNoteBlockTextClickListener);
         mSiteFollowListener = listener;
     }
 
@@ -49,7 +50,12 @@ public class UserNoteBlock extends NoteBlock {
     public View configureView(View view) {
         UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
         noteBlockHolder.mNameTextView.setText(getNoteText());
-        noteBlockHolder.mUrlTextView.setText(StringUtils.notNullStr(getUserUrl()));
+        noteBlockHolder.mUrlTextView.setText(NotificationUtils.getClickableTextForIdUrl(
+                getUrlIdObject(),
+                getUserUrl(),
+                getOnNoteBlockTextClickListener()
+        ));
+
         if (hasImageMediaItem()) {
             noteBlockHolder.mAvatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
         }
@@ -88,6 +94,7 @@ public class UserNoteBlock extends NoteBlock {
         public UserActionNoteBlockHolder(View view) {
             mNameTextView = (WPTextView) view.findViewById(R.id.name);
             mUrlTextView = (WPTextView) view.findViewById(R.id.url);
+            mUrlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             mActionButton = (WPTextView) view.findViewById(R.id.action_button);
             mActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,7 +132,7 @@ public class UserNoteBlock extends NoteBlock {
         }
     }
 
-    public String getUserUrl() {
+    public JSONObject getUrlIdObject() {
         if (getNoteData() == null) return null;
 
         JSONArray idsArray = getNoteData().optJSONArray("ids");
@@ -134,12 +141,20 @@ public class UserNoteBlock extends NoteBlock {
                 try {
                     JSONObject idObject = idsArray.getJSONObject(i);
                     if (idObject.has("url")) {
-                        return UrlUtils.removeUrlScheme(idObject.getString("url"));
+                        return idObject;
                     }
                 } catch (JSONException e) {
                     AppLog.i(AppLog.T.NOTIFS, "Unexpected object in notifications ids array.");
                 }
             }
+        }
+
+        return null;
+    }
+
+    public String getUserUrl() {
+        if (getUrlIdObject() != null) {
+            return UrlUtils.removeUrlScheme(getUrlIdObject().optString("url", ""));
         }
 
         return null;

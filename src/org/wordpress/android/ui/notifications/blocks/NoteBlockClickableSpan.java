@@ -26,10 +26,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     private JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(JSONObject idData) {
+    public NoteBlockClickableSpan(JSONObject idData, int backgroundColor) {
         mBlockData = idData;
         // Same color as notifications_blue in colors.xml
-        mBackgroundColor = Color.parseColor("#90aec2");
+        mBackgroundColor = backgroundColor;
         processIdData();
     }
 

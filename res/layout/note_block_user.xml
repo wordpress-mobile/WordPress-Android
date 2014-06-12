@@ -55,7 +55,6 @@
                 android:id="@+id/url"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selectable_background_wordpress"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/notifications_blue"

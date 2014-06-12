@@ -44,6 +44,10 @@ public class NoteBlock {
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
     }
 
+    public OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
+        return mOnNoteBlockTextClickListener;
+    }
+
     public BlockType getBlockType() {
         return BlockType.BASIC;
     }
@@ -53,7 +57,7 @@ public class NoteBlock {
     }
 
     public Spannable getNoteText() {
-        return NotificationUtils.getSpannableTextFromIndices(mNoteData, true, mOnNoteBlockTextClickListener);
+        return NotificationUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
     }
 
     public JSONObject getNoteMediaItem() {

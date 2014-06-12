@@ -165,7 +165,7 @@ public class Note extends Syncable {
         if (mSubject == null) {
             try {
                 JSONObject subject = mNoteJSON.getJSONObject("subject");
-                mSubject = NotificationUtils.getSpannableTextFromIndices(subject, false, null);
+                mSubject = NotificationUtils.getSpannableTextFromIndices(subject, null);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

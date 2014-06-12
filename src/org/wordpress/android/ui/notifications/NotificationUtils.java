@@ -2,6 +2,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -211,7 +212,7 @@ public class NotificationUtils {
         return "org.wordpress.android.playstore";
     }
 
-    public static Spannable getSpannableTextFromIndices(JSONObject subject, boolean shouldLinkify,
+    public static Spannable getSpannableTextFromIndices(JSONObject subject,
                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
 
         String text = subject.optString("text", "");
@@ -222,7 +223,7 @@ public class NotificationUtils {
 
             for (int i=0; i < idsArray.length(); i++) {
                 JSONObject idObject = (JSONObject) idsArray.get(i);
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject) {
+                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject, Color.parseColor("#90aec2")) {
                     @Override
                     public void onClick(View widget) {
                         onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
@@ -243,6 +244,24 @@ public class NotificationUtils {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return spannableStringBuilder;
+    }
+
+    public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text, final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+        if (idBlock == null || TextUtils.isEmpty(text)) {
+            return new SpannableStringBuilder("");
+        }
+
+        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, Color.parseColor("#b2c6d3")) {
+            @Override
+            public void onClick(View widget) {
+                onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+            }
+        };
+
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
+        spannableStringBuilder.setSpan(clickableSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableStringBuilder;
     }
