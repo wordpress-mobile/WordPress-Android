@@ -19,7 +19,6 @@ import com.simperium.client.User;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
-import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -312,12 +311,6 @@ public class NewNotificationsActivity extends WPActionBarActivity
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putInt(NOTE_ID_EXTRA, mSelectedNoteId);
-        if (mSelectedReaderPost != null) {
-            outState.putSerializable(KEY_SELECTED_POST_ID, mSelectedReaderPost);
-        }
-        if (mSelectedComment != null) {
-            outState.putSerializable(KEY_SELECTED_COMMENT_ID, mSelectedComment);
-        }
         super.onSaveInstanceState(outState);
     }
 
@@ -344,7 +337,6 @@ public class NewNotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onPostClicked(Note note, int remoteBlogId, int postId) {
-        mTmpSelectedReaderPost = new BlogPairId(remoteBlogId, postId);
         ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -360,7 +352,6 @@ public class NewNotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentClicked(Note note, int remoteBlogId, long commentId) {
-        mTmpSelectedComment = new BlogPairId(remoteBlogId, commentId);
         CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
         String tagForFragment = getString(R.string.fragment_tag_comment_detail);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
