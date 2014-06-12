@@ -653,6 +653,8 @@ public class ReaderPostAdapter extends BaseAdapter {
                 // if list was previously empty, animate in the new posts
                 if (wasEmpty) {
                     enableRowAnimation();
+                } else if (mAnimateRows) {
+                    mAnimateRows = false;
                 }
                 notifyDataSetChanged();
             }
