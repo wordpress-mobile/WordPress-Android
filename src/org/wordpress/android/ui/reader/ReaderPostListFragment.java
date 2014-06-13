@@ -93,7 +93,6 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
-    private int mLastPostListScrollPos = -1;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -191,7 +190,6 @@ public class ReaderPostListFragment extends Fragment
     public void onPause() {
         super.onPause();
         mWasPaused = true;
-        mLastPostListScrollPos = -1;
     }
 
     @Override
@@ -1162,7 +1160,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void repositionBlogInfoView() {
         int scrollPos = mListView.getVerticalScrollOffset();
-        if (mBlogInfoView == null || scrollPos == mLastPostListScrollPos) {
+        if (mBlogInfoView == null) {
             return;
         }
 
@@ -1186,7 +1184,6 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mBlogInfoView.moveInfoContainer(infoTop);
-        mLastPostListScrollPos = scrollPos;
     }
 
     /*
