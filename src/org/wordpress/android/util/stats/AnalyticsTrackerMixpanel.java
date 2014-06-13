@@ -158,7 +158,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void clearAllData() {
-        endSession();
         mMixpanel.clearSuperProperties();
         mMixpanel.getPeople().clearPushRegistrationId();
     }

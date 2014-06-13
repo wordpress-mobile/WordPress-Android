@@ -84,7 +84,7 @@ public final class AnalyticsTracker {
         mHasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
         if (manageSession) {
             if (mHasUserOptedOut) {
-                // End session and clear data
+                endSession(true);
                 clearAllData();
             } else {
                 beginSession();
@@ -125,8 +125,8 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void endSession() {
-        if (mHasUserOptedOut) {
+    public static void endSession(boolean force) {
+        if (mHasUserOptedOut && !force) {
             return;
         }
         for (Tracker tracker : TRACKERS) {
@@ -135,9 +135,6 @@ public final class AnalyticsTracker {
     }
 
     public static void clearAllData() {
-        if (mHasUserOptedOut) {
-            return;
-        }
         for (Tracker tracker : TRACKERS) {
             tracker.clearAllData();
         }
