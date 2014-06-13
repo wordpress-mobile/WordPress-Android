@@ -458,7 +458,7 @@ public class ReaderSubsActivity extends Activity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
                     mTagsChanged = true;
                     getPageAdapter().refreshTagFragments();
                 }
@@ -474,7 +474,7 @@ public class ReaderSubsActivity extends Activity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
                 }
             }

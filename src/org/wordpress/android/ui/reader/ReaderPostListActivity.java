@@ -258,6 +258,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(UpdateResult result) {
+                if (isFinishing()) {
+                    return;
+                }
                 if (result != UpdateResult.FAILED) {
                     mHasPerformedInitialUpdate = true;
                 }
