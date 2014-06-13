@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -35,6 +36,7 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.SetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -86,6 +88,7 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -114,6 +117,17 @@ public class WordPress extends Application {
                 }
             }
             return false;
+        }
+    };
+
+    /**
+     *  Update blog list in a background task.
+     *  TODO: update WPActionBar menudrawer blog list onPostExecute
+     */
+    public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
+        protected boolean run() {
+            new SetupBlogTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return true;
         }
     };
 
@@ -666,8 +680,8 @@ public class WordPress extends Application {
             // Rate limited Stats Update
             WordPress.sUpdateCurrentBlogStats.runIfNotLimited();
 
-            //Update Stats!
-            WordPress.updateCurrentBlogStatsInBackground(false);
+            // Rate limited WPCom blog list Update
+            WordPress.sUpdateWordPressComBlogList.runIfNotLimited();
         }
 
         @Override

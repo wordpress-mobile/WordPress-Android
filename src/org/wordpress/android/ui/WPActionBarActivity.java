@@ -461,21 +461,19 @@ public abstract class WPActionBarActivity extends Activity {
     }
 
     /**
-     * Update all of the items in the menu drawer based on the current active
-     * blog.
+     * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
         mAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
         Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
-        while(availableItems.hasNext()){
+        while (availableItems.hasNext()) {
             MenuDrawerItem item = availableItems.next();
             if (item.isVisible()) {
                 mAdapter.add(item);
             }
         }
         mAdapter.notifyDataSetChanged();
-
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {

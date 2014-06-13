@@ -3,10 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.ActionBar;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +16,6 @@ import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.util.ListScrollPositionManager;
@@ -60,7 +56,7 @@ public class ManageBlogsActivity extends ListActivity {
                             mPullToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        new SetupBlogTask().execute();
+                        new UpdateBlogTask(getApplicationContext()).execute();
                     }
                 });
 
@@ -123,7 +119,7 @@ public class ManageBlogsActivity extends ListActivity {
 
     private void refreshBlogs() {
         mPullToRefreshHelper.setRefreshing(true);
-        new SetupBlogTask().execute();
+        new UpdateBlogTask(getApplicationContext()).execute();
     }
 
     private void loadAccounts() {
@@ -163,28 +159,9 @@ public class ManageBlogsActivity extends ListActivity {
         }
     }
 
-    private class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object>>> {
-        private SetupBlog mSetupBlog;
-        private int mErrorMsgId;
-
-        @Override
-        protected void onPreExecute() {
-            mSetupBlog = new SetupBlog();
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-            String password = WordPressDB.decryptPassword(settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-            mSetupBlog.setUsername(username);
-            mSetupBlog.setPassword(password);
-        }
-
-        @Override
-        protected List<Map<String, Object>> doInBackground(Void... args) {
-            List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
-            mErrorMsgId = mSetupBlog.getErrorMsgId();
-            if (userBlogList != null) {
-                mSetupBlog.syncBlogs(getApplicationContext(), userBlogList);
-            }
-            return userBlogList;
+    private class UpdateBlogTask extends SetupBlogTask {
+        public UpdateBlogTask(Context context) {
+            super(context);
         }
 
         @Override
