@@ -741,7 +741,7 @@ public abstract class WPActionBarActivity extends Activity {
         }
 
         if (shouldUpdateCurrentBlogStatsInBackground()) {
-            WordPress.updateCurrentBlogStatsInBackground(true);
+            WordPress.sUpdateCurrentBlogStats.forceRun();
         }
     }
 
