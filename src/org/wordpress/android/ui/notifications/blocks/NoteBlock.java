@@ -95,7 +95,7 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             noteBlockHolder.getImageView().setImageUrl(mMediaItem.optString("url", ""), WordPress.imageLoader);
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-        } else if (noteBlockHolder.getImageView() != null) {
+        } else if (noteBlockHolder.imageView != null) {
             noteBlockHolder.getImageView().setVisibility(View.GONE);
         }
 
@@ -105,8 +105,8 @@ public class NoteBlock {
             noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
 
             // Attach a mediaController if we are displaying a video.
-            final MediaController mediaController = new MediaController(noteBlockHolder.mVideoView.getContext());
-            mediaController.setMediaPlayer(noteBlockHolder.mVideoView);
+            final MediaController mediaController = new MediaController(noteBlockHolder.getVideoView().getContext());
+            mediaController.setMediaPlayer(noteBlockHolder.getVideoView());
 
             noteBlockHolder.getVideoView().setMediaController(mediaController);
             mediaController.requestFocus();
@@ -118,7 +118,7 @@ public class NoteBlock {
                     mediaController.show(0);
                 }
             });
-        } else if (noteBlockHolder.getVideoView() != null) {
+        } else if (noteBlockHolder.videoView != null) {
             noteBlockHolder.getVideoView().setVisibility(View.GONE);
         }
 
@@ -138,10 +138,11 @@ public class NoteBlock {
     }
 
     private static class BasicNoteBlockHolder {
+        public NetworkImageView imageView;
+        public VideoView videoView;
+
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
-        private NetworkImageView mImageView;
-        private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
             mRootLayout = (LinearLayout)view;
@@ -154,30 +155,30 @@ public class NoteBlock {
         }
 
         public NetworkImageView getImageView() {
-            if (mImageView == null) {
-                mImageView = new NetworkImageView(mRootLayout.getContext());
+            if (imageView == null) {
+                imageView = new NetworkImageView(mRootLayout.getContext());
                 int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 220);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
-                mImageView.setLayoutParams(layoutParams);
-                mRootLayout.addView(mImageView);
+                imageView.setLayoutParams(layoutParams);
+                mRootLayout.addView(imageView);
             }
 
-            return mImageView;
+            return imageView;
         }
 
         public VideoView getVideoView() {
-            if (mVideoView == null) {
-                mVideoView = new VideoView(mRootLayout.getContext());
+            if (videoView == null) {
+                videoView = new VideoView(mRootLayout.getContext());
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
-                mVideoView.setLayoutParams(layoutParams);
-                mRootLayout.addView(mVideoView);
+                videoView.setLayoutParams(layoutParams);
+                mRootLayout.addView(videoView);
             }
 
-            return mVideoView;
+            return videoView;
         }
     }
 }

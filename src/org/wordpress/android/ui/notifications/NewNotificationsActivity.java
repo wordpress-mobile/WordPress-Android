@@ -47,6 +47,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
     private static final String FRAGMENT_TAG_LIST = "notes_list";
 
     private NewNotificationsListFragment mNotesList;
+    private Fragment mDetailFragment;
     private boolean mDualPane;
     private int mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
@@ -70,16 +71,8 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-
-        if (savedInstanceState == null) {
-            mNotesList = new NewNotificationsListFragment();
-            mNotesList.setOnNoteClickListener(new NoteClickListener());
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, FRAGMENT_TAG_LIST);
-            fragmentTransaction.commitAllowingStateLoss();
-        } else {
-            mNotesList = (NewNotificationsListFragment) fm.findFragmentByTag(FRAGMENT_TAG_LIST);
-        }
+        mNotesList = (NewNotificationsListFragment) fm.findFragmentById(R.id.fragment_notes_list);
+        mNotesList.setOnNoteClickListener(new NoteClickListener());
 
         GCMIntentService.clearNotificationsMap();
 
@@ -260,14 +253,23 @@ public class NewNotificationsActivity extends WPActionBarActivity
         }
 
         // create detail fragment for this note type
-        Fragment detailFragment = getDetailFragmentForNote(note);
+        mDetailFragment = getDetailFragmentForNote(note);
 
         // swap the fragment
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, detailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.layout_fragment_container, mDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS);
-        ft.addToBackStack(null);
+        // only add to backstack if we're removing the list view from the fragment container
+        View container = findViewById(R.id.layout_fragment_container);
+        if (container.findViewById(R.id.fragment_notes_list) != null) {
+            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            ft.addToBackStack(null);
+            if (mNotesList != null) {
+                ft.hide(mNotesList);
+            }
+        }
+
         ft.commitAllowingStateLoss();
     }
 
@@ -276,7 +278,10 @@ public class NewNotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (mDetailFragment != null) {
+            ft.hide(mDetailFragment);
+        }
+        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -286,6 +291,9 @@ public class NewNotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
+        if (mDetailFragment != null) {
+            ft.hide(mDetailFragment);
+        }
         ft.replace(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();

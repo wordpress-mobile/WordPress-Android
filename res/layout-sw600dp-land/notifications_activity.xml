@@ -6,6 +6,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="horizontal">
 
     <FrameLayout
@@ -15,7 +16,7 @@
         android:layout_width="0dp">
 
         <fragment
-            android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
+            android:name="org.wordpress.android.ui.notifications.NewNotificationsListFragment"
             android:id="@+id/fragment_notes_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

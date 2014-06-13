@@ -5,6 +5,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,29 +77,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         // Loop through the body items in this note, and create blocks for each.
-        // TODO asynctask this work
-        JSONArray bodyArray = mNote.getBody();
-        if (bodyArray != null && bodyArray.length() > 0) {
-            for (int i=0; i < bodyArray.length(); i++) {
-                try {
-                    JSONObject noteObject = bodyArray.getJSONObject(i);
-                    // Determine NoteBlock type and add it to the array
-                    NoteBlock noteBlock;
-                    String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
-                    if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
-                        noteBlock = new UserNoteBlock(noteObject, mOnNoteBlockTextClickListener, mOnSiteFollowListener);
-                    } else {
-                        noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
-                    }
-
-                    mNoteBlockArray.add(noteBlock);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
-        }
+        new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -117,7 +96,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         private LayoutInflater mLayoutInflater;
 
         NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks) {
-            super(context, R.layout.menu_drawer_row, R.id.menu_row_title, noteBlocks);
+            super(context, 0, noteBlocks);
 
             mNoteBlockList = noteBlocks;
             mLayoutInflater = LayoutInflater.from(context);
@@ -173,4 +152,37 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
+
+    private class LoadNoteBlocksTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            JSONArray bodyArray = mNote.getBody();
+            if (bodyArray != null && bodyArray.length() > 0) {
+                for (int i=0; i < bodyArray.length(); i++) {
+                    try {
+                        JSONObject noteObject = bodyArray.getJSONObject(i);
+                        // Determine NoteBlock type and add it to the array
+                        NoteBlock noteBlock;
+                        String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
+                        if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
+                            noteBlock = new UserNoteBlock(noteObject, mOnNoteBlockTextClickListener, mOnSiteFollowListener);
+                        } else {
+                            noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                        }
+
+                        mNoteBlockArray.add(noteBlock);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
+        }
+    }
 }
