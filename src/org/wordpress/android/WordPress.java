@@ -131,6 +131,7 @@ public class WordPress extends Application {
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
+        AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
@@ -424,6 +425,7 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+        AnalyticsTracker.endSession(false);
         AnalyticsTracker.clearAllData();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
@@ -587,7 +589,7 @@ public class WordPress extends Application {
                 // We're in the Background
                 isInBackground = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED);
-                AnalyticsTracker.endSession();
+                AnalyticsTracker.endSession(false);
             } else {
                 isInBackground = false;
             }

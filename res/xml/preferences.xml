@@ -83,6 +83,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/preference_privacy"
+        android:key="wp_privacy">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="wp_pref_send_usage_stats"
+            android:title="@string/preference_send_usage_stats"
+            android:summary="@string/preference_send_usage_stats_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="wp_pref_app_about_section"
         android:title="@string/about">
         <Preference android:title="@string/app_title"

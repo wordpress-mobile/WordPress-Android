@@ -18,7 +18,6 @@ import java.util.Map;
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private MixpanelAPI mMixpanel;
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
-
     private static final String SESSION_COUNT = "sessionCount";
     private static final String MIXPANEL_PLATFORM = "platform";
     private static final String MIXPANEL_SESSION_COUNT = "session_count";
@@ -159,7 +158,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void clearAllData() {
-        endSession();
         mMixpanel.clearSuperProperties();
         mMixpanel.getPeople().clearPushRegistrationId();
     }
