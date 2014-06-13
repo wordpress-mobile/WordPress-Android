@@ -6,6 +6,11 @@
             <solid android:color="@color/reader_list_selector" />
         </shape>
     </item>
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/reader_list_selector" />
+        </shape>
+    </item>
     <item android:state_focused="true">
         <shape>
             <solid android:color="@color/reader_list_selector" />

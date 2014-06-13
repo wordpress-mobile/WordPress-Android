@@ -7,7 +7,7 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
-    style="@style/WordPressListRowBackground">
+    android:background="@drawable/list_bg_selector">
 
     <LinearLayout
         android:layout_weight="1"

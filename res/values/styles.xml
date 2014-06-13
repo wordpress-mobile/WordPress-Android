@@ -123,10 +123,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="WordPressListRowBackground">
-        <item name="android:background">@null</item>
-    </style>
-
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">@dimen/menu_drawer_width</item>
         <item name="mdContentBackground">@color/background_grey</item>
