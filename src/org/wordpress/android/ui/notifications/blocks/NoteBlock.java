@@ -95,31 +95,16 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             noteBlockHolder.getImageView().setImageUrl(mMediaItem.optString("url", ""), WordPress.imageLoader);
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-        } else if (noteBlockHolder.imageView != null) {
-            noteBlockHolder.getImageView().setVisibility(View.GONE);
+        } else {
+            noteBlockHolder.hideImageView();
         }
 
         // Note video
         if (hasVideoMediaItem()) {
             noteBlockHolder.getVideoView().setVideoURI(Uri.parse(mMediaItem.optString("url", "")));
             noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
-
-            // Attach a mediaController if we are displaying a video.
-            final MediaController mediaController = new MediaController(noteBlockHolder.getVideoView().getContext());
-            mediaController.setMediaPlayer(noteBlockHolder.getVideoView());
-
-            noteBlockHolder.getVideoView().setMediaController(mediaController);
-            mediaController.requestFocus();
-            noteBlockHolder.getVideoView().setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    // Show the media controls when the video is ready to be played.
-                    mediaController.show(0);
-                }
-            });
-        } else if (noteBlockHolder.videoView != null) {
-            noteBlockHolder.getVideoView().setVisibility(View.GONE);
+        } else {
+            noteBlockHolder.hideVideoView();
         }
 
         // Note text
@@ -138,11 +123,11 @@ public class NoteBlock {
     }
 
     private static class BasicNoteBlockHolder {
-        public NetworkImageView imageView;
-        public VideoView videoView;
-
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
+
+        private NetworkImageView mImageView;
+        private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
             mRootLayout = (LinearLayout)view;
@@ -155,30 +140,57 @@ public class NoteBlock {
         }
 
         public NetworkImageView getImageView() {
-            if (imageView == null) {
-                imageView = new NetworkImageView(mRootLayout.getContext());
+            if (mImageView == null) {
+                mImageView = new NetworkImageView(mRootLayout.getContext());
                 int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 220);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
-                imageView.setLayoutParams(layoutParams);
-                mRootLayout.addView(imageView);
+                mImageView.setLayoutParams(layoutParams);
+                mRootLayout.addView(mImageView);
             }
 
-            return imageView;
+            return mImageView;
         }
 
         public VideoView getVideoView() {
-            if (videoView == null) {
-                videoView = new VideoView(mRootLayout.getContext());
+            if (mVideoView == null) {
+                mVideoView = new VideoView(mRootLayout.getContext());
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
-                videoView.setLayoutParams(layoutParams);
-                mRootLayout.addView(videoView);
+                mVideoView.setLayoutParams(layoutParams);
+                mRootLayout.addView(mVideoView);
+
+                // Attach a mediaController if we are displaying a video.
+                final MediaController mediaController = new MediaController(mRootLayout.getContext());
+                mediaController.setMediaPlayer(mVideoView);
+
+                mVideoView.setMediaController(mediaController);
+                mediaController.requestFocus();
+                mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        // Show the media controls when the video is ready to be played.
+                        mediaController.show(0);
+                    }
+                });
             }
 
-            return videoView;
+            return mVideoView;
+        }
+
+        public void hideImageView() {
+            if (mImageView != null) {
+                mImageView.setVisibility(View.GONE);
+            }
+        }
+
+        public void hideVideoView() {
+            if (mVideoView != null) {
+                mVideoView.setVisibility(View.GONE);
+            }
         }
     }
 }
