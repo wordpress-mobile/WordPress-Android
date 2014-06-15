@@ -6,8 +6,20 @@ read on.
 
 ## Build Instructions ##
 
-The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need to generate the
+WordPress for Android uses open sources libraries, some of them  (email-
+checker and android-passcodelock for instance) are developed and tested within
+the WordPress for Android project. To ease the development process and to use
+them in other projects, we use separate github projects and git repositories
+and we added them as local dependencies in our gradle configuration.
+
+After you cloned the main repository, you'll have to update pull these
+libraries which are git submodules:
+
+    $ git submodule init
+    $ git submodule update
+
+The [gradle build system][2] will fetch all other dependencies and generate
+files you need to build the project. You only need to generate the
 local.properties file and create the gradle.properties file, the easiest
 way is to copy our example:
 
