@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -34,6 +33,7 @@ import java.util.List;
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
     private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
+    private View mHeaderView;
 
     public NotificationsDetailListFragment() {
     }
@@ -46,7 +46,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.notifications_detail_list, container, false);
+        return inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
     }
 
     @Override
@@ -62,22 +62,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             return;
         }
 
-        // Add header if we have a subject
-        if (hasActivity() && mNote.getSubject() != null) {
-            LinearLayout headerLayout = (LinearLayout)getActivity().getLayoutInflater().inflate(R.layout.notifications_detail_header, null);
-            if (headerLayout != null) {
-                NoticonTextView noticonTextView = (NoticonTextView)headerLayout.findViewById(R.id.notification_header_icon);
-                noticonTextView.setText(mNote.getNoticonCharacter());
-
-                WPTextView subjectTextView = (WPTextView)headerLayout.findViewById(R.id.notification_header_subject);
-                subjectTextView.setText(mNote.getSubject());
-
-                getListView().addHeaderView(headerLayout);
-            }
-        }
-
-        // Loop through the body items in this note, and create blocks for each.
-        new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        reloadNoteBlocks();
     }
 
     @Override
@@ -88,6 +73,24 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void setNote(Note note) {
         mNote = note;
+    }
+
+    public void reloadNoteBlocks() {
+        // Add header if we have a subject
+        if (hasActivity() && mNote.getSubject() != null) {
+            if (mHeaderView == null) {
+                mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.notifications_detail_header, null);
+                getListView().addHeaderView(mHeaderView);
+            }
+
+            NoticonTextView noticonTextView = (NoticonTextView) mHeaderView.findViewById(R.id.notification_header_icon);
+            noticonTextView.setText(mNote.getNoticonCharacter());
+
+            WPTextView subjectTextView = (WPTextView) mHeaderView.findViewById(R.id.notification_header_subject);
+            subjectTextView.setText(mNote.getSubject());
+        }
+
+        new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
@@ -153,11 +156,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     };
 
 
+    // Loop through the body items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
             JSONArray bodyArray = mNote.getBody();
+            mNoteBlockArray.clear();
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {

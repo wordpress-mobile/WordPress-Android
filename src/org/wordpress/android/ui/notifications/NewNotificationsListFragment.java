@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.simperium.client.Bucket;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.PullToRefreshHelper;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -38,7 +40,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
+        View v = inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
         return v;
     }
 
@@ -85,9 +87,11 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         mBucket = SimperiumUtils.getNotesBucket();
 
         ListView listView = getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
+        if (DisplayUtils.isLandscapeTablet(getActivity())) {
+            listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+        }
         if (mBucket != null) {
             mNotesAdapter = new TestNotesAdapter(getActivity(), mBucket);
             setListAdapter(mNotesAdapter);
@@ -106,8 +110,8 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.registerReceiver(getActivity());
+        //initPullToRefreshHelper();
+        //mFauxPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
@@ -131,18 +135,18 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
     public void onDestroy() {
         //mNotesAdapter.closeCursor();
 
-        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
+        //mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroyView();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        boolean isRefreshing = mFauxPullToRefreshHelper.isRefreshing();
+        //boolean isRefreshing = mFauxPullToRefreshHelper.isRefreshing();
         super.onConfigurationChanged(newConfig);
         // Pull to refresh layout is destroyed onDetachedFromWindow,
         // so we have to re-init the layout, via the helper here
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
+        //initPullToRefreshHelper();
+        //mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
     }
 
     private void initPullToRefreshHelper() {
@@ -171,7 +175,15 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         Note note = mNotesAdapter.getNote(position);
         if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
+            if (getListView().getChoiceMode() == ListView.CHOICE_MODE_SINGLE) {
+                mNotesAdapter.setSelectedPosition(position);
+            }
         }
+    }
+
+    public void resetSelection() {
+        mNotesAdapter.setSelectedPosition(ListView.INVALID_POSITION);
+        refreshNotes();
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {

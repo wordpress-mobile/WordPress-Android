@@ -229,7 +229,8 @@
 
         <!-- Notifications activities -->
         <activity
-            android:name=".ui.notifications.NewNotificationsActivity"/>
+            android:name=".ui.notifications.NewNotificationsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
 
         <activity
             android:name=".ui.notifications.NotificationsWebViewActivity"

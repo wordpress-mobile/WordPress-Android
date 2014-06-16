@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -18,19 +19,15 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-
 class TestNotesAdapter extends CursorAdapter {
 
     private int mAvatarSz;
-    private Context mContext;
-    private ArrayList<Note> mNotesList;
     private final Query mQuery;
+    private int mSelectedPosition = ListView.INVALID_POSITION;
 
     TestNotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
 
-        mContext = context;
         // build a query that sorts by timestamp descending
         mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
@@ -57,6 +54,10 @@ class TestNotesAdapter extends CursorAdapter {
         return ((Bucket.ObjectCursor<Note>) getCursor()).getObject();
     }
 
+    public void setSelectedPosition(int selectedPosition) {
+        mSelectedPosition = selectedPosition;
+    }
+
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.notifications_list_item, parent, false);
@@ -70,6 +71,8 @@ class TestNotesAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         if (cursor.isClosed())
             return;
+
+        view.setActivated(cursor.getPosition() == mSelectedPosition);
 
         Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
         Note note = bucketCursor.getObject();

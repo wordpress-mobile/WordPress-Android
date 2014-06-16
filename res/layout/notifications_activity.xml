@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    non-tablet layout for notifications
+    layout for notifications
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <fragment
-        android:name="org.wordpress.android.ui.notifications.NewNotificationsListFragment"
-        android:id="@+id/fragment_notes_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
-</FrameLayout>
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:showDividers="middle"
+    android:divider="?android:attr/dividerVertical"
+    android:weightSum="10">
+</LinearLayout>
