@@ -24,7 +24,7 @@ public abstract class RateLimitedTask {
 
     public synchronized boolean runIfNotLimited() {
         Date now = new Date();
-        if (DateTimeUtils.secondsBetween(now, mLastUpdate) >= mMinRateInSeconds) {
+        if (mLastUpdate == null || DateTimeUtils.secondsBetween(now, mLastUpdate) >= mMinRateInSeconds) {
             if (run()) {
                 mLastUpdate = now;
                 return true;
