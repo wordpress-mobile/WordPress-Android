@@ -36,7 +36,7 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.accounts.SetupBlogTask;
+import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -86,6 +86,7 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
     public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
+    public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
@@ -121,12 +122,12 @@ public class WordPress extends Application {
     };
 
     /**
-     *  Update blog list in a background task.
-     *  TODO: update WPActionBar menudrawer blog list onPostExecute
+     *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
+     *  list changed.
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            new SetupBlogTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new GenericSetupBlogTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
     };
@@ -185,6 +186,7 @@ public class WordPress extends Application {
         registerActivityLifecycleCallbacks(pnBackendMonitor);
 
         sUpdateCurrentBlogStats.runIfNotLimited();
+        sUpdateWordPressComBlogList.runIfNotLimited();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -670,6 +672,7 @@ public class WordPress extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
+            // isNetworkAvailableAndComeFromBackground return false on Application start (doesn't come from background)
             if (!isNetworkAvailableAndComeFromBackground()) {
                 return;
             }
@@ -678,10 +681,10 @@ public class WordPress extends Application {
             updatePushNotificationToken();
 
             // Rate limited Stats Update
-            WordPress.sUpdateCurrentBlogStats.runIfNotLimited();
+            sUpdateCurrentBlogStats.runIfNotLimited();
 
             // Rate limited WPCom blog list Update
-            WordPress.sUpdateWordPressComBlogList.runIfNotLimited();
+            sUpdateWordPressComBlogList.runIfNotLimited();
         }
 
         @Override
