@@ -15,6 +15,7 @@ public class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object
     protected SetupBlog mSetupBlog;
     protected int mErrorMsgId;
     protected Context mContext;
+    protected boolean mBlogListChanged;
 
     public SetupBlogTask(Context context) {
         mContext = context;
@@ -35,8 +36,21 @@ public class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object
         List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
         mErrorMsgId = mSetupBlog.getErrorMsgId();
         if (userBlogList != null) {
-            mSetupBlog.syncBlogs(mContext, userBlogList);
+            mBlogListChanged = mSetupBlog.syncBlogs(mContext, userBlogList);
         }
         return userBlogList;
+    }
+
+    public static class GenericSetupBlogTask extends SetupBlogTask {
+        public GenericSetupBlogTask(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onPostExecute(final List<Map<String, Object>> userBlogList) {
+            if (mBlogListChanged) {
+                WordPress.sendLocalBroadcast(WordPress.getContext(), WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
+            }
+        }
     }
 }
