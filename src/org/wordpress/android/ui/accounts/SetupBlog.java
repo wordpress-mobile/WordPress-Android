@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
@@ -217,6 +218,18 @@ public class SetupBlog {
             if (isHTTPAuthErrorMessage(e)) {
                 return null;
             }
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
+        } catch (SSLPeerUnverifiedException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
+            return null;
         } catch (IOException e) {
             AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
             if (isHTTPAuthErrorMessage(e)) {
@@ -243,6 +256,18 @@ public class SetupBlog {
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
+        } catch (SSLPeerUnverifiedException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
+            return null;
         } catch (IOException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (XmlPullParserException e) {
@@ -298,6 +323,7 @@ public class SetupBlog {
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         }
+
         return xmlrpcUrl;
     }
 
