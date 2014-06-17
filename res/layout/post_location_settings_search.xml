@@ -23,5 +23,5 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:lines="1"
-        android:text="@string/search_location" />
+        android:text="@string/search_current_location" />
 </LinearLayout>

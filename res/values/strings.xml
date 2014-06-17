@@ -308,7 +308,8 @@
     <string name="remove_location">Remove</string>
     <string name="add_location">Add Location</string>
     <string name="current_location">Current Location</string>
-    <string name="search_location">Locate</string>
+    <string name="search_current_location">Locate</string>
+    <string name="search_location">Search</string>
     <string name="edit_location">Edit</string>
 
     <!-- preferences -->

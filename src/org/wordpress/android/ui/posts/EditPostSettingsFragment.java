@@ -11,8 +11,10 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.KeyEvent;
@@ -51,6 +53,7 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
@@ -601,6 +604,26 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
     private View mLocationViewSection;
     private TextView mLocationText;
     private EditText mLocationEditText;
+    private Button mButtonSearchLocation;
+
+    private TextWatcher mLocationEditTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String buttonText;
+            if (s.length() > 0) {
+                buttonText = getResources().getString(R.string.search_location);
+            } else {
+                buttonText = getResources().getString(R.string.search_current_location);
+            }
+            mButtonSearchLocation.setText(buttonText);
+        }
+    };
 
     /*
      * called when activity is created to initialize the location provider, show views related
@@ -631,11 +654,12 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
             addLocation.setOnClickListener(this);
 
-            Button searchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
-            searchLocation.setOnClickListener(this);
+            mButtonSearchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
+            mButtonSearchLocation.setOnClickListener(this);
 
             mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
             mLocationEditText.setOnEditorActionListener(this);
+            mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
 
             Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
             Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
