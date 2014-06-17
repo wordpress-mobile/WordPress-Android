@@ -504,9 +504,14 @@ public class PostsActivity extends WPActionBarActivity
                         PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.delete_draft));
-                dialogBuilder.setMessage(getResources().getText(
-                        R.string.delete_sure)
-                        + " '" + post.getTitle() + "'?");
+
+                String deleteDraftMessage = getResources().getText(R.string.delete_sure).toString();
+                if (!post.getTitle().isEmpty()) {
+                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
+                    deleteDraftMessage += " " + postTitleEnclosedByQuotes;
+                }
+
+                dialogBuilder.setMessage(deleteDraftMessage + "?");
                 dialogBuilder.setPositiveButton(
                         getResources().getText(R.string.yes),
                         new DialogInterface.OnClickListener() {
