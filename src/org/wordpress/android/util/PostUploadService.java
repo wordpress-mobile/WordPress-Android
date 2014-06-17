@@ -385,24 +385,30 @@ public class PostUploadService extends Service {
                 try {
                     if (remoteGeoLatitude != null) {
                         hLatitude.put("id", remoteGeoLatitude.getInt("id"));
-                    } else {
-                        hLatitude.put("key", "geo_latitude");
                     }
 
                     if (remoteGeoLongitude != null) {
                         hLongitude.put("id", remoteGeoLongitude.getInt("id"));
-                    } else {
-                        hLongitude.put("key", "geo_longitude");
                     }
 
                     if (remoteGeoPublic != null) {
                         hPublic.put("id", remoteGeoPublic.getInt("id"));
-                    } else {
-                        hPublic.put("key", "geo_public");
                     }
 
                     if (post.hasLocation()) {
                         PostLocation location = post.getLocation();
+                        if (!hLatitude.containsKey("id")) {
+                            hLatitude.put("key", "geo_latitude");
+                        }
+
+                        if (!hLongitude.containsKey("id")) {
+                            hLongitude.put("key", "geo_longitude");
+                        }
+
+                        if (!hPublic.containsKey("id")) {
+                            hPublic.put("key", "geo_public");
+                        }
+
                         hLatitude.put("value", location.getLatitude());
                         hLongitude.put("value", location.getLongitude());
                         hPublic.put("value", 1);
