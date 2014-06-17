@@ -27,7 +27,6 @@ import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-import java.util.List;
 import java.util.Locale;
 
 /**

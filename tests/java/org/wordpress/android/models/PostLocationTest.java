@@ -77,7 +77,6 @@ public class PostLocationTest extends InstrumentationTestCase {
         } catch (IllegalArgumentException e) {
             assertFalse("Invalid setLatitude and still valid", location.isValid());
         }
-
     }
 
     public void testInvalidLongitude() {
@@ -112,6 +111,5 @@ public class PostLocationTest extends InstrumentationTestCase {
         } catch (IllegalArgumentException e) {
             assertFalse("Invalid setLongitude and still valid", location.isValid());
         }
-
     }
 }

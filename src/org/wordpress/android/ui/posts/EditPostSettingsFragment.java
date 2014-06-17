@@ -53,7 +53,6 @@ import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.LocationHelper;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 
@@ -63,11 +62,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
-public class EditPostSettingsFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener {
+public class EditPostSettingsFragment extends Fragment
+        implements View.OnClickListener, TextView.OnEditorActionListener {
     private static final int ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES = 5;
 
     private static final String CATEGORY_PREFIX_TAG = "category-";
@@ -608,10 +607,10 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
 
     private TextWatcher mLocationEditTextWatcher = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
         @Override
         public void afterTextChanged(Editable s) {
@@ -636,7 +635,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         if (hasLocationProvider() && post.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
-            ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());
+            TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
+            locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
 
             mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
             mLocationText.setOnClickListener(this);
@@ -681,7 +681,8 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         List<String> providers = locationManager.getProviders(true);
         if (providers != null) {
             for (String providerName : providers) {
-                if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+                if (providerName.equals(LocationManager.GPS_PROVIDER)
+                        || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
                     hasLocationProvider = true;
                 }
             }

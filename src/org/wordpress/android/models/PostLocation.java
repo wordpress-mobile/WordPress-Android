@@ -13,7 +13,7 @@ public class PostLocation implements Serializable {
     private double mLatitude = INVALID_LATITUDE;
     private double mLongitude = INVALID_LONGITUDE;
 
-    public PostLocation() {}
+    public PostLocation() { }
 
     public PostLocation(double latitude, double longitude) {
         setLatitude(latitude);
@@ -30,7 +30,9 @@ public class PostLocation implements Serializable {
 
     public void setLatitude(double latitude) {
         if (!isValidLatitude(latitude)) {
-            throw new IllegalArgumentException("Invalid latitude; must be between the range " + MIN_LATITUDE + " and " + MAX_LATITUDE);
+            throw new IllegalArgumentException(
+                    "Invalid latitude; must be between the range " + MIN_LATITUDE + " and " + MAX_LATITUDE
+            );
         }
 
         mLatitude = latitude;
@@ -42,7 +44,9 @@ public class PostLocation implements Serializable {
 
     public void setLongitude(double longitude) {
         if (!isValidLongitude(longitude)) {
-            throw new IllegalArgumentException("Invalid longitude; must be between the range " + MIN_LONGITUDE + " and " + MAX_LONGITUDE);
+            throw new IllegalArgumentException(
+                    "Invalid longitude; must be between the range " + MIN_LONGITUDE + " and " + MAX_LONGITUDE
+            );
         }
 
         mLongitude = longitude;

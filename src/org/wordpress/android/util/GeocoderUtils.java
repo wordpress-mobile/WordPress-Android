@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class GeocoderUtils {
+public final class GeocoderUtils {
+    private GeocoderUtils() {
+        throw new AssertionError();
+    }
+
     public static Geocoder getGeocoder(Context context) {
         // first make sure a Geocoder service exists on this device (requires API 9)
-        if (!Geocoder.isPresent())
+        if (!Geocoder.isPresent()) {
             return null;
+        }
 
         Geocoder gcd;
 
@@ -41,7 +46,10 @@ public class GeocoderUtils {
         } catch (IOException e) {
             // may get "Unable to parse response from server" IOException here if Geocoder
             // service is hit too frequently
-            AppLog.e(AppLog.T.UTILS, "Unable to parse response from server. Is Geocoder service hitting the server too frequently?", e);
+            AppLog.e(AppLog.T.UTILS,
+                    "Unable to parse response from server. Is Geocoder service hitting the server too frequently?",
+                    e
+            );
         }
 
         // addresses may be null or empty if network isn't connected
@@ -79,12 +87,17 @@ public class GeocoderUtils {
 
     public static String getLocationNameFromAddress(Address address) {
         String locality = "", adminArea = "", country = "";
-        if (address.getLocality() != null)
+        if (address.getLocality() != null) {
             locality = address.getLocality();
-        if (address.getAdminArea() != null)
+        }
+
+        if (address.getAdminArea() != null) {
             adminArea = address.getAdminArea();
-        if (address.getCountryName() != null)
+        }
+
+        if (address.getCountryName() != null) {
             country = address.getCountryName();
+        }
 
         return ((locality.equals("")) ? locality : locality + ", ")
                 + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;

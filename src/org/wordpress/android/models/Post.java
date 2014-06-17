@@ -140,14 +140,14 @@ public class Post implements Serializable {
     }
 
     public JSONObject getCustomField(String key) {
-        JSONArray customFields = getCustomFields();
-        if (customFields == null) {
+        JSONArray customFieldsJson = getCustomFields();
+        if (customFieldsJson == null) {
             return null;
         }
 
-        for (int i = 0; i < customFields.length(); i++) {
+        for (int i = 0; i < customFieldsJson.length(); i++) {
             try {
-                JSONObject jsonObject = new JSONObject(customFields.getString(i));
+                JSONObject jsonObject = new JSONObject(customFieldsJson.getString(i));
                 String curentKey = jsonObject.getString("key");
                 if (key.equals(curentKey)) {
                     return jsonObject;
@@ -423,7 +423,8 @@ public class Post implements Serializable {
                                       StringUtils.equals(password, otherPost.password) &&
                                       StringUtils.equals(postFormat, otherPost.postFormat) &&
                                       this.dateCreatedGmt == otherPost.dateCreatedGmt &&
-                                      (this.hasLocation() && otherPost.hasLocation() && mPostLocation.equals(otherPost.mPostLocation)));
+                                      (this.hasLocation() && otherPost.hasLocation()
+                                              && mPostLocation.equals(otherPost.mPostLocation)));
     }
 
     @Override

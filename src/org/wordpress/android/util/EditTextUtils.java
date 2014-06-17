@@ -60,7 +60,7 @@ public class EditTextUtils {
     public static void showSoftInput(EditText edit) {
         if (edit == null) {
             return;
-	    }
+        }
 
         edit.requestFocus();
 
