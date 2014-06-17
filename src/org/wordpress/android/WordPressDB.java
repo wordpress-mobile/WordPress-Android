@@ -900,11 +900,7 @@ public class WordPressDB {
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
-            if (post.hasLocation()) {
-                PostLocation location = post.getLocation();
-                values.put("latitude", location.getLatitude());
-                values.put("longitude", location.getLongitude());
-            }
+            putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 
@@ -942,6 +938,7 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
@@ -952,6 +949,17 @@ public class WordPressDB {
         }
 
         return (result);
+    }
+
+    private void putPostLocation(Post post, ContentValues values) {
+        if (post.hasLocation()) {
+            PostLocation location = post.getLocation();
+            values.put("latitude", location.getLatitude());
+            values.put("longitude", location.getLongitude());
+        } else {
+            values.putNull("latitude");
+            values.putNull("longitude");
+        }
     }
 
     public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {

@@ -487,10 +487,7 @@ public class EditPostSettingsFragment extends Fragment
             post.setChangedFromLocalDraftToPublished(true);
         }
 
-        if (mActivity.getPost().supportsLocation()) {
-            if (mPostLocation == null && post.hasLocation()) {
-                mPostLocation = post.getLocation();
-            }
+        if (post.supportsLocation()) {
             post.setLocation(mPostLocation);
         }
 
