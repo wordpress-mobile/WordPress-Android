@@ -236,7 +236,6 @@
 	<string name="author_url">URL de l\'auteur</string>
 	<string name="author_email">E-mail de l\'auteur</string>
 	<string name="author_name">Nom de l\'auteur</string>
-	<string name="geotag">Géotaguer les articles</string>
 	<string name="select_a_blog">Sélectionner un blog</string>
 	<string name="category_desc">Description de la catégorie (optionnel)</string>
 	<string name="category_parent">Catégorie mère (optionnel)</string>

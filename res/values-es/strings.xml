@@ -213,7 +213,6 @@
 	<string name="jetpack_stats_unauthorized">No se puede acceder a las estadísticas</string>
 	<string name="reader_toast_err_reblog_requires_blog">Selecciona un blog</string>
 	<string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
-	<string name="geotag">Entrada geoposicionadas</string>
 	<string name="location_not_found">Localización desconocida</string>
 	<string name="stats_visitors_and_views_header_best_ever">El mejor</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>

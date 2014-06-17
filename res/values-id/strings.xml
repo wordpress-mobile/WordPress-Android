@@ -219,7 +219,6 @@
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="wpcom_blogs">Blog di WordPress.com</string>
-	<string name="geotag">Berikan geotag pada pos</string>
 	<string name="location_not_found">Lokasi tidak diketahui</string>
 	<string name="self_hosted_blogs">Blog dengan hosting mandiri</string>
 	<string name="stats_view_views_by_country">Kunjungan berdasarkan negara</string>

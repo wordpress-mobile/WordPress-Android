@@ -203,7 +203,6 @@
 	<string name="email_cant_be_used_to_signup">Bu e-posta adresini kayıt olmak için kullanamazsınız. Bazı e-postalarımızın engellenmesiyle ilgili problem yaşıyoruz. Farklı bir e-posta sağlayıcısı kullanın.</string>
 	<string name="trash_no">Çöp değil</string>
 	<string name="dlg_confirm_trash_comments">Çöpe gönderilsin mi?</string>
-	<string name="geotag">Coğrafi etiket yazıları</string>
 	<string name="self_hosted_blogs">Kendi sunucusunda barınan bloglar</string>
 	<string name="stats_view_top_authors">Popüler yazarlar</string>
 	<string name="http_credentials">HTTP bilgileri (seçime bağlı)</string>

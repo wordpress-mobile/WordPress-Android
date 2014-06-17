@@ -194,7 +194,6 @@
 	<string name="comment_added">Iruzkina ondo gehitu da</string>
 	<string name="post_not_published">Sarreraren egoera ez dago argitaratuta</string>
 	<string name="page_not_published">Orrialdearen egoera ez dago argitaratuta</string>
-	<string name="geotag">Geoetiketa sarrerak</string>
 	<string name="jetpack_stats_unauthorized">Ezin estatistiketara sartu</string>
 	<string name="reader_toast_err_reblog_requires_blog">Hautatu blog bat</string>
 	<string name="required_field">Beharrezko eremua</string>

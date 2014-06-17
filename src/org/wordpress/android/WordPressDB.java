@@ -424,7 +424,6 @@ public class WordPressDB {
         values.put("fullSizeImage", blog.isFullSizeImage());
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
-        values.put("location", blog.isLocation());
         values.put("postFormats", blog.getPostFormats());
         values.put("dotcom_username", blog.getDotcom_username());
         values.put("dotcom_password", encryptPassword(blog.getDotcom_password()));
@@ -492,7 +491,7 @@ public class WordPressDB {
         String[] fields =
                 new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
-                             "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
+                             "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
         Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
@@ -523,7 +522,6 @@ public class WordPressDB {
                 blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
                 blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
                 blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
-                blog.setLocation(c.getInt(c.getColumnIndex("location")) > 0);
                 blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
                 if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
                     blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));

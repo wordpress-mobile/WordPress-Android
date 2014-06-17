@@ -182,7 +182,6 @@
 	<string name="share_action_post">Nieuw bericht</string>
 	<string name="share_action_media">Mediabibliotheek</string>
 	<string name="file_error_create">Kan geen tijdelijk bestand maken voor het uploaden van media. Controleer of er genoeg vrije ruimte is op je apparaat.</string>
-	<string name="geotag">Berichten taggen met locatie</string>
 	<string name="location_not_found">Onbekende locatie</string>
 	<string name="open_source_licenses">Open-sourcelicenties</string>
 	<string name="wpcom_blogs">WordPress.com-blogs</string>

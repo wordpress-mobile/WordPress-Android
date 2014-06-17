@@ -211,7 +211,6 @@
 	<string name="share_action_post">Новая запись</string>
 	<string name="share_action_media">Медиа-библиотека</string>
 	<string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
-	<string name="geotag">Геотеги записи</string>
 	<string name="stats_view_top_authors">Топ авторов</string>
 	<string name="stats_view_tags_and_categories">Тэги и категории</string>
 	<string name="stats_view_top_posts_and_pages">Топ страниц и записей</string>

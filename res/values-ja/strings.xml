@@ -182,7 +182,6 @@
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
 	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。デバイス上に空き容量があるか確認してください。</string>
 	<string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたようです。</string>
-	<string name="geotag">投稿に位置情報を追加</string>
 	<string name="hide_all">すべて非表示</string>
 	<string name="hint_comment_content">コメント</string>
 	<string name="horizontal_alignment">横配置</string>

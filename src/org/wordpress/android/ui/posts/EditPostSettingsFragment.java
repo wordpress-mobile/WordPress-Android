@@ -488,7 +488,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
             post.setChangedFromLocalDraftToPublished(true);
         }
 
-        if (WordPress.getCurrentBlog().isLocation() && mActivity.getPost().supportsLocation()) {
+        if (mActivity.getPost().supportsLocation()) {
             if (mPostLocation == null && post.hasLocation()) {
                 mPostLocation = post.getLocation();
             }
@@ -633,7 +633,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         Post post = mActivity.getPost();
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
-        if (hasLocationProvider() && WordPress.getCurrentBlog().isLocation() && post.supportsLocation()) {
+        if (hasLocationProvider() && post.supportsLocation()) {
             View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
 
             ((TextView) locationRootView.findViewById(R.id.locationLabel)).setText(getResources().getString(R.string.location).toUpperCase());

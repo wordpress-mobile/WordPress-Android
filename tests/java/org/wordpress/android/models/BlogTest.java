@@ -105,12 +105,6 @@ public class BlogTest extends InstrumentationTestCase {
         assertEquals(1, blog.getRemoteBlogId());
     }
 
-    public void testGetSetLocation() {
-        assertFalse(blog.isLocation());
-        blog.setLocation(true);
-        assertTrue(blog.isLocation());
-    }
-
     public void testGetSetDotcom_username() {
         assertNull(blog.getDotcom_username());
         blog.setDotcom_username("username");

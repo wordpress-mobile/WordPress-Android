@@ -218,7 +218,6 @@
 	<string name="post_not_published">이 게시물은 아직 공개되지 않았습니다</string>
 	<string name="page_not_published">이 페이지는 아직 공개되지 않았습니다</string>
 	<string name="pending_review">리뷰 진행중</string>
-	<string name="geotag">작성 지도 태깅</string>
 	<string name="post_deleted">게시물을 삭제했습니다</string>
 	<string name="delete_post">게시물 삭제</string>
 	<string name="page_deleted">게시물을 삭제했습니다</string>

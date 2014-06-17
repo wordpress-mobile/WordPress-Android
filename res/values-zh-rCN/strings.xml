@@ -190,7 +190,6 @@
 	<string name="share_action_post">新文章</string>
 	<string name="share_action_media">媒体库</string>
 	<string name="file_error_create">无法创建上传媒体所需的临时文件。请确保设备有足够的空闲空间.</string>
-	<string name="geotag">为文章添加地理标签</string>
 	<string name="location_not_found">未知位置</string>
 	<string name="open_source_licenses">开源许可协议</string>
 	<string name="wpcom_blogs">WordPress.com 博客</string>

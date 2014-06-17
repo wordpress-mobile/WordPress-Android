@@ -219,7 +219,6 @@
 	<string name="category_parent">श्रेणी जनक (वैकल्पिक):</string>
 	<string name="category_slug">श्रेणी स्लग (वैकल्पिक)</string>
 	<string name="scaled_image_error">एक वैध बढ़ाया चौड़ाई का मान दर्ज करें</string>
-	<string name="geotag">जियोटैग पोस्ट्स</string>
 	<string name="quick_photo">त्वरित तस्वीर</string>
 	<string name="quick_video">त्वरित विडियो</string>
 	<string name="stats_view_video_plays">विडियो चलाया गया</string>

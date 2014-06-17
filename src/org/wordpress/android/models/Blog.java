@@ -31,7 +31,6 @@ public class Blog {
     private String maxImageWidth;
     private int maxImageWidthId;
     private int remoteBlogId;
-    private boolean location;
     private String dotcom_username;
     private String dotcom_password;
     private String api_key;
@@ -48,7 +47,7 @@ public class Blog {
     public Blog() {
     }
 
-    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, boolean location, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
+    public Blog(int localTableBlogId, String url, String homeURL, String blogName, String username, String password, String imagePlacement, boolean featuredImageCapable, boolean fullSizeImage, boolean scaledImage, int scaledImageWidth, String maxImageWidth, int maxImageWidthId, int remoteBlogId, String dotcom_username, String dotcom_password, String api_key, String api_blogid, boolean dotcomFlag, String wpVersion, String httpuser, String httppassword, String postFormats, String blogOptions, boolean isAdmin, boolean isHidden) {
         this.localTableBlogId = localTableBlogId;
         this.url = url;
         this.homeURL = homeURL;
@@ -63,7 +62,6 @@ public class Blog {
         this.maxImageWidth = maxImageWidth;
         this.maxImageWidthId = maxImageWidthId;
         this.remoteBlogId = remoteBlogId;
-        this.location = location;
         this.dotcom_username = dotcom_username;
         this.dotcom_password = dotcom_password;
         this.api_key = api_key;
@@ -201,14 +199,6 @@ public class Blog {
 
     public void setRemoteBlogId(int blogId) {
         this.remoteBlogId = blogId;
-    }
-
-    public boolean isLocation() {
-        return location;
-    }
-
-    public void setLocation(boolean location) {
-        this.location = location;
     }
 
     public String getDotcom_username() {

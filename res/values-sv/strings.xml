@@ -210,7 +210,6 @@
 	<string name="category_slug">Kategorins permalänk (valfritt)</string>
 	<string name="category_parent">Kategorins förälder (valfritt):</string>
 	<string name="file_error_create">Kunde inte skapa temporär mediafil för uppladdning. Se till att det finns tillräckligt med utrymme på din enhet.</string>
-	<string name="geotag">Ange geografisk plats för inlägg</string>
 	<string name="self_hosted_blogs">Egen-installerade bloggar</string>
 	<string name="stats_view_top_posts_and_pages">Populära inlägg och sidor</string>
 	<string name="stats_view_totals_followers_and_shares">Summor, följare &amp; delningar</string>

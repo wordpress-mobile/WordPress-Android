@@ -220,7 +220,6 @@
 	<string name="category_name">Kategorie-Name</string>
 	<string name="stats_entry_video_plays">Video-Name</string>
 	<string name="media_gallery_image_order">Bild-Reihenfolge</string>
-	<string name="geotag">Beitrag geotaggen</string>
 	<string name="http_credentials">HTTP-Zugangsdaten (optional)</string>
 	<string name="share_action_post">Neuer Beitrag</string>
 	<string name="create_new_blog_wpcom">Erstelle WordPress.com-Blog</string>
