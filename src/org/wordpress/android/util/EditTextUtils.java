@@ -57,14 +57,12 @@ public class EditTextUtils {
     /**
      * show the soft keyboard for the passed EditText
      */
-    public static void showSoftInput(EditText edit, boolean requestFocus) {
+    public static void showSoftInput(EditText edit) {
         if (edit == null) {
             return;
 	    }
 
-        if (requestFocus) {
-            edit.requestFocus();
-        }
+        edit.requestFocus();
 
         InputMethodManager imm = getInputMethodManager(edit);
         if (imm != null) {

@@ -694,7 +694,7 @@ public class EditPostSettingsFragment extends Fragment implements View.OnClickLi
         mLocationSearchSection.setVisibility(View.VISIBLE);
         mLocationViewSection.setVisibility(View.GONE);
 
-        EditTextUtils.showSoftInput(mLocationEditText, true);
+        EditTextUtils.showSoftInput(mLocationEditText);
     }
 
     private void showLocationAdd() {
