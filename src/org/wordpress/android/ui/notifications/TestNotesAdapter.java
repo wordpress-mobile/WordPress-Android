@@ -21,7 +21,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 class TestNotesAdapter extends CursorAdapter {
 
-    private int mAvatarSz;
+    final private int mAvatarSz;
     private final Query mQuery;
     private int mSelectedPosition = ListView.INVALID_POSITION;
 
@@ -31,7 +31,7 @@ class TestNotesAdapter extends CursorAdapter {
         // build a query that sorts by timestamp descending
         mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
-        mAvatarSz = (int)context.getResources().getDimension(R.dimen.note_avatar_sz);
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.note_avatar_sz);
     }
 
     public void closeCursor() {
@@ -56,6 +56,10 @@ class TestNotesAdapter extends CursorAdapter {
 
     public void setSelectedPosition(int selectedPosition) {
         mSelectedPosition = selectedPosition;
+    }
+
+    public int getSelectedPosition() {
+        return mSelectedPosition;
     }
 
     @Override

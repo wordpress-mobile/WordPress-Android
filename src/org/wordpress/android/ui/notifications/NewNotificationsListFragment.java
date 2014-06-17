@@ -57,10 +57,11 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         if (DisplayUtils.isLandscapeTablet(getActivity())) {
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         }
-        if (mBucket != null) {
+
+        if (mBucket != null && mNotesAdapter == null) {
             mNotesAdapter = new TestNotesAdapter(getActivity(), mBucket);
             setListAdapter(mNotesAdapter);
-        } else {
+        } else if (mBucket == null) {
             ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
         }
 
@@ -130,17 +131,26 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         Note note = mNotesAdapter.getNote(position);
         if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
-            if (getListView().getChoiceMode() == ListView.CHOICE_MODE_SINGLE) {
-                mNotesAdapter.setSelectedPosition(position);
-            }
+            mNotesAdapter.setSelectedPosition(position);
         }
     }
 
     // Clears list selection
     public void resetSelection() {
+        if (mNotesAdapter == null) return;
+
         mNotesAdapter.setSelectedPosition(ListView.INVALID_POSITION);
         getListView().clearChoices();
         refreshNotes();
+    }
+
+    // When rotating on a tablet, set last selected item as checked
+    public void setSelectedPositionChecked() {
+        if (mNotesAdapter == null) return;
+
+        if (mNotesAdapter.getSelectedPosition() >= 0 && getListView().getCount() > mNotesAdapter.getSelectedPosition()) {
+            getListView().setItemChecked(mNotesAdapter.getSelectedPosition(), true);
+        }
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {
