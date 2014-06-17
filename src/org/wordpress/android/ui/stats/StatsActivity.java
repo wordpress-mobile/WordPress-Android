@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -451,7 +450,10 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
+            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
+            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + WordPress.getCurrentRemoteBlogId() + "&unit=1";
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
+            startActivityWithDelay(statsWebViewIntent);
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
             onBackPressed();
