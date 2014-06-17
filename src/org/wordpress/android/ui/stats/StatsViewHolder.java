@@ -58,7 +58,7 @@ class StatsViewHolder {
                             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_URL, url);
                             v.getContext().startActivity(statsWebViewIntent);
                         } catch (ActivityNotFoundException e) {
-                            AppLog.e(AppLog.T.UTILS, e);
+                            AppLog.e(AppLog.T.STATS, e);
                             ToastUtils.showToast(v.getContext(),
                                     v.getContext().getString(R.string.reader_toast_err_url_intent, url),
                                     ToastUtils.Duration.LONG);

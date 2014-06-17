@@ -42,7 +42,7 @@ public class StatsWebViewActivity extends AuthenticatedWebViewActivity {
                 this.loadUrl(addressToLoad);
             }
         } else {
-            AppLog.e(AppLog.T.UTILS, "No valid URL passed to StatsWebViewActivity!!");
+            AppLog.e(AppLog.T.STATS, "No valid URL passed to StatsWebViewActivity!!");
         }
     }
 
@@ -58,7 +58,7 @@ public class StatsWebViewActivity extends AuthenticatedWebViewActivity {
                     URLEncoder.encode(url, "UTF-8"));
             mWebView.postUrl("https://wordpress.com/wp-login.php", postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.UTILS, e);
+            AppLog.e(AppLog.T.STATS, e);
         }
     }
 }
