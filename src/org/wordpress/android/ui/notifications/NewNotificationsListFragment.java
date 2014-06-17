@@ -179,6 +179,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mNotesAdapter.setShouldHighlightRows(DisplayUtils.isLandscapeTablet(getActivity()));
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 

@@ -24,6 +24,7 @@ class TestNotesAdapter extends CursorAdapter {
     final private int mAvatarSz;
     private final Query mQuery;
     private int mSelectedPosition = ListView.INVALID_POSITION;
+    private boolean mShouldHighlightRows;
 
     TestNotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
@@ -76,7 +77,7 @@ class TestNotesAdapter extends CursorAdapter {
         if (cursor.isClosed())
             return;
 
-        view.setActivated(cursor.getPosition() == mSelectedPosition);
+        view.setActivated(mShouldHighlightRows && cursor.getPosition() == mSelectedPosition);
 
         Bucket.ObjectCursor<Note> bucketCursor = (Bucket.ObjectCursor<Note>) cursor;
         Note note = bucketCursor.getObject();
@@ -111,6 +112,10 @@ class TestNotesAdapter extends CursorAdapter {
         }
 
         noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setShouldHighlightRows(boolean shouldHighlightRows) {
+        mShouldHighlightRows = shouldHighlightRows;
     }
 
     private static class NoteViewHolder {
