@@ -139,7 +139,6 @@
 	<string name="share_action_media">Librería multimedia</string>
 	<string name="media_gallery_num_columns">Número de columnas</string>
 	<string name="post_deleted">Entrada eliminada</string>
-	<string name="view_map">Ver mapa</string>
 	<string name="new_post">Nueva entrada</string>
 	<string name="new_page">Nueva página</string>
 	<string name="account_details">Detalles de la cuenta</string>
@@ -215,7 +214,6 @@
 	<string name="reader_toast_err_reblog_requires_blog">Selecciona un blog</string>
 	<string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
 	<string name="geotag">Entrada geoposicionadas</string>
-	<string name="location_toast">Los datos de localización no están disponibles</string>
 	<string name="location_not_found">Localización desconocida</string>
 	<string name="stats_visitors_and_views_header_best_ever">El mejor</string>
 	<string name="cannot_delete_multi_media_items">Algunos elementos multimedia no pudieron ser borrados. Prueba más tarde</string>

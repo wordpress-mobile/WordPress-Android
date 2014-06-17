@@ -57,7 +57,6 @@
 	<string name="category_parent">หมวดหมู่แม่ (ตัวเลือก):</string>
 	<string name="share_action_post">เรื่องใหม่</string>
 	<string name="share_action_media">คลังไฟล์สื่อ</string>
-	<string name="view_map">ดูแผนที่</string>
 	<string name="stats_view_views_by_country">การดูโดยประเทศ</string>
 	<string name="delete_draft">ลบฉบับร่าง</string>
 	<string name="preview_page">ดูก่อนหน้า</string>

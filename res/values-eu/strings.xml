@@ -129,7 +129,6 @@
 	<string name="share_action_media">Multimedia bilduma</string>
 	<string name="media_gallery_num_columns">Zutabe kopurua</string>
 	<string name="post_deleted">Sarrera ezabatu da</string>
-	<string name="view_map">Ikusi mapa</string>
 	<string name="new_post">Sarrera berria</string>
 	<string name="new_page">Orrialde berria</string>
 	<string name="account_details">Kontuaren xehetasunak</string>
@@ -207,7 +206,6 @@
 	<string name="media_error_no_permission">Ez duzu eduki bilduma iksuteko bahimenik</string>
 	<string name="cannot_delete_multi_media_items">Edukiren bat ezin izan da orain ezabatu. Saiatu berriz beranduago.</string>
 	<string name="themes_live_preview">Zuzeneko aurrebista</string>
-	<string name="location_toast">Kokalekuaren datuak ez daude oraindik eskuragarri...</string>
 	<string name="location_not_found">Kokaleku ezezaguna</string>
 	<string name="self_hosted_blogs">Ostatatutako blogak</string>
 	<string name="stats_view_search_engine_terms">Bilaketa motoreen terminoak</string>

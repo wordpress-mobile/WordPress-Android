@@ -109,7 +109,6 @@
 	<string name="comment_added">टिप्पणी सफलतापूर्वक जोड़ा गया</string>
 	<string name="content_required">टिप्पणी आवश्यक है</string>
 	<string name="stats_entry_video_plays">वीडियो का नाम</string>
-	<string name="view_map">मानचित्र देखें</string>
 	<string name="view_site">साइट देखें</string>
 	<string name="author_email">लेखक ईमेल</string>
 	<string name="author_name">लेखक का नाम</string>
@@ -214,7 +213,6 @@
 	<string name="stats_visitors_and_views_header_best_ever">सर्वश्रेष्ठ</string>
 	<string name="local_changes">स्थानीय परिवर्तन</string>
 	<string name="local_draft">स्थानीय प्रारूप</string>
-	<string name="location_toast">स्थान डेटा अभी तक उपलब्ध नहीं…</string>
 	<string name="pages_empty_list">अभी कोई पृष्ठ नहीं.क्यों नहीं एक जोड़े? </string>
 	<string name="posts_empty_list">अभी कोई पोस्ट नहीं. क्यों नहीं एक जोड़े?</string>
 	<string name="stats_view_search_engine_terms">खोज इंजन के शब्द</string>

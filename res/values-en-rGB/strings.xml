@@ -219,8 +219,6 @@
 	<string name="share_action_media">Media library</string>
 	<string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
 	<string name="geotag">Geotag posts</string>
-	<string name="location_toast">Location data not yet available…</string>
-	<string name="view_map">View map</string>
 	<string name="location_not_found">Unknown location</string>
 	<string name="open_source_licenses">Open source licenses</string>
 	<string name="wpcom_blogs">WordPress.com blogs</string>

@@ -180,8 +180,6 @@
 	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
 	<string name="geotag">Coğrafi etiket yazıları</string>
-	<string name="location_toast">Mövqe məlumatı hələlik hazır deyil...</string>
-	<string name="view_map">Xəritəyə bax</string>
 	<string name="location_not_found">Bilinməyən mövqe</string>
 	<string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
 	<string name="xmlrpc_error">Əlaqə qurula bilmədi. Saytınızdakı xmlrpc.php-nin tam yolunu daxil edib təkrar yoxlayın</string>

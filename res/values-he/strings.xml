@@ -183,8 +183,6 @@
 	<string name="share_action_media">ספריית מדיה</string>
 	<string name="file_error_create">יצירת קובץ temp להעלאת קבצים לא הצליחה. וודא שיש מספיק מקום פנוי במכשיר.</string>
 	<string name="geotag">רשומות Geotag </string>
-	<string name="location_toast">נתוני המיקום עדיין לא זמינים...</string>
-	<string name="view_map">הצג מפה</string>
 	<string name="location_not_found">מיקום לא ידוע</string>
 	<string name="open_source_licenses">רישיונות קוד פתוח</string>
 	<string name="wpcom_blogs">בלוגים ב-WordPress.com</string>

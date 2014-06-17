@@ -196,7 +196,6 @@
 	<string name="jetpack_message_not_admin">İstatistikler için Jetpack eklentisi gerekli. Site yöneticisi ile iletişim kurun.</string>
 	<string name="page_not_published">Sayfa durumu yayınlanmadı</string>
 	<string name="view_in_browser">Tarayıcıda görüntüle</string>
-	<string name="view_map">Haritayı görüntüle</string>
 	<string name="location_not_found">Bilinmeyen konum</string>
 	<string name="open_source_licenses">Açık kaynak lisanslar</string>
 	<string name="wpcom_blogs">WordPress.com blogları</string>
@@ -233,7 +232,6 @@
 	<string name="post_not_published">Yazı durumu yayınlanmadı</string>
 	<string name="share_action_post">Yeni yazı</string>
 	<string name="file_error_create">Geçici medya dosyası oluşturulamıyor. Cihazınızda yeterli boş alan olduğundan emin olun.</string>
-	<string name="location_toast">Konum verisi henüz hazır değil...</string>
 	<string name="stats_view_top_posts_and_pages">Popüler yazılar ve sayfalar</string>
 	<string name="stats_view_totals_followers_and_shares">Takipçi ve paylaşım toplamları</string>
 	<string name="stats_view_search_engine_terms">Ara motoru terimleri</string>

@@ -160,7 +160,6 @@
 	<string name="privacy_policy">Datenschutzbestimmung</string>
 	<string name="image_settings">Bild-Einstellungen</string>
 	<string name="quick_video">Schnelles Video</string>
-	<string name="view_map">Karte ansehen</string>
 	<string name="comment_added">Kommentar erfolgreich hinzugefügt</string>
 	<string name="blog_removed_successfully">Blog erfolgreich entfernt</string>
 	<string name="stats_visitors_and_views_header_all_time">Gesamte Zeit</string>
@@ -239,7 +238,6 @@
 	<string name="blog_name_invalid">Ungültige Webseiten-Adresse</string>
 	<string name="post_not_published">Status des Beitrags ist nicht veröffentlicht</string>
 	<string name="page_not_published">Seitenstatus ist nicht veröffentlicht</string>
-	<string name="location_toast">Standortdaten sind noch nicht verfügbar...</string>
 	<string name="quick_photo">Schnelles Foto</string>
 	<string name="jetpack_message_not_admin">Das Jetpack-Plugin wird für die Statistiken benötigt. Kontaktiere den Webseiten-Administrator.</string>
 	<string name="blog_title_invalid">Ungültiger Webseiten-Titel</string>
