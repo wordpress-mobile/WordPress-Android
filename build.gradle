@@ -92,7 +92,7 @@ android {
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Simperium
-        compile 'com.simperium:simperium-android:0.4.6'
+        compile 'com.simperium:simperium-android:0.4.8'
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')
