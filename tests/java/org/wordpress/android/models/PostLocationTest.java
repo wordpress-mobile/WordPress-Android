@@ -51,7 +51,7 @@ public class PostLocationTest extends InstrumentationTestCase {
             maxLoc = new PostLocation(INVALID_LAT_MAX, 0);
             Assert.fail("Lat more than max should have failed on instantiation");
         } catch (IllegalArgumentException e) {
-            assertFalse("Invalid instantiation and still valid", maxLoc.isValid());
+            assertNull("Invalid instantiation and not null", maxLoc);
         }
 
         PostLocation minLoc = null;
@@ -59,7 +59,7 @@ public class PostLocationTest extends InstrumentationTestCase {
             minLoc = new PostLocation(INVALID_LAT_MIN, 0);
             Assert.fail("Lat less than min should have failed on instantiation");
         } catch (IllegalArgumentException e) {
-            assertFalse("Invalid instantiation and still valid", minLoc.isValid());
+            assertNull("Invalid instantiation and not null", minLoc);
         }
 
         PostLocation location = new PostLocation();
@@ -86,7 +86,7 @@ public class PostLocationTest extends InstrumentationTestCase {
             maxLoc = new PostLocation(0, INVALID_LNG_MAX);
             Assert.fail("Lng more than max should have failed on instantiation");
         } catch (IllegalArgumentException e) {
-            assertFalse("Invalid instantiation and still valid", maxLoc.isValid());
+            assertNull("Invalid instantiation and not null",  maxLoc);
         }
 
         PostLocation minLoc = null;
@@ -94,7 +94,7 @@ public class PostLocationTest extends InstrumentationTestCase {
             minLoc = new PostLocation(0, INVALID_LNG_MIN);
             Assert.fail("Lng less than min should have failed on instantiation");
         } catch (IllegalArgumentException e) {
-            assertFalse("Invalid instantiation and still valid", minLoc.isValid());
+            assertNull("Invalid instantiation and not null",  minLoc);
         }
 
         PostLocation location = new PostLocation();
