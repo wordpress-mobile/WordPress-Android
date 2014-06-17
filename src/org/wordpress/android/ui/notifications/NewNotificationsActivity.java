@@ -132,17 +132,12 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         if (DisplayUtils.isTablet(this)) {
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (!mNotesList.isInLayout()) {
-                    removeDetailFragment();
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
-                    ft.commitAllowingStateLoss();
-                } else {
-                    mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-                    mNotesList.resetSelection();
-                }
-                
+                FragmentManager fm = getFragmentManager();
+                // pop back to list view fragment
+                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                mMenuDrawer.setDrawerIndicatorEnabled(true);
+                mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+                mNotesList.resetSelection();
                 // Add the note detail fragment
                 addDetailFragment();
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
