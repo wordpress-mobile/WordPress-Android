@@ -137,7 +137,6 @@ public class NewNotificationsActivity extends WPActionBarActivity
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
                 mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-                mNotesList.resetSelection();
                 // Add the note detail fragment
                 addDetailFragment();
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -145,7 +144,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
                     mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
                     mNotesList.resetSelection();
                 }
-                // Remove the editor fragment when rotating back to portrait
+                // Remove the detail fragment when rotating back to portrait
                 if (mDetailFragment != null) {
                     FragmentManager fm = getFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
@@ -259,12 +258,9 @@ public class NewNotificationsActivity extends WPActionBarActivity
         mNotesList.refreshNotes();
     }
 
-    void popNoteDetail(){
+    void popNoteDetail() {
         FragmentManager fm = getFragmentManager();
-        Fragment f = fm.findFragmentById(R.id.fragment_comment_detail);
-        if (f == null) {
-            fm.popBackStack();
-        }
+        fm.popBackStack();
     }
 
     /**
