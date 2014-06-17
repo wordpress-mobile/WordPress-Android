@@ -132,11 +132,17 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         if (DisplayUtils.isTablet(this)) {
             if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                // TODO what if user is currently viewing a detail view in portrait?
-                if (mNotesList != null) {
+                if (!mNotesList.isInLayout()) {
+                    removeDetailFragment();
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
+                    ft.commitAllowingStateLoss();
+                } else {
                     mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                     mNotesList.resetSelection();
                 }
+                
                 // Add the note detail fragment
                 addDetailFragment();
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
