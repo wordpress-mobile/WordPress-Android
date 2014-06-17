@@ -62,13 +62,13 @@ public class EditTextUtils {
             return;
 	    }
 
+        if (requestFocus) {
+            edit.requestFocus();
+        }
+
         InputMethodManager imm = getInputMethodManager(edit);
         if (imm != null) {
             imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
-        }
-
-        if (requestFocus) {
-            edit.requestFocus();
         }
     }
 
