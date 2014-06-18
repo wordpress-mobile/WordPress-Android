@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
@@ -12,7 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -391,37 +391,10 @@ public class StatsActivity extends WPActionBarActivity {
             }
 
             if (getBlogId() == null) {
+                // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mPullToRefreshHelper.setRefreshing(false);
-                // Blog has not returned a jetpack_client_id
-                AlertDialog.Builder builder = new AlertDialog.Builder(this.mStatsActivityWeakRef.get());
-                if (WordPress.getCurrentBlog().isAdmin()) {
-                    builder.setMessage(getString(R.string.jetpack_message))
-                    .setTitle(getString(R.string.jetpack_not_found));
-                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent jetpackIntent = new Intent(
-                                    VerifyJetpackSettingsCallback.this.mStatsActivityWeakRef.get(),
-                                    AuthenticatedWebViewActivity.class);
-                            jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL,
-                                    WordPress.getCurrentBlog().getAdminUrl()
-                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                                    + "&plugin-search-input=Search+Plugins");
-                            startActivityForResult(jetpackIntent, REQUEST_JETPACK);
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
-                        }
-                    });
-                    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                } else {
-                    builder.setMessage(getString(R.string.jetpack_message_not_admin))
-                    .setTitle(getString(R.string.jetpack_not_found));
-                    builder.setPositiveButton(R.string.yes, null);
-                }
-                builder.create().show();
+                showJetpackMissingAlert(this.mStatsActivityWeakRef.get());
             }
         }
 
@@ -440,6 +413,38 @@ public class StatsActivity extends WPActionBarActivity {
         }
     }
 
+    private void showJetpackMissingAlert(final Activity currentActivity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
+        if (WordPress.getCurrentBlog().isAdmin()) {
+            builder.setMessage(getString(R.string.jetpack_message))
+                    .setTitle(getString(R.string.jetpack_not_found));
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent jetpackIntent = new Intent(
+                            currentActivity,
+                            AuthenticatedWebViewActivity.class);
+                    jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL,
+                            WordPress.getCurrentBlog().getAdminUrl()
+                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
+                                    + "&plugin-search-input=Search+Plugins");
+                    startActivityForResult(jetpackIntent, REQUEST_JETPACK);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+        } else {
+            builder.setMessage(getString(R.string.jetpack_message_not_admin))
+                    .setTitle(getString(R.string.jetpack_not_found));
+            builder.setPositiveButton(R.string.yes, null);
+        }
+        builder.create().show();
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -451,7 +456,40 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://wordpress.com/my-stats")));
+            final String blogId = getBlogId();
+            if (blogId == null) {
+                showJetpackMissingAlert(this);
+                return true;
+            }
+            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
+            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
+
+            // 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
+            // 2. If credentials are empty read the global wpcom credentials
+            // 3. Check that credentials are not empty before launching the activity
+            String statsAuthenticatedUser = WordPress.getCurrentBlog().getDotcom_username();
+            String statsAuthenticatedPassword = WordPress.getCurrentBlog().getDotcom_password();
+
+            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                // Let's try the global wpcom credentials
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+                statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+                statsAuthenticatedPassword = WordPressDB.decryptPassword(
+                        settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+                );
+            }
+            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                // Still empty. Show Toast.
+                Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
+            startActivityWithDelay(statsWebViewIntent);
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -540,7 +578,7 @@ public class StatsActivity extends WPActionBarActivity {
         final Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null) {
             mPullToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "Current blog is null. This should nevver happen here.");
+            AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
             return;
         }
 
