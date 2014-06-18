@@ -154,7 +154,8 @@ public class Note extends Syncable {
     }
 
     public Boolean isCommentType() {
-        return isType(NOTE_COMMENT_TYPE);
+        return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
+                isType(NOTE_COMMENT_TYPE);
     }
 
     public Boolean isAutomattcherType() {
