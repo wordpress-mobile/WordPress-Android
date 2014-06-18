@@ -662,8 +662,7 @@ public class EditPostSettingsFragment extends Fragment
                 showLocationView();
 
                 PostLocation location = post.getLocation();
-
-                new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
+                setLocation(location.getLatitude(), location.getLongitude());
             } else {
                 showLocationAdd();
             }
