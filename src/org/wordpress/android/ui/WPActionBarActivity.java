@@ -461,21 +461,19 @@ public abstract class WPActionBarActivity extends Activity {
     }
 
     /**
-     * Update all of the items in the menu drawer based on the current active
-     * blog.
+     * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
         mAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
         Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
-        while(availableItems.hasNext()){
+        while (availableItems.hasNext()) {
             MenuDrawerItem item = availableItems.next();
             if (item.isVisible()) {
                 mAdapter.add(item);
             }
         }
         mAdapter.notifyDataSetChanged();
-
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
@@ -741,7 +739,7 @@ public abstract class WPActionBarActivity extends Activity {
         }
 
         if (shouldUpdateCurrentBlogStatsInBackground()) {
-            WordPress.updateCurrentBlogStatsInBackground(true);
+            WordPress.sUpdateCurrentBlogStats.forceRun();
         }
     }
 
@@ -1079,6 +1077,7 @@ public abstract class WPActionBarActivity extends Activity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+        filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, filter);
     }
@@ -1116,6 +1115,9 @@ public abstract class WPActionBarActivity extends Activity {
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
+                initMenuDrawer();
             }
         }
     };

@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -35,6 +36,7 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -44,6 +46,7 @@ import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
@@ -83,11 +86,51 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
     public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
+    public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
+
+    private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
+    private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
 
-    private static Date mStatsLastPingDate; //last time stats were updated in background
+    /**
+     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
+     *  too frequent refreshes.
+     *  User is not notified in case of errors.
+     */
+    public static RateLimitedTask sUpdateCurrentBlogStats = new RateLimitedTask(SECONDS_BETWEEN_STATS_UPDATE) {
+        protected boolean run() {
+            Blog currentBlog = WordPress.getCurrentBlog();
+            if (currentBlog != null) {
+                String blogID = null;
+                if (currentBlog.isDotcomFlag()) {
+                    blogID = String.valueOf(currentBlog.getRemoteBlogId());
+                } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
+                    blogID = currentBlog.getApi_blogid(); // Can return null
+                }
+                if (blogID != null) {
+                    // start service to get stats
+                    Intent intent = new Intent(mContext, StatsService.class);
+                    intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
+                    mContext.startService(intent);
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    /**
+     *  Update blog list in a background task. Broadcast WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED if the
+     *  list changed.
+     */
+    public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
+        protected boolean run() {
+            new GenericSetupBlogTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return true;
+        }
+    };
 
     public static BitmapLruCache getBitmapCache() {
         if (mBitmapCache == null) {
@@ -143,7 +186,8 @@ public class WordPress extends Application {
         registerComponentCallbacks(pnBackendMonitor);
         registerActivityLifecycleCallbacks(pnBackendMonitor);
 
-        updateCurrentBlogStatsInBackground(false);
+        sUpdateCurrentBlogStats.runIfNotLimited();
+        sUpdateWordPressComBlogList.runIfNotLimited();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -528,37 +572,6 @@ public class WordPress extends Application {
         return mUserAgent;
     }
 
-    /*
-     *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
-     *  too frequent refreshes.
-     *  User is not notified in case of errors.
-     */
-    public synchronized static void updateCurrentBlogStatsInBackground(boolean alwaysUpdate) {
-        if (!alwaysUpdate && mStatsLastPingDate != null) {
-        	// check if the last stats refresh was done less than 30 minute ago
-            if (DateTimeUtils.minutesBetween(new Date(), mStatsLastPingDate) < 30) {
-              return;
-            }
-        }
-
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog != null) {
-            String blogID = null;
-            if (currentBlog.isDotcomFlag()) {
-                blogID = String.valueOf(currentBlog.getRemoteBlogId());
-            } else if (currentBlog.isJetpackPowered() && currentBlog.hasValidJetpackCredentials()) {
-                blogID = currentBlog.getApi_blogid(); // Can return null
-            }
-            if (blogID != null) {
-                // start service to get stats
-                Intent intent = new Intent(mContext, StatsService.class);
-                intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
-                mContext.startService(intent);
-                mStatsLastPingDate = new Date(); //set the last ping time
-            }
-        }
-    }
-
     /**
      * Detect when the app goes to the background and come back to the foreground.
      *
@@ -602,10 +615,9 @@ public class WordPress extends Application {
         }
 
         /**
-         * Checks that the network connection is available, and that at least 2 minutes are passed
-         * since the last ping.
+         * @return true if a network connection is available and the app come from background to foreground.
          */
-        private boolean canSynchWithWordPressDotComBackend() {
+        private boolean isNetworkAvailableAndComeFromBackground() {
             // The app wasn't in background. No need to ping the backend again.
             if (isInBackground == false) {
                 return false;
@@ -617,30 +629,30 @@ public class WordPress extends Application {
                 return false;
             }
 
+            return true;
+        }
+
+        private boolean isPushNotificationPingNeeded() {
             if (lastPingDate == null) {
                 // first startup
                 return false;
             }
 
             Date now = new Date();
-            if (DateTimeUtils.secondsBetween(now,lastPingDate) >= DEFAULT_TIMEOUT) {
+            if (DateTimeUtils.secondsBetween(now, lastPingDate) >= DEFAULT_TIMEOUT) {
                 lastPingDate = now;
                 return true;
             }
-
             return false;
         }
 
-        @Override
-        public void onActivityResumed(Activity arg0) {
-            if (!canSynchWithWordPressDotComBackend()) {
-                return;
-            }
-
-            // Note: The Code below is not called at startup
-
+        /**
+         * Check if user has valid credentials, and that at least 2 minutes are passed
+         * since the last ping, then try to update the PN token.
+         */
+        private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
-            if (WordPress.hasValidWPComCredentials(mContext)) {
+            if (isPushNotificationPingNeeded() && WordPress.hasValidWPComCredentials(mContext)) {
                 String token = null;
                 try {
                     // Register for Google Cloud Messaging
@@ -650,7 +662,6 @@ public class WordPress extends Application {
                     String gcmId = BuildConfig.GCM_ID;
                     if (gcmId == null || token == null || token.equals("") ) {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
-                        return;
                     } else {
                         // Send the token to WP.com
                         NotificationUtils.registerDeviceForPushNotifications(mContext, token);
@@ -659,9 +670,23 @@ public class WordPress extends Application {
                     AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());
                 }
             }
+        }
 
-            //Update Stats!
-            WordPress.updateCurrentBlogStatsInBackground(false);
+        @Override
+        public void onActivityResumed(Activity activity) {
+            // isNetworkAvailableAndComeFromBackground return false on Application start (doesn't come from background)
+            if (!isNetworkAvailableAndComeFromBackground()) {
+                return;
+            }
+
+            // Rate limited PN Token Update
+            updatePushNotificationTokenIfNotLimited();
+
+            // Rate limited Stats Update
+            sUpdateCurrentBlogStats.runIfNotLimited();
+
+            // Rate limited WPCom blog list Update
+            sUpdateWordPressComBlogList.runIfNotLimited();
         }
 
         @Override
