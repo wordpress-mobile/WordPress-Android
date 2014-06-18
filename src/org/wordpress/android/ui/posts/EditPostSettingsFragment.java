@@ -642,7 +642,7 @@ public class EditPostSettingsFragment extends Fragment
             mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
             mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
 
-            if (mActivity.getPost().hasLocation()) {
+            if (post.hasLocation()) {
                 showLocationView();
             } else {
                 showLocationAdd();
