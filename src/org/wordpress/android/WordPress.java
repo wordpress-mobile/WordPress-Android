@@ -648,7 +648,7 @@ public class WordPress extends Application {
          * Check if user has valid credentials, and that at least 2 minutes are passed
          * since the last ping, then try to update the PN token.
          */
-        private void updatePushNotificationToken() {
+        private void updatePushNotificationTokenIfNotLimited() {
             // Synch Push Notifications settings
             if (isPushNotificationPingNeeded() && WordPress.hasValidWPComCredentials(mContext)) {
                 String token = null;
@@ -678,7 +678,7 @@ public class WordPress extends Application {
             }
 
             // Rate limited PN Token Update
-            updatePushNotificationToken();
+            updatePushNotificationTokenIfNotLimited();
 
             // Rate limited Stats Update
             sUpdateCurrentBlogStats.runIfNotLimited();
