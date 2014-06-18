@@ -642,12 +642,6 @@ public class EditPostSettingsFragment extends Fragment
             mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
             mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
 
-            if (post.hasLocation()) {
-                showLocationView();
-            } else {
-                showLocationAdd();
-            }
-
             Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
             addLocation.setOnClickListener(this);
 
@@ -665,9 +659,13 @@ public class EditPostSettingsFragment extends Fragment
 
             // if this post has location attached to it, look up the location address
             if (post.hasLocation()) {
+                showLocationView();
+
                 PostLocation location = post.getLocation();
 
                 new GetAddressTask().execute(location.getLatitude(), location.getLongitude());
+            } else {
+                showLocationAdd();
             }
         }
     }
