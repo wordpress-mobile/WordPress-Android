@@ -28,7 +28,6 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     public NoteBlockClickableSpan(JSONObject idData, int backgroundColor) {
         mBlockData = idData;
-        // Same color as notifications_blue in colors.xml
         mBackgroundColor = backgroundColor;
         processIdData();
     }
@@ -47,10 +46,6 @@ public class NoteBlockClickableSpan extends ClickableSpan {
                 mIndices[1] = indicesArray.optInt(1);
             }
         }
-    }
-
-    private boolean hasUrl() {
-        return !TextUtils.isEmpty(mUrl);
     }
 
     @Override
@@ -96,6 +91,14 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     public void setPressed(boolean isPressed) {
         this.mPressed = isPressed;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    private boolean hasUrl() {
+        return !TextUtils.isEmpty(mUrl);
     }
 
     public boolean shouldShowBlogPreview() {

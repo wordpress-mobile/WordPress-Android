@@ -21,6 +21,7 @@ import com.simperium.client.User;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -334,8 +335,8 @@ public class NewNotificationsActivity extends WPActionBarActivity
         ft.commitAllowingStateLoss();
     }
 
-    public void showBlogPreviewForSiteId(long siteId) {
-        ReaderPostListFragment readerPostListFragment = ReaderPostListFragment.newInstance(siteId, null);
+    public void showBlogPreviewForSiteId(long siteId, String siteUrl) {
+        ReaderPostListFragment readerPostListFragment = ReaderPostListFragment.newInstance(siteId, siteUrl);
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
@@ -358,6 +359,12 @@ public class NewNotificationsActivity extends WPActionBarActivity
         ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
+    }
+
+    public void showWebViewActivityForUrl(String url) {
+        Intent intent = new Intent(this, AuthenticatedWebViewActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
     private class NoteClickListener implements NewNotificationsListFragment.OnNoteClickListener {

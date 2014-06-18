@@ -109,6 +109,11 @@ public class NoteBlock {
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
+            if (hasImageMediaItem() || hasVideoMediaItem()) {
+                noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
+            } else {
+                noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
+            }
             noteBlockHolder.getTextView().setText(getNoteText());
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
@@ -147,7 +152,7 @@ public class NoteBlock {
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
                 mImageView.setLayoutParams(layoutParams);
-                mRootLayout.addView(mImageView);
+                mRootLayout.addView(mImageView, 0);
             }
 
             return mImageView;
@@ -160,7 +165,7 @@ public class NoteBlock {
                         DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
                 layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
                 mVideoView.setLayoutParams(layoutParams);
-                mRootLayout.addView(mVideoView);
+                mRootLayout.addView(mVideoView, 0);
 
                 // Attach a mediaController if we are displaying a video.
                 final MediaController mediaController = new MediaController(mRootLayout.getContext());

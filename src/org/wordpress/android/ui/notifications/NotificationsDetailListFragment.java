@@ -7,6 +7,7 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,17 +132,18 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!hasActivity()) return;
 
+            NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
             if (clickedSpan.shouldShowBlogPreview()) {
                 // Show blog preview
-                long siteId = (clickedSpan.getType() == NoteBlockIdType.USER) ? clickedSpan.getId() : clickedSpan.getSiteId();
-                NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
-                notificationsActivity.showBlogPreviewForSiteId(siteId);
+                notificationsActivity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
             } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
                 // Show post detail
-                NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
-                long siteId = clickedSpan.getSiteId();
-                long postId = clickedSpan.getId();
-                notificationsActivity.showPostForSiteAndPostId(siteId, postId);
+                notificationsActivity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
+            } else {
+                // We don't know what type of id this is, let's see if it has a URL and push a webview if so
+                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                    notificationsActivity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                }
             }
         }
     };
