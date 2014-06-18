@@ -423,8 +423,8 @@ public class Post implements Serializable {
                                       StringUtils.equals(password, otherPost.password) &&
                                       StringUtils.equals(postFormat, otherPost.postFormat) &&
                                       this.dateCreatedGmt == otherPost.dateCreatedGmt &&
-                                      (this.hasLocation() && otherPost.hasLocation()
-                                              && mPostLocation.equals(otherPost.mPostLocation)));
+                                      PostLocation.equals(this.mPostLocation, otherPost.mPostLocation)
+        );
     }
 
     @Override

@@ -59,4 +59,35 @@ public class PostLocation implements Serializable {
     private boolean isValidLongitude(double longitude) {
         return longitude >= MIN_LONGITUDE && longitude <= MAX_LONGITUDE;
     }
+
+    public int hashCode() {
+        final int prime = 31;
+        int hashCode = 1;
+
+        hashCode = prime * hashCode + (Double.valueOf(mLatitude).hashCode());
+        hashCode = prime * hashCode + (Double.valueOf(mLongitude).hashCode());
+
+        return hashCode;
+    }
+
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        } else if (other instanceof PostLocation) {
+            PostLocation otherLocation = (PostLocation) other;
+            return this.mLatitude == otherLocation.mLatitude
+                    && this.mLongitude == otherLocation.mLongitude;
+        }
+        return false;
+    }
+
+    public static boolean equals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        } else if (a == null || b == null) {
+            return false;
+        } else {
+            return a.equals(b);
+        }
+    }
 }
