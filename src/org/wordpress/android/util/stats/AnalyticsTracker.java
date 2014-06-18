@@ -81,8 +81,10 @@ public final class AnalyticsTracker {
 
     public static void loadPrefHasUserOptedOut(boolean manageSession) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        mHasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
-        if (manageSession) {
+
+        boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut && manageSession) {
+            mHasUserOptedOut = hasUserOptedOut;
             if (mHasUserOptedOut) {
                 endSession(true);
                 clearAllData();
