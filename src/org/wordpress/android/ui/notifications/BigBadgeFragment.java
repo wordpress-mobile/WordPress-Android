@@ -23,7 +23,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
     private Note mNote;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state) {
         View view = inflater.inflate(R.layout.notifications_big_badge, parent, false);
         NetworkImageView badgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
 
@@ -40,8 +40,9 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
 
             // Get the badge
             String iconURL = getNote().getIconURL();
-            if (!iconURL.equals(""))
+            if (!iconURL.equals("")) {
                 badgeImageView.setImageUrl(iconURL, WordPress.imageLoader);
+            }
 
             // if this is a stats-related note, show stats link and enable tapping badge
             // to view stats - but only if the note is for a blog that's visible
@@ -65,10 +66,10 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
         return view;
     }
 
-    public void setNote(Note note){
+    public void setNote(Note note) {
         mNote = note;
     }
-    public Note getNote(){
+    public Note getNote() {
         return mNote;
     }
 
@@ -84,12 +85,14 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
      *   most_followed_day
      */
     boolean isStatsNote() {
-        if (getNote() == null)
+        if (getNote() == null) {
             return false;
+        }
 
         String type = getNote().getType();
-        if (type == null)
+        if (type == null) {
             return false;
+        }
 
         return (type.contains("_milestone_")
              || type.startsWith("traffic_")
@@ -101,8 +104,9 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
      * show stats for the passed blog
      */
     private void showStatsActivity(int remoteBlogId) {
-        if (getActivity() == null || isRemoving())
+        if (getActivity() == null || isRemoving()) {
             return;
+        }
 
         // stats activity is designed to work with the current blog, so switch blogs if necessary
         if (WordPress.getCurrentRemoteBlogId() != remoteBlogId) {

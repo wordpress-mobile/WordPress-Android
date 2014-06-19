@@ -16,10 +16,10 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
-
     public static WPLinkMovementMethod getInstance() {
-        if (mMovementMethod == null)
+        if (mMovementMethod == null) {
             mMovementMethod = new StatsWPLinkMovementMethod();
+        }
         return mMovementMethod;
     }
 
@@ -27,8 +27,7 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
         int action = event.getAction();
 
-        if (action == MotionEvent.ACTION_UP)
-        {
+        if (action == MotionEvent.ACTION_UP) {
             int x = (int) event.getX();
             int y = (int) event.getY();
 
@@ -43,16 +42,16 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
             int off = layout.getOffsetForHorizontal(line, x);
 
             URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
-            if (link.length != 0)
-            {
+            if (link.length != 0) {
                 String url = link[0].getURL();
                 AppLog.d(AppLog.T.UTILS, "Tapped on the Link: " + url);
-                if (url.startsWith("https://wordpress.com/my-stats") || url.startsWith("http://wordpress.com/my-stats/")) {
+                if (url.startsWith("https://wordpress.com/my-stats")
+                        || url.startsWith("http://wordpress.com/my-stats/")) {
                     // make sure to load the no-chrome version of Stats over https
                     url = UrlUtils.makeHttps(url);
                     if (url.contains("?")) {
                         // add the no chrome parameters if not available
-                        if (!url.contains("?no-chrome") && !url.contains("&no-chrome") ) {
+                        if (!url.contains("?no-chrome") && !url.contains("&no-chrome")) {
                             url += "&no-chrome";
                         }
                     } else {
@@ -72,11 +71,12 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                     }
                     Intent statsWebViewIntent = new Intent(widget.getContext(), StatsWebViewActivity.class);
                     statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
-                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
+                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD,
+                            statsAuthenticatedPassword);
                     statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, url);
                     widget.getContext().startActivity(statsWebViewIntent);
                     return true;
-                } else  if (url.startsWith("https") || url.startsWith("http")){
+                } else  if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
                     Intent statsWebViewIntent = new Intent(widget.getContext(), StatsWebViewActivity.class);
                     statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_URL, url);
