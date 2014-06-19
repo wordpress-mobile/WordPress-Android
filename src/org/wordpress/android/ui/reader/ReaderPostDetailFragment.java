@@ -158,7 +158,7 @@ public class ReaderPostDetailFragment extends Fragment
             // detects that more comments exist on the server than are stored locally
             ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
                 @Override
-                public void onRequestData(ReaderActions.RequestDataAction action) {
+                public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader post detail > requesting newer comments");
                         updateComments();

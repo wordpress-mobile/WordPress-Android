@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.text.TextUtils;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -12,8 +12,8 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
 import org.wordpress.android.models.ReaderTagList;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -31,38 +31,39 @@ public class ReaderTagActions {
     /**
      * perform the passed action on the passed tag - this is optimistic (returns before API call completes)
      **/
-    public static boolean performTagAction(final TagAction action,
-                                           final String tagName,
+    public static boolean performTagAction(final ReaderTag tag,
+                                           final TagAction action,
                                            final ReaderActions.ActionListener actionListener) {
-        if (TextUtils.isEmpty(tagName)) {
-            return false;
-        }
-
-        // don't allow actions on default tags
-        if (ReaderTagTable.isDefaultTag(tagName)) {
+        if (tag == null) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
             }
             return false;
         }
 
-        final ReaderTag originalTopic;
+        // don't allow actions on default tags
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            AppLog.w(T.READER, "cannot add or delete default tag");
+            if (actionListener != null) {
+                actionListener.onActionResult(false);
+            }
+            return false;
+        }
+
         final String path;
-        final String tagNameForApi = sanitizeTitle(tagName);
+        final String tagNameForApi = sanitizeTitle(tag.getTagName());
 
         switch (action) {
             case DELETE:
-                originalTopic = ReaderTagTable.getTag(tagName, ReaderTagType.FOLLOWED);
                 // delete tag & all related posts
-                ReaderTagTable.deleteTag(tagName);
-                ReaderPostTable.deletePostsWithTag(tagName);
+                ReaderTagTable.deleteTag(tag);
+                ReaderPostTable.deletePostsWithTag(tag);
                 path = "read/tags/" + tagNameForApi + "/mine/delete";
                 break;
 
             case ADD :
-                originalTopic = null; // prevent compiler warning
                 String endpoint = "/read/tags/" + tagNameForApi + "/posts";
-                ReaderTag newTopic = new ReaderTag(tagName, endpoint, ReaderTagType.FOLLOWED);
+                ReaderTag newTopic = new ReaderTag(tag.getTagName(), endpoint, ReaderTagType.FOLLOWED);
                 ReaderTagTable.addOrUpdateTag(newTopic);
                 path = "read/tags/" + tagNameForApi + "/mine/new";
                 break;
@@ -104,14 +105,12 @@ public class ReaderTagActions {
                 // revert on failure
                 switch (action) {
                     case DELETE:
-                        // add back original topic
-                        if (originalTopic != null) {
-                            ReaderTagTable.addOrUpdateTag(originalTopic);
-                        }
+                        // add back original tag
+                        ReaderTagTable.addOrUpdateTag(tag);
                         break;
                     case ADD:
                         // remove new topic
-                        ReaderTagTable.deleteTag(tagName);
+                        ReaderTagTable.deleteTag(tag);
                         break;
                 }
 
@@ -141,8 +140,9 @@ public class ReaderTagActions {
                                   .replace(".", "-");
 
         // replace double dashes with single dash (may have been added above)
-        while (sanitized.contains("--"))
+        while (sanitized.contains("--")) {
             sanitized = sanitized.replace("--", "-");
+        }
 
         return sanitized.trim();
     }
@@ -184,8 +184,8 @@ public class ReaderTagActions {
             public void run() {
                 // get server topics, both default & followed
                 ReaderTagList serverTopics = new ReaderTagList();
-                serverTopics.addAll(parseTags(jsonObject, "default", ReaderTag.ReaderTagType.DEFAULT));
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTag.ReaderTagType.FOLLOWED));
+                serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
+                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
 
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
@@ -202,7 +202,7 @@ public class ReaderTagActions {
                 }
 
                 // save changes to recommended topics
-                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTag.ReaderTagType.RECOMMENDED);
+                ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
                 ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(T.READER, "recommended topics changed");
@@ -224,15 +224,17 @@ public class ReaderTagActions {
     /*
      * parse a specific topic section from the topic response
      */
-    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTag.ReaderTagType topicType) {
+    private static ReaderTagList parseTags(JSONObject jsonObject, String name, ReaderTagType topicType) {
         ReaderTagList topics = new ReaderTagList();
 
-        if (jsonObject==null)
+        if (jsonObject == null) {
             return topics;
+        }
 
         JSONObject jsonTopics = jsonObject.optJSONObject(name);
-        if (jsonTopics==null)
+        if (jsonTopics == null) {
             return topics;
+        }
 
         Iterator<String> it = jsonTopics.keys();
         while (it.hasNext()) {
@@ -248,18 +250,21 @@ public class ReaderTagActions {
         return topics;
     }
 
-    private static void deleteTags(ReaderTagList topics) {
-        if (topics==null || topics.size()==0)
+    private static void deleteTags(ReaderTagList tagList) {
+        if (tagList == null || tagList.size() == 0) {
             return;
-        ReaderDatabase.getWritableDb().beginTransaction();
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
         try {
-            for (ReaderTag topic: topics) {
-                ReaderTagTable.deleteTag(topic.getTagName());
-                ReaderPostTable.deletePostsWithTag(topic.getTagName());
+            for (ReaderTag tag: tagList) {
+                ReaderTagTable.deleteTag(tag);
+                ReaderPostTable.deletePostsWithTag(tag);
             }
-            ReaderDatabase.getWritableDb().setTransactionSuccessful();
+            db.setTransactionSuccessful();
         } finally {
-            ReaderDatabase.getWritableDb().endTransaction();
+            db.endTransaction();
         }
     }
 

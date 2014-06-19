@@ -11,7 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
+import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
@@ -95,8 +96,9 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
         outState.putSerializable(ARG_TAG_TYPE, getTagType());
     }
 
-    void scrollToTag(String tagName) {
-        int index = getTagAdapter().indexOfTagName(tagName);
+    private void scrollToTagName(String tagName) {
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+        int index = getTagAdapter().indexOfTag(tag);
         if (index > -1) {
             mListView.smoothScrollToPosition(index);
         }
@@ -113,7 +115,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    scrollToTag(scrollToTagName);
+                    scrollToTagName(scrollToTagName);
                 }
             };
             getTagAdapter().refresh(dataListener);
@@ -142,7 +144,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
      * has been made by the time this is called
      */
     @Override
-    public void onTagAction(TagAction action, final String tagName) {
+    public void onTagAction(ReaderTag tag, TagAction action) {
         final boolean animateRemoval;
         switch (action) {
             case ADD:
@@ -158,7 +160,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 break;
         }
 
-        int index = getTagAdapter().indexOfTagName(tagName);
+        int index = getTagAdapter().indexOfTag(tag);
         if (animateRemoval && index > -1) {
             Animation.AnimationListener aniListener = new Animation.AnimationListener() {
                 @Override
@@ -178,7 +180,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
         // let the host activity know about the change
         if (getActivity() instanceof TagActionListener) {
-            ((TagActionListener) getActivity()).onTagAction(action, tagName);
+            ((TagActionListener) getActivity()).onTagAction(tag, action);
         }
     }
 }

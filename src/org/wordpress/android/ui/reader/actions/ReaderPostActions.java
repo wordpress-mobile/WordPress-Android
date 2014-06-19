@@ -15,6 +15,7 @@ import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
@@ -285,22 +286,22 @@ public class ReaderPostActions {
      * a backfillListener to request new posts and backfill missing posts - note that a backfill
      * will NOT occur unless a backfillListener is passed
      */
-    public static void updatePostsInTag(final String tagName,
+    public static void updatePostsInTag(final ReaderTag tag,
                                         final ReaderActions.RequestDataAction updateAction,
                                         final ReaderActions.UpdateResultAndCountListener resultListener) {
-        updatePostsInTag(tagName, updateAction, resultListener, null);
+        updatePostsInTag(tag, updateAction, resultListener, null);
     }
-    public static void updatePostsInTagWithBackfill(final String tagName,
+    public static void updatePostsInTagWithBackfill(final ReaderTag tag,
                                                     final ReaderActions.UpdateResultAndCountListener resultListener,
                                                     final ReaderActions.PostBackfillListener backfillListener) {
-        updatePostsInTag(tagName, ReaderActions.RequestDataAction.LOAD_NEWER, resultListener, backfillListener);
+        updatePostsInTag(tag, ReaderActions.RequestDataAction.LOAD_NEWER, resultListener, backfillListener);
     }
-    private static void updatePostsInTag(final String tagName,
+    private static void updatePostsInTag(final ReaderTag tag,
                                          final ReaderActions.RequestDataAction updateAction,
                                          final ReaderActions.UpdateResultAndCountListener resultListener,
                                          final ReaderActions.PostBackfillListener backfillListener) {
 
-        String endpoint = getEndpointForTag(tagName);
+        String endpoint = getEndpointForTag(tag);
         if (TextUtils.isEmpty(endpoint)) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
@@ -318,37 +319,37 @@ public class ReaderPostActions {
 
         // apply the after/before to limit results based on previous update, but only if there are
         // existing posts in this topic
-        if (ReaderPostTable.hasPostsWithTag(tagName)) {
+        if (ReaderPostTable.hasPostsWithTag(tag)) {
             switch (updateAction) {
                 case LOAD_NEWER:
-                    String dateNewest = ReaderTagTable.getTagNewestDate(tagName);
+                    String dateNewest = ReaderTagTable.getTagNewestDate(tag);
                     if (!TextUtils.isEmpty(dateNewest)) {
                         sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                        AppLog.d(T.READER, String.format("requesting newer posts in tag (%s)", dateNewest));
+                        AppLog.d(T.READER, String.format("requesting newer posts in tag %s (%s)", tag.getTagNameForLog(), dateNewest));
                     }
                     break;
 
                 case LOAD_OLDER:
-                    String dateOldest = ReaderTagTable.getTagOldestDate(tagName);
+                    String dateOldest = ReaderTagTable.getTagOldestDate(tag);
                     // if oldest date isn't stored, it means we haven't requested older posts until
                     // now, so use the date of the oldest stored post
                     if (TextUtils.isEmpty(dateOldest)) {
-                        dateOldest = ReaderPostTable.getOldestPubDateWithTag(tagName);
+                        dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
                     }
                     if (!TextUtils.isEmpty(dateOldest)) {
                         sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                        AppLog.d(T.READER, String.format("requesting older posts in tag (%s)", dateOldest));
+                        AppLog.d(T.READER, String.format("requesting older posts in tag %s (%s)", tag.getTagNameForLog(), dateOldest));
                     }
                     break;
             }
         } else {
-            AppLog.d(T.READER, "requesting posts in empty tag");
+            AppLog.d(T.READER, "requesting posts in empty tag " + tag.getTagNameForLog());
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsWithTagResponse(tagName, updateAction, jsonObject, resultListener, backfillListener);
+                handleUpdatePostsWithTagResponse(tag, updateAction, jsonObject, resultListener, backfillListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -364,7 +365,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostsWithTagResponse(final String tagName,
+    private static void handleUpdatePostsWithTagResponse(final ReaderTag tag,
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
                                                          final ReaderActions.UpdateResultAndCountListener resultListener,
@@ -385,12 +386,12 @@ public class ReaderPostActions {
                 // remember when this topic was updated if newer posts were requested, regardless of
                 // whether the response contained any posts
                 if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
-                    ReaderTagTable.setTagLastUpdated(tagName, DateTimeUtils.javaDateToIso8601(new Date()));
+                    ReaderTagTable.setTagLastUpdated(tag, DateTimeUtils.javaDateToIso8601(new Date()));
                 }
 
                 // go no further if the response didn't contain any posts
                 if (serverPosts.size() == 0) {
-                    AppLog.d(T.READER, "no new posts in tag");
+                    AppLog.d(T.READER, "no new posts in tag " + tag.getTagNameForLog());
                     if (resultListener != null) {
                         handler.post(new Runnable() {
                             public void run() {
@@ -411,13 +412,13 @@ public class ReaderPostActions {
                         case LOAD_NEWER:
                             String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
                             if (!TextUtils.isEmpty(newest)) {
-                                ReaderTagTable.setTagNewestDate(tagName, newest);
+                                ReaderTagTable.setTagNewestDate(tag, newest);
                             }
                             break;
                         case LOAD_OLDER:
                             String oldest = jsonDateRange.has("after") ? JSONUtil.getString(jsonDateRange, "after") : JSONUtil.getString(jsonDateRange, "oldest");
                             if (!TextUtils.isEmpty(oldest)) {
-                                ReaderTagTable.setTagOldestDate(tagName, oldest);
+                                ReaderTagTable.setTagOldestDate(tag, oldest);
                             }
                             break;
                     }
@@ -425,20 +426,21 @@ public class ReaderPostActions {
 
                 // remember whether there were existing posts with this tag before adding
                 // the ones we just retrieved
-                final boolean hasExistingPostsWithTag = ReaderPostTable.hasPostsWithTag(tagName);
+                final boolean hasExistingPostsWithTag = ReaderPostTable.hasPostsWithTag(tag);
 
                 // determine how many of the downloaded posts are new (response may contain both
                 // new posts and posts updated since the last call), then save the posts even if
                 // none are new in order to update comment counts, likes, etc., on existing posts
                 final int numNewPosts;
                 if (hasExistingPostsWithTag) {
-                    numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
+                    numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
                 } else {
                     numNewPosts = serverPosts.size();
                 }
-                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
+                ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
-                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag", serverPosts.size(), numNewPosts));
+                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag %s",
+                        serverPosts.size(), numNewPosts, tag.getTagNameForLog()));
 
                 handler.post(new Runnable() {
                     public void run() {
@@ -455,7 +457,7 @@ public class ReaderPostActions {
                             boolean areAllPostsNew = (numNewPosts == ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
                             if (areAllPostsNew) {
                                 Date dtOldestServerPost = serverPosts.getOldestPubDate();
-                                backfillPostsWithTag(tagName, dtOldestServerPost, 0, backfillListener);
+                                backfillPostsWithTag(tag, dtOldestServerPost, 0, backfillListener);
                             }
                         }
                     }
@@ -525,19 +527,29 @@ public class ReaderPostActions {
      * returns the endpoint to use for the passed tag - first gets it from local db, if not
      * there it generates it "by hand"
      */
-    private static String getEndpointForTag(String tagName) {
-        String endpoint = ReaderTagTable.getEndpointForTag(tagName);
-        if (TextUtils.isEmpty(endpoint)) {
-            // never hand craft the endpoint for default tags, since these MUST be updated
-            // using their stored endpoints
-            if (ReaderTag.isDefaultTagName(tagName)) {
-                return null;
-            } else {
-                return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tagName));
-            }
-        } else {
+    private static String getEndpointForTag(ReaderTag tag) {
+        if (tag == null) {
+            return null;
+        }
+
+        // if passed tag has an assigned endpoint, return it and be done
+        if (!TextUtils.isEmpty(tag.getEndpoint())) {
+            return tag.getEndpoint();
+        }
+
+        // check the db for the endpoint
+        String endpoint = ReaderTagTable.getEndpointForTag(tag);
+        if (!TextUtils.isEmpty(endpoint)) {
             return endpoint;
         }
+
+        // never hand craft the endpoint for default tags, since these MUST be updated
+        // using their stored endpoints
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            return null;
+        }
+
+        return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tag.getTagName()));
     }
 
     /*
@@ -546,11 +558,11 @@ public class ReaderPostActions {
      * missing between the posts retrieved the previous day and the posts just retrieved
      */
     private static final int BACKFILL_MAX_RECURSION = 3;
-    private static void backfillPostsWithTag(final String tagName,
+    private static void backfillPostsWithTag(final ReaderTag tag,
                                              final Date dateBefore,
                                              final int recursionCounter,
                                              final ReaderActions.PostBackfillListener backfillListener) {
-        String endpoint = getEndpointForTag(tagName);
+        String endpoint = getEndpointForTag(tag);
         if (TextUtils.isEmpty(endpoint)) {
             return;
         }
@@ -558,7 +570,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleBackfillResponse(jsonObject, tagName, recursionCounter, backfillListener);
+                handleBackfillResponse(jsonObject, tag, recursionCounter, backfillListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -573,11 +585,11 @@ public class ReaderPostActions {
                     + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
                     + "&order=DESC"
                     + "&before=" + UrlUtils.urlEncode(strDateBefore);
-        AppLog.i(T.READER, String.format("backfilling tag, recursion %d", recursionCounter));
+        AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tag.getTagNameForLog(), recursionCounter));
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
     private static void handleBackfillResponse(final JSONObject jsonObject,
-                                               final String tagName,
+                                               final ReaderTag tag,
                                                final int recursionCounter,
                                                final ReaderActions.PostBackfillListener backfillListener) {
         if (jsonObject == null) {
@@ -590,13 +602,13 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 final ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tagName, serverPosts);
+                final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
                 if (numNewPosts == 0) {
                     return;
                 }
 
-                AppLog.i(T.READER, String.format("backfilling tag found %d new posts", numNewPosts));
-                ReaderPostTable.addOrUpdatePosts(tagName, serverPosts);
+                AppLog.i(T.READER, String.format("backfilling tag %s found %d new posts", tag.getTagNameForLog(), numNewPosts));
+                ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
                 handler.post(new Runnable() {
                     public void run() {
@@ -608,7 +620,7 @@ public class ReaderPostActions {
                         // so we don't backfill forever
                         boolean areAllPostsNew = (numNewPosts == ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
                         if (areAllPostsNew && recursionCounter < BACKFILL_MAX_RECURSION) {
-                            backfillPostsWithTag(tagName,
+                            backfillPostsWithTag(tag,
                                     serverPosts.getOldestPubDate(),
                                     recursionCounter + 1,
                                     backfillListener);

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -85,7 +86,8 @@ public class ReaderPostTable {
                 + "   blog_id     INTEGER NOT NULL,"
                 + "   pseudo_id   TEXT NOT NULL,"
                 + "   tag_name    TEXT NOT NULL COLLATE NOCASE,"
-                + "   PRIMARY KEY (post_id, blog_id, tag_name)"
+                + "   tag_type    INTEGER DEFAULT 0,"
+                + "   PRIMARY KEY (post_id, blog_id, tag_name, tag_type)"
                 + ")");
     }
 
@@ -123,28 +125,29 @@ public class ReaderPostTable {
     }
 
     public static int getNumPostsInBlog(long blogId) {
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_posts WHERE blog_id=?", new String[]{Long.toString(blogId)});
-    }
-
-    public static int getNumPostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return 0;
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT count(*) FROM tbl_post_tags WHERE tag_name=?",
-                    new String[]{tagName});
+                "SELECT count(*) FROM tbl_posts WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
     }
 
-    public static boolean hasPostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return false;
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_post_tags WHERE tag_name=? LIMIT 1",
-                new String[]{tagName});
+    public static int getNumPostsWithTag(ReaderTag tag) {
+        if (tag == null) {
+            return 0;
+        }
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                    "SELECT count(*) FROM tbl_post_tags WHERE tag_name=? AND tag_type=?",
+                    args);
+    }
+
+    public static boolean hasPostsWithTag(ReaderTag tag) {
+        return (getNumPostsWithTag(tag) > 0);
     }
 
     public static void addOrUpdatePost(ReaderPost post) {
-        if (post == null)
+        if (post == null) {
             return;
+        }
         ReaderPostList posts = new ReaderPostList();
         posts.add(post);
         addOrUpdatePosts(null, posts);
@@ -154,8 +157,9 @@ public class ReaderPostTable {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1", args);
         try {
-            if (!c.moveToFirst())
+            if (!c.moveToFirst()) {
                 return null;
+            }
             return getPostFromCursor(c, null);
         } finally {
             SqlUtils.closeCursor(c);
@@ -184,15 +188,18 @@ public class ReaderPostTable {
     /*
      * returns a count of which posts in the passed list don't already exist in the db for the passed tag
      */
-    public static int getNumNewPostsWithTag(String tagName, ReaderPostList posts) {
-        if (posts == null || posts.size() == 0 || TextUtils.isEmpty(tagName))
+    public static int getNumNewPostsWithTag(ReaderTag tag, ReaderPostList posts) {
+        if (posts == null || posts.size() == 0 || tag == null) {
             return 0;
+        }
 
         // if there aren't any posts in this tag, then all passed posts are new
-        if (getNumPostsWithTag(tagName) == 0)
+        if (getNumPostsWithTag(tag) == 0) {
             return posts.size();
+        }
 
-        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM tbl_post_tags WHERE tag_name=? AND pseudo_id IN (");
+        StringBuilder sb = new StringBuilder(
+                "SELECT COUNT(*) FROM tbl_post_tags WHERE tag_name=? AND tag_type=? AND pseudo_id IN (");
         boolean isFirst = true;
         for (ReaderPost post: posts) {
             if (isFirst) {
@@ -204,7 +211,8 @@ public class ReaderPostTable {
         }
         sb.append(")");
 
-        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), args);
         return posts.size() - numExisting;
     }
 
@@ -213,8 +221,9 @@ public class ReaderPostTable {
      * may differ from ReaderCommentTable.getNumCommentsForPost (which returns # local comments for this post)
      */
     public static int getNumCommentsForPost(ReaderPost post) {
-        if (post == null)
+        if (post == null) {
             return 0;
+        }
         String[] args = new String[] {Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT num_replies FROM tbl_posts WHERE blog_id=? AND post_id=?",
@@ -268,14 +277,16 @@ public class ReaderPostTable {
         return isChanged;
     }
 
-    public static int deletePostsWithTag(String tagName) {
-        if (TextUtils.isEmpty(tagName))
+    public static int deletePostsWithTag(final ReaderTag tag) {
+        if (tag == null) {
             return 0;
+        }
 
         // first delete posts from tbl_post_tags, and if any were deleted next delete posts in tbl_posts that no longer exist in tbl_post_tags
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_post_tags",
-                "tag_name=?",
-                new String[]{tagName});
+                "tag_name=? AND tag_type=?",
+                args);
 
         if (numDeleted > 0)
             ReaderDatabase.getWritableDb().delete("tbl_posts",
@@ -288,14 +299,17 @@ public class ReaderPostTable {
     /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
-    public static String getOldestPubDateWithTag(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
+    public static String getOldestPubDateWithTag(final ReaderTag tag) {
+        if (tag == null) {
             return "";
+        }
 
         String sql = "SELECT tbl_posts.published FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                   + " AND tbl_post_tags.tag_name=? ORDER BY published LIMIT 1";
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, new String[]{tagName});
+                   + " AND tbl_post_tags.tag_name=? AND tbl_post_tags.tag_type=?"
+                   + " ORDER BY published LIMIT 1";
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
     /*
@@ -344,7 +358,7 @@ public class ReaderPostTable {
         }
     }
     
-    public static void addOrUpdatePosts(final String tagName, ReaderPostList posts) {
+    public static void addOrUpdatePosts(final ReaderTag tag, ReaderPostList posts) {
         if (posts == null || posts.size() == 0) {
             return;
         }
@@ -355,7 +369,7 @@ public class ReaderPostTable {
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28)");
         SQLiteStatement stmtTags = db.compileStatement(
-                "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name) VALUES (?1,?2,?3,?4)");
+                "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
         db.beginTransaction();
         try {
@@ -395,12 +409,15 @@ public class ReaderPostTable {
 
             // now add to tbl_post_tags - note that tagName will be null when updating a single
             // post, in which case we skip it here
-            if (!TextUtils.isEmpty(tagName)) {
+            if (tag != null) {
+                String tagName = tag.getTagName();
+                int tagType = tag.tagType.toInt();
                 for (ReaderPost post: posts) {
                     stmtTags.bindLong  (1, post.postId);
                     stmtTags.bindLong  (2, post.blogId);
                     stmtTags.bindString(3, post.getPseudoId());
                     stmtTags.bindString(4, tagName);
+                    stmtTags.bindLong  (5, tagType);
                     stmtTags.execute();
                     stmtTags.clearBindings();
                 }
@@ -415,29 +432,35 @@ public class ReaderPostTable {
         }
     }
 
-    public static ReaderPostList getPostsWithTag(String tagName, int maxPosts) {
-        if (TextUtils.isEmpty(tagName))
+    public static ReaderPostList getPostsWithTag(ReaderTag tag, int maxPosts) {
+        if (tag == null) {
             return new ReaderPostList();
+        }
 
         String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
-                   + " AND tbl_post_tags.tag_name=?";
+                   + " AND tbl_post_tags.tag_name=?"
+                   + " AND tbl_post_tags.tag_type=?";
 
-        if (tagName.equals(ReaderTag.TAG_NAME_LIKED)) {
-            // skip posts that are no longer liked if this is "Posts I Like"
-            sql += " AND tbl_posts.is_liked != 0";
-        } else if (tagName.equals(ReaderTag.TAG_NAME_FOLLOWING)) {
-            // skip posts that are no longer followed if this is "Blogs I Follow"
-            sql += " AND tbl_posts.is_followed != 0";
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
+            // longer followed if this is "Blogs I Follow"
+            if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED)) {
+                sql += " AND tbl_posts.is_liked != 0";
+            } else if (tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING)) {
+                sql += " AND tbl_posts.is_followed != 0";
+            }
         }
 
         sql += " ORDER BY tbl_posts.timestamp DESC";
 
-        if (maxPosts > 0)
+        if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
+        }
 
-        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{tagName});
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             ReaderPostList posts = new ReaderPostList();
             if (cursor != null && cursor.moveToFirst()) {
@@ -457,14 +480,16 @@ public class ReaderPostTable {
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts) {
         String sql = "SELECT * FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
 
-        if (maxPosts > 0)
+        if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
+        }
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
         try {
             ReaderPostList posts = new ReaderPostList();
-            if (cursor == null || !cursor.moveToFirst())
+            if (cursor == null || !cursor.moveToFirst()) {
                 return posts;
+            }
 
             final PostColumnIndexes cols = new PostColumnIndexes(cursor);
             do {
@@ -479,8 +504,9 @@ public class ReaderPostTable {
 
 
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
-        if (post == null)
+        if (post == null) {
             return;
+        }
 
         String sql = "UPDATE tbl_posts SET is_reblogged=" + SqlUtils.boolToSql(isReblogged)
                   + " WHERE blog_id=? AND post_id=?";
@@ -570,14 +596,16 @@ public class ReaderPostTable {
     }
 
     private static ReaderPost getPostFromCursor(Cursor c, PostColumnIndexes cols) {
-        if (c == null)
+        if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
+        }
 
         ReaderPost post = new ReaderPost();
 
         // if column index object wasn't passed, create it now
-        if (cols == null)
+        if (cols == null) {
             cols = new PostColumnIndexes(c);
+        }
 
         post.postId = c.getLong(cols.idx_post_id);
         post.blogId = c.getLong(cols.idx_blog_id);

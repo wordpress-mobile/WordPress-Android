@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_item"
     style="?android:attr/spinnerDropDownItemStyle"
+    android:id="@+id/layout_item"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="fill_horizontal|center_vertical"
     android:padding="6dp">
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text"
         style="?android:attr/spinnerDropDownItemStyle"
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -18,8 +19,8 @@
         android:maxWidth="175dp"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
-        tools:text="text_name"
-        android:textColor="@color/reader_actionbar_text" />
+        android:textColor="@color/reader_actionbar_text"
+        tools:text="text_name" />
 
 </LinearLayout>
 

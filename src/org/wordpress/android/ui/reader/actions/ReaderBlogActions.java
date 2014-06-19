@@ -155,14 +155,14 @@ public class ReaderBlogActions {
                 return "/sites/" + blogId + "/follows/new";
             } else {
                 AppLog.w(T.READER, "following blog by url rather than id");
-                return "/read/following/mine/new?url=" + getEncodedDomainFromUrl(blogUrl);
+                return "/read/following/mine/new?url=" + UrlUtils.urlEncode(blogUrl);
             }
         } else {
             if (blogId != 0) {
                 return "/sites/" + blogId + "/follows/mine/delete";
             } else {
                 AppLog.w(T.READER, "unfollowing blog by url rather than id");
-                return "/read/following/mine/delete?url=" + getEncodedDomainFromUrl(blogUrl);
+                return "/read/following/mine/delete?url=" + UrlUtils.urlEncode(blogUrl);
             }
         }
     }
@@ -267,7 +267,7 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtils().get("/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtils().get("/sites/" + getEncodedDomainFromUrl(blogUrl), listener, errorListener);
+            WordPress.getRestClientUtils().get("/sites/" + UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(blogUrl)), listener, errorListener);
         }
     }
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
@@ -380,9 +380,5 @@ public class ReaderBlogActions {
                 listener,
                 errorListener);
         WordPress.requestQueue.add(request);
-    }
-
-    private static String getEncodedDomainFromUrl(final String url) {
-        return UrlUtils.urlEncode(UrlUtils.getDomainFromUrl(url));
     }
 }

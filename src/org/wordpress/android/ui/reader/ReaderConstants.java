@@ -15,7 +15,7 @@ public class ReaderConstants {
     static final int INTENT_READER_REBLOG      = 1001;
 
     // intent arguments / keys
-    static final String ARG_TAG_NAME          = "tag_name";
+    static final String ARG_TAG               = "tag";
     static final String ARG_BLOG_ID           = "blog_id";
     static final String ARG_BLOG_URL          = "blog_url";
     static final String ARG_POST_ID           = "post_id";

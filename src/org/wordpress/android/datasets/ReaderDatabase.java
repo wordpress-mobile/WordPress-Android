@@ -1,10 +1,8 @@
 package org.wordpress.android.datasets;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
@@ -21,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 76;
+    private static final int DB_VERSION = 78;
 
     /*
      * version history
@@ -35,6 +33,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   74 - added primary_tag to ReaderPostTable
      *   75 - added secondary_tag to ReaderPostTable
      *   76 - added feed_id to ReaderBlogTable
+     *   77 - restructured tag tables (ReaderTagTable)
+     *   78 - added tag_type to ReaderPostTable.tbl_post_tags
      */
 
     /*
@@ -43,9 +43,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     private static ReaderDatabase mReaderDb;
     private final static Object mDbLock = new Object();
     public static ReaderDatabase getDatabase() {
-        if (mReaderDb==null) {
+        if (mReaderDb == null) {
             synchronized(mDbLock) {
-                if (mReaderDb==null) {
+                if (mReaderDb == null) {
                     mReaderDb = new ReaderDatabase(WordPress.getContext());
                     // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
@@ -151,23 +151,27 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
                 // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
-                if (numCommentsDeleted > 0)
+                if (numCommentsDeleted > 0) {
                     AppLog.i(T.READER, String.format("%d comments purged", numCommentsDeleted));
+                }
 
                 // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
-                if (numLikesDeleted > 0)
+                if (numLikesDeleted > 0) {
                     AppLog.i(T.READER, String.format("%d likes purged", numLikesDeleted));
+                }
 
                 // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
-                if (numThumbsPurged > 0)
+                if (numThumbsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d thumbnails purged", numThumbsPurged));
+                }
 
                 // purge unattached tags
                 int numTagsPurged = ReaderTagTable.purge(db);
-                if (numTagsPurged > 0)
+                if (numTagsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d tags purged", numTagsPurged));
+                }
             }
             db.setTransactionSuccessful();
         } finally {
@@ -200,8 +204,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = input.read(buffer)) > 0)
+            while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
+            }
 
             output.flush();
             output.close();
