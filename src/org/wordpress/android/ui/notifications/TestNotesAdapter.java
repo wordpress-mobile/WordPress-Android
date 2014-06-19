@@ -87,10 +87,8 @@ class TestNotesAdapter extends CursorAdapter {
         noteViewHolder.txtLabel.setText(note.getSubject());
         if (note.isCommentType()) {
             noteViewHolder.txtLabel.setMaxLines(2);
-            //noteViewHolder.txtDetail.setText(note.getCommentPreview());
+            noteViewHolder.txtDetail.setText(note.getCommentPreview());
             noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
-            // TODO Real comment data ;)
-            noteViewHolder.txtDetail.setText("I can't stop drinking coffee. It's the elixir of life, I'm telling you!");
         } else {
             noteViewHolder.txtLabel.setMaxLines(3);
             noteViewHolder.txtDetail.setVisibility(View.GONE);

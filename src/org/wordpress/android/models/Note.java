@@ -17,7 +17,6 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
@@ -183,27 +182,28 @@ public class Note extends Syncable {
     }
 
     /**
-     * Removes HTML and cleans up newlines and whitespace
+     * Searches for 'comment' type in the note body and returns the 'text' value
      */
     public String getCommentPreview() {
         if (mCommentPreview == null) {
-            mCommentPreview = HtmlUtils.fastStripHtml(getCommentText());
-
-            // Trim down the comment preview if the comment text is too large.
-            if (mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
-                mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+            JSONArray noteBodyItems = getBody();
+            if (noteBodyItems != null) {
+                for (int i=0; i < noteBodyItems.length(); i++) {
+                    JSONObject bodyItem = noteBodyItems.optJSONObject(i);
+                    if (bodyItem != null && bodyItem.optString("type", "").equals(NOTE_COMMENT_TYPE)) {
+                        mCommentPreview = bodyItem.optString("text", "");
+                        break;
+                    }
+                }
             }
 
+            // Trim down the comment preview if the comment text is too large.
+            if (mCommentPreview != null && mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+            }
         }
-        return mCommentPreview;
-    }
 
-    /**
-     * For a comment note the text is in the body object's last item. It currently
-     * is only provided in HTML format.
-     */
-    String getCommentText() {
-        return queryJSON("body.items[last].html", "");
+        return mCommentPreview;
     }
 
     /**
