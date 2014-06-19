@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 
 import org.wordpress.android.WordPress;
@@ -60,5 +61,14 @@ public class StatsWebViewActivity extends AuthenticatedWebViewActivity {
         } catch (UnsupportedEncodingException e) {
             AppLog.e(AppLog.T.STATS, e);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        // The 2 lines below fix an issue where this activity has leaked window
+        // android.widget.ZoomButtonsController$Container
+        mWebView.getSettings().setBuiltInZoomControls(false);
+        mWebView.setVisibility(View.GONE);
+        super.onDestroy();
     }
 }
