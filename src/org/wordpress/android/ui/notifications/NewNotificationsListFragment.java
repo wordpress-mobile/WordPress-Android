@@ -54,6 +54,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         ListView listView = getListView();
         listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
         listView.setDividerHeight(1);
+        listView.setBackgroundColor(getResources().getColor(R.color.white));
         if (DisplayUtils.isLandscapeTablet(getActivity())) {
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         }

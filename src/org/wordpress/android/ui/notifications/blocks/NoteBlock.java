@@ -7,12 +7,16 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -88,13 +92,29 @@ public class NoteBlock {
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
-    public View configureView(View view) {
+    public View configureView(final View view) {
         final BasicNoteBlockHolder noteBlockHolder = (BasicNoteBlockHolder)view.getTag();
 
         // Note image
         if (hasImageMediaItem()) {
-            noteBlockHolder.getImageView().setImageUrl(mMediaItem.optString("url", ""), WordPress.imageLoader);
+            // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
+            WordPress.imageLoader.get(mMediaItem.optString("url", ""), new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    if (response.getBitmap() != null && view.getContext() != null) {
+                        noteBlockHolder.getImageView().setImageBitmap(response.getBitmap());
+                        Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
+                        noteBlockHolder.getImageView().startAnimation(pop);
+                        noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    noteBlockHolder.hideImageView();
+                }
+            });
         } else {
             noteBlockHolder.hideImageView();
         }
@@ -111,8 +131,10 @@ public class NoteBlock {
         if (!TextUtils.isEmpty(getNoteText())) {
             if (hasImageMediaItem() || hasVideoMediaItem()) {
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
+                noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
             } else {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
+                noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
             }
             noteBlockHolder.getTextView().setText(getNoteText());
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
@@ -131,7 +153,7 @@ public class NoteBlock {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
 
-        private NetworkImageView mImageView;
+        private ImageView mImageView;
         private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
@@ -144,13 +166,12 @@ public class NoteBlock {
             return mTextView;
         }
 
-        public NetworkImageView getImageView() {
+        public ImageView getImageView() {
             if (mImageView == null) {
-                mImageView = new NetworkImageView(mRootLayout.getContext());
+                mImageView = new ImageView(mRootLayout.getContext());
                 int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 220);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
                 mImageView.setLayoutParams(layoutParams);
                 mRootLayout.addView(mImageView, 0);
             }
@@ -163,7 +184,6 @@ public class NoteBlock {
                 mVideoView = new VideoView(mRootLayout.getContext());
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
-                layoutParams.setMargins(0, 0, 0, DisplayUtils.dpToPx(mRootLayout.getContext(), 16));
                 mVideoView.setLayoutParams(layoutParams);
                 mRootLayout.addView(mVideoView, 0);
 
