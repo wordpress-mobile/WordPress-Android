@@ -20,7 +20,7 @@ import org.wordpress.android.R;
  */
 
 public class WPLinkMovementMethod extends LinkMovementMethod {
-    private static WPLinkMovementMethod mMovementMethod;
+    protected static WPLinkMovementMethod mMovementMethod;
 
     public static WPLinkMovementMethod getInstance() {
         if (mMovementMethod == null)

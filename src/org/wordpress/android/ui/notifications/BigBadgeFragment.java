@@ -15,9 +15,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsWPLinkMovementMethod;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.WPLinkMovementMethod;
 
 public class BigBadgeFragment extends Fragment implements NotificationFragment {
     private Note mNote;
@@ -28,7 +28,7 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
         NetworkImageView badgeImageView = (NetworkImageView) view.findViewById(R.id.badge);
 
         TextView bodyTextView = (TextView) view.findViewById(R.id.body);
-        bodyTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        bodyTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
 
         if (getNote() != null) {
             String noteHTML = JSONUtil.queryJSON(getNote().toJSONObject(), "body.html", "");
