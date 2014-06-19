@@ -99,7 +99,8 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/WordPress.DropDownListView.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

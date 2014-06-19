@@ -7,7 +7,7 @@
 
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Dark.WordPress</item>
         <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
         <item name="android:actionBarStyle">@style/ActionBar.Solid.WordPress</item>
@@ -21,6 +21,10 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
 
         <item name="menuDrawerStyle">@style/MenuDrawer</item>
+    </style>
+
+    <style name="WordPress.DropDownListView.Light" parent="WordPress">
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
     <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
@@ -39,7 +43,7 @@
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.WordPress.Widget" parent="android:Theme.Holo">
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
     <style name="TabBarStyle.WordPress" parent="@android:style/Widget.Holo.ActionBar.TabBar">
@@ -56,8 +60,15 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
-    <style name="DropDownListView.WordPress" parent="android:Widget.Holo.ListView.DropDown">
+    <style name="DropDownListView.Dark.WordPress" parent="android:Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
+        <item name="android:fadeScrollbars">false</item>
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_white</item>
+    </style>
+
+    <style name="DropDownListView.Light.WordPress" parent="android:Widget.Holo.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
+        <item name="android:fadeScrollbars">false</item>
     </style>
 
     <style name="ActionBarTabStyle.WordPress" parent="android:Widget.Holo.ActionBar.TabView">
