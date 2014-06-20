@@ -56,14 +56,13 @@ public class NotificationsActivity extends WPActionBarActivity
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        super.onCreate(null);
+        createMenuDrawer(R.layout.notifications);
         // savedInstanceState will be non-null if activity is being re-created
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
         }
 
-        createMenuDrawer(R.layout.notifications);
         View fragmentContainer = findViewById(R.id.layout_fragment_container);
         mDualPane = fragmentContainer != null && getString(R.string.dual_pane_mode).equals(fragmentContainer.getTag());
 
