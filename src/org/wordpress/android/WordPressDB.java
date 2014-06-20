@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -423,7 +424,6 @@ public class WordPressDB {
         values.put("fullSizeImage", blog.isFullSizeImage());
         values.put("maxImageWidth", blog.getMaxImageWidth());
         values.put("maxImageWidthId", blog.getMaxImageWidthId());
-        values.put("location", blog.isLocation());
         values.put("postFormats", blog.getPostFormats());
         values.put("dotcom_username", blog.getDotcom_username());
         values.put("dotcom_password", encryptPassword(blog.getDotcom_password()));
@@ -491,7 +491,7 @@ public class WordPressDB {
         String[] fields =
                 new String[]{"url", "blogName", "username", "password", "httpuser", "httppassword", "imagePlacement",
                              "centerThumbnail", "fullSizeImage", "maxImageWidth", "maxImageWidthId",
-                             "blogId", "location", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
+                             "blogId", "dotcomFlag", "dotcom_username", "dotcom_password", "api_key",
                              "api_blogid", "wpVersion", "postFormats", "isScaledImage",
                              "scaledImgWidth", "homeURL", "blog_options", "isAdmin", "isHidden"};
         Cursor c = db.query(SETTINGS_TABLE, fields, "id=?", new String[]{Integer.toString(localId)}, null, null, null);
@@ -522,7 +522,6 @@ public class WordPressDB {
                 blog.setMaxImageWidth(c.getString(c.getColumnIndex("maxImageWidth")));
                 blog.setMaxImageWidthId(c.getInt(c.getColumnIndex("maxImageWidthId")));
                 blog.setRemoteBlogId(c.getInt(c.getColumnIndex("blogId")));
-                blog.setLocation(c.getInt(c.getColumnIndex("location")) > 0);
                 blog.setDotcomFlag(c.getInt(c.getColumnIndex("dotcomFlag")) > 0);
                 if (c.getString(c.getColumnIndex("dotcom_username")) != null) {
                     blog.setDotcom_username(c.getString(c.getColumnIndex("dotcom_username")));
@@ -901,8 +900,7 @@ public class WordPressDB {
             values.put("uploaded", post.isUploaded());
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
-            values.put("latitude", post.getLatitude());
-            values.put("longitude", post.getLongitude());
+            putPostLocation(post, values);
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 
@@ -940,6 +938,7 @@ public class WordPressDB {
             values.put("wp_post_format", post.getPostFormat());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
+            putPostLocation(post, values);
 
             result = db.update(POSTS_TABLE, values, "blogID=? AND id=? AND isPage=?",
                     new String[]{
@@ -950,6 +949,17 @@ public class WordPressDB {
         }
 
         return (result);
+    }
+
+    private void putPostLocation(Post post, ContentValues values) {
+        if (post.hasLocation()) {
+            PostLocation location = post.getLocation();
+            values.put("latitude", location.getLatitude());
+            values.put("longitude", location.getLongitude());
+        } else {
+            values.putNull("latitude");
+            values.putNull("longitude");
+        }
     }
 
     public List<Map<String, Object>> loadUploadedPosts(int blogID, boolean loadPages) {
@@ -1033,8 +1043,13 @@ public class WordPressDB {
                 post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
                 post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
                 post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-                post.setLatitude(c.getDouble(c.getColumnIndex("latitude")));
-                post.setLongitude(c.getDouble(c.getColumnIndex("longitude")));
+
+                int latColumnIndex = c.getColumnIndex("latitude");
+                int lngColumnIndex = c.getColumnIndex("longitude");
+                if (!c.isNull(latColumnIndex) && !c.isNull(lngColumnIndex)) {
+                    post.setLocation(c.getDouble(latColumnIndex), c.getDouble(lngColumnIndex));
+                }
+
                 post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
                 post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
                 post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));

@@ -131,32 +131,10 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/sectionLocation"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sectionTags"
-            android:layout_marginTop="8dp" >
-
-            <TextView
-                android:id="@+id/l_section3"
-                style="@style/WordPressSettingsSectionHeader"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/location" />
-
-            <CheckBox
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/l_section3"
-                android:text="@string/geotag" />
-        </RelativeLayout>
-
-        <RelativeLayout
             android:id="@+id/sectionSettings"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/sectionLocation"
+            android:layout_below="@id/sectionTags"
             android:layout_marginTop="8dp" >
 
             <TextView

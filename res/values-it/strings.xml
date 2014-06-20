@@ -182,9 +182,6 @@
 	<string name="share_action_post">Nuovo articolo</string>
 	<string name="share_action_media">Libreria multimediale</string>
 	<string name="file_error_create">Impossibile creare un file temporaneo per il caricamento. Assicurati che vi sia spazio libero sufficiente sul dispositivo.</string>
-	<string name="geotag">Geotagga gli articoli</string>
-	<string name="location_toast">Dati sulla posizione non ancora disponibili...</string>
-	<string name="view_map">Visualizza mappa</string>
 	<string name="location_not_found">Posizione non nota</string>
 	<string name="open_source_licenses">Licenze Open Source</string>
 	<string name="wpcom_blogs">Blog di WordPress.com</string>

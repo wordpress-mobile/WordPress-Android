@@ -211,7 +211,6 @@
 	<string name="share_action_post">Новая запись</string>
 	<string name="share_action_media">Медиа-библиотека</string>
 	<string name="file_error_create">Не удалось создать временный файл для выгрузки медиа. Убедитесь, что имеется достаточно свободного места на вашем устройстве.</string>
-	<string name="geotag">Геотеги записи</string>
 	<string name="stats_view_top_authors">Топ авторов</string>
 	<string name="stats_view_tags_and_categories">Тэги и категории</string>
 	<string name="stats_view_top_posts_and_pages">Топ страниц и записей</string>
@@ -247,7 +246,6 @@
 	<string name="blog_name_invalid">Недопустимый адрес сайта</string>
 	<string name="blog_title_invalid">Недопустимый заголовок сайта</string>
 	<string name="local_draft">Локальные черновики</string>
-	<string name="view_map">Карта просмотров</string>
 	<string name="location_not_found">Неизвестное местоположение</string>
 	<string name="open_source_licenses">Лицензия Open Source</string>
 	<string name="wpcom_blogs">Блоги WordPress.com</string>
@@ -264,7 +262,6 @@
 	<string name="http_authorization_required">Требуется авторизация</string>
 	<string name="http_credentials">Учетные данные HTTP(необязательно)</string>
 	<string name="stats_view_search_engine_terms">Условия поиска</string>
-	<string name="location_toast">Данные о местоположении еще не доступны...</string>
 	<string name="local_changes">Локальные изменения</string>
 	<string name="author_url">URL автора</string>
 	<string name="stats_view_totals_followers_and_shares">Общее число подписавшихся и поделившихся</string>

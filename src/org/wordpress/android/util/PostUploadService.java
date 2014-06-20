@@ -21,6 +21,7 @@ import android.webkit.MimeTypeMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -28,6 +29,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog.T;
@@ -371,22 +373,52 @@ public class PostUploadService extends Service {
             contentStruct.put("mt_excerpt", post.getPostExcerpt());
 
             contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
-            if (!post.isPage()) {
-                if (post.getLatitude() > 0) {
-                    Map<Object, Object> hLatitude = new HashMap<Object, Object>();
-                    hLatitude.put("key", "geo_latitude");
-                    hLatitude.put("value", post.getLatitude());
+            if (post.supportsLocation()) {
+                JSONObject remoteGeoLatitude = post.getCustomField("geo_latitude");
+                JSONObject remoteGeoLongitude = post.getCustomField("geo_longitude");
+                JSONObject remoteGeoPublic = post.getCustomField("geo_public");
 
-                    Map<Object, Object> hLongitude = new HashMap<Object, Object>();
-                    hLongitude.put("key", "geo_longitude");
-                    hLongitude.put("value",post.getLongitude());
+                Map<Object, Object> hLatitude = new HashMap<Object, Object>();
+                Map<Object, Object> hLongitude = new HashMap<Object, Object>();
+                Map<Object, Object> hPublic = new HashMap<Object, Object>();
 
-                    Map<Object, Object> hPublic = new HashMap<Object, Object>();
-                    hPublic.put("key", "geo_public");
-                    hPublic.put("value", 1);
+                try {
+                    if (remoteGeoLatitude != null) {
+                        hLatitude.put("id", remoteGeoLatitude.getInt("id"));
+                    }
 
+                    if (remoteGeoLongitude != null) {
+                        hLongitude.put("id", remoteGeoLongitude.getInt("id"));
+                    }
+
+                    if (remoteGeoPublic != null) {
+                        hPublic.put("id", remoteGeoPublic.getInt("id"));
+                    }
+
+                    if (post.hasLocation()) {
+                        PostLocation location = post.getLocation();
+                        if (!hLatitude.containsKey("id")) {
+                            hLatitude.put("key", "geo_latitude");
+                        }
+
+                        if (!hLongitude.containsKey("id")) {
+                            hLongitude.put("key", "geo_longitude");
+                        }
+
+                        if (!hPublic.containsKey("id")) {
+                            hPublic.put("key", "geo_public");
+                        }
+
+                        hLatitude.put("value", location.getLatitude());
+                        hLongitude.put("value", location.getLongitude());
+                        hPublic.put("value", 1);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.EDITOR, e);
+                }
+
+                if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
                     Object[] geo = {hLatitude, hLongitude, hPublic};
-
                     contentStruct.put("custom_fields", geo);
                 }
             }
