@@ -251,6 +251,7 @@
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
     <string name="post_signature">Post signature</string>
+    <string name="your_signature">Your signature:</string>
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>

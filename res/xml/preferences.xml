@@ -51,11 +51,12 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wp_pref_signature_enabled"
-            android:title="@string/add_tagline"/>
+            android:title="@string/post_signature"
+            android:summary="@string/add_tagline"/>
 
         <org.wordpress.android.util.WPEditTextPreference
             android:key="wp_pref_post_signature"
-            android:title="@string/post_signature"/>
+            android:title="@string/your_signature"/>
     </PreferenceCategory>
 
     <PreferenceCategory
