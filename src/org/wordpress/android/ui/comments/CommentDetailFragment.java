@@ -3,7 +3,6 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -651,9 +649,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
                         // refocus editor on failure and show soft keyboard
-                        mEditReply.requestFocus();
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(mEditReply, InputMethodManager.SHOW_IMPLICIT);
+                        EditTextUtils.showSoftInput(mEditReply);
                     }
                 }
             }
