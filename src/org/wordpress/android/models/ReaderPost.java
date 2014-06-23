@@ -143,6 +143,11 @@ public class ReaderPost {
             post.title = extractTitle(post.excerpt, 50);
         }
 
+        // remove html from title (rare, but does happen)
+        if (post.hasTitle() && post.title.contains("<") && post.title.contains(">")) {
+            post.title = HtmlUtils.stripHtml(post.title);
+        }
+
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
