@@ -89,7 +89,7 @@ public class ReaderSubsActivity extends Activity
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
         tabStrip.setTabIndicatorColorResource(R.color.blue_light);
-        tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_light));
+        tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
