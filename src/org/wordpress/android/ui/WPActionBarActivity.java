@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,8 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -709,6 +712,28 @@ public abstract class WPActionBarActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void refreshCurrentBlogContent() {
+        if (WordPress.getCurrentBlog() != null) {
+            ApiHelper.GenericCallback callback = new ApiHelper.GenericCallback() {
+                @Override
+                public void onSuccess() {
+                    if (isFinishing()) {
+                        return;
+                    }
+                    // refresh spinner in case a blog's name has changed
+                    refreshBlogSpinner(getBlogNames());
+                    updateMenuDrawer();
+                }
+
+                @Override
+                public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
+                }
+            };
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).executeOnExecutor(
+                    AsyncTask.THREAD_POOL_EXECUTOR, false);
+        }
+    }
+
     /**
      * This method is called when the user changes the active blog or hides all blogs
      */
@@ -738,6 +763,7 @@ public abstract class WPActionBarActivity extends Activity {
             }
         }
 
+        refreshCurrentBlogContent();
         if (shouldUpdateCurrentBlogStatsInBackground()) {
             WordPress.sUpdateCurrentBlogStats.forceRun();
         }
