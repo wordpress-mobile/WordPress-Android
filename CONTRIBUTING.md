@@ -1,5 +1,7 @@
 # Contributing
 
+If you're looking to contribute to the source code please continue reading, but if you want to help translating the app, please jump on [Contribute to translations](#contribute-to-translations).
+
 Here's a quick guide to create a pull request for your WordPress-Android patch:
 
 1. Fork the github project by visiting this URL: https://github.com/wordpress-mobile/WordPress-Android/fork
@@ -54,3 +56,7 @@ We use the [git flow branching model][git-flow].
 Note: `release/x.y` or `hotfix/x.y.z` will be merged back in `master` just after a new version is released. A new tag will be created and pushed at the same time.
 
 [git-flow]: http://nvie.com/posts/a-successful-git-branching-model/
+
+# Contribute to translations
+
+We use a tool called GlotPress to manage translations. The WordPress-Android GlotPress instance lives here: https://translate.wordpress.org/projects/android/dev - to add new translations or fix existing ones, you first need to create an account there.
