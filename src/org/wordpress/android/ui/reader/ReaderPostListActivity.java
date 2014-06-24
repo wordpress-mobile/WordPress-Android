@@ -308,6 +308,13 @@ public class ReaderPostListActivity extends WPActionBarActivity
      */
     @Override
     public void onPostSelected(long blogId, long postId) {
+        // skip if this activity no longer has the focus - this prevents the post detail from
+        // being shown multiple times if the user quickly taps a post more than once
+        if (!this.hasWindowFocus()) {
+            AppLog.i(T.READER, "post selected when activity not focused");
+            return;
+        }
+
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
             ReaderBlogIdPostIdList idList = listFragment.getBlogIdPostIdList();
