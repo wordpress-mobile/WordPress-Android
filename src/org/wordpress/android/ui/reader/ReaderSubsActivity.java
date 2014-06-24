@@ -88,7 +88,7 @@ public class ReaderSubsActivity extends Activity
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
-        tabStrip.setTabIndicatorColorResource(R.color.blue_light);
+        tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
         tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
