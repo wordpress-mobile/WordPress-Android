@@ -38,6 +38,7 @@ function checkENStrings() {
 	rm -f res/values-??/strings.xml
 	/bin/echo -n "Check for missing strings (slow)..."
 	./gradlew build > /dev/null 2>&1 && pOk || (pFail; ./gradlew build)
+	./gradlew clean
 	git checkout -- res/
 
 	# restore local changes
