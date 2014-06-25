@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
+import com.helpshift.Helpshift;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
@@ -55,11 +57,18 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
+        Bundle extras = intent.getExtras();
+
+        // Handle helpshift PNs
+        if (extras != null && TextUtils.equals(extras.getString("origin"), "helpshift")) {
+            AppLog.d(T.NOTIFS, "Helpshift message received: " + intent.toString());
+            Helpshift.handlePush(context, intent);
+            return;
+        }
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
 
-        Bundle extras = intent.getExtras();
 
         if (extras == null) {
             AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
@@ -252,7 +261,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onRegistered(Context context, String regId) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (regId != null && regId.length() > 0) {
+        if (!TextUtils.isEmpty(regId)) {
             // Get or create UUID for WP.com notes api
             String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
@@ -263,6 +272,11 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
+
+            boolean helpshiftEnabled = true;
+            if (helpshiftEnabled) {
+                Helpshift.registerDeviceToken(context, regId);
+            }
         }
     }
 

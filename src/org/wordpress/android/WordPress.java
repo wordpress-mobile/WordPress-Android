@@ -28,6 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.helpshift.Helpshift;
 
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
@@ -284,24 +285,44 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    public static void registerForCloudMessaging(Context ctx) {
-        if (WordPress.hasValidWPComCredentials(ctx)) {
-            String token = null;
+    /**
+     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
+     *
+     * @return registration id or empty string if it's not registered.
+     */
+    private static String gcmRegisterIfNot(Context context) {
+        String regId;
+        GCMRegistrar.checkDevice(context);
+        GCMRegistrar.checkManifest(context);
+        regId = GCMRegistrar.getRegistrationId(context);
+        String gcmId = BuildConfig.GCM_ID;
+        if (gcmId != null && TextUtils.isEmpty(regId)) {
+            GCMRegistrar.register(context, gcmId);
+        }
+        return regId;
+    }
+
+    public static void registerForCloudMessaging(Context context) {
+        String regId = gcmRegisterIfNot(context);
+
+        // Register to WordPress.com notifications
+        if (WordPress.hasValidWPComCredentials(context)) {
             try {
-                // Register for Google Cloud Messaging
-                GCMRegistrar.checkDevice(ctx);
-                GCMRegistrar.checkManifest(ctx);
-                token = GCMRegistrar.getRegistrationId(ctx);
-                String gcmId = BuildConfig.GCM_ID;
-                if (gcmId != null && token.equals("")) {
-                    GCMRegistrar.register(ctx, gcmId);
-                } else {
+                if (!TextUtils.isEmpty(regId)) {
                     // Send the token to WP.com in case it was invalidated
-                    NotificationUtils.registerDeviceForPushNotifications(ctx, token);
+                    NotificationUtils.registerDeviceForPushNotifications(context, regId);
                     AppLog.v(T.NOTIFS, "Already registered for GCM");
                 }
             } catch (Exception e) {
                 AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
+            }
+        }
+
+        // Register to Helpshift notifications
+        boolean helpshiftEnabled = true;
+        if (helpshiftEnabled) {
+            if (!TextUtils.isEmpty(regId)) {
+                Helpshift.registerDeviceToken(context, regId);
             }
         }
     }
