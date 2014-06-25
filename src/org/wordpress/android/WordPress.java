@@ -28,7 +28,6 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.helpshift.Helpshift;
 
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
@@ -41,10 +40,13 @@ import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
@@ -152,6 +154,7 @@ public class WordPress extends Application {
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
         }
+        HelpshiftHelper.init(this);
         versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
@@ -319,11 +322,8 @@ public class WordPress extends Application {
         }
 
         // Register to Helpshift notifications
-        boolean helpshiftEnabled = true;
-        if (helpshiftEnabled) {
-            if (!TextUtils.isEmpty(regId)) {
-                Helpshift.registerDeviceToken(context, regId);
-            }
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         }
     }
 

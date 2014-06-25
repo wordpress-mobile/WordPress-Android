@@ -16,15 +16,17 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
-import com.helpshift.Helpshift;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 
@@ -61,8 +63,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         // Handle helpshift PNs
         if (extras != null && TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            AppLog.d(T.NOTIFS, "Helpshift message received: " + intent.toString());
-            Helpshift.handlePush(context, intent);
+            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -273,9 +274,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
 
-            boolean helpshiftEnabled = true;
-            if (helpshiftEnabled) {
-                Helpshift.registerDeviceToken(context, regId);
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             }
         }
     }

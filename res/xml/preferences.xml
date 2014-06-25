@@ -109,6 +109,9 @@
             <intent android:targetClass="org.wordpress.android.ui.AppLogViewerActivity"
                     android:targetPackage="org.wordpress.android"/>
         </Preference>
+        <Preference android:key="wp_pref_contact_us"
+                    android:title="@string/contact_us"
+                    android:summary="@string/contact_us_pref_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory

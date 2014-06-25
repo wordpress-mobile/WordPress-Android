@@ -8,12 +8,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-import com.helpshift.Helpshift;
-
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AppLogViewerActivity;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -24,8 +24,7 @@ public class NuxHelpActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        boolean helpshiftEnabled = true;
-        if (helpshiftEnabled) {
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             initHelpshiftLayout();
         } else {
             initDefaultLayout();
@@ -45,9 +44,6 @@ public class NuxHelpActivity extends Activity {
     }
 
     private void initHelpshiftLayout() {
-        Helpshift.install(getApplication(), BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
-                BuildConfig.HELPSHIFT_API_ID);
-
         setContentView(R.layout.activity_nux_help_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
@@ -57,7 +53,7 @@ public class NuxHelpActivity extends Activity {
         helpCenterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Helpshift.showConversation(NuxHelpActivity.this);
+                HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
         });
     }
