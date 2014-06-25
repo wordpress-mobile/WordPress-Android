@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
+import com.helpshift.Helpshift;
+
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AppLogViewerActivity;
@@ -21,10 +24,46 @@ public class NuxHelpActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_nux_help);
+        boolean helpshiftEnabled = true;
+        if (helpshiftEnabled) {
+            initHelpshiftLayout();
+        } else {
+            initDefaultLayout();
+        }
+
+        // Init common elements
+        WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
+        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+
+        WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
+        applogButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
+            }
+        });
+    }
+
+    private void initHelpshiftLayout() {
+        Helpshift.install(getApplication(), BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+                BuildConfig.HELPSHIFT_API_ID);
+
+        setContentView(R.layout.activity_nux_help_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
+
+        WPTextView helpCenterButton = (WPTextView) findViewById(R.id.contact_us_button);
+        helpCenterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Helpshift.showConversation(NuxHelpActivity.this);
+            }
+        });
+    }
+
+    private void initDefaultLayout() {
+        setContentView(R.layout.activity_nux_help);
 
         WPTextView helpCenterButton = (WPTextView) findViewById(R.id.help_button);
         helpCenterButton.setOnClickListener(new OnClickListener() {
@@ -41,13 +80,5 @@ public class NuxHelpActivity extends Activity {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(FORUM_URL)));
             }
         });
-
-        WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
-        applogButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(v.getContext(), AppLogViewerActivity.class));
-            }
-        });
-    }
+   }
 }
