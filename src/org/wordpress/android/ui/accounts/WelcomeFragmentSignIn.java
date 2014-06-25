@@ -32,20 +32,24 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
+import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -423,7 +427,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         endProgress();
     }
 
-    private class SetupBlogTask extends AsyncTask<Void, Void, List<Object>> {
+    private class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object>>> {
         private SetupBlog mSetupBlog;
         private int mErrorMsgId;
 
@@ -451,9 +455,38 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     R.string.connecting_wpcom));
         }
 
+        private void refreshBlogContent(Map<String, Object> blogMap) {
+            String blogId = blogMap.get("blogid").toString();
+            String xmlRpcUrl = blogMap.get("xmlrpc").toString();
+            int intBlogId = StringUtils.stringToInt(blogId, -1);
+            if (intBlogId == -1) {
+                AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
+                return;
+            }
+            int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(intBlogId, xmlRpcUrl);
+            Blog firstBlog = WordPress.wpDB.instantiateBlogByLocalId(blogLocalId);
+            new ApiHelper.RefreshBlogContentTask(getActivity(), firstBlog, null).executeOnExecutor(
+                    AsyncTask.THREAD_POOL_EXECUTOR, false);
+        }
+
+        /**
+         * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
+         * Also when a user add a new self hosted blog, userBlogList contains only one element.
+         * TODO: when user's default blog autoselection is implemented, we should refresh the default one and
+         * not the first one.
+         * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
+         * user selects it.
+         */
+        private void refreshFirstBlogContent(List<Map<String, Object>> userBlogList) {
+            if (userBlogList != null && !userBlogList.isEmpty()) {
+                Map<String, Object> firstBlogMap = userBlogList.get(0);
+                refreshBlogContent(firstBlogMap);
+            }
+        }
+
         @Override
-        protected List doInBackground(Void... args) {
-            List userBlogList = mSetupBlog.getBlogList();
+        protected List<Map<String, Object>> doInBackground(Void... args) {
+            List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
             mErrorMsgId = mSetupBlog.getErrorMsgId();
             if (mErrorMsgId != 0) {
                 return null;
@@ -544,7 +577,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
 
         @Override
-        protected void onPostExecute(final List<Object> userBlogList) {
+        protected void onPostExecute(final List<Map<String, Object>> userBlogList) {
             if (mSetupBlog.isErroneousSslCertificates() && hasActivity()) {
                 askForSslTrust();
                 return;
@@ -559,6 +592,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 signInError();
                 return;
             }
+
+            refreshFirstBlogContent(userBlogList);
 
             if (mSelfHosted) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);

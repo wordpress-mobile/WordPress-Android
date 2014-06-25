@@ -410,8 +410,8 @@ public class WordPress extends Application {
         return currentBlog;
     }
 
-    /*
-     * returns the blogID of the current blog
+    /**
+     * returns the blogID of the current blog or -1 if current blog is null
      */
     public static int getCurrentRemoteBlogId() {
         return (getCurrentBlog() != null ? getCurrentBlog().getRemoteBlogId() : -1);
