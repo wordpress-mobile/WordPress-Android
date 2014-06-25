@@ -38,6 +38,9 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
             y += widget.getScrollY();
 
             Layout layout = widget.getLayout();
+            if ( layout == null ) {
+                return super.onTouchEvent(widget, buffer, event);
+            }
             int line = layout.getLineForVertical(y);
             int off = layout.getOffsetForHorizontal(line, x);
 
@@ -46,7 +49,7 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                 String url = link[0].getURL();
                 AppLog.d(AppLog.T.UTILS, "Tapped on the Link: " + url);
                 if (url.startsWith("https://wordpress.com/my-stats")
-                        || url.startsWith("http://wordpress.com/my-stats/")) {
+                        || url.startsWith("http://wordpress.com/my-stats")) {
                     // make sure to load the no-chrome version of Stats over https
                     url = UrlUtils.makeHttps(url);
                     if (url.contains("?")) {
