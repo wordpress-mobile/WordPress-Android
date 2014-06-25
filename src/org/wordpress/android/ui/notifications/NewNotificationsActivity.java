@@ -43,6 +43,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
+    public static final int NOTIFICATION_TRANSITION_DURATION = 300;
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String TAG_LIST_VIEW = "listView";
     private static final String TAG_DETAIL_VIEW = "detailView";
@@ -243,7 +244,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
             if (notesBucket != null) {
                 Note note = notesBucket.get(noteId);
                 if (note != null) {
-                    openNote(note);
+                    openNote(note, 0);
                 }
             }
         } catch (BucketObjectMissingException e) {
@@ -277,7 +278,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note) {
+    private Fragment getDetailFragmentForNote(Note note, float yPosition) {
         if (note == null)
             return null;
 
@@ -291,17 +292,17 @@ public class NewNotificationsActivity extends WPActionBarActivity
             if (isPost) {
                 return ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
             } else {
-                return NotificationsDetailListFragment.newInstance(note);
+                return NotificationsDetailListFragment.newInstance(note, yPosition);
             }
         } else {
-            return NotificationsDetailListFragment.newInstance(note);
+            return NotificationsDetailListFragment.newInstance(note, yPosition);
         }
     }
 
     /**
      * Open a note fragment based on the type of note
      */
-    private void openNote(final Note note) {
+    private void openNote(final Note note, float yOffset) {
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
@@ -314,6 +315,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
             note.markAsRead();
         }
 
+
         // If we are already showing the NotificationDetailListFragment on a tablet, update note.
         if (DisplayUtils.isLandscapeTablet(this) && mDetailFragment instanceof NotificationsDetailListFragment) {
             NotificationsDetailListFragment detailListFragment = (NotificationsDetailListFragment) mDetailFragment;
@@ -325,11 +327,18 @@ public class NewNotificationsActivity extends WPActionBarActivity
         }
 
         // create detail fragment for this note type
-        mDetailFragment = getDetailFragmentForNote(note);
+        mDetailFragment = getDetailFragmentForNote(note, yOffset);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.layout_fragment_container, mDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (!DisplayUtils.isLandscapeTablet(this)) {
+            // will show custom animation on phones
+            ft.setTransition(1);
+        } else {
+            // tablets will use standard fade
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        }
+        ft.replace(R.id.layout_fragment_container, mDetailFragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -369,13 +378,13 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
     private class NoteClickListener implements NewNotificationsListFragment.OnNoteClickListener {
         @Override
-        public void onClickNote(Note note) {
+        public void onClickNote(Note note, float yPosition) {
             if (note == null)
                 return;
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNote(note);
+            openNote(note, yPosition);
         }
     }
 

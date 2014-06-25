@@ -3,27 +3,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="@dimen/margin_extra_large"
     android:background="@color/white"
-    android:gravity="center_vertical">
+    android:orientation="vertical">
 
-    <org.wordpress.android.widgets.NoticonTextView
-        android:id="@+id/notification_header_icon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:background="@drawable/shape_oval_grey"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textSize="26sp"
-        android:layout_marginRight="@dimen/margin_extra_large"
-        android:textColor="@color/white" />
+    <LinearLayout
+        android:id="@+id/notification_header_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="@dimen/margin_extra_large"
+        android:orientation="horizontal">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/notification_header_subject"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_medium"
-        android:textColor="@color/notifications_blue" />
+        <org.wordpress.android.widgets.NoticonTextView
+            android:id="@+id/notification_header_icon"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:background="@drawable/shape_oval_grey"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/notification_header_subject"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/notifications_blue"
+            android:textSize="@dimen/text_sz_medium" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

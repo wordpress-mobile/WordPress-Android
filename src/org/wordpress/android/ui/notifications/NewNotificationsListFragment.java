@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,7 +38,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(Note note);
+        public void onClickNote(Note note, float yPosition);
     }
 
     @Override
@@ -129,9 +131,18 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        if (!hasActivity()) return;
+
+        if (!DisplayUtils.isLandscapeTablet(getActivity())) {
+            // Animate the row to the top to match with fragment transition animation
+            v.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
+            float yOffset = -v.getY();
+            v.animate().translationY(yOffset).alpha(0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+        }
+
         Note note = mNotesAdapter.getNote(position);
         if (note != null && mNoteClickListener != null) {
-            mNoteClickListener.onClickNote(note);
+            mNoteClickListener.onClickNote(note, v.getY());
             mNotesAdapter.setSelectedPosition(position);
         }
     }
@@ -189,7 +200,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
                     mShouldLoadFirstNote = false;
                     Note note = mNotesAdapter.getNote(0);
                     if (note != null && mNoteClickListener != null) {
-                        mNoteClickListener.onClickNote(note);
+                        mNoteClickListener.onClickNote(note, 0);
                         getListView().setItemChecked(0, true);
                     }
                 }
@@ -234,5 +245,17 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     private boolean hasActivity() {
         return getActivity() != null;
+    }
+
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        if (transit == 0) {
+            return null;
+        }
+
+        ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "alpha", 0.0f, 1.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+        ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+
+        return enter ? enterAnimation : exitAnimation;
     }
 }
