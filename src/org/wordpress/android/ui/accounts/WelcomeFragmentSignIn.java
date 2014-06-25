@@ -464,6 +464,21 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     AsyncTask.THREAD_POOL_EXECUTOR, false);
         }
 
+        /**
+         * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
+         * Also when a user add a new self hosted blog, userBlogList contains only one element.
+         * TODO: when user's default blog autoselection is implemented, we should refresh the default one and
+         * not the first one.
+         * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
+         * user selects it.
+         */
+        private void refreshFirstBlogContent(List<Map<String, Object>> userBlogList) {
+            if (userBlogList != null && !userBlogList.isEmpty()) {
+                Map<String, Object> firstBlogMap = userBlogList.get(0);
+                refreshBlogContent(firstBlogMap);
+            }
+        }
+
         @Override
         protected List<Map<String, Object>> doInBackground(Void... args) {
             List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
@@ -473,17 +488,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
             if (userBlogList != null) {
                 mSetupBlog.addBlogs(userBlogList);
-
-                // Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
-                // Also when a user add a new self hosted blog, userBlogList contains only one element.
-                // TODO: when user's default blog autoselection is implemented, we should refresh the default one and
-                // not the first one.
-                // We don't want to refresh the whole list because it can be huge and each blog is refreshed when
-                // user selects it.
-                if (!userBlogList.isEmpty()) {
-                    Map<String, Object> firstBlogMap = userBlogList.get(0);
-                    refreshBlogContent(firstBlogMap);
-                }
             }
             mErrorMsgId = mSetupBlog.getErrorMsgId();
             if (mErrorMsgId != 0) {
@@ -583,6 +587,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 signInError();
                 return;
             }
+
+            refreshFirstBlogContent(userBlogList);
 
             if (mSelfHosted) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
