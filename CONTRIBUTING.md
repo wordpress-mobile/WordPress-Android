@@ -10,7 +10,7 @@ Here's a quick guide to create a pull request for your WordPress-Android patch:
 
         $ git clone git@github.com:YOUR-GITHUB-USERNAME/WordPress-Android.git
 
-3. Create a new branch in your git repository. You probably want `develop` branch as your root, see [Notes about branching](#notes-about-branching) below.
+3. Create a new branch in your git repository (branched from `develop` - see [Notes about branching](#notes-about-branching) below).
 
         $ cd WordPress-Android/
         $ git checkout develop
