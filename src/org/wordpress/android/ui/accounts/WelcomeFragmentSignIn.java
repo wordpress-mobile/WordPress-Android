@@ -39,6 +39,7 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
@@ -457,8 +458,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         private void refreshBlogContent(Map<String, Object> blogMap) {
             String blogId = blogMap.get("blogid").toString();
             String xmlRpcUrl = blogMap.get("xmlrpc").toString();
-            int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(Integer.parseInt(blogId),
-                    xmlRpcUrl);
+            int intBlogId = StringUtils.stringToInt(blogId, -1);
+            if (intBlogId == -1) {
+                AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
+                return;
+            }
+            int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(intBlogId, xmlRpcUrl);
             Blog firstBlog = WordPress.wpDB.instantiateBlogByLocalId(blogLocalId);
             new ApiHelper.RefreshBlogContentTask(getActivity(), firstBlog, null).executeOnExecutor(
                     AsyncTask.THREAD_POOL_EXECUTOR, false);
