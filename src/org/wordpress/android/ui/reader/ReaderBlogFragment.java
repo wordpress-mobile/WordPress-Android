@@ -84,7 +84,7 @@ public class ReaderBlogFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setAdapter(getBlogAdapter());
-        getBlogAdapter().refresh();
+        refresh();
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ReaderBlogFragment extends Fragment
         }
 
         UserPrefs.setReaderRecommendedBlogOffset(newOffset);
-        getBlogAdapter().refresh();
+        refresh();
     }
 
     void refresh() {
