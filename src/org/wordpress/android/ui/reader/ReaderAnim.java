@@ -122,25 +122,31 @@ public class ReaderAnim {
     /*
      * animation when user taps a like/follow/reblog button
      */
+    private static enum ReaderButton { LIKE, REBLOG, FOLLOW }
     public static void animateLikeButton(final View target) {
-        animateButton(target, true);
+        animateButton(target, ReaderButton.LIKE);
     }
     public static void animateReblogButton(final View target) {
-        animateButton(target, true);
+        animateButton(target, ReaderButton.REBLOG);
     }
     public static void animateFollowButton(final View target) {
-        animateButton(target, false);
+        animateButton(target, ReaderButton.FOLLOW);
     }
-    private static void animateButton(final View target, boolean rotate) {
+    private static void animateButton(final View target, ReaderButton button) {
         if (target == null) {
             return;
         }
 
-        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, 1f, 1.5f);
+        // follow button uses different scaling and doesn't rotate
+        float startScale = 1f;
+        float endScale = (button == ReaderButton.FOLLOW ? 0.75f : 1.5f);
+        boolean rotate = (button != ReaderButton.FOLLOW);
+
+        ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, startScale, endScale);
         animX.setRepeatMode(ValueAnimator.REVERSE);
         animX.setRepeatCount(1);
 
-        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 1f, 1.5f);
+        ObjectAnimator animY = ObjectAnimator.ofFloat(target, View.SCALE_Y, startScale, endScale);
         animY.setRepeatMode(ValueAnimator.REVERSE);
         animY.setRepeatCount(1);
 
