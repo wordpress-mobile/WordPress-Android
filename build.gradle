@@ -71,6 +71,7 @@ android {
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
+        compile 'com.cocosw:undobar:1.+@aar'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
