@@ -20,13 +20,6 @@ public class AniUtils {
             target.setVisibility(View.VISIBLE);
     }
 
-    /*
-     * called when user clicks an action view (like button, follow button, etc.)
-     */
-    public static void zoomAction(final View target) {
-        startAnimation(target, R.anim.reader_zoom_action);
-    }
-
     public static void flyIn(View target) {
         Context context = target.getContext();
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.reader_flyin);
