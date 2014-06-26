@@ -90,42 +90,9 @@ public class NotificationsDetailFragment extends Fragment implements Notificatio
             return null;
         }
 
-        ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "translationY", mYPosition, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
-        enterAnimation.addListener(mAnimationCompletedListener);
+        ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "translationY", mYPosition, 0.0f);
+        enterAnimation.setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
 
         return enterAnimation;
     }
-
-    Animator.AnimatorListener mAnimationCompletedListener = new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            /*if (mHeaderWrapper != null) {
-                // 'overshoot' animate the content of the header view
-                float inertia = yOffset / NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION;
-                float overshootPixels = inertia * 3;
-
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playSequentially(ObjectAnimator.ofFloat(mHeaderWrapper, "translationY", -overshootPixels),
-                ObjectAnimator.ofFloat(mHeaderWrapper, "translationY", 0.0f));
-                animatorSet.setDuration(80);
-                animatorSet.setInterpolator(new DecelerateInterpolator());
-                animatorSet.start();
-            }*/
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    };
 }

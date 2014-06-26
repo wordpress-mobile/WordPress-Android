@@ -26,51 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Note extends Syncable {
-
-    public static class Schema extends BucketSchema<Note> {
-
-        static public final String NAME = "note";
-        static public final String TIMESTAMP_INDEX = "timestamp";
-
-        private static final Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
-
-            @Override
-            public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<Index>(1);
-                try {
-                    indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
-                } catch (NumberFormatException e) {
-                    // note will not have an indexed timestamp so it will
-                    // show up at the end of a query sorting by timestamp
-                    android.util.Log.e("WordPress", "Failed to index timestamp", e);
-                }
-                return indexes;
-            }
-
-        };
-
-        public Schema() {
-            // save an index with a timestamp
-            addIndex(sTimestampIndexer);
-        }
-
-        @Override
-        public String getRemoteName() {
-            return NAME;
-        }
-
-        @Override
-        public Note build(String key, JSONObject properties) {
-            return new Note(properties);
-        }
-
-        public void update(Note note, JSONObject properties) {
-            note.updateJSON(properties);
-        }
-
-    }
-
-
     private static final String TAG = "NoteModel";
 
     // Maximum character length for a comment preview
@@ -384,15 +339,15 @@ public class Note extends Syncable {
     }
 
     public int getBlogId() {
-        return mBlogId;
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.site", 0);
     }
 
     public int getPostId() {
-        return mPostId;
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.post", 0);
     }
 
     public long getCommentId() {
-        return mCommentId;
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
     }
 
     public long getCommentParentId() {
@@ -441,5 +396,48 @@ public class Note extends Syncable {
         public String getRestPath() {
             return mRestPath;
         }
+    }
+
+    public static class Schema extends BucketSchema<Note> {
+
+        static public final String NAME = "note";
+        static public final String TIMESTAMP_INDEX = "timestamp";
+
+        private static final Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
+
+            @Override
+            public List<Index> index(Note note) {
+                List<Index> indexes = new ArrayList<Index>(1);
+                try {
+                    indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
+                } catch (NumberFormatException e) {
+                    // note will not have an indexed timestamp so it will
+                    // show up at the end of a query sorting by timestamp
+                    android.util.Log.e("WordPress", "Failed to index timestamp", e);
+                }
+                return indexes;
+            }
+
+        };
+
+        public Schema() {
+            // save an index with a timestamp
+            addIndex(sTimestampIndexer);
+        }
+
+        @Override
+        public String getRemoteName() {
+            return NAME;
+        }
+
+        @Override
+        public Note build(String key, JSONObject properties) {
+            return new Note(properties);
+        }
+
+        public void update(Note note, JSONObject properties) {
+            note.updateJSON(properties);
+        }
+
     }
 }

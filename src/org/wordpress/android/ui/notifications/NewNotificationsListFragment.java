@@ -137,7 +137,9 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
             // Animate the row to the top to match with fragment transition animation
             v.setBackgroundColor(getActivity().getResources().getColor(R.color.white));
             float yOffset = -v.getY();
-            v.animate().translationY(yOffset).alpha(0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+            v.animate().translationY(yOffset)
+                    .alpha(0.0f)
+                    .setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
         }
 
         Note note = mNotesAdapter.getNote(position);
