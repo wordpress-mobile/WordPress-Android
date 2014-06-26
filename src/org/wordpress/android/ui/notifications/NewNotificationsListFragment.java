@@ -249,13 +249,13 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        if (transit == 0) {
+        if (transit == 0 || enter) {
             return null;
         }
 
-        ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "alpha", 0.0f, 1.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
-        ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+        ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f)
+                .setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
 
-        return enter ? enterAnimation : exitAnimation;
+        return exitAnimation;
     }
 }

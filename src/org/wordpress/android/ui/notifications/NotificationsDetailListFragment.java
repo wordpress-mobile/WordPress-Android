@@ -91,6 +91,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mHeaderWrapper = mHeaderView.findViewById(R.id.notification_header_wrapper);
 
                 getListView().addHeaderView(mHeaderView);
+            } else if (getListView().getHeaderViewsCount() == 0) {
+                getListView().addHeaderView(mHeaderView);
             }
 
             NoticonTextView noticonTextView = (NoticonTextView) mHeaderView.findViewById(R.id.notification_header_icon);
@@ -204,16 +206,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        if (transit == 0) {
+        if (transit == 0 || !enter) {
             return null;
         }
 
         ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "translationY", yOffset, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
         enterAnimation.addListener(mAnimationCompletedListener);
 
-        ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
-
-        return enter ? enterAnimation : exitAnimation;
+        return enterAnimation;
     }
 
     Animator.AnimatorListener mAnimationCompletedListener = new Animator.AnimatorListener() {

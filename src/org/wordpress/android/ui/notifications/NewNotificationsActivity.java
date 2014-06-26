@@ -352,7 +352,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (mDetailFragment != null) {
             ft.hide(mDetailFragment);
         }
-        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -365,7 +365,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (mDetailFragment != null) {
             ft.hide(mDetailFragment);
         }
-        ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.replace(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
