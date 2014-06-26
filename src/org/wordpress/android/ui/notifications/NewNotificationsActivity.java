@@ -282,21 +282,26 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (note == null)
             return null;
 
+        // detail fragment, contains header
+        NotificationsDetailFragment fragment = NotificationsDetailFragment.newInstance(note, yPosition);
+
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            return CommentDetailFragment.newInstance(note);
+            fragment.setFragment(CommentDetailFragment.newInstance(note));
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
             boolean isPost = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
             if (isPost) {
-                return ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
+                fragment.setFragment(ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId()));
             } else {
-                return NotificationsDetailListFragment.newInstance(note, yPosition);
+                fragment.setFragment(NotificationsDetailListFragment.newInstance(note));
             }
         } else {
-            return NotificationsDetailListFragment.newInstance(note, yPosition);
+            fragment.setFragment(NotificationsDetailListFragment.newInstance(note));
         }
+
+        return fragment;
     }
 
     /**
@@ -309,15 +314,16 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         mSelectedNoteId = note.getId();
 
+        // TODO: Enable once using live data
         // mark the note as read if it's unread
-        if (note.isUnread()) {
+        /*if (note.isUnread()) {
             // mark as read which syncs with simperium
             note.markAsRead();
-        }
+        }*/
 
 
         // If we are already showing the NotificationDetailListFragment on a tablet, update note.
-        if (DisplayUtils.isLandscapeTablet(this) && mDetailFragment instanceof NotificationsDetailListFragment) {
+        if (DisplayUtils.isLandscapeTablet(this)) {
             NotificationsDetailListFragment detailListFragment = (NotificationsDetailListFragment) mDetailFragment;
             detailListFragment.setNote(note);
             detailListFragment.reloadNoteBlocks();
@@ -333,7 +339,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         FragmentTransaction ft = fm.beginTransaction();
         if (!DisplayUtils.isLandscapeTablet(this)) {
             // will show custom animation on phones
-            ft.setTransition(1);
+            ft.setTransition(NotificationsDetailFragment.NOTIFICATIONS_TRANSIT_ID);
         } else {
             // tablets will use standard fade
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -352,7 +358,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (mDetailFragment != null) {
             ft.hide(mDetailFragment);
         }
-        ft.replace(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
@@ -365,7 +371,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (mDetailFragment != null) {
             ft.hide(mDetailFragment);
         }
-        ft.replace(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }

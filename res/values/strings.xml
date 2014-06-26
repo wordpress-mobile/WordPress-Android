@@ -114,7 +114,7 @@
     <string name="media_edit_description_hint">Enter a description here</string>
     <string name="media_edit_success">Updated</string>
     <string name="media_edit_failure">Failed to update</string>
-    <string name="saving">Saving&#8230;</string>
+    <string name="saving">Saving…</string>
 
     <!-- Delete Media -->
     <string name="confirm_delete_media">Are you sure you want to delete this media item?</string>
@@ -122,7 +122,7 @@
     <string name="wait_until_upload_completes">Wait until upload completes</string>
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="media_empty_list">No media</string>
-    <string name="media_empty_list_custom_date">No media in this time&#160;interval</string>
+    <string name="media_empty_list_custom_date">No media in this time interval</string>
     <string name="delete">Delete</string>
 
     <!-- tab titles -->
@@ -151,14 +151,14 @@
 
     <!-- page view -->
     <string name="title">Title</string>
-    <string name="pages_empty_list">No pages yet. Why not create&#160;one?</string>
+    <string name="pages_empty_list">No pages yet. Why not create one?</string>
     <string name="page_id">Page</string>
     <string name="page_settings">Page settings</string>
 
     <!-- posts tab -->
     <string name="untitled">Untitled</string>
     <string name="local_draft">Local draft</string>
-    <string name="posts_empty_list">No posts yet. Why not create&#160;one?</string>
+    <string name="posts_empty_list">No posts yet. Why not create one?</string>
     <string name="empty_list_default">This list is empty</string>
 
     <!-- post view -->
@@ -178,11 +178,11 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="loading_posts">Loading posts&#8230;</string>
-    <string name="loading_pages">Loading pages&#8230;</string>
+    <string name="loading_posts">Loading posts…</string>
+    <string name="loading_pages">Loading pages…</string>
 
     <!-- reload drop down -->
-    <string name="loading">Loading&#8230;</string>
+    <string name="loading">Loading…</string>
 
     <!-- comment view -->
     <string name="on">on</string>
@@ -262,6 +262,7 @@
 
     <!-- drafts -->
 
+
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
     <string name="select_video">Select a video from gallery</string>
@@ -282,7 +283,7 @@
 
     <!-- action from share intents -->
     <string name="select_a_blog">Select a blog</string>
-    <string name="share_action_title">Add to &#8230;</string>
+    <string name="share_action_title">Add to …</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
     <string name="share_action">Share</string>
@@ -371,8 +372,7 @@
     <!-- stats: totals, followers, and shares -->
     <string name="stats_totals_followers_shares_header_content">Content</string>
     <string name="stats_totals_followers_shares_header_followers">Followers</string>
-    <string name="stats_totals_followers_shares_header_includes_publicize"
-            comment="part of the full string: _123 Followers (includes &lt;a href=..&gt;Publicize&lt;a&gt;)_ the %s replaced by &lt;a href=...&gt;">includes %sPublicize</string>
+    <string name="stats_totals_followers_shares_header_includes_publicize" comment="part of the full string: _123 Followers (includes &lt;a href=..>Publicize&lt;a>)_ the %s replaced by &lt;a href=...>">includes %sPublicize</string>
     <string name="stats_totals_followers_shares_header_shares">Shares</string>
     <string name="stats_totals_followers_shares_label_posts">Posts</string>
     <string name="stats_totals_followers_shares_label_categories">Categories</string>
@@ -478,7 +478,7 @@
         <item>Video</item>
     </string-array>
 
-    <!--  Menu Buttons -->
+    <!-- Menu Buttons -->
     <string name="new_post">New post</string>
     <string name="new_page">New page</string>
     <string name="new_media">New media</string>
@@ -490,6 +490,7 @@
 
     <!-- Image Alignment -->
     <string name="image_alignment">Alignment</string>
+
     <string-array name="alignment_array">
         <item>None</item>
         <item>Left</item>
@@ -508,14 +509,13 @@
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
     <string name="remote_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
-
     <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>
     <string name="add_account_blog_url">Blog address</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="blogusername">blogusername</string>
 
-    <!--  Error Messages -->
+    <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
     <!-- The 4 following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
@@ -533,7 +533,7 @@
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
     <string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 
-    <!--  Image Descriptions for Accessibility -->
+    <!-- Image Descriptions for Accessibility -->
     <string name="content_description_add_media">Add media</string>
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="manage">Manage</string>
@@ -562,6 +562,7 @@
        ***
     -->
 
+
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="reader_timespan_now">now</string>
 
@@ -587,7 +588,7 @@
     <!-- subject line when sharing a reader url -->
     <string name="reader_share_subject">Shared from %s</string>
 
-    <!-- menu text-->
+    <!-- menu text -->
     <string name="reader_menu_tags">Tags</string>
 
     <!-- button text -->
@@ -618,7 +619,7 @@
     <string name="reader_label_reached_last_post">You\'ve reached the end</string>
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
 
-    <!-- like counts liking users activity-->
+    <!-- like counts liking users activity -->
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
@@ -646,14 +647,14 @@
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
 
     <!-- empty list/grid text -->
-    <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>
+    <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
-    <string name="reader_empty_followed_tags">You don\'t follow any&#160;tags</string>
+    <string name="reader_empty_followed_tags">You don\'t follow any tags</string>
     <string name="reader_empty_popular_tags">No popular tags</string>
     <string name="reader_empty_recommended_blogs">No recommended blogs</string>
-    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
-    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
-    <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
+    <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
+    <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
+    <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
 
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
@@ -663,8 +664,8 @@
     <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
-    <string name="create_account_wpcom">Create an account on&#160;WordPress.com</string>
-    <string name="create_new_blog_wpcom">Create WordPress.com&#160;blog</string>
+    <string name="create_account_wpcom">Create an account on WordPress.com</string>
+    <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
     <string name="creating_your_account">Creating your account</string>
@@ -675,7 +676,7 @@
     <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
     <string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
     <string name="email_hint">Email address</string>
-    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms&#160;of&#160;Service%2$s</string>
+    <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Username or email</string>
     <string name="site_address">Your self-hosted address (URL)</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
@@ -684,7 +685,7 @@
     <string name="username_not_allowed">Username not allowed</string>
     <string name="email_cant_be_used_to_signup">You can\'t use that email address to signup. We are having problems with them blocking some of our email. Use another email provider.</string>
     <string name="username_must_be_at_least_four_characters">Username must be at least 4 characters</string>
-    <string name="username_contains_invalid_characters">Username may not contain the character &#8220;_&#8221;</string>
+    <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
     <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
@@ -696,7 +697,7 @@
     <string name="blog_name_not_allowed">That site address isn\'t allowed</string>
     <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters</string>
-    <string name="blog_name_contains_invalid_characters">Site address may not contain the character &#8220;_&#8221;</string>
+    <string name="blog_name_contains_invalid_characters">Site address may not contain the character “_”</string>
     <string name="blog_name_cant_be_used">You may not use that site address</string>
     <string name="blog_name_only_lowercase_letters_and_numbers">Site address can only contain lowercase letters (a-z) and numbers</string>
     <string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
@@ -719,7 +720,7 @@
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
-    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new&#160;ones</string>
+    <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
     <string name="forums">Forums</string>
     <string name="help_center">Help center</string>
     <string name="ssl_certificate_trust">Trust</string>
@@ -731,4 +732,6 @@
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

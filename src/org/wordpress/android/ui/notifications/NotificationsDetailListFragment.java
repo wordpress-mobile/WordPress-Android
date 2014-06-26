@@ -3,9 +3,6 @@
  */
 package org.wordpress.android.ui.notifications;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -29,26 +25,20 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.NoticonTextView;
-import org.wordpress.android.widgets.WPTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
-    private static float yOffset;
     private Note mNote;
     private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
-    private View mHeaderView;
-    private View mHeaderWrapper;
 
     public NotificationsDetailListFragment() {
     }
 
-    public static NotificationsDetailListFragment newInstance(final Note note, float yPosition) {
+    public static NotificationsDetailListFragment newInstance(final Note note) {
         NotificationsDetailListFragment fragment = new NotificationsDetailListFragment();
         fragment.setNote(note);
-        yOffset = yPosition;
         return fragment;
     }
 
@@ -84,24 +74,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     public void reloadNoteBlocks() {
-        // Add header if we have a subject
-        if (hasActivity() && mNote.getSubject() != null) {
-            if (mHeaderView == null) {
-                mHeaderView = getActivity().getLayoutInflater().inflate(R.layout.notifications_detail_header, null);
-                mHeaderWrapper = mHeaderView.findViewById(R.id.notification_header_wrapper);
-
-                getListView().addHeaderView(mHeaderView);
-            } else if (getListView().getHeaderViewsCount() == 0) {
-                getListView().addHeaderView(mHeaderView);
-            }
-
-            NoticonTextView noticonTextView = (NoticonTextView) mHeaderView.findViewById(R.id.notification_header_icon);
-            noticonTextView.setText(mNote.getNoticonCharacter());
-
-            WPTextView subjectTextView = (WPTextView) mHeaderView.findViewById(R.id.notification_header_subject);
-            subjectTextView.setText(mNote.getSubject());
-        }
-
         new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -203,50 +175,4 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
         }
     }
-
-    @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        if (transit == 0 || !enter) {
-            return null;
-        }
-
-        ObjectAnimator enterAnimation = ObjectAnimator.ofFloat(null, "translationY", yOffset, 0.0f).setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
-        enterAnimation.addListener(mAnimationCompletedListener);
-
-        return enterAnimation;
-    }
-
-    Animator.AnimatorListener mAnimationCompletedListener = new Animator.AnimatorListener() {
-        @Override
-        public void onAnimationStart(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            if (mHeaderWrapper != null) {
-                // 'overshoot' animate the content of the header view
-                float inertia = yOffset / NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION;
-                float overshootPixels = inertia * 3;
-
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playSequentially(ObjectAnimator.ofFloat(mHeaderWrapper, "translationY", -overshootPixels),
-                ObjectAnimator.ofFloat(mHeaderWrapper, "translationY", 0.0f));
-                animatorSet.setDuration(80);
-                animatorSet.setInterpolator(new DecelerateInterpolator());
-                animatorSet.start();
-            }
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
-    };
-
 }
