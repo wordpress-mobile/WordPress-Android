@@ -56,12 +56,6 @@ public class NewNotificationsActivity extends WPActionBarActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
-        createMenuDrawer(R.layout.notifications);
-        // savedInstanceState will be non-null if activity is being re-created
-        if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
-        }
-
         createMenuDrawer(R.layout.notifications_activity);
 
         FragmentManager fm = getFragmentManager();
@@ -70,6 +64,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
             fragmentTransaction.commit();
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
         } else {
             mNotesList = (NewNotificationsListFragment) getFragmentManager().findFragmentByTag(TAG_LIST_VIEW);
         }
