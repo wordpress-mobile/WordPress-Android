@@ -11,7 +11,6 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.WPLinkMovementMethod;
 
 /**
  * View holder for stats_list_cell layout
@@ -24,6 +23,7 @@ class StatsViewHolder {
 
     public StatsViewHolder(View view) {
         entryTextView = (TextView) view.findViewById(R.id.stats_list_cell_entry);
+        entryTextView.setMovementMethod(StatsWPLinkMovementMethod.getInstance());
         totalsTextView = (TextView) view.findViewById(R.id.stats_list_cell_total);
         chevronImageView = (ImageView) view.findViewById(R.id.stats_list_cell_chevron);
 
@@ -36,8 +36,9 @@ class StatsViewHolder {
      * used by stats fragments to set the entry text, making it a clickable link if a url is passed
      */
     public void setEntryTextOrLink(String linkUrl, String linkName) {
-        if (entryTextView == null)
+        if (entryTextView == null) {
             return;
+        }
 
         if (TextUtils.isEmpty(linkUrl)) {
             entryTextView.setText(linkName);
@@ -51,7 +52,6 @@ class StatsViewHolder {
             }
         } else {
             entryTextView.setText(Html.fromHtml("<a href=\"" + linkUrl + "\">" + linkName + "</a>"));
-            entryTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
     }
 
@@ -59,8 +59,9 @@ class StatsViewHolder {
      * used by stats fragments to show a downloadable icon or default image
      */
     public void showNetworkImage(String imageUrl) {
-        if (networkImageView == null)
+        if (networkImageView == null) {
             return;
+        }
         if (imageUrl != null && imageUrl.startsWith("http")) {
             networkImageView.setImageUrl(imageUrl, WordPress.imageLoader);
         } else {

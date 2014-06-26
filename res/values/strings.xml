@@ -251,6 +251,7 @@
     <string name="page_not_published">Page status isn\'t published</string>
     <string name="view_in_browser">View in browser</string>
     <string name="post_signature">Post signature</string>
+    <string name="your_signature">Your signature:</string>
     <string name="add_tagline">Add a signature to new posts</string>
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
@@ -304,16 +305,21 @@
 
     <!-- location -->
     <string name="location">Location</string>
-    <string name="geotag">Geotag posts</string>
-    <string name="location_toast">Location data not yet available…</string>
-    <string name="view_map">View map</string>
     <string name="location_not_found">Unknown location</string>
     <string name="remove_location">Remove</string>
+    <string name="add_location">Add location</string>
+    <string name="current_location">Current location</string>
+    <string name="search_current_location">Locate</string>
+    <string name="search_location">Search</string>
+    <string name="edit_location">Edit</string>
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
+    <string name="preference_privacy">Privacy</string>
+    <string name="preference_send_usage_stats">Send statistics</string>
+    <string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
 
     <!-- wpcom sign in dialog -->
     <string name="need_help_signin_wpcom">Need help?</string>

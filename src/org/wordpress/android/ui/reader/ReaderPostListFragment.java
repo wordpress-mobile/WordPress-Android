@@ -29,6 +29,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -48,20 +49,20 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
-        ViewTreeObserver.OnScrollChangedListener,
-        ActionBar.OnNavigationListener {
+                   ViewTreeObserver.OnScrollChangedListener,
+                   ActionBar.OnNavigationListener {
 
     static interface OnPostSelectedListener {
         public void onPostSelected(long blogId, long postId);
@@ -88,11 +89,10 @@ public class ReaderPostListFragment extends Fragment
     private View mMshotSpacerView;
     private static final String MSHOT_SPACER_TAG = "mshot_spacer";
 
-    private String mCurrentTag;
+    private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
-    private int mLastPostListScrollPos = -1;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -100,14 +100,17 @@ public class ReaderPostListFragment extends Fragment
 
     private Parcelable mListState = null;
 
+    private final Stack<String> mTagPreviewHistory = new Stack<String>();
+    private static final String KEY_TAG_PREVIEW_HISTORY = "tag_preview_history";
+
     /*
      * show posts with a specific tag
      */
-    static ReaderPostListFragment newInstance(String tagName, ReaderPostListType listType) {
+    static ReaderPostListFragment newInstance(ReaderTag tag, ReaderPostListType listType) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
-        args.putString(ReaderConstants.ARG_TAG_NAME, tagName);
+        args.putSerializable(ReaderConstants.ARG_TAG, tag);
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
@@ -138,11 +141,17 @@ public class ReaderPostListFragment extends Fragment
         super.setArguments(args);
 
         if (args != null) {
-            mCurrentTag = args.getString(ReaderConstants.ARG_TAG_NAME);
-            mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
-            mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
+            if (args.containsKey(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) args.getSerializable(ReaderConstants.ARG_TAG);
+            }
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
+            mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
+
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
+                mTagPreviewHistory.push(getCurrentTagName());
             }
         }
     }
@@ -153,8 +162,8 @@ public class ReaderPostListFragment extends Fragment
 
         if (savedInstanceState != null) {
             AppLog.d(T.READER, "reader post list > restoring instance state");
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG_NAME)) {
-                mCurrentTag = savedInstanceState.getString(ReaderConstants.ARG_TAG_NAME);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_BLOG_ID)) {
                 mCurrentBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
@@ -168,6 +177,11 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
+            if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
+                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
+                mTagPreviewHistory.clear();
+                mTagPreviewHistory.addAll(backStack);
+            }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
     }
@@ -176,7 +190,6 @@ public class ReaderPostListFragment extends Fragment
     public void onPause() {
         super.onPause();
         mWasPaused = true;
-        mLastPostListScrollPos = -1;
     }
 
     @Override
@@ -203,7 +216,13 @@ public class ReaderPostListFragment extends Fragment
         super.onSaveInstanceState(outState);
         AppLog.d(T.READER, "reader post list > saving instance state");
 
-        outState.putString(ReaderConstants.ARG_TAG_NAME, mCurrentTag);
+        if (mCurrentTag != null) {
+            outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
+        }
+        if (!mTagPreviewHistory.empty()) {
+            outState.putSerializable(KEY_TAG_PREVIEW_HISTORY, mTagPreviewHistory);
+        }
+
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
         outState.putString(ReaderConstants.ARG_BLOG_URL, mCurrentBlogUrl);
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
@@ -500,7 +519,7 @@ public class ReaderPostListFragment extends Fragment
         if (isUpdating()) {
             title = R.string.reader_empty_posts_in_tag_updating;
         } else {
-            int tagIndex = getActionBarAdapter().getIndexOfTagName(mCurrentTag);
+            int tagIndex = getActionBarAdapter().getIndexOfTag(mCurrentTag);
 
             final String tagId;
             if (tagIndex > -1) {
@@ -561,7 +580,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
         @Override
-        public void onRequestData(RequestDataAction action) {
+        public void onRequestData() {
             // skip if update is already in progress
             if (isUpdating()) {
                 return;
@@ -629,51 +648,94 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private boolean isCurrentTag(final String tagName) {
-        if (!hasCurrentTag() || TextUtils.isEmpty(tagName)) {
-            return false;
-        }
-        return (mCurrentTag.equalsIgnoreCase(tagName));
+    private boolean isCurrentTag(final ReaderTag tag) {
+        return ReaderTag.isSameTag(tag, mCurrentTag);
+    }
+    private boolean isCurrentTagName(String tagName) {
+        return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
 
-    String getCurrentTag() {
-        return StringUtils.notNullStr(mCurrentTag);
+    ReaderTag getCurrentTag() {
+        return mCurrentTag;
+    }
+
+    String getCurrentTagName() {
+        return (mCurrentTag != null ? mCurrentTag.getTagName() : "");
     }
 
     private boolean hasCurrentTag() {
-        return !TextUtils.isEmpty(mCurrentTag);
+        return mCurrentTag != null;
     }
 
-    void setCurrentTag(final String tagName) {
+    void setCurrentTagName(String tagName) {
+        setCurrentTagName(tagName, true);
+    }
+    void setCurrentTagName(String tagName, boolean allowAutoUpdate) {
         if (TextUtils.isEmpty(tagName)) {
+            return;
+        }
+        setCurrentTag(new ReaderTag(tagName, ReaderTagType.FOLLOWED), allowAutoUpdate);
+    }
+    void setCurrentTag(final ReaderTag tag) {
+        setCurrentTag(tag, true);
+    }
+    void setCurrentTag(final ReaderTag tag, boolean allowAutoUpdate) {
+        if (tag == null) {
             return;
         }
 
         // skip if this is already the current tag and the post adapter is already showing it - this
         // will happen when the list fragment is restored and the current tag is re-selected in the
         // actionBar dropdown
-        if (isCurrentTag(tagName)
+        if (isCurrentTag(tag)
                 && hasPostAdapter()
-                && tagName.equals(getPostAdapter().getCurrentTag())) {
+                && getPostAdapter().isCurrentTag(tag)) {
             return;
         }
 
-        mCurrentTag = tagName;
+        mCurrentTag = tag;
 
-        // remember this as the current tag if viewing followed tag
-        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)) {
-            UserPrefs.setReaderTag(tagName);
+        switch (getPostListType()) {
+            case TAG_FOLLOWED:
+                // remember this as the current tag if viewing followed tag
+                UserPrefs.setReaderTag(tag);
+                break;
+            case TAG_PREVIEW:
+                mTagPreviewHistory.push(tag.getTagName());
+                break;
         }
 
-        getPostAdapter().setCurrentTag(tagName);
+        getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
         updateTagPreviewHeader();
         hideLoadingProgress();
 
         // update posts in this tag if it's time to do so
-        if (ReaderTagTable.shouldAutoUpdateTag(tagName)) {
-            updatePostsWithTag(tagName, RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+        if (allowAutoUpdate && ReaderTagTable.shouldAutoUpdateTag(tag)) {
+            updatePostsWithTag(tag, RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
         }
+    }
+
+    /*
+    * when previewing posts with a specific tag, a history of previewed tags is retained so
+    * the user can navigate back through them - this is faster and requires less memory
+    * than creating a new fragment for each previewed tag
+    */
+    boolean goBackInTagHistory() {
+        if (mTagPreviewHistory.empty()) {
+            return false;
+        }
+
+        String tag = mTagPreviewHistory.pop();
+        if (isCurrentTagName(tag)) {
+            if (mTagPreviewHistory.empty()) {
+                return false;
+            }
+            tag = mTagPreviewHistory.pop();
+        }
+
+        setCurrentTagName(tag, false);
+        return true;
     }
 
     /*
@@ -687,20 +749,20 @@ public class ReaderPostListFragment extends Fragment
 
         final TextView txtTagName = (TextView) mTagInfoView.findViewById(R.id.text_tag_name);
         String color = HtmlUtils.colorResToHtmlColor(getActivity(), R.color.grey_extra_dark);
-        String htmlTag = "<font color=" + color + ">" + getCurrentTag() + "</font>";
+        String htmlTag = "<font color=" + color + ">" + getCurrentTagName() + "</font>";
         String htmlLabel = getString(R.string.reader_label_tag_preview, htmlTag);
         txtTagName.setText(Html.fromHtml(htmlLabel));
 
         final TextView txtFollow = (TextView) mTagInfoView.findViewById(R.id.text_follow_blog);
-        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTag(getCurrentTag()));
+        ReaderUtils.showFollowStatus(txtFollow, ReaderTagTable.isFollowedTagName(getCurrentTagName()));
 
         txtFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ReaderAnim.animateFollowButton(txtFollow);
-                boolean isAskingToFollow = !ReaderTagTable.isFollowedTag(getCurrentTag());
+                boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(getCurrentTagName());
                 TagAction action = (isAskingToFollow ? TagAction.ADD : TagAction.DELETE);
-                if (ReaderTagActions.performTagAction(action, getCurrentTag(), null)) {
+                if (ReaderTagActions.performTagAction(getCurrentTag(), action, null)) {
                     ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
                 }
             }
@@ -737,12 +799,6 @@ public class ReaderPostListFragment extends Fragment
         return (getActivity() != null && !isRemoving());
     }
 
-    void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
-        if (hasPostAdapter()) {
-            getPostAdapter().updateFollowStatusOnPostsForBlog(blogId, blogUrl, followStatus);
-        }
-    }
-
     /*
      * get posts for the current blog from the server
      */
@@ -772,10 +828,10 @@ public class ReaderPostListFragment extends Fragment
     /*
      * get latest posts for this tag from the server
      */
-    void updatePostsWithTag(final String tagName,
+    void updatePostsWithTag(final ReaderTag tag,
                             final RequestDataAction updateAction,
                             final ReaderTypes.RefreshType refreshType) {
-        if (TextUtils.isEmpty(tagName)) {
+        if (tag == null) {
             return;
         }
 
@@ -799,8 +855,8 @@ public class ReaderPostListFragment extends Fragment
 
         // if this is "Posts I Like" or "Blogs I Follow" and it's a manual refresh (user tapped refresh icon),
         // refresh the posts so posts that were unliked/unfollowed no longer appear
-        if (refreshType == ReaderTypes.RefreshType.MANUAL && isCurrentTag(tagName)) {
-            if (tagName.equals(ReaderTag.TAG_NAME_LIKED) || tagName.equals(ReaderTag.TAG_NAME_FOLLOWING))
+        if (refreshType == ReaderTypes.RefreshType.MANUAL && isCurrentTag(tag)) {
+            if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED) || tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING))
                 refreshPosts();
         }
 
@@ -815,7 +871,7 @@ public class ReaderPostListFragment extends Fragment
                 setIsUpdating(false, updateAction);
 
                 // make sure this is still the current tag (user may have switched tags during the update)
-                if (!isCurrentTag(tagName)) {
+                if (!isCurrentTag(tag)) {
                     AppLog.i(T.READER, "reader post list > new posts in inactive tag");
                     return;
                 }
@@ -850,7 +906,7 @@ public class ReaderPostListFragment extends Fragment
                         AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
                         return;
                     }
-                    if (!isCurrentTag(tagName)) {
+                    if (!isCurrentTag(tag)) {
                         AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
                     } else if (isPostAdapterEmpty()) {
                         // show the new posts right away if this is the current tag and there aren't
@@ -859,9 +915,9 @@ public class ReaderPostListFragment extends Fragment
                     }
                 }
             };
-            ReaderPostActions.updatePostsInTagWithBackfill(tagName, resultListener, backfillListener);
+            ReaderPostActions.updatePostsInTagWithBackfill(tag, resultListener, backfillListener);
         } else {
-            ReaderPostActions.updatePostsInTag(tagName, updateAction, resultListener);
+            ReaderPostActions.updatePostsInTag(tag, updateAction, resultListener);
         }
     }
 
@@ -940,7 +996,7 @@ public class ReaderPostListFragment extends Fragment
         if (hasCurrentTag()
                 && getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
                 && !ReaderTagTable.tagExists(getCurrentTag())) {
-            mCurrentTag = ReaderTag.TAG_NAME_DEFAULT;
+            mCurrentTag = ReaderTag.getDefaultTag();
         }
     }
 
@@ -958,13 +1014,13 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * called from ReaderActivity after user adds/removes tags
+     * called from host activity after user adds/removes tags
      */
     void doTagsChanged(final String newCurrentTag) {
         checkCurrentTag();
         getActionBarAdapter().reloadTags();
         if (!TextUtils.isEmpty(newCurrentTag)) {
-            setCurrentTag(newCurrentTag);
+            setCurrentTagName(newCurrentTag);
         }
     }
 
@@ -1048,16 +1104,13 @@ public class ReaderPostListFragment extends Fragment
     /*
      * make sure the passed tag is the one selected in the actionbar
      */
-    private void selectTagInActionBar(final String tagName) {
-        if (TextUtils.isEmpty(tagName))
-            return;
-
+    private void selectTagInActionBar(final ReaderTag tag) {
         ActionBar actionBar = getActionBar();
         if (actionBar == null) {
             return;
         }
 
-        int position = getActionBarAdapter().getIndexOfTagName(tagName);
+        int position = getActionBarAdapter().getIndexOfTag(tag);
         if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
             return;
         }
@@ -1080,7 +1133,7 @@ public class ReaderPostListFragment extends Fragment
             return false;
         }
 
-        if (!isCurrentTag(tag.getTagName())) {
+        if (!isCurrentTag(tag)) {
             Map<String, String> properties = new HashMap<String, String>();
             properties.put("tag", tag.getTagName());
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LOADED_TAG, properties);
@@ -1089,8 +1142,8 @@ public class ReaderPostListFragment extends Fragment
             }
         }
 
-        setCurrentTag(tag.getTagName());
-        AppLog.d(T.READER, "reader post list > tag chosen from actionbar: " + tag.getTagName());
+        setCurrentTag(tag);
+        AppLog.d(T.READER, String.format("reader post list > tag %s chosen from actionbar", tag.getTagNameForLog()));
 
         return true;
     }
@@ -1107,7 +1160,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void repositionBlogInfoView() {
         int scrollPos = mListView.getVerticalScrollOffset();
-        if (mBlogInfoView == null || scrollPos == mLastPostListScrollPos) {
+        if (mBlogInfoView == null) {
             return;
         }
 
@@ -1131,7 +1184,6 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mBlogInfoView.moveInfoContainer(infoTop);
-        mLastPostListScrollPos = scrollPos;
     }
 
     /*

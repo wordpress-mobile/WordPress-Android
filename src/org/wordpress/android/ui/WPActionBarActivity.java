@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,8 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -461,21 +464,19 @@ public abstract class WPActionBarActivity extends Activity {
     }
 
     /**
-     * Update all of the items in the menu drawer based on the current active
-     * blog.
+     * Update all of the items in the menu drawer based on the current active blog.
      */
     public void updateMenuDrawer() {
         mAdapter.clear();
         // iterate over the available menu items and only show the ones that should be visible
         Iterator<MenuDrawerItem> availableItems = mMenuItems.iterator();
-        while(availableItems.hasNext()){
+        while (availableItems.hasNext()) {
             MenuDrawerItem item = availableItems.next();
             if (item.isVisible()) {
                 mAdapter.add(item);
             }
         }
         mAdapter.notifyDataSetChanged();
-
     }
 
     public static class MenuAdapter extends ArrayAdapter<MenuDrawerItem> {
@@ -711,6 +712,28 @@ public abstract class WPActionBarActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void refreshCurrentBlogContent() {
+        if (WordPress.getCurrentBlog() != null) {
+            ApiHelper.GenericCallback callback = new ApiHelper.GenericCallback() {
+                @Override
+                public void onSuccess() {
+                    if (isFinishing()) {
+                        return;
+                    }
+                    // refresh spinner in case a blog's name has changed
+                    refreshBlogSpinner(getBlogNames());
+                    updateMenuDrawer();
+                }
+
+                @Override
+                public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
+                }
+            };
+            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).executeOnExecutor(
+                    AsyncTask.THREAD_POOL_EXECUTOR, false);
+        }
+    }
+
     /**
      * This method is called when the user changes the active blog or hides all blogs
      */
@@ -740,8 +763,9 @@ public abstract class WPActionBarActivity extends Activity {
             }
         }
 
+        refreshCurrentBlogContent();
         if (shouldUpdateCurrentBlogStatsInBackground()) {
-            WordPress.updateCurrentBlogStatsInBackground(true);
+            WordPress.sUpdateCurrentBlogStats.forceRun();
         }
     }
 
@@ -1079,6 +1103,7 @@ public abstract class WPActionBarActivity extends Activity {
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE);
         filter.addAction(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT);
+        filter.addAction(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, filter);
     }
@@ -1116,6 +1141,9 @@ public abstract class WPActionBarActivity extends Activity {
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT)) {
                 ToastUtils.showToast(context, R.string.limit_reached, Duration.LONG);
+            }
+            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_BLOG_LIST_CHANGED)) {
+                initMenuDrawer();
             }
         }
     };

@@ -4,12 +4,13 @@ import android.text.TextUtils;
 
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 
-public class ReaderTag {
-    private static final int INT_DEFAULT = 0;
-    private static final int INT_FOLLOWED = 1;
-    private static final int INT_RECOMMENDED = 2;
+public class ReaderTag implements Serializable {
+    private String tagName;
+    private String endpoint;
+    public ReaderTagType tagType;
 
     public static String TAG_ID_FOLLOWING = "following";
     public static String TAG_ID_LIKED = "liked";
@@ -18,36 +19,7 @@ public class ReaderTag {
     public static final String TAG_NAME_LIKED = "Posts I Like";
     public static final String TAG_NAME_FOLLOWING = "Blogs I Follow";
     public static final String TAG_NAME_FRESHLY_PRESSED = "Freshly Pressed";
-    public static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
-
-    public static enum ReaderTagType {FOLLOWED,
-                                      DEFAULT,
-                                      RECOMMENDED;
-        public static ReaderTagType fromInt(int value) {
-            switch (value) {
-                case INT_RECOMMENDED :
-                    return RECOMMENDED;
-                case INT_FOLLOWED :
-                    return FOLLOWED;
-                default :
-                    return DEFAULT;
-            }
-        }
-        public int toInt() {
-            switch (this) {
-                case FOLLOWED:
-                    return INT_FOLLOWED;
-                case RECOMMENDED:
-                    return INT_RECOMMENDED;
-                default :
-                    return INT_DEFAULT;
-            }
-        }
-    }
-
-    private String tagName;
-    private String endpoint;
-    public ReaderTagType tagType;
+    private static final String TAG_NAME_DEFAULT = TAG_NAME_FRESHLY_PRESSED;
 
     public ReaderTag(String tagName, String endpoint, ReaderTagType tagType) {
         if (TextUtils.isEmpty(tagName)) {
@@ -57,6 +29,15 @@ public class ReaderTag {
         }
         this.setEndpoint(endpoint);
         this.tagType = tagType;
+    }
+
+    public ReaderTag(String tagName, ReaderTagType tagType) {
+        this.setTagName(tagName);
+        this.tagType = tagType;
+    }
+
+    public static ReaderTag getDefaultTag() {
+        return new ReaderTag(TAG_NAME_DEFAULT, ReaderTagType.DEFAULT);
     }
 
     public String getEndpoint() {
@@ -89,12 +70,34 @@ public class ReaderTag {
         this.tagName = StringUtils.notNullStr(name);
     }
     public String getCapitalizedTagName() {
-        if (tagName == null)
+        if (tagName == null) {
             return "";
+        }
         // HACK to allow iPhone, iPad, iEverything else
-        if (tagName.startsWith("iP"))
+        if (tagName.startsWith("iP")) {
             return tagName;
+        }
         return StringUtils.capitalize(tagName);
+    }
+
+    /*
+     * returns the tag name for use in the application log - if this is a default tag it returns
+     * the full tag name, otherwise it abbreviates the tag name since exposing followed tags
+     * in the log could be considered a privacy issue
+     */
+    public String getTagNameForLog() {
+        String tagName = getTagName();
+        if (tagType == ReaderTagType.DEFAULT) {
+            return tagName;
+        } else if (tagName.length() >= 6) {
+            return tagName.substring(0, 3) + "...";
+        } else if (tagName.length() >= 4) {
+            return tagName.substring(0, 2) + "...";
+        } else if (tagName.length() >= 2) {
+            return tagName.substring(0, 1) + "...";
+        } else {
+            return "...";
+        }
     }
 
     /*
@@ -142,5 +145,13 @@ public class ReaderTag {
         return (tagName.equalsIgnoreCase(TAG_NAME_FOLLOWING)
              || tagName.equalsIgnoreCase(TAG_NAME_FRESHLY_PRESSED)
              || tagName.equalsIgnoreCase(TAG_NAME_LIKED));
+    }
+
+    public static boolean isSameTag(ReaderTag tag1, ReaderTag tag2) {
+        if (tag1 == null || tag2 == null) {
+            return false;
+        }
+        return (tag1.getTagName().equalsIgnoreCase(tag2.getTagName())
+             && tag1.tagType.equals(tag2.tagType));
     }
 }

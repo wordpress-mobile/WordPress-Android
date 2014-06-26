@@ -99,7 +99,8 @@
         <activity
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/WordPress.DropDownListView.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -128,6 +129,10 @@
         <!-- Stats Activities -->
         <activity android:name=".ui.stats.StatsActivity" >
         </activity>
+
+        <activity android:name=".ui.stats.StatsWebViewActivity" >
+        </activity>
+
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >

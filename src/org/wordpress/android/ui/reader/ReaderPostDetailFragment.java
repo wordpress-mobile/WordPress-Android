@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -158,7 +157,7 @@ public class ReaderPostDetailFragment extends Fragment
             // detects that more comments exist on the server than are stored locally
             ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
                 @Override
-                public void onRequestData(ReaderActions.RequestDataAction action) {
+                public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader post detail > requesting newer comments");
                         updateComments();
@@ -786,8 +785,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
         });
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editComment, InputMethodManager.SHOW_IMPLICIT);
+        EditTextUtils.showSoftInput(editComment);
 
         // if user is replying to another comment, highlight the comment being replied to and scroll
         // it to the top so the user can see which comment they're replying to - note that scrolling

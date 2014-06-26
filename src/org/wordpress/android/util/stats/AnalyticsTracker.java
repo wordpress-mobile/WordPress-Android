@@ -1,10 +1,17 @@
 package org.wordpress.android.util.stats;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import org.wordpress.android.WordPress;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public final class AnalyticsTracker {
+    private static boolean mHasUserOptedOut;
+
     public enum Stat {
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
@@ -68,6 +75,25 @@ public final class AnalyticsTracker {
     private AnalyticsTracker() {
     }
 
+    public static void init() {
+        loadPrefHasUserOptedOut(false);
+    }
+
+    public static void loadPrefHasUserOptedOut(boolean manageSession) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+
+        boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut && manageSession) {
+            mHasUserOptedOut = hasUserOptedOut;
+            if (mHasUserOptedOut) {
+                endSession(true);
+                clearAllData();
+            } else {
+                beginSession();
+            }
+        }
+    }
+
     public static void registerTracker(Tracker tracker) {
         if (tracker != null) {
             TRACKERS.add(tracker);
@@ -75,24 +101,36 @@ public final class AnalyticsTracker {
     }
 
     public static void track(Stat stat) {
+        if (mHasUserOptedOut) {
+            return;
+        }
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat);
         }
     }
 
     public static void track(Stat stat, Map<String, ?> properties) {
+        if (mHasUserOptedOut) {
+            return;
+        }
         for (Tracker tracker : TRACKERS) {
             tracker.track(stat, properties);
         }
     }
 
     public static void beginSession() {
+        if (mHasUserOptedOut) {
+            return;
+        }
         for (Tracker tracker : TRACKERS) {
             tracker.beginSession();
         }
     }
 
-    public static void endSession() {
+    public static void endSession(boolean force) {
+        if (mHasUserOptedOut && !force) {
+            return;
+        }
         for (Tracker tracker : TRACKERS) {
             tracker.endSession();
         }

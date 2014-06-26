@@ -22,7 +22,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HtmlUtils;
@@ -216,7 +216,7 @@ public class FollowRow extends LinearLayout {
 
             // show new follow state and animate button right away (before network call)
             updateFollowButton(!isFollowing());
-            AniUtils.zoomAction(getFollowButton());
+            ReaderAnim.animateFollowButton(getFollowButton());
 
             if (isFollowing()) {
                 getFollowListener().onUnfollow(FollowRow.this, getSiteId());

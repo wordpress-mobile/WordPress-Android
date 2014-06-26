@@ -47,10 +47,31 @@ public class EditTextUtils {
         if (edit == null) {
             return;
         }
-        Context context = edit.getContext();
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        InputMethodManager imm = getInputMethodManager(edit);
         if (imm != null) {
             imm.hideSoftInputFromWindow(edit.getWindowToken(), 0);
         }
+    }
+
+    /**
+     * show the soft keyboard for the passed EditText
+     */
+    public static void showSoftInput(EditText edit) {
+        if (edit == null) {
+            return;
+        }
+
+        edit.requestFocus();
+
+        InputMethodManager imm = getInputMethodManager(edit);
+        if (imm != null) {
+            imm.showSoftInput(edit, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    private static InputMethodManager getInputMethodManager(EditText edit) {
+        Context context = edit.getContext();
+        return (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 }

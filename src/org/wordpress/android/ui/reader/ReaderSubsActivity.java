@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -25,7 +26,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTag.ReaderTagType;
+import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -61,12 +62,12 @@ public class ReaderSubsActivity extends Activity
 
     private boolean mTagsChanged;
     private boolean mBlogsChanged;
-    private String mLastAddedTag;
+    private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
     static final String KEY_TAGS_CHANGED   = "tags_changed";
     static final String KEY_BLOGS_CHANGED  = "blogs_changed";
-    static final String KEY_LAST_ADDED_TAG = "last_added_tag";
+    static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_SUGGESTED_TAGS = 1;
@@ -82,7 +83,13 @@ public class ReaderSubsActivity extends Activity
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
-        setupActionBar();
+
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
+        tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
+        tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -113,7 +120,6 @@ public class ReaderSubsActivity extends Activity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                getActionBar().setSelectedNavigationItem(position);
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
@@ -122,24 +128,6 @@ public class ReaderSubsActivity extends Activity
         // update list of tags and blogs from the server
         if (!mHasPerformedUpdate) {
             performUpdate();
-        }
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // add the tabs to match the viewPager
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        for (int i = 0; i < getPageAdapter().getCount(); i++) {
-            actionBar.addTab(actionBar.newTab()
-                     .setText(getPageAdapter().getPageTitle(i))
-                     .setTabListener(this));
         }
     }
 
@@ -157,7 +145,7 @@ public class ReaderSubsActivity extends Activity
         if (state != null) {
             mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
             mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
-            mLastAddedTag = state.getString(KEY_LAST_ADDED_TAG);
+            mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
     }
@@ -189,8 +177,8 @@ public class ReaderSubsActivity extends Activity
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
-        if (mLastAddedTag != null) {
-            outState.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+        if (mLastAddedTagName != null) {
+            outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
     }
 
@@ -201,8 +189,8 @@ public class ReaderSubsActivity extends Activity
             Bundle bundle = new Bundle();
             if (mTagsChanged) {
                 bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTag != null && ReaderTagTable.isFollowedTag(mLastAddedTag)) {
-                    bundle.putString(KEY_LAST_ADDED_TAG, mLastAddedTag);
+                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
+                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
                 }
             }
             if (mBlogsChanged) {
@@ -253,7 +241,7 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        if (ReaderTagTable.isFollowedTag(entry)) {
+        if (ReaderTagTable.isFollowedTagName(entry)) {
             ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
@@ -315,16 +303,18 @@ public class ReaderSubsActivity extends Activity
                 if (!succeeded && !isFinishing()) {
                     getPageAdapter().refreshTagFragments();
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
-                    mLastAddedTag = null;
+                    mLastAddedTagName = null;
                 }
             }
         };
 
-        if (ReaderTagActions.performTagAction(TagAction.ADD, tagName, actionListener)) {
+        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
+
+        if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
             String msgText = getString(R.string.reader_label_added_tag, tagName);
             MessageBarUtils.showMessageBar(this, msgText, MessageBarType.INFO);
             getPageAdapter().refreshTagFragments(null, tagName);
-            onTagAction(TagAction.ADD, tagName);
+            onTagAction(tag, TagAction.ADD);
         }
     }
 
@@ -415,7 +405,7 @@ public class ReaderSubsActivity extends Activity
      * after user adds a tag - note that network request has been made by the time this is called
      */
     @Override
-    public void onTagAction(TagAction action, String tagName) {
+    public void onTagAction(ReaderTag tag, TagAction action) {
         mTagsChanged = true;
 
         final String msgText;
@@ -424,19 +414,19 @@ public class ReaderSubsActivity extends Activity
         switch (action) {
             case ADD:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_added_tag, tagName);
+                msgText = getString(R.string.reader_label_added_tag, tag.getTagName());
                 msgType = MessageBarType.INFO;
-                mLastAddedTag = tagName;
+                mLastAddedTagName = tag.getTagName();
                 // user added from recommended tags, make sure addition is reflected on followed tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.FOLLOWED);
                 break;
 
             case DELETE:
                 AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
-                msgText = getString(R.string.reader_label_removed_tag, tagName);
+                msgText = getString(R.string.reader_label_removed_tag, tag.getTagName());
                 msgType = MessageBarType.ALERT;
-                if (mLastAddedTag != null && mLastAddedTag.equals(tagName)) {
-                    mLastAddedTag = null;
+                if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
+                    mLastAddedTagName = null;
                 }
                 // user deleted from followed tags, make sure deletion is reflected on recommended tags
                 getPageAdapter().refreshTagFragments(ReaderTagType.RECOMMENDED);
@@ -456,7 +446,7 @@ public class ReaderSubsActivity extends Activity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
                     mTagsChanged = true;
                     getPageAdapter().refreshTagFragments();
                 }
@@ -472,7 +462,7 @@ public class ReaderSubsActivity extends Activity
         ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
                 }
             }
@@ -514,7 +504,6 @@ public class ReaderSubsActivity extends Activity
         for (int i = 0; i < adapter.getCount(); i++) {
             if (pageTitle.equals(adapter.getPageTitle(i))) {
                 mViewPager.setCurrentItem(i);
-                getActionBar().setSelectedNavigationItem(i);
                 return;
             }
         }

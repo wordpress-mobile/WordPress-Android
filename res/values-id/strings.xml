@@ -219,8 +219,6 @@
 	<string name="file_error_create">Tidak bisa membuat berkas temporer untuk pengunggahan media. Pastikan masih cukup ruang di perangkat Anda.</string>
 	<string name="open_source_licenses">Lisensi sumber terbuka</string>
 	<string name="wpcom_blogs">Blog di WordPress.com</string>
-	<string name="geotag">Berikan geotag pada pos</string>
-	<string name="location_toast">Data lokasi belum tersedia...</string>
 	<string name="location_not_found">Lokasi tidak diketahui</string>
 	<string name="self_hosted_blogs">Blog dengan hosting mandiri</string>
 	<string name="stats_view_views_by_country">Kunjungan berdasarkan negara</string>
@@ -263,7 +261,6 @@
 	<string name="email_hint">Alamat email</string>
 	<string name="username_email">Nama pengguna atau email</string>
 	<string name="site_address">Alamat (URL) host mandiri Anda</string>
-	<string name="view_map">Tampilkan peta</string>
 	<string name="email_cant_be_used_to_signup">Anda tak bisa menggunakan alamat email tersebut untuk mendaftar. Kami bermasalah dengan blokir mereka atas sejumlah email kami. Silakan gunakan layanan email lainnya.</string>
 	<string name="email_reserved">Alamat email tersebut telah digunakan. Periksa kotak masuk Anda untuk email aktivasi. Jika Anda tidak mengaktifkannya, Anda masih bisa mencoba lagi dalam beberapa hari.</string>
 	<string name="blog_name_must_include_letters">Alamat situs harus memiliki setidaknya 1 huruf (a-z)</string>

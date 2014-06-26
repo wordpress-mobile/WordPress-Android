@@ -198,8 +198,6 @@
 	<string name="add_new_category">Ajouter une nouvelle catégorie</string>
 	<string name="category_name">Nom de la catégorie</string>
 	<string name="share_action_media">Bibliothèque de médias</string>
-	<string name="location_toast">En attente des données de position…</string>
-	<string name="view_map">Carte</string>
 	<string name="location_not_found">Localisation inconnue</string>
 	<string name="open_source_licenses">Licences open sources</string>
 	<string name="wpcom_blogs">Blogs WordPress.com</string>
@@ -238,7 +236,6 @@
 	<string name="author_url">URL de l\'auteur</string>
 	<string name="author_email">E-mail de l\'auteur</string>
 	<string name="author_name">Nom de l\'auteur</string>
-	<string name="geotag">Géotaguer les articles</string>
 	<string name="select_a_blog">Sélectionner un blog</string>
 	<string name="category_desc">Description de la catégorie (optionnel)</string>
 	<string name="category_parent">Catégorie mère (optionnel)</string>

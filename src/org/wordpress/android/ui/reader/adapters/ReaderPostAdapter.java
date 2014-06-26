@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -41,7 +39,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -52,7 +49,7 @@ import java.lang.ref.WeakReference;
  * adapter for list of posts in a specific tag
  */
 public class ReaderPostAdapter extends BaseAdapter {
-    private String mCurrentTag;
+    private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
 
     private final int mPhotonWidth;
@@ -60,10 +57,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final int mAvatarSz;
     private final int mMarginLarge;
 
-    private final float mRowAnimationFromYDelta;
-    private final int mRowAnimationDuration;
     private boolean mCanRequestMorePosts = false;
-    private boolean mAnimateRows = false;
     private boolean mIsFlinging = false;
 
     private final LayoutInflater mInflater;
@@ -99,15 +93,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(context);
-
         int listMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_list_margin);
         mPhotonWidth = displayWidth - (listMargin * 2);
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
-
-        // when animating rows in, start from this y-position near the bottom using short animation duration
-        mRowAnimationFromYDelta = displayHeight - (displayHeight / 6);
-        mRowAnimationDuration = context.getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         // enable preloading of images
         mEnableImagePreload = true;
@@ -125,17 +113,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
-    public String getCurrentTag() {
-        return StringUtils.notNullStr(mCurrentTag);
-    }
-
     // used when the viewing tagged posts
-    public void setCurrentTag(String tagName) {
-        tagName = StringUtils.notNullStr(tagName);
-        if (mCurrentTag == null || !mCurrentTag.equals(tagName)) {
-            mCurrentTag = tagName;
+    public void setCurrentTag(ReaderTag tag) {
+        if (!ReaderTag.isSameTag(tag, mCurrentTag)) {
+            mCurrentTag = tag;
             reload();
         }
+    }
+
+    public boolean isCurrentTag(ReaderTag tag) {
+        return ReaderTag.isSameTag(tag, mCurrentTag);
     }
 
     // used when the list type is ReaderPostListType.BLOG_PREVIEW
@@ -155,13 +142,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     public void refresh() {
-        //clear(); <-- don't do this, causes LoadPostsTask to always think all posts are new
         loadPosts();
     }
 
     /*
-     * same as refresh() above but first clears the existing posts - this will cause the
-     * adapter to animate in the new posts
+     * same as refresh() above but first clears the existing posts
      */
     public void reload() {
         clear();
@@ -173,15 +158,15 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     public void reloadPost(ReaderPost post) {
         int index = mPosts.indexOfPost(post);
-        if (index == -1)
+        if (index == -1) {
             return;
+        }
 
         final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
-        if (updatedPost==null)
-            return;
-
-        mPosts.set(index, updatedPost);
-        notifyDataSetChanged();
+        if (updatedPost != null) {
+            mPosts.set(index, updatedPost);
+            notifyDataSetChanged();
+        }
     }
 
     /*
@@ -197,7 +182,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * sets the follow status of each post in the passed blog
      */
-    public void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
+    void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {
         if (isEmpty()) {
             return;
         }
@@ -334,7 +319,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         params.topMargin = titleMargin;
 
         // show the best tag for this post
-        final String tagToDisplay = post.getTagForDisplay(mCurrentTag);
+        final String tagToDisplay = (mCurrentTag != null ? post.getTagForDisplay(mCurrentTag.getTagName()) : null);
         if (!TextUtils.isEmpty(tagToDisplay)) {
             holder.txtTag.setText(tagToDisplay);
             holder.txtTag.setVisibility(View.VISIBLE);
@@ -401,14 +386,9 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
-        // animate the appearance of this row while new posts are being loaded
-        if (mAnimateRows) {
-            animateRow(convertView);
-        }
-
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
-            mDataRequestedListener.onRequestData(ReaderActions.RequestDataAction.LOAD_OLDER);
+            mDataRequestedListener.onRequestData();
         }
 
         // if image preload is enabled, preload images in the post PRELOAD_OFFSET positions ahead of this one
@@ -450,17 +430,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         if (animateChanges) {
             holder.layoutBottom.setLayoutTransition(null);
         }
-    }
-
-    /*
-     * animate in the passed listView item
-     */
-    private final DecelerateInterpolator mRowInterpolator = new DecelerateInterpolator();
-    private void animateRow(View view) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, mRowAnimationFromYDelta, 0f);
-        animator.setDuration(mRowAnimationDuration);
-        animator.setInterpolator(mRowInterpolator);
-        animator.start();
     }
 
     private static class PostViewHolder {
@@ -623,11 +592,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             // post - these values are all cached by the post after the first time they're
             // computed, so calling these getters ensures the values are immediately available
             // when accessed from getView
+            String currentTagName = (mCurrentTag != null ? mCurrentTag.getTagName() : "");
             for (ReaderPost post: tmpPosts) {
                 post.getPostAvatarForDisplay(mAvatarSz);
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight);
                 post.getDatePublished();
-                post.getTagForDisplay(mCurrentTag);
+                post.getTagForDisplay(currentTagName);
             }
 
             return true;
@@ -635,7 +605,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                boolean wasEmpty = mPosts.isEmpty();
                 mPosts = (ReaderPostList)(tmpPosts.clone());
 
                 // preload images in the first few posts, skipping the first two since they'll
@@ -650,10 +619,6 @@ public class ReaderPostAdapter extends BaseAdapter {
                     }
                 }
 
-                // if list was previously empty, animate in the new posts
-                if (wasEmpty) {
-                    enableRowAnimation();
-                }
                 notifyDataSetChanged();
             }
 
@@ -663,19 +628,6 @@ public class ReaderPostAdapter extends BaseAdapter {
 
             mIsTaskRunning = false;
         }
-    }
-
-    /*
-     * briefly enable animating the appearance of new rows
-     */
-    private void enableRowAnimation() {
-        mAnimateRows = true;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mAnimateRows = false;
-            }
-        }, 250);
     }
 
     /*

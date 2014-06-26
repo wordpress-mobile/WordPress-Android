@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -298,9 +296,7 @@ public class ViewPostFragment extends Fragment {
                 submitComment();
             }
         });
-
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mEditComment, InputMethodManager.SHOW_IMPLICIT);
+        EditTextUtils.showSoftInput(mEditComment);
         mIsCommentBoxShowing = true;
     }
 

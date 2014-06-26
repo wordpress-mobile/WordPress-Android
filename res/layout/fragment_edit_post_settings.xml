@@ -111,72 +111,10 @@
             android:hint="@string/post_password"
             android:inputType="textPassword" />
 
-        <RelativeLayout
-            android:id="@+id/sectionLocation"
+        <ViewStub
+            android:id="@+id/stub_post_location_settings"
+            android:layout="@layout/post_location_settings"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="8dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/locationLabel"
-                style="@style/WordPressSubHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/location"
-                android:layout_marginBottom="8dp" />
-
-            <TextView
-                android:drawableLeft="@drawable/ic_action_location_searching"
-                android:gravity="center_vertical"
-                android:id="@+id/locationText"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/locationLabel"
-                android:layout_marginLeft="8dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/loading" />
-
-            <LinearLayout
-                android:id="@+id/sectionLocationButtons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/locationText"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/viewMap"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/view_map" />
-
-                <Button
-                    android:id="@+id/updateLocation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/update_verb" />
-
-                <Button
-                    android:id="@+id/removeLocation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="1"
-                    android:text="@string/remove_location" />
-            </LinearLayout>
-
-        </RelativeLayout>
+            android:layout_height="fill_parent"/>
     </LinearLayout>
 </ScrollView>

@@ -215,16 +215,13 @@
 	<string name="quick_video">빠른 비디오</string>
 	<string name="upload_failed">업로드에 실패했습니다.</string>
 	<string name="view_in_browser">브라우저에서 표시</string>
-	<string name="view_map">보기</string>
 	<string name="post_not_published">이 게시물은 아직 공개되지 않았습니다</string>
 	<string name="page_not_published">이 페이지는 아직 공개되지 않았습니다</string>
 	<string name="pending_review">리뷰 진행중</string>
-	<string name="geotag">작성 지도 태깅</string>
 	<string name="post_deleted">게시물을 삭제했습니다</string>
 	<string name="delete_post">게시물 삭제</string>
 	<string name="page_deleted">게시물을 삭제했습니다</string>
 	<string name="delete_page">페이지를 제거</string>
-	<string name="location_toast">위치 데이터를 아직 사용할 수 없습니다. 잠시만 기다려 주세요.</string>
 	<string name="account_details">계정 정보</string>
 	<string name="select_a_blog">블로그 선택</string>
 	<string name="required_field">필수 항목</string>

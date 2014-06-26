@@ -85,8 +85,6 @@ public class PostsActivity extends WPActionBarActivity
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
             !(this instanceof PagesActivity)) {
-            // Refresh blog content when returning to the app
-            refreshBlogContent();
 
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -504,9 +502,14 @@ public class PostsActivity extends WPActionBarActivity
                         PostsActivity.this);
                 dialogBuilder.setTitle(getResources().getText(
                         R.string.delete_draft));
-                dialogBuilder.setMessage(getResources().getText(
-                        R.string.delete_sure)
-                        + " '" + post.getTitle() + "'?");
+
+                String deleteDraftMessage = getResources().getText(R.string.delete_sure).toString();
+                if (!post.getTitle().isEmpty()) {
+                    String postTitleEnclosedByQuotes = "'" + post.getTitle() + "'";
+                    deleteDraftMessage += " " + postTitleEnclosedByQuotes;
+                }
+
+                dialogBuilder.setMessage(deleteDraftMessage + "?");
                 dialogBuilder.setPositiveButton(
                         getResources().getText(R.string.yes),
                         new DialogInterface.OnClickListener() {
@@ -618,38 +621,10 @@ public class PostsActivity extends WPActionBarActivity
         attemptToSelectPost();
         mPostList.clear();
         mPostList.getPostListAdapter().loadPosts();
-        refreshBlogContent();
         mPostList.onBlogChanged();
     }
 
     public void setRefreshing(boolean refreshing) {
         mPostList.setRefreshing(refreshing);
-    }
-
-    private void refreshBlogContent() {
-        ApiHelper.GenericCallback callback = new ApiHelper.GenericCallback() {
-            @Override
-            public void onSuccess() {
-                if (isFinishing()) {
-                    return;
-                }
-
-                // refresh spinner in case a blog's name has changed
-                refreshBlogSpinner(getBlogNames());
-
-                updateMenuDrawer();
-                mPostList.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                if (isFinishing()) {
-                    return;
-                }
-                mPostList.setRefreshing(false);
-            }
-        };
-
-        new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).execute(false);
     }
 }

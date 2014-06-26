@@ -143,6 +143,11 @@ public class ReaderPost {
             post.title = extractTitle(post.excerpt, 50);
         }
 
+        // remove html from title (rare, but does happen)
+        if (post.hasTitle() && post.title.contains("<") && post.title.contains(">")) {
+            post.title = HtmlUtils.stripHtml(post.title);
+        }
+
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
@@ -615,10 +620,10 @@ public class ReaderPost {
      *  - secondary tag if primary tag is the same as the currently selected tag
      */
     private transient String tagForDisplay;
-    public String getTagForDisplay(final String currentTag) {
+    public String getTagForDisplay(final String currentTagName) {
         if (tagForDisplay == null) {
             if (!isPrivate && hasPrimaryTag()) {
-                if (getPrimaryTag().equalsIgnoreCase(currentTag)) {
+                if (getPrimaryTag().equalsIgnoreCase(currentTagName)) {
                     tagForDisplay = getSecondaryTag();
                 } else {
                     tagForDisplay = getPrimaryTag();

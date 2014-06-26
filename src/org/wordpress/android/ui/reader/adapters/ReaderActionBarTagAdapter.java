@@ -43,12 +43,14 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         refreshTags();
     }
 
-    public int getIndexOfTagName(String tagName) {
-        if (tagName==null)
+    public int getIndexOfTag(ReaderTag tag) {
+        if (tag == null) {
             return -1;
-        for (int i=0; i < mTags.size(); i++) {
-            if (tagName.equalsIgnoreCase(mTags.get(i).getTagName()))
+        }
+        for (int i = 0; i < mTags.size(); i++) {
+            if (ReaderTag.isSameTag(tag, mTags.get(i))) {
                 return i;
+            }
         }
         return -1;
     }
@@ -71,9 +73,17 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         return (mTags !=null ? mTags.size() : 0);
     }
 
+    private boolean isValidPosition(int position) {
+        return (position >= 0 && position < getCount());
+    }
+
     @Override
     public Object getItem(int index) {
-        return mTags.get(index);
+        if (isValidPosition(index)) {
+            return mTags.get(index);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -151,8 +161,9 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
             if (result) {
                 mTags = (ReaderTagList) tmpTags.clone();
                 notifyDataSetChanged();
-                if (mDataListener != null)
+                if (mDataListener != null) {
                     mDataListener.onDataLoaded(mTags.isEmpty());
+                }
             }
             mIsTaskRunning = false;
         }

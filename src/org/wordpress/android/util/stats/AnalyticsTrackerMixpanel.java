@@ -18,7 +18,6 @@ import java.util.Map;
 public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private MixpanelAPI mMixpanel;
     private EnumMap<AnalyticsTracker.Stat, JSONObject> mAggregatedProperties;
-
     private static final String SESSION_COUNT = "sessionCount";
     private static final String MIXPANEL_PLATFORM = "platform";
     private static final String MIXPANEL_SESSION_COUNT = "session_count";
@@ -28,6 +27,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     public AnalyticsTrackerMixpanel() {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
+        mMixpanel = MixpanelAPI.getInstance(WordPress.getContext(), BuildConfig.MIXPANEL_TOKEN);
     }
 
     @Override
@@ -108,8 +108,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void beginSession() {
-        mMixpanel = MixpanelAPI.getInstance(WordPress.getContext(), BuildConfig.MIXPANEL_TOKEN);
-
         // Tracking session count will help us isolate users who just installed the app
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(SESSION_COUNT, 0);
@@ -159,7 +157,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void clearAllData() {
-        endSession();
         mMixpanel.clearSuperProperties();
         mMixpanel.getPeople().clearPushRegistrationId();
     }

@@ -51,11 +51,12 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="wp_pref_signature_enabled"
-            android:title="@string/add_tagline"/>
+            android:title="@string/post_signature"
+            android:summary="@string/add_tagline"/>
 
         <org.wordpress.android.util.WPEditTextPreference
             android:key="wp_pref_post_signature"
-            android:title="@string/post_signature"/>
+            android:title="@string/your_signature"/>
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -80,6 +81,16 @@
             android:persistent="false"
             android:title="@string/reset_auto_share_preference">
         </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/preference_privacy"
+        android:key="wp_privacy">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="wp_pref_send_usage_stats"
+            android:title="@string/preference_send_usage_stats"
+            android:summary="@string/preference_send_usage_stats_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory

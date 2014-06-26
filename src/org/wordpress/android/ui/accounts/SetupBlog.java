@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.SSLHandshakeException;
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 public class SetupBlog {
     private static final String DEFAULT_IMAGE_SIZE = "2000";
@@ -217,6 +218,18 @@ public class SetupBlog {
             if (isHTTPAuthErrorMessage(e)) {
                 return null;
             }
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
+        } catch (SSLPeerUnverifiedException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
+            return null;
         } catch (IOException e) {
             AppLog.i(T.NUX, "system.listMethods failed on: " + baseUrl);
             if (isHTTPAuthErrorMessage(e)) {
@@ -243,6 +256,18 @@ public class SetupBlog {
             return xmlRpcUrl;
         } catch (XMLRPCException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
+        } catch (SSLHandshakeException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
+            return null;
+        } catch (SSLPeerUnverifiedException e) {
+            if (!UrlUtils.getDomainFromUrl(baseUrl).endsWith("wordpress.com")) {
+                mErroneousSslCertificate = true;
+            }
+            AppLog.w(T.NUX, "SSLPeerUnverifiedException failed. Erroneous SSL certificate detected.");
+            return null;
         } catch (IOException e) {
             AppLog.e(T.NUX, "system.listMethods failed on: " + guessURL, e);
         } catch (XmlPullParserException e) {
@@ -298,12 +323,19 @@ public class SetupBlog {
             AppLog.w(T.NUX, "SSLHandshakeException failed. Erroneous SSL certificate detected.");
             return null;
         }
+
         return xmlrpcUrl;
     }
 
-    public Blog addBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId,
-                        String username, String password, boolean isAdmin) {
-        Blog blog = null;
+    /**
+     * Add a new blog or update a blog name in local DB.
+     *
+     * @return true if a new blog has been added or an old blog has been updated.
+     * Return false if no change has been made.
+     */
+    public boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId, String username,
+                                   String password, boolean isAdmin) {
+        Blog blog;
         if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
             // The blog isn't in the app, so let's create it
             blog = new Blog(xmlRpcUrl, username, password);
@@ -323,6 +355,7 @@ public class SetupBlog {
             blog.setWpVersion("");
             blog.setAdmin(isAdmin);
             WordPress.wpDB.saveBlog(blog);
+            return true;
         } else {
             // Update blog name
             int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
@@ -332,22 +365,28 @@ public class SetupBlog {
                 if (!blogName.equals(blog.getBlogName())) {
                     blog.setBlogName(blogName);
                     WordPress.wpDB.saveBlog(blog);
+                    return true;
                 }
             } catch (Exception e) {
                 AppLog.e(T.NUX, "localTableBlogId: " + localTableBlogId + " not found");
             }
+            return false;
         }
-        return blog;
     }
 
     /**
      * Remove blogs that are not in the list and add others
      * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
      * that by a HashSet of a specialized Blog class (that supports comparison)
+     *
+     * @return true if a change has been made (new blog added, old blog updated, blog deleted).
      */
-    public void syncBlogs(Context context, List<Map<String, Object>> newBlogList) {
+    public boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList) {
+        boolean retValue;
+
         // Add all blogs from blogList
-        addBlogs(newBlogList);
+        retValue = addBlogs(newBlogList);
+
         // Delete blogs if not in blogList
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
@@ -357,14 +396,19 @@ public class SetupBlog {
         for (Map<String, Object> blog : allBlogs) {
             if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
                 WordPress.wpDB.deleteAccount(context, Integer.parseInt(blog.get("id").toString()));
+                retValue = true;
             }
         }
+        return retValue;
     }
 
     /**
-     * Add selected blog(s) to the database
+     * Add selected blog(s) to the database.
+     *
+     * @return true if a change has been made (new blog added or old blog updated).
      */
-    public void addBlogs(List<Map<String, Object>> blogList) {
+    public boolean addBlogs(List<Map<String, Object>> blogList) {
+        boolean retValue = false;
         for (int i = 0; i < blogList.size(); i++) {
             Map<String, Object> blogMap = blogList.get(i);
             String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
@@ -373,12 +417,13 @@ public class SetupBlog {
                 // xmlrpcUrl is invalid, set the error message
                 mErrorMsgId = R.string.invalid_xmlrpc_url;
                 AppLog.e(T.NUX, "Invalid XMLRPC url: " + xmlrpcUrl);
-                return;
+                return retValue;
             }
             String homeUrl = blogMap.get("url").toString();
             String blogId = blogMap.get("blogid").toString();
             boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
-            addBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
+            retValue |= addOrUpdateBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
         }
+        return retValue;
     }
 }

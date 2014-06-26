@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.DashboardActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -46,7 +44,6 @@ public class BlogPreferencesActivity extends Activity {
     private EditText mHttpPasswordET;
     private CheckBox mFullSizeCB;
     private CheckBox mScaledCB;
-    private CheckBox mLocationCB;
     private Spinner mImageWidthSpinner;
     private EditText mScaledImageWidthET;
 
@@ -77,7 +74,6 @@ public class BlogPreferencesActivity extends Activity {
         mScaledImageWidthET = (EditText) findViewById(R.id.scaledImageWidth);
         mFullSizeCB = (CheckBox) findViewById(R.id.fullSizeImage);
         mScaledCB = (CheckBox) findViewById(R.id.scaledImage);
-        mLocationCB = (CheckBox) findViewById(R.id.location);
         mImageWidthSpinner = (Spinner) findViewById(R.id.maxImageWidth);
         Button removeBlogButton = (Button) findViewById(R.id.remove_account);
 
@@ -142,8 +138,6 @@ public class BlogPreferencesActivity extends Activity {
 
         blog.setMaxImageWidth(mImageWidthSpinner.getSelectedItem().toString());
 
-        blog.setLocation(mLocationCB.isChecked());
-
         WordPress.wpDB.saveBlog(blog);
 
         if (WordPress.getCurrentBlog().getLocalTableBlogId() == blog.getLocalTableBlogId())
@@ -174,7 +168,6 @@ public class BlogPreferencesActivity extends Activity {
         // Set header labels to upper case
         ((TextView) findViewById(R.id.l_section1)).setText(getResources().getString(R.string.account_details).toUpperCase(Locale.getDefault()));
         ((TextView) findViewById(R.id.l_section2)).setText(getResources().getString(R.string.media).toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.l_section3)).setText(getResources().getString(R.string.location).toUpperCase(Locale.getDefault()));
         ((TextView) findViewById(R.id.l_maxImageWidth)).setText(getResources().getString(R.string.max_thumbnail_px_width).toUpperCase(Locale.getDefault()));
         ((TextView) findViewById(R.id.l_httpuser)).setText(getResources().getString(R.string.http_credentials).toUpperCase(Locale.getDefault()));
 
@@ -254,23 +247,6 @@ public class BlogPreferencesActivity extends Activity {
                 }
             }
         });
-        // don't show location option for devices that have no location support.
-        boolean hasLocationProvider = false;
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        List<String> providers = locationManager.getProviders(true);
-        for (String providerName : providers) {
-            if (providerName.equals(LocationManager.GPS_PROVIDER) || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
-                hasLocationProvider = true;
-            }
-        }
-
-        if (hasLocationProvider) {
-            mLocationCB.setChecked(blog.isLocation());
-        } else {
-            mLocationCB.setChecked(false);
-            RelativeLayout locationLayout = (RelativeLayout) findViewById(R.id.sectionLocation);
-            locationLayout.setVisibility(View.GONE);
-        }
 
         int imageWidthPosition = spinnerArrayAdapter.getPosition(blog.getMaxImageWidth());
         mImageWidthSpinner.setSelection((imageWidthPosition >= 0) ? imageWidthPosition : 0);

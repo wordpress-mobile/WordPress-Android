@@ -182,7 +182,6 @@
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
 	<string name="file_error_create">メディアアップロードの際に一時ファイルを作成できませんでした。デバイス上に空き容量があるか確認してください。</string>
 	<string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたようです。</string>
-	<string name="geotag">投稿に位置情報を追加</string>
 	<string name="hide_all">すべて非表示</string>
 	<string name="hint_comment_content">コメント</string>
 	<string name="horizontal_alignment">横配置</string>
@@ -193,7 +192,6 @@
 	<string name="link_enter_url_text">リンク​​テキスト (オプション)</string>
 	<string name="local_draft">ローカルの下書き</string>
 	<string name="location_not_found">位置情報が見つかりません</string>
-	<string name="location_toast">位置データがまだ利用できません…</string>
 	<string name="media_gallery_edit">ギャラリーを編集</string>
 	<string name="media_gallery_image_order">画像の順序</string>
 	<string name="media_gallery_num_columns">カラム数</string>
@@ -257,7 +255,6 @@
 	<string name="username_email">ユーザー名またはメールアドレス</string>
 	<string name="view_admin">管理画面を表示</string>
 	<string name="view_in_browser">ブラウザで表示</string>
-	<string name="view_map">地図を表示</string>
 	<string name="visit_security_settings">セキュリティ設定へ移動</string>
 	<string name="wordpress_blog">WordPress ブログ</string>
 	<string name="wpcom_blogs">WordPress.com ブログ</string>

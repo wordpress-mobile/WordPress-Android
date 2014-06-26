@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sectionLocationSearch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/searchLocationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/current_location"
+        android:layout_weight="1"
+        android:inputType="text"
+        android:imeOptions="actionSearch" />
+
+    <Button
+        android:id="@+id/searchLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="@string/search_current_location" />
+</LinearLayout>
