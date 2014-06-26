@@ -386,6 +386,19 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
+        // dropdown arrow only shows for wp posts in followed tags
+        if (post.isWP() && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+            holder.imgDropDown.setVisibility(View.VISIBLE);
+            holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO
+                }
+            });
+        } else {
+            holder.imgDropDown.setVisibility(View.GONE);
+        }
+
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData();
@@ -446,6 +459,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final ImageView imgBtnLike;
         private final ImageView imgBtnComment;
         private final ImageView imgBtnReblog;
+        private final ImageView imgDropDown;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
@@ -470,13 +484,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
+            imgDropDown = (ImageView) view.findViewById(R.id.image_dropdown);
 
             layoutBottom = (ViewGroup) view.findViewById(R.id.layout_bottom);
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
             // in a specific blog
-            if (postListType.equals(ReaderTypes.ReaderPostListType.BLOG_PREVIEW)) {
+            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
                 layoutPostHeader.setVisibility(View.GONE);
             }
         }

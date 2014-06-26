@@ -44,6 +44,19 @@
             android:layout_below="@+id/text_blog_name"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_toRightOf="@+id/image_avatar" />
+
+        <ImageView
+            android:id="@+id/image_dropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/margin_extra_small"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@drawable/reader_transparent_selector"
+            android:src="@drawable/reader_arrow_dropdown" />
+
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPNetworkImageView
