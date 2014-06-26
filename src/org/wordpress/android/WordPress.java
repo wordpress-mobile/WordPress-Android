@@ -294,13 +294,23 @@ public class WordPress extends Application {
      * @return registration id or empty string if it's not registered.
      */
     private static String gcmRegisterIfNot(Context context) {
-        String regId;
-        GCMRegistrar.checkDevice(context);
-        GCMRegistrar.checkManifest(context);
-        regId = GCMRegistrar.getRegistrationId(context);
-        String gcmId = BuildConfig.GCM_ID;
-        if (gcmId != null && TextUtils.isEmpty(regId)) {
-            GCMRegistrar.register(context, gcmId);
+        String regId = "";
+        try {
+            GCMRegistrar.checkDevice(context);
+            GCMRegistrar.checkManifest(context);
+            regId = GCMRegistrar.getRegistrationId(context);
+            String gcmId = BuildConfig.GCM_ID;
+            if (gcmId != null && TextUtils.isEmpty(regId)) {
+                GCMRegistrar.register(context, gcmId);
+            }
+        } catch (UnsupportedOperationException e) {
+            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
+            // doesn't support GCM (ie. non-google Android)
+            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
+            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
+            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
         }
         return regId;
     }
@@ -310,14 +320,10 @@ public class WordPress extends Application {
 
         // Register to WordPress.com notifications
         if (WordPress.hasValidWPComCredentials(context)) {
-            try {
-                if (!TextUtils.isEmpty(regId)) {
-                    // Send the token to WP.com in case it was invalidated
-                    NotificationUtils.registerDeviceForPushNotifications(context, regId);
-                    AppLog.v(T.NOTIFS, "Already registered for GCM");
-                }
-            } catch (Exception e) {
-                AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
+            if (!TextUtils.isEmpty(regId)) {
+                // Send the token to WP.com in case it was invalidated
+                NotificationUtils.registerDeviceForPushNotifications(context, regId);
+                AppLog.v(T.NOTIFS, "Already registered for GCM");
             }
         }
 
