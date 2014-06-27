@@ -296,6 +296,11 @@ public class ReaderPostTable {
         return numDeleted;
     }
 
+    public static int deletePostsInBlog(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+    }
+
     /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */

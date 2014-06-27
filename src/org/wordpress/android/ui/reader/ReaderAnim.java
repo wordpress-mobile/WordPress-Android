@@ -169,9 +169,9 @@ public class ReaderAnim {
     }
 
     public static void animateListItem(ListView listView,
-                                int positionAbsolute,
-                                Animation.AnimationListener listener,
-                                int animResId) {
+                                       int positionAbsolute,
+                                       Animation.AnimationListener listener,
+                                       int animResId) {
         if (listView == null) {
             return;
         }
@@ -187,6 +187,8 @@ public class ReaderAnim {
         }
 
         Animation animation = AnimationUtils.loadAnimation(listView.getContext(), animResId);
+        animation.setFillAfter(false);
+
         if (listener != null) {
             animation.setAnimationListener(listener);
         }

@@ -381,4 +381,26 @@ public class ReaderBlogActions {
                 errorListener);
         WordPress.requestQueue.add(request);
     }
+
+    public static boolean blockBlogFromReader(final long blogId) {
+        if (blogId == 0) {
+            return false;
+        }
+
+        ReaderPostTable.deletePostsInBlog(blogId);
+
+        // TODO: add API call
+
+        return true;
+    }
+
+    public static boolean unblockBlogFromReader(final long blogId) {
+        if (blogId == 0) {
+            return false;
+        }
+
+        // TODO: add API call
+
+        return true;
+    }
 }

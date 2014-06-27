@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -226,9 +227,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         return mPosts.size();
     }
 
+    public boolean isValidPosition(int position) {
+        return (position >= 0 && position < getCount());
+    }
     @Override
     public Object getItem(int position) {
-        return mPosts.get(position);
+        if (isValidPosition(position)) {
+            return mPosts.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -386,13 +394,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
-        // dropdown arrow only shows for wp posts in followed tags
-        if (post.isWP() && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        // dropdown arrow which displays "block this blog" menu only shows for public
+        // wp posts in followed tags
+        if (post.isWP() && !post.isPrivate && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             holder.imgDropDown.setVisibility(View.VISIBLE);
             holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO
+                    v.showContextMenu();
                 }
             });
         } else {

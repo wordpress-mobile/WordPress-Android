@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,10 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cocosw.undobar.UndoBarController;
+
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -37,6 +41,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
@@ -93,6 +98,7 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+    private int mContextMenuListItemPosition;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -239,6 +245,8 @@ public class ReaderPostListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         mListView = (WPListView) rootView.findViewById(android.R.id.list);
+
+        registerForContextMenu(mListView);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -444,6 +452,79 @@ public class ReaderPostListFragment extends Fragment
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private static final int CONTEXT_MENU_BLOCK_BLOG = 1;
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        mContextMenuListItemPosition = info.position;
+        menu.add(0, CONTEXT_MENU_BLOCK_BLOG, 0, R.string.reader_menu_block_blog);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case CONTEXT_MENU_BLOCK_BLOG :
+                ReaderPost post = (ReaderPost) getPostAdapter().getItem(mContextMenuListItemPosition);
+                if (post != null) {
+                    blockBlog(post.blogId, post.getBlogName());
+                }
+                return true;
+            default :
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    private void blockBlog(final long blogId, final String blogName) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        // remember the posts that we're about to delete so they can be restored upon undo
+        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+
+        if (!ReaderBlogActions.blockBlogFromReader(blogId)) {
+            return;
+        }
+
+        // fade out the post the user chose to block from, then refresh the list
+        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (hasActivity()) {
+                    refreshPosts();
+                }
+            }
+        };
+        ReaderAnim.animateListItem(mListView, mContextMenuListItemPosition, aniListener, R.anim.fade_out);
+
+        // show the undo bar enabling the user to undo the block
+        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+            @Override
+            public void onUndo(Parcelable parcelable) {
+                if (ReaderBlogActions.unblockBlogFromReader(blogId)) {
+                    ReaderPostTable.addOrUpdatePosts(getCurrentTag(), postsToRestore);
+                    refreshPosts();
+                }
+            }
+        };
+        new UndoBarController.UndoBar(getActivity())
+                             .message(getString(R.string.reader_toast_blog_blocked, blogName))
+                             .listener(undoListener)
+                             .translucent(true)
+                             .show();
+    }
+
+    private void hideUndoBar() {
+        if (hasActivity()) {
+            UndoBarController.clear(getActivity());
         }
     }
 
@@ -707,6 +788,7 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
+        hideUndoBar();
         updateTagPreviewHeader();
         hideLoadingProgress();
 
