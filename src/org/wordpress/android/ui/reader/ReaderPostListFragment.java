@@ -98,7 +98,9 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
+
     private int mContextMenuListItemPosition;
+    private ReaderPost mContextMenuPost;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -461,30 +463,33 @@ public class ReaderPostListFragment extends Fragment
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         mContextMenuListItemPosition = info.position;
-        menu.add(0, CONTEXT_MENU_BLOCK_BLOG, 0, R.string.reader_menu_block_blog);
+        mContextMenuPost = (ReaderPost) getPostAdapter().getItem(mContextMenuListItemPosition);
+        if (mContextMenuPost != null) {
+            if (mContextMenuPost.hasBlogName()) {
+                menu.setHeaderTitle(mContextMenuPost.getBlogName());
+            }
+            menu.add(0, CONTEXT_MENU_BLOCK_BLOG, 0, R.string.reader_menu_block_blog);
+        }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case CONTEXT_MENU_BLOCK_BLOG :
-                ReaderPost post = (ReaderPost) getPostAdapter().getItem(mContextMenuListItemPosition);
-                if (post != null) {
-                    blockBlog(post.blogId, post.getBlogName());
-                }
+                blockBlog(mContextMenuPost.blogId);
                 return true;
             default :
                 return super.onContextItemSelected(item);
         }
     }
 
-    private void blockBlog(final long blogId, final String blogName) {
+    private void blockBlog(final long blogId) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
         // remember the posts that we're about to delete so they can be restored upon undo
-        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, 0);
 
         if (!ReaderBlogActions.blockBlogFromReader(blogId)) {
             return;
@@ -516,7 +521,7 @@ public class ReaderPostListFragment extends Fragment
             }
         };
         new UndoBarController.UndoBar(getActivity())
-                             .message(getString(R.string.reader_toast_blog_blocked, blogName))
+                             .message(getString(R.string.reader_toast_blog_blocked))
                              .listener(undoListener)
                              .translucent(true)
                              .show();
