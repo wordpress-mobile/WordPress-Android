@@ -716,8 +716,8 @@ public class ReaderPostDetailFragment extends Fragment
         // remove excess existing views
         int numExistingViews = layoutLikingAvatars.getChildCount();
         if (numExistingViews > avatarUrls.size()) {
-            int numToRemove = avatarUrls.size() - numExistingViews;
-            layoutLikingAvatars.removeViews(numExistingViews, numToRemove);
+            int numToRemove = numExistingViews - avatarUrls.size();
+            layoutLikingAvatars.removeViews(numExistingViews - numToRemove, numToRemove);
         }
 
         int index = 0;
