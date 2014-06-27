@@ -412,8 +412,7 @@ public class ReaderPostTable {
                 stmtPosts.clearBindings();
             }
 
-            // now add to tbl_post_tags - note that tagName will be null when updating a single
-            // post, in which case we skip it here
+            // now add to tbl_post_tags if a tag was passed
             if (tag != null) {
                 String tagName = tag.getTagName();
                 int tagType = tag.tagType.toInt();

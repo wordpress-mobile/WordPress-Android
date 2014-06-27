@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
@@ -382,24 +383,59 @@ public class ReaderBlogActions {
         WordPress.requestQueue.add(request);
     }
 
-    public static boolean blockBlogFromReader(final long blogId) {
+    /*
+     * block a blog - returns the list of posts that were deleted by the block so they can
+     * be restored if the user undoes the block
+     */
+    public static ReaderPostList blockBlogFromReader(final long blogId) {
         if (blogId == 0) {
-            return false;
+            return null;
         }
 
+        // remember the posts in this blog, then delete them
+        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, 0);
         ReaderPostTable.deletePostsInBlog(blogId);
 
-        // TODO: add API call
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
+                if (!success) {
+                    ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+            }
+        };
 
-        return true;
+        String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
+
+        return postsToRestore;
     }
 
-    public static boolean unblockBlogFromReader(final long blogId) {
-        if (blogId == 0) {
-            return false;
-        }
+    public static boolean unblockBlogFromReader(final long blogId, final ReaderPostList postsToRestore) {
+        ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
 
-        // TODO: add API call
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                // nop
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+            }
+        };
+        String path = "/me/block/sites/" + Long.toString(blogId) + "/delete";
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
     }

@@ -488,14 +488,12 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        // remember the posts that we're about to delete so they can be restored upon undo
-        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, 0);
+        // perform call to block this blog - returns list of posts deleted by blocking so
+        // they can be restored if the user undoes the block
+        final ReaderPostList postsToRestore = ReaderBlogActions.blockBlogFromReader(blogId);
 
-        if (!ReaderBlogActions.blockBlogFromReader(blogId)) {
-            return;
-        }
-
-        // fade out the post the user chose to block from, then refresh the list
+        // fade out the post the user chose to block from, then refresh the list so the posts
+        // deleted by the above call no longer appear
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -514,8 +512,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                if (ReaderBlogActions.unblockBlogFromReader(blogId)) {
-                    ReaderPostTable.addOrUpdatePosts(getCurrentTag(), postsToRestore);
+                if (ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore)) {
                     refreshPosts();
                 }
             }
