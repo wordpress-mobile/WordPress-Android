@@ -85,10 +85,10 @@ public class ReaderUserListActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         if (getListView().getFirstVisiblePosition() > 0) {
             outState.putParcelable(LIST_STATE, getListView().onSaveInstanceState());
         }
+        super.onSaveInstanceState(outState);
     }
 
     private void loadUsers(final long blogId, final long postId) {

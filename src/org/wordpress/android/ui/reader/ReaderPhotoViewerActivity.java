@@ -45,9 +45,9 @@ public class ReaderPhotoViewerActivity extends Activity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
+        super.onSaveInstanceState(outState);
     }
 
     private void loadImage(String imageUrl) {
