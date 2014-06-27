@@ -393,7 +393,7 @@ public class ReaderBlogActions {
         }
 
         // remember the posts in this blog, then delete them
-        final ReaderPostList postsToRestore = ReaderPostTable.getPostsInBlog(blogId, 0);
+        final ReaderPostList deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0);
         ReaderPostTable.deletePostsInBlog(blogId);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -401,7 +401,7 @@ public class ReaderBlogActions {
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 if (!success) {
-                    ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+                    ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
                 }
             }
         };
@@ -409,14 +409,14 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+                ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
             }
         };
 
         String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
-        return postsToRestore;
+        return deletedPosts;
     }
 
     public static boolean unblockBlogFromReader(final long blogId, final ReaderPostList postsToRestore) {
