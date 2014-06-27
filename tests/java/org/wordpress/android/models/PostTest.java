@@ -39,4 +39,10 @@ public class PostTest extends InstrumentationTestCase {
         assertNotNull(loadedPost);
         assertEquals(loadedPost.getTitle(), post.getTitle());
     }
+
+    // reproduce issue #1544
+    public void testGetCustomFields() {
+        Post post = new Post(1, false);
+        post.getCustomFields();
+    }
 }
