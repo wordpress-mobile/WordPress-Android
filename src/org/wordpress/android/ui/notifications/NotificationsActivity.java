@@ -112,6 +112,15 @@ public class NotificationsActivity extends WPActionBarActivity
         notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
     }
 
+    @Override
+    protected void onDestroy() {
+        if (mNotesList != null) {
+            mNotesList.closeAdapterCursor();
+        }
+
+        super.onDestroy();
+    }
+
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
