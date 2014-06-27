@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
+import org.json.JSONObject;
 import org.wordpress.android.TestUtils;
 import org.wordpress.android.WordPress;
 
@@ -41,8 +42,14 @@ public class PostTest extends InstrumentationTestCase {
     }
 
     // reproduce issue #1544
-    public void testGetCustomFields() {
+    public void testGetNullCustomFields() {
         Post post = new Post(1, false);
-        post.getCustomFields();
+        assertEquals(post.getCustomFields(), null);
+    }
+
+    public void testGetNullCustomField() {
+        Post post = new Post(1, false);
+        JSONObject remoteGeoLatitude = post.getCustomField("geo_latitude");
+        assertEquals(remoteGeoLatitude, null);
     }
 }
