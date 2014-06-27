@@ -58,15 +58,18 @@ public class NewNotificationsActivity extends WPActionBarActivity
         super.onCreate(null);
         createMenuDrawer(R.layout.notifications_activity);
 
-        FragmentManager fm = getFragmentManager();
         if (savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+        }
+
+        FragmentManager fm = getFragmentManager();
+        if (fm.findFragmentByTag(TAG_LIST_VIEW) != null) {
+            mNotesList = (NewNotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
+        } else {
             mNotesList = new NewNotificationsListFragment();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
             fragmentTransaction.commit();
-            AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
-        } else {
-            mNotesList = (NewNotificationsListFragment) getFragmentManager().findFragmentByTag(TAG_LIST_VIEW);
         }
 
         if (DisplayUtils.isLandscapeTablet(this)) {
