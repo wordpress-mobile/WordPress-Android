@@ -170,6 +170,9 @@ public class ReaderAnim {
         set.start();
     }
 
+    /*
+     * called when adding or removing an item from a listView
+     */
     public static enum AnimateListItemStyle { ADDITION, DELETION }
     public static void animateListItem(ListView listView,
                                        int positionAbsolute,
