@@ -99,9 +99,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onDestroyView() {
-        if (mNotesAdapter != null) {
-            mNotesAdapter.closeCursor();
-        }
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroyView();
     }
@@ -114,6 +111,12 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         // so we have to re-init the layout, via the helper here
         initPullToRefreshHelper();
         mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
+    }
+
+    public void closeAdapterCursor() {
+        if (mNotesAdapter != null) {
+            mNotesAdapter.closeCursor();
+        }
     }
 
     private void initPullToRefreshHelper() {
