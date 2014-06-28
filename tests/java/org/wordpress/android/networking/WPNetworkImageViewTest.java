@@ -3,6 +3,10 @@ package org.wordpress.android.networking;
 import android.os.Handler;
 import android.test.InstrumentationTestCase;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader.ImageContainer;
+import com.android.volley.toolbox.ImageLoader.ImageListener;
+
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -22,7 +26,7 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
     }
 
     // https://github.com/wordpress-mobile/WordPress-Android/issues/1549
-    public void testVolleyImageLoaderGetNullUrl() throws Exception {
+    public void testVolleyImageLoaderGetNullHost() throws InterruptedException {
         Handler mainLooperHandler = new Handler(WordPress.getContext().getMainLooper());
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         final boolean success[] = new boolean[1];
@@ -31,7 +35,13 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
             public void run() {
                 try {
                     // This call crash on old volley versions
-                    WordPress.imageLoader.get(null, null, 1, 1);
+                    WordPress.imageLoader.get("http;///hello/null/host", new ImageListener() {
+                        @Override
+                        public void onResponse(ImageContainer imageContainer, boolean b) {}
+
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {}
+                    }, 1, 1);
                     success[0] = true;
                 } catch (Exception e) {
                     AppLog.e(T.TESTS, e);
