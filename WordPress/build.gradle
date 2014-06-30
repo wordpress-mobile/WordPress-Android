@@ -75,7 +75,15 @@ android {
         compile 'com.android.support:support-v13:19.0.+'
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
+
+        compile('org.apache.httpcomponents:httpmime:4.1.+') {
+          exclude group: 'commons-logging', module: 'commons-logging'
+        }
+
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
+        compile 'commons-lang:commons-lang:2.6'
+        compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
+        compile "com.mixpanel.android:mixpanel-android:4.2.1"
         compile 'com.mcxiaoke.volley:library:1.0.+'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
@@ -83,16 +91,14 @@ android {
         androidTestCompile 'org.objenesis:objenesis:2.1'
         androidTestCompile 'org.mockito:mockito-core:+'
 
-        // These are provided by the WordPress-Android Repository
-        compile 'org.wordpress:gcm:1.0.0'
-        compile 'com.automattic:wordpresscom-rest:0.0.5'
-        compile 'org.wordpress:httpmime:4.1.2'
-        compile 'org.wordpress:graphview:3.1.1'
-        compile 'org.wordpress:drag-sort-listview:0.6.1'
-        compile 'org.wordpress:slidinguppanel:1.0.0'
+        // Provided by the WordPress-Android Repository
+        compile 'org.wordpress:gcm:1.0.0' // not found in maven central
+        compile 'org.wordpress:graphview:3.1.1' // not found in maven central
+        compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
+        compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
         compile 'org.wordpress:android-passcodelock:0.0.5'
-        compile 'org.wordpress:commons-lang:2.6'
-        compile 'org.wordpress:pulltorefresh-main:+'
+        compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
+        compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
@@ -102,8 +108,6 @@ android {
             exclude group: 'com.android', module: 'volley'
         }
 
-        // Local dependencies
-        compile files('libs/MixpanelAPI.jar')
     }
 
     sourceSets {
