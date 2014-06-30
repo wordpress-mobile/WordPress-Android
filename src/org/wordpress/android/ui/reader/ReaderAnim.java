@@ -208,7 +208,6 @@ public class ReaderAnim {
         }
 
         Animation animation = AnimationUtils.loadAnimation(listView.getContext(), animResId);
-        animation.setFillAfter(false);
 
         if (listener != null) {
             animation.setAnimationListener(listener);

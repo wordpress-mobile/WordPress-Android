@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -152,6 +151,13 @@ public class ReaderPostAdapter extends BaseAdapter {
     public void reload() {
         clear();
         loadPosts();
+    }
+
+    public void removePost(int position) {
+        if (isValidPosition(position)) {
+            mPosts.remove(position);
+            notifyDataSetChanged();
+        }
     }
 
     /*

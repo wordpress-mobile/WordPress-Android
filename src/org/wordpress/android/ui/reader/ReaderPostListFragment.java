@@ -501,7 +501,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore = ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
 
-        // fade out the post the user chose to block from, then refresh the list so the posts
+        // animate out the post the user chose to block from, then refresh the list so the posts
         // deleted by the above call no longer appear
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
@@ -511,7 +511,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (hasActivity()) {
-                    refreshPosts();
+                    getPostAdapter().removePost(mContextMenuListItemPosition);
                 }
             }
         };
