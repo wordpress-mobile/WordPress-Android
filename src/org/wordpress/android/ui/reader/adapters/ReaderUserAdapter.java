@@ -15,7 +15,7 @@ import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
-import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.PhotonUtils;

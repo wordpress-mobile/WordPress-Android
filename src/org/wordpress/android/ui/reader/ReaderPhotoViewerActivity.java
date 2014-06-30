@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;

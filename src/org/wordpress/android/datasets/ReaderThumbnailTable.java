@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
-import org.wordpress.android.util.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.SqlUtils;
 
 /**

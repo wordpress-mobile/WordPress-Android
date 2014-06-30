@@ -24,7 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ReaderVideoUtils;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 /**

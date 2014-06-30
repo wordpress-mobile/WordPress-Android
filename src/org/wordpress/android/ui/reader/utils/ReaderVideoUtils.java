@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
 import android.text.TextUtils;
@@ -10,7 +10,9 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.JSONUtil;
 
 public class ReaderVideoUtils {
 	private ReaderVideoUtils() {

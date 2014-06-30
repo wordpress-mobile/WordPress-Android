@@ -28,7 +28,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;

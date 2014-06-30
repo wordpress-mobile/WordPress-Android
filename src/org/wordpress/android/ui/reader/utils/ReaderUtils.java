@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader.utils;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,7 +19,7 @@ public class ReaderUtils {
     /*
      * used by ReaderPostDetailFragment to enter/exit full screen mode
      */
-    static interface FullScreenListener {
+    public static interface FullScreenListener {
         boolean onRequestFullScreen(boolean enable);
         boolean isFullScreen();
         boolean isFullScreenSupported();
@@ -73,7 +73,7 @@ public class ReaderUtils {
     /*
      * adds a transparent header to the passed listView
      */
-    static View addListViewHeader(ListView listView, int height) {
+    public static View addListViewHeader(ListView listView, int height) {
         if (listView == null) {
             return null;
         }
@@ -89,7 +89,7 @@ public class ReaderUtils {
      * adds a rule which tells the view with targetId to be placed below layoutBelowId - only
      * works if viewParent is a RelativeLayout
      */
-    static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
+    public static void layoutBelow(ViewGroup viewParent, int targetId, int layoutBelowId) {
         if (viewParent == null || !(viewParent instanceof RelativeLayout)) {
             return;
         }

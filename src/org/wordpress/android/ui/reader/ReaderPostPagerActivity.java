@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;

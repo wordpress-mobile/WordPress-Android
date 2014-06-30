@@ -19,7 +19,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.AppLog;
