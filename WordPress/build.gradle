@@ -45,6 +45,7 @@ android {
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
         debug {
+
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
@@ -109,18 +110,20 @@ android {
     }
 
     sourceSets {
+
         release {
-            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
         }
 
         debug {
-            manifest.srcFile 'AndroidManifestReleaseAndDebug.xml'
+            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
         }
 
         zbetagroup {
-            res.srcDirs = ['src/main/res-zbetagroup']
-            manifest.srcFile 'AndroidManifestBetagroup.xml'
+            res.srcDirs = ['res-zbetagroup']
+            manifest.srcFile 'src/main/AndroidManifestBetagroup.xml'
         }
+
     }
 } // end android
 
