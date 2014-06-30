@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.ui.stats.StatUtils;
 
 /**
  * A model to represent a top post or page stat

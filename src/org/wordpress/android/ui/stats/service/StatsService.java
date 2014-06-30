@@ -43,7 +43,7 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.ui.stats.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;

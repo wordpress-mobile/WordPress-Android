@@ -22,7 +22,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 

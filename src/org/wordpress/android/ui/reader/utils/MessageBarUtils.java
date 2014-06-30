@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.reader.utils;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AniUtils;
 
 /*
  * used by activities to animate a message in from the bottom then animate it back out after

@@ -18,7 +18,6 @@ import org.wordpress.android.datasets.StatsVideosTable;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for video stats. Has three pages, for Today's and Yesterday's stats as well as a summary page.

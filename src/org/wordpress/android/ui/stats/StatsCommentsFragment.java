@@ -19,7 +19,6 @@ import org.wordpress.android.datasets.StatsTopCommentersTable;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.FormatUtils;
-import org.wordpress.android.util.StatUtils;
 
 /**
  * Fragment for comments stats. Has three pages, for Most Commented, for Top Commenters, and for Comments Summary

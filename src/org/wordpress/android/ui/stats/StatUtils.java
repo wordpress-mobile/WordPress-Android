@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
@@ -22,6 +22,7 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.FileInputStream;

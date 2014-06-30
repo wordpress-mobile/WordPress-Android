@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.Utils;
 
 import java.util.Locale;

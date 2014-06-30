@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.ui.stats.StatUtils;
 
 /**
  * A model to represent the summary of a blog's stats.

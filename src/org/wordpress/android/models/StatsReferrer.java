@@ -2,7 +2,7 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.wordpress.android.util.StatUtils;
+import org.wordpress.android.ui.stats.StatUtils;
 
 /**
  * A model to represent a referrer child stat.
