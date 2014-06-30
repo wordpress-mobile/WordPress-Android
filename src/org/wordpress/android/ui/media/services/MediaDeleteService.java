@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.media.services;
 
 import android.app.Service;
 import android.content.Context;

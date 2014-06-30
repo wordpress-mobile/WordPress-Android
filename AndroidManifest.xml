@@ -264,12 +264,12 @@
         </service>
 
         <service
-            android:name=".util.MediaUploadService"
+            android:name=".ui.media.services.MediaUploadService"
             android:label="Media Upload Service" >
         </service>
 
         <service
-            android:name=".util.MediaDeleteService"
+            android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service" >
         </service>
 

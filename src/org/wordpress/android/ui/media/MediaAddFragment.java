@@ -24,10 +24,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
-import org.wordpress.android.util.MediaUploadService;
-import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.MediaUtils.LaunchCameraCallback;
-import org.wordpress.android.util.MediaUtils.RequestCode;
+import org.wordpress.android.ui.media.services.MediaUploadService;
+import org.wordpress.android.ui.media.MediaUtils.LaunchCameraCallback;
+import org.wordpress.android.ui.media.MediaUtils.RequestCode;
 import org.wordpress.android.util.ToastUtils;
 
 import java.io.File;

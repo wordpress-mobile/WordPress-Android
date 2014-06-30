@@ -77,7 +77,7 @@ import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.MediaGalleryImageSpan;
-import org.wordpress.android.util.MediaUtils;
+import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.util.WPHtml;

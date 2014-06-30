@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,7 +18,11 @@ import android.webkit.MimeTypeMap;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.Version;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
 
