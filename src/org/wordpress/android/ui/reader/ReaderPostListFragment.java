@@ -491,7 +491,7 @@ public class ReaderPostListFragment extends Fragment
         final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded) {
+                if (!succeeded && hasActivity()) {
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_generic);
                 }
             }
