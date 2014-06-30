@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

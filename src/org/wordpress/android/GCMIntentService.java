@@ -24,7 +24,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
