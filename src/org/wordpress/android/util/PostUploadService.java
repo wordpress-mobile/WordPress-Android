@@ -663,7 +663,7 @@ public class PostUploadService extends Service {
                 String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
                 String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
 
-                orientation = ImageHelper.getImageOrientation(context, path);
+                orientation = ImageUtils.getImageOrientation(context, path);
 
                 String resizedPictureURL = null;
 
@@ -691,7 +691,7 @@ public class PostUploadService extends Service {
                 if (shouldUploadResizedVersion) {
                     MediaFile resizedMediaFile = new MediaFile(mediaFile);
                     // Create resized image
-                    byte[] bytes = ImageHelper.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
+                    byte[] bytes = ImageUtils.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
                             fileExtension, orientation);
 
                     if (bytes == null) {

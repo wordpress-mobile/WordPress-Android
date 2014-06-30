@@ -28,8 +28,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
-import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
-import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
+import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.Utils;
 

@@ -28,8 +28,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.util.ImageHelper.BitmapWorkerCallback;
-import org.wordpress.android.util.ImageHelper.BitmapWorkerTask;
+import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
+import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.xmlrpc.android.ApiHelper;
 
 import java.util.ArrayList;

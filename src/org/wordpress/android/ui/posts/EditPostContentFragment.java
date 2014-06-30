@@ -75,7 +75,7 @@ import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
@@ -896,7 +896,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 int maxWidth = getMaximumThumbnailWidth();
                 //resize the downloaded bitmap
                 try {
-                    resizedBitmap = ImageHelper.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
+                    resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
                 } catch (OutOfMemoryError er) {
                     CrashlyticsUtils.setInt(ExtraKey.IMAGE_WIDTH, downloadedBitmap.getWidth());
                     CrashlyticsUtils.setInt(ExtraKey.IMAGE_HEIGHT, downloadedBitmap.getHeight());
@@ -1022,12 +1022,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            thumbnailBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(getActivity(), imageUri.getEncodedPath(),
+            thumbnailBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(getActivity(), imageUri.getEncodedPath(),
                     getMaximumThumbnailWidth());
             if (thumbnailBitmap == null) {
                 return false;
             }
-            mediaTitle = ImageHelper.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
         }
 
         WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);

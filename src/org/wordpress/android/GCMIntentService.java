@@ -23,7 +23,7 @@ import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 
 import java.io.UnsupportedEncodingException;
@@ -129,7 +129,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             float screenDensity = getResources().getDisplayMetrics().densityDpi;
             int size = Math.round(64 * (screenDensity / 160));
             String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
-            largeIconBitmap = ImageHelper.downloadBitmap(resizedURL);
+            largeIconBitmap = ImageUtils.downloadBitmap(resizedURL);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

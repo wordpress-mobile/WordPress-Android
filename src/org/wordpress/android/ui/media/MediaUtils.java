@@ -20,7 +20,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.Version;
 import org.wordpress.android.widgets.WPImageSpan;
@@ -315,7 +315,7 @@ public class MediaUtils {
             }
         }
 
-        int[] dimensions = ImageHelper.getImageSize(curStream, context);
+        int[] dimensions = ImageUtils.getImageSize(curStream, context);
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
 
         if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
