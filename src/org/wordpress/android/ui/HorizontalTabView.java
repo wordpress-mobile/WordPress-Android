@@ -16,7 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * A view that mimics the action bar tabs. It can be placed anywhere and appears
@@ -76,11 +77,13 @@ public class HorizontalTabView extends HorizontalScrollView implements OnClickLi
         tab.setPosition(mTabs.size());
         mTabs.add(tab);
 
-        int divWidth = (int) Utils.dpToPx(1);
-        int divTopMargin = (int) Utils.dpToPx(12);
-        int divHeight = (int) Utils.dpToPx(24);
+        Context context = getContext();
 
-        int tabPad = (int) Utils.dpToPx(16);
+        int divWidth = DisplayUtils.dpToPx(context, 1);
+        int divTopMargin = DisplayUtils.dpToPx(context, 12);
+        int divHeight = DisplayUtils.dpToPx(context, 24);
+
+        int tabPad = DisplayUtils.dpToPx(context, 16);
 
         int fontSizeSp = 12;
 

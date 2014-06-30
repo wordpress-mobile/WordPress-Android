@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent a video stat
@@ -27,7 +27,7 @@ public class StatsVideo {
 
     public StatsVideo(String blogId, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
+        setDate(StatsUtils.toMs(result.getString("date")));
         setVideoId(result.getInt("videoId"));
         setName(result.getString("name"));
         setPlays(result.getInt("plays"));

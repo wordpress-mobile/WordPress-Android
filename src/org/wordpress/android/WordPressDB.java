@@ -24,10 +24,10 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -352,7 +352,7 @@ public class WordPressDB {
             c.moveToNext();
         }
         c.close();
-        Collections.sort(accounts, Utils.BlogNameComparator);
+        Collections.sort(accounts, BlogUtils.BlogNameComparator);
         return accounts;
     }
 

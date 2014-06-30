@@ -18,7 +18,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.Locale;
 
@@ -81,8 +82,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         mFragmentContainer = (FrameLayout) view.findViewById(getInnerFragmentID());
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
-        int dp8 = (int) Utils.dpToPx(8);
-        int dp80 = (int) Utils.dpToPx(80);
+        int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
+        int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
 
@@ -166,7 +167,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             return;
 
         long date = cursor.getLong(colDate);
-        long currentDate = StatUtils.getCurrentDateMs();
+        long currentDate = StatsUtils.getCurrentDateMs();
 
         boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
         boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());
@@ -175,8 +176,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
         final String label1;
         if (isToday) {
             if (date < currentDate) { // old stats
-                label0 = StatUtils.msToString(date, "MMM d");
-                label1 = StatUtils.msToString(date - ONE_DAY, "MMM d"); // assume the second set of stats is also old, and one day behind
+                label0 = StatsUtils.msToString(date, "MMM d");
+                label1 = StatsUtils.msToString(date - ONE_DAY, "MMM d"); // assume the second set of stats is also old, and one day behind
             } else {
                 label0 = StatsTimeframe.TODAY.getLabel();
                 label1 = StatsTimeframe.YESTERDAY.getLabel();
@@ -185,7 +186,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             label0 = null;
             currentDate -= ONE_DAY;
             if (date < currentDate) {// old stats
-                label1 = StatUtils.msToString(date, "MMM d");
+                label1 = StatsUtils.msToString(date, "MMM d");
             } else {
                 label1 = StatsTimeframe.YESTERDAY.getLabel();
             }

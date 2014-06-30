@@ -44,7 +44,8 @@ import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallbac
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -312,7 +313,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             mSearchView.clearFocus();
 
         // collapse the search menu on phone
-        if (mSearchMenuItem != null && !Utils.isTablet())
+        if (mSearchMenuItem != null && !DisplayUtils.isTablet(this))
             mSearchMenuItem.collapseActionView();
 
         FragmentManager fm = getFragmentManager();
@@ -443,7 +444,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_delete).setVisible(Utils.isTablet());
+        menu.findItem(R.id.menu_delete).setVisible(DisplayUtils.isTablet(this));
         return super.onPrepareOptionsMenu(menu);
     }
 

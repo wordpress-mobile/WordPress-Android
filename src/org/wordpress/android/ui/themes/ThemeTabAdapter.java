@@ -16,7 +16,8 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 /**
  * Adapter for the {@link ThemeTabFragment}'s gridview
@@ -37,7 +38,7 @@ public class ThemeTabAdapter extends CursorAdapter {
         mColumnHeight = (int) (0.75f * mColumnWidth);
         mIconPremium = context.getResources().getDrawable(R.drawable.theme_icon_tag_premium);
         mIconCurrent = context.getResources().getDrawable(R.drawable.theme_icon_tag_current);
-        m32DpToPx = (int) Utils.dpToPx(32);
+        m32DpToPx = DisplayUtils.dpToPx(context, 32);
     }
 
     private static class ThemeViewHolder {
@@ -109,14 +110,14 @@ public class ThemeTabAdapter extends CursorAdapter {
     private static int getColumnWidth(Context context) {
         // Padding is 4 dp between the grid columns and on the outside
         int columnCount = context.getResources().getInteger(R.integer.themes_grid_num_columns);
-        int dp4 = (int) Utils.dpToPx(4);
+        int dp4 = DisplayUtils.dpToPx(context, 4);
         int padding = (columnCount + 1) * dp4;
 
         // the max width of the themes is either:
         // = width of entire screen (phone and tablet portrait)
         // = width of entire screen - menu drawer width (tablet landscape)
         int maxWidth = context.getResources().getDisplayMetrics().widthPixels;
-        if (Utils.isXLarge(context) && Utils.isLandscape(context))
+        if (DisplayUtils.isXLarge(context) && DisplayUtils.isLandscape(context))
             maxWidth -= context.getResources().getDimensionPixelSize(R.dimen.menu_drawer_width);
 
         return (maxWidth - padding) / columnCount;

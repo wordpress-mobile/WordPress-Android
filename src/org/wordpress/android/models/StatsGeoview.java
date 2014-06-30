@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent a geoview stat.
@@ -25,7 +25,7 @@ public class StatsGeoview {
 
     public StatsGeoview(String blogId, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
+        setDate(StatsUtils.toMs(result.getString("date")));
         setCountry(result.getString("country"));
         setViews(result.getInt("views"));
         setImageUrl(result.getString("imageUrl"));

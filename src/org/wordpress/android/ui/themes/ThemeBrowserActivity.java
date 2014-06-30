@@ -36,8 +36,8 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeSortType;
 import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.analytics.AnalyticsTracker;
 
@@ -309,7 +309,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     public void onThemeSelected(String themeId) {
         FragmentManager fm = getFragmentManager();
 
-        if (!Utils.isXLarge(ThemeBrowserActivity.this)) {
+        if (!DisplayUtils.isXLarge(ThemeBrowserActivity.this)) {
             // show details as a fragment on top
             FragmentTransaction ft = fm.beginTransaction();
 
@@ -411,7 +411,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if (Utils.isXLarge(ThemeBrowserActivity.this) && mDetailsFragment != null) {
+        if (DisplayUtils.isXLarge(ThemeBrowserActivity.this) && mDetailsFragment != null) {
             mDetailsFragment.dismiss();
         }
         super.onSaveInstanceState(outState);
@@ -493,7 +493,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         }
 
         if (mDetailsFragment != null) {
-            if (Utils.isXLarge(ThemeBrowserActivity.this)) {
+            if (DisplayUtils.isXLarge(ThemeBrowserActivity.this)) {
                 mDetailsFragment.dismiss();
             } else {
                 ft.hide(mDetailsFragment);

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent the summary of a blog's stats.
@@ -163,7 +163,7 @@ public class StatsSummary implements Serializable{
     }
 
     public String getCommentsMostActiveRecentDay() {
-        return StatUtils.parseDate(commentsMostActiveRecentDay, "yyyy-MM-dd", "MMMMM d, yyyy");
+        return StatsUtils.parseDate(commentsMostActiveRecentDay, "yyyy-MM-dd", "MMMMM d, yyyy");
     }
 
     public void setCommentsMostActiveRecentDay(String commentsMostActiveRecentDay) {

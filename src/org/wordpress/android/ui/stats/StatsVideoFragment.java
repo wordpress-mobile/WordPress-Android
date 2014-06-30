@@ -135,7 +135,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
                 @Override
                 protected StatsVideoSummary doInBackground(String... params) {
                     final String blogId = params[0];
-                    return StatUtils.getVideoSummary(blogId);
+                    return StatsUtils.getVideoSummary(blogId);
                 }
 
                 protected void onPostExecute(StatsVideoSummary result) {

@@ -29,7 +29,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.analytics.AnalyticsTracker;
 
@@ -300,12 +301,12 @@ public class ThemeDetailsFragment extends DialogFragment {
         int maxWidth = display.getWidth() - llParams.leftMargin - llParams.rightMargin - mParentView.getPaddingLeft() - mParentView.getPaddingRight();
 
 
-        if (Utils.isXLarge(getActivity())) {
+        if (DisplayUtils.isXLarge(getActivity())) {
             int minDialogWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int dialogWidth = Math.max((int) (display.getWidth() * 0.6), minDialogWidth);
             maxWidth = dialogWidth / 2 - llParams.leftMargin - llParams.rightMargin;
 
-        } else if (Utils.isTablet() && mLeftContainer != null) {
+        } else if (DisplayUtils.isTablet(getActivity()) && mLeftContainer != null) {
             int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
             mLeftContainer.measure(spec, spec);
 
@@ -324,8 +325,8 @@ public class ThemeDetailsFragment extends DialogFragment {
 
         int widthSoFar = 0;
 
-        int dp4 = (int) Utils.dpToPx(4);
-        int dp2 = (int) Utils.dpToPx(2);
+        int dp4 = DisplayUtils.dpToPx(getActivity(), 4);
+        int dp2 = DisplayUtils.dpToPx(getActivity(), 2);
 
         for (int i = 0; i < views.length; i++)
         {

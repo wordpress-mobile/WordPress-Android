@@ -17,7 +17,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
-import org.wordpress.android.util.Utils;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 
@@ -87,7 +88,7 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
             // sliding panel layout is on phone only
 
             mSlidingPanelLayout.setDragView(mMediaGallerySettingsFragment.getDragView());
-            mSlidingPanelLayout.setPanelHeight((int) Utils.dpToPx(48));
+            mSlidingPanelLayout.setPanelHeight(DisplayUtils.dpToPx(this, 48));
             mSlidingPanelLayout.setPanelSlideListener(new PanelSlideListener() {
                 @Override
                 public void onPanelSlide(View panel, float slideOffset) {
@@ -174,7 +175,7 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
 
     @Override
     public void onBackPressed() {
-        if (Utils.isTablet()) {
+        if (DisplayUtils.isTablet(this)) {
             super.onBackPressed();
         } else {
             if (mSlidingPanelLayout != null && !mIsPanelCollapsed)

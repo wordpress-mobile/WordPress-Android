@@ -25,10 +25,11 @@ import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -151,7 +152,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (Utils.isTablet()) {
+                    } else if (DisplayUtils.isTablet(getActivity())) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {

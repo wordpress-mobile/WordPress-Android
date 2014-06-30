@@ -59,6 +59,12 @@ public class DisplayUtils {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
+    public static boolean isXLarge(Context context) {
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+            return true;
+        return false;
+    }
+
     /**
      * returns the height of the ActionBar if one is enabled - supports both the native ActionBar
      * and ActionBarSherlock - http://stackoverflow.com/a/15476793/1673548

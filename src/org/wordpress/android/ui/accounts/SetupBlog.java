@@ -9,10 +9,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.Utils;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -126,7 +126,7 @@ public class SetupBlog {
                 mErrorMsgId = R.string.xmlrpc_error;
                 return null;
             }
-            Arrays.sort(userBlogs, Utils.BlogNameComparator);
+            Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
             List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
             for (Object blog : userBlogs) {
                 try {

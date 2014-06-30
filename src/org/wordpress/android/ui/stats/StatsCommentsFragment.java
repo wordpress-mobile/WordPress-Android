@@ -151,7 +151,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
                 @Override
                 protected StatsSummary doInBackground(Void... params) {
                     //StatsRestHelper.getStatsSummary(blogId);
-                    return StatUtils.getSummary(blogId);
+                    return StatsUtils.getSummary(blogId);
                 }
 
                 protected void onPostExecute(final StatsSummary result) {

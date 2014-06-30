@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.os.SystemClock;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
@@ -72,6 +73,21 @@ public class ProfilingUtils {
             AppLog.d(T.PROFILING, mLabel + ":      " + (now - prev) + " ms, " + splitLabel);
         }
         AppLog.d(T.PROFILING, mLabel + ": end, " + (now - first) + " ms");
+    }
+
+    /*
+     * Return true if Debug build. false otherwise.
+     *
+     * ADT (r17) or Higher => BuildConfig.java is generated automatically by Android build tools, and is placed into the gen folder.
+     *
+     * BuildConfig containing a DEBUG constant that is automatically set according to your build type.
+     * You can check the (BuildConfig.DEBUG) constant in your code to run debug-only functions.
+     */
+    public static boolean isDebugBuild() {
+        if (BuildConfig.DEBUG) {
+            return true;
+        }
+        return false;
     }
 }
 

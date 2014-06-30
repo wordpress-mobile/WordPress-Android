@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent a search engine term stat
@@ -23,7 +23,7 @@ public class StatsSearchEngineTerm {
 
     public StatsSearchEngineTerm(String blogId, String date, JSONArray result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(date));
+        setDate(StatsUtils.toMs(date));
         setSearch(result.getString(0));
         setViews(result.getInt(1));
     }

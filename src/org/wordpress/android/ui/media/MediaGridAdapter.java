@@ -28,10 +28,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CheckableFrameLayout.OnCheckedChangeListener;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerCallback;
 import org.wordpress.android.util.ImageUtils.BitmapWorkerTask;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,7 +195,7 @@ public class MediaGridAdapter extends CursorAdapter {
         String fileExtension = MediaUtils.getExtensionForMimeType(mimeType);
         fileExtension = fileExtension.toUpperCase();
         // file type
-        if  (Utils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
+        if  (DisplayUtils.isXLarge(context) && !TextUtils.isEmpty(fileExtension)) {
             holder.fileTypeView.setText("File type: " + fileExtension);
         } else {
             holder.fileTypeView.setText(fileExtension);
@@ -449,7 +450,7 @@ public class MediaGridAdapter extends CursorAdapter {
 
         if (columnCount > 1) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mGridItemWidth, mGridItemWidth);
-            int margins = (int) Utils.dpToPx(8);
+            int margins = DisplayUtils.dpToPx(context, 8);
             params.setMargins(0, margins, 0, margins);
             params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
             view.setLayoutParams(params);
@@ -522,7 +523,7 @@ public class MediaGridAdapter extends CursorAdapter {
         int maxWidth = mContext.getResources().getDisplayMetrics().widthPixels;
         int columnCount = getColumnCount(mContext);
         if (columnCount > 0) {
-            int dp8 = (int) Utils.dpToPx(8);
+            int dp8 = DisplayUtils.dpToPx(mContext, 8);
             int padding = (columnCount + 1) * dp8;
             mGridItemWidth = (maxWidth - padding) / columnCount;
         }

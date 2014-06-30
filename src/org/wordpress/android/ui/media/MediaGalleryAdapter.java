@@ -13,8 +13,9 @@ import com.mobeta.android.dslv.ResourceDragSortCursorAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 /**
  * Adapter for a drag-sort listview where the user can drag media items to sort their order
@@ -98,7 +99,7 @@ class MediaGalleryAdapter extends ResourceDragSortCursorAdapter {
 
         // file type
         String fileType = filePath.replaceAll(".*\\.(\\w+)$", "$1").toUpperCase();
-        if  (Utils.isXLarge(context)) {
+        if  (DisplayUtils.isXLarge(context)) {
             holder.fileTypeView.setText("File type: " + fileType);
         } else {
             holder.fileTypeView.setText(fileType);

@@ -48,7 +48,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -148,7 +147,7 @@ public class WordPress extends Application {
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
-        if (!Utils.isDebugBuild()) {
+        if (!ProfilingUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
         versionName = getVersionName(this);

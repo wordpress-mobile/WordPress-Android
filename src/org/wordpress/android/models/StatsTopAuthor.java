@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent a top author stat
@@ -27,7 +27,7 @@ public class StatsTopAuthor {
 
     public StatsTopAuthor(String blogId, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(result.getString("date")));
+        setDate(StatsUtils.toMs(result.getString("date")));
         setUserId(result.getInt("userId"));
         setName(result.getString("name"));
         setViews(result.getInt("views"));

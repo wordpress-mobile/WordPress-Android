@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.ui.stats.StatUtils;
+import org.wordpress.android.ui.stats.StatsUtils;
 
 /**
  * A model to represent a click group stat.
@@ -32,7 +32,7 @@ public class StatsClickGroup {
 
     public StatsClickGroup(String blogId, String date, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setDate(StatUtils.toMs(date));
+        setDate(StatsUtils.toMs(date));
         setGroupId(result.getString("group"));
         setName(result.getString("name"));
         setTotal(result.getInt("total"));

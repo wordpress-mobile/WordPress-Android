@@ -45,7 +45,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.util.Utils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
@@ -310,8 +309,8 @@ public class StatsActivity extends WPActionBarActivity {
         ft.commit();
 
         // split layout into two for 720DP tablets and 600DP tablets in landscape
-        if (Utils.getSmallestWidthDP() >= TABLET_720DP
-                || (Utils.getSmallestWidthDP() == TABLET_600DP && isInLandscape())) {
+        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
+                || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape())) {
             loadSplitLayout();
         }
     }

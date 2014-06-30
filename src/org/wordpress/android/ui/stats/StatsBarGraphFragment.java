@@ -22,8 +22,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 /**
  * A fragment that shows stats bar chart data.
@@ -125,9 +126,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         GraphViewSeries visitorsSeries = new GraphViewSeries(visitors);
 
         viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-        viewsSeries.getStyle().padding = Utils.dpToPx(1);
+        viewsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
         visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
-        visitorsSeries.getStyle().padding = Utils.dpToPx(3);
+        visitorsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 3);
 
         // Update or create a new GraphView
         GraphView graphView;
@@ -153,8 +154,12 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         //noop
     }
 
+    private boolean hasActivity() {
+        return getActivity() != null;
+    }
+
     private int getNumOfPoints() {
-        if (Utils.isTablet()) {
+        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
             return 30;
         }
 
@@ -165,7 +170,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     }
 
     private int getNumOfHorizontalLabels(int numPoints) {
-        if (Utils.isTablet()) {
+        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
             return numPoints / 5;
         }
 
@@ -188,15 +193,15 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         switch (unit) {
             case DAY:
-                return StatUtils.parseDate(cursorDate, "yyyy-MM-dd", "MMM d");
+                return StatsUtils.parseDate(cursorDate, "yyyy-MM-dd", "MMM d");
             case WEEK:
                 // first four digits are the year
                 // followed by Wxx where xx is the month
                 // followed by Wxx where xx is the day of the month
                 // ex: 2013W07W22 = July 22, 2013
-                return StatUtils.parseDate(cursorDate, "yyyy'W'MM'W'dd", "MMM d");
+                return StatsUtils.parseDate(cursorDate, "yyyy'W'MM'W'dd", "MMM d");
             case MONTH:
-                return StatUtils.parseDate(cursorDate, "yyyy-MM", "MMM yyyy");
+                return StatsUtils.parseDate(cursorDate, "yyyy-MM", "MMM yyyy");
             default:
                 return cursorDate;
         }

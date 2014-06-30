@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.StatsBarChartData;
@@ -37,7 +38,7 @@ import java.util.Date;
 /**
  * A utility class to help with date parsing and saving summaries in stats
  */
-public class StatUtils {
+public class StatsUtils {
     private static final String STAT_SUMMARY = "StatSummary_";
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
@@ -219,5 +220,9 @@ public class StatUtils {
             AppLog.e(T.STATS, e);
         }
         return stat;
+    }
+
+    public static int getSmallestWidthDP() {
+        return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
 }

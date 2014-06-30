@@ -95,7 +95,7 @@ public class StatsTotalsFollowersAndSharesFragment extends StatsAbsViewFragment 
                 if (TextUtils.isEmpty(blogId))
                     blogId = "0";
 
-                final StatsSummary stats = StatUtils.getSummary(blogId);
+                final StatsSummary stats = StatsUtils.getSummary(blogId);
 
                 handler.post(new Runnable() {
                     public void run() {

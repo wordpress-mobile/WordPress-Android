@@ -21,9 +21,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.BlogUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.Utils;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -69,9 +70,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         for (int i = 0; i < TITLES.length; i++) {
             RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            int dp8 = (int) Utils.dpToPx(8);
+            int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
             params.setMargins(0, 0, dp8, 0);
-            rb.setMinimumWidth((int) Utils.dpToPx(80));
+            rb.setMinimumWidth(DisplayUtils.dpToPx(view.getContext(), 80));
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
             rb.setText(TITLES[i]);
@@ -139,7 +140,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 String blogId = WordPress.getCurrentBlog().getDotComBlogId();
                 if (TextUtils.isEmpty(blogId))
                     blogId = "0";
-                final StatsSummary summary = StatUtils.getSummary(blogId);
+                final StatsSummary summary = StatsUtils.getSummary(blogId);
                 handler.post(new Runnable() {
                     public void run() {
                         refreshSummary(summary);

@@ -41,9 +41,9 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.ui.stats.StatUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
@@ -155,8 +155,8 @@ public class StatsService extends Service {
             @Override
             public void run() {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
-                final String today = StatUtils.getCurrentDate();
-                final String yesterday = StatUtils.getYesterdaysDate();
+                final String today = StatsUtils.getCurrentDate();
+                final String yesterday = StatsUtils.getYesterdaysDate();
 
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId);
                 broadcastUpdate(true);
@@ -320,7 +320,7 @@ public class StatsService extends Service {
                             JSONArray results = currentViewsByCountryJsonObject.getJSONArray("country-views");
                             int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
                             String date = currentViewsByCountryJsonObject.getString("date");
-                            long dateMs = StatUtils.toMs(date);
+                            long dateMs = StatsUtils.toMs(date);
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
                             if (count > 0) {
@@ -371,7 +371,7 @@ public class StatsService extends Service {
                         if (!isSingleCallResponseError(currentSearchEngineTermsPath,
                                 currentSearchEngineTermsJsonObject)) {
                             String date = currentSearchEngineTermsJsonObject.getString("date");
-                            long dateMs = StatUtils.toMs(date);
+                            long dateMs = StatsUtils.toMs(date);
 
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
@@ -428,7 +428,7 @@ public class StatsService extends Service {
                                 response.getJSONObject(currentClickPath);
                         if (!isSingleCallResponseError(currentClickPath, currentClicksJsonObject)) {
                             String date = currentClicksJsonObject.getString("date");
-                            long dateMs = StatUtils.toMs(date);
+                            long dateMs = StatsUtils.toMs(date);
 
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
@@ -507,7 +507,7 @@ public class StatsService extends Service {
                                 response.getJSONObject(currentReferrerPath);
                         if (!isSingleCallResponseError(currentReferrerPath, currentReferrersJsonObject)) {
                             String date = currentReferrersJsonObject.getString("date");
-                            long dateMs = StatUtils.toMs(date);
+                            long dateMs = StatsUtils.toMs(date);
 
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
@@ -591,7 +591,7 @@ public class StatsService extends Service {
                             int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
 
                             String date = currentTopPostsAndPagesJsonObject.getString("date");
-                            long dateMs = StatUtils.toMs(date);
+                            long dateMs = StatsUtils.toMs(date);
 
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
                             // delete data with the same date, and data older than two days ago (keep yesterday's data)
@@ -700,8 +700,8 @@ public class StatsService extends Service {
                             return;
                         }
                         // save summary, then send broadcast that they've changed
-                        StatUtils.saveSummary(mRequestBlogId, summaryJsonObject);
-                        StatsSummary stats = StatUtils.getSummary(mRequestBlogId);
+                        StatsUtils.saveSummary(mRequestBlogId, summaryJsonObject);
+                        StatsSummary stats = StatsUtils.getSummary(mRequestBlogId);
                         if (stats != null) {
                             LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
                             Intent intent = new Intent(StatsService.ACTION_STATS_SUMMARY_UPDATED);
