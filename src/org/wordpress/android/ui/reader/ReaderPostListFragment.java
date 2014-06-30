@@ -51,7 +51,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;

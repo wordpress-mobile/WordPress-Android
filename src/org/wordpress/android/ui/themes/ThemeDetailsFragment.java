@@ -31,7 +31,7 @@ import org.wordpress.android.models.Theme;
 import org.wordpress.android.ui.ViewSiteActivity;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.util.ArrayList;
 

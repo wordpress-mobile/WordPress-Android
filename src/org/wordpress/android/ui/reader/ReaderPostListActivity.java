@@ -27,7 +27,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 
 /*
  * this activity serves as the host for ReaderPostListFragment

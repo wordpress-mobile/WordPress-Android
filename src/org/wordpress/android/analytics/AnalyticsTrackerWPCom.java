@@ -1,4 +1,4 @@
-package org.wordpress.android.util.stats;
+package org.wordpress.android.analytics;
 
 import com.android.volley.Request;
 import com.android.volley.Response;

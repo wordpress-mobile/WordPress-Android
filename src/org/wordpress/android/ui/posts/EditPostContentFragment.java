@@ -76,14 +76,14 @@ import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.MediaGalleryImageSpan;
+import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 

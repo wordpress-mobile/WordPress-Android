@@ -40,7 +40,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.ref.WeakReference;

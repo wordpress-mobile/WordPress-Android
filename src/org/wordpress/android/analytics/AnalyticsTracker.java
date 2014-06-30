@@ -1,4 +1,4 @@
-package org.wordpress.android.util.stats;
+package org.wordpress.android.analytics;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

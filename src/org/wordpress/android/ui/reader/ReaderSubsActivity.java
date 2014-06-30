@@ -41,7 +41,7 @@ import org.wordpress.android.util.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.util.ArrayList;
 import java.util.List;

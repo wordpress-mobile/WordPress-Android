@@ -50,9 +50,9 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
-import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
-import org.wordpress.android.util.stats.AnalyticsTrackerWPCom;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;

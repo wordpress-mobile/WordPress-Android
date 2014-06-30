@@ -57,7 +57,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 

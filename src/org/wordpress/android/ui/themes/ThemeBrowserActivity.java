@@ -39,7 +39,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
