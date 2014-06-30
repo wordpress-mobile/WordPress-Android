@@ -45,7 +45,6 @@ android {
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
         debug {
-            applicationIdSuffix ".debug" 
 
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
