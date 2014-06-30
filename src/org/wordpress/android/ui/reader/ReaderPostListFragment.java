@@ -488,9 +488,18 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded) {
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_generic);
+                }
+            }
+        };
+
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderPostList postsToRestore = ReaderBlogActions.blockBlogFromReader(blogId);
+        final ReaderPostList postsToRestore = ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
 
         // fade out the post the user chose to block from, then refresh the list so the posts
         // deleted by the above call no longer appear
@@ -512,7 +521,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                if (ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore)) {
+                if (ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore, actionListener)) {
                     refreshPosts();
                 }
             }

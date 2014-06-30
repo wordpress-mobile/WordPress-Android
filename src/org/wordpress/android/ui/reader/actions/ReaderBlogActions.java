@@ -387,12 +387,8 @@ public class ReaderBlogActions {
      * block a blog - returns the list of posts that were deleted by the block so they can
      * be restored if the user undoes the block
      */
-    public static ReaderPostList blockBlogFromReader(final long blogId) {
-        if (blogId == 0) {
-            return null;
-        }
-
-        // remember the posts in this blog, then delete them
+    public static ReaderPostList blockBlogFromReader(final long blogId,
+                                                     final ReaderActions.ActionListener actionListener) {
         final ReaderPostList deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0);
         ReaderPostTable.deletePostsInBlog(blogId);
 
@@ -401,8 +397,13 @@ public class ReaderBlogActions {
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 if (!success) {
+                    AppLog.w(T.READER, "failed to block blog");
                     ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
                 }
+                if (actionListener != null) {
+                    actionListener.onActionResult(success);
+                }
+
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -410,6 +411,9 @@ public class ReaderBlogActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
+                if (actionListener != null) {
+                    actionListener.onActionResult(false);
+                }
             }
         };
 
@@ -419,19 +423,31 @@ public class ReaderBlogActions {
         return deletedPosts;
     }
 
-    public static boolean unblockBlogFromReader(final long blogId, final ReaderPostList postsToRestore) {
+    public static boolean unblockBlogFromReader(final long blogId,
+                                                final ReaderPostList postsToRestore,
+                                                final ReaderActions.ActionListener actionListener) {
         ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                // nop
+                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
+                if (!success) {
+                    AppLog.w(T.READER, "failed to unblock blog");
+                }
+                if (actionListener != null) {
+                    actionListener.onActionResult(success);
+                }
+
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
+                if (actionListener != null) {
+                    actionListener.onActionResult(false);
+                }
             }
         };
         String path = "/me/block/sites/" + Long.toString(blogId) + "/delete";
