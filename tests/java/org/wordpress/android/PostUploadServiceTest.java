@@ -13,7 +13,7 @@ import org.wordpress.android.mocks.SystemServiceFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.PostUploadService;
+import org.wordpress.android.ui.posts.PostUploadService;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

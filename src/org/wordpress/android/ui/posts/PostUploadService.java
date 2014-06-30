@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.posts;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -33,8 +33,11 @@ import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.SystemServiceFactory;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;

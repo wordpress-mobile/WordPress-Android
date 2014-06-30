@@ -259,7 +259,7 @@
 
 		<!-- Services -->
         <service
-            android:name=".util.PostUploadService"
+            android:name=".ui.posts.PostUploadService"
             android:label="Post Upload Service" >
         </service>
 
