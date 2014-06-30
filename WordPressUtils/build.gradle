@@ -18,7 +18,7 @@ android {
     buildToolsVersion "19.1.0"
 
     defaultConfig {
-        applicationId "org.wordpress.android.utils"
+        applicationId "org.wordpress.android.util"
         versionName "1.0.0"
         versionCode 1
         minSdkVersion 14
