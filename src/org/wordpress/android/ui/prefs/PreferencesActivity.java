@@ -50,7 +50,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPEditTextPreference;
+import org.wordpress.android.widgets.WPEditTextPreference;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 

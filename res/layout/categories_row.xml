@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.util.CheckedLinearLayout
+<org.wordpress.android.widgets.CheckedLinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="@dimen/category_row_height"
@@ -21,4 +21,4 @@
             android:paddingRight="6dip"
             android:checkMark="?android:attr/listChoiceIndicatorMultiple"
             android:id="@+id/categoryRowText"/>
-</org.wordpress.android.util.CheckedLinearLayout>
+</org.wordpress.android.widgets.CheckedLinearLayout>

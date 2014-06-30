@@ -46,7 +46,7 @@ import org.wordpress.android.ui.posts.EditPostContentFragment;
 import org.wordpress.android.util.MediaDeleteService;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.Utils;
-import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
 

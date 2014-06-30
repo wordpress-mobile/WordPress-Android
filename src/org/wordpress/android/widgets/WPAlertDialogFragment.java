@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.widgets;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.StringUtils;
 
 public class WPAlertDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
     private static enum WPAlertDialogType {ALERT,    // simple ok dialog with error message

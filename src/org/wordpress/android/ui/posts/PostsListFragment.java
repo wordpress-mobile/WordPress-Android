@@ -29,7 +29,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.Utils;
-import org.wordpress.android.util.WPAlertDialogFragment;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 

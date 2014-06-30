@@ -29,7 +29,7 @@
                 android:hint="@string/title"
                 android:inputType="textCapSentences|textAutoCorrect" />
 
-            <org.wordpress.android.util.WPEditText
+            <org.wordpress.android.widgets.WPEditText
                 android:id="@+id/post_content"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"

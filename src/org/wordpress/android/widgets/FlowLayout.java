@@ -3,7 +3,7 @@
  * Fixed and tweaked since
  */
 
-package org.wordpress.android.util;
+package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;

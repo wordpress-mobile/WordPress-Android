@@ -21,7 +21,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PostUploadService;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPViewPager;
+import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
 import java.util.Timer;

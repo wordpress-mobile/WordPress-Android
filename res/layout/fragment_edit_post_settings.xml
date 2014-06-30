@@ -80,7 +80,7 @@
                 android:text="@string/categories"
                 android:layout_marginBottom="4dp" />
 
-            <org.wordpress.android.util.FlowLayout
+            <org.wordpress.android.widgets.FlowLayout
                 android:id="@+id/sectionCategories"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

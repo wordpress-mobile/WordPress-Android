@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
 /**
  * Provides a simplified way to show toast messages without having to create the toast, set the

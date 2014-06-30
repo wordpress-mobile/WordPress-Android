@@ -57,6 +57,8 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.widgets.WPImageSpan;
+import org.wordpress.android.widgets.WPUnderlineSpan;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;

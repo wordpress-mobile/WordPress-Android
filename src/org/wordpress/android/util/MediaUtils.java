@@ -19,6 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.DataInputStream;

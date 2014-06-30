@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.widgets;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
