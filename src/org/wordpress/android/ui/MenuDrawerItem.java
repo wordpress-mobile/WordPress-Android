@@ -22,7 +22,7 @@ public abstract class MenuDrawerItem {
      */
     public Boolean isVisible(){
         return true;
-    };
+    }
     /**
      * Determines if the item is selected. Default is always false.
      */
