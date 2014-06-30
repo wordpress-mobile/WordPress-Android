@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ThemeHelper;
+import org.wordpress.android.ui.themes.ThemeUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -187,7 +187,7 @@ public class Theme {
         if (tags != null && tags.length() > 0) {
             boolean isFirst = true;
             for (int i = 0; i < tags.length(); i++ ) {
-                String label = ThemeHelper.getLabel(tags.getString(i));
+                String label = ThemeUtils.getLabel(tags.getString(i));
                 if (!TextUtils.isEmpty(label)) {
                     if (isFirst) {
                         isFirst = false;

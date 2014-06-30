@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.ui.themes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.apache.commons.lang.WordUtils;
  * A helper class to retrieve the labels for a given feature based on the tag supplied by the api.
  *
  */
-public class ThemeHelper {
+public class ThemeUtils {
     private static Map<String, String> mTagToLabelMap;
 
     public static String getLabel(String feature_tag) {
