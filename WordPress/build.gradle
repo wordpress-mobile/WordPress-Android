@@ -130,7 +130,7 @@ android {
 
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
-    def outputFile = new File("${buildDir}/crashlytics.properties")
+    def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
     def inputFile = file("gradle.properties")
     outputs.file outputFile
     inputs.file inputFile
