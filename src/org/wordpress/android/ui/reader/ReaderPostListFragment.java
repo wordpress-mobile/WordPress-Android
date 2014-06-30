@@ -515,7 +515,10 @@ public class ReaderPostListFragment extends Fragment
                 }
             }
         };
-        ReaderAnim.animateListItem(mListView, mContextMenuListItemPosition, ReaderAnim.AnimateListItemStyle.DELETION, aniListener);
+        ReaderAnim.animateListItem(mListView,
+                mContextMenuListItemPosition,
+                ReaderAnim.AnimateListItemStyle.BLOCK,
+                aniListener);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {

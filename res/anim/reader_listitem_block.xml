@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- used when a blog is blocked in the reader -->
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:fromXScale="1.0"
+    android:fromYScale="1.0"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toXScale="0.25"
+    android:toYScale="0.25" />
