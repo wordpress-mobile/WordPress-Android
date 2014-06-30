@@ -70,8 +70,9 @@ public class ReaderBlogAdapter extends BaseAdapter {
     public void refresh() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "load blogs task is already running");
+        } else {
+            new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        new LoadBlogsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
