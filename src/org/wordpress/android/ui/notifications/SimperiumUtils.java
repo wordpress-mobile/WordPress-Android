@@ -2,7 +2,7 @@
  * Simperium integration with WordPress.com
  * Currently used with Notifications
  */
-package org.wordpress.android.util;
+package org.wordpress.android.ui.notifications;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 public class SimperiumUtils {
     public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
