@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.wordpress.android"
     android:installLocation="auto" >
 
@@ -46,7 +47,8 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
-        android:theme="@style/WordPress" >
+        android:theme="@style/WordPress"
+        tools:replace="allowBackup">
 
         <!-- Account activities -->
         <activity
