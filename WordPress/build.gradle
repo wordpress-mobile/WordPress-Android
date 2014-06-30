@@ -120,7 +120,7 @@ android {
         }
 
         zbetagroup {
-            res.srcDirs = ['res-zbetagroup']
+            res.srcDirs = ['src/main/res-zbetagroup']
             manifest.srcFile 'AndroidManifestBetagroup.xml'
         }
 
