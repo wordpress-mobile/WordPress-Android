@@ -8,7 +8,7 @@ public class ABTestingUtils {
     public static boolean isFeatureEnabled(Feature feature) {
         switch (feature) {
             case HELPSHIFT:
-                return false;
+                return true;
         }
         return false;
     }
