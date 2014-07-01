@@ -25,9 +25,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.HtmlUtils;
 
 public class FollowRow extends LinearLayout {
     public static interface OnFollowListener {

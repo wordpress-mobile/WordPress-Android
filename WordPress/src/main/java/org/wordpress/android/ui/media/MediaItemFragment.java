@@ -254,7 +254,7 @@ public class MediaItemFragment extends Fragment {
             } else {
                 // Allow non-private wp.com and Jetpack blogs to use photon to get a higher res thumbnail
                 if (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isPhotonCapable()){
-                    String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int)screenWidth);
+                    String thumbnailURL = StringUtils.getPhotonUrl(imageUri, (int) screenWidth);
                     ((NetworkImageView) mImageView).setImageUrl(thumbnailURL, mImageLoader);
                 } else {
                     ((NetworkImageView) mImageView).setImageUrl(imageUri + "?w=" + screenWidth, mImageLoader);

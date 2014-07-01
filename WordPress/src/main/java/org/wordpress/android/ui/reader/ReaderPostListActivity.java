@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 
 /*

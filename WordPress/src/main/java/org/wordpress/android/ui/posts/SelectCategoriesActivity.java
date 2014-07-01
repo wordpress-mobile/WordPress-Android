@@ -22,9 +22,9 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -123,7 +123,7 @@ public class SelectCategoriesActivity extends ListActivity {
     private void populateCategoryList() {
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
-            mCategoryNames.put( StringUtils.unescapeHTML( mCategoryLevels.get(i).getName() ), i);
+            mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
         }
 
         CategoryArrayAdapter categoryAdapter = new CategoryArrayAdapter(this, R.layout.categories_row, mCategoryLevels);

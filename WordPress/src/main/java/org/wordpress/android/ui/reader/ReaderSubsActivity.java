@@ -35,13 +35,13 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
@@ -43,8 +42,9 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.BuildUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
@@ -147,10 +147,10 @@ public class WordPress extends Application {
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
-        if (!ProfilingUtils.isDebugBuild()) {
+        if (!BuildUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        versionName = getVersionName(this);
+        versionName = ProfilingUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
@@ -307,16 +307,6 @@ public class WordPress extends Application {
 
     public interface OnPostUploadedListener {
         public abstract void OnPostUploaded(int localBlogId, String postId, boolean isPage);
-    }
-
-    public static String getVersionName(Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-            return pi.versionName == null ? "" : pi.versionName;
-        } catch (NameNotFoundException e) {
-            return "";
-        }
     }
 
     public static void setOnPostUploadedListener(OnPostUploadedListener listener) {
