@@ -96,7 +96,10 @@ android {
         compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
         compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
-        compile 'org.wordpress:wordpress-utils:1.0.0'
+        releaseCompile 'org.wordpress:wordpress-utils:1.0.0'
+        debugCompile project(':WordPressUtils')
+        zbetagroupCompile 'org.wordpress:wordpress-utils:1.0.0'
+
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
