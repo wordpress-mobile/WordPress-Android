@@ -10,7 +10,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.ArrayList;
 
 public class JSONUtil {
-    private static String QUERY_SEPERATOR= "";
+    private static String QUERY_SEPERATOR=".";
     private static String QUERY_ARRAY_INDEX_START="[";
     private static String QUERY_ARRAY_INDEX_END="]";
     private static String QUERY_ARRAY_FIRST="first";
