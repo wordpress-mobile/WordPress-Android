@@ -11,15 +11,13 @@
 
     <uses-permission android:name="org.wordpress.android.beta.permission.C2D_MESSAGE"/>
 
-    <application
-        tools:replace="allowBackup, icon"
-        android:allowBackup="false"
-        android:icon="@drawable/app_icon">
+    <application>
 
         <provider
             android:name=".providers.StatsContentProvider"
             android:authorities="org.wordpress.android.providers.StatsContentProviderBeta"
-            android:exported="false"/>
+            android:exported="false"
+            tools:replace="android:authorities" />
 
         <service android:name="org.wordpress.android.GCMIntentService"/>
 

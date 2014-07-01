@@ -25,6 +25,14 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <uses-permission android:name="org.wordpress.android.permission.C2D_MESSAGE" />
+
+    <!-- GCM configuration -->
+    <permission
+        android:name="org.wordpress.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -48,7 +56,7 @@
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:theme="@style/WordPress"
-        tools:replace="allowBackup">
+        tools:replace="allowBackup, icon">
 
         <!-- Account activities -->
         <activity
@@ -283,5 +291,23 @@
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+
+        <provider
+            android:name=".providers.StatsContentProvider"
+            android:authorities="org.wordpress.android.providers.StatsContentProvider"
+            android:exported="false"/>
+
+        <service android:name="org.wordpress.android.GCMIntentService"/>
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+
+                <category android:name="org.wordpress.android"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>

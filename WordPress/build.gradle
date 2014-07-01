@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.12.1'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -27,8 +27,6 @@ dependencies {
 
 android {
 
-    useOldManifestMerger true
-
     lintOptions {
         quiet true
         abortOnError false
@@ -40,14 +38,11 @@ android {
     }
 
     buildTypes {
-        release {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
-        }
+
         debug {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
+
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
@@ -64,6 +59,9 @@ android {
         versionCode 119
         minSdkVersion 14
         targetSdkVersion 19
+
+        buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
     }
 
     dependencies {
@@ -108,22 +106,6 @@ android {
 
     }
 
-    sourceSets {
-
-        release {
-            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
-        }
-
-        debug {
-            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
-        }
-
-        zbetagroup {
-            res.srcDirs = ['src/main/res-zbetagroup']
-            manifest.srcFile 'src/main/AndroidManifestBetagroup.xml'
-        }
-
-    }
 } // end android
 
 
