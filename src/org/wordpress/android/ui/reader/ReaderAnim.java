@@ -173,7 +173,10 @@ public class ReaderAnim {
     /*
      * called when adding or removing an item from a listView
      */
-    public static enum AnimateListItemStyle { ADDITION, DELETION, BLOCK }
+    public static enum AnimateListItemStyle {
+        ADD,
+        REMOVE,
+        SHRINK }
     public static void animateListItem(ListView listView,
                                        int positionAbsolute,
                                        AnimateListItemStyle style,
@@ -194,14 +197,14 @@ public class ReaderAnim {
 
         final int animResId;
         switch (style) {
-            case ADDITION:
+            case ADD:
                 animResId = R.anim.reader_listitem_add;
                 break;
-            case DELETION:
-                animResId = R.anim.reader_listitem_delete;
+            case REMOVE:
+                animResId = R.anim.reader_listitem_remove;
                 break;
-            case BLOCK:
-                animResId = R.anim.reader_listitem_block;
+            case SHRINK:
+                animResId = R.anim.reader_listitem_shrink;
                 break;
             default:
                 return;

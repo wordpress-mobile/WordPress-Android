@@ -492,7 +492,6 @@ public class ReaderPostListFragment extends Fragment
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && hasActivity()) {
                     hideUndoBar();
-                    getPostAdapter().refresh();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
@@ -518,7 +517,7 @@ public class ReaderPostListFragment extends Fragment
         };
         ReaderAnim.animateListItem(mListView,
                 position,
-                ReaderAnim.AnimateListItemStyle.BLOCK,
+                ReaderAnim.AnimateListItemStyle.SHRINK,
                 aniListener);
 
         // show the undo bar enabling the user to undo the block

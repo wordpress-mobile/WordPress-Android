@@ -172,7 +172,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                     refresh();
                 }
             };
-            ReaderAnim.AnimateListItemStyle animStyle = (action == TagAction.ADD ? ReaderAnim.AnimateListItemStyle.ADDITION : ReaderAnim.AnimateListItemStyle.DELETION);
+            ReaderAnim.AnimateListItemStyle animStyle =
+                    (action == TagAction.ADD ? ReaderAnim.AnimateListItemStyle.ADD : ReaderAnim.AnimateListItemStyle.REMOVE);
             ReaderAnim.animateListItem(mListView, index, animStyle, aniListener);
         } else {
             refresh();
