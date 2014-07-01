@@ -396,6 +396,7 @@ public class ReaderBlogActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
+                // TODO: call always returns success=false for vip blogs
                 if (!success) {
                     AppLog.w(T.READER, "failed to block blog " + blogId);
                     ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
@@ -425,8 +426,7 @@ public class ReaderBlogActions {
     }
 
     public static boolean unblockBlogFromReader(final long blogId,
-                                                final ReaderPostList postsToRestore,
-                                                final ReaderActions.ActionListener actionListener) {
+                                                final ReaderPostList postsToRestore) {
         if (postsToRestore != null) {
             ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
         }
@@ -438,9 +438,6 @@ public class ReaderBlogActions {
                 if (!success) {
                     AppLog.w(T.READER, "failed to unblock blog " + blogId);
                 }
-                if (actionListener != null) {
-                    actionListener.onActionResult(success);
-                }
 
             }
         };
@@ -448,9 +445,6 @@ public class ReaderBlogActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
-                }
             }
         };
 

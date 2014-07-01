@@ -490,12 +490,12 @@ public class ReaderPostListFragment extends Fragment
 
         AppLog.i(T.READER, "blocking blog " + post.blogId);
 
-        final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && hasActivity()) {
                     hideUndoBar();
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_generic);
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog);
                 }
             }
         };
@@ -528,7 +528,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                if (ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore, actionListener)) {
+                if (ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore)) {
                     refreshPosts();
                 }
             }
