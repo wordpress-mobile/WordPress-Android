@@ -45,7 +45,6 @@ android {
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
         debug {
-
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
         }
@@ -120,7 +119,7 @@ android {
         }
 
         zbetagroup {
-            res.srcDirs = ['res-zbetagroup']
+            res.srcDirs = ['src/main/res-zbetagroup']
             manifest.srcFile 'src/main/AndroidManifestBetagroup.xml'
         }
 
