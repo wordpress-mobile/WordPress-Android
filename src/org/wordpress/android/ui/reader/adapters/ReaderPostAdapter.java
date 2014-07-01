@@ -265,10 +265,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
+        ReaderPostListType postListType = getPostListType();
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
-            holder = new PostViewHolder(convertView, getPostListType());
+            holder = new PostViewHolder(convertView, postListType);
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
@@ -278,7 +279,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         // post header (avatar, blog name and follow button) only appears when showing tagged posts
-        if (getPostListType().isTagType()) {
+        if (postListType.isTagType()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
                 holder.txtBlogName.setText(post.getBlogName());
@@ -408,7 +409,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         // dropdown arrow which displays "block this blog" menu only shows for public
         // wp posts in followed tags
-        if (post.isWP() && !post.isPrivate && getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+        if (post.isWP() && !post.isPrivate && postListType == ReaderPostListType.TAG_FOLLOWED) {
             holder.imgDropDown.setVisibility(View.VISIBLE);
             holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
                 @Override

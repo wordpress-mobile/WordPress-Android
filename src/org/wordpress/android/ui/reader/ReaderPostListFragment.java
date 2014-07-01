@@ -488,6 +488,8 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
+        AppLog.i(T.READER, "blocking blog " + post.blogId);
+
         final ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {

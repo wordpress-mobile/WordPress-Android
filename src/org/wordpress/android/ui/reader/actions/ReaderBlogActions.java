@@ -374,9 +374,9 @@ public class ReaderBlogActions {
             }
         };
 
-        // TODO: this should be a HEAD rather than GET request, but Volley doesn't support HEAD
+        // TODO: may be a leak here - http://stackoverflow.com/a/23549486/1673548
         StringRequest request = new StringRequest(
-                Request.Method.GET,
+                Request.Method.HEAD,
                 blogUrl,
                 listener,
                 errorListener);
@@ -397,7 +397,7 @@ public class ReaderBlogActions {
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 if (!success) {
-                    AppLog.w(T.READER, "failed to block blog");
+                    AppLog.w(T.READER, "failed to block blog " + blogId);
                     ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
                 }
                 if (actionListener != null) {
@@ -417,6 +417,7 @@ public class ReaderBlogActions {
             }
         };
 
+        AppLog.i(T.READER, "blocking blog " + blogId);
         String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
@@ -426,14 +427,16 @@ public class ReaderBlogActions {
     public static boolean unblockBlogFromReader(final long blogId,
                                                 final ReaderPostList postsToRestore,
                                                 final ReaderActions.ActionListener actionListener) {
-        ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+        if (postsToRestore != null) {
+            ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+        }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 if (!success) {
-                    AppLog.w(T.READER, "failed to unblock blog");
+                    AppLog.w(T.READER, "failed to unblock blog " + blogId);
                 }
                 if (actionListener != null) {
                     actionListener.onActionResult(success);
@@ -450,6 +453,8 @@ public class ReaderBlogActions {
                 }
             }
         };
+
+        AppLog.i(T.READER, "unblocking blog " + blogId);
         String path = "/me/block/sites/" + Long.toString(blogId) + "/delete";
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
