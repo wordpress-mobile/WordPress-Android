@@ -37,19 +37,6 @@ android {
         exclude "META-INF/NOTICE.txt"
     }
 
-    buildTypes {
-
-        debug {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-        }
-
-        zbetagroup {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
-            applicationIdSuffix ".beta"
-        }
-    }
-
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
@@ -62,6 +49,26 @@ android {
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
         buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
+    }
+
+    productFlavors {
+
+        vanilla {}
+
+        zbetagroup {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
+            applicationId "org.wordperss.android.beta"
+        }
+
+    }
+
+    buildTypes {
+
+        debug {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+        }
+
     }
 
     dependencies {
@@ -97,7 +104,6 @@ android {
         compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Simperium
         compile('com.simperium:simperium-android:0.4.8') {
@@ -156,5 +162,4 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
-    android.buildTypes.zbetagroup.signingConfig = android.signingConfigs.release
 }
