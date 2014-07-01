@@ -239,7 +239,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         return mPosts.size();
     }
 
-    public boolean isValidPosition(int position) {
+    boolean isValidPosition(int position) {
         return (position >= 0 && position < getCount());
     }
     @Override
@@ -670,7 +670,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * called from ReaderPostListFragment when user starts/ends listview fling
+     * called from ReaderPostListFragment when user starts/ends listView fling
      */
     public void setIsFlinging(boolean isFlinging) {
         mIsFlinging = isFlinging;
@@ -686,7 +686,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         mLastPreloadPos = position;
 
-        // skip if listview is in a fling (note that we still set mLastPreloadPos above)
+        // skip if listView is in a fling (note that we still set mLastPreloadPos above)
         if (mIsFlinging) {
             return;
         }

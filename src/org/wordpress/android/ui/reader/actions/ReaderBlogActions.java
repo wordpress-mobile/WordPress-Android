@@ -425,8 +425,8 @@ public class ReaderBlogActions {
         return deletedPosts;
     }
 
-    public static boolean unblockBlogFromReader(final long blogId,
-                                                final ReaderPostList postsToRestore) {
+    public static void unblockBlogFromReader(final long blogId,
+                                             final ReaderPostList postsToRestore) {
         if (postsToRestore != null) {
             ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
         }
@@ -451,7 +451,5 @@ public class ReaderBlogActions {
         AppLog.i(T.READER, "unblocking blog " + blogId);
         String path = "/me/block/sites/" + Long.toString(blogId) + "/delete";
         WordPress.getRestClientUtils().post(path, listener, errorListener);
-
-        return true;
     }
 }

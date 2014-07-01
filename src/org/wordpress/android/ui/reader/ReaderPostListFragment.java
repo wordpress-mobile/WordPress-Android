@@ -458,7 +458,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-
     /*
      * called when user taps dropdown arrow icon next to a post - shows a popup menu
      * that enables blocking the blog the post is in
@@ -488,8 +487,6 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        AppLog.i(T.READER, "blocking blog " + post.blogId);
-
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -506,8 +503,7 @@ public class ReaderPostListFragment extends Fragment
         final ReaderPostList postsToRestore =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
 
-        // animate out the post the user chose to block from, then refresh the list so the posts
-        // deleted by the above call no longer appear
+        // animate out the post the user chose to block from, then remove the post from the adapter
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -529,9 +525,8 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                if (ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore)) {
-                    refreshPosts();
-                }
+                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                refreshPosts();
             }
         };
         new UndoBarController.UndoBar(getActivity())

@@ -10,10 +10,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 public class ImageUtils {
-    /*
-     * used for round avatars in Reader
-     */
-    public static Bitmap getRoundedBitmap(final Bitmap bitmap) {
+    public static Bitmap getCircularBitmap(final Bitmap bitmap) {
         if (bitmap==null)
             return null;
 
@@ -36,6 +33,33 @@ public class ImageUtils {
         paint.setStrokeWidth(1f);
         paint.setColor(Color.DKGRAY);
         canvas.drawOval(rectF, paint);
+
+        return output;
+    }
+
+    public static Bitmap getRoundedEdgeBitmap(final Bitmap bitmap, int radius) {
+        if (bitmap == null) {
+            return null;
+        }
+
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(Color.RED);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1f);
+        paint.setColor(Color.DKGRAY);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
 
         return output;
     }
