@@ -1,4 +1,4 @@
-package org.wordpress.android.util;
+package org.wordpress.android.networking;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,6 +7,7 @@ import android.os.Build;
 import android.provider.Settings;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * requires android.permission.ACCESS_NETWORK_STATE

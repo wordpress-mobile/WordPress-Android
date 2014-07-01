@@ -12,7 +12,12 @@ local.properties file and create the gradle.properties file, the easiest
 way is to copy our example:
 
     $ android update project -p . --target android-14 # generate or update local.properties
-    $ cp gradle.properties-example gradle.properties
+    $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
+    
+Checkout our library projects to create a debug build:
+  - checkout the project [WordPress-Utils-Android][6]
+  - create a simbolic link to the WordPress-Utils-Android project by calling 
+  - `ln -s ../WordPress-Utils-Android/WordPressUtils/ WordPressUtils` from the main folder of this project
 
 Note: generated `build.xml`, `proguard-project.txt` and `project.properties` are not used and can be deleted.
 After this step, you can invoke gradle to build, install and test the project:
@@ -35,3 +40,4 @@ Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 [3]: http://developer.android.com/sdk/installing/studio.html
 [4]: http://make.wordpress.org/mobile/handbook/
 [5]: http://make.wordpress.org/mobile/
+[6]: https://github.com/wordpress-mobile/WordPress-Utils-Android

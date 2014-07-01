@@ -23,7 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
-import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.networking.NetworkUtils;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 

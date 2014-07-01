@@ -11,14 +11,12 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.WebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPWebChromeClient;
-import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;

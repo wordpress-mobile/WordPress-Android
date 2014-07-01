@@ -22,10 +22,10 @@ import android.widget.TextView;
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.UserEmail;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 

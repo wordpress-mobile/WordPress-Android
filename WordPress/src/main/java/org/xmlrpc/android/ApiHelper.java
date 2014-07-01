@@ -24,8 +24,8 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
