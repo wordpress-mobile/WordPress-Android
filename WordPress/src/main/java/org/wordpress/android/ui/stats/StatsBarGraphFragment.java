@@ -2,16 +2,22 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -22,6 +28,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -33,6 +40,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
+    private double lastTappedX, lastTappedY;
+
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -62,13 +71,29 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     public void onResume() {
         super.onResume();
         getActivity().getContentResolver().registerContentObserver(StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver);
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.registerReceiver(mReceiver, new IntentFilter("CPCT"));
     }
 
     @Override
     public void onPause() {
         super.onPause();
         getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+
+        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
+        lbm.unregisterReceiver(mReceiver);
     }
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if ("CPCT".equals(action)) {
+
+            }
+        }
+    };
 
     private StatsBarChartUnit getBarChartUnit() {
         int ordinal = getArguments().getInt(ARGS_BAR_CHART_UNIT);
@@ -130,7 +155,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         visitorsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 3);
 
         // Update or create a new GraphView
-        GraphView graphView;
+        final GraphView graphView;
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
             graphView = (GraphView) mGraphContainer.getChildAt(0);
         } else {
@@ -145,6 +170,39 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             graphView.addSeries(visitorsSeries);
             graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
             graphView.setHorizontalLabels(horLabels);
+
+            graphView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    ViewConfiguration vc = ViewConfiguration.get(view.getContext());
+                 /*   int mTouchSlop = vc.getScaledTouchSlop();
+                    AppLog.w(AppLog.T.STATS, "mTouchSlop: "+mTouchSlop);
+                    AppLog.e(AppLog.T.STATS, ">>>> graphView.onTouch");
+                    AppLog.w(AppLog.T.STATS, motionEvent.toString());
+                    */
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+
+                        GraphView currentGraphView = (GraphView) view;
+                        float x = motionEvent.getX(motionEvent.getActionIndex()); //the location of the touch on the graphview
+                        int width = currentGraphView.getWidth(); //the width of the graphview
+                        double xValue =  (x/width); //the x-Value of the graph where you touched
+                        AppLog.w(AppLog.T.STATS, "x " + x);
+                        AppLog.w(AppLog.T.STATS, "width " + width);
+                        AppLog.w(AppLog.T.STATS, "xValue " + xValue);
+
+                        float y = motionEvent.getY(motionEvent.getActionIndex());
+                        int height = currentGraphView.getHeight();
+                        double yValue =  (y/height);
+                        AppLog.w(AppLog.T.STATS, "y " + y);
+                        AppLog.w(AppLog.T.STATS, "height " + height);
+                        AppLog.w(AppLog.T.STATS, "yValue " + yValue);
+                        AppLog.e(AppLog.T.STATS, "<<< graphView.onTouch");
+                    }
+                    return false;
+                }
+            });
+
         }
     }
 

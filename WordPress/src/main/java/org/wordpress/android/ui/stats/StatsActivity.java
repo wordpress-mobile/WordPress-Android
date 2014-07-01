@@ -21,6 +21,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -182,6 +183,21 @@ public class StatsActivity extends WPActionBarActivity {
 
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+    }
+
+    //intercepts touch events on the graphview
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event)
+    {
+     //   AppLog.w(AppLog.T.STATS, "Activity - evento - " + event.toString());
+     //   FragmentManager fm = getFragmentManager();
+     //   fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG);
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            // assuming that is was a tap event
+            WordPress.sendLocalBroadcast(this, "CTPC");
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
     private void startWPComLoginActivity() {
