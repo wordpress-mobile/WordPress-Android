@@ -3,13 +3,17 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies { classpath 'com.android.tools.build:gradle:0.11.+' }
+    dependencies { classpath 'com.android.tools.build:gradle:0.12.+' }
 }
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    compile 'commons-lang:commons-lang:2.6'
 }
 
 android {
