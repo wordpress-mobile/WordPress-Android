@@ -495,7 +495,8 @@ public class ReaderPostListFragment extends Fragment
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && hasActivity()) {
                     hideUndoBar();
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog);
+                    getPostAdapter().refresh();
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
             }
         };
