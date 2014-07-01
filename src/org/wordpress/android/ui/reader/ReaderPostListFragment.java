@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -77,8 +77,13 @@ public class ReaderPostListFragment extends Fragment
         public void onTagSelected(String tagName);
     }
 
+    public static interface OnPostPopupListener {
+        public void onShowPostPopup(View view, ReaderPost post, int position);
+    }
+
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
+
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
 
@@ -98,9 +103,6 @@ public class ReaderPostListFragment extends Fragment
     private long mCurrentBlogId;
     private String mCurrentBlogUrl;
     private ReaderPostListType mPostListType;
-
-    private int mContextMenuListItemPosition;
-    private ReaderPost mContextMenuPost;
 
     private boolean mIsUpdating;
     private boolean mIsFlinging;
@@ -247,8 +249,6 @@ public class ReaderPostListFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.reader_fragment_post_list, container, false);
         mListView = (WPListView) rootView.findViewById(android.R.id.list);
-
-        registerForContextMenu(mListView);
 
         // bar that appears at top when new posts are downloaded
         mNewPostsBar = (TextView) rootView.findViewById(R.id.text_new_posts);
@@ -434,6 +434,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
+        getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
     }
 
     @Override
@@ -457,33 +458,32 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private static final int CONTEXT_MENU_BLOCK_BLOG = 1;
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        mContextMenuListItemPosition = info.position;
-        mContextMenuPost = (ReaderPost) getPostAdapter().getItem(mContextMenuListItemPosition);
-        if (mContextMenuPost != null) {
-            if (mContextMenuPost.hasBlogName()) {
-                menu.setHeaderTitle(mContextMenuPost.getBlogName());
+
+    /*
+     * called when user taps dropdown arrow icon next to a post - shows a popup menu
+     * that enables blocking the blog the post is in
+     */
+    private final OnPostPopupListener mOnPostPopupListener = new OnPostPopupListener() {
+        @Override
+        public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+            if (view == null || post == null) {
+                return;
             }
-            menu.add(0, CONTEXT_MENU_BLOCK_BLOG, 0, R.string.reader_menu_block_blog);
-        }
-    }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_BLOCK_BLOG :
-                blockBlog(mContextMenuPost.blogId);
-                return true;
-            default :
-                return super.onContextItemSelected(item);
+            PopupMenu popup = new PopupMenu(getActivity(), view);
+            MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    blockBlogForPost(post, position);
+                    return true;
+                }
+            });
+            popup.show();
         }
-    }
+    };
 
-    private void blockBlog(final long blogId) {
+    private void blockBlogForPost(final ReaderPost post, final int position) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -492,6 +492,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (!succeeded && hasActivity()) {
+                    hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_generic);
                 }
             }
@@ -499,7 +500,8 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderPostList postsToRestore = ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
+        final ReaderPostList postsToRestore =
+                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
 
         // animate out the post the user chose to block from, then refresh the list so the posts
         // deleted by the above call no longer appear
@@ -511,12 +513,12 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (hasActivity()) {
-                    getPostAdapter().removePost(mContextMenuListItemPosition);
+                    getPostAdapter().removePost(position);
                 }
             }
         };
         ReaderAnim.animateListItem(mListView,
-                mContextMenuListItemPosition,
+                position,
                 ReaderAnim.AnimateListItemStyle.BLOCK,
                 aniListener);
 
@@ -524,7 +526,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                if (ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore, actionListener)) {
+                if (ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore, actionListener)) {
                     refreshPosts();
                 }
             }

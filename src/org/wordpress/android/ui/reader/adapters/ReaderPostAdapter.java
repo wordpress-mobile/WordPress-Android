@@ -25,6 +25,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostPopupListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -66,6 +67,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderPostList mPosts = new ReaderPostList();
 
     private OnTagSelectedListener mOnTagSelectedListener;
+    private OnPostPopupListener mOnPostPopupListener;
     private final ReaderActions.RequestReblogListener mReblogListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -107,6 +109,10 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public void setOnTagSelectedListener(OnTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
+    }
+
+    public void setOnPostPopupListener(OnPostPopupListener onPostPopupListener) {
+        mOnPostPopupListener = onPostPopupListener;
     }
 
     ReaderPostListType getPostListType() {
@@ -406,8 +412,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgDropDown.setVisibility(View.VISIBLE);
             holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    v.showContextMenu();
+                public void onClick(View view) {
+                    if (mOnPostPopupListener != null) {
+                        mOnPostPopupListener.onShowPostPopup(view, post, position);
+                    }
                 }
             });
         } else {
