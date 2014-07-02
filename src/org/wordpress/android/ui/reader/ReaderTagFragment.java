@@ -92,8 +92,8 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_TAG_TYPE, getTagType());
+        super.onSaveInstanceState(outState);
     }
 
     private void scrollToTagName(String tagName) {

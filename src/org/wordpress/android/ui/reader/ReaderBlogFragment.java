@@ -84,14 +84,14 @@ public class ReaderBlogFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mListView.setAdapter(getBlogAdapter());
-        getBlogAdapter().refresh();
+        refresh();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        super.onSaveInstanceState(outState);
     }
 
     private void restoreState(Bundle args) {
@@ -141,7 +141,7 @@ public class ReaderBlogFragment extends Fragment
         }
 
         UserPrefs.setReaderRecommendedBlogOffset(newOffset);
-        getBlogAdapter().refresh();
+        refresh();
     }
 
     void refresh() {

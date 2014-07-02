@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.11.+'
+        classpath 'com.android.tools.build:gradle:0.12.+'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -26,6 +26,9 @@ dependencies {
 }
 
 android {
+
+    useOldManifestMerger true
+
     lintOptions {
         quiet true
         abortOnError false
@@ -57,8 +60,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0-beta-2"
-        versionCode 119
+        versionName "3.0-beta-3"
+        versionCode 120
         minSdkVersion 14
         targetSdkVersion 19
     }
@@ -72,6 +75,7 @@ android {
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
         compile 'com.helpshift:android-aar:3.4.1'
+        compile 'com.mcxiaoke.volley:library:1.0.+'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.0'
@@ -93,7 +97,9 @@ android {
         zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Simperium
-        compile 'com.simperium:simperium-android:0.4.8'
+        compile('com.simperium:simperium-android:0.4.8') {
+            exclude group: 'com.android', module: 'volley'
+        }
 
         // Local dependencies
         compile files('libs/MixpanelAPI.jar')

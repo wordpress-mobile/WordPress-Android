@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -82,7 +83,13 @@ public class ReaderSubsActivity extends Activity
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
-        setupActionBar();
+
+        getActionBar().setDisplayShowTitleEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
+        tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
+        tabStrip.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -113,7 +120,6 @@ public class ReaderSubsActivity extends Activity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                getActionBar().setSelectedNavigationItem(position);
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
@@ -122,24 +128,6 @@ public class ReaderSubsActivity extends Activity
         // update list of tags and blogs from the server
         if (!mHasPerformedUpdate) {
             performUpdate();
-        }
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = getActionBar();
-        if (actionBar == null) {
-            return;
-        }
-
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // add the tabs to match the viewPager
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        for (int i = 0; i < getPageAdapter().getCount(); i++) {
-            actionBar.addTab(actionBar.newTab()
-                     .setText(getPageAdapter().getPageTitle(i))
-                     .setTabListener(this));
         }
     }
 
@@ -185,13 +173,13 @@ public class ReaderSubsActivity extends Activity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -516,7 +504,6 @@ public class ReaderSubsActivity extends Activity
         for (int i = 0; i < adapter.getCount(); i++) {
             if (pageTitle.equals(adapter.getPageTitle(i))) {
                 mViewPager.setCurrentItem(i);
-                getActionBar().setSelectedNavigationItem(i);
                 return;
             }
         }

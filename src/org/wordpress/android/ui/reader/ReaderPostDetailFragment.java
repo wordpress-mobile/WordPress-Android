@@ -356,8 +356,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
@@ -378,6 +376,8 @@ public class ReaderPostDetailFragment extends Fragment
         } else {
             mListState = null;
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -716,8 +716,8 @@ public class ReaderPostDetailFragment extends Fragment
         // remove excess existing views
         int numExistingViews = layoutLikingAvatars.getChildCount();
         if (numExistingViews > avatarUrls.size()) {
-            int numToRemove = avatarUrls.size() - numExistingViews;
-            layoutLikingAvatars.removeViews(numExistingViews, numToRemove);
+            int numToRemove = numExistingViews - avatarUrls.size();
+            layoutLikingAvatars.removeViews(numExistingViews - numToRemove, numToRemove);
         }
 
         int index = 0;
@@ -973,8 +973,8 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * size to use for images that fit the full width of the listView item
      */
-    private int getFullSizeImageWidth() {
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
+    private int getFullSizeImageWidth(Context context) {
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int marginWidth = getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
         int imageWidth = displayWidth - (marginWidth * 2);
         if (hasStaticMenuDrawer()) {
@@ -1011,7 +1011,7 @@ public class ReaderPostDetailFragment extends Fragment
         int marginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         int marginSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
         int marginExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-        int fullSizeImageWidth = getFullSizeImageWidth();
+        int fullSizeImageWidth = getFullSizeImageWidth(context);
 
         final String linkColor = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
         final String greyLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
@@ -1217,7 +1217,7 @@ public class ReaderPostDetailFragment extends Fragment
                     showFeaturedImage = true;
                     // note that only the width is used here - the imageView will adjust
                     // the height to match that of the image once loaded
-                    featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(), 0);
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(container.getContext()), 0);
                 }
             }
 

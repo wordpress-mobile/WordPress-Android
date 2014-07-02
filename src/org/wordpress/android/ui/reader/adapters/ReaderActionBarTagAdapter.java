@@ -73,9 +73,17 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
         return (mTags !=null ? mTags.size() : 0);
     }
 
+    private boolean isValidPosition(int position) {
+        return (position >= 0 && position < getCount());
+    }
+
     @Override
     public Object getItem(int index) {
-        return mTags.get(index);
+        if (isValidPosition(index)) {
+            return mTags.get(index);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -153,8 +161,9 @@ public class ReaderActionBarTagAdapter extends BaseAdapter {
             if (result) {
                 mTags = (ReaderTagList) tmpTags.clone();
                 notifyDataSetChanged();
-                if (mDataListener != null)
+                if (mDataListener != null) {
                     mDataListener.onDataLoaded(mTags.isEmpty());
+                }
             }
             mIsTaskRunning = false;
         }
