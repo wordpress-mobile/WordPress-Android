@@ -165,6 +165,8 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
+        ABTestingUtils.init();
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
             shouldRestoreSelectedActivity = true;
