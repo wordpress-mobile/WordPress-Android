@@ -98,7 +98,6 @@ dependencies {
     compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
     releaseCompile 'org.wordpress:wordpress-utils:1.0.+'
     debugCompile project(':WordPressUtils')
-    zbetagroupCompile 'org.wordpress:wordpress-utils:1.0.0'
 
     releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
     debugCompile project(':WordPressNetworking')
