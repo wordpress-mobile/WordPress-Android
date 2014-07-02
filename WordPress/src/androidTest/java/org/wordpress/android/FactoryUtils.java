@@ -5,7 +5,6 @@ import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.SystemServiceFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
-import org.wordpress.android.networking.RestClientFactory;
 import org.wordpress.android.util.AppLog.T;
 import org.xmlrpc.android.XMLRPCFactory;
 

@@ -155,6 +155,8 @@ public class WordPress extends Application {
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
+        RestClientUtils.setUserAgent(getUserAgent());
+
         configureSimperium();
 
         // Volley networking setup

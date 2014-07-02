@@ -5,7 +5,6 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.wordpress.rest.RestClient;
 
-import org.wordpress.android.networking.RestClientFactoryAbstract;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
