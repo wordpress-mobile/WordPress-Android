@@ -5,7 +5,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:0.12.1'
         classpath 'com.github.nrudenko:gradle-android-cq-plugin:0.1+'
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:+'
     }
@@ -27,8 +27,6 @@ dependencies {
 
 android {
 
-    useOldManifestMerger true
-
     lintOptions {
         quiet true
         abortOnError false
@@ -37,22 +35,6 @@ android {
     packagingOptions {
         exclude "META-INF/LICENSE.txt"
         exclude "META-INF/NOTICE.txt"
-    }
-
-    buildTypes {
-        release {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
-        }
-        debug {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
-        }
-        zbetagroup {
-            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
-            applicationIdSuffix ".beta"
-        }
     }
 
     compileSdkVersion 19
@@ -64,6 +46,29 @@ android {
         versionCode 119
         minSdkVersion 14
         targetSdkVersion 19
+
+        buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
+        buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
+    }
+
+    productFlavors {
+
+        vanilla {}
+
+        zbetagroup {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
+            applicationId "org.wordpress.android.beta"
+        }
+
+    }
+
+    buildTypes {
+
+        debug {
+            buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+        }
+
     }
 
     dependencies {
@@ -102,7 +107,6 @@ android {
 
         releaseCompile 'org.wordpress:emailchecker:0.2'
         debugCompile 'org.wordpress:emailchecker-debug:0.2'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
 
         // Simperium
         compile('com.simperium:simperium-android:0.4.8') {
@@ -111,22 +115,6 @@ android {
 
     }
 
-    sourceSets {
-
-        release {
-            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
-        }
-
-        debug {
-            manifest.srcFile 'src/main/AndroidManifestReleaseAndDebug.xml'
-        }
-
-        zbetagroup {
-            res.srcDirs = ['src/main/res-zbetagroup']
-            manifest.srcFile 'src/main/AndroidManifestBetagroup.xml'
-        }
-
-    }
 } // end android
 
 
@@ -177,5 +165,4 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
-    android.buildTypes.zbetagroup.signingConfig = android.signingConfigs.release
 }
