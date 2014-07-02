@@ -89,9 +89,9 @@ public class ReaderBlogFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putSerializable(ARG_BLOG_TYPE, getBlogType());
         outState.putBoolean(ReaderConstants.KEY_WAS_PAUSED, mWasPaused);
+        super.onSaveInstanceState(outState);
     }
 
     private void restoreState(Bundle args) {

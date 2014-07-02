@@ -173,13 +173,13 @@ public class ReaderSubsActivity extends Activity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
