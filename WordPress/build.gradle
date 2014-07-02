@@ -58,7 +58,7 @@ android {
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
             buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
-            applicationId "org.wordperss.android.beta"
+            applicationId "org.wordpress.android.beta"
         }
 
     }

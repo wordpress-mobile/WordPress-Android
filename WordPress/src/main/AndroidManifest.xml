@@ -279,6 +279,8 @@
             android:label="Stats Update Service"
             android:exported="false" />
 
+        <service android:name="org.wordpress.android.GCMIntentService"/>
+
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
