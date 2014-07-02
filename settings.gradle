@@ -1,1 +1,3 @@
-include ':WordPress', ':WordPressUtils', ':WordPressNetworking'
+include ':WordPress'
+include ':libs:utils:WordPressUtils'
+include ':libs:networking:WordPressNetworking'

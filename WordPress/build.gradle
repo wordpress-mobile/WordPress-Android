@@ -22,6 +22,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-cq'
 apply plugin: 'crashlytics'
 
+dependencies {
+    compile 'com.crashlytics.android:crashlytics:+'
+}
+
 android {
     lintOptions {
         quiet true
@@ -66,6 +70,18 @@ android {
 
 dependencies {
     compile 'com.crashlytics.android:crashlytics:+'
+    wordpress {
+        utils {
+            repo 'WordPress-Utils-Android'
+            subproject 'WordPressUtils'
+            artifact 'org.wordpress:wordpress-utils:1.0.+'
+        }
+        networking {
+            repo 'WordPress-Networking-Android'
+            subproject 'WordPressNetworking'
+            artifact 'org.wordpress:wordpress-utils:1.0.+'
+        }
+    }
 
     // Provided by maven central
     compile 'com.google.code.gson:gson:2.2.2'
@@ -96,11 +112,6 @@ dependencies {
     compile 'org.wordpress:android-passcodelock:0.0.5'
     compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
     compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
-    releaseCompile 'org.wordpress:wordpress-utils:1.0.+'
-    debugCompile project(':WordPressUtils')
-
-    releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
-    debugCompile project(':WordPressNetworking')
 
     releaseCompile 'org.wordpress:emailchecker:0.2'
     debugCompile 'org.wordpress:emailchecker-debug:0.2'

@@ -16,6 +16,9 @@ bin/
 gen/
 build/
 
+# local development library repositories
+libs/*
+
 # Local configuration file (sdk path, etc)
 local.properties
 
