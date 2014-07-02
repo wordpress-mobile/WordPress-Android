@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies { classpath 'com.android.tools.build:gradle:0.12.+' }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 20
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "org.wordpress.android.networking"
+        minSdkVersion 14
+        targetSdkVersion 20
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
+    compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile 'org.wordpress:wordpress-utils:1.0.+'
+}
