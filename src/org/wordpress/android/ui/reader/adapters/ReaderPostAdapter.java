@@ -159,6 +159,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         loadPosts();
     }
 
+    /*
+     * remove a single post at the passed position
+     */
     public void removePost(int position) {
         if (isValidPosition(position)) {
             mPosts.remove(position);

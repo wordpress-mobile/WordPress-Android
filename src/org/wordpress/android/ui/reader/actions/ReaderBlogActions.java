@@ -395,15 +395,20 @@ public class ReaderBlogActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
-                // TODO: call always returns success=false for vip blogs
+                // TODO: call always returns success=false for vip blogs, backend work being
+                // done to resolve this (as of 02-July-2014) - once this is resolved we should
+                // return false here when the call fails
+                if (actionListener != null) {
+                    actionListener.onActionResult(true);
+                }
+                /*boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
                 if (!success) {
                     AppLog.w(T.READER, "failed to block blog " + blogId);
                     ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
                 }
                 if (actionListener != null) {
                     actionListener.onActionResult(success);
-                }
+                }*/
 
             }
         };

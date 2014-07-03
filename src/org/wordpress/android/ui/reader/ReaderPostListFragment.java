@@ -483,6 +483,10 @@ public class ReaderPostListFragment extends Fragment
         }
     };
 
+    /*
+     * blocks the blog associated with the passed post and removes all posts in that blog
+     * from the adapter - passed position is the index of the post in the adapter
+     */
     private void blockBlogForPost(final ReaderPost post, final int position) {
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
