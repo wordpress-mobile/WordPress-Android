@@ -512,7 +512,10 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (hasActivity()) {
+                    // remove this specific post, then refresh the adapter so other posts in this
+                    // blog no long appear
                     getPostAdapter().removePost(position);
+                    getPostAdapter().refresh();
                 }
             }
         };
