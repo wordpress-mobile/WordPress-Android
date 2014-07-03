@@ -14,7 +14,7 @@ public class ABTestingUtils {
     private static StringMap sRemoteControlMap;
 
     // URL where remote control values are stored
-    private final static String REMOTE_CONTROL_URL = "http://wpandroid.files.wordpress.com/2014/07/remote-control1.jpg";
+    private final static String REMOTE_CONTROL_URL = "http://api.wordpress.org/androidapp/feedback-check/1.0/";
 
     // Update it max every 6 hours if the application is not killed
     private final static int SECONDS_BETWEEN_TWO_UPDATES = 60 * 60 * 6;
