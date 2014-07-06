@@ -160,10 +160,11 @@ public class ReaderUtils {
         }
 
         // remove ampersands and number signs, replace spaces & periods with dashes
-        String sanitized = tagName.replace("&", "")
-                .replace("#", "")
-                .replace(" ", "-")
-                .replace(".", "-");
+        String sanitized = tagName.trim()
+                                  .replace("&", "")
+                                  .replace("#", "")
+                                  .replace(" ", "-")
+                                  .replace(".", "-");
 
         // replace double dashes with single dash (may have been added above)
         while (sanitized.contains("--")) {
