@@ -728,7 +728,7 @@
     <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new&#160;ones</string>
     <string name="forums">Forums</string>
     <string name="contact_us">Contact us</string>
-    <string name="contact_us_pref_summary">If you need help with the app</string>
+    <string name="contact_us_pref_summary">Get help from Automattic support</string>
     <string name="help_center">Help center</string>
     <string name="ssl_certificate_trust">Trust</string>
     <string name="ssl_certificate_details">Certificate Details</string>
