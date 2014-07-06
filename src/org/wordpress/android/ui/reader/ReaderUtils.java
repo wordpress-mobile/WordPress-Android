@@ -149,4 +149,27 @@ public class ReaderUtils {
         // remove the existing query string, add the new one, and make sure the url is https:
         return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
     }
+
+    /*
+     * returns the passed tagName formatted for use with our API
+     * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
+     */
+    public static String sanitizeTagName(final String tagName) {
+        if (tagName == null) {
+            return "";
+        }
+
+        // remove ampersands and number signs, replace spaces & periods with dashes
+        String sanitized = tagName.replace("&", "")
+                .replace("#", "")
+                .replace(" ", "-")
+                .replace(".", "-");
+
+        // replace double dashes with single dash (may have been added above)
+        while (sanitized.contains("--")) {
+            sanitized = sanitized.replace("--", "-");
+        }
+
+        return sanitized.trim();
+    }
 }
