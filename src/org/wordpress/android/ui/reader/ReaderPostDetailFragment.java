@@ -624,7 +624,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void refreshLikes() {
         AppLog.d(T.READER, "reader post detail > refreshLikes");
-        if (!hasActivity() || !hasPost() || !mPost.isWP()) {
+        if (!hasActivity() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
             return;
         }
 
@@ -1160,6 +1160,7 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtFollow;
 
         ImageView imgBtnReblog;
+        ImageView imgBtnLike;
         ImageView imgBtnComment;
 
         WPNetworkImageView imgAvatar;
@@ -1202,6 +1203,7 @@ public class ReaderPostDetailFragment extends Fragment
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
+            imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
@@ -1325,14 +1327,25 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnComment.setVisibility(View.GONE);
             }
 
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
-                mLayoutLikes.setVisibility(View.INVISIBLE);
+            if (mPost.isLikesEnabled) {
+                imgBtnLike.setVisibility(View.VISIBLE);
+                // if we know refreshLikes() is going to show the liking layout, force it to take up
+                // space right now
+                if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
+                    mLayoutLikes.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                imgBtnLike.setVisibility(View.GONE);
             }
 
             // external blogs (feeds) don't support action icons
-            mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
+            if (!mPost.isExternal && (mPost.isLikesEnabled
+                                   || mPost.canReblog()
+                                   || mPost.isCommentsOpen)) {
+                mLayoutIcons.setVisibility(View.VISIBLE);
+            } else {
+                mLayoutIcons.setVisibility(View.GONE);
+            }
 
             // enable JavaScript in the webView if it's safe to do so
             mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
