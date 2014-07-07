@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="search_location">Axtarış</string>
+	<string name="edit_location">Redaktə et</string>
+	<string name="preference_privacy">Gizlilik</string>
+	<string name="preference_send_usage_stats">Statistikaları göndər</string>
+	<string name="reader_label_tap_to_dismiss">Davam etmək üçün toxunun</string>
+	<string name="reader_title_reblog">Yazını yenidən bloqla</string>
+	<string name="reader_hint_reblog_comment">Öz rəyini yaz (seçimə bağlı)</string>
+	<string name="reader_label_reblog_to">Yenidən bloqla</string>
 	<string name="update_verb">Yenilə</string>
 	<string name="schedule_verb">Planla</string>
+	<string name="sign_in_again">Yenidən daxil ol</string>
+	<string name="simperium_connection_error">Bildirişləri qəbul etmək üçün daxil olmaq mümkün olmadı.</string>
+	<string name="invalid_xmlrpc_url">Sizin sayt xətalı XMLRPC ünvanı döndürür. Lütfən sayt nəazarətçisi ilə əlaqə qurun.</string>
 	<string name="reader_label_followers">%s izləyici</string>
 	<string name="reader_label_new_posts">Yeni yazıları göstər</string>
 	<string name="reader_title_blog_preview">Bloq Önizləməsi</string>
@@ -14,6 +25,10 @@
 	<string name="reader_label_followed_blog">Bloq izlənilir</string>
 	<string name="reader_label_unfollowed_blog">Bloq izlənilmir</string>
 	<string name="reader_label_more_recommendations">Daha çox məsləhət</string>
+	<string name="reader_label_tag_preview">Yazılar %s etiketləndi</string>
+	<string name="reader_toast_err_get_blog_info">Bloqu göstərmək mümkün olmadı</string>
+	<string name="reader_toast_err_already_follow_blog">Bu bloqu artıq izləyirsiniz</string>
+	<string name="reader_toast_err_follow_blog">Bu bloqu izləmək mümkün deyil</string>
 	<string name="blogs_visibility">Bloqlar</string>
 	<string name="stats_empty_referrers_title">Yonləndirmələr yoxdur.</string>
 	<string name="need_help_signin_wpcom">Yardım Lazımdırmı?</string>

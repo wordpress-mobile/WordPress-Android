@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="contact_us">Contactez nous</string>
+	<string name="contact_us_pref_summary">Obtenez l\'aide du support Automattic</string>
+	<string name="hs__conversation_detail_error">Décrivez le problème rencontré</string>
+	<string name="hs__new_conversation_header">Discussion support</string>
+	<string name="hs__conversation_header">Discussion support</string>
+	<string name="hs__username_blank_error">Entrer un nom valide</string>
+	<string name="hs__invalid_email_error">Entrer une adresse email valide</string>
+	<string name="add_location">Ajouter localisation</string>
+	<string name="current_location">Localisation courante</string>
+	<string name="your_signature">Votre signature:</string>
+	<string name="search_location">Rechercher</string>
+	<string name="edit_location">Editer</string>
+	<string name="search_current_location">Localiser</string>
+	<string name="preference_privacy">Données personnelles</string>
+	<string name="preference_send_usage_stats">Envoyer statistiques</string>
+	<string name="preference_send_usage_stats_summary">Envoyer automatiquement des statistiques d\'utilisation pour nous aider à améliorer WordPress pour Android</string>
+	<string name="reader_label_reached_last_post">Vous avez atteint la fin</string>
+	<string name="reader_label_tap_to_dismiss">Toucher pour faire disparaitre</string>
 	<string name="reader_hint_reblog_comment">Ajouter un commentaire (optionnel)</string>
 	<string name="reader_label_reblog_to">Reblogger sur</string>
 	<string name="reader_title_reblog">Reblogger l\'article</string>
@@ -517,9 +535,9 @@
 	<string name="notification_blink">Faire clignoter le voyant de notification</string>
 	<string name="notification_sound">Faire retentir la sonnerie</string>
 	<string name="status">Avancement</string>
-	<string name="location">Emplacement</string>
 	<string name="sdcard_title">Carte SD requise</string>
 	<string name="select_video">Choisissez une vidéo dans la galerie</string>
+	<string name="location">Localisation</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Effacer</string>
 	<string name="none">Aucun</string>
