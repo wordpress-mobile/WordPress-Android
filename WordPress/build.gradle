@@ -22,10 +22,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-cq'
 apply plugin: 'crashlytics'
 
-dependencies {
-    compile 'com.crashlytics.android:crashlytics:+'
-}
-
 android {
     lintOptions {
         quiet true
@@ -68,20 +64,21 @@ android {
     }
 }
 
+wordpress {
+    utils {
+        repo 'WordPress-Utils-Android'
+        subproject 'WordPressUtils'
+        artifact 'org.wordpress:wordpress-utils:1.0.+'
+    }
+    networking {
+        repo 'WordPress-Networking-Android'
+        subproject 'WordPressNetworking'
+        artifact 'org.wordpress:wordpress-utils:1.0.+'
+    }
+}
+
 dependencies {
     compile 'com.crashlytics.android:crashlytics:+'
-    wordpress {
-        utils {
-            repo 'WordPress-Utils-Android'
-            subproject 'WordPressUtils'
-            artifact 'org.wordpress:wordpress-utils:1.0.+'
-        }
-        networking {
-            repo 'WordPress-Networking-Android'
-            subproject 'WordPressNetworking'
-            artifact 'org.wordpress:wordpress-utils:1.0.+'
-        }
-    }
 
     // Provided by maven central
     compile 'com.google.code.gson:gson:2.2.2'
