@@ -731,6 +731,8 @@
     <string name="forgot_password">Lost your password?</string>
     <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new&#160;ones</string>
     <string name="forums">Forums</string>
+    <string name="contact_us">Contact us</string>
+    <string name="contact_us_pref_summary">Get help from Automattic support</string>
     <string name="help_center">Help center</string>
     <string name="ssl_certificate_trust">Trust</string>
     <string name="ssl_certificate_details">Certificate Details</string>
@@ -741,4 +743,11 @@
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
+
+    <!-- Helpshift overridden strings -->
+    <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
+    <string name="hs__new_conversation_header">Support chat</string>
+    <string name="hs__conversation_header">Support chat</string>
+    <string name="hs__username_blank_error">Enter a valid name</string>
+    <string name="hs__invalid_email_error">Enter a valid email address</string>
 </resources>

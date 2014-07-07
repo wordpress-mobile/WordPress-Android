@@ -29,6 +29,8 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
+import java.util.Comparator;
 
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
@@ -332,6 +334,15 @@ public class ReaderBlogAdapter extends BaseAdapter {
                         break;
                     case FOLLOWED:
                         mFollowedBlogs = (ReaderBlogList) (tmpFollowedBlogs.clone());
+                        // sort followed blogs by name/domain to match display
+                        Collections.sort(mFollowedBlogs, new Comparator<ReaderBlog>() {
+                            @Override
+                            public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
+                                final String thisName = (thisBlog.hasName() ? thisBlog.getName() : UrlUtils.getDomainFromUrl(thisBlog.getUrl()));
+                                final String thatName = (thatBlog.hasName() ? thatBlog.getName() : UrlUtils.getDomainFromUrl(thatBlog.getUrl()));
+                                return thisName.compareToIgnoreCase(thatName);
+                            }
+                        });
                         break;
                 }
                 notifyDataSetChanged();
