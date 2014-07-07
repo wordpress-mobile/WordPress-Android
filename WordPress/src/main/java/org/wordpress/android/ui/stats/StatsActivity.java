@@ -17,7 +17,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,6 +76,9 @@ public class StatsActivity extends WPActionBarActivity {
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
+
+    public static final String STATS_TOUCH_DETECTED = "STATS_TOUCH_DETECTED";
+    private GestureDetectorCompat mDetector;
 
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
@@ -134,6 +139,7 @@ public class StatsActivity extends WPActionBarActivity {
         setTitle(R.string.stats);
 
         restoreState(savedInstanceState);
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
     }
 
     @Override
@@ -179,24 +185,32 @@ public class StatsActivity extends WPActionBarActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+        super.onSaveInstanceState(outState);
     }
 
-    //intercepts touch events on the graphview
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+        @Override
+        public boolean onSingleTapUp (MotionEvent event) {
+            AppLog.w(AppLog.T.STATS, "Tap UP detected");
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_TOUCH_DETECTED);
+            return false;
+        }
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event)
     {
-     //   AppLog.w(AppLog.T.STATS, "Activity - evento - " + event.toString());
-     //   FragmentManager fm = getFragmentManager();
-     //   fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG);
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            // assuming that is was a tap event
-            WordPress.sendLocalBroadcast(this, "CTPC");
+        this.mDetector.onTouchEvent(event);
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float x = event.getX(event.getActionIndex()); //the location of the touch on the graphview
+            AppLog.w(AppLog.T.STATS, "Stats activty xValue " + x);
         }
-
         return super.dispatchTouchEvent(event);
     }
 

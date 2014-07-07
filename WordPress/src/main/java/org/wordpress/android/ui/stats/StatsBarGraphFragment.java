@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,6 +33,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 
+import java.util.Random;
+
 /**
  * A fragment that shows stats bar chart data.
  */
@@ -40,8 +43,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
-    private double lastTappedX, lastTappedY;
-
+    private float lastTappedX, lastTappedY;
+    private StatsBarGraph graphView;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -73,7 +76,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         getActivity().getContentResolver().registerContentObserver(StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver);
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter("CPCT"));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_TOUCH_DETECTED));
     }
 
     @Override
@@ -89,8 +92,24 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if ("CPCT".equals(action)) {
-
+            if (StatsActivity.STATS_TOUCH_DETECTED.equals(action)) {
+                AppLog.w(AppLog.T.STATS, ">>>> BroadcastReceiver -> touch detected");
+                AppLog.w(AppLog.T.STATS, "lastTappedX " + lastTappedX);
+                AppLog.w(AppLog.T.STATS, "lastTappedY " + lastTappedY);
+                // 1. detect if the tap is inside a bar
+                // 2. always reset variables to 0
+                if (graphView != null && lastTappedX != 0.0 &&  lastTappedY != 0.0
+                        && graphView.isTapOnBar(lastTappedX, lastTappedY)) {
+                    Random rnd = new Random();
+                 /*   for (GraphViewSeries graphViewSeries : graphView.getAllSeries()) {
+                        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                        graphViewSeries.getStyle().color = color;
+                    }*/
+                    graphView.redrawAll();
+                }
+                lastTappedX = 0.0f;
+                lastTappedY = 0.0f;
+                AppLog.w(AppLog.T.STATS, "<<<< BroadcastReceiver -> touch detected");
             }
         }
     };
@@ -154,10 +173,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
         visitorsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 3);
 
-        // Update or create a new GraphView
-        final GraphView graphView;
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-            graphView = (GraphView) mGraphContainer.getChildAt(0);
+            graphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
         } else {
             mGraphContainer.removeAllViews();
             graphView = new StatsBarGraph(getActivity());
@@ -171,40 +188,43 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
             graphView.setHorizontalLabels(horLabels);
 
-            graphView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                    ViewConfiguration vc = ViewConfiguration.get(view.getContext());
-                 /*   int mTouchSlop = vc.getScaledTouchSlop();
-                    AppLog.w(AppLog.T.STATS, "mTouchSlop: "+mTouchSlop);
-                    AppLog.e(AppLog.T.STATS, ">>>> graphView.onTouch");
-                    AppLog.w(AppLog.T.STATS, motionEvent.toString());
-                    */
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-
-                        GraphView currentGraphView = (GraphView) view;
-                        float x = motionEvent.getX(motionEvent.getActionIndex()); //the location of the touch on the graphview
-                        int width = currentGraphView.getWidth(); //the width of the graphview
-                        double xValue =  (x/width); //the x-Value of the graph where you touched
-                        AppLog.w(AppLog.T.STATS, "x " + x);
-                        AppLog.w(AppLog.T.STATS, "width " + width);
-                        AppLog.w(AppLog.T.STATS, "xValue " + xValue);
-
-                        float y = motionEvent.getY(motionEvent.getActionIndex());
-                        int height = currentGraphView.getHeight();
-                        double yValue =  (y/height);
-                        AppLog.w(AppLog.T.STATS, "y " + y);
-                        AppLog.w(AppLog.T.STATS, "height " + height);
-                        AppLog.w(AppLog.T.STATS, "yValue " + yValue);
-                        AppLog.e(AppLog.T.STATS, "<<< graphView.onTouch");
-                    }
-                    return false;
-                }
-            });
+            graphView.setOnTouchListener(mBarGraphTouchListener);
 
         }
     }
+
+    /*
+    The bar graph is only getting the ACTION_DOWN event. So we record the coordinate of the ACTION_DOWN
+    event in a local variable. The StatsActivity, actually detects the tap and fires a local broadcast.
+    The bargraph can now  start the math and diplay the details view.
+     */
+    private View.OnTouchListener mBarGraphTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                StatsBarGraph currentGraphView = (StatsBarGraph) view;
+                float x = motionEvent.getX(motionEvent.getActionIndex()); //the location of the touch on the graphview
+                AppLog.w(AppLog.T.STATS, "currentGraphView x value " + x);
+             /*   int width = currentGraphView.getWidth(); //the width of the graphview
+                float xValue =  (x/width); //the x-Value of the graph where you touched
+                AppLog.e(AppLog.T.STATS, ">>> graphView.onTouch");
+                AppLog.w(AppLog.T.STATS, "x " + x);
+                AppLog.w(AppLog.T.STATS, "width " + width);
+                AppLog.w(AppLog.T.STATS, "xValue " + xValue);*/
+                lastTappedX = x;
+
+                float y = motionEvent.getY(motionEvent.getActionIndex());
+/*                int height = currentGraphView.getHeight();
+                float yValue =  (y/height);
+                AppLog.w(AppLog.T.STATS, "y " + y);
+                AppLog.w(AppLog.T.STATS, "height " + height);
+                AppLog.w(AppLog.T.STATS, "yValue " + yValue);
+                AppLog.e(AppLog.T.STATS, "<<< graphView.onTouch");*/
+                lastTappedY = y;
+            }
+            return false;
+        }
+    };
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {

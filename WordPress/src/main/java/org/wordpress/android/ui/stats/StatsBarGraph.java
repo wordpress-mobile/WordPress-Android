@@ -7,15 +7,22 @@ import android.graphics.Color;
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
+import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A Bar graph depicting the view and visitors.
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
+    private final List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
+
 	public StatsBarGraph(Context context) {
 		super(context, "");
 
@@ -59,6 +66,8 @@ class StatsBarGraph extends GraphView {
 		paint.setStrokeWidth(style.thickness);
 		paint.setColor(style.color);
 
+        barChartRects.clear();
+
 		// draw data
 		for (int i = 0; i < values.length; i++) {
 			float valY = (float) (values[i].getY() - minY);
@@ -70,7 +79,6 @@ class StatsBarGraph extends GraphView {
 				paint.setColor(style.getValueDependentColor().get(values[i]));
 			}
 
-
 			float pad = style.padding;
 
 			float left = (i * colwidth) + horstart;
@@ -79,8 +87,41 @@ class StatsBarGraph extends GraphView {
 			float bottom = graphheight + border - 1;
 
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
 		}
+        canvas.drawRect(0, 0, 10, 10, paint);
 	}
+
+    private class BarChartRect {
+        float left, top, right, bottom;
+
+        BarChartRect(float left, float top, float right, float bottom) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
+
+        public boolean isPointInside(float x, float y) {
+            int leftOffset = getLeft();
+            int top = getTop();
+            if (x >= this.left + leftOffset && x <= this.right &&
+                    y>= this.bottom && y>= this.top)
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public boolean isTapOnBar(float x, float y) {
+        for (BarChartRect barChartRect : barChartRects) {
+            if (barChartRect.isPointInside(x,y)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	@Override
 	protected double getMinY() {
