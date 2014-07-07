@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_location">位置情報を追加</string>
+	<string name="current_location">現在の位置</string>
+	<string name="your_signature">署名:</string>
+	<string name="search_location">検索</string>
+	<string name="edit_location">編集</string>
+	<string name="search_current_location">位置情報取得</string>
+	<string name="preference_privacy">プライバシー</string>
+	<string name="preference_send_usage_stats">統計情報を送信</string>
+	<string name="preference_send_usage_stats_summary">WordPress for Android を改善するため、利用統計情報を自動的に送信する</string>
+	<string name="reader_label_reached_last_post">これが最後です</string>
+	<string name="reader_label_tap_to_dismiss">非表示にするにはタップ</string>
 	<string name="reader_hint_reblog_comment">ひとことどうぞ (オプション)</string>
 	<string name="reader_label_reblog_to">リブログ先:</string>
 	<string name="reader_title_reblog">リブログ</string>
