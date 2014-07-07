@@ -743,6 +743,7 @@
     <!-- Helpshift overridden strings -->
     <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
     <string name="hs__new_conversation_header">Support chat</string>
+    <string name="hs__conversation_header">Support chat</string>
     <string name="hs__username_blank_error">Enter a valid name</string>
-    <string name="hs__invalid_email_error">@string/email_invalid</string>
+    <string name="hs__invalid_email_error">Enter a valid email address</string>
 </resources>
