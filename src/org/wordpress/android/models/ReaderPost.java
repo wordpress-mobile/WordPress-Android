@@ -559,7 +559,7 @@ public class ReaderPost {
      * only public wp posts can be reblogged
      */
     public boolean canReblog() {
-        return !isExternal && !isPrivate;
+        return !isExternal && !isPrivate && isSharingEnabled;
     }
 
     /*
