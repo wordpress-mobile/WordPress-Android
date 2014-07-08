@@ -26,7 +26,8 @@ public class ReaderCommentTable {
                     + " published,"
                     + " timestamp,"
                     + " status,"
-                    + " text";
+                    + " text,"
+                    + " num_likes";
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -44,6 +45,7 @@ public class ReaderCommentTable {
                 + " timestamp           INTEGER DEFAULT 0,"
                 + " status              TEXT,"
                 + " text                TEXT,"
+                + " num_likes           INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, post_id, comment_id))");
     }
 
@@ -115,25 +117,25 @@ public class ReaderCommentTable {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
                                                   + COLUMN_NAMES
-                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13)");
+                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)");
         try {
             for (ReaderComment comment: comments) {
-                stmt.bindLong  (1, comment.blogId);
-                stmt.bindLong  (2, comment.postId);
-                stmt.bindLong  (3, comment.commentId);
-                stmt.bindLong  (4, comment.parentId);
-                stmt.bindString(5, comment.getAuthorName());
-                stmt.bindString(6, comment.getAuthorAvatar());
-                stmt.bindString(7, comment.getAuthorUrl());
-                stmt.bindLong  (8, comment.authorId);
-                stmt.bindLong  (9, comment.authorBlogId);
+                stmt.bindLong  (1,  comment.blogId);
+                stmt.bindLong  (2,  comment.postId);
+                stmt.bindLong  (3,  comment.commentId);
+                stmt.bindLong  (4,  comment.parentId);
+                stmt.bindString(5,  comment.getAuthorName());
+                stmt.bindString(6,  comment.getAuthorAvatar());
+                stmt.bindString(7,  comment.getAuthorUrl());
+                stmt.bindLong  (8,  comment.authorId);
+                stmt.bindLong  (9,  comment.authorBlogId);
                 stmt.bindString(10, comment.getPublished());
                 stmt.bindLong  (11, comment.timestamp);
                 stmt.bindString(12, comment.getStatus());
                 stmt.bindString(13, comment.getText());
+                stmt.bindLong  (14, comment.numLikes);
 
                 stmt.execute();
-                stmt.clearBindings();
             }
 
             db.setTransactionSuccessful();
@@ -182,6 +184,8 @@ public class ReaderCommentTable {
 
         comment.setStatus(c.getString(c.getColumnIndex("status")));
         comment.setText(c.getString(c.getColumnIndex("text")));
+
+        comment.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 
         return comment;
     }

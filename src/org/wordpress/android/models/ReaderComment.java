@@ -8,9 +8,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
-/**
- * TODO: unify this with Comment.java
- */
 public class ReaderComment {
     public long commentId;
     public long blogId;
@@ -29,12 +26,15 @@ public class ReaderComment {
     public long timestamp;
     private String published;
 
+    public int numLikes;
+
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;
 
     public static ReaderComment fromJson(JSONObject json, long blogId) {
-        if (json == null)
+        if (json == null) {
             throw new IllegalArgumentException("null json comment");
+        }
 
         ReaderComment comment = new ReaderComment();
 
@@ -49,8 +49,9 @@ public class ReaderComment {
         comment.timestamp = DateTimeUtils.iso8601ToTimestamp(comment.published);
 
         JSONObject jsonPost = json.optJSONObject("post");
-        if (jsonPost!=null)
+        if (jsonPost != null) {
             comment.postId = jsonPost.optLong("ID");
+        }
 
         JSONObject jsonAuthor = json.optJSONObject("author");
         if (jsonAuthor!=null) {
@@ -63,8 +64,9 @@ public class ReaderComment {
         }
 
         JSONObject jsonParent = json.optJSONObject("parent");
-        if (jsonParent!=null)
+        if (jsonParent != null) {
             comment.parentId = jsonParent.optLong("ID");
+        }
 
         return comment;
     }

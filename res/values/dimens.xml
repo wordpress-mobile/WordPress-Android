@@ -61,7 +61,6 @@
     <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
-    <dimen name="reader_button_icon_small">40dp</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>

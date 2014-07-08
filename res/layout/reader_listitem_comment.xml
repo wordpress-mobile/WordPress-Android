@@ -14,8 +14,8 @@
     <View
         android:id="@+id/spacer_top"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="@dimen/margin_large" />
+        android:layout_height="@dimen/margin_large"
+        android:visibility="gone" />
 
     <!-- spacer_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -64,29 +64,50 @@
         android:focusableInTouchMode="false"
         tools:text="text_comment_text" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/text_reply"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_comment_actions"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:layout_alignLeft="@+id/text_comment_author"
-        android:layout_below="@+id/text_comment_text"
-        android:layout_marginTop="@dimen/margin_small"
-        android:background="@drawable/reader_transparent_selector"
-        android:paddingBottom="@dimen/margin_small"
-        android:paddingRight="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_small"
-        android:text="@string/reader_label_reply"
-        android:textColor="@color/reader_hyperlink"
-        android:textSize="@dimen/text_sz_small" />
+        android:layout_below="@+id/text_comment_text">
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reader_transparent_selector"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:text="@string/reader_label_reply"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_small" />
+
+        <ImageView
+            android:id="@+id/image_like_btn"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:src="@drawable/reader_button_comment_like" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_sz_small"
+            android:textColor="@color/reader_hyperlink"
+            tools:text="12 likes" />
+    </LinearLayout>
 
     <View
         android:id="@+id/divider_comment"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/text_reply"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_below="@+id/layout_comment_actions"
         android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="@color/grey_light" />
 
     <ProgressBar

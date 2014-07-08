@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -171,6 +172,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
             });
         }
 
+        if (mPost.isLikesEnabled) {
+            holder.txtLikeCount.setVisibility(View.VISIBLE);
+            holder.imgLikeButton.setVisibility(View.VISIBLE);
+        } else {
+            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.imgLikeButton.setVisibility(View.GONE);
+        }
+
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
         if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1)) {
@@ -193,6 +202,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final View spacerTop;
         private final ProgressBar progress;
         private final View divider;
+        private final TextView txtLikeCount;
+        private final ImageView imgLikeButton;
 
         CommentHolder(View view) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
@@ -204,6 +215,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             spacerTop = view.findViewById(R.id.spacer_top);
             progress = (ProgressBar) view.findViewById(R.id.progress);
             divider = view.findViewById(R.id.divider_comment);
+
+            txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
+            imgLikeButton = (ImageView) view.findViewById(R.id.image_like_btn);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);

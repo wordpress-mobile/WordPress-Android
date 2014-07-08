@@ -36,7 +36,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   77 - restructured tag tables (ReaderTagTable)
      *   78 - added tag_type to ReaderPostTable.tbl_post_tags
      *   79 - added is_likes_enabled and is_sharing_enabled to tbl_posts
-     *   80 - added tbl_comment_likes in ReaderLikeTable
+     *   80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
      */
 
     /*
