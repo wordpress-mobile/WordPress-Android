@@ -20,10 +20,18 @@ public class ReaderLikeTable {
                 + " blog_id        INTEGER,"
                 + " user_id        INTEGER,"
                 + " PRIMARY KEY (blog_id, post_id, user_id))");
+
+        db.execSQL("CREATE TABLE tbl_comment_likes ("
+                + " post_id        INTEGER,"
+                + " blog_id        INTEGER,"
+                + " comment_id     INTEGER,"
+                + " user_id        INTEGER,"
+                + " PRIMARY KEY (blog_id, post_id, comment_id, user_id))");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_post_likes");
+        db.execSQL("DROP TABLE IF EXISTS tbl_comment_likes");
     }
 
     protected static void reset(SQLiteDatabase db) {
@@ -32,10 +40,12 @@ public class ReaderLikeTable {
     }
 
     /*
-     * purge likes attached to posts that no longer exist
+     * purge likes attached to posts/comments that no longer exist
      */
     protected static int purge(SQLiteDatabase db) {
-        return db.delete("tbl_post_likes", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+        int numDeleted = db.delete("tbl_post_likes", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+        numDeleted += db.delete("tbl_comment_likes", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+        return numDeleted;
     }
 
     /*
@@ -43,8 +53,9 @@ public class ReaderLikeTable {
      */
     public static ReaderUserIdList getLikesForPost(ReaderPost post) {
         ReaderUserIdList userIds = new ReaderUserIdList();
-        if (post==null)
+        if (post == null) {
             return userIds;
+        }
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
@@ -80,8 +91,9 @@ public class ReaderLikeTable {
     }*/
 
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked) {
-        if (post==null)
+        if (post == null) {
             return;
+        }
         long userId = UserPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
@@ -96,8 +108,9 @@ public class ReaderLikeTable {
     }
 
     public static void setLikesForPost(ReaderPost post, ReaderUserIdList userIds) {
-        if (post==null)
+        if (post == null) {
             return;
+        }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
