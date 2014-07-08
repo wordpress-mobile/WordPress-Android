@@ -252,7 +252,7 @@ public class WordPressDB {
         return db;
     }
 
-    public void deleteDatabase(Context ctx) {
+    public static void deleteDatabase(Context ctx) {
         ctx.deleteDatabase(DATABASE_NAME);
     }
 
