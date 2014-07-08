@@ -27,6 +27,7 @@ public class ReaderComment {
     private String published;
 
     public int numLikes;
+    public boolean isLikedByCurrentUser;
 
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;

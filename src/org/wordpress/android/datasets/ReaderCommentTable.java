@@ -27,7 +27,8 @@ public class ReaderCommentTable {
                     + " timestamp,"
                     + " status,"
                     + " text,"
-                    + " num_likes";
+                    + " num_likes,"
+                    + " is_liked";
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -46,6 +47,7 @@ public class ReaderCommentTable {
                 + " status              TEXT,"
                 + " text                TEXT,"
                 + " num_likes           INTEGER DEFAULT 0,"
+                + " is_liked            INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, post_id, comment_id))");
     }
 
@@ -117,7 +119,7 @@ public class ReaderCommentTable {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
                                                   + COLUMN_NAMES
-                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14)");
+                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)");
         try {
             for (ReaderComment comment: comments) {
                 stmt.bindLong  (1,  comment.blogId);
@@ -134,6 +136,7 @@ public class ReaderCommentTable {
                 stmt.bindString(12, comment.getStatus());
                 stmt.bindString(13, comment.getText());
                 stmt.bindLong  (14, comment.numLikes);
+                stmt.bindLong  (15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
 
                 stmt.execute();
             }
@@ -186,6 +189,7 @@ public class ReaderCommentTable {
         comment.setText(c.getString(c.getColumnIndex("text")));
 
         comment.numLikes = c.getInt(c.getColumnIndex("num_likes"));
+        comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
 
         return comment;
     }
