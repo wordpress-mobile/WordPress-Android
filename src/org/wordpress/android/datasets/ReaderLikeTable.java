@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
+import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -80,29 +81,19 @@ public class ReaderLikeTable {
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
     }
 
-    /*
-     * returns true if the passed user likes the passed post
-     */
-    /*private static boolean isLikedByUser(ReaderPost post, long userId) {
-        if (post==null)
-            return false;
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(userId)};
-        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(), "SELECT 1 FROM tbl_post_likes WHERE blog_id=? AND post_id=? AND user_id=?", args);
-    }*/
-
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked) {
         if (post == null) {
             return;
         }
-        long userId = UserPrefs.getCurrentUserId();
+        long currentUserId = UserPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);
             values.put("post_id", post.postId);
-            values.put("user_id", userId);
+            values.put("user_id", currentUserId);
             ReaderDatabase.getWritableDb().insert("tbl_post_likes", null, values);
         } else {
-            String args[] = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(userId)};
+            String args[] = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(currentUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_post_likes", "blog_id=? AND post_id=? AND user_id=?", args);
         }
     }
@@ -121,13 +112,108 @@ public class ReaderLikeTable {
             db.delete("tbl_post_likes", "blog_id=? AND post_id=?", args);
 
             // now insert the passed likes
-            if (userIds!=null) {
+            if (userIds != null) {
+                stmt.bindLong(1, post.blogId);
+                stmt.bindLong(2, post.postId);
                 for (Long userId: userIds) {
-                    stmt.bindLong(1, post.blogId);
-                    stmt.bindLong(2, post.postId);
                     stmt.bindLong(3, userId);
                     stmt.execute();
-                    stmt.clearBindings();
+                }
+            }
+
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+            SqlUtils.closeStatement(stmt);
+        }
+    }
+
+
+    /****
+     * comment likes
+     */
+
+    public static ReaderUserIdList getLikesForComment(ReaderComment comment) {
+        ReaderUserIdList userIds = new ReaderUserIdList();
+        if (comment == null) {
+            return userIds;
+        }
+
+        String[] args = {Long.toString(comment.blogId),
+                         Long.toString(comment.postId),
+                         Long.toString(comment.commentId)};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT user_id FROM tbl_comment_likes WHERE blog_id=? AND post_id=? AND comment_id=?", args);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    userIds.add(c.getLong(0));
+                } while (c.moveToNext());
+            }
+
+            return userIds;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    public static int getNumLikesForComment(ReaderComment comment) {
+        if (comment == null) {
+            return 0;
+        }
+        String[] args = {Long.toString(comment.blogId),
+                         Long.toString(comment.postId),
+                         Long.toString(comment.commentId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT count(*) FROM tbl_comment_likes WHERE blog_id=? AND post_id=? AND comment_id=?", args);
+    }
+
+    public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked) {
+        if (comment == null) {
+            return;
+        }
+
+        long currentUserId = UserPrefs.getCurrentUserId();
+        if (isLiked) {
+            ContentValues values = new ContentValues();
+            values.put("blog_id", comment.blogId);
+            values.put("post_id", comment.postId);
+            values.put("comment_id", comment.commentId);
+            values.put("user_id", currentUserId);
+            ReaderDatabase.getWritableDb().insert("tbl_comment_likes", null, values);
+        } else {
+            String args[] = {Long.toString(comment.blogId),
+                             Long.toString(comment.postId),
+                             Long.toString(comment.commentId),
+                             Long.toString(currentUserId)};
+            ReaderDatabase.getWritableDb().delete("tbl_comment_likes",
+                    "blog_id=? AND post_id=? AND comment_id=? AND user_id=?", args);
+        }
+    }
+
+    public static void setLikesForComment(ReaderComment comment, ReaderUserIdList userIds) {
+        if (comment == null) {
+            return;
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        SQLiteStatement stmt = db.compileStatement(
+                "INSERT INTO tbl_comment_likes (blog_id, post_id, comment_id, user_id) VALUES (?1,?2,?3,?4)");
+        try {
+            String[] args = {Long.toString(comment.blogId),
+                             Long.toString(comment.postId),
+                             Long.toString(comment.commentId)};
+            db.delete("tbl_comment_likes", "blog_id=? AND post_id=? AND comment_id=?", args);
+
+            if (userIds != null) {
+                stmt.bindLong(1, comment.blogId);
+                stmt.bindLong(2, comment.postId);
+                stmt.bindLong(3, comment.commentId);
+                for (Long userId: userIds) {
+                    stmt.bindLong(4, userId);
+                    stmt.execute();
                 }
             }
 
