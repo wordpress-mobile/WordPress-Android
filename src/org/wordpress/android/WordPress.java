@@ -222,8 +222,9 @@ public class WordPress extends Application {
             editor.commit();
             if (wpDB != null) {
                 wpDB.updateLastBlogId(-1);
-                wpDB.deleteDatabase(this);
             }
+            // Force DB deletion
+            WordPressDB.deleteDatabase(this);
             wpDB = new WordPressDB(this);
         }
     }
