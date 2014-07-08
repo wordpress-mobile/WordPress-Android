@@ -8,32 +8,31 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
-
-import java.util.Random;
+import org.wordpress.android.util.ToastUtils;
 
 /**
  * A fragment that shows stats bar chart data.
@@ -43,8 +42,10 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
-    private float lastTappedX, lastTappedY;
     private StatsBarGraph graphView;
+    private GraphViewSeries viewsSeries;
+    private GraphViewSeries visitorsSeries;
+    private String[] statsDate;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -93,26 +94,58 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (StatsActivity.STATS_TOUCH_DETECTED.equals(action)) {
-                AppLog.w(AppLog.T.STATS, ">>>> BroadcastReceiver -> touch detected");
-                AppLog.w(AppLog.T.STATS, "lastTappedX " + lastTappedX);
-                AppLog.w(AppLog.T.STATS, "lastTappedY " + lastTappedY);
-                // 1. detect if the tap is inside a bar
-                // 2. always reset variables to 0
-                if (graphView != null && lastTappedX != 0.0 &&  lastTappedY != 0.0
-                        && graphView.isTapOnBar(lastTappedX, lastTappedY)) {
-                    Random rnd = new Random();
-                 /*   for (GraphViewSeries graphViewSeries : graphView.getAllSeries()) {
-                        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                        graphViewSeries.getStyle().color = color;
-                    }*/
-                    graphView.redrawAll();
+                int tappedBar;
+                if (graphView != null && (tappedBar = graphView.getTappedBar()) != -1) {
+                    //AppLog.w(AppLog.T.STATS, "tapped bar index " + tappedBar);
+                    //AppLog.w(AppLog.T.STATS, "tapped bar date " + statsDate[tappedBar]);
+                    graphView.highlightBar(tappedBar);
+                    doSomethingWithThisDate(tappedBar);
                 }
-                lastTappedX = 0.0f;
-                lastTappedY = 0.0f;
-                AppLog.w(AppLog.T.STATS, "<<<< BroadcastReceiver -> touch detected");
             }
         }
     };
+
+    private void doSomethingWithThisDate(int tappedBar){
+        String date = statsDate[tappedBar];
+        StatsBarChartUnit unit = getBarChartUnit();
+        if (unit == StatsBarChartUnit.DAY) {
+            // make sure to load the no-chrome version of Stats over https
+            String url = "https://wordpress.com/my-stats/?no-chrome&blog="+WordPress.getCurrentRemoteBlogId()+"&day="+date+"&unit=1";
+            // Let's try the global wpcom credentials
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+            String statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+            String statsAuthenticatedPassword = WordPressDB.decryptPassword(
+                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+            );
+            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+                // Still empty. Do not eat the event, but let's open the default Web Browser.
+
+            } else {
+                Intent statsWebViewIntent = new Intent(this.getActivity(), StatsWebViewActivity.class);
+                statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
+                statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD,
+                        statsAuthenticatedPassword);
+                statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, url);
+                this.getActivity().startActivity(statsWebViewIntent);
+            }
+        } else {
+            GraphViewDataInterface[] views = viewsSeries.getData();
+            GraphViewDataInterface[] visitors = visitorsSeries.getData();
+            String formattedDate;
+            // Show a toast instead
+            if (unit == StatsBarChartUnit.WEEK) {
+                formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "MMM d");
+            } else {
+                //Month
+                formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMM yyyy");
+            }
+            ToastUtils.showToast(this.getActivity(),
+                    formattedDate + " - Views " + views[tappedBar].getY() + " - Visitors "+  visitors[tappedBar].getY() ,
+                    ToastUtils.Duration.LONG);
+        }
+    }
+
 
     private StatsBarChartUnit getBarChartUnit() {
         int ordinal = getArguments().getInt(ARGS_BAR_CHART_UNIT);
@@ -154,6 +187,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
         final String[] horLabels = new String[numPoints];
+        statsDate = new String[numPoints];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
         GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
 
@@ -162,11 +196,12 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             views[i] = new GraphView.GraphViewData(i, getViews(cursor));
             visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
             horLabels[i] = getDateLabel(cursor, unit);
+            statsDate[i] = getDate(cursor);
             cursor.moveToNext();
         }
 
-        GraphViewSeries viewsSeries = new GraphViewSeries(views);
-        GraphViewSeries visitorsSeries = new GraphViewSeries(visitors);
+        viewsSeries = new GraphViewSeries(views);
+        visitorsSeries = new GraphViewSeries(visitors);
 
         viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         viewsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
@@ -187,44 +222,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             graphView.addSeries(visitorsSeries);
             graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
             graphView.setHorizontalLabels(horLabels);
-
-            graphView.setOnTouchListener(mBarGraphTouchListener);
-
         }
     }
-
-    /*
-    The bar graph is only getting the ACTION_DOWN event. So we record the coordinate of the ACTION_DOWN
-    event in a local variable. The StatsActivity, actually detects the tap and fires a local broadcast.
-    The bargraph can now  start the math and diplay the details view.
-     */
-    private View.OnTouchListener mBarGraphTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                StatsBarGraph currentGraphView = (StatsBarGraph) view;
-                float x = motionEvent.getX(motionEvent.getActionIndex()); //the location of the touch on the graphview
-                AppLog.w(AppLog.T.STATS, "currentGraphView x value " + x);
-             /*   int width = currentGraphView.getWidth(); //the width of the graphview
-                float xValue =  (x/width); //the x-Value of the graph where you touched
-                AppLog.e(AppLog.T.STATS, ">>> graphView.onTouch");
-                AppLog.w(AppLog.T.STATS, "x " + x);
-                AppLog.w(AppLog.T.STATS, "width " + width);
-                AppLog.w(AppLog.T.STATS, "xValue " + xValue);*/
-                lastTappedX = x;
-
-                float y = motionEvent.getY(motionEvent.getActionIndex());
-/*                int height = currentGraphView.getHeight();
-                float yValue =  (y/height);
-                AppLog.w(AppLog.T.STATS, "y " + y);
-                AppLog.w(AppLog.T.STATS, "height " + height);
-                AppLog.w(AppLog.T.STATS, "yValue " + yValue);
-                AppLog.e(AppLog.T.STATS, "<<< graphView.onTouch");*/
-                lastTappedY = y;
-            }
-            return false;
-        }
-    };
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
@@ -282,6 +281,10 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             default:
                 return cursorDate;
         }
+    }
+
+    private String getDate(Cursor cursor) {
+        return StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE)));
     }
 
     class BarGraphContentObserver extends ContentObserver {

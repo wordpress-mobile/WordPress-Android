@@ -3,15 +3,14 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Handler;
 
 import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
-import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AppLog;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,9 @@ import java.util.List;
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
-    private final List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
+    // Keep tracks of every bar drawn on the graph.
+    private  List<List<BarChartRect>> seriesOnScreen = (List<List<BarChartRect>>) new LinkedList();
+    private int barPositionToHighlight = -1;
 
 	public StatsBarGraph(Context context) {
 		super(context, "");
@@ -56,6 +57,16 @@ class StatsBarGraph extends GraphView {
         });
     }
 
+
+    /**
+     * @param canvas
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        seriesOnScreen.clear(); // Empty the list before calling super. Super calls drawSeries and we need an empty list there.
+        super.onDraw(canvas);
+    }
+
     @Override
 	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values,
 			float graphwidth, float graphheight, float border, double minX,
@@ -66,7 +77,7 @@ class StatsBarGraph extends GraphView {
 		paint.setStrokeWidth(style.thickness);
 		paint.setColor(style.color);
 
-        barChartRects.clear();
+        List<BarChartRect> barChartRects = new LinkedList<BarChartRect>(); // Bar chart position of this series on the canvas
 
 		// draw data
 		for (int i = 0; i < values.length; i++) {
@@ -79,6 +90,19 @@ class StatsBarGraph extends GraphView {
 				paint.setColor(style.getValueDependentColor().get(values[i]));
 			}
 
+            //Trick to redraw the tapped bar
+            if (barPositionToHighlight == i) {
+                int color;
+                if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
+                    color =  getResources().getColor(R.color.orange_medium);
+                } else {
+                    color = getResources().getColor(R.color.orange_dark);
+                }
+                paint.setColor(color);
+            } else {
+                paint.setColor(style.color);
+            }
+
 			float pad = style.padding;
 
 			float left = (i * colwidth) + horstart;
@@ -89,38 +113,34 @@ class StatsBarGraph extends GraphView {
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
 		}
-        canvas.drawRect(0, 0, 10, 10, paint);
+        seriesOnScreen.add(barChartRects);
 	}
 
-    private class BarChartRect {
-        float left, top, right, bottom;
-
-        BarChartRect(float left, float top, float right, float bottom) {
-            this.left = left;
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
-        }
-
-        public boolean isPointInside(float x, float y) {
-            int leftOffset = getLeft();
-            int top = getTop();
-            if (x >= this.left + leftOffset && x <= this.right &&
-                    y>= this.bottom && y>= this.top)
-            {
-                return true;
+    public int getTappedBar() {
+        float[] lastTouchEventPoint = this.getLastTouchPointAndReset();
+        for (List<BarChartRect> barChartRects : seriesOnScreen) {
+            int i = 0;
+            for (BarChartRect barChartRect : barChartRects) {
+                if (barChartRect.isPointInside(lastTouchEventPoint[0], lastTouchEventPoint[1])) {
+                    return i;
+                }
+                i++;
             }
-            return false;
         }
+        return -1;
     }
 
-    public boolean isTapOnBar(float x, float y) {
-        for (BarChartRect barChartRect : barChartRects) {
-            if (barChartRect.isPointInside(x,y)) {
-                return true;
+    public void highlightBar(int barPosition) {
+        barPositionToHighlight = barPosition;
+        this.redrawAll();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                barPositionToHighlight = -1;
+                redrawAll();
             }
-        }
-        return false;
+        }, 500);
     }
 
 	@Override
@@ -148,6 +168,28 @@ class StatsBarGraph extends GraphView {
 
 		maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
 		return maxY;
-
 	}
+
+
+    /**
+     * Private class that is used to hold the local (to the canvas) coordinate on the screen of every single bar in the graph
+     */
+    private class BarChartRect {
+        float left, top, right, bottom;
+
+        BarChartRect(float left, float top, float right, float bottom) {
+            this.left = left;
+            this.top = top;
+            this.right = right;
+            this.bottom = bottom;
+        }
+
+        public boolean isPointInside(float x, float y) {
+            if (x >= this.left && x <= this.right &&
+                    y<= this.bottom && y>= this.top) {
+                return true;
+            }
+            return false;
+        }
+    }
 }

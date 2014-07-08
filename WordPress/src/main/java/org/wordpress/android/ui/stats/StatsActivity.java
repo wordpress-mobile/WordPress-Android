@@ -197,7 +197,6 @@ public class StatsActivity extends WPActionBarActivity {
         }
         @Override
         public boolean onSingleTapUp (MotionEvent event) {
-            AppLog.w(AppLog.T.STATS, "Tap UP detected");
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_TOUCH_DETECTED);
             return false;
         }
@@ -207,10 +206,6 @@ public class StatsActivity extends WPActionBarActivity {
     public boolean dispatchTouchEvent(MotionEvent event)
     {
         this.mDetector.onTouchEvent(event);
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float x = event.getX(event.getActionIndex()); //the location of the touch on the graphview
-            AppLog.w(AppLog.T.STATS, "Stats activty xValue " + x);
-        }
         return super.dispatchTouchEvent(event);
     }
 
