@@ -314,7 +314,7 @@ public class MediaUtils {
         int imageWidthPictureSetting = dimensions[0] == 0 ? Integer.MAX_VALUE : dimensions[0];
 
         if (Math.min(imageWidthPictureSetting, imageWidthBlogSetting) == Integer.MAX_VALUE) {
-            //Default value in case of errors reading the picture size and the blog settings is set to Original size
+            // Default value in case of errors reading the picture size and the blog settings is set to Original size
             return 1024;
         } else {
             return Math.min(imageWidthPictureSetting, imageWidthBlogSetting);
