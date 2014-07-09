@@ -554,7 +554,7 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * request comments for this post
      */
-    private void updateComments(boolean applyOffset) {
+    private void updateComments(boolean requestNewer) {
         if (!hasPost() || !mPost.isWP()) {
             return;
         }
@@ -566,7 +566,8 @@ public class ReaderPostDetailFragment extends Fragment
         AppLog.d(T.READER, "reader post detail > updateComments");
         mIsUpdatingComments = true;
 
-        if (!isCommentAdapterEmpty()) {
+        // show progress if we're requesting newer comments
+        if (requestNewer) {
             showProgressFooter();
         }
 
@@ -583,7 +584,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(mPost, applyOffset, resultListener);
+        ReaderCommentActions.updateCommentsForPost(mPost, requestNewer, resultListener);
     }
 
     /*

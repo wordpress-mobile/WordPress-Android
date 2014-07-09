@@ -15,10 +15,12 @@ import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUser;
+import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class ReaderCommentActions {
      * get the latest comments for this post
      **/
     public static void updateCommentsForPost(final ReaderPost post,
-                                             boolean applyOffset,
+                                             final boolean requestNewer,
                                              final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
@@ -39,7 +41,7 @@ public class ReaderCommentActions {
         path += "&order=ASC";
 
         // offset by the number of comments already stored locally (so we only get new comments)
-        if (applyOffset) {
+        if (requestNewer) {
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(post);
             if (numLocalComments > 0) {
                 path += "&offset=" + Integer.toString(numLocalComments);
@@ -49,7 +51,7 @@ public class ReaderCommentActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, post.blogId, resultListener);
+                handleUpdateCommentsResponse(jsonObject, post.blogId, requestNewer, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -64,10 +66,14 @@ public class ReaderCommentActions {
         AppLog.d(T.READER, "updating comments");
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
-    private static void handleUpdateCommentsResponse(final JSONObject jsonObject, final long blogId, final ReaderActions.UpdateResultListener resultListener) {
-        if (jsonObject==null) {
-            if (resultListener!=null)
+    private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
+                                                     final long blogId,
+                                                     final boolean requestNewer,
+                                                     final ReaderActions.UpdateResultListener resultListener) {
+        if (jsonObject == null) {
+            if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
             return;
         }
 
@@ -76,23 +82,101 @@ public class ReaderCommentActions {
         new Thread() {
             @Override
             public void run() {
-                // request asks for only newer comments, so if it returns any comments then they are all new
                 ReaderCommentList serverComments = ReaderCommentList.fromJson(jsonObject, blogId);
-                final int numNew = serverComments.size();
-                if (numNew > 0) {
+
+                final boolean hasNewComments;
+                if (requestNewer) {
+                    hasNewComments = (serverComments.size() > 0);
+                } else {
+                    hasNewComments = ReaderCommentTable.hasNewComments(serverComments);
+                }
+                if (hasNewComments) {
                     AppLog.d(T.READER, "new comments found");
-                    ReaderCommentTable.addOrUpdateComments(serverComments);
                 }
 
-                if (resultListener!=null) {
+                // add to db regardless of whether any or new so that changes to likes are stored
+                ReaderCommentTable.addOrUpdateComments(serverComments);
+
+                if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
-                            resultListener.onUpdateResult(numNew > 0 ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            ReaderActions.UpdateResult result =
+                                    (hasNewComments ? ReaderActions.UpdateResult.CHANGED
+                                                    : ReaderActions.UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
                         }
                     });
                 }
             }
         }.start();
+    }
+
+    /*
+     * gets liking users for the passed comment - UNTESTED
+     */
+    private static void updateCommentLikes(final ReaderComment comment,
+                                           final ReaderActions.UpdateResultListener resultListener) {
+        if (comment == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
+            return;
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                handleUpdateCommentLikesResponse(comment, jsonObject, resultListener);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                }
+
+            }
+        };
+
+        AppLog.d(T.READER, "updating comment likes");
+        String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
+        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
+    }
+
+    private static void handleUpdateCommentLikesResponse(final ReaderComment comment,
+                                                         final JSONObject jsonObject,
+                                                         final ReaderActions.UpdateResultListener resultListener) {
+        if (comment == null || jsonObject == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+            }
+            return;
+        }
+
+        int numLikes = jsonObject.optInt("found");
+        boolean isLikedByCurrentUser = JSONUtil.getBool(jsonObject, "i_like");
+        boolean isChanged = (comment.numLikes != numLikes || comment.isLikedByCurrentUser != isLikedByCurrentUser);
+
+        if (isChanged) {
+            comment.isLikedByCurrentUser = isLikedByCurrentUser;
+            comment.numLikes = numLikes;
+            ReaderCommentTable.addOrUpdateComment(comment);
+            ReaderLikeTable.setCurrentUserLikesComment(comment, isLikedByCurrentUser);
+        }
+
+        ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonObject);
+        ReaderUserTable.addOrUpdateUsers(likingUsers);
+        ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
+
+        if (resultListener != null) {
+            if (isChanged) {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
+            } else {
+                resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED);
+            }
+        }
     }
 
     /*
@@ -211,7 +295,16 @@ public class ReaderCommentActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
+                boolean success = (jsonObject != null && JSONUtil.getBool(jsonObject, "success"));
+                if (success) {
+                    AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
+                } else {
+                    AppLog.w(T.READER, String.format("comment %s failed", actionName));
+                    if (originalComment != null) {
+                        ReaderCommentTable.addOrUpdateComment(originalComment);
+                        ReaderLikeTable.setCurrentUserLikesComment(comment, originalComment.isLikedByCurrentUser);
+                    }
+                }
             }
         };
 

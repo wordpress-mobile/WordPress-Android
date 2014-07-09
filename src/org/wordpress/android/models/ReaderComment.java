@@ -43,9 +43,6 @@ public class ReaderComment {
         comment.commentId = json.optLong("ID");
         comment.status = JSONUtil.getString(json, "status");
 
-        comment.numLikes = json.optInt("like_count");
-        comment.isLikedByCurrentUser = JSONUtil.getBool(json, "i_like");
-
         // note that content may contain html, adapter needs to handle it
         comment.text = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
 
@@ -70,6 +67,13 @@ public class ReaderComment {
         JSONObject jsonParent = json.optJSONObject("parent");
         if (jsonParent != null) {
             comment.parentId = jsonParent.optLong("ID");
+        }
+
+        // like info is found under meta/data/likes when meta=likes query param is used
+        JSONObject jsonLikes = JSONUtil.getJSONChild(json, "meta/data/likes");
+        if (jsonLikes != null) {
+            comment.numLikes = jsonLikes.optInt("found");
+            comment.isLikedByCurrentUser = JSONUtil.getBool(jsonLikes, "i_like");
         }
 
         return comment;

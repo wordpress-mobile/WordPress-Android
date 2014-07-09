@@ -60,11 +60,18 @@ public class ReaderCommentTable {
         createTables(db);
     }
 
+    /*
+     * purge comments attached to posts that no longer exist
+     */
+    protected static int purge(SQLiteDatabase db) {
+        return db.delete("tbl_comments", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+    }
+
     public static boolean isEmpty() {
         return (getNumComments()==0);
     }
 
-    public static int getNumComments() {
+    private static int getNumComments() {
         long count = SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_comments");
         return (int)count;
     }
@@ -77,7 +84,10 @@ public class ReaderCommentTable {
         if (post == null) {
             return 0;
         }
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+        return getNumCommentsForPost(post.blogId, post.postId);
+    }
+    private static int getNumCommentsForPost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
     }
 
@@ -163,13 +173,6 @@ public class ReaderCommentTable {
         }
     }
 
-    /*
-     * purge comments attached to posts that no longer exist
-     */
-    protected static int purge(SQLiteDatabase db) {
-        return db.delete("tbl_comments", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
-    }
-
     public static void deleteComment(ReaderPost post, long commentId) {
         if (post == null) {
             return;
@@ -178,7 +181,36 @@ public class ReaderCommentTable {
         ReaderDatabase.getWritableDb().delete("tbl_comments", "blog_id=? AND post_id=? AND comment_id=?", args);
     }
 
-    public static ReaderComment getCommentFromCursor(Cursor c) {
+    /*
+     * returns true if any of the passed comments don't already exist
+     * IMPORTANT: assumes passed comments are all for the same post
+     */
+    public static boolean hasNewComments(ReaderCommentList comments) {
+        if (comments == null || comments.size() == 0) {
+            return false;
+        }
+
+        StringBuilder sb = new StringBuilder(
+                "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
+        boolean isFirst = true;
+        for (ReaderComment comment: comments) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sb.append(",");
+            }
+            sb.append(comment.commentId);
+        }
+        sb.append(")");
+
+        String[] args = {Long.toString(comments.get(0).blogId),
+                         Long.toString(comments.get(0).postId)};
+        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), args);
+        return numExisting != comments.size();
+    }
+
+
+    private static ReaderComment getCommentFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("null comment cursor");
         }

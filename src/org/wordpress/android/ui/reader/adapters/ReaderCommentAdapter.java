@@ -163,7 +163,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         // different background for highlighted comment, with optional progress bar
-        if (mHighlightCommentId==comment.commentId) {
+        if (mHighlightCommentId == comment.commentId) {
             convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else {
