@@ -17,8 +17,9 @@ public class HtmlUtils {
      * but it's very slow, so avoid using this where performance is important
      */
     public static String stripHtml(final String text) {
-        if (TextUtils.isEmpty(text))
+        if (TextUtils.isEmpty(text)) {
             return "";
+        }
         return Html.fromHtml(text).toString().trim();
     }
 
@@ -55,8 +56,7 @@ public class HtmlUtils {
             return "";
         }
         int start = 0;
-        while (start != strLen
-                && (Character.isWhitespace(str.charAt(start)) || str.charAt(start) == 160)) {
+        while (start != strLen && (Character.isWhitespace(str.charAt(start)) || str.charAt(start) == 160)) {
             start++;
         }
         return str.substring(start);
@@ -66,8 +66,9 @@ public class HtmlUtils {
      * convert html entities to actual Unicode characters - relies on commons apache lang
      */
     public static String fastUnescapeHtml(final String text) {
-        if (text == null || !text.contains("&"))
+        if (text == null || !text.contains("&")) {
             return text;
+        }
         return StringEscapeUtils.unescapeHtml(text);
     }
 
@@ -90,16 +91,18 @@ public class HtmlUtils {
      * first seen at http://houseofgeekery.com/2013/11/03/13-terrible-x-men-we-wont-see-in-the-movies/
      */
     public static String stripScript(final String text) {
-        if (text == null)
+        if (text == null) {
             return null;
+        }
 
         StringBuilder sb = new StringBuilder(text);
         int start = sb.indexOf("<script");
 
         while (start > -1) {
             int end = sb.indexOf("</script>", start);
-            if (end == -1)
+            if (end == -1) {
                 return sb.toString();
+            }
             sb.delete(start, end + 9);
             start = sb.indexOf("<script", start);
         }
@@ -121,10 +124,9 @@ public class HtmlUtils {
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
         for (QuoteSpan span : spans) {
-            html.setSpan(new WPHtml.WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(
-                    span));
-            html.setSpan(new ForegroundColorSpan(0xFF666666), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(
-                    span));
+            html.setSpan(new WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(span));
+            html.setSpan(new ForegroundColorSpan(0xFF666666), html.getSpanStart(span), html.getSpanEnd(span),
+                    html.getSpanFlags(span));
             html.removeSpan(span);
         }
         return html;
