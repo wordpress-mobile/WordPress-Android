@@ -73,11 +73,19 @@
         android:layout_alignLeft="@+id/text_comment_author"
         android:layout_below="@+id/text_comment_text">
 
+        <ImageView
+            android:id="@+id/image_comment_reply"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:src="@drawable/note_icon_reply" />
+
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/reader_transparent_selector"
+            android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"
             android:paddingRight="@dimen/margin_extra_large"

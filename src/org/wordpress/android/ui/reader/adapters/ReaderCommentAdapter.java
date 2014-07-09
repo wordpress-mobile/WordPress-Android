@@ -173,12 +173,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // tapping reply icon tells activity to show reply box
         if (mReplyListener != null) {
-            holder.txtReply.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener replyClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mReplyListener.onRequestReply(comment.commentId);
                 }
-            });
+            };
+            holder.txtReply.setOnClickListener(replyClickListener);
+            holder.imgReply.setOnClickListener(replyClickListener);
         }
 
         showLikeStatus(holder, comment, position);
@@ -200,6 +202,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtText;
         private final TextView txtDate;
         private final TextView txtReply;
+        private final ImageView imgReply;
         private final WPNetworkImageView imgAvatar;
         private final View spacerIndent;
         private final View spacerTop;
@@ -212,7 +215,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
+
             txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
+            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
 
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
