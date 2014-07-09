@@ -353,7 +353,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holder.imgBtnLike.setVisibility(View.INVISIBLE);
+            holder.imgBtnLike.setVisibility(View.GONE);
             holder.txtLikeCount.setVisibility(View.GONE);
         }
 
@@ -374,7 +374,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
         } else {
-            holder.imgBtnComment.setVisibility(View.INVISIBLE);
+            holder.imgBtnComment.setVisibility(View.GONE);
             holder.txtCommentCount.setVisibility(View.GONE);
         }
 
@@ -393,6 +393,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
         } else {
+            // use INVISIBLE rather than GONE to ensure container maintains the same height
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
