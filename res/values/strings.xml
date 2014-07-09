@@ -571,7 +571,7 @@
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="reader_timespan_now">now</string>
 
-    <!-- title shown for untitled posts -->
+    <!-- title shown for untitled posts and blogs -->
     <string name="reader_untitled_post">(Untitled)</string>
 
     <!-- activity titles -->
