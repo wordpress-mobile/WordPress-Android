@@ -17,14 +17,14 @@ public class ReaderComment {
     private String authorName;
     private String authorAvatar;
     private String authorUrl;
-    public long authorId;
-    public long authorBlogId;
-
     private String status;
     private String text;
 
-    public long timestamp;
     private String published;
+    public long timestamp;
+
+    public long authorId;
+    public long authorBlogId;
 
     public int numLikes;
     public boolean isLikedByCurrentUser;
@@ -42,6 +42,9 @@ public class ReaderComment {
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
         comment.status = JSONUtil.getString(json, "status");
+
+        comment.numLikes = json.optInt("like_count");
+        comment.isLikedByCurrentUser = JSONUtil.getBool(json, "i_like");
 
         // note that content may contain html, adapter needs to handle it
         comment.text = HtmlUtils.stripScript(JSONUtil.getString(json, "content"));
