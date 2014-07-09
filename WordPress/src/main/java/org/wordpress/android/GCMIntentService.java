@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
@@ -21,10 +22,15 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.ImageHelper;
+import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -55,11 +61,17 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
+        Bundle extras = intent.getExtras();
+
+        // Handle helpshift PNs
+        if (extras != null && TextUtils.equals(extras.getString("origin"), "helpshift")) {
+            HelpshiftHelper.getInstance().handlePush(context, intent);
+            return;
+        }
 
         if (!WordPress.hasValidWPComCredentials(context))
             return;
 
-        Bundle extras = intent.getExtras();
 
         if (extras == null) {
             AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
@@ -252,7 +264,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onRegistered(Context context, String regId) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (regId != null && regId.length() > 0) {
+        if (!TextUtils.isEmpty(regId)) {
             // Get or create UUID for WP.com notes api
             String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
@@ -263,6 +275,10 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
+
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
+            }
         }
     }
 

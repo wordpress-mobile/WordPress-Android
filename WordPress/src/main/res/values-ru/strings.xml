@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="add_location">Добавить местоположение</string>
+	<string name="current_location">Текущее местоположение</string>
+	<string name="search_location">Поиск</string>
+	<string name="edit_location">Изменить</string>
+	<string name="search_current_location">Найти</string>
+	<string name="preference_privacy">Приватность</string>
+	<string name="preference_send_usage_stats">Отправить статистику</string>
+	<string name="preference_send_usage_stats_summary">Автоматически отправлять статистику использования для улучшения WordPress для Android</string>
+	<string name="reader_label_reached_last_post">Вы дошли до конца</string>
+	<string name="reader_label_tap_to_dismiss">Нажмите, чтобы продолжить</string>
 	<string name="reader_label_reblog_to">Реблогнуть в</string>
 	<string name="reader_hint_reblog_comment">Опишите своё мнение(необязательно)</string>
 	<string name="reader_title_reblog">Сделать реблог</string>

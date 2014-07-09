@@ -39,12 +39,16 @@ import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.BuildUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
@@ -150,7 +154,8 @@ public class WordPress extends Application {
         if (!BuildUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        versionName = ProfilingUtils.getVersionName(this);
+        HelpshiftHelper.init(this);
+        versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
@@ -161,6 +166,8 @@ public class WordPress extends Application {
 
         // Volley networking setup
         setupVolleyQueue();
+
+        ABTestingUtils.init();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
@@ -217,8 +224,9 @@ public class WordPress extends Application {
             editor.commit();
             if (wpDB != null) {
                 wpDB.updateLastBlogId(-1);
-                wpDB.deleteDatabase(this);
             }
+            // Force DB deletion
+            WordPressDB.deleteDatabase(this);
             wpDB = new WordPressDB(this);
         }
     }
@@ -285,25 +293,48 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    public static void registerForCloudMessaging(Context ctx) {
-        if (WordPress.hasValidWPComCredentials(ctx)) {
-            String token = null;
-            try {
-                // Register for Google Cloud Messaging
-                GCMRegistrar.checkDevice(ctx);
-                GCMRegistrar.checkManifest(ctx);
-                token = GCMRegistrar.getRegistrationId(ctx);
-                String gcmId = BuildConfig.GCM_ID;
-                if (gcmId != null && token.equals("")) {
-                    GCMRegistrar.register(ctx, gcmId);
-                } else {
-                    // Send the token to WP.com in case it was invalidated
-                    NotificationUtils.registerDeviceForPushNotifications(ctx, token);
-                    AppLog.v(T.NOTIFS, "Already registered for GCM");
-                }
-            } catch (Exception e) {
-                AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
+    /**
+     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
+     *
+     * @return registration id or empty string if it's not registered.
+     */
+    private static String gcmRegisterIfNot(Context context) {
+        String regId = "";
+        try {
+            GCMRegistrar.checkDevice(context);
+            GCMRegistrar.checkManifest(context);
+            regId = GCMRegistrar.getRegistrationId(context);
+            String gcmId = BuildConfig.GCM_ID;
+            if (gcmId != null && TextUtils.isEmpty(regId)) {
+                GCMRegistrar.register(context, gcmId);
             }
+        } catch (UnsupportedOperationException e) {
+            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
+            // doesn't support GCM (ie. non-google Android)
+            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
+        } catch (IllegalStateException e) {
+            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
+            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
+            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
+        }
+        return regId;
+    }
+
+    public static void registerForCloudMessaging(Context context) {
+        String regId = gcmRegisterIfNot(context);
+
+        // Register to WordPress.com notifications
+        if (WordPress.hasValidWPComCredentials(context)) {
+            if (!TextUtils.isEmpty(regId)) {
+                // Send the token to WP.com in case it was invalidated
+                NotificationUtils.registerDeviceForPushNotifications(context, regId);
+                AppLog.v(T.NOTIFS, "Already registered for GCM");
+            }
+        }
+
+        // Register to Helpshift notifications
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         }
     }
 

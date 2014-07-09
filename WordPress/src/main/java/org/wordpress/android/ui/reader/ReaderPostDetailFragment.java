@@ -357,8 +357,6 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
 
@@ -379,6 +377,8 @@ public class ReaderPostDetailFragment extends Fragment
         } else {
             mListState = null;
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

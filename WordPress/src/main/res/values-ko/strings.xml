@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="preference_privacy">프라이버시</string>
+	<string name="preference_send_usage_stats">통계 보내기</string>
+	<string name="preference_send_usage_stats_summary">사용 통계를 자동으로 보내면 안드로이드용 워드프레스를 개선하는데 도움이 됩니다.</string>
+	<string name="reader_label_reached_last_post">더 이상 갈 곳이 없습니다</string>
+	<string name="reader_label_tap_to_dismiss">무시하려면 터치하세요</string>
+	<string name="reader_title_reblog">글 리블로그하기</string>
+	<string name="reader_hint_reblog_comment">생각 추가(선택사항)</string>
+	<string name="reader_label_reblog_to">다음으로 리블로그하기:</string>
 	<string name="update_verb">업데이트</string>
 	<string name="schedule_verb">예약</string>
 	<string name="sign_in_again">다시 로그인</string>

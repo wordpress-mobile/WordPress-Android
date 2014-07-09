@@ -111,10 +111,10 @@ public class ReaderReblogActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         if (mDestinationBlogId != 0) {
             outState.putLong(KEY_DESTINATION_BLOG_ID, mDestinationBlogId);
         }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
