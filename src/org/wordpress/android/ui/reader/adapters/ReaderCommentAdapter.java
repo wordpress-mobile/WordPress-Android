@@ -19,7 +19,9 @@ import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -44,6 +46,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private final int mBgColorHighlight;
     private final int mLinkColor;
     private final int mNoLinkColor;
+
+    private final String mLikesSingle;
+    private final String mLikesMulti;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -73,6 +78,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
+
+        mLikesSingle = context.getString(R.string.reader_likes_one_short);
+        mLikesMulti = context.getString(R.string.reader_likes_multi_short);
     }
 
     public void refreshComments() {
@@ -148,8 +156,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (comment.level > 0) {
             int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.spacerIndent.getLayoutParams();
-            if (params.width!=indent)
+            if (params.width != indent) {
                 params.width = indent;
+            }
             holder.spacerIndent.setVisibility(View.VISIBLE);
         }
 
@@ -172,13 +181,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             });
         }
 
-        if (mPost.isLikesEnabled) {
-            holder.txtLikeCount.setVisibility(View.VISIBLE);
-            holder.imgLikeButton.setVisibility(View.VISIBLE);
-        } else {
-            holder.txtLikeCount.setVisibility(View.GONE);
-            holder.imgLikeButton.setVisibility(View.GONE);
-        }
+        showLikeStatus(holder, comment, position);
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
@@ -203,7 +206,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final ProgressBar progress;
         private final View divider;
         private final TextView txtLikeCount;
-        private final ImageView imgLikeButton;
+        private final ImageView imgBtnLike;
 
         CommentHolder(View view) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
@@ -217,12 +220,58 @@ public class ReaderCommentAdapter extends BaseAdapter {
             divider = view.findViewById(R.id.divider_comment);
 
             txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
-            imgLikeButton = (ImageView) view.findViewById(R.id.image_like_btn);
+            imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);
             txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
+    }
+
+    private void showLikeStatus(final CommentHolder holder,
+                                final ReaderComment comment,
+                                final int position) {
+        if (mPost.isLikesEnabled) {
+            holder.imgBtnLike.setVisibility(View.VISIBLE);
+            holder.imgBtnLike.setSelected(comment.isLikedByCurrentUser);
+            switch (comment.numLikes) {
+                case 0:
+                    holder.txtLikeCount.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    holder.txtLikeCount.setVisibility(View.VISIBLE);
+                    holder.txtLikeCount.setText(mLikesSingle);
+                    break;
+                default:
+                    holder.txtLikeCount.setVisibility(View.VISIBLE);
+                    holder.txtLikeCount.setText(String.format(mLikesMulti, comment.numLikes));
+
+            }
+            holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleLike(holder, comment, position);
+                }
+            });
+        } else {
+            holder.imgBtnLike.setVisibility(View.GONE);
+            holder.txtLikeCount.setVisibility(View.GONE);
+        }
+    }
+
+    private void toggleLike(final CommentHolder holder,
+                            final ReaderComment comment,
+                            final int position) {
+        ReaderAnim.animateLikeButton(holder.imgBtnLike);
+        boolean isAskingToLike = !comment.isLikedByCurrentUser;
+
+        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+            return;
+        }
+
+        ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
+        mComments.set(position, updatedComment);
+        showLikeStatus(holder, comment, position);
     }
 
     /*

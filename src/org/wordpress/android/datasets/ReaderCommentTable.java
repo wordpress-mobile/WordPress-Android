@@ -149,6 +149,20 @@ public class ReaderCommentTable {
         }
     }
 
+    public static ReaderComment getComment(long blogId, long postId, long commentId) {
+        String[] args = new String[] {Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=? LIMIT 1", args);
+        try {
+            if (!c.moveToFirst()) {
+                return null;
+            }
+            return getCommentFromCursor(c);
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     /*
      * purge comments attached to posts that no longer exist
      */

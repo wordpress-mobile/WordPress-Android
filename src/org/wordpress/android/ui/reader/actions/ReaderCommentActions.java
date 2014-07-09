@@ -9,6 +9,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.VolleyUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,5 +166,71 @@ public class ReaderCommentActions {
         WordPress.getRestClientUtils().post(path, params, null, listener, errorListener);
 
         return newComment;
+    }
+
+    /*
+     * like or unlike the passed comment
+     */
+    public static boolean performLikeAction(final ReaderComment comment,
+                                            final boolean isAskingToLike) {
+        if (comment == null) {
+            return false;
+        }
+
+        // get this comment from db so we can revert on failure
+        final ReaderComment originalComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
+
+        // nothing more to do if like status isn't changing
+        if (originalComment != null && originalComment.isLikedByCurrentUser == isAskingToLike) {
+            return true;
+        }
+
+        // update local db
+        comment.isLikedByCurrentUser = isAskingToLike;
+        if (isAskingToLike) {
+            comment.numLikes++;
+        } else if (!isAskingToLike && comment.numLikes > 0) {
+            comment.numLikes--;
+        }
+        ReaderCommentTable.addOrUpdateComment(comment);
+        ReaderLikeTable.setCurrentUserLikesComment(comment, isAskingToLike);
+
+        // sites/$site/comments/$comment_ID/likes/new
+        final String actionName = isAskingToLike ? "like" : "unlike";
+        String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
+        if (isAskingToLike) {
+            path += "new";
+        } else {
+            path += "mine/delete";
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
+            }
+        };
+
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                String error = VolleyUtils.errStringFromVolleyError(volleyError);
+                if (TextUtils.isEmpty(error)) {
+                    AppLog.w(T.READER, String.format("comment %s failed", actionName));
+                } else {
+                    AppLog.w(T.READER, String.format("comment %s failed (%s)", actionName, error));
+                }
+                AppLog.e(T.READER, volleyError);
+                // revert to original comment
+                if (originalComment != null) {
+                    ReaderCommentTable.addOrUpdateComment(originalComment);
+                    ReaderLikeTable.setCurrentUserLikesComment(comment, originalComment.isLikedByCurrentUser);
+                }
+            }
+        };
+
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
+
+        return true;
     }
 }
