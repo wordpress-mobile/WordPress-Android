@@ -235,6 +235,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (mPost.isLikesEnabled) {
             holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnLike.setSelected(comment.isLikedByCurrentUser);
+            holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
             switch (comment.numLikes) {
                 case 0:
                     holder.txtLikeCount.setVisibility(View.GONE);
@@ -248,12 +249,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
                     holder.txtLikeCount.setText(String.format(mLikesMulti, comment.numLikes));
 
             }
-            holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener likeListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, comment, position);
                 }
-            });
+            };
+            holder.imgBtnLike.setOnClickListener(likeListener);
+            holder.txtLikeCount.setOnClickListener(likeListener);
         } else {
             holder.imgBtnLike.setVisibility(View.GONE);
             holder.txtLikeCount.setVisibility(View.GONE);
