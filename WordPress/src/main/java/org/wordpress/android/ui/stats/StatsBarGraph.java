@@ -21,7 +21,7 @@ import java.util.List;
  */
 class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
-    private  List<List<BarChartRect>> seriesOnScreen = (List<List<BarChartRect>>) new LinkedList();
+    private  List<List<BarChartRect>> seriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int barPositionToHighlight = -1;
 
 	public StatsBarGraph(Context context) {
@@ -63,7 +63,7 @@ class StatsBarGraph extends GraphView {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        seriesOnScreen.clear(); // Empty the list before calling super. Super calls drawSeries and we need an empty list there.
+        seriesRectsDrawedOnScreen.clear(); // Empty the list before calling super. Super calls drawSeries and we need an empty list there.
         super.onDraw(canvas);
     }
 
@@ -113,15 +113,18 @@ class StatsBarGraph extends GraphView {
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
 		}
-        seriesOnScreen.add(barChartRects);
+        seriesRectsDrawedOnScreen.add(barChartRects);
 	}
 
     public int getTappedBar() {
-        float[] lastTouchEventPoint = this.getLastTouchPointAndReset();
-        for (List<BarChartRect> barChartRects : seriesOnScreen) {
+        float[] lastBarChartTouchedPoint = this.getLastTouchedPointOnCanvasAndReset();
+        if (lastBarChartTouchedPoint[0] == 0f && lastBarChartTouchedPoint[1] == 0f) {
+            return -1;
+        }
+        for (List<BarChartRect> currentSerieChartRects : seriesRectsDrawedOnScreen) {
             int i = 0;
-            for (BarChartRect barChartRect : barChartRects) {
-                if (barChartRect.isPointInside(lastTouchEventPoint[0], lastTouchEventPoint[1])) {
+            for (BarChartRect barChartRect : currentSerieChartRects) {
+                if (barChartRect.isPointInside(lastBarChartTouchedPoint[0], lastBarChartTouchedPoint[1])) {
                     return i;
                 }
                 i++;
@@ -132,6 +135,9 @@ class StatsBarGraph extends GraphView {
 
     public void highlightBar(int barPosition) {
         barPositionToHighlight = barPosition;
+        if (barPositionToHighlight == -1) {
+            return;
+        }
         this.redrawAll();
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -186,7 +192,7 @@ class StatsBarGraph extends GraphView {
 
         public boolean isPointInside(float x, float y) {
             if (x >= this.left && x <= this.right &&
-                    y<= this.bottom && y>= this.top) {
+                    y <= this.bottom && y >= this.top) {
                 return true;
             }
             return false;
