@@ -97,7 +97,6 @@
             android:id="@+id/image_comment_like_btn"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginLeft="@dimen/margin_medium"
             android:src="@drawable/reader_button_comment_like" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -107,7 +106,7 @@
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_small"
             android:textColor="@color/reader_like_text"
-            tools:text="Like - 4 likes" />
+            tools:text="Like" />
     </LinearLayout>
 
     <View
