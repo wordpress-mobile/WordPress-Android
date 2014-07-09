@@ -23,4 +23,12 @@ android {
             res.srcDirs = ['res']
         }
     }
+
+    defaultConfig {
+        applicationId "com.jjoe64.graphview"
+        versionName "3.2.0"
+        versionCode 1
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
 }

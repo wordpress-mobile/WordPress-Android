@@ -170,4 +170,7 @@ public class GraphViewSeries {
 			g.redrawAll();
 		}
 	}
+    public GraphViewDataInterface[] getData() {
+        return values;
+    }
 }

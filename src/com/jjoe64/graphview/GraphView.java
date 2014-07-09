@@ -58,6 +58,7 @@ abstract public class GraphView extends LinearLayout {
 
 	private class GraphViewContentView extends View {
 		private float lastTouchEventX;
+        private float lastTouchEventY;
 		private float graphwidth;
 		private boolean scrollingStarted;
 
@@ -121,7 +122,7 @@ abstract public class GraphView extends LinearLayout {
 			}
 
 			float colWidth = graphwidth / horlabels.length;
-			
+
 			// horizontal labels + lines
 			int hors = horlabels.length;
 			int horLabelsToShow = getGraphViewStyle().getNumHorizontalLabels();
@@ -194,7 +195,9 @@ abstract public class GraphView extends LinearLayout {
 		 */
 		@Override
 		public boolean onTouchEvent(MotionEvent event) {
-			if (!isScrollable() || isDisableTouch()) {
+            if (!isScrollable() || isDisableTouch()) {
+                lastTouchEventX = event.getX(event.getActionIndex()); //record the last touch event
+                lastTouchEventY = event.getY(event.getActionIndex());
 				return super.onTouchEvent(event);
 			}
 
@@ -234,7 +237,16 @@ abstract public class GraphView extends LinearLayout {
 			}
 			return handled;
 		}
-	}
+
+        protected float[] getLastTouchedPoint() {
+            return new float[]{lastTouchEventX, lastTouchEventY};
+        }
+
+        protected void setLastTouchedPoint(float x,float y) {
+            lastTouchEventX = x;
+            lastTouchEventY = y;
+        }
+    }
 
 	/**
 	 * one data set for a graph series
@@ -670,6 +682,12 @@ abstract public class GraphView extends LinearLayout {
 		return smallest;
 	}
 
+    protected float[] getLastTouchedPointOnCanvasAndReset() {
+        float[] lastTouchedPointOnCanvas = this.graphViewContentView.getLastTouchedPoint();
+        this.graphViewContentView.setLastTouchedPoint(0f,0f);
+        return lastTouchedPointOnCanvas;
+    }
+
 	public boolean isDisableTouch() {
 		return disableTouch;
 	}
@@ -734,6 +752,10 @@ abstract public class GraphView extends LinearLayout {
 
 		removeSeries(graphSeries.get(index));
 	}
+
+    public List<GraphViewSeries> getSeries() {
+        return graphSeries;
+    }
 
 	/**
 	 * scrolls to the last x-value
