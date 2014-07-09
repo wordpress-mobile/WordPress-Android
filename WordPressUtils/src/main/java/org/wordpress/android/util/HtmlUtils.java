@@ -10,9 +10,6 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
-import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 
 public class HtmlUtils {
     /*
@@ -120,9 +117,6 @@ public class HtmlUtils {
         } catch (RuntimeException runtimeException) {
             // In case our tag handler fails
             html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, null);
-            // Log the exception and text that produces the error
-            CrashlyticsUtils.setString(ExtraKey.NOTE_HTMLDATA, source);
-            CrashlyticsUtils.logException(runtimeException, ExceptionType.SPECIFIC, T.NOTIFS);
         }
         Emoticons.replaceEmoticonsWithEmoji(html);
         QuoteSpan spans[] = html.getSpans(0, html.length(), QuoteSpan.class);
