@@ -101,13 +101,13 @@
             android:src="@drawable/reader_button_comment_like" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_like_count"
+            android:id="@+id/text_comment_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_small"
             android:textColor="@color/reader_like_text"
-            tools:text="4 likes" />
+            tools:text="Like - 4 likes" />
     </LinearLayout>
 
     <View
