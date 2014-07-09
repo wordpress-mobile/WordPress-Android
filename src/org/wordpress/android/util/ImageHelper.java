@@ -27,10 +27,19 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 public class ImageHelper {
-    public static int[] getImageSize(Uri uri, Context context){
+    /**
+     * Read image size from an image uri
+     *
+     * @return (image width, image height) or in case of an error (0, 0)
+     */
+    public static int[] getImageSize(Uri uri, Context context) {
         String path = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+
+        if (uri == null || context == null) {
+            return new int[]{0, 0};
+        }
 
         if (uri.toString().contains("content:")) {
             String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};

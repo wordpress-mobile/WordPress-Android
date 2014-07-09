@@ -89,6 +89,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -353,7 +354,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                         try {
                             File f = new File(mMediaCapturePath);
                             Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri, null))
+                            if (!addMedia(capturedImageUri, null, getActivity()))
                                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                             getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
                                     + Environment.getExternalStorageDirectory())));
@@ -376,7 +377,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 case MediaUtils.RequestCode.ACTIVITY_REQUEST_CODE_TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(getActivity());
-                        if (!addMedia(capturedVideoUri, null))
+                        if (!addMedia(capturedVideoUri, null, getActivity()))
                             Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT).show();
                     } else if (mActivity != null && mQuickMediaType > -1 && TextUtils.isEmpty(mContentEditText.getText())) {
                         // Quick Photo was cancelled, delete post and finish activity
@@ -522,7 +523,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 List<Serializable> params = new Vector<Serializable>();
                 params.add(sharedUris);
                 params.add(type);
-                new processAttachmentsTask().execute(params);
+                new ProcessAttachmentsTask().execute(params);
             }
         }
     }
@@ -643,7 +644,12 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * Media
      */
 
-    private class processAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
+    private class ProcessAttachmentsTask extends AsyncTask<List<?>, Void, SpannableStringBuilder> {
+        private final WeakReference<Context> mWeakContext;
+        public ProcessAttachmentsTask(Context context) {
+            mWeakContext = new WeakReference<Context>(context);
+        }
+
         protected void onPreExecute() {
             Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
         }
@@ -657,7 +663,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 if (streamUri instanceof Uri) {
                     Uri imageUri = (Uri) streamUri;
                     if (type != null) {
-                        addMedia(imageUri, ssb);
+                        Context context = mWeakContext.get();
+                        if (context != null) {
+                            addMedia(imageUri, ssb, context);
+                        }
                     }
                 }
             }
@@ -711,7 +720,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             new DownloadMediaTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediaUri);
         } else {
             // It is a regular local image file
-            if (!addMedia(mediaUri, null)) {
+            if (!addMedia(mediaUri, null, getActivity())) {
                 Toast.makeText(getActivity(), getResources().getText(R.string.gallery_error), Toast.LENGTH_SHORT)
                      .show();
             }
@@ -736,7 +745,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             }
 
             if (newUri != null) {
-                addMedia(newUri, null);
+                addMedia(newUri, null, getActivity());
             } else {
                 Toast.makeText(getActivity(), getString(R.string.error_downloading_image), Toast.LENGTH_SHORT).show();
             }
@@ -1008,9 +1017,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         s.insert(selectionEnd + 1, "\n\n");
     }
 
-    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb) {
-        if (ssb != null && !MediaUtils.isInMediaStore(imageUri))
-            imageUri = MediaUtils.downloadExternalMedia(getActivity(), imageUri);
+    private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb, Context context) {
+        if (ssb != null && !MediaUtils.isInMediaStore(imageUri)) {
+            imageUri = MediaUtils.downloadExternalMedia(context, imageUri);
+        }
 
         if (imageUri == null) {
             return false;
@@ -1019,23 +1029,23 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         Bitmap thumbnailBitmap;
         String mediaTitle;
         if (imageUri.toString().contains("video") && !MediaUtils.isInMediaStore(imageUri)) {
-            thumbnailBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.media_movieclip);
+            thumbnailBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.media_movieclip);
             mediaTitle = getResources().getString(R.string.video);
         } else {
-            thumbnailBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(getActivity(), imageUri.getEncodedPath(),
+            thumbnailBitmap = ImageHelper.getWPImageSpanThumbnailFromFilePath(context, imageUri.getEncodedPath(),
                     getMaximumThumbnailWidth());
             if (thumbnailBitmap == null) {
                 return false;
             }
-            mediaTitle = ImageHelper.getTitleForWPImageSpan(getActivity(), imageUri.getEncodedPath());
+            mediaTitle = ImageHelper.getTitleForWPImageSpan(context, imageUri.getEncodedPath());
         }
 
-        WPImageSpan is = new WPImageSpan(getActivity(), thumbnailBitmap, imageUri);
+        WPImageSpan is = new WPImageSpan(context, thumbnailBitmap, imageUri);
         MediaFile mediaFile = is.getMediaFile();
         mediaFile.setPostID(mActivity.getPost().getLocalTablePostId());
         mediaFile.setTitle(mediaTitle);
         mediaFile.setFilePath(is.getImageSource().toString());
-        MediaUtils.setWPImageSpanWidth(getActivity(), imageUri, is);
+        MediaUtils.setWPImageSpanWidth(context, imageUri, is);
         if (imageUri.getEncodedPath() != null)
             mediaFile.setVideo(imageUri.getEncodedPath().contains("video"));
         mediaFile.save();
