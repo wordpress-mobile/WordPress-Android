@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -26,11 +27,8 @@ import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.ImageHelper;
-import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.util.ImageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

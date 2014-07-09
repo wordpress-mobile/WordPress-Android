@@ -28,15 +28,20 @@ import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
@@ -46,16 +51,10 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.BuildUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -155,7 +154,7 @@ public class WordPress extends Application {
             Crashlytics.start(this);
         }
         HelpshiftHelper.init(this);
-        versionName = getVersionName(this);
+        versionName = ProfilingUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;

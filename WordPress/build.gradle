@@ -73,6 +73,7 @@ dependencies {
     compile 'com.android.support:support-v13:19.0.+'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    compile 'com.helpshift:android-aar:3.4.1'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'
