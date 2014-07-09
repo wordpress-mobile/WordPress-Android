@@ -127,7 +127,6 @@ public class ReaderBlogTable {
             stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.isFollowing));
             stmt.bindLong  (9, blogInfo.numSubscribers);
             stmt.execute();
-            stmt.clearBindings();
         } finally {
             SqlUtils.closeStatement(stmt);
         }
@@ -307,7 +306,6 @@ public class ReaderBlogTable {
                         stmt.bindString(6, blog.getImageUrl());
                         stmt.bindString(7, blog.getReason());
                         stmt.execute();
-                        stmt.clearBindings();
                     }
                 }
                 db.setTransactionSuccessful();

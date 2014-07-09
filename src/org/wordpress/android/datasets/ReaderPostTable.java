@@ -410,7 +410,6 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
                 stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isSharingEnabled));
                 stmtPosts.execute();
-                stmtPosts.clearBindings();
             }
 
             // now add to tbl_post_tags - note that tagName will be null when updating a single
@@ -425,7 +424,6 @@ public class ReaderPostTable {
                     stmtTags.bindString(4, tagName);
                     stmtTags.bindLong  (5, tagType);
                     stmtTags.execute();
-                    stmtTags.clearBindings();
                 }
             }
 

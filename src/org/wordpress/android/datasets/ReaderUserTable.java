@@ -68,7 +68,6 @@ public class ReaderUserTable {
                 stmt.bindString(6, user.getProfileUrl());
                 stmt.bindString(7, user.getAvatarUrl());
                 stmt.execute();
-                stmt.clearBindings();
             }
 
             db.setTransactionSuccessful();
