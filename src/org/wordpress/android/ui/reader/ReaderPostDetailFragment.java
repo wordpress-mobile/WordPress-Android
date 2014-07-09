@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -160,7 +159,7 @@ public class ReaderPostDetailFragment extends Fragment
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader post detail > requesting newer comments");
-                        updateComments();
+                        updateComments(true);
                     }
                 }
             };
@@ -536,22 +535,16 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        // remember the original like/comment count for this post - note that these values
-        // come from the stored likes/comments and NOT from the like/comment count itself
-        final int origNumLikes = ReaderLikeTable.getNumLikesForPost(mPost);
-        final int origNumReplies = ReaderCommentTable.getNumCommentsForPost(mPost);
-
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result != ReaderActions.UpdateResult.FAILED) {
+                    int numLikes = mPost.numLikes;
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (origNumLikes != mPost.numLikes) {
+                    if (numLikes != mPost.numLikes) {
                         refreshLikes();
                     }
-                    if (mPost.numReplies != origNumReplies) {
-                        updateComments();
-                    }
+                    updateComments(false);
                 }
             }
         };
@@ -561,7 +554,7 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * request comments for this post
      */
-    private void updateComments() {
+    private void updateComments(boolean applyOffset) {
         if (!hasPost() || !mPost.isWP()) {
             return;
         }
@@ -590,7 +583,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(mPost, resultListener);
+        ReaderCommentActions.updateCommentsForPost(mPost, applyOffset, resultListener);
     }
 
     /*

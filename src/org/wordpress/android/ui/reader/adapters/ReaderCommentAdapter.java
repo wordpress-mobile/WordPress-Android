@@ -185,7 +185,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1)) {
+        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData();
         }
 
@@ -212,15 +212,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
-            txtReply = (TextView) view.findViewById(R.id.text_reply);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
-            spacerIndent = view.findViewById(R.id.spacer_indent);
-            spacerTop = view.findViewById(R.id.spacer_top);
-            progress = (ProgressBar) view.findViewById(R.id.progress);
+            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
+
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
+            spacerIndent = view.findViewById(R.id.spacer_comment_indent);
+            spacerTop = view.findViewById(R.id.spacer_comment_top);
+            progress = (ProgressBar) view.findViewById(R.id.progress_comment);
             divider = view.findViewById(R.id.divider_comment);
 
-            txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
-            imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
+            imgBtnLike = (ImageView) view.findViewById(R.id.image_comment_like_btn);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);

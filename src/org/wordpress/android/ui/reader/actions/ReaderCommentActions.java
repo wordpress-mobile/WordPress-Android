@@ -28,7 +28,9 @@ public class ReaderCommentActions {
     /**
      * get the latest comments for this post
      **/
-    public static void updateCommentsForPost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
+    public static void updateCommentsForPost(final ReaderPost post,
+                                             boolean applyOffset,
+                                             final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
                     + "&meta=likes";
@@ -37,9 +39,11 @@ public class ReaderCommentActions {
         path += "&order=ASC";
 
         // offset by the number of comments already stored locally (so we only get new comments)
-        int numLocalComments = ReaderCommentTable.getNumCommentsForPost(post);
-        if (numLocalComments > 0) {
-            path += "&offset=" + Integer.toString(numLocalComments);
+        if (applyOffset) {
+            int numLocalComments = ReaderCommentTable.getNumCommentsForPost(post);
+            if (numLocalComments > 0) {
+                path += "&offset=" + Integer.toString(numLocalComments);
+            }
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
