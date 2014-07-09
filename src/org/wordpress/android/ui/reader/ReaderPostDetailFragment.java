@@ -535,13 +535,14 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
+        final int numLikesBefore = mPost.numLikes;
+
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result != ReaderActions.UpdateResult.FAILED) {
-                    int numLikes = mPost.numLikes;
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (numLikes != mPost.numLikes) {
+                    if (numLikesBefore != mPost.numLikes) {
                         refreshLikes();
                     }
                     updateComments(false);
