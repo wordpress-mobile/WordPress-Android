@@ -25,6 +25,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostPopupListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -66,6 +67,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private ReaderPostList mPosts = new ReaderPostList();
 
     private OnTagSelectedListener mOnTagSelectedListener;
+    private OnPostPopupListener mOnPostPopupListener;
     private final ReaderActions.RequestReblogListener mReblogListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -107,6 +109,10 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public void setOnTagSelectedListener(OnTagSelectedListener listener) {
         mOnTagSelectedListener = listener;
+    }
+
+    public void setOnPostPopupListener(OnPostPopupListener onPostPopupListener) {
+        mOnPostPopupListener = onPostPopupListener;
     }
 
     ReaderPostListType getPostListType() {
@@ -151,6 +157,16 @@ public class ReaderPostAdapter extends BaseAdapter {
     public void reload() {
         clear();
         loadPosts();
+    }
+
+    /*
+     * remove a single post at the passed position
+     */
+    public void removePost(int position) {
+        if (isValidPosition(position)) {
+            mPosts.remove(position);
+            notifyDataSetChanged();
+        }
     }
 
     /*
@@ -226,9 +242,16 @@ public class ReaderPostAdapter extends BaseAdapter {
         return mPosts.size();
     }
 
+    boolean isValidPosition(int position) {
+        return (position >= 0 && position < getCount());
+    }
     @Override
     public Object getItem(int position) {
-        return mPosts.get(position);
+        if (isValidPosition(position)) {
+            return mPosts.get(position);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -245,10 +268,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, final ViewGroup parent) {
         final ReaderPost post = (ReaderPost) getItem(position);
         final PostViewHolder holder;
+        ReaderPostListType postListType = getPostListType();
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_post_excerpt, parent, false);
-            holder = new PostViewHolder(convertView, getPostListType());
+            holder = new PostViewHolder(convertView, postListType);
             convertView.setTag(holder);
         } else {
             holder = (PostViewHolder) convertView.getTag();
@@ -258,7 +282,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(post.getDatePublished()));
 
         // post header (avatar, blog name and follow button) only appears when showing tagged posts
-        if (getPostListType().isTagType()) {
+        if (postListType.isTagType()) {
             holder.imgAvatar.setImageUrl(post.getPostAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
             if (post.hasBlogName()) {
                 holder.txtBlogName.setText(post.getBlogName());
@@ -397,6 +421,22 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
+        // dropdown arrow which displays "block this blog" menu only shows for public
+        // wp posts in followed tags
+        if (post.isWP() && !post.isPrivate && postListType == ReaderPostListType.TAG_FOLLOWED) {
+            holder.imgDropDown.setVisibility(View.VISIBLE);
+            holder.imgDropDown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mOnPostPopupListener != null) {
+                        mOnPostPopupListener.onShowPostPopup(view, post, position);
+                    }
+                }
+            });
+        } else {
+            holder.imgDropDown.setVisibility(View.GONE);
+        }
+
         // if we're nearing the end of the posts, fire request to load more
         if (mCanRequestMorePosts && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData();
@@ -457,6 +497,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final ImageView imgBtnLike;
         private final ImageView imgBtnComment;
         private final ImageView imgBtnReblog;
+        private final ImageView imgDropDown;
 
         private final WPNetworkImageView imgFeatured;
         private final WPNetworkImageView imgAvatar;
@@ -481,13 +522,14 @@ public class ReaderPostAdapter extends BaseAdapter {
             imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
+            imgDropDown = (ImageView) view.findViewById(R.id.image_dropdown);
 
             layoutBottom = (ViewGroup) view.findViewById(R.id.layout_bottom);
             layoutPostHeader = (ViewGroup) view.findViewById(R.id.layout_post_header);
 
             // hide the post header (avatar, blog name & follow button) if we're showing posts
             // in a specific blog
-            if (postListType.equals(ReaderTypes.ReaderPostListType.BLOG_PREVIEW)) {
+            if (postListType == ReaderPostListType.BLOG_PREVIEW) {
                 layoutPostHeader.setVisibility(View.GONE);
             }
         }
@@ -642,7 +684,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * called from ReaderPostListFragment when user starts/ends listview fling
+     * called from ReaderPostListFragment when user starts/ends listView fling
      */
     public void setIsFlinging(boolean isFlinging) {
         mIsFlinging = isFlinging;
@@ -658,7 +700,7 @@ public class ReaderPostAdapter extends BaseAdapter {
 
         mLastPreloadPos = position;
 
-        // skip if listview is in a fling (note that we still set mLastPreloadPos above)
+        // skip if listView is in a fling (note that we still set mLastPreloadPos above)
         if (mIsFlinging) {
             return;
         }

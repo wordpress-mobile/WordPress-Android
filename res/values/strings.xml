@@ -595,6 +595,7 @@
 
     <!-- menu text-->
     <string name="reader_menu_tags">Tags</string>
+    <string name="reader_menu_block_blog">Block this blog</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -652,6 +653,9 @@
     <string name="reader_toast_err_already_follow_blog">You already follow this blog</string>
     <string name="reader_toast_err_follow_blog">Unable to follow this blog</string>
     <string name="reader_toast_err_unfollow_blog">Unable to unfollow this blog</string>
+    <string name="reader_toast_blog_blocked">Posts from this blog will no longer be shown</string>
+    <string name="reader_toast_err_block_blog">Unable to block this blog</string>
+    <string name="reader_toast_err_generic">Unable to perform this action</string>
 
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_in_tag">No posts with this&#160;tag</string>

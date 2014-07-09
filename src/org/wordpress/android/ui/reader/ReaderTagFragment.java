@@ -172,8 +172,9 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                     refresh();
                 }
             };
-            int aniResId = (action == TagAction.ADD ? R.anim.reader_tag_add : R.anim.reader_tag_delete);
-            ReaderAnim.animateListItem(mListView, index, aniListener, aniResId);
+            ReaderAnim.AnimateListItemStyle animStyle =
+                    (action == TagAction.ADD ? ReaderAnim.AnimateListItemStyle.ADD : ReaderAnim.AnimateListItemStyle.REMOVE);
+            ReaderAnim.animateListItem(mListView, index, animStyle, aniListener);
         } else {
             refresh();
         }

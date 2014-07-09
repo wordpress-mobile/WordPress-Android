@@ -300,6 +300,11 @@ public class ReaderPostTable {
         return numDeleted;
     }
 
+    public static int deletePostsInBlog(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id = ?", args);
+    }
+
     /*
      * returns the iso8601 published date of the oldest post with the passed tag
      */
@@ -412,8 +417,7 @@ public class ReaderPostTable {
                 stmtPosts.execute();
             }
 
-            // now add to tbl_post_tags - note that tagName will be null when updating a single
-            // post, in which case we skip it here
+            // now add to tbl_post_tags if a tag was passed
             if (tag != null) {
                 String tagName = tag.getTagName();
                 int tagType = tag.tagType.toInt();
