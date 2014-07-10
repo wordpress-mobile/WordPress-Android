@@ -248,32 +248,36 @@ public class ReaderCommentAdapter extends BaseAdapter {
                                 final int position) {
         if (mPost.isLikesEnabled) {
             holder.imgLike.setVisibility(View.VISIBLE);
-            holder.txtLike.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
+
+            holder.txtLike.setVisibility(View.VISIBLE);
             holder.txtLike.setSelected(comment.isLikedByCurrentUser);
             holder.txtLike.setText(comment.isLikedByCurrentUser ? mLiked : mLike);
+
             switch (comment.numLikes) {
                 case 0:
-                    holder.txtLike.setVisibility(View.GONE);
+                    holder.txtLikeCount.setVisibility(View.GONE);
                     break;
                 case 1:
-                    holder.txtLike.setVisibility(View.VISIBLE);
+                    holder.txtLikeCount.setVisibility(View.VISIBLE);
                     holder.txtLikeCount.setText(mLikesSingle);
                     break;
                 default:
-                    holder.txtLike.setVisibility(View.VISIBLE);
+                    holder.txtLikeCount.setVisibility(View.VISIBLE);
                     holder.txtLikeCount.setText(String.format(mLikesMulti, comment.numLikes));
 
             }
+
+            // toggle like when like image or caption is tapped
             View.OnClickListener likeListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, comment, position);
                 }
             };
-            // toggle like when like image or caption is tapped
             holder.imgLike.setOnClickListener(likeListener);
             holder.txtLike.setOnClickListener(likeListener);
+
             // show liking users when like count is tapped
             holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
                 @Override

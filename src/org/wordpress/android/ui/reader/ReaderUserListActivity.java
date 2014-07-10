@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
@@ -98,7 +99,7 @@ public class ReaderUserListActivity extends Activity {
         new Thread() {
             @Override
             public void run() {
-                final String title = getTitleString(blogId, postId);
+                final String title = getTitleString(blogId, postId, commentId);
                 final TextView txtTitle = (TextView) findViewById(R.id.text_title);
 
                 final ReaderUserList users;
@@ -129,9 +130,18 @@ public class ReaderUserListActivity extends Activity {
         }.start();
     }
 
-    private String getTitleString(final long blogId, final long postId) {
-        int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
-        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+    private String getTitleString(final long blogId,
+                                  final long postId,
+                                  final long commentId) {
+        final int numLikes;
+        final boolean isLikedByCurrentUser;
+        if (commentId == 0) {
+            numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
+            isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+        } else {
+            numLikes = ReaderCommentTable.getNumLikesForComment(blogId, postId, commentId);
+            isLikedByCurrentUser = ReaderCommentTable.isCommentLikedByCurrentUser(blogId, postId, commentId);
+        }
 
         if (isLikedByCurrentUser) {
             switch (numLikes) {

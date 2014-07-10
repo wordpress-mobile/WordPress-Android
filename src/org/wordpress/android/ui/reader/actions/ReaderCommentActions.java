@@ -6,9 +6,11 @@ import android.text.TextUtils;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
@@ -58,9 +60,9 @@ public class ReaderCommentActions {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (resultListener!=null)
+                if (resultListener != null) {
                     resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-
+                }
             }
         };
         AppLog.d(T.READER, "updating comments");
@@ -82,20 +84,42 @@ public class ReaderCommentActions {
         new Thread() {
             @Override
             public void run() {
-                ReaderCommentList serverComments = ReaderCommentList.fromJson(jsonObject, blogId);
-
                 final boolean hasNewComments;
-                if (requestNewer) {
-                    hasNewComments = (serverComments.size() > 0);
-                } else {
-                    hasNewComments = ReaderCommentTable.hasNewComments(serverComments);
-                }
-                if (hasNewComments) {
-                    AppLog.d(T.READER, "new comments found");
-                }
 
-                // add to db regardless of whether any or new so that changes to likes are stored
-                ReaderCommentTable.addOrUpdateComments(serverComments);
+                ReaderDatabase.getWritableDb().beginTransaction();
+                try {
+                    ReaderCommentList serverComments = new ReaderCommentList();
+                    JSONArray jsonCommentList = jsonObject.optJSONArray("comments");
+                    if (jsonCommentList != null) {
+                        for (int i = 0; i < jsonCommentList.length(); i++) {
+                            JSONObject jsonComment = jsonCommentList.optJSONObject(i);
+
+                            // extract this comment and add it to the list
+                            ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
+                            serverComments.add(comment);
+
+                            // extract and save likes for this comment
+                            JSONObject jsonLikes = JSONUtil.getJSONChild(jsonComment, "meta/data/likes");
+                            if (jsonLikes != null) {
+                                ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
+                                ReaderUserTable.addOrUpdateUsers(likingUsers);
+                                ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
+                            }
+                        }
+                    }
+
+                    if (requestNewer) {
+                        hasNewComments = (serverComments.size() > 0);
+                    } else {
+                        hasNewComments = ReaderCommentTable.hasNewComments(serverComments);
+                    }
+
+                    // save to db regardless of whether any are new so changes to likes are stored
+                    ReaderCommentTable.addOrUpdateComments(serverComments);
+                    ReaderDatabase.getWritableDb().setTransactionSuccessful();
+                } finally {
+                    ReaderDatabase.getWritableDb().endTransaction();
+                }
 
                 if (resultListener != null) {
                     handler.post(new Runnable() {
@@ -112,7 +136,7 @@ public class ReaderCommentActions {
     }
 
     /*
-     * gets liking users for the passed comment - UNTESTED
+     * request liking users for the passed comment - UNTESTED
      */
     private static void updateCommentLikes(final ReaderComment comment,
                                            final ReaderActions.UpdateResultListener resultListener) {

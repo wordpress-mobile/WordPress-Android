@@ -209,6 +209,26 @@ public class ReaderCommentTable {
         return numExisting != comments.size();
     }
 
+    /*
+     * returns the #likes known to exist for this comment
+     */
+    public static int getNumLikesForComment(long blogId, long postId, long commentId) {
+        String[] args = {Long.toString(blogId),
+                         Long.toString(postId),
+                         Long.toString(commentId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT num_likes FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?",
+                args);
+    }
+
+    public static boolean isCommentLikedByCurrentUser(long blogId, long postId, long commentId) {
+        String[] args = {Long.toString(blogId),
+                Long.toString(postId),
+                Long.toString(commentId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT is_liked FROM tbl_comments WHERE blog_id=? AND post_id=? and comment_id=?",
+                args);
+    }
 
     private static ReaderComment getCommentFromCursor(Cursor c) {
         if (c == null) {
