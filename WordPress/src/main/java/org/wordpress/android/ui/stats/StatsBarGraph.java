@@ -98,9 +98,9 @@ class StatsBarGraph extends GraphView {
             if (mBarPositionToHighlight == i) {
                 int color;
                 if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
-                    color =  getResources().getColor(R.color.orange_medium);
+                    color =  getResources().getColor(R.color.stats_views_hover_color);
                 } else {
-                    color = getResources().getColor(R.color.orange_dark);
+                    color = getResources().getColor(R.color.stats_visitors_hover_color);
                 }
                 paint.setColor(color);
             } else {
