@@ -106,16 +106,16 @@
             android:padding="@dimen/margin_small"
             android:textColor="@color/reader_like_text"
             android:textSize="@dimen/text_sz_small"
-            tools:text="Like" />
+            tools:text="@string/reader_label_like" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_small"
-            android:textColor="@color/grey_medium"
+            android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_small"
-            tools:text="4 likes" />
+            tools:text="@string/reader_likes_one_short" />
     </LinearLayout>
 
     <View

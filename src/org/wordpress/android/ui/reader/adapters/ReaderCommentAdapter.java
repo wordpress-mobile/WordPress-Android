@@ -83,8 +83,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mLike = context.getString(R.string.reader_label_like);
         mLiked = context.getString(R.string.reader_label_liked);
-        mLikesSingle = context.getString(R.string.reader_likes_one_short);
-        mLikesMulti = context.getString(R.string.reader_likes_multi_short);
+
+        // like count ends with an ellipsis to make it more obvious that it's tappable
+        mLikesSingle = context.getString(R.string.reader_likes_one_short) + "…";
+        mLikesMulti = context.getString(R.string.reader_likes_multi_short) + "…";
     }
 
     public void refreshComments() {
