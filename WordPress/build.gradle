@@ -108,7 +108,7 @@ dependencies {
     releaseCompile 'org.wordpress:emailchecker:0.2'
     debugCompile 'org.wordpress:emailchecker-debug:0.2'
 
-    releaseCompile 'org.wordpress:graphview:3.1.1'
+    releaseCompile 'org.wordpress:graphview:3.2.0'
     debugCompile project(':WordPressGraphLib')
 
     // Simperium
