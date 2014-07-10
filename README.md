@@ -15,3 +15,7 @@ This will produce two files:
 You can also use this project as an Android Library Project instead of using the `jar` by adding a library references to your app's `project.properties` file:
 
     android.library.reference.1=path/to/wordpress-rest-android/
+
+## LICENSE
+
+This library is dual licensed unded MIT and GPL v2.
