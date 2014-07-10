@@ -633,8 +633,8 @@
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
-    <string name="reader_likes_one_short">1 like</string>
-    <string name="reader_likes_multi_short">%,d likes</string>
+    <string name="reader_likes_one_short">1 Like</string>
+    <string name="reader_likes_multi_short">%,d Likes</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
