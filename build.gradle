@@ -1,0 +1,12 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.automattic.android:gradle-wordpresslibraries:1.+'
+    }
+}
+
+allprojects {
+    apply plugin:'wordpress'
+}
