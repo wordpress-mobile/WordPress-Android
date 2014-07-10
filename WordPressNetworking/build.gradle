@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    compile 'com.automattic:wordpresscom-rest:0.0.5' // android-wordpress-com-rest repo is not public
     compile 'com.mcxiaoke.volley:library:1.0.+'
+    compile project(':WordPressComRest')
     compile project(':WordPressUtils')
 }
