@@ -92,9 +92,7 @@ android {
         compile 'org.wordpress:android-passcodelock:0.0.5'
         compile 'org.wordpress:commons-lang:2.6'
         compile 'org.wordpress:pulltorefresh-main:+'
-        releaseCompile 'org.wordpress:emailchecker:0.2'
-        debugCompile 'org.wordpress:emailchecker-debug:0.2'
-        zbetagroupCompile 'org.wordpress:emailchecker:0.2'
+        compile 'org.wordpress:emailchecker:0.3'
 
         // Simperium
         compile('com.simperium:simperium-android:0.4.8') {
