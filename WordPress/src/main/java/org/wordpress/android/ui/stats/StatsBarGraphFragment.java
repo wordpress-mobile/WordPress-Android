@@ -149,11 +149,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, url);
             this.getActivity().startActivity(statsWebViewIntent);
         } else {
-
+            // Week or Month on the screen. Show a toast.
             GraphViewDataInterface[] views = viewsSeries.getData();
             GraphViewDataInterface[] visitors = visitorsSeries.getData();
             String formattedDate;
-            // Show a toast instead
+
             if (unit == StatsBarChartUnit.WEEK) {
                 formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "MMM d");
             } else {
@@ -161,11 +161,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                 formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMM yyyy");
             }
 
-            ToastUtils.showToast(this.getActivity(),
-                    formattedDate + " - " + getString(R.string.stats_totals_views) + " "
-                            + (int) views[tappedBar].getY() + " - "
-                            + getString(R.string.stats_totals_visitors) + " " + (int) visitors[tappedBar].getY(),
-                    ToastUtils.Duration.LONG);
+            String message = String.format("%s - %s %d - %s %d", formattedDate, getString(R.string.stats_totals_views),
+                    (int) views[tappedBar].getY(), getString(R.string.stats_totals_visitors),
+                    (int) visitors[tappedBar].getY() );
+
+            ToastUtils.showToast(this.getActivity(), message, ToastUtils.Duration.LONG);
         }
     }
 

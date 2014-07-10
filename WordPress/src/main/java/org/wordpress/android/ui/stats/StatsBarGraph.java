@@ -63,7 +63,9 @@ class StatsBarGraph extends GraphView {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        seriesRectsDrawedOnScreen.clear(); // Empty the list before calling super. Super calls drawSeries and we need an empty list there.
+        // Empty the rectangles list before calling super.
+        // Super.onDraw calls drawSeries several times and we need an empty list there.
+        seriesRectsDrawedOnScreen.clear();
         super.onDraw(canvas);
     }
 
