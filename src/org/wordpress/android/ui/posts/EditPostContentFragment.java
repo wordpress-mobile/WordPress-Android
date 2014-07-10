@@ -523,7 +523,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 List<Serializable> params = new Vector<Serializable>();
                 params.add(sharedUris);
                 params.add(type);
-                new ProcessAttachmentsTask().execute(params);
+                new ProcessAttachmentsTask(getActivity()).execute(params);
             }
         }
     }
