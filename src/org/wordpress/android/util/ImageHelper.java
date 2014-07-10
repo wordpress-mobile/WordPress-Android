@@ -27,13 +27,22 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 public class ImageHelper {
-    public static int[] getImageSize(Uri uri, Context context){
+    /**
+     * Read image size from an image uri
+     *
+     * @return (image width, image height) or in case of an error (0, 0)
+     */
+    public static int[] getImageSize(Uri uri, Context context) {
         String path = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
 
+        if (uri == null || context == null) {
+            return new int[]{0, 0};
+        }
+
         if (uri.toString().contains("content:")) {
-            String[] projection = new String[] { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
+            String[] projection = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA};
             Cursor cur = context.getContentResolver().query(uri, projection, null, null, null);
             if (cur != null) {
                 if (cur.moveToFirst()) {
@@ -87,7 +96,6 @@ public class ImageHelper {
 
         return orientation;
     }
-
 
     public static int getExifOrientation(String path) {
         ExifInterface exif;
@@ -150,7 +158,9 @@ public class ImageHelper {
         return null;
     }
 
-    /** From http://developer.android.com/training/displaying-bitmaps/load-bitmap.html **/
+    /**
+     * From http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+     */
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -170,7 +180,6 @@ public class ImageHelper {
 
         return inSampleSize;
     }
-
 
     public interface BitmapWorkerCallback {
         public void onBitmapReady(String filePath, ImageView imageView, Bitmap bitmap);
@@ -257,10 +266,8 @@ public class ImageHelper {
 
             if (callback != null)
                 callback.onBitmapReady(path, imageView, bitmap);
-
         }
     }
-
 
     public static String getTitleForWPImageSpan(Context ctx, String filePath) {
         if (filePath == null)
@@ -277,7 +284,7 @@ public class ImageHelper {
         if (filePath.contains("video")) {
             return "Video";
         } else {
-            String[] projection = new String[] { MediaStore.Images.Thumbnails.DATA };
+            String[] projection = new String[]{MediaStore.Images.Thumbnails.DATA};
 
             Cursor cur;
             try {
@@ -376,12 +383,12 @@ public class ImageHelper {
             // Resize portrait bitmap
             targetHeight = targetSize;
             float percentage = (float) targetSize / bitmap.getHeight();
-            targetWidth = (int)(bitmap.getWidth() * percentage);
+            targetWidth = (int) (bitmap.getWidth() * percentage);
         } else {
             // Resize landscape or square image
             targetWidth = targetSize;
             float percentage = (float) targetSize / bitmap.getWidth();
-            targetHeight = (int)(bitmap.getHeight() * percentage);
+            targetHeight = (int) (bitmap.getHeight() * percentage);
         }
 
         return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true);
@@ -401,7 +408,7 @@ public class ImageHelper {
 
         String filePath = null;
         if (imageUri.toString().contains("content:")) {
-            String[] projection = new String[] { MediaStore.Images.Media.DATA };
+            String[] projection = new String[]{MediaStore.Images.Media.DATA};
             Cursor cur = context.getContentResolver().query(imageUri, projection, null, null, null);
             if (cur != null) {
                 if (cur.moveToFirst()) {
