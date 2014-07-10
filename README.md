@@ -1,20 +1,25 @@
 # WordPress REST Client for Android
 
+## Build
+
+To build the library, invoke the following `gradle` command in the project root directory:
+
+    $ ./gradlew build
+
+This will create an `aar` package at this location: `WordPressComRest/build/outputs/aar/WordPressComRest.aar`. Feel free to use it directly or put it in a maven repository.
+
 ## Usage
 
-Easiest way to install the library is by building the latest `jar` and dropping it in your project's `./lib` directory.
+If you don't want to compile and host it. The easiest way to use it in your Android project is to add it as a library in your build.gradle file, don't forget to add the wordpress-mobile maven repository. For instance:
 
-    cd path/to/library
-    ant jar
+    repositories {
+        maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
+    }
 
-This will produce two files:
-- `dist/wordpress-android-rest-VERSION.jar`
-- `dist/wordpress-android-rest-VERSION-http.jar`
-
-
-You can also use this project as an Android Library Project instead of using the `jar` by adding a library references to your app's `project.properties` file:
-
-    android.library.reference.1=path/to/wordpress-rest-android/
+    dependencies {
+        // use the latest 1.x version
+        compile 'com.automattic:wordpresscom-rest:1.+'
+    }
 
 ## LICENSE
 
