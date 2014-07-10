@@ -214,7 +214,6 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (mCurrentTag != null) {
@@ -234,6 +233,8 @@ public class ReaderPostListFragment extends Fragment
         if (mListView != null && mListView.getFirstVisiblePosition() > 0) {
             outState.putParcelable(ReaderConstants.KEY_LIST_STATE, mListView.onSaveInstanceState());
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

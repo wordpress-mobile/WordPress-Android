@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.comments;
 
-import android.text.Html;
+import android.graphics.drawable.Drawable;
 import android.text.Spanned;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.Emoticons;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.WPImageGetter;
 
 public class CommentUtils {
@@ -36,9 +39,12 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            html = Html.fromHtml(content, new WPImageGetter(textView, maxImageSize), null);
+            Drawable loading = textView.getContext().getResources().getDrawable(R.drawable.remote_image);
+            Drawable failed = textView.getContext().getResources().getDrawable(R.drawable.remote_failed);
+            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, WordPress.imageLoader,
+                    loading, failed));
         } else {
-            html = Html.fromHtml(content);
+            html = HtmlUtils.fromHtml(content);
         }
 
         // remove extra \n\n added by Html.convert()

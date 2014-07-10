@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="your_signature">आपका हस्ताक्षर:</string>
+	<string name="search_location">खोज</string>
+	<string name="edit_location">संपादित करें</string>
+	<string name="preference_privacy">गोपनीयता</string>
+	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
 	<string name="update_verb">अपडेट करे</string>
+	<string name="sign_in_again">फिर से साइन इन करें</string>
 	<string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
 	<string name="reader_label_unfollowed_blog">अनुसरण नहीं किये गए ब्लॉग</string>
 	<string name="reader_label_followers">%s प्रशंसक</string>
@@ -9,12 +15,20 @@
 	<string name="reader_title_blog_preview">ब्लॉग पूर्वावलोकन</string>
 	<string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
 	<string name="reader_page_recommended_blogs">अनुशंसित ब्लॉग</string>
+	<string name="reader_title_subs">टैग और ब्लॉग</string>
+	<string name="reader_toast_err_follow_blog">इस ब्लॉग का अनुसरण करने में असमर्थ</string>
+	<string name="reader_toast_err_get_blog_info">इस ब्लॉग को दिखाने में असमर्थ</string>
+	<string name="reader_toast_err_unfollow_blog">इस ब्लॉग अनुसरण रद्द करने में असमर्थ</string>
+	<string name="reader_label_new_posts">नया पोस्ट दिखाएं</string>
 	<string name="blogs_visibility">ब्लॉग</string>
 	<string name="stats_empty_clicks_title">क्लिकें दर्ज नही.</string>
+	<string name="stats_empty_search_engine_terms_title">कोई खोज शब्द नहीं.</string>
 	<string name="ssl_certificate_details">प्रमाणपत्र विवरण</string>
 	<string name="need_help_signin_wpcom">मदद की ज़रूरत है?</string>
 	<string name="media_empty_list">कोई मीडिया नहीं</string>
 	<string name="saving">सहेजा जा रहा…</string>
+	<string name="ssl_certificate_do_not_trust">भरोसा नही करे</string>
+	<string name="ssl_certificate_trust">भरोसा</string>
 	<string name="help_center">सहायता केंद्र</string>
 	<string name="help">सहायता</string>
 	<string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>

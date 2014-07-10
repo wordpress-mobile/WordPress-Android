@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="your_signature">Your signature:</string>
+	<string name="search_location">Search</string>
+	<string name="edit_location">Edit</string>
+	<string name="search_current_location">Locate</string>
+	<string name="preference_privacy">Privacy</string>
+	<string name="preference_send_usage_stats">Send statistics</string>
+	<string name="preference_send_usage_stats_summary">Automatically send usage statistics to help us improve WordPress for Android</string>
+	<string name="reader_label_reached_last_post">You\'ve reached the end</string>
+	<string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
 	<string name="reader_title_reblog">Reblog Post</string>
 	<string name="reader_hint_reblog_comment">Add your thoughts (optional)</string>
 	<string name="reader_label_reblog_to">Reblog to</string>

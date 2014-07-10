@@ -130,6 +130,9 @@ public class Post implements Serializable {
     }
 
     public JSONArray getCustomFields() {
+        if (customFields == null) {
+            return null;
+        }
         JSONArray jArray = null;
         try {
             jArray = new JSONArray(customFields);
