@@ -68,10 +68,10 @@
         android:id="@+id/layout_comment_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
         android:layout_alignLeft="@+id/text_comment_author"
-        android:layout_below="@+id/text_comment_text">
+        android:layout_below="@+id/text_comment_text"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/image_comment_reply"
@@ -85,16 +85,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/reader_transparent_selector"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_small"
             android:text="@string/reader_label_reply"
             android:textColor="@color/reader_hyperlink"
             android:textSize="@dimen/text_sz_small" />
 
         <ImageView
-            android:id="@+id/image_comment_like_btn"
+            android:id="@+id/image_comment_like"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/reader_button_comment_like" />
@@ -103,10 +103,19 @@
             android:id="@+id/text_comment_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_small"
             android:textColor="@color/reader_like_text"
+            android:textSize="@dimen/text_sz_small"
             tools:text="Like" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_comment_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_small"
+            android:textColor="@color/grey_medium"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="4 likes" />
     </LinearLayout>
 
     <View

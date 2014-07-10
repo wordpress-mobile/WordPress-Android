@@ -60,6 +60,7 @@ public class ReaderUserListActivity extends Activity {
 
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+        long commentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
 
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
@@ -74,7 +75,7 @@ public class ReaderUserListActivity extends Activity {
         rootView.getLayoutParams().height = maxHeight;
 
         getListView().setAdapter(getAdapter());
-        loadUsers(blogId, postId);
+        loadUsers(blogId, postId, commentId);
     }
 
     @Override
@@ -91,18 +92,29 @@ public class ReaderUserListActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    private void loadUsers(final long blogId, final long postId) {
+    private void loadUsers(final long blogId,
+                           final long postId,
+                           final long commentId) {
         new Thread() {
             @Override
             public void run() {
                 final String title = getTitleString(blogId, postId);
                 final TextView txtTitle = (TextView) findViewById(R.id.text_title);
 
-                final ReaderUserList users =
-                        ReaderUserTable.getUsersWhoLikePost(
-                                blogId,
-                                postId,
-                                ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                final ReaderUserList users;
+                if (commentId == 0) {
+                    // commentId is empty (not passed), so we're showing users who like a post
+                    users = ReaderUserTable.getUsersWhoLikePost(
+                            blogId,
+                            postId,
+                            ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                } else {
+                    // commentId is non-empty, so we're showing users who like a comment
+                    users = ReaderUserTable.getUsersWhoLikeComment(
+                            blogId,
+                            commentId,
+                            ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override

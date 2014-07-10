@@ -215,8 +215,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtReply;
         private final ImageView imgReply;
 
-        private final TextView txtLike;
         private final ImageView imgLike;
+        private final TextView txtLike;
+        private final TextView txtLikeCount;
 
         CommentHolder(View view) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
@@ -232,8 +233,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
             divider = view.findViewById(R.id.divider_comment);
 
+            imgLike = (ImageView) view.findViewById(R.id.image_comment_like);
             txtLike = (TextView) view.findViewById(R.id.text_comment_like);
-            imgLike = (ImageView) view.findViewById(R.id.image_comment_like_btn);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);
@@ -249,16 +251,18 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtLike.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
             holder.txtLike.setSelected(comment.isLikedByCurrentUser);
+            holder.txtLike.setText(comment.isLikedByCurrentUser ? mLiked : mLike);
             switch (comment.numLikes) {
                 case 0:
-                    holder.txtLike.setText(mLike);
+                    holder.txtLike.setVisibility(View.GONE);
                     break;
                 case 1:
-                    holder.txtLike.setText(mLikesSingle);
+                    holder.txtLike.setVisibility(View.VISIBLE);
+                    holder.txtLikeCount.setText(mLikesSingle);
                     break;
                 default:
                     holder.txtLike.setVisibility(View.VISIBLE);
-                    holder.txtLike.setText(String.format(mLikesMulti, comment.numLikes));
+                    holder.txtLikeCount.setText(String.format(mLikesMulti, comment.numLikes));
 
             }
             View.OnClickListener likeListener = new View.OnClickListener() {
@@ -267,8 +271,16 @@ public class ReaderCommentAdapter extends BaseAdapter {
                     toggleLike(holder, comment, position);
                 }
             };
+            // toggle like when like image or caption is tapped
             holder.imgLike.setOnClickListener(likeListener);
             holder.txtLike.setOnClickListener(likeListener);
+            // show liking users when like count is tapped
+            holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderLikingUsers(v.getContext(), comment);
+                }
+            });
         } else {
             holder.imgLike.setVisibility(View.GONE);
             holder.txtLike.setVisibility(View.GONE);

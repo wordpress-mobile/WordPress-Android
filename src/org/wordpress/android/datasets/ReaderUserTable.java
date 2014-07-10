@@ -154,8 +154,33 @@ public class ReaderUserTable {
     public static ReaderUserList getUsersWhoLikePost(long blogId, long postId, int max) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         String sql = "SELECT * from tbl_users WHERE user_id IN (SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
-        if (max > 0)
+        if (max > 0) {
             sql += " LIMIT " + Integer.toString(max);
+        }
+
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            ReaderUserList users = new ReaderUserList();
+            if (c.moveToFirst()) {
+                do {
+                    users.add(getUserFromCursor(c));
+                } while (c.moveToNext());
+            }
+            return users;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
+    public static ReaderUserList getUsersWhoLikeComment(long blogId, long commentId, int max) {
+        String[] args = {Long.toString(blogId),
+                         Long.toString(commentId)};
+        String sql = "SELECT * from tbl_users WHERE user_id IN"
+                   + " (SELECT user_id FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?)"
+                   + " ORDER BY display_name";
+        if (max > 0) {
+            sql += " LIMIT " + Integer.toString(max);
+        }
 
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
