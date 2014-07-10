@@ -6,8 +6,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
@@ -17,12 +19,12 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsVideoSummary;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsBarChartUnit;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -43,9 +45,11 @@ public class StatsUtils {
     private static final String STAT_VIDEO_SUMMARY = "StatVideoSummary_";
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
 
-    /** Converts date in the form of 2013-07-18 to ms **/
+    /**
+     * Converts date in the form of 2013-07-18 to ms *
+     */
     @SuppressLint("SimpleDateFormat")
-	public static long toMs(String date) {
+    public static long toMs(String date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             return sdf.parse(date).getTime();
@@ -115,7 +119,7 @@ public class StatsUtils {
             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
 
             if (length > 0) {
-                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[] { blogId, StatsBarChartUnit.DAY.name() }).build();
+                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[]{blogId, StatsBarChartUnit.DAY.name()}).build();
                 operations.add(op);
             }
 
@@ -225,4 +229,54 @@ public class StatsUtils {
     public static int getSmallestWidthDP() {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);
     }
+
+    /**
+     * Return the credentials for the current blog or null if not available.
+     *
+     * 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
+     * 2. If credentials are empty read the global wpcom credentials
+     * 3. Check that credentials are not empty before launching the activity
+     *
+     */
+    public static StatsCredentials getCurrentBlogStatsCredentials() {
+        String statsAuthenticatedUser = WordPress.getCurrentBlog().getDotcom_username();
+        String statsAuthenticatedPassword = WordPress.getCurrentBlog().getDotcom_password();
+
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+            // Let's try the global wpcom credentials
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+            statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+            statsAuthenticatedPassword = WordPressDB.decryptPassword(
+                    settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+            );
+        }
+
+        if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
+                || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
+            AppLog.e(AppLog.T.STATS, "WPCOM Credentials for the current blog are null!");
+            return null;
+        }
+
+        return new StatsCredentials(statsAuthenticatedUser, statsAuthenticatedPassword);
+    }
+
+    public static class StatsCredentials {
+
+        public StatsCredentials (String username, String password) {
+            this.mUsername = username;
+            this.mPassword = password;
+        }
+
+        public String getUsername() {
+            return mUsername;
+        }
+
+        public String getPassword() {
+            return mPassword;
+        }
+
+        private String mUsername, mPassword;
+    }
+
 }

@@ -485,31 +485,18 @@ public class StatsActivity extends WPActionBarActivity {
                 showJetpackMissingAlert(this);
                 return true;
             }
-            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            // 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
-            // 2. If credentials are empty read the global wpcom credentials
-            // 3. Check that credentials are not empty before launching the activity
-            String statsAuthenticatedUser = WordPress.getCurrentBlog().getDotcom_username();
-            String statsAuthenticatedPassword = WordPress.getCurrentBlog().getDotcom_password();
-
-            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                // Let's try the global wpcom credentials
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                        settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                );
-            }
-            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                // Still empty. Show Toast.
+            StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
+            if (credentials == null) {
                 Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
             }
 
+            String statsAuthenticatedUser = credentials.getUsername();
+            String statsAuthenticatedPassword =  credentials.getPassword();
+            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
+
+            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
