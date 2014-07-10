@@ -94,8 +94,9 @@ public class StatsWebViewActivity extends WebViewActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (mWebView == null)
+        if (mWebView == null) {
             return false;
+        }
 
         int itemID = item.getItemId();
         if (itemID == R.id.menu_refresh) {

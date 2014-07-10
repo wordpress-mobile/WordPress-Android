@@ -21,10 +21,10 @@ import java.util.List;
  */
 class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
-    private  List<List<BarChartRect>> seriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
-    private int barPositionToHighlight = -1;
+    private  List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
+    private int mBarPositionToHighlight = -1;
 
-	public StatsBarGraph(Context context) {
+    public StatsBarGraph(Context context) {
 		super(context, "");
 
         setProperties();
@@ -41,8 +41,9 @@ class StatsBarGraph extends GraphView {
         setCustomLabelFormatter(new CustomLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
-                if(isValueX)
+                if (isValueX) {
                     return null;
+                }
 
                 if (value < 1000) {
                     return null;
@@ -65,7 +66,7 @@ class StatsBarGraph extends GraphView {
     protected void onDraw(Canvas canvas) {
         // Empty the rectangles list before calling super.
         // Super.onDraw calls drawSeries several times and we need an empty list there.
-        seriesRectsDrawedOnScreen.clear();
+        mSeriesRectsDrawedOnScreen.clear();
         super.onDraw(canvas);
     }
 
@@ -79,7 +80,8 @@ class StatsBarGraph extends GraphView {
 		paint.setStrokeWidth(style.thickness);
 		paint.setColor(style.color);
 
-        List<BarChartRect> barChartRects = new LinkedList<BarChartRect>(); // Bar chart position of this series on the canvas
+        // Bar chart position of this series on the canvas
+        List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
 
 		// draw data
 		for (int i = 0; i < values.length; i++) {
@@ -92,8 +94,8 @@ class StatsBarGraph extends GraphView {
 				paint.setColor(style.getValueDependentColor().get(values[i]));
 			}
 
-            //Trick to redraw the tapped bar
-            if (barPositionToHighlight == i) {
+            // Trick to redraw the tapped bar
+            if (mBarPositionToHighlight == i) {
                 int color;
                 if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
                     color =  getResources().getColor(R.color.orange_medium);
@@ -115,7 +117,7 @@ class StatsBarGraph extends GraphView {
 			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
 		}
-        seriesRectsDrawedOnScreen.add(barChartRects);
+        mSeriesRectsDrawedOnScreen.add(barChartRects);
 	}
 
     public int getTappedBar() {
@@ -123,7 +125,7 @@ class StatsBarGraph extends GraphView {
         if (lastBarChartTouchedPoint[0] == 0f && lastBarChartTouchedPoint[1] == 0f) {
             return -1;
         }
-        for (List<BarChartRect> currentSerieChartRects : seriesRectsDrawedOnScreen) {
+        for (List<BarChartRect> currentSerieChartRects : mSeriesRectsDrawedOnScreen) {
             int i = 0;
             for (BarChartRect barChartRect : currentSerieChartRects) {
                 if (barChartRect.isPointInside(lastBarChartTouchedPoint[0], lastBarChartTouchedPoint[1])) {
@@ -136,8 +138,8 @@ class StatsBarGraph extends GraphView {
     }
 
     public void highlightBar(int barPosition) {
-        barPositionToHighlight = barPosition;
-        if (barPositionToHighlight == -1) {
+        mBarPositionToHighlight = barPosition;
+        if (mBarPositionToHighlight == -1) {
             return;
         }
         this.redrawAll();
@@ -145,7 +147,7 @@ class StatsBarGraph extends GraphView {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                barPositionToHighlight = -1;
+                mBarPositionToHighlight = -1;
                 redrawAll();
             }
         }, 500);
@@ -161,18 +163,19 @@ class StatsBarGraph extends GraphView {
 		double maxY = super.getMaxY();
 
 		final int divideBy;
-		if (maxY < 100)
-			divideBy = 10;
-		else if (maxY < 1000)
-			divideBy = 100;
-		else if (maxY < 10000)
-			divideBy = 1000;
-		else if (maxY < 100000)
-			divideBy = 10000;
-		else if (maxY < 1000000)
-			divideBy = 100000;
-		else
-			divideBy = 1000000;
+		if (maxY < 100) {
+            divideBy = 10;
+        } else if (maxY < 1000) {
+            divideBy = 100;
+        } else if (maxY < 10000) {
+            divideBy = 1000;
+        } else if (maxY < 100000) {
+            divideBy = 10000;
+        } else if (maxY < 1000000) {
+            divideBy = 100000;
+        } else {
+            divideBy = 1000000;
+        }
 
 		maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
 		return maxY;
@@ -180,21 +183,24 @@ class StatsBarGraph extends GraphView {
 
 
     /**
-     * Private class that is used to hold the local (to the canvas) coordinate on the screen of every single bar in the graph
+     * Private class that is used to hold the local (to the canvas) coordinate on the screen
+     * of every single bar in the graph
      */
     private class BarChartRect {
-        float left, top, right, bottom;
+        float mLeft, mTop, mRight, mBottom;
 
         BarChartRect(float left, float top, float right, float bottom) {
-            this.left = left;
-            this.top = top;
-            this.right = right;
-            this.bottom = bottom;
+            this.mLeft = left;
+            this.mTop = top;
+            this.mRight = right;
+            this.mBottom = bottom;
         }
 
         public boolean isPointInside(float x, float y) {
-            if (x >= this.left && x <= this.right &&
-                    y <= this.bottom && y >= this.top) {
+            if (x >= this.mLeft
+                    && x <= this.mRight
+                    && y <= this.mBottom
+                    && y >= this.mTop) {
                 return true;
             }
             return false;

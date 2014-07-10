@@ -38,7 +38,7 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
             y += widget.getScrollY();
 
             Layout layout = widget.getLayout();
-            if ( layout == null ) {
+            if (layout == null) {
                 return super.onTouchEvent(widget, buffer, event);
             }
             int line = layout.getLineForVertical(y);
