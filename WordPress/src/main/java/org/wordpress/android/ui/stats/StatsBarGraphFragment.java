@@ -39,10 +39,10 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
-    private StatsBarGraph graphView;
-    private GraphViewSeries viewsSeries;
-    private GraphViewSeries visitorsSeries;
-    private String[] statsDate;
+    private StatsBarGraph mGraphView;
+    private GraphViewSeries mViewsSeries;
+    private GraphViewSeries mVisitorsSeries;
+    private String[] mStatsDate;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -57,7 +57,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mGraphContainer = (LinearLayout)inflater.inflate(R.layout.stats_bar_graph_fragment, container, false);
+        mGraphContainer = (LinearLayout) inflater.inflate(R.layout.stats_bar_graph_fragment, container, false);
         mGraphContainer.setTag(getArguments().getInt(ARGS_BAR_CHART_UNIT, -1));
         return mGraphContainer;
     }
@@ -71,7 +71,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().getContentResolver().registerContentObserver(StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver);
+        getActivity().getContentResolver().registerContentObserver(
+                StatsContentProvider.STATS_BAR_CHART_DATA_URI, true, mContentObserver
+        );
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_TOUCH_DETECTED));
@@ -92,8 +94,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             String action = intent.getAction();
             if (StatsActivity.STATS_TOUCH_DETECTED.equals(action)) {
                 int tappedBar;
-                if (graphView != null && (tappedBar = graphView.getTappedBar()) != -1) {
-                    graphView.highlightBar(tappedBar);
+                if (mGraphView != null && (tappedBar = mGraphView.getTappedBar()) != -1) {
+                    mGraphView.highlightBar(tappedBar);
                     handleBarChartTap(tappedBar);
                 }
             }
@@ -101,11 +103,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     };
 
     private void handleBarChartTap(int tappedBar) {
-        if (tappedBar < 0 || statsDate.length < tappedBar) {
+        if (tappedBar < 0 || mStatsDate.length < tappedBar) {
             return;
         }
 
-        String date = statsDate[tappedBar];
+        String date = mStatsDate[tappedBar];
         StatsBarChartUnit unit = getBarChartUnit();
         if (unit == StatsBarChartUnit.DAY) {
             StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
@@ -117,7 +119,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             String statsAuthenticatedUser = credentials.getUsername();
             String statsAuthenticatedPassword =  credentials.getPassword();
             // make sure to load the no-chrome version of Stats over https
-            String url = "https://wordpress.com/my-stats/?no-chrome&blog=" + WordPress.getCurrentRemoteBlogId() + "&day=" + date + "&unit=1";
+            String url = "https://wordpress.com/my-stats/?no-chrome&blog="
+                    + WordPress.getCurrentRemoteBlogId() + "&day=" + date + "&unit=1";
 
             Intent statsWebViewIntent = new Intent(this.getActivity(), StatsWebViewActivity.class);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
@@ -127,20 +130,20 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             this.getActivity().startActivity(statsWebViewIntent);
         } else {
             // Week or Month on the screen. Show a toast.
-            GraphViewDataInterface[] views = viewsSeries.getData();
-            GraphViewDataInterface[] visitors = visitorsSeries.getData();
+            GraphViewDataInterface[] views = mViewsSeries.getData();
+            GraphViewDataInterface[] visitors = mVisitorsSeries.getData();
             String formattedDate;
 
             if (unit == StatsBarChartUnit.WEEK) {
                 formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "MMM d");
             } else {
-                //Month
+                // Month
                 formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMM yyyy");
             }
 
             String message = String.format("%s - %s %d - %s %d", formattedDate, getString(R.string.stats_totals_views),
                     (int) views[tappedBar].getY(), getString(R.string.stats_totals_visitors),
-                    (int) visitors[tappedBar].getY() );
+                    (int) visitors[tappedBar].getY());
 
             ToastUtils.showToast(this.getActivity(), message, ToastUtils.Duration.LONG);
         }
@@ -154,40 +157,44 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
             return null;
+        }
 
         String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-        if (TextUtils.isEmpty(blogId))
+        if (TextUtils.isEmpty(blogId)) {
             blogId = "0";
+        }
         StatsBarChartUnit unit = getBarChartUnit();
         return new CursorLoader(getActivity(),
                                 StatsContentProvider.STATS_BAR_CHART_DATA_URI,
                                 null,
                                 "blogId=? AND unit=?",
-                                new String[] { blogId, unit.name() },
+                                new String[] {blogId, unit.name()},
                                 null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (getActivity() == null)
+        if (getActivity() == null) {
             return;
+        }
 
         if (!cursor.moveToFirst()) {
             Context context = mGraphContainer.getContext();
             if (context != null) {
                 LayoutInflater inflater = LayoutInflater.from(context);
                 View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
-                if (emptyBarGraphView != null)
+                if (emptyBarGraphView != null) {
                     mGraphContainer.addView(emptyBarGraphView);
+                }
             }
             return;
         }
 
         int numPoints = Math.min(getNumOfPoints(), cursor.getCount());
         final String[] horLabels = new String[numPoints];
-        statsDate = new String[numPoints];
+        mStatsDate = new String[numPoints];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
         GraphView.GraphViewData[] visitors = new GraphView.GraphViewData[numPoints];
 
@@ -196,38 +203,38 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             views[i] = new GraphView.GraphViewData(i, getViews(cursor));
             visitors[i] = new GraphView.GraphViewData(i, getVisitors(cursor));
             horLabels[i] = getDateLabel(cursor, unit);
-            statsDate[i] = getDate(cursor);
+            mStatsDate[i] = getDate(cursor);
             cursor.moveToNext();
         }
 
-        viewsSeries = new GraphViewSeries(views);
-        visitorsSeries = new GraphViewSeries(visitors);
+        mViewsSeries = new GraphViewSeries(views);
+        mVisitorsSeries = new GraphViewSeries(visitors);
 
-        viewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
-        viewsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
-        visitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
-        visitorsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 3);
+        mViewsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
+        mViewsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
+        mVisitorsSeries.getStyle().color = getResources().getColor(R.color.stats_bar_graph_visitors);
+        mVisitorsSeries.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 3);
 
         if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-            graphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
+            mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
         } else {
             mGraphContainer.removeAllViews();
-            graphView = new StatsBarGraph(getActivity());
-            mGraphContainer.addView(graphView);
+            mGraphView = new StatsBarGraph(getActivity());
+            mGraphContainer.addView(mGraphView);
         }
 
-        if (graphView != null) {
-            graphView.removeAllSeries();
-            graphView.addSeries(viewsSeries);
-            graphView.addSeries(visitorsSeries);
-            graphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
-            graphView.setHorizontalLabels(horLabels);
+        if (mGraphView != null) {
+            mGraphView.removeAllSeries();
+            mGraphView.addSeries(mViewsSeries);
+            mGraphView.addSeries(mVisitorsSeries);
+            mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
+            mGraphView.setHorizontalLabels(horLabels);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        //noop
+        // noop
     }
 
     private boolean hasActivity() {
@@ -239,10 +246,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             return 30;
         }
 
-        if (getBarChartUnit() == StatsBarChartUnit.DAY)
+        if (getBarChartUnit() == StatsBarChartUnit.DAY) {
             return 7;
-        else
+        } else {
             return 12;
+        }
     }
 
     private int getNumOfHorizontalLabels(int numPoints) {
@@ -250,10 +258,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             return numPoints / 5;
         }
 
-        if (getBarChartUnit() == StatsBarChartUnit.DAY)
+        if (getBarChartUnit() == StatsBarChartUnit.DAY) {
             return numPoints / 2;
-        else
+        } else {
             return numPoints / 3;
+        }
     }
 
     private int getViews(Cursor cursor) {
@@ -265,7 +274,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     }
 
     private String getDateLabel(Cursor cursor, StatsBarChartUnit unit) {
-        String cursorDate = StringUtils.notNullStr(cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE)));
+        String cursorDate = StringUtils.notNullStr(
+                cursor.getString(cursor.getColumnIndex(StatsBarChartDataTable.Columns.DATE))
+        );
 
         switch (unit) {
             case DAY:

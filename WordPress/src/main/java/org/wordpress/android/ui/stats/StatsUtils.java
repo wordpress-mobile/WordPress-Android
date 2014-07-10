@@ -262,8 +262,9 @@ public class StatsUtils {
     }
 
     public static class StatsCredentials {
+        private String mUsername, mPassword;
 
-        public StatsCredentials (String username, String password) {
+        public StatsCredentials(String username, String password) {
             this.mUsername = username;
             this.mPassword = password;
         }
@@ -275,8 +276,5 @@ public class StatsUtils {
         public String getPassword() {
             return mPassword;
         }
-
-        private String mUsername, mPassword;
     }
-
 }

@@ -196,15 +196,14 @@ public class StatsActivity extends WPActionBarActivity {
             return true;
         }
         @Override
-        public boolean onSingleTapUp (MotionEvent event) {
+        public boolean onSingleTapUp(MotionEvent event) {
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_TOUCH_DETECTED);
             return false;
         }
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event)
-    {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         this.mDetector.onTouchEvent(event);
         return super.dispatchTouchEvent(event);
     }
