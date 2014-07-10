@@ -651,7 +651,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
 
         protected void onPreExecute() {
-            Toast.makeText(getActivity(), R.string.loading, Toast.LENGTH_SHORT).show();
+            Context context = mWeakContext.get();
+            if (context != null) {
+                Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -1018,6 +1021,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
     }
 
     private boolean addMedia(Uri imageUri, SpannableStringBuilder ssb, Context context) {
+        if (context == null) {
+            return false;
+        }
+
         if (ssb != null && !MediaUtils.isInMediaStore(imageUri)) {
             imageUri = MediaUtils.downloadExternalMedia(context, imageUri);
         }
