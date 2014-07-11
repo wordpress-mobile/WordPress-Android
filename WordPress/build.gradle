@@ -68,12 +68,12 @@ wordpress {
     utils {
         repo 'WordPress-Utils-Android'
         subproject 'WordPressUtils'
-        artifact 'org.wordpress:wordpress-utils:1.0.+'
+        artifact 'org.wordpress:wordpress-utils:1.0.1'
     }
     networking {
         repo 'WordPress-Networking-Android'
         subproject 'WordPressNetworking'
-        artifact 'org.wordpress:wordpress-utils:1.0.+'
+        artifact 'org.wordpress:wordpress-networking:1.0.0'
     }
     wpcomrest {
         repo 'Automattic/android-wordpress-com-rest'
@@ -92,6 +92,7 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.4.1'
+    compile 'commons-lang:commons-lang:2.6'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'
