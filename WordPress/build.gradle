@@ -75,6 +75,11 @@ wordpress {
         subproject 'WordPressNetworking'
         artifact 'org.wordpress:wordpress-utils:1.0.+'
     }
+    wpcomrest {
+        repo 'Automattic/android-wordpress-com-rest'
+        subproject 'WordPressComRest'
+        artifact 'com.automattic:wordpresscom-rest:1.0.0'
+    }
 }
 
 dependencies {
