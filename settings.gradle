@@ -1,1 +1,1 @@
-include ':WordPress', ':WordPressUtils', ':WordPressNetworking', ':WordPressGraphLib'
+include ':WordPress', ':WordPressUtils', ':WordPressNetworking',  ':WordPressComRest', ':WordPressGraphLib'
