@@ -443,9 +443,9 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostLike(ReaderPost post, View likeButton) {
         boolean isSelected = likeButton.isSelected();
         likeButton.setSelected(!isSelected);
-        ReaderAnim.animateLikeButton(likeButton);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(likeButton, isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             likeButton.setSelected(isSelected);

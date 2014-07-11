@@ -296,8 +296,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private void toggleLike(final CommentHolder holder,
                             final ReaderComment comment,
                             final int position) {
-        ReaderAnim.animateLikeButton(holder.imgLike);
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
             return;

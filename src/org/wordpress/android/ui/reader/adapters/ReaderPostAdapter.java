@@ -539,10 +539,9 @@ public class ReaderPostAdapter extends BaseAdapter {
      * triggered when user taps the like button (textView)
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
-        // start animation immediately so user knows they did something
-        ReaderAnim.animateLikeButton(holder.imgBtnLike);
-
         boolean isAskingToLike = !post.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(holder.imgBtnLike, isAskingToLike);
+
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             return;
         }
