@@ -231,7 +231,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case READER_COMMENTED_ON_ARTICLE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Commented on Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_reader_article");
                 break;
             case READER_FOLLOWED_SITE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
