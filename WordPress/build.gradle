@@ -115,9 +115,7 @@ dependencies {
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'
     compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
-
-    releaseCompile 'org.wordpress:emailchecker:0.2'
-    debugCompile 'org.wordpress:emailchecker-debug:0.2'
+    compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
     compile('com.simperium:simperium-android:0.4.8') {
