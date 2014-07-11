@@ -44,7 +44,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private final int mBgColorNormal;
     private final int mBgColorHighlight;
-    private final int mBgColorPostAuthor;
     private final int mLinkColor;
     private final int mNoLinkColor;
 
@@ -79,7 +78,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
-        mBgColorPostAuthor = context.getResources().getColor(R.color.grey_light);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
@@ -174,7 +172,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else if (comment.authorId == mPost.authorId) {
             // different background color for comments from the post's author
-            convertView.setBackgroundColor(mBgColorPostAuthor);
+            convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(View.GONE);
         } else {
             convertView.setBackgroundColor(mBgColorNormal);
