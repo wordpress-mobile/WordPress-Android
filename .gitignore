@@ -23,5 +23,4 @@ gradle.properties
 .DS_Store
 
 # dependencies
-WordPressUtils
-WordPressComRest
+libs
