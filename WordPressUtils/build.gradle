@@ -3,10 +3,13 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies { classpath 'com.android.tools.build:gradle:0.12.+' }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
@@ -18,7 +21,6 @@ dependencies {
 }
 
 android {
-
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
@@ -28,5 +30,16 @@ android {
         versionCode 1
         minSdkVersion 14
         targetSdkVersion 19
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.repository)
+            pom.version = android.defaultConfig.versionName
+            pom.groupId = "org.wordpress"
+            pom.artifactId = "wordpress-utils"
+        }
     }
 }
