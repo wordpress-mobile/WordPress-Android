@@ -1,1 +1,4 @@
-include ':WordPress', ':WordPressUtils', ':WordPressNetworking', ':WordPressComRest'
+include ':WordPress'
+include ':libs:utils:WordPressUtils'
+include ':libs:networking:WordPressNetworking'
+include ':libs:wpcomrest:WordPressComRest'
