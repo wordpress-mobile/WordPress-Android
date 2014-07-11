@@ -157,9 +157,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
-        // show top spacer for first comment (adds extra space between comments and post)
-        holder.spacerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-
         // show indentation spacer and indent it based on comment level
         holder.spacerIndent.setVisibility(comment.parentId==0 ? View.GONE : View.VISIBLE);
         if (comment.level > 0) {
@@ -214,7 +211,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         private final WPNetworkImageView imgAvatar;
         private final View spacerIndent;
-        private final View spacerTop;
         private final ProgressBar progress;
 
         private final TextView txtReply;
@@ -234,7 +230,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
-            spacerTop = view.findViewById(R.id.spacer_comment_top);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
             imgLike = (ImageView) view.findViewById(R.id.image_comment_like);

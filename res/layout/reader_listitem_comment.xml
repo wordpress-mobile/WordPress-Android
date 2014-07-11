@@ -5,17 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_extra_light"
-    android:paddingBottom="@dimen/margin_small"
+    android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_large"
     android:paddingRight="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_medium">
-
-    <!-- spacer_comment_top is visible for the first comment only, to provide extra space between post & comments -->
-    <View
-        android:id="@+id/spacer_comment_top"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_large"
-        android:visibility="gone" />
+    android:paddingTop="@dimen/margin_large">
 
     <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -27,7 +20,6 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_comment_avatar"
         style="@style/ReaderImageView.Avatar.Small"
-        android:layout_below="@+id/spacer_comment_top"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/margin_small"
         android:layout_toRightOf="@+id/spacer_comment_indent" />
@@ -117,12 +109,6 @@
             android:textSize="@dimen/text_sz_small"
             tools:text="@string/reader_likes_one_short" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/spacer_comment_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_large"
-        android:layout_below="@+id/layout_comment_actions" />
 
     <ProgressBar
         android:id="@+id/progress_comment"
