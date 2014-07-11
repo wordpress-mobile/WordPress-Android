@@ -273,22 +273,22 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case EDITOR_PUBLISHED_POST_WITH_PHOTO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_published_posts_with_photos");
+                                "number_of_posts_published_with_photos");
                 break;
             case EDITOR_PUBLISHED_POST_WITH_VIDEO:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_published_posts_with_videos");
+                                "number_of_posts_published_with_videos");
               break;
             case EDITOR_PUBLISHED_POST_WITH_CATEGORIES:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_published_posts_with_categories");
+                                "number_of_posts_published_with_categories");
                 break;
             case EDITOR_PUBLISHED_POST_WITH_TAGS:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                       mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                              "number_of_published_posts_with_tags");
+                              "number_of_posts_published_with_tags");
                 break;
             case NOTIFICATIONS_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
