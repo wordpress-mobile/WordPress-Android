@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.automattic.android:gradle-wordpresslibraries:1.1.0'
+        classpath 'com.automattic.android:gradle-wordpresslibraries:1.1.1'
     }
 }
 
