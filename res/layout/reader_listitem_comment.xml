@@ -74,39 +74,27 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/reader_transparent_selector"
-            android:paddingBottom="@dimen/margin_small"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_small"
+            style="@style/ReaderTextView.Comment.Action"
             android:text="@string/reader_label_reply"
-            android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_small" />
+            android:textColor="@color/reader_hyperlink" />
 
         <ImageView
             android:id="@+id/image_comment_like"
             android:layout_width="18dp"
             android:layout_height="18dp"
+            android:layout_marginLeft="@dimen/margin_large"
             android:src="@drawable/reader_button_comment_like" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_small"
+            style="@style/ReaderTextView.Comment.Action"
             android:textColor="@color/reader_like_text"
-            android:textSize="@dimen/text_sz_small"
             tools:text="@string/reader_label_like" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_small"
+            style="@style/ReaderTextView.Comment.Action"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_small"
             tools:text="@string/reader_likes_one_short" />
     </LinearLayout>
 
@@ -118,4 +106,5 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:visibility="gone" />
+    
 </RelativeLayout>
