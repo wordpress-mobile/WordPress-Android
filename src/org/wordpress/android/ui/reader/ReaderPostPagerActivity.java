@@ -140,10 +140,13 @@ public class ReaderPostPagerActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        // if fullscreen video is showing, hide the custom view rather than navigate back
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null && fragment.isCustomViewShowing()) {
+            // if fullscreen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
+        } else if (fragment != null && fragment.isAddCommentBoxShowing()) {
+            // if comment reply entry is showing, hide it rather than navigate back
+            fragment.hideAddCommentBox();
         } else {
             super.onBackPressed();
         }
