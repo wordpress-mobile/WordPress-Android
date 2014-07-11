@@ -354,23 +354,25 @@ public class PostsActivity extends WPActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
+        if (isFinishing() || isActivityDestroyed()) {
+            return;
+        }
         FragmentManager fm = getFragmentManager();
-        ViewPostFragment f = (ViewPostFragment) fm
-                .findFragmentById(R.id.postDetail);
+        ViewPostFragment viewPostFragment = (ViewPostFragment) fm.findFragmentById(R.id.postDetail);
 
         if (post != null) {
             WordPress.currentPost = post;
-            if (f == null || !f.isInLayout()) {
+            if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mPostList);
-                f = new ViewPostFragment();
-                ft.add(R.id.postDetailFragmentContainer, f);
+                viewPostFragment = new ViewPostFragment();
+                ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
                 mMenuDrawer.setDrawerIndicatorEnabled(false);
             } else {
-                f.loadPost(post);
+                viewPostFragment.loadPost(post);
             }
         }
     }
