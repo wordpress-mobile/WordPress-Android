@@ -11,6 +11,7 @@ repositories {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven'
 
 android {
     compileSdkVersion 20
@@ -21,7 +22,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
     }
 }
 
@@ -40,4 +41,15 @@ wordpress {
 
 dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: project.repository)
+            pom.version = android.defaultConfig.versionName
+            pom.groupId = "org.wordpress"
+            pom.artifactId = "wordpress-networking"
+        }
+    }
 }
