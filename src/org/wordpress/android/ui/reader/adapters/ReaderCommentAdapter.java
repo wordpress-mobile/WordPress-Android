@@ -44,6 +44,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private final int mBgColorNormal;
     private final int mBgColorHighlight;
+    private final int mBgColorPostAuthor;
     private final int mLinkColor;
     private final int mNoLinkColor;
 
@@ -78,6 +79,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mBgColorPostAuthor = context.getResources().getColor(R.color.grey_light);
+
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
 
@@ -168,10 +171,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.spacerIndent.setVisibility(View.VISIBLE);
         }
 
-        // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId == comment.commentId) {
+            // different background for highlighted comment, with optional progress bar
             convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
+        } else if (comment.authorId == mPost.authorId) {
+            // different background color for comments from the post's author
+            convertView.setBackgroundColor(mBgColorPostAuthor);
+            holder.progress.setVisibility(View.GONE);
         } else {
             convertView.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
@@ -197,9 +204,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
             mDataRequestedListener.onRequestData();
         }
 
-        // hide divider if this is the last comment
-        holder.divider.setVisibility(position < getCount()-1 ? View.VISIBLE : View.INVISIBLE);
-
         return convertView;
     }
 
@@ -212,7 +216,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final View spacerIndent;
         private final View spacerTop;
         private final ProgressBar progress;
-        private final View divider;
 
         private final TextView txtReply;
         private final ImageView imgReply;
@@ -233,7 +236,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             spacerTop = view.findViewById(R.id.spacer_comment_top);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
-            divider = view.findViewById(R.id.divider_comment);
 
             imgLike = (ImageView) view.findViewById(R.id.image_comment_like);
             txtLike = (TextView) view.findViewById(R.id.text_comment_like);

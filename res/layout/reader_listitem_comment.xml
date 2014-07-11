@@ -119,13 +119,10 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/divider_comment"
+        android:id="@+id/spacer_comment_bottom"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/layout_comment_actions"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/grey_light" />
+        android:layout_height="@dimen/margin_large"
+        android:layout_below="@+id/layout_comment_actions" />
 
     <ProgressBar
         android:id="@+id/progress_comment"
