@@ -32,7 +32,7 @@ class TestNotesAdapter extends CursorAdapter {
         // build a query that sorts by timestamp descending
         mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
-        mAvatarSz = (int) context.getResources().getDimension(R.dimen.note_avatar_sz);
+        mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
     }
 
     public void closeCursor() {

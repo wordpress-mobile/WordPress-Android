@@ -26,8 +26,8 @@
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/note_avatar"
-            android:layout_width="@dimen/note_avatar_sz"
-            android:layout_height="@dimen/note_avatar_sz"
+            android:layout_width="@dimen/avatar_sz_large"
+            android:layout_height="@dimen/avatar_sz_large"
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_small" />
 
@@ -35,8 +35,8 @@
             android:id="@+id/note_icon"
             android:layout_width="@dimen/note_icon_sz"
             android:layout_height="@dimen/note_icon_sz"
-            android:layout_marginLeft="48dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginLeft="42dp"
+            android:layout_marginTop="46dp"
             android:background="@drawable/shape_oval_blue"
             android:gravity="center"
             android:textColor="@color/white"
