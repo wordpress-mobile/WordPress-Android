@@ -13,6 +13,7 @@ import com.simperium.client.Syncable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -178,10 +179,14 @@ public class Note extends Syncable {
     }
 
 
-    public Reply buildReply(String content){
-        JSONObject replyAction = queryJSON(ACTION_KEY_REPLY, new JSONObject());
-        String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
-        AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
+    public Reply buildReply(String content) {
+        String restPath;
+        if (this.isCommentType()) {
+            restPath = String.format("sites/%d/comments/%d", getBlogId(), getCommentId());
+        } else {
+            restPath = String.format("sites/%d/posts/%d", getBlogId(), getPostId());
+        }
+
         return new Reply(this, String.format("%s/replies/new", restPath), content);
     }
 
@@ -240,10 +245,10 @@ public class Note extends Syncable {
             return actions;
         if (jsonActions.has(ACTION_KEY_REPLY))
             actions.add(EnabledActions.ACTION_REPLY);
-        if (jsonActions.has(ACTION_KEY_APPROVE))
-            actions.add(EnabledActions.ACTION_APPROVE);
-        if (jsonActions.has(ACTION_KEY_UNAPPROVE))
+        if (jsonActions.has(ACTION_KEY_APPROVE) && jsonActions.optBoolean(ACTION_KEY_APPROVE, false))
             actions.add(EnabledActions.ACTION_UNAPPROVE);
+        if (jsonActions.has(ACTION_KEY_APPROVE) && !jsonActions.optBoolean(ACTION_KEY_APPROVE, false))
+            actions.add(EnabledActions.ACTION_APPROVE);
         if (jsonActions.has(ACTION_KEY_SPAM))
             actions.add(EnabledActions.ACTION_SPAM);
         return actions;
@@ -266,6 +271,75 @@ public class Note extends Syncable {
      */
     public <U> U queryJSON(String query, U defaultObject) {
         return JSONUtil.queryJSON(this.toJSONObject(), query, defaultObject);
+    }
+
+    /**
+     * Constructs a new Comment object based off of data in a Note
+     */
+    public Comment buildComment() {
+        return new Comment(
+                queryJSON("meta.ids.post", -1),
+                queryJSON("meta.ids.comment", -1),
+                getCommentAuthorName(),
+                DateTimeUtils.timestampToIso8601Str(getTimestamp()),
+                getCommentText(),
+                getCommentStatus(),
+                "", // post title is unavailable in note model
+                getCommentAuthorUrl(),
+                "", // user email is unavailable in note model
+                getIconURL()
+        );
+    }
+
+    private String getCommentAuthorName() {
+        JSONArray bodyArray = getBody();
+
+        for (int i=0; i < bodyArray.length(); i++) {
+            try {
+                JSONObject bodyItem = bodyArray.getJSONObject(i);
+                if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
+                    return bodyItem.optString("text");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "";
+    }
+
+    private String getCommentText() {
+        return queryJSON("body[last].text", "");
+    }
+
+    private String getCommentAuthorUrl() {
+        JSONArray bodyArray = getBody();
+
+        for (int i=0; i < bodyArray.length(); i++) {
+            try {
+                JSONObject bodyItem = bodyArray.getJSONObject(i);
+                if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
+                    return JSONUtil.queryJSON(bodyItem, "meta.links.home", "");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "";
+    }
+
+    private String getCommentStatus() {
+        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+
+        if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
+            return CommentStatus.toString(CommentStatus.APPROVED);
+        } else if (enabledActions.contains(EnabledActions.ACTION_SPAM)) {
+            return CommentStatus.toString(CommentStatus.SPAM);
+        } else {
+            return CommentStatus.toString(CommentStatus.UNAPPROVED);
+        }
+
     }
 
     /**

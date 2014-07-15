@@ -17,16 +17,18 @@
         android:layout_above="@+id/layout_bottom">
 
         <LinearLayout
+            android:id="@+id/comment_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_large">
+            android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/comment_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_large">
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/image_avatar"

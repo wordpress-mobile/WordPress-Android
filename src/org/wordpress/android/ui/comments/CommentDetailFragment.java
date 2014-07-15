@@ -3,6 +3,8 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,10 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
+import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -49,7 +48,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -235,8 +233,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
-        if (hasActivity() && mNote != null)
+        if (hasActivity() && mNote != null) {
             showComment();
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -795,6 +794,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * display the comment associated with the passed notification
      */
     private void showCommentForNote(Note note) {
+        if (getView() == null) return;
+        View view = getView();
+
+        // hide standard comment views, since we'll be adding note blocks instead
+        View commentContent = view.findViewById(R.id.comment_content);
+        if (commentContent != null) {
+            commentContent.setVisibility(View.GONE);
+        }
+
+        View commentText = view.findViewById(R.id.text_content);
+        if (commentText != null) {
+            commentText.setVisibility(View.GONE);
+        }
+
+        // Now we'll add a detail fragment list
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        NotificationsDetailListFragment fragment = NotificationsDetailListFragment.newInstance(note);
+        fragmentTransaction.add(R.id.comment_content_container, fragment);
+        fragmentTransaction.commitAllowingStateLoss();
+
         /*
          * determine which actions to enable for this comment - if the comment is from this user's
          * blog then all actions will be enabled, but they won't be if it's a reply to a comment
@@ -808,60 +828,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // note that the local blog id won't be found if the comment is from someone else's blog
         int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
-        // first try to get from local db, if that fails request it from the server
-        final Comment comment = (localBlogId > 0 ? CommentTable.getComment(localBlogId, commentId) : null);
+        // first try to get from local db, if that fails build it from the note data
+        Comment comment = (localBlogId > 0 ? CommentTable.getComment(localBlogId, commentId) : null);
         if (comment != null) {
             setComment(localBlogId, comment);
         } else {
-            requestComment(localBlogId, mRemoteBlogId, commentId);
+            comment = note.buildComment();
+            CommentTable.addComment(localBlogId, comment);
+            setComment(localBlogId, note.buildComment());
         }
-    }
-
-    /*
-     * request a comment - note that this uses the REST API rather than XMLRPC, which means the user must
-     * either be wp.com or have Jetpack, but it's safe to do this since this method is only called when
-     * displayed from a notification (and notifications require wp.com/Jetpack)
-     */
-    private void requestComment(final int localBlogId,
-                                final int remoteBlogId,
-                                final long commentId) {
-        final ProgressBar progress = (hasActivity() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
-        if (progress != null)
-            progress.setVisibility(View.VISIBLE);
-
-        RestRequest.Listener restListener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                mIsRequestingComment = false;
-                if (hasActivity()) {
-                    if (progress != null)
-                        progress.setVisibility(View.GONE);
-                    Comment comment = Comment.fromJSON(jsonObject);
-                    if (comment != null) {
-                        // save comment to local db if localBlogId is valid
-                        if (localBlogId > 0)
-                            CommentTable.addComment(localBlogId, comment);
-                        // now, at long last, show the comment
-                        setComment(localBlogId, comment);
-                    }
-                }
-            }
-        };
-        RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                mIsRequestingComment = false;
-                AppLog.e(T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
-                if (hasActivity()) {
-                    if (progress != null)
-                        progress.setVisibility(View.GONE);
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
-                }
-            }
-        };
-
-        final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
-        mIsRequestingComment = true;
-        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }
