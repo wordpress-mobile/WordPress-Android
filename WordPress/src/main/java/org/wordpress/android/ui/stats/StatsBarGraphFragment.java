@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
@@ -43,6 +44,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private GraphViewSeries mViewsSeries;
     private GraphViewSeries mVisitorsSeries;
     private String[] mStatsDate;
+    private Toast mTappedToast = null;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -86,6 +88,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
+        mTappedToast = null;
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -144,8 +147,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             String message = String.format("%s - %s %d - %s %d", formattedDate, getString(R.string.stats_totals_views),
                     (int) views[tappedBar].getY(), getString(R.string.stats_totals_visitors),
                     (int) visitors[tappedBar].getY());
-
-            ToastUtils.showToast(this.getActivity(), message, ToastUtils.Duration.LONG);
+            if (mTappedToast != null) {
+                mTappedToast.cancel();
+                mTappedToast = null;
+            }
+            mTappedToast = ToastUtils.showToast(this.getActivity(), message, ToastUtils.Duration.LONG);
         }
     }
 
@@ -237,15 +243,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         // noop
     }
 
-    private boolean hasActivity() {
-        return getActivity() != null;
-    }
-
     private int getNumOfPoints() {
-        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
-            return 30;
-        }
-
         if (getBarChartUnit() == StatsBarChartUnit.DAY) {
             return 7;
         } else {
@@ -254,10 +252,6 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     }
 
     private int getNumOfHorizontalLabels(int numPoints) {
-        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
-            return numPoints / 5;
-        }
-
         if (getBarChartUnit() == StatsBarChartUnit.DAY) {
             return numPoints / 2;
         } else {

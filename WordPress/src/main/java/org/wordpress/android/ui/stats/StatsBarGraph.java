@@ -58,16 +58,9 @@ class StatsBarGraph extends GraphView {
         });
     }
 
-
-    /**
-     * @param canvas
-     */
     @Override
-    protected void onDraw(Canvas canvas) {
-        // Empty the rectangles list before calling super.
-        // Super.onDraw calls drawSeries several times and we need an empty list there.
+    protected void onBeforeDrawSeries() {
         mSeriesRectsDrawedOnScreen.clear();
-        super.onDraw(canvas);
     }
 
     @Override
@@ -79,7 +72,7 @@ class StatsBarGraph extends GraphView {
 
 		paint.setStrokeWidth(style.thickness);
 		paint.setColor(style.color);
-
+        
         // Bar chart position of this series on the canvas
         List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
 
