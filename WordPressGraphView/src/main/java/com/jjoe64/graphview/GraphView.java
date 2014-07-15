@@ -75,6 +75,7 @@ abstract public class GraphView extends LinearLayout {
 		 */
 		@Override
 		protected void onDraw(Canvas canvas) {
+            onBeforeDrawSeries();
 
 			paint.setAntiAlias(true);
 
@@ -465,6 +466,7 @@ abstract public class GraphView extends LinearLayout {
 		}
 	}
 
+    abstract protected void onBeforeDrawSeries();
 	abstract protected void drawSeries(Canvas canvas, GraphViewDataInterface[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart, GraphViewSeriesStyle style);
 
 	/**

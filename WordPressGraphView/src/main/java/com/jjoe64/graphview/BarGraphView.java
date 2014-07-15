@@ -38,6 +38,10 @@ public class BarGraphView extends GraphView {
 		super(context, title);
 	}
 
+    @Override
+    protected void onBeforeDrawSeries() {
+    }
+
 	@Override
 	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values, float graphwidth, float graphheight,
 			float border, double minX, double minY, double diffX, double diffY,

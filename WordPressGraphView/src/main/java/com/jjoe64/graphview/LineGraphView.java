@@ -50,6 +50,11 @@ public class LineGraphView extends GraphView {
 		paintBackground.setStrokeWidth(4);
 	}
 
+
+    @Override
+    protected void onBeforeDrawSeries() {
+    }
+
 	@Override
 	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values, float graphwidth, float graphheight, float border, double minX, double minY, double diffX, double diffY, float horstart, GraphViewSeriesStyle style) {
 		// draw background
