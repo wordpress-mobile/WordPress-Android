@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        versionName "3.2.0"
+        versionCode 1
+        minSdkVersion 8
+        targetSdkVersion 19
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            def repo_url = ""
+            if (project.hasProperty("repository")) {
+                repo_url = project.repository
+            }
+            repository(url: repo_url)
+            pom.version = android.defaultConfig.versionName
+            pom.groupId = "org.wordpress"
+            pom.artifactId = "graphview"
+        }
+    }
+}

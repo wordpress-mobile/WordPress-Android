@@ -1,46 +1,25 @@
-# built application files
-*.ap_
-
-# files for the dex VM
-*.dex
-
-# Java class files
-*.class
-
 # generated files
-bin/
-gen/
-lint.xml
+build/
 
 # Local configuration file (sdk path, etc)
 local.properties
-
-# Eclipse project files
-.classpath
-.project
-.settings
-.checkstyle
-
-# Maven
-target
-release.properties
-pom.xml.*
-
-# Ant
-build.xml
-ant.properties
-local.properties
-proguard.cfg
-proguard-project.txt
+tools/deploy-mvn-artifact.conf
 
 # Intellij project files
 *.iml
 *.ipr
 *.iws
 .idea/
-out/
-gen-external-apklibs/
 
 # Gradle
-.gradle
-build
+.gradle/
+gradle.properties
+
+# Idea
+.idea/workspace.xml
+*.iml
+
+# OS X
+.DS_Store
+
+# dependencies
