@@ -107,6 +107,10 @@ class ReaderBlogInfoView extends FrameLayout {
 
         if (blogInfo.hasName()) {
             txtBlogName.setText(blogInfo.getName());
+        } else if (blogInfo.hasUrl()) {
+            txtBlogName.setText(UrlUtils.getDomainFromUrl(blogInfo.getUrl()));
+        } else {
+            txtBlogName.setText(getContext().getString(R.string.reader_untitled_post));
         }
 
         if (blogInfo.hasDescription()) {
