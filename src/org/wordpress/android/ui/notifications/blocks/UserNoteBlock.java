@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
@@ -25,15 +28,26 @@ import org.wordpress.android.widgets.WPTextView;
 public class UserNoteBlock extends NoteBlock {
     private boolean mIsFollowing;
     private OnSiteFollowListener mSiteFollowListener;
-    private long mUserSiteId;
+    private OnGravatarClickedListener mGravatarClickedListener;
+
+    private static int GRAVATAR_ANIMATION_DURATION = 150;
 
     public interface OnSiteFollowListener {
         public void onSiteFollow(boolean success);
     }
 
-    public UserNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener, OnSiteFollowListener listener) {
+    public interface OnGravatarClickedListener {
+        public void onGravatarClicked(long userId, long siteId);
+    }
+
+    public UserNoteBlock(
+            JSONObject noteObject,
+            OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+            OnSiteFollowListener onSiteFollowListener,
+            OnGravatarClickedListener onGravatarClickedListener) {
         super(noteObject, onNoteBlockTextClickListener);
-        mSiteFollowListener = listener;
+        mSiteFollowListener = onSiteFollowListener;
+        mGravatarClickedListener = onGravatarClickedListener;
     }
 
     @Override
@@ -48,7 +62,7 @@ public class UserNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(View view) {
-        UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
+        final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
         noteBlockHolder.mNameTextView.setText(getNoteText());
         noteBlockHolder.mUrlTextView.setText(NotificationUtils.getClickableTextForIdUrl(
                 getUrlIdObject(),
@@ -58,6 +72,14 @@ public class UserNoteBlock extends NoteBlock {
 
         if (hasImageMediaItem()) {
             noteBlockHolder.mAvatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
+            if (!TextUtils.isEmpty(getUserUrl())) {
+                noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+            } else {
+                noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+            }
+        } else {
+            noteBlockHolder.mAvatarImageView.setImageResource(R.drawable.placeholder);
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
         if (hasAction()) {
@@ -168,4 +190,37 @@ public class UserNoteBlock extends NoteBlock {
 
         return getNoteData().has("actions");
     }
+
+    private View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                v.animate()
+                        .scaleX(0.9f)
+                        .scaleY(0.9f)
+                        .alpha(0.5f)
+                        .setDuration(GRAVATAR_ANIMATION_DURATION)
+                        .setInterpolator(new DecelerateInterpolator());
+            } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                v.animate()
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .alpha(1.0f)
+                        .setDuration(GRAVATAR_ANIMATION_DURATION)
+                        .setInterpolator(new DecelerateInterpolator());
+
+                if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
+                    // Fire the listener, which will load the site preview for the user's site
+                    // In the future we can use this to load a 'profile view' (currently in R&D)
+                    long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", "0"));
+                    long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", "0"));
+                    if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
+                        mGravatarClickedListener.onGravatarClicked(siteId, userId);
+                    }
+                }
+            }
+
+            return true;
+        }
+    };
 }

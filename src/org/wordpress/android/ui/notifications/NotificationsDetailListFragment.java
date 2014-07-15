@@ -140,6 +140,16 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
+    private UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
+        @Override
+        public void onGravatarClicked(long siteId, long userId) {
+            if (!hasActivity()) return;
+
+            NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
+            notificationsActivity.showBlogPreviewForSiteId(siteId, null);
+        }
+    };
+
 
     // Loop through the body items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Void, Void> {
@@ -156,7 +166,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
                         if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
-                            noteBlock = new UserNoteBlock(noteObject, mOnNoteBlockTextClickListener, mOnSiteFollowListener);
+                            noteBlock = new UserNoteBlock(
+                                    noteObject,
+                                    mOnNoteBlockTextClickListener,
+                                    mOnSiteFollowListener,
+                                    mOnGravatarClickedListener
+                            );
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
