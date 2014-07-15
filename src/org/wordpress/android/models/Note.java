@@ -48,19 +48,14 @@ public class Note extends Syncable {
         ACTION_SPAM
     }
 
-    private Map<String, JSONObject> mActions;
+    private JSONObject mActions;
     private JSONObject mNoteJSON;
 
-    private int mBlogId;
-    private int mPostId;
-    private long mCommentId;
-    private long mCommentParentId;
     private long mTimestamp;
 
     private transient String mCommentPreview;
     private Spannable mSubject;
     private transient String mIconUrl;
-    private transient String mSnippet;
     private transient String mNoteType;
 
     /**
@@ -68,7 +63,6 @@ public class Note extends Syncable {
      */
     public Note(JSONObject noteJSON) {
         mNoteJSON = noteJSON;
-        preloadContent();
     }
 
     /**
@@ -185,7 +179,7 @@ public class Note extends Syncable {
 
 
     public Reply buildReply(String content){
-        JSONObject replyAction = getActions().get(ACTION_KEY_REPLY);
+        JSONObject replyAction = queryJSON(ACTION_KEY_REPLY, new JSONObject());
         String restPath = JSONUtil.queryJSON(replyAction, "params.rest_path", "");
         AppLog.d(T.NOTIFS, String.format("Search actions %s", restPath));
         return new Reply(this, String.format("%s/replies/new", restPath), content);
@@ -202,14 +196,6 @@ public class Note extends Syncable {
         return mTimestamp;
     }
 
-    /*
-     * returns a string representing the timespan based on the note's timestamp - used for display
-     * in the notification list (ex: "3d")
-     */
-    public String getTimeSpan() {
-        return DateTimeUtils.timestampToTimeSpan(getTimestamp());
-    }
-
     public JSONArray getBody() {
         try {
             return mNoteJSON.getJSONArray("body");
@@ -223,23 +209,11 @@ public class Note extends Syncable {
         return queryJSON("noticon", "");
     }
 
-    Map<String, JSONObject> getActions() {
+    JSONObject getCommentActions() {
         if (mActions == null) {
-            try {
-                JSONArray actions = queryJSON("body.actions", new JSONArray());
-                mActions = new HashMap<String, JSONObject>(actions.length());
-                for (int i = 0; i < actions.length(); i++) {
-                    JSONObject action = actions.getJSONObject(i);
-                    String actionType = JSONUtil.queryJSON(action, "type", "");
-                    if (!actionType.equals("")) {
-                        mActions.put(actionType, action);
-                    }
-                }
-            } catch (JSONException e) {
-                AppLog.e(T.NOTIFS, "Could not find actions", e);
-                mActions = new HashMap<String, JSONObject>();
-            }
+            mActions = queryJSON("body[last].actions", new JSONObject());
         }
+
         return mActions;
     }
 
@@ -254,26 +228,6 @@ public class Note extends Syncable {
         mSubject = null;
         mIconUrl = null;
         mNoteType = null;
-
-        // preload content again
-        preloadContent();
-    }
-
-    /*
-     * returns the "meta" section of the note's JSON (not guaranteed to exist)
-     */
-    private JSONObject getJSONMeta() {
-        return JSONUtil.getJSONChild(this.toJSONObject(), "meta");
-    }
-
-    /*
-     * returns the value of the passed name in the meta section of the JSON
-     */
-    public int getMetaValueAsInt(String name, int defaultValue) {
-        JSONObject jsonMeta = getJSONMeta();
-        if (jsonMeta == null)
-            return defaultValue;
-        return jsonMeta.optInt(name, defaultValue);
     }
 
     /*
@@ -281,61 +235,18 @@ public class Note extends Syncable {
      */
     public EnumSet<EnabledActions> getEnabledActions() {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
-        Map<String, JSONObject> jsonActions = getActions();
-        if (jsonActions == null || jsonActions.size() == 0)
+        JSONObject jsonActions = getCommentActions();
+        if (jsonActions == null || jsonActions.length() == 0)
             return actions;
-        if (jsonActions.containsKey(ACTION_KEY_REPLY))
+        if (jsonActions.has(ACTION_KEY_REPLY))
             actions.add(EnabledActions.ACTION_REPLY);
-        if (jsonActions.containsKey(ACTION_KEY_APPROVE))
+        if (jsonActions.has(ACTION_KEY_APPROVE))
             actions.add(EnabledActions.ACTION_APPROVE);
-        if (jsonActions.containsKey(ACTION_KEY_UNAPPROVE))
+        if (jsonActions.has(ACTION_KEY_UNAPPROVE))
             actions.add(EnabledActions.ACTION_UNAPPROVE);
-        if (jsonActions.containsKey(ACTION_KEY_SPAM))
+        if (jsonActions.has(ACTION_KEY_SPAM))
             actions.add(EnabledActions.ACTION_SPAM);
         return actions;
-    }
-
-    /**
-     * pre-loads commonly-accessed fields - avoids performance hit of loading these
-     * fields inside an adapter's getView()
-     */
-    void preloadContent() {
-        if (mNoteJSON == null || mNoteJSON.length() == 0) {
-            return;
-        }
-
-        /*if (isCommentType()) {
-            // pre-load the comment HTML for being displayed. Cleans up emoticons.
-            mComment = HtmlUtils.fromHtml(getCommentText());
-
-            // pre-load the preview text
-            getCommentPreview();
-        }
-
-        // pre-load the subject, avatar url and type
-        getSubject();
-        getIconURL();
-        getType();
-
-        // pre-load site/post/comment IDs
-        preloadMetaIds();*/
-    }
-
-    /*
-     * nbradbury - preload the blog, post, & comment IDs from the meta section
-     * ids={"site":61509427,"self":993925505,"post":161,"comment":178,"comment_parent":0}
-     */
-    private void preloadMetaIds() {
-        JSONObject jsonMeta = getJSONMeta();
-        if (jsonMeta == null)
-            return;
-        JSONObject jsonIDs = jsonMeta.optJSONObject("ids");
-        if (jsonIDs == null)
-            return;
-        mBlogId = jsonIDs.optInt("site");
-        mPostId = jsonIDs.optInt("post");
-        mCommentId = jsonIDs.optLong("comment");
-        mCommentParentId = jsonIDs.optLong("comment_parent");
     }
 
     public int getBlogId() {
@@ -348,24 +259,6 @@ public class Note extends Syncable {
 
     public long getCommentId() {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
-    }
-
-    public long getCommentParentId() {
-        return mCommentParentId;
-    }
-
-    /*
-     * plain-text snippet returned by the server - currently shown only for comments
-     */
-    String getSnippet() {
-        if (mSnippet == null) {
-            mSnippet = queryJSON("snippet", "");
-        }
-        return mSnippet;
-    }
-
-    public boolean hasSnippet() {
-        return !TextUtils.isEmpty(getSnippet());
     }
 
     /**
@@ -400,7 +293,7 @@ public class Note extends Syncable {
 
     public static class Schema extends BucketSchema<Note> {
 
-        static public final String NAME = "note";
+        static public final String NAME = "note20";
         static public final String TIMESTAMP_INDEX = "timestamp";
 
         private static final Indexer<Note> sTimestampIndexer = new Indexer<Note>() {

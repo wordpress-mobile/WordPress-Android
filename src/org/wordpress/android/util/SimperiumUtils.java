@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.simperium.Simperium;
-import com.simperium.client.AuthException;
-import com.simperium.client.AuthResponseListener;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketNameInvalid;
 import com.simperium.client.BucketObject;
@@ -47,7 +45,7 @@ public class SimperiumUtils {
 
             try {
                 mNotesBucket = mSimperium.bucket(new Note.Schema());
-                //mMetaBucket = mSimperium.bucket("meta");
+                mMetaBucket = mSimperium.bucket("meta");
 
                 mSimperium.setUserStatusChangeListener(new User.StatusChangeListener() {
 
@@ -56,11 +54,11 @@ public class SimperiumUtils {
                         switch (status) {
                             case AUTHORIZED:
                                 mNotesBucket.start();
-                                //mMetaBucket.start();
+                                mMetaBucket.start();
                                 break;
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
-                                //mMetaBucket.stop();
+                                mMetaBucket.stop();
                                 Intent simperiumNotAuthorizedIntent = new Intent();
                                 simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
@@ -78,23 +76,7 @@ public class SimperiumUtils {
             }
         }
 
-        //authorizeUser(mSimperium, token);
-        // FOR TESTING
-        if (mSimperium.getUser().needsAuthorization()) {
-            mSimperium.authorizeUser(BuildConfig.SIMPERIUM_TEST_USER, BuildConfig.SIMPERIUM_TEST_PW, new AuthResponseListener() {
-                @Override
-                public void onSuccess(User user) {
-                    AppLog.i(AppLog.T.NOTIFS, "Signed in");
-                }
-
-                @Override
-                public void onFailure(User user, AuthException e) {
-                    AppLog.i(AppLog.T.NOTIFS, "Couldn't log in");
-                }
-            });
-        } else {
-            mNotesBucket.start();
-        }
+        authorizeUser(mSimperium, token);
 
         return mSimperium;
     }
