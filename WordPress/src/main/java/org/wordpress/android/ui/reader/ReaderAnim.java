@@ -133,14 +133,13 @@ public class ReaderAnim {
         animateButton(target, ReaderButton.FOLLOW);
     }
     private static void animateButton(final View target, ReaderButton button) {
-        if (target == null) {
+        if (target == null || button == null) {
             return;
         }
 
-        // follow button uses different scaling and doesn't rotate
+        // follow button uses different scaling
         float startScale = 1f;
-        float endScale = (button == ReaderButton.FOLLOW ? 0.75f : 1.5f);
-        boolean rotate = (button != ReaderButton.FOLLOW);
+        float endScale = (button == ReaderButton.FOLLOW ? 0.75f : 1.75f);
 
         ObjectAnimator animX = ObjectAnimator.ofFloat(target, View.SCALE_X, startScale, endScale);
         animX.setRepeatMode(ValueAnimator.REVERSE);
@@ -152,11 +151,13 @@ public class ReaderAnim {
 
         AnimatorSet set = new AnimatorSet();
 
-        if (rotate) {
-            ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 60f);
-            animRotate.setRepeatMode(ValueAnimator.REVERSE);
-            animRotate.setRepeatCount(1);
+        if (button == ReaderButton.LIKE) {
+            // rotate like button 72 degrees (72 = 360/5, 5 is the number of points in the star)
+            ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, 72f);
             set.play(animX).with(animY).with(animRotate);
+            // on Android 4.4.3 the rotation animation may cause the drawable to fade out unless
+            // we set the layer type - https://code.google.com/p/android/issues/detail?id=70914
+            target.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
             set.play(animX).with(animY);
         }
