@@ -78,6 +78,7 @@ public class StatsActivity extends WPActionBarActivity {
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
 
     public static final String STATS_TOUCH_DETECTED = "STATS_TOUCH_DETECTED";
+    public static final String STATS_DETAILS_DATE = "STATS_DETAILS_DATE";
     private GestureDetectorCompat mDetector;
 
     private Dialog mSignInDialog;
@@ -221,7 +222,7 @@ public class StatsActivity extends WPActionBarActivity {
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
-                if (getBlogId() == null) {
+                if (StatsUtils.getBlogId() == null) {
                     final Handler handler = new Handler();
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
@@ -413,7 +414,7 @@ public class StatsActivity extends WPActionBarActivity {
                 return;
             }
 
-            if (getBlogId() == null) {
+            if (StatsUtils.getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mPullToRefreshHelper.setRefreshing(false);
@@ -479,7 +480,7 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            final String blogId = getBlogId();
+            final String blogId = StatsUtils.getBlogId();
             if (blogId == null) {
                 showJetpackMissingAlert(this);
                 return true;
@@ -592,7 +593,7 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         }
 
-        final String blogId = getBlogId();
+        final String blogId = StatsUtils.getBlogId();
 
         // Make sure the blogId is available.
         if (blogId != null) {
@@ -642,23 +643,6 @@ public class StatsActivity extends WPActionBarActivity {
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         startService(intent);
-    }
-
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    String getBlogId() {
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog.isDotcomFlag()) {
-            return String.valueOf(currentBlog.getRemoteBlogId());
-        } else {
-            return currentBlog.getApi_blogid();
-        }
     }
 
     private void stopStatsService() {

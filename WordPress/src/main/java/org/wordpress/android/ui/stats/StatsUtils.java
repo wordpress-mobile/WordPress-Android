@@ -21,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsVideoSummary;
@@ -275,6 +276,26 @@ public class StatsUtils {
 
         public String getPassword() {
             return mPassword;
+        }
+    }
+
+    /**
+     * Return the remote blogId as stored on the wpcom backend.
+     * <p>
+     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
+     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
+     * </p>
+     * @return String  blogId or null
+     */
+    public static String getBlogId() {
+        Blog currentBlog = WordPress.getCurrentBlog();
+        if (currentBlog == null) {
+            return null;
+        }
+        if (currentBlog.isDotcomFlag()) {
+            return String.valueOf(currentBlog.getRemoteBlogId());
+        } else {
+            return currentBlog.getApi_blogid();
         }
     }
 }
