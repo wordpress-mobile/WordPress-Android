@@ -64,6 +64,24 @@ android {
     }
 }
 
+wordpress {
+    utils {
+        repo 'WordPress-Utils-Android'
+        subproject 'WordPressUtils'
+        artifact 'org.wordpress:wordpress-utils:1.0.1'
+    }
+    networking {
+        repo 'WordPress-Networking-Android'
+        subproject 'WordPressNetworking'
+        artifact 'org.wordpress:wordpress-networking:1.0.0'
+    }
+    wpcomrest {
+        repo 'Automattic/android-wordpress-com-rest'
+        subproject 'WordPressComRest'
+        artifact 'com.automattic:wordpresscom-rest:1.0.0'
+    }
+}
+
 dependencies {
     compile 'com.crashlytics.android:crashlytics:+'
 
@@ -74,6 +92,7 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.4.1'
+    compile 'commons-lang:commons-lang:2.6'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'
@@ -95,18 +114,7 @@ dependencies {
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'
     compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
-
-    releaseCompile 'org.wordpress:wordpress-utils:1.0.1'
-    debugCompile project(':WordPressUtils')
-
-    releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
-    debugCompile project(':WordPressNetworking')
-
-    releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
-    debugCompile project(':WordPressComRest')
-
-    releaseCompile 'org.wordpress:emailchecker:0.2'
-    debugCompile 'org.wordpress:emailchecker-debug:0.2'
+    compile 'org.wordpress:emailchecker:0.3'
 
     releaseCompile 'org.wordpress:graphview:3.2.0'
     debugCompile project(':WordPressGraphLib')
