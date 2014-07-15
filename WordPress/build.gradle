@@ -80,6 +80,11 @@ wordpress {
         subproject 'WordPressComRest'
         artifact 'com.automattic:wordpresscom-rest:1.0.0'
     }
+    graphview {
+        repo 'wordpress-mobile/GraphView'
+        subproject 'WordPressGraphView'
+        artifact 'org.wordpress:graphview:3.2.0'
+    }
 }
 
 dependencies {
@@ -115,9 +120,6 @@ dependencies {
     compile 'org.wordpress:android-passcodelock:0.0.5'
     compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
     compile 'org.wordpress:emailchecker:0.3'
-
-    releaseCompile 'org.wordpress:graphview:3.2.0'
-    debugCompile project(':WordPressGraphLib')
 
     // Simperium
     compile('com.simperium:simperium-android:0.4.8') {
