@@ -46,7 +46,11 @@ dependencies {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: project.repository)
+            def repo_url = ""
+            if (project.hasProperty("repository")) {
+                repo_url = project.repository
+            }
+            repository(url: repo_url)
             pom.version = android.defaultConfig.versionName
             pom.groupId = "org.wordpress"
             pom.artifactId = "wordpress-networking"
