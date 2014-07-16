@@ -14,6 +14,7 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.TAGS;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -53,6 +54,7 @@ public class NuxHelpActivity extends Activity {
         helpCenterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                HelpshiftHelper.getInstance().setTags(new TAGS[] {TAGS.LOGIN_SCREEN});
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
         });

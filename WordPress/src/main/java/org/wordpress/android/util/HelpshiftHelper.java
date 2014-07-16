@@ -4,16 +4,50 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.helpshift.Helpshift;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HelpshiftHelper {
     private static HelpshiftHelper mInstance = null;
     private static Application mApplication = null;
+    private static HashMap mMetadata = new HashMap();
+
+    public enum TAGS {
+        LOGIN_SCREEN("login-screen"),
+        SETTINGS_SCREEN("settings-screen");
+
+        private final String mStringValue;
+
+        private TAGS(final String stringValue) {
+            mStringValue = stringValue;
+        }
+
+        public String toString() {
+            return mStringValue;
+        }
+
+        public static String[] toString(TAGS[] tags) {
+            if (tags == null) {
+                return null;
+            }
+            String[] res = new String[tags.length];
+            for (int i = 0; i < res.length; i++) {
+                res[0] = tags[0].toString();
+            }
+            return res;
+        }
+    }
 
     private HelpshiftHelper() {
     }
