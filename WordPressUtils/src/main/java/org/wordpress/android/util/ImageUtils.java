@@ -5,7 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -489,5 +496,59 @@ public class ImageUtils {
         bmpRotated.recycle();
 
         return stream.toByteArray();
+    }
+
+    public static Bitmap getCircularBitmap(final Bitmap bitmap) {
+        if (bitmap==null)
+            return null;
+
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(Color.RED);
+        canvas.drawOval(rectF, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        // outline
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1f);
+        paint.setColor(Color.DKGRAY);
+        canvas.drawOval(rectF, paint);
+
+        return output;
+    }
+
+    public static Bitmap getRoundedEdgeBitmap(final Bitmap bitmap, int radius) {
+        if (bitmap == null) {
+            return null;
+        }
+
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(Color.RED);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1f);
+        paint.setColor(Color.DKGRAY);
+        canvas.drawRoundRect(rectF, radius, radius, paint);
+
+        return output;
     }
 }
