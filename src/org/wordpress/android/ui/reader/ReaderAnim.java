@@ -13,6 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ListView;
 
+import org.wordpress.android.R;
+
 public class ReaderAnim {
 
     public static enum Duration {
@@ -169,10 +171,17 @@ public class ReaderAnim {
         set.start();
     }
 
+    /*
+     * called when adding or removing an item from a listView
+     */
+    public static enum AnimateListItemStyle {
+        ADD,
+        REMOVE,
+        SHRINK }
     public static void animateListItem(ListView listView,
-                                int positionAbsolute,
-                                Animation.AnimationListener listener,
-                                int animResId) {
+                                       int positionAbsolute,
+                                       AnimateListItemStyle style,
+                                       Animation.AnimationListener listener) {
         if (listView == null) {
             return;
         }
@@ -187,7 +196,23 @@ public class ReaderAnim {
             return;
         }
 
+        final int animResId;
+        switch (style) {
+            case ADD:
+                animResId = R.anim.reader_listitem_add;
+                break;
+            case REMOVE:
+                animResId = R.anim.reader_listitem_remove;
+                break;
+            case SHRINK:
+                animResId = R.anim.reader_listitem_shrink;
+                break;
+            default:
+                return;
+        }
+
         Animation animation = AnimationUtils.loadAnimation(listView.getContext(), animResId);
+
         if (listener != null) {
             animation.setAnimationListener(listener);
         }
