@@ -138,7 +138,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:src="@drawable/reader_button_comment" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_count"
             style="@style/ReaderTextView.Count"
             android:layout_width="wrap_content"
@@ -152,7 +152,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:src="@drawable/reader_button_like" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_like_count"
             style="@style/ReaderTextView.Count"
             android:layout_width="wrap_content"

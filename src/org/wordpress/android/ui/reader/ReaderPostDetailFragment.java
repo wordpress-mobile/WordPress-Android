@@ -27,7 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
@@ -160,7 +159,7 @@ public class ReaderPostDetailFragment extends Fragment
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader post detail > requesting newer comments");
-                        updateComments();
+                        updateComments(true);
                     }
                 }
             };
@@ -444,9 +443,9 @@ public class ReaderPostDetailFragment extends Fragment
     private void togglePostLike(ReaderPost post, View likeButton) {
         boolean isSelected = likeButton.isSelected();
         likeButton.setSelected(!isSelected);
-        ReaderAnim.animateLikeButton(likeButton);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(likeButton, isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             likeButton.setSelected(isSelected);
@@ -536,22 +535,17 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        // remember the original like/comment count for this post - note that these values
-        // come from the stored likes/comments and NOT from the like/comment count itself
-        final int origNumLikes = ReaderLikeTable.getNumLikesForPost(mPost);
-        final int origNumReplies = ReaderCommentTable.getNumCommentsForPost(mPost);
+        final int numLikesBefore = mPost.numLikes;
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result != ReaderActions.UpdateResult.FAILED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (origNumLikes != mPost.numLikes) {
+                    if (numLikesBefore != mPost.numLikes) {
                         refreshLikes();
                     }
-                    if (mPost.numReplies != origNumReplies) {
-                        updateComments();
-                    }
+                    updateComments(false);
                 }
             }
         };
@@ -561,7 +555,7 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * request comments for this post
      */
-    private void updateComments() {
+    private void updateComments(boolean requestNewer) {
         if (!hasPost() || !mPost.isWP()) {
             return;
         }
@@ -573,7 +567,8 @@ public class ReaderPostDetailFragment extends Fragment
         AppLog.d(T.READER, "reader post detail > updateComments");
         mIsUpdatingComments = true;
 
-        if (!isCommentAdapterEmpty()) {
+        // show progress if we're requesting newer comments
+        if (requestNewer) {
             showProgressFooter();
         }
 
@@ -590,7 +585,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(mPost, resultListener);
+        ReaderCommentActions.updateCommentsForPost(mPost, requestNewer, resultListener);
     }
 
     /*
@@ -624,7 +619,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void refreshLikes() {
         AppLog.d(T.READER, "reader post detail > refreshLikes");
-        if (!hasActivity() || !hasPost() || !mPost.isWP()) {
+        if (!hasActivity() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
             return;
         }
 
@@ -805,7 +800,11 @@ public class ReaderPostDetailFragment extends Fragment
         mIsAddCommentBoxShowing = true;
     }
 
-    private void hideAddCommentBox() {
+    protected boolean isAddCommentBoxShowing() {
+        return mIsAddCommentBoxShowing;
+    }
+
+    protected void hideAddCommentBox() {
         if (!hasActivity() || !mIsAddCommentBoxShowing) {
             return;
         }
@@ -1160,6 +1159,7 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtFollow;
 
         ImageView imgBtnReblog;
+        ImageView imgBtnLike;
         ImageView imgBtnComment;
 
         WPNetworkImageView imgAvatar;
@@ -1202,6 +1202,7 @@ public class ReaderPostDetailFragment extends Fragment
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
+            imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
@@ -1325,14 +1326,25 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnComment.setVisibility(View.GONE);
             }
 
-            // if we know refreshLikes() is going to show the liking layout, force it to take up
-            // space right now
-            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
-                mLayoutLikes.setVisibility(View.INVISIBLE);
+            if (mPost.isLikesEnabled) {
+                imgBtnLike.setVisibility(View.VISIBLE);
+                // if we know refreshLikes() is going to show the liking layout, force it to take up
+                // space right now
+                if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
+                    mLayoutLikes.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                imgBtnLike.setVisibility(View.GONE);
             }
 
             // external blogs (feeds) don't support action icons
-            mLayoutIcons.setVisibility(mPost.isExternal ? View.GONE : View.VISIBLE);
+            if (!mPost.isExternal && (mPost.isLikesEnabled
+                                   || mPost.canReblog()
+                                   || mPost.isCommentsOpen)) {
+                mLayoutIcons.setVisibility(View.VISIBLE);
+            } else {
+                mLayoutIcons.setVisibility(View.GONE);
+            }
 
             // enable JavaScript in the webView if it's safe to do so
             mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
