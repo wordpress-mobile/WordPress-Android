@@ -15,7 +15,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HelpshiftHelper {
@@ -71,12 +70,9 @@ public class HelpshiftHelper {
     public void showConversation(Activity activity) {
         Helpshift.setNameAndEmail("", UserEmail.getPrimaryEmail(activity));
         setDefaultMetaData(activity);
-        Helpshift.setMetadataCallback(new HSCallable() {
-            public HashMap call() {
-                return mMetadata;
-            }
-        });
-        Helpshift.showConversation(activity);
+        HashMap config = new HashMap ();
+        config.put(Helpshift.HSCustomMetadataKey, mMetadata);
+        Helpshift.showConversation(activity, config);
     }
 
     public void registerDeviceToken(Context context, String regId) {
@@ -85,7 +81,28 @@ public class HelpshiftHelper {
         }
     }
 
+    public void setTags(TAGS[] tags) {
+        mMetadata.put(Helpshift.HSTagsKey, TAGS.toString(tags));
+    }
+
     public void handlePush(Context context, Intent intent) {
         Helpshift.handlePush(context, intent);
+    }
+
+    private void setDefaultMetaData(Context context) {
+        // Use plain text log (unfortunately Helpshift can't display this correctly)
+        mMetadata.put("log", AppLog.toPlainText(context));
+
+        // List blogs name and url
+        Map<String, String> blogMap = new HashMap<String, String>();
+        for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
+            blogMap.put(MapUtils.getMapStr(account, "blogName"), MapUtils.getMapStr(account, "blogUrl"));
+        }
+        mMetadata.put("blogs", blogMap);
+
+        // wpcom user
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+        mMetadata.put("wpcom-username", username);
     }
 }
