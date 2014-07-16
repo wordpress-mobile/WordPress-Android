@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
@@ -373,12 +374,81 @@ public class ReaderBlogActions {
             }
         };
 
-        // TODO: this should be a HEAD rather than GET request, but Volley doesn't support HEAD
+        // TODO: may be a leak here - http://stackoverflow.com/a/23549486/1673548
         StringRequest request = new StringRequest(
-                Request.Method.GET,
+                Request.Method.HEAD,
                 blogUrl,
                 listener,
                 errorListener);
         WordPress.requestQueue.add(request);
+    }
+
+    /*
+     * block a blog - returns the list of posts that were deleted by the block so they can
+     * be restored if the user undoes the block
+     */
+    public static ReaderPostList blockBlogFromReader(final long blogId,
+                                                     final ReaderActions.ActionListener actionListener) {
+        final ReaderPostList deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0);
+        ReaderPostTable.deletePostsInBlog(blogId);
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
+                if (!success) {
+                    AppLog.w(T.READER, "failed to block blog " + blogId);
+                    ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
+                }
+                if (actionListener != null) {
+                    actionListener.onActionResult(success);
+                }
+
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+                ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
+                if (actionListener != null) {
+                    actionListener.onActionResult(false);
+                }
+            }
+        };
+
+        AppLog.i(T.READER, "blocking blog " + blogId);
+        String path = "/me/block/sites/" + Long.toString(blogId) + "/new";
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
+
+        return deletedPosts;
+    }
+
+    public static void unblockBlogFromReader(final long blogId,
+                                             final ReaderPostList postsToRestore) {
+        if (postsToRestore != null) {
+            ReaderPostTable.addOrUpdatePosts(null, postsToRestore);
+        }
+
+        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
+                if (!success) {
+                    AppLog.w(T.READER, "failed to unblock blog " + blogId);
+                }
+
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.READER, volleyError);
+            }
+        };
+
+        AppLog.i(T.READER, "unblocking blog " + blogId);
+        String path = "/me/block/sites/" + Long.toString(blogId) + "/delete";
+        WordPress.getRestClientUtils().post(path, listener, errorListener);
     }
 }

@@ -5,7 +5,9 @@
 -->
 <resources>
     <!-- activity themes -->
-    <style name="ReaderTheme" parent="@style/WordPress" />
+    <style name="ReaderTheme" parent="@style/WordPress">
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
+    </style>
     <style name="ReaderTheme.PopupPanel" parent="@android:style/Theme.Holo.Light.Panel">
         <item name="android:windowAnimationStyle">@style/ReaderAnimation.ReaderPopup</item>
         <item name="android:backgroundDimEnabled">true</item>
