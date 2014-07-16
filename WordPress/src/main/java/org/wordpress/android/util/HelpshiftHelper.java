@@ -35,6 +35,13 @@ public class HelpshiftHelper {
     }
 
     public void showConversation(Activity activity) {
+        Helpshift.setNameAndEmail("", UserEmail.getPrimaryEmail(activity));
+        setDefaultMetaData(activity);
+        Helpshift.setMetadataCallback(new HSCallable() {
+            public HashMap call() {
+                return mMetadata;
+            }
+        });
         Helpshift.showConversation(activity);
     }
 
