@@ -8,6 +8,11 @@ import android.util.Patterns;
 import java.util.regex.Pattern;
 
 public class UserEmail {
+    /**
+     * Get primary account and return its name if it matches the email address pattern.
+     *
+     * @return primary account email address if it can be found or empty string else.
+     */
     public static String getPrimaryEmail(Context context) {
         try {
             AccountManager accountManager = AccountManager.get(context);
