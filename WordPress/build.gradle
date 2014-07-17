@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0-beta-2"
+        versionName "3.0-rc-1"
         versionCode 121
         minSdkVersion 14
         targetSdkVersion 19
@@ -80,11 +80,6 @@ wordpress {
         subproject 'WordPressComRest'
         artifact 'com.automattic:wordpresscom-rest:1.0.0'
     }
-    graphview {
-        repo 'wordpress-mobile/GraphView'
-        subproject 'WordPressGraphView'
-        artifact 'org.wordpress:graphview:3.2.0'
-    }
 }
 
 dependencies {
@@ -98,6 +93,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.4.1'
     compile 'commons-lang:commons-lang:2.6'
+    compile 'com.cocosw:undobar:1.+@aar'
 
     compile('org.apache.httpcomponents:httpmime:4.1.+') {
         exclude group: 'commons-logging', module: 'commons-logging'
@@ -115,6 +111,7 @@ dependencies {
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
+    compile 'org.wordpress:graphview:3.1.1' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'
