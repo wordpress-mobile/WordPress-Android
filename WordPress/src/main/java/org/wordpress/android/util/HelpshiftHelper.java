@@ -96,7 +96,7 @@ public class HelpshiftHelper {
         // List blogs name and url
         Map<String, String> blogMap = new HashMap<String, String>();
         for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
-            blogMap.put(MapUtils.getMapStr(account, "blogName"), MapUtils.getMapStr(account, "blogUrl"));
+            blogMap.put(MapUtils.getMapStr(account, "blogName"), MapUtils.getMapStr(account, "url"));
         }
         mMetadata.put("blogs", blogMap);
 
