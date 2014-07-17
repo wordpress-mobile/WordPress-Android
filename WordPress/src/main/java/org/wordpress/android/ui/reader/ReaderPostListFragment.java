@@ -20,14 +20,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.PullToRefreshHelper;
@@ -37,6 +41,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
@@ -73,8 +78,13 @@ public class ReaderPostListFragment extends Fragment
         public void onTagSelected(String tagName);
     }
 
+    public static interface OnPostPopupListener {
+        public void onShowPostPopup(View view, ReaderPost post, int position);
+    }
+
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
+
     private OnPostSelectedListener mPostSelectedListener;
     private OnTagSelectedListener mOnTagSelectedListener;
 
@@ -426,6 +436,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         getPostAdapter().setOnTagSelectedListener(mOnTagSelectedListener);
+        getPostAdapter().setOnPostPopupListener(mOnPostPopupListener);
     }
 
     @Override
@@ -446,6 +457,96 @@ public class ReaderPostListFragment extends Fragment
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /*
+     * called when user taps dropdown arrow icon next to a post - shows a popup menu
+     * that enables blocking the blog the post is in
+     */
+    private final OnPostPopupListener mOnPostPopupListener = new OnPostPopupListener() {
+        @Override
+        public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+            if (view == null || post == null) {
+                return;
+            }
+
+            PopupMenu popup = new PopupMenu(getActivity(), view);
+            MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    blockBlogForPost(post, position);
+                    return true;
+                }
+            });
+            popup.show();
+        }
+    };
+
+    /*
+     * blocks the blog associated with the passed post and removes all posts in that blog
+     * from the adapter - passed position is the index of the post in the adapter
+     */
+    private void blockBlogForPost(final ReaderPost post, final int position) {
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            return;
+        }
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && hasActivity()) {
+                    hideUndoBar();
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
+                }
+            }
+        };
+
+        // perform call to block this blog - returns list of posts deleted by blocking so
+        // they can be restored if the user undoes the block
+        final ReaderPostList postsToRestore =
+                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+
+        // animate out the post the user chose to block from, then remove the post from the adapter
+        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (hasActivity()) {
+                    // remove this specific post, then refresh the adapter so other posts in this
+                    // blog no long appear
+                    getPostAdapter().removePost(position);
+                    getPostAdapter().refresh();
+                }
+            }
+        };
+        ReaderAnim.animateListItem(mListView,
+                position,
+                ReaderAnim.AnimateListItemStyle.SHRINK,
+                aniListener);
+
+        // show the undo bar enabling the user to undo the block
+        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+            @Override
+            public void onUndo(Parcelable parcelable) {
+                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                refreshPosts();
+            }
+        };
+        new UndoBarController.UndoBar(getActivity())
+                             .message(getString(R.string.reader_toast_blog_blocked))
+                             .listener(undoListener)
+                             .translucent(true)
+                             .show();
+    }
+
+    private void hideUndoBar() {
+        if (hasActivity()) {
+            UndoBarController.clear(getActivity());
         }
     }
 
@@ -709,6 +810,7 @@ public class ReaderPostListFragment extends Fragment
 
         getPostAdapter().setCurrentTag(tag);
         hideNewPostsBar();
+        hideUndoBar();
         updateTagPreviewHeader();
         hideLoadingProgress();
 
