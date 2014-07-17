@@ -49,11 +49,19 @@ public class NuxHelpActivity extends Activity {
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
 
-        WPTextView helpCenterButton = (WPTextView) findViewById(R.id.contact_us_button);
-        helpCenterButton.setOnClickListener(new OnClickListener() {
+        WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
+        contactUsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
+            }
+        });
+
+        WPTextView faqbutton = (WPTextView) findViewById(R.id.faq_button);
+        faqbutton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelpshiftHelper.getInstance().showFAQ(NuxHelpActivity.this);
             }
         });
     }

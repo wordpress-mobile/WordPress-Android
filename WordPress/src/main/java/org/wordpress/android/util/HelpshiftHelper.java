@@ -38,6 +38,10 @@ public class HelpshiftHelper {
         Helpshift.showConversation(activity);
     }
 
+    public void showFAQ(Activity activity) {
+        Helpshift.showFAQs(activity);
+    }
+
     public void registerDeviceToken(Context context, String regId) {
         if (!TextUtils.isEmpty(regId)) {
             Helpshift.registerDeviceToken(context, regId);
