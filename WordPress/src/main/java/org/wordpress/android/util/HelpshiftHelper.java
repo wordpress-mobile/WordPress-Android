@@ -22,13 +22,28 @@ public class HelpshiftHelper {
     private static Application mApplication = null;
     private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
-    public enum TAGS {
+    public enum MetadataKey {
+        USER_ENTERED_URL("user-entered-url"),
+        USER_ENTERED_USERNAME("user-entered-username");
+
+        private final String mStringValue;
+
+        private MetadataKey(final String stringValue) {
+            mStringValue = stringValue;
+        }
+
+        public String toString() {
+            return mStringValue;
+        }
+    }
+
+    public enum Tag {
         LOGIN_SCREEN("login-screen"),
         SETTINGS_SCREEN("settings-screen");
 
         private final String mStringValue;
 
-        private TAGS(final String stringValue) {
+        private Tag(final String stringValue) {
             mStringValue = stringValue;
         }
 
@@ -36,7 +51,7 @@ public class HelpshiftHelper {
             return mStringValue;
         }
 
-        public static String[] toString(TAGS[] tags) {
+        public static String[] toString(Tag[] tags) {
             if (tags == null) {
                 return null;
             }
@@ -81,16 +96,20 @@ public class HelpshiftHelper {
         }
     }
 
-    public void setTags(TAGS[] tags) {
-        mMetadata.put(Helpshift.HSTagsKey, TAGS.toString(tags));
+    public void setTags(Tag[] tags) {
+        mMetadata.put(Helpshift.HSTagsKey, Tag.toString(tags));
     }
 
     public void handlePush(Context context, Intent intent) {
         Helpshift.handlePush(context, intent);
     }
 
-    public void addMetaData(String key, Object o) {
-        mMetadata.put(key, o);
+    public void addMetaData(MetadataKey key, Object o) {
+        mMetadata.put(key.toString(), o);
+    }
+
+    public Object getMetaData(MetadataKey key) {
+        return mMetadata.get(key.toString());
     }
 
     private void addDefaultMetaData(Context context) {

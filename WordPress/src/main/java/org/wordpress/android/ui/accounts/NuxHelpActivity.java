@@ -14,7 +14,8 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.TAGS;
+import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -59,12 +60,12 @@ public class NuxHelpActivity extends Activity {
                 if (extras != null) {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
-                    HelpshiftHelper.getInstance().addMetaData("user-entered-url", extras.getString(
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
                             WelcomeFragmentSignIn.ENTERED_URL_KEY));
-                    HelpshiftHelper.getInstance().addMetaData("user-entered-username", extras.getString(
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
                 }
-                HelpshiftHelper.getInstance().setTags(new TAGS[] {TAGS.LOGIN_SCREEN});
+                HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.LOGIN_SCREEN});
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
         });

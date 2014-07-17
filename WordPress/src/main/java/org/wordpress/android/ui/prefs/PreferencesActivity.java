@@ -50,7 +50,7 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.HelpshiftHelper.TAGS;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -713,7 +713,7 @@ public class PreferencesActivity extends PreferenceActivity {
     private OnPreferenceClickListener contactUsPreferenceClickListener = new OnPreferenceClickListener() {
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            HelpshiftHelper.getInstance().setTags(new TAGS[] {TAGS.SETTINGS_SCREEN});
+            HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.SETTINGS_SCREEN});
             HelpshiftHelper.getInstance().showConversation(PreferencesActivity.this);
             return true;
         }
