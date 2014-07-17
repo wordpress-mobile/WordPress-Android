@@ -1,15 +1,18 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.view.Display;
 
 import com.google.gson.Gson;
 

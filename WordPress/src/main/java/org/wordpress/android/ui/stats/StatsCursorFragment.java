@@ -6,7 +6,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -147,7 +146,7 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
         if (mAdapter != null)
             mAdapter.changeCursor(data);
         configureEmptyLabel();
-        reloadLinearLayout();
+        StatsUIHelper.reloadLinearLayout(getActivity(), mAdapter, mLinearLayout);
     }
 
     @Override
@@ -155,7 +154,7 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
         if (mAdapter != null)
             mAdapter.changeCursor(null);
         configureEmptyLabel();
-        reloadLinearLayout();
+        StatsUIHelper.reloadLinearLayout(getActivity(), mAdapter, mLinearLayout);
     }
 
     public void setCallback(StatsCursorInterface callback) {
@@ -164,46 +163,7 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
 
     public void setListAdapter(CursorAdapter adapter) {
         mAdapter = adapter;
-        reloadLinearLayout();
-    }
-
-    private void reloadLinearLayout() {
-        if (getActivity() == null || mLinearLayout == null || mAdapter == null)
-            return;
-
-        // limit number of items to show otherwise it would cause performance issues on the LinearLayout
-        int count = Math.min(mAdapter.getCount(), StatsActivity.STATS_GROUP_MAX_ITEMS);
-
-        if (count == 0) {
-            mLinearLayout.removeAllViews();
-            return;
-        }
-
-        int numExistingViews = mLinearLayout.getChildCount();
-        int altRowColor = getResources().getColor(R.color.stats_alt_row);
-
-        // remove excess views
-        if (count < numExistingViews) {
-            int numToRemove = numExistingViews - count;
-            mLinearLayout.removeViews(count, numToRemove);
-            numExistingViews = count;
-        }
-
-        for (int i = 0; i < count; i++) {
-            int bgColor = (i % 2 == 1 ? altRowColor : Color.TRANSPARENT);
-            final View view;
-            // reuse existing view when possible
-            if (i < numExistingViews) {
-                View convertView = mLinearLayout.getChildAt(i);
-                view = mAdapter.getView(i, convertView, mLinearLayout);
-                view.setBackgroundColor(bgColor);
-            } else {
-                view = mAdapter.getView(i, null, mLinearLayout);
-                view.setBackgroundColor(bgColor);
-                mLinearLayout.addView(view);
-            }
-        }
-        mLinearLayout.invalidate();
+        StatsUIHelper.reloadLinearLayout(getActivity(), mAdapter, mLinearLayout);
     }
 
     @Override

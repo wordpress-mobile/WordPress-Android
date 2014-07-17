@@ -12,13 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GestureDetectorCompat;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,10 +66,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity {
-    // Max number of rows to show in a stats fragment
-    public static final int STATS_GROUP_MAX_ITEMS = 10;
-    public static final int STATS_CHILD_MAX_ITEMS = 25;
-
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
@@ -91,9 +85,6 @@ public class StatsActivity extends WPActionBarActivity {
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    // Used for tablet UI
-    private static final int TABLET_720DP = 720;
-    private static final int TABLET_600DP = 600;
     private LinearLayout mFragmentContainer;
 
     @Override
@@ -141,6 +132,10 @@ public class StatsActivity extends WPActionBarActivity {
 
         restoreState(savedInstanceState);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+        // Refresh stats at startup
+        refreshStats();
+        mPullToRefreshHelper.setRefreshing(true);
     }
 
     @Override
@@ -157,20 +152,15 @@ public class StatsActivity extends WPActionBarActivity {
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
-
-        if (!mIsRestoredFromState) {
-            mPullToRefreshHelper.setRefreshing(true);
-            refreshStats();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        mPullToRefreshHelper.setRefreshing(false);
         mPullToRefreshHelper.unregisterReceiver(this);
     }
 
@@ -334,8 +324,7 @@ public class StatsActivity extends WPActionBarActivity {
         ft.commit();
 
         // split layout into two for 720DP tablets and 600DP tablets in landscape
-        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
-                || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape())) {
+        if (StatsUIHelper.shouldLoadSplitLayout(this)) {
             loadSplitLayout();
         }
     }
@@ -391,13 +380,6 @@ public class StatsActivity extends WPActionBarActivity {
         frameView = (FrameLayout) findViewById(R.id.stats_tags_and_categories_container);
         mFragmentContainer.removeView(frameView);
         columnRight.addView(frameView);*/
-    }
-
-    private boolean isInLandscape() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        return (point.y < point.x);
     }
 
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {

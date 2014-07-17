@@ -80,6 +80,11 @@ wordpress {
         subproject 'WordPressComRest'
         artifact 'com.automattic:wordpresscom-rest:1.0.0'
     }
+    graphview {
+        repo 'wordpress-mobile/GraphView'
+        subproject 'WordPressGraphView'
+        artifact 'org.wordpress:graphview:3.2.0'
+    }
 }
 
 dependencies {
@@ -111,7 +116,6 @@ dependencies {
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
-    compile 'org.wordpress:graphview:3.1.1' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'

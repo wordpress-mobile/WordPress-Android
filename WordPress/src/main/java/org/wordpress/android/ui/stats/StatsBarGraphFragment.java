@@ -122,7 +122,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             String statsAuthenticatedUser = credentials.getUsername();
             String statsAuthenticatedPassword =  credentials.getPassword();
             // make sure to load the no-chrome version of Stats over https
-            String url = "https://wordpress.com/my-stats/?no-chrome&blog="
+/*            String url = "https://wordpress.com/my-stats/?no-chrome&blog="
                     + WordPress.getCurrentRemoteBlogId() + "&day=" + date + "&unit=1";
 
             Intent statsWebViewIntent = new Intent(this.getActivity(), StatsWebViewActivity.class);
@@ -131,6 +131,14 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                     statsAuthenticatedPassword);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, url);
             this.getActivity().startActivity(statsWebViewIntent);
+*/
+            Intent statsWebViewIntent = new Intent(this.getActivity(), StatsDetailsActivity.class);
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
+            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD,
+                    statsAuthenticatedPassword);
+            statsWebViewIntent.putExtra(StatsActivity.STATS_DETAILS_DATE, date);
+            this.getActivity().startActivity(statsWebViewIntent);
+
         } else {
             // Week or Month on the screen. Show a toast.
             GraphViewDataInterface[] views = mViewsSeries.getData();
