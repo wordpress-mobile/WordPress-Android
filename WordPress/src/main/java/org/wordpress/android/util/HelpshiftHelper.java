@@ -83,7 +83,17 @@ public class HelpshiftHelper {
     }
 
     public void showConversation(Activity activity) {
-        Helpshift.setNameAndEmail("", UserEmail.getPrimaryEmail(activity));
+        String emailAddress = UserEmail.getPrimaryEmail(activity);
+        // Use the user entered username to pre-fill name
+        String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
+        // If it's null or empty, use split email address to pre-fill name
+        if (TextUtils.isEmpty(name)) {
+            String[] splitEmail = TextUtils.split(emailAddress, "@");
+            if (splitEmail.length >= 1) {
+                name = splitEmail[0];
+            }
+        }
+        Helpshift.setNameAndEmail(name, emailAddress);
         addDefaultMetaData(activity);
         HashMap config = new HashMap ();
         config.put(Helpshift.HSCustomMetadataKey, mMetadata);
