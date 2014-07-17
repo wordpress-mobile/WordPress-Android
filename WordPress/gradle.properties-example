@@ -1,0 +1,11 @@
+wp.oauth.app_id = wordpress
+wp.oauth.app_secret = wordpress
+wp.oauth.redirect_uri = http://android.wordpress.org/
+wp.gcm.id = wordpress
+wp.db_secret = wordpress
+wp.mixpanel_token = wordpress
+wp.simperium.app_secret = wordpress
+wp.simperium.app_name = wordpress
+wp.helpshift.api.key = wordpress
+wp.helpshift.api.domain = wordpress
+wp.helpshift.api.id = wordpress
