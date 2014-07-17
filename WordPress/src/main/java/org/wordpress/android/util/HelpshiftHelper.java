@@ -20,7 +20,7 @@ import java.util.Map;
 public class HelpshiftHelper {
     private static HelpshiftHelper mInstance = null;
     private static Application mApplication = null;
-    private static HashMap mMetadata = new HashMap();
+    private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
     public enum TAGS {
         LOGIN_SCREEN("login-screen"),
@@ -69,7 +69,7 @@ public class HelpshiftHelper {
 
     public void showConversation(Activity activity) {
         Helpshift.setNameAndEmail("", UserEmail.getPrimaryEmail(activity));
-        setDefaultMetaData(activity);
+        addDefaultMetaData(activity);
         HashMap config = new HashMap ();
         config.put(Helpshift.HSCustomMetadataKey, mMetadata);
         Helpshift.showConversation(activity, config);
@@ -89,7 +89,11 @@ public class HelpshiftHelper {
         Helpshift.handlePush(context, intent);
     }
 
-    private void setDefaultMetaData(Context context) {
+    public void addMetaData(String key, Object o) {
+        mMetadata.put(key, o);
+    }
+
+    private void addDefaultMetaData(Context context) {
         // Use plain text log (unfortunately Helpshift can't display this correctly)
         mMetadata.put("log", AppLog.toPlainText(context));
 

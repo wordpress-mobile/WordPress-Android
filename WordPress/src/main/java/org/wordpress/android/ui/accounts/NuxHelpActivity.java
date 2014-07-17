@@ -50,10 +50,20 @@ public class NuxHelpActivity extends Activity {
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
 
+
         WPTextView helpCenterButton = (WPTextView) findViewById(R.id.contact_us_button);
         helpCenterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle extras = getIntent().getExtras();
+                if (extras != null) {
+                    // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
+                    // related code at the same place (Note: value can be null).
+                    HelpshiftHelper.getInstance().addMetaData("user-entered-url", extras.getString(
+                            WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                    HelpshiftHelper.getInstance().addMetaData("user-entered-username", extras.getString(
+                            WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                }
                 HelpshiftHelper.getInstance().setTags(new TAGS[] {TAGS.LOGIN_SCREEN});
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
