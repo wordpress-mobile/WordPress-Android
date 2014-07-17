@@ -172,6 +172,7 @@ public class PreferencesActivity extends PreferenceActivity {
                     );
         }
         initContactUsPreference();
+        initFaqPreference();
         displayPreferences();
     }
 
@@ -198,6 +199,18 @@ public class PreferencesActivity extends PreferenceActivity {
             PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("wp_pref_app_about_section");
             if (contactUsPreference != null && preferenceCategory != null) {
                 preferenceCategory.removePreference(contactUsPreference);
+            }
+        }
+    }
+
+    private void initFaqPreference() {
+        Preference faqPreference = findPreference("wp_pref_faq");
+        faqPreference.setOnPreferenceClickListener(faqPreferenceClickListener);
+        // This is a Helpshift FAQ (and users are able to start conversation from there) so keep ABTest check
+        if (!ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("wp_pref_app_about_section");
+            if (faqPreference != null && preferenceCategory != null) {
+                preferenceCategory.removePreference(faqPreference);
             }
         }
     }
@@ -713,6 +726,14 @@ public class PreferencesActivity extends PreferenceActivity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             HelpshiftHelper.getInstance().showConversation(PreferencesActivity.this);
+            return true;
+        }
+    };
+
+    private OnPreferenceClickListener faqPreferenceClickListener = new OnPreferenceClickListener() {
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            HelpshiftHelper.getInstance().showFAQ(PreferencesActivity.this);
             return true;
         }
     };
