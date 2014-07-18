@@ -19,11 +19,12 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -338,8 +339,8 @@ public class ReaderBlogAdapter extends BaseAdapter {
                         Collections.sort(mFollowedBlogs, new Comparator<ReaderBlog>() {
                             @Override
                             public int compare(ReaderBlog thisBlog, ReaderBlog thatBlog) {
-                                final String thisName = (thisBlog.hasName() ? thisBlog.getName() : UrlUtils.getDomainFromUrl(thisBlog.getUrl()));
-                                final String thatName = (thatBlog.hasName() ? thatBlog.getName() : UrlUtils.getDomainFromUrl(thatBlog.getUrl()));
+                                String thisName = getBlogNameForComparison(thisBlog);
+                                String thatName = getBlogNameForComparison(thatBlog);
                                 return thisName.compareToIgnoreCase(thatName);
                             }
                         });
@@ -349,6 +350,18 @@ public class ReaderBlogAdapter extends BaseAdapter {
             }
 
             mIsTaskRunning = false;
+        }
+
+        private String getBlogNameForComparison(ReaderBlog blog) {
+            if (blog == null) {
+                return "";
+            } else if (blog.hasName()) {
+                return blog.getName();
+            } else if (blog.hasUrl()) {
+                return StringUtils.notNullStr(UrlUtils.getDomainFromUrl(blog.getUrl()));
+            } else {
+                return "";
+            }
         }
     }
 }
