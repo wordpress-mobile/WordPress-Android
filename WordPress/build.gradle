@@ -89,7 +89,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:19.0.+'
-    compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.4.1'
     compile 'commons-lang:commons-lang:2.6'
@@ -115,7 +114,6 @@ dependencies {
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'
-    compile 'org.wordpress:pulltorefresh-main:+' // org.wordpress version includes some fixes
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
