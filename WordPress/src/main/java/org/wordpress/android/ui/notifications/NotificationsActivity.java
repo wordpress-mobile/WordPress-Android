@@ -19,6 +19,7 @@ import com.simperium.client.User;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.BlogPairId;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -29,9 +30,8 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 public class NotificationsActivity extends WPActionBarActivity
         implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
@@ -90,7 +90,8 @@ public class NotificationsActivity extends WPActionBarActivity
         if (SimperiumUtils.getSimperium() != null) {
             User user = SimperiumUtils.getSimperium().getUser();
             if (user != null && user.getStatus() == User.Status.NOT_AUTHORIZED) {
-                ToastUtils.showAuthErrorDialog(this, R.string.sign_in_again, R.string.simperium_connection_error);
+                AuthenticationDialogUtils.showAuthErrorDialog(this, R.string.sign_in_again,
+                        R.string.simperium_connection_error);
             }
         }
     }

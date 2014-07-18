@@ -32,20 +32,21 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -703,7 +704,7 @@ public class StatsActivity extends WPActionBarActivity {
                         mSignInDialog = builder.create();
                         mSignInDialog.show();
                     } else if (errorObject instanceof VolleyError) {
-                        ToastUtils.showToastOrAuthAlert(StatsActivity.this, (VolleyError) errorObject,
+                        AuthenticationDialogUtils.showToastOrAuthAlert(StatsActivity.this, (VolleyError) errorObject,
                                 StatsActivity.this.getString(R.string.error_refresh_stats));
                     } else {
                         ToastUtils.showToast(StatsActivity.this,

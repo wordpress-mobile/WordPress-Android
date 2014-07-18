@@ -20,14 +20,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
@@ -338,7 +338,7 @@ public class SelectCategoriesActivity extends ListActivity {
             return true;
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
             return true;
         }
 
