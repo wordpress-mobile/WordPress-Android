@@ -311,13 +311,11 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         mSelectedNoteId = note.getId();
 
-        // TODO: Enable once using live data
         // mark the note as read if it's unread
-        /*if (note.isUnread()) {
+        if (note.isUnread()) {
             // mark as read which syncs with simperium
             note.markAsRead();
-        }*/
-
+        }
 
         // If we are already showing the NotificationDetailListFragment on a tablet, update note.
         if (DisplayUtils.isLandscapeTablet(this)) {

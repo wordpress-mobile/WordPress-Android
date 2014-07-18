@@ -195,7 +195,7 @@ public class Note extends Syncable {
      */
     public long getTimestamp() {
         if (mTimestamp == 0) {
-            mTimestamp = queryJSON("timestamp", 0);
+            mTimestamp = DateTimeUtils.iso8601ToTimestamp(queryJSON("timestamp", ""));
         }
 
         return mTimestamp;
