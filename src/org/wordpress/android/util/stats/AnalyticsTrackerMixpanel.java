@@ -137,7 +137,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mMixpanel.identify(username);
             mMixpanel.getPeople().identify(username);
-
             try {
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("$username", username);
@@ -147,6 +146,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 AppLog.e(AppLog.T.UTILS, e);
             }
         }
+    }
+
+    @Override
+    public void registerPushNotificationToken(String regId) {
+        mMixpanel.getPeople().setPushRegistrationId(regId);
     }
 
     @Override
@@ -465,7 +469,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
 
         try {
-            Object valueForProperty  = properties.get(property);
+            Object valueForProperty = properties.get(property);
             return valueForProperty;
         } catch (JSONException e) {
             // We are okay with swallowing this exception as the next line will just return a null value

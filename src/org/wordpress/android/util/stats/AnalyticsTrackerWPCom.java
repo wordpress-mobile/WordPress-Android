@@ -49,6 +49,11 @@ public class AnalyticsTrackerWPCom implements AnalyticsTracker.Tracker {
         // No-op
     }
 
+    @Override
+    public void registerPushNotificationToken(String regId) {
+        // No-op
+    }
+
     private void pingWPComStatsEndpoint(String statName) {
         Response.Listener<String> listener = new Response.Listener<String>() {
             public void onResponse(String response) {
