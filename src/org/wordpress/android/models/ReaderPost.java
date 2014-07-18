@@ -52,7 +52,7 @@ public class ReaderPost {
     public boolean isVideoPress;
 
     public boolean isLikesEnabled;
-    public boolean isSharingEnabled;
+    public boolean isSharingEnabled;    // currently unused
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -559,7 +559,7 @@ public class ReaderPost {
      * only public wp posts can be reblogged
      */
     public boolean canReblog() {
-        return !isExternal && !isPrivate && isSharingEnabled;
+        return !isExternal && !isPrivate;
     }
 
     /*
