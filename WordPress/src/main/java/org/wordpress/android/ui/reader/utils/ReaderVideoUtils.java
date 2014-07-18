@@ -115,7 +115,7 @@ public class ReaderVideoUtils {
      * extract the video id from the passed Vimeo url
      * ex: http://player.vimeo.com/video/72386905 -> 72386905
      */
-	public static String getVimeoVideoId(final String link) {
+	private static String getVimeoVideoId(final String link) {
 		if (link==null)
 			return "";
         if (!link.contains("player.vimeo.com"))

@@ -800,11 +800,11 @@ public class ReaderPostDetailFragment extends Fragment
         mIsAddCommentBoxShowing = true;
     }
 
-    protected boolean isAddCommentBoxShowing() {
+    boolean isAddCommentBoxShowing() {
         return mIsAddCommentBoxShowing;
     }
 
-    protected void hideAddCommentBox() {
+    void hideAddCommentBox() {
         if (!hasActivity() || !mIsAddCommentBoxShowing) {
             return;
         }
