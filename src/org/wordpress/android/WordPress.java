@@ -334,6 +334,7 @@ public class WordPress extends Application {
         if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         }
+        AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
     public interface OnPostUploadedListener {

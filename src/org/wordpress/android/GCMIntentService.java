@@ -29,6 +29,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -277,6 +279,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
                 HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             }
+            AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
 
