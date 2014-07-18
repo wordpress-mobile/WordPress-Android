@@ -18,6 +18,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -29,7 +30,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostPopupListene
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -41,7 +42,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.lang.ref.WeakReference;
@@ -360,35 +360,45 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         // likes, comments & reblogging - supported by wp posts only
-        if (post.isWP()) {
-            showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
-            holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (parent instanceof ListView) {
-                        ListView listView = (ListView) parent;
-                        // the base listView onItemClick includes the header count in the position,
-                        // so do the same here
-                        int index = position + listView.getHeaderViewsCount();
-                        listView.performItemClick(holder.imgBtnComment, index, getItemId(position));
-                    }
-                }
-            });
+        boolean showLikes = post.isWP() && post.isLikesEnabled;
+        boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
 
+        if (showLikes || showComments) {
+            showCounts(holder, post, false);
+        }
+
+        if (showLikes) {
+            showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
+            holder.imgBtnLike.setVisibility(View.VISIBLE);
             holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, position, post);
                 }
             });
-
-            holder.imgBtnLike.setVisibility(View.VISIBLE);
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
-            showCounts(holder, post, false);
         } else {
-            holder.imgBtnLike.setVisibility(View.INVISIBLE);
-            holder.imgBtnComment.setVisibility(View.INVISIBLE);
+            holder.imgBtnLike.setVisibility(View.GONE);
             holder.txtLikeCount.setVisibility(View.GONE);
+        }
+
+        if (showComments) {
+            holder.imgBtnComment.setVisibility(View.VISIBLE);
+            if (post.isCommentsOpen) {
+                holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (parent instanceof ListView) {
+                            ListView listView = (ListView) parent;
+                            // the base listView onItemClick includes the header count in the position,
+                            // so do the same here
+                            int index = position + listView.getHeaderViewsCount();
+                            listView.performItemClick(holder.imgBtnComment, index, getItemId(position));
+                        }
+                    }
+                });
+            }
+        } else {
+            holder.imgBtnComment.setVisibility(View.GONE);
             holder.txtCommentCount.setVisibility(View.GONE);
         }
 
@@ -407,6 +417,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 });
             }
         } else {
+            // use INVISIBLE rather than GONE to ensure container maintains the same height
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
         }
 
@@ -528,10 +539,9 @@ public class ReaderPostAdapter extends BaseAdapter {
      * triggered when user taps the like button (textView)
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
-        // start animation immediately so user knows they did something
-        ReaderAnim.animateLikeButton(holder.imgBtnLike);
-
         boolean isAskingToLike = !post.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(holder.imgBtnLike, isAskingToLike);
+
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             return;
         }

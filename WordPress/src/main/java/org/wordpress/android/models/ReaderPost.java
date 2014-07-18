@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -51,6 +51,9 @@ public class ReaderPost {
     public boolean isPrivate;
     public boolean isVideoPress;
 
+    public boolean isLikesEnabled;
+    public boolean isSharingEnabled;    // currently unused
+
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
             throw new IllegalArgumentException("null json post");
@@ -83,6 +86,9 @@ public class ReaderPost {
         post.isCommentsOpen = JSONUtil.getBool(json, "comments_open");
         post.isExternal = JSONUtil.getBool(json, "is_external");
         post.isPrivate = JSONUtil.getBool(json, "site_is_private");
+
+        post.isLikesEnabled = JSONUtil.getBool(json, "likes_enabled");
+        post.isSharingEnabled = JSONUtil.getBool(json, "sharing_enabled");
 
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
