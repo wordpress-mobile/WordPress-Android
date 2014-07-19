@@ -301,7 +301,7 @@ public class ReaderCommentActions {
         comment.isLikedByCurrentUser = isAskingToLike;
         if (isAskingToLike) {
             comment.numLikes++;
-        } else if (!isAskingToLike && comment.numLikes > 0) {
+        } else if (comment.numLikes > 0) {
             comment.numLikes--;
         }
         ReaderCommentTable.addOrUpdateComment(comment);
