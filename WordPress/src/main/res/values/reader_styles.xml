@@ -115,8 +115,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:paddingLeft">@dimen/margin_small</item>
-        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_small</item>
+        <item name="android:paddingRight">@dimen/margin_extra_small</item>
         <item name="android:paddingTop">@dimen/margin_medium</item>
         <item name="android:paddingBottom">@dimen/margin_medium</item>
     </style>

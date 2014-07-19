@@ -48,8 +48,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private final int mNoLinkColor;
 
     private final String mLike;
-    private final String mLiked;
+    private final String mLikedBy;
     private final String mLikesSingle;
+    private final String mLikedByYou;
     private final String mLikesMulti;
 
     public interface RequestReplyListener {
@@ -83,11 +84,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
 
         mLike = context.getString(R.string.reader_label_like);
-        mLiked = context.getString(R.string.reader_label_liked);
-
-        // like count ends with an ellipsis to make it more obvious that it's tappable
-        mLikesSingle = context.getString(R.string.reader_likes_one_short) + "…";
-        mLikesMulti = context.getString(R.string.reader_likes_multi_short) + "…";
+        mLikedBy = context.getString(R.string.reader_label_liked_by);
+        mLikedByYou = context.getString(R.string.reader_label_liked_by_you);
+        mLikesSingle = context.getString(R.string.reader_likes_one_short);
+        mLikesMulti = context.getString(R.string.reader_likes_multi_short);
     }
 
     public void refreshComments() {
@@ -246,23 +246,25 @@ public class ReaderCommentAdapter extends BaseAdapter {
         if (mPost.isLikesEnabled) {
             holder.imgLike.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
-
             holder.txtLike.setVisibility(View.VISIBLE);
-            holder.txtLike.setSelected(comment.isLikedByCurrentUser);
-            holder.txtLike.setText(comment.isLikedByCurrentUser ? mLiked : mLike);
 
-            switch (comment.numLikes) {
-                case 0:
-                    holder.txtLikeCount.setVisibility(View.GONE);
-                    break;
-                case 1:
-                    holder.txtLikeCount.setVisibility(View.VISIBLE);
-                    holder.txtLikeCount.setText(mLikesSingle);
-                    break;
-                default:
-                    holder.txtLikeCount.setVisibility(View.VISIBLE);
-                    holder.txtLikeCount.setText(String.format(mLikesMulti, comment.numLikes));
-
+            if (comment.numLikes == 0) {
+                // no likes, so show "Like" as the caption with no count
+                holder.txtLike.setText(mLike);
+                holder.txtLike.setTextColor(mLinkColor);
+                holder.txtLikeCount.setVisibility(View.GONE);
+            } else if (comment.numLikes == 1 && comment.isLikedByCurrentUser) {
+                // comment is liked only by the current user, so show "Liked by you" with no count
+                holder.txtLike.setText(mLikedByYou);
+                holder.txtLike.setTextColor(mNoLinkColor);
+                holder.txtLikeCount.setVisibility(View.GONE);
+            } else {
+                // otherwise show "Liked by" followed by the like count
+                holder.txtLike.setText(mLikedBy);
+                holder.txtLike.setTextColor(mNoLinkColor);
+                holder.txtLikeCount.setText(comment.numLikes == 1 ? mLikesSingle : String.format(mLikesMulti, comment.numLikes));
+                holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
+                holder.txtLikeCount.setVisibility(View.VISIBLE);
             }
 
             // toggle like when like image or caption is tapped

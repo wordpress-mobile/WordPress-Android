@@ -88,13 +88,13 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like"
             style="@style/ReaderTextView.Comment.Action"
-            android:textColor="@color/reader_like_text"
-            tools:text="@string/reader_label_like" />
+            android:textColor="@color/grey_medium"
+            tools:text="@string/reader_label_liked_by" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like_count"
             style="@style/ReaderTextView.Comment.Action"
-            android:textColor="@color/reader_hyperlink"
+            android:textColor="@color/reader_like_text"
             tools:text="@string/reader_likes_one_short" />
     </LinearLayout>
 
