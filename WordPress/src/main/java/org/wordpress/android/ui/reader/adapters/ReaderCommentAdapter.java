@@ -81,7 +81,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
 
         mLike = context.getString(R.string.reader_label_like);
         mLikedBy = context.getString(R.string.reader_label_liked_by);
@@ -155,15 +155,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
-        // show indentation spacer and indent it based on comment level
-        holder.spacerIndent.setVisibility(comment.parentId==0 ? View.GONE : View.VISIBLE);
-        if (comment.level > 0) {
+        // show indentation spacer for comments with parents and indent it based on comment level
+        if (comment.parentId != 0 && comment.level > 0) {
             int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.spacerIndent.getLayoutParams();
-            if (params.width != indent) {
-                params.width = indent;
-            }
+            params.width = indent;
             holder.spacerIndent.setVisibility(View.VISIBLE);
+        } else {
+            holder.spacerIndent.setVisibility(View.GONE);
         }
 
         if (mHighlightCommentId == comment.commentId) {
@@ -256,7 +255,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             } else if (comment.numLikes == 1 && comment.isLikedByCurrentUser) {
                 // comment is liked only by the current user, so show "Liked by you" with no count
                 holder.txtLike.setText(mLikedByYou);
-                holder.txtLike.setTextColor(mNoLinkColor);
+                holder.txtLike.setTextColor(mLinkColor);
                 holder.txtLikeCount.setVisibility(View.GONE);
             } else {
                 // otherwise show "Liked by" followed by the like count
