@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -114,6 +115,22 @@ public class ReaderPostTable {
 
         return numDeleted;
     }
+
+    /*
+     * remove posts in "Blogs I Follow" that are no longer attached to followed blogs
+     */
+    public static int purgeUnfollowedPosts() {
+        String[] args = {ReaderTag.TAG_NAME_FOLLOWING};
+        int numPurged = ReaderDatabase.getWritableDb().delete(
+                "tbl_post_tags",
+                "tag_name=? AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_following!=0)",
+                args);
+        if (numPurged > 0) {
+            AppLog.d(AppLog.T.READER, String.format("purged %d unfollowed posts", numPurged));
+        }
+        return numPurged;
+    }
+
 
     public static boolean isEmpty() {
         return (getNumPosts() == 0);
