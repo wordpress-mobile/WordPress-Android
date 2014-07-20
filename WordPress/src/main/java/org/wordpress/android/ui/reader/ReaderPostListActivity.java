@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
@@ -26,8 +29,6 @@ import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 /*
  * this activity serves as the host for ReaderPostListFragment
@@ -241,6 +242,20 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
+     * is the list fragment showing posts with the passed tag?
+     */
+    private boolean isListFragmentForTagShowing(String tagName) {
+        if (tagName == null) {
+            return false;
+        }
+        ReaderPostListFragment listFragment = getListFragment();
+        return listFragment != null
+                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                && listFragment.getCurrentTagName().equals(tagName);
+    }
+
+
+    /*
      * initial update performed at startup to ensure we have the latest reader-related info
      */
     private void performInitialUpdate() {
@@ -293,7 +308,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
                 // update followed blogs
                 AppLog.i(T.READER, "reader activity > updating followed blogs");
-                ReaderBlogActions.updateFollowedBlogs(null);
+                updateFollowedBlogs();
 
                 // update cookies so that we can show authenticated images in WebViews
                 AppLog.i(T.READER, "reader activity > updating cookies");
@@ -302,6 +317,51 @@ public class ReaderPostListActivity extends WPActionBarActivity
         };
         ReaderTagActions.updateTags(listener);
     }
+
+    /*
+     * request the latest list of blogs the user is following
+     */
+    private void updateFollowedBlogs() {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(UpdateResult result) {
+                if (!isFinishing() && result == UpdateResult.CHANGED) {
+                    // if followed blogs have changed, remove posts in blogs that are
+                    // no longer being followed
+                    purgeUnfollowedPosts();
+                }
+            }
+        };
+        ReaderBlogActions.updateFollowedBlogs(listener);
+    }
+
+    /*
+     * remove posts in blogs that are no longer followed
+     */
+    private void purgeUnfollowedPosts() {
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                // purge in the background
+                int numPurged = ReaderPostTable.purgeUnfollowedPosts();
+
+                // if any posts were purged and we're showing posts in followed blogs, refresh the
+                // list fragment so purged posts no longer appear
+                if (numPurged > 0) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            if (isListFragmentForTagShowing(ReaderTag.TAG_NAME_FOLLOWING)) {
+                                getListFragment().refreshPosts();
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
 
     /*
      * user tapped a post in the list fragment

@@ -876,7 +876,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * refresh adapter so latest posts appear
      */
-    private void refreshPosts() {
+    void refreshPosts() {
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
         }
