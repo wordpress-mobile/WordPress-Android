@@ -184,7 +184,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     public void onSignout() {
         super.onSignout();
 
-        AppLog.i(T.READER, "user signed out");
+        AppLog.i(T.READER, "reader post list > user signed out");
         mHasPerformedInitialUpdate = false;
 
         // reader database will have been cleared by the time this is called, but the fragment must
@@ -303,15 +303,15 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 // now that tags have been retrieved, perform the other requests - first update
                 // the current user to ensure we have their user_id as well as their latest info
                 // in case they changed their avatar, name, etc. since last time
-                AppLog.i(T.READER, "reader activity > updating current user");
+                AppLog.d(T.READER, "reader post list > updating current user");
                 ReaderUserActions.updateCurrentUser(null);
 
                 // update followed blogs
-                AppLog.i(T.READER, "reader activity > updating followed blogs");
+                AppLog.d(T.READER, "reader post list > updating followed blogs");
                 updateFollowedBlogs();
 
                 // update cookies so that we can show authenticated images in WebViews
-                AppLog.i(T.READER, "reader activity > updating cookies");
+                AppLog.d(T.READER, "reader post list > updating cookies");
                 ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
             }
         };
@@ -326,6 +326,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
             @Override
             public void onUpdateResult(UpdateResult result) {
                 if (!isFinishing() && result == UpdateResult.CHANGED) {
+                    AppLog.d(T.READER, "reader post list > followed blogs have changed");
                     // if followed blogs have changed, remove posts in blogs that are
                     // no longer being followed
                     purgeUnfollowedPosts();
@@ -371,7 +372,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         // skip if this activity no longer has the focus - this prevents the post detail from
         // being shown multiple times if the user quickly taps a post more than once
         if (!this.hasWindowFocus()) {
-            AppLog.i(T.READER, "post selected when activity not focused");
+            AppLog.w(T.READER, "reader post list > post selected when activity not focused");
             return;
         }
 
