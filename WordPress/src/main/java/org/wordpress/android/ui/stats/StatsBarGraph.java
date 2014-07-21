@@ -21,16 +21,16 @@ import java.util.List;
  */
 class StatsBarGraph extends GraphView {
     // Keep tracks of every bar drawn on the graph.
-    private  List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
+    private List<List<BarChartRect>> mSeriesRectsDrawedOnScreen = (List<List<BarChartRect>>) new LinkedList();
     private int mBarPositionToHighlight = -1;
 
     public StatsBarGraph(Context context) {
-		super(context, "");
+        super(context, "");
 
         setProperties();
-	}
+    }
 
-	private void setProperties() {
+    private void setProperties() {
         getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
         getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
         getGraphViewStyle().setTextSize(getResources().getDimensionPixelSize(R.dimen.graph_font_size));
@@ -64,34 +64,34 @@ class StatsBarGraph extends GraphView {
     }
 
     @Override
-	public void drawSeries(Canvas canvas, GraphViewDataInterface[] values,
-			float graphwidth, float graphheight, float border, double minX,
-			double minY, double diffX, double diffY, float horstart,
-			GraphViewSeriesStyle style) {
-		float colwidth = graphwidth / values.length;
+    public void drawSeries(Canvas canvas, GraphViewDataInterface[] values,
+                           float graphwidth, float graphheight, float border, double minX,
+                           double minY, double diffX, double diffY, float horstart,
+                           GraphViewSeriesStyle style) {
+        float colwidth = graphwidth / values.length;
 
-		paint.setStrokeWidth(style.thickness);
-		paint.setColor(style.color);
+        paint.setStrokeWidth(style.thickness);
+        paint.setColor(style.color);
 
         // Bar chart position of this series on the canvas
         List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
 
-		// draw data
-		for (int i = 0; i < values.length; i++) {
-			float valY = (float) (values[i].getY() - minY);
-			float ratY = (float) (valY / diffY);
-			float y = graphheight * ratY;
+        // draw data
+        for (int i = 0; i < values.length; i++) {
+            float valY = (float) (values[i].getY() - minY);
+            float ratY = (float) (valY / diffY);
+            float y = graphheight * ratY;
 
-			// hook for value dependent color
-			if (style.getValueDependentColor() != null) {
-				paint.setColor(style.getValueDependentColor().get(values[i]));
-			}
+            // hook for value dependent color
+            if (style.getValueDependentColor() != null) {
+                paint.setColor(style.getValueDependentColor().get(values[i]));
+            }
 
             // Trick to redraw the tapped bar
             if (mBarPositionToHighlight == i) {
                 int color;
                 if (style.color == getResources().getColor(R.color.stats_bar_graph_views)) {
-                    color =  getResources().getColor(R.color.stats_views_hover_color);
+                    color = getResources().getColor(R.color.stats_views_hover_color);
                 } else {
                     color = getResources().getColor(R.color.stats_visitors_hover_color);
                 }
@@ -100,18 +100,18 @@ class StatsBarGraph extends GraphView {
                 paint.setColor(style.color);
             }
 
-			float pad = style.padding;
+            float pad = style.padding;
 
-			float left = (i * colwidth) + horstart;
-			float top = (border - y) + graphheight;
-			float right = left + colwidth;
-			float bottom = graphheight + border - 1;
+            float left = (i * colwidth) + horstart;
+            float top = (border - y) + graphheight;
+            float right = left + colwidth;
+            float bottom = graphheight + border - 1;
 
-			canvas.drawRect(left + pad, top, right - pad, bottom, paint);
+            canvas.drawRect(left + pad, top, right - pad, bottom, paint);
             barChartRects.add(new BarChartRect(left + pad, top, right - pad, bottom));
-		}
+        }
         mSeriesRectsDrawedOnScreen.add(barChartRects);
-	}
+    }
 
     public int getTappedBar() {
         float[] lastBarChartTouchedPoint = this.getLastTouchedPointOnCanvasAndReset();
@@ -146,17 +146,17 @@ class StatsBarGraph extends GraphView {
         }, 500);
     }
 
-	@Override
-	protected double getMinY() {
-		return 0;
-	}
+    @Override
+    protected double getMinY() {
+        return 0;
+    }
 
-	@Override
-	protected double getMaxY() {
-		double maxY = super.getMaxY();
+    @Override
+    protected double getMaxY() {
+        double maxY = super.getMaxY();
 
-		final int divideBy;
-		if (maxY < 100) {
+        final int divideBy;
+        if (maxY < 100) {
             divideBy = 10;
         } else if (maxY < 1000) {
             divideBy = 100;
@@ -170,9 +170,9 @@ class StatsBarGraph extends GraphView {
             divideBy = 1000000;
         }
 
-		maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
-		return maxY;
-	}
+        maxY = Math.rint((maxY / divideBy) + 1) * divideBy;
+        return maxY;
+    }
 
 
     /**
@@ -199,7 +199,7 @@ class StatsBarGraph extends GraphView {
             if (x >= this.mLeft
                     && x <= this.mRight
                     && (this.mBottom - this.mTop) > 1f
-                   ) {
+                    ) {
                 return true;
             }
             return false;
