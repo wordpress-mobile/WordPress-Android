@@ -38,13 +38,14 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0-beta-2"
-        versionCode 119
+        versionName "3.0-rc-1"
+        versionCode 121
         minSdkVersion 14
         targetSdkVersion 19
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
-        buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
+        buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
+                "\"org.wordpress.android.providers.StatsContentProvider\""
     }
 
     productFlavors {
@@ -52,7 +53,8 @@ android {
 
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
+                    "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             applicationId "org.wordpress.android.beta"
         }
     }
@@ -127,7 +129,7 @@ dependencies {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("gradle.properties")
+    def inputFile = file("${rootDir}/WordPress/gradle.properties")
     outputs.file outputFile
     inputs.file inputFile
     doLast {
@@ -143,18 +145,17 @@ apiKey=${crashlyticsApiKey}""")
     }
 }
 
-// Add the generateWPConfig task to every buildType's compile tasks
+// Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
+android.applicationVariants.all { variant ->
+    variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
+}
+
+// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
     project.properties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
             buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
-        }
-    }
-    def name = "generate${buildType.name.capitalize()}BuildConfig"
-    tasks.whenTaskAdded { task ->
-        if (task.name == name) {
-            task.dependsOn(generateCrashlyticsConfig)
         }
     }
 }

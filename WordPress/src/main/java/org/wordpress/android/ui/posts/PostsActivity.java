@@ -391,7 +391,6 @@ public class PostsActivity extends WPActionBarActivity
             mLoadingDialog.setCancelable(false);
             return mLoadingDialog;
         }
-
         return super.onCreateDialog(id);
     }
 
@@ -407,6 +406,12 @@ public class PostsActivity extends WPActionBarActivity
 
         @Override
         protected void onPostExecute(Boolean result) {
+            if (result) {
+                WordPress.wpDB.deletePost(post);
+            }
+            if (mLoadingDialog == null || isActivityDestroyed() || isFinishing()) {
+                return;
+            }
             dismissDialog(ID_DIALOG_DELETING);
             attemptToSelectPost();
             if (result) {
@@ -414,7 +419,6 @@ public class PostsActivity extends WPActionBarActivity
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
                 checkForLocalChanges(false);
-                WordPress.wpDB.deletePost(post);
                 mPostList.requestPosts(false);
                 mPostList.setRefreshing(true);
             } else {

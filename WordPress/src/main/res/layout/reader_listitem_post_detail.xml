@@ -85,7 +85,7 @@
         android:visibility="gone" />
 
     <org.wordpress.android.ui.reader.ReaderWebView
-        android:id="@+id/webView"
+        android:id="@+id/reader_webview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/reader_list_margin"

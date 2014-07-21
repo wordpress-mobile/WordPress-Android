@@ -123,7 +123,6 @@ public class ReaderTagTable {
                 stmt.bindLong  (2, tag.tagType.toInt());
                 stmt.bindString(3, tag.getEndpoint());
                 stmt.execute();
-                stmt.clearBindings();
             }
 
         } finally {
@@ -390,7 +389,6 @@ public class ReaderTagTable {
                     stmt.bindLong  (2, tag.tagType.toInt());
                     stmt.bindString(3, tag.getEndpoint());
                     stmt.execute();
-                    stmt.clearBindings();
                 }
 
                 db.setTransactionSuccessful();

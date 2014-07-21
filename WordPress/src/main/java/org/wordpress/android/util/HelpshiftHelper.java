@@ -87,21 +87,17 @@ public class HelpshiftHelper {
      * Automatically add default metadata to this conversation
      */
     public void showConversation(Activity activity) {
-        String emailAddress = UserEmail.getPrimaryEmail(activity);
-        // Use the user entered username to pre-fill name
-        String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
-        // If it's null or empty, use split email address to pre-fill name
-        if (TextUtils.isEmpty(name)) {
-            String[] splitEmail = TextUtils.split(emailAddress, "@");
-            if (splitEmail.length >= 1) {
-                name = splitEmail[0];
-            }
-        }
-        Helpshift.setNameAndEmail(name, emailAddress);
-        addDefaultMetaData(activity);
-        HashMap config = new HashMap ();
-        config.put(Helpshift.HSCustomMetadataKey, mMetadata);
+        HashMap config = getHelpshiftConfig(activity);
         Helpshift.showConversation(activity, config);
+    }
+
+    /**
+     * Show FAQ activity
+     * Automatically add default metadata to this conversation (users can start a conversation from FAQ screen).
+     */
+    public void showFAQ(Activity activity) {
+        HashMap config = getHelpshiftConfig(activity);
+        Helpshift.showFAQs(activity, config);
     }
 
     /**
@@ -159,5 +155,23 @@ public class HelpshiftHelper {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         mMetadata.put("wpcom-username", username);
+    }
+
+    private HashMap getHelpshiftConfig(Context context) {
+        String emailAddress = UserEmail.getPrimaryEmail(context);
+        // Use the user entered username to pre-fill name
+        String name = (String) getMetaData(MetadataKey.USER_ENTERED_USERNAME);
+        // If it's null or empty, use split email address to pre-fill name
+        if (TextUtils.isEmpty(name)) {
+            String[] splitEmail = TextUtils.split(emailAddress, "@");
+            if (splitEmail.length >= 1) {
+                name = splitEmail[0];
+            }
+        }
+        Helpshift.setNameAndEmail(name, emailAddress);
+        addDefaultMetaData(context);
+        HashMap config = new HashMap ();
+        config.put(Helpshift.HSCustomMetadataKey, mMetadata);
+        return config;
     }
 }

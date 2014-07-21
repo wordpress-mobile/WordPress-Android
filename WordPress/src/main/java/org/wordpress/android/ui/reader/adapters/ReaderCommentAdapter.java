@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,7 +19,9 @@ import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -43,6 +46,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private final int mBgColorHighlight;
     private final int mLinkColor;
     private final int mNoLinkColor;
+
+    private final String mLike;
+    private final String mLikedBy;
+    private final String mLikesSingle;
+    private final String mLikedByYou;
+    private final String mLikesMulti;
 
     public interface RequestReplyListener {
         void onRequestReply(long commentId);
@@ -70,8 +79,15 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
-        mNoLinkColor = context.getResources().getColor(R.color.grey_medium_dark);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
+
+        mLike = context.getString(R.string.reader_label_like);
+        mLikedBy = context.getString(R.string.reader_label_liked_by);
+        mLikedByYou = context.getString(R.string.reader_label_liked_by_you);
+        mLikesSingle = context.getString(R.string.reader_likes_one_short);
+        mLikesMulti = context.getString(R.string.reader_likes_multi_short);
     }
 
     public void refreshComments() {
@@ -139,23 +155,24 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
-        // show top spacer for first comment (adds extra space between comments and post)
-        holder.spacerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
-
-        // show indentation spacer and indent it based on comment level
-        holder.spacerIndent.setVisibility(comment.parentId==0 ? View.GONE : View.VISIBLE);
-        if (comment.level > 0) {
+        // show indentation spacer for comments with parents and indent it based on comment level
+        if (comment.parentId != 0 && comment.level > 0) {
             int indent = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.spacerIndent.getLayoutParams();
-            if (params.width!=indent)
-                params.width = indent;
+            params.width = indent;
             holder.spacerIndent.setVisibility(View.VISIBLE);
+        } else {
+            holder.spacerIndent.setVisibility(View.GONE);
         }
 
-        // different background for highlighted comment, with optional progress bar
-        if (mHighlightCommentId==comment.commentId) {
+        if (mHighlightCommentId == comment.commentId) {
+            // different background for highlighted comment, with optional progress bar
             convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
+        } else if (comment.authorId == mPost.authorId) {
+            // different background color for comments from the post's author
+            convertView.setBackgroundColor(mBgColorHighlight);
+            holder.progress.setVisibility(View.GONE);
         } else {
             convertView.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
@@ -163,22 +180,23 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         // tapping reply icon tells activity to show reply box
         if (mReplyListener != null) {
-            holder.txtReply.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener replyClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mReplyListener.onRequestReply(comment.commentId);
                 }
-            });
+            };
+            holder.txtReply.setOnClickListener(replyClickListener);
+            holder.imgReply.setOnClickListener(replyClickListener);
         }
+
+        showLikeStatus(holder, comment, position);
 
         // if we're nearing the end of the comments and we know more exist on the server,
         // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener!=null && (position >= getCount()-1)) {
+        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getCount()-1)) {
             mDataRequestedListener.onRequestData();
         }
-
-        // hide divider if this is the last comment
-        holder.divider.setVisibility(position < getCount()-1 ? View.VISIBLE : View.INVISIBLE);
 
         return convertView;
     }
@@ -187,28 +205,103 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtAuthor;
         private final TextView txtText;
         private final TextView txtDate;
-        private final TextView txtReply;
+
         private final WPNetworkImageView imgAvatar;
         private final View spacerIndent;
-        private final View spacerTop;
         private final ProgressBar progress;
-        private final View divider;
+
+        private final TextView txtReply;
+        private final ImageView imgReply;
+
+        private final ImageView imgLike;
+        private final TextView txtLike;
+        private final TextView txtLikeCount;
 
         CommentHolder(View view) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
-            txtReply = (TextView) view.findViewById(R.id.text_reply);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
-            spacerIndent = view.findViewById(R.id.spacer_indent);
-            spacerTop = view.findViewById(R.id.spacer_top);
-            progress = (ProgressBar) view.findViewById(R.id.progress);
-            divider = view.findViewById(R.id.divider_comment);
+
+            txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
+            imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
+
+            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
+            spacerIndent = view.findViewById(R.id.spacer_comment_indent);
+            progress = (ProgressBar) view.findViewById(R.id.progress_comment);
+
+            imgLike = (ImageView) view.findViewById(R.id.image_comment_like);
+            txtLike = (TextView) view.findViewById(R.id.text_comment_like);
+            txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
             // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);
             txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
         }
+    }
+
+    private void showLikeStatus(final CommentHolder holder,
+                                final ReaderComment comment,
+                                final int position) {
+        if (mPost.isLikesEnabled) {
+            holder.imgLike.setVisibility(View.VISIBLE);
+            holder.imgLike.setSelected(comment.isLikedByCurrentUser);
+            holder.txtLike.setVisibility(View.VISIBLE);
+
+            if (comment.numLikes == 0) {
+                // no likes, so show "Like" as the caption with no count
+                holder.txtLike.setText(mLike);
+                holder.txtLike.setTextColor(mLinkColor);
+                holder.txtLikeCount.setVisibility(View.GONE);
+            } else if (comment.numLikes == 1 && comment.isLikedByCurrentUser) {
+                // comment is liked only by the current user, so show "Liked by you" with no count
+                holder.txtLike.setText(mLikedByYou);
+                holder.txtLike.setTextColor(mLinkColor);
+                holder.txtLikeCount.setVisibility(View.GONE);
+            } else {
+                // otherwise show "Liked by" followed by the like count
+                holder.txtLike.setText(mLikedBy);
+                holder.txtLike.setTextColor(mNoLinkColor);
+                holder.txtLikeCount.setText(comment.numLikes == 1 ? mLikesSingle : String.format(mLikesMulti, comment.numLikes));
+                holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
+                holder.txtLikeCount.setVisibility(View.VISIBLE);
+            }
+
+            // toggle like when like image or caption is tapped
+            View.OnClickListener likeListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleLike(holder, comment, position);
+                }
+            };
+            holder.imgLike.setOnClickListener(likeListener);
+            holder.txtLike.setOnClickListener(likeListener);
+
+            // show liking users when like count is tapped
+            holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderLikingUsers(v.getContext(), comment);
+                }
+            });
+        } else {
+            holder.imgLike.setVisibility(View.GONE);
+            holder.txtLike.setVisibility(View.GONE);
+        }
+    }
+
+    private void toggleLike(final CommentHolder holder,
+                            final ReaderComment comment,
+                            final int position) {
+        boolean isAskingToLike = !comment.isLikedByCurrentUser;
+        ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
+
+        if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+            return;
+        }
+
+        ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
+        mComments.set(position, updatedComment);
+        showLikeStatus(holder, comment, position);
     }
 
     /*
