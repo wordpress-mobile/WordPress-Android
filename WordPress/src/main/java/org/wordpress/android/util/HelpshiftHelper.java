@@ -82,6 +82,10 @@ public class HelpshiftHelper {
         mApplication = application;
     }
 
+    /**
+     * Show conversation activity
+     * Automatically add default metadata to this conversation
+     */
     public void showConversation(Activity activity) {
         String emailAddress = UserEmail.getPrimaryEmail(activity);
         // Use the user entered username to pre-fill name
@@ -100,6 +104,11 @@ public class HelpshiftHelper {
         Helpshift.showConversation(activity, config);
     }
 
+    /**
+     * Register a GCM device token to Helpshift servers
+     *
+     * @param regId registration id
+     */
     public void registerDeviceToken(Context context, String regId) {
         if (!TextUtils.isEmpty(regId)) {
             Helpshift.registerDeviceToken(context, regId);
@@ -110,12 +119,22 @@ public class HelpshiftHelper {
         mMetadata.put(Helpshift.HSTagsKey, Tag.toString(tags));
     }
 
+    /**
+     * Handle push notification
+     */
     public void handlePush(Context context, Intent intent) {
         Helpshift.handlePush(context, intent);
     }
 
-    public void addMetaData(MetadataKey key, Object o) {
-        mMetadata.put(key.toString(), o);
+    /**
+     * Add metadata to Helpshift conversations
+     *
+     * @param key map key
+     * @param object to store. Be careful with the type used. Nothing is specified in the documentation. Better to use
+     *               String but String[] is needed for specific key like Helpshift.HSTagsKey
+     */
+    public void addMetaData(MetadataKey key, Object object) {
+        mMetadata.put(key.toString(), object);
     }
 
     public Object getMetaData(MetadataKey key) {
@@ -127,11 +146,14 @@ public class HelpshiftHelper {
         mMetadata.put("log", AppLog.toPlainText(context));
 
         // List blogs name and url
-        Map<String, String> blogMap = new HashMap<String, String>();
+        StringBuilder blogList = new StringBuilder();
         for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
-            blogMap.put(MapUtils.getMapStr(account, "blogName"), MapUtils.getMapStr(account, "url"));
+            blogList.append(MapUtils.getMapStr(account, "blogName"));
+            blogList.append(": ");
+            blogList.append(MapUtils.getMapStr(account, "url"));
+            blogList.append("\n");
         }
-        mMetadata.put("blogs", blogMap);
+        mMetadata.put("blogs", blogList.toString());
 
         // wpcom user
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
