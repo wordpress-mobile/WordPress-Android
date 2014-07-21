@@ -119,10 +119,10 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * adapter containing comments for this post
      */
-    private ReaderCommentAdapter mAdapter;
+    private ReaderCommentAdapter mCommentAdapter;
 
     private ReaderCommentAdapter getCommentAdapter() {
-        if (mAdapter == null) {
+        if (mCommentAdapter == null) {
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
@@ -163,13 +163,13 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 }
             };
-            mAdapter = new ReaderCommentAdapter(getActivity(), mPost, replyListener, dataLoadedListener, dataRequestedListener);
+            mCommentAdapter = new ReaderCommentAdapter(getActivity(), mPost, replyListener, dataLoadedListener, dataRequestedListener);
         }
-        return mAdapter;
+        return mCommentAdapter;
     }
 
     private boolean isCommentAdapterEmpty() {
-        return (mAdapter == null || mAdapter.isEmpty());
+        return (mCommentAdapter == null || mCommentAdapter.isEmpty());
     }
 
     @Override
