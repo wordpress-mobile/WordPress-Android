@@ -313,6 +313,7 @@
     <string name="edit_location">Edit</string>
 
     <!-- preferences -->
+    <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
