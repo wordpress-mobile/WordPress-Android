@@ -10,6 +10,8 @@ import android.text.Html;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -175,6 +177,14 @@ public class StatsDetailsActivity extends WPActionBarActivity {
         super.onPause();
         mIsInFront = false;
         mPullToRefreshHelper.unregisterReceiver(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.stats_details, menu);
+        return true;
     }
 
     private void refreshStats() {
