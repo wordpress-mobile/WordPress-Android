@@ -406,7 +406,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                 }
                 if (views == 0) {
                     mVisitorsCount = 0;
-                    mViewsPerVisitor = 0;
+                    mViewsCount = 0;
                     mViewsPerVisitor = 0f;
                 } else {
                     mViewsCount = views;
