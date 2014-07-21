@@ -72,7 +72,7 @@ class StatsBarGraph extends GraphView {
 
 		paint.setStrokeWidth(style.thickness);
 		paint.setColor(style.color);
-        
+
         // Bar chart position of this series on the canvas
         List<BarChartRect> barChartRects = new LinkedList<BarChartRect>();
 
@@ -189,11 +189,17 @@ class StatsBarGraph extends GraphView {
             this.mBottom = bottom;
         }
 
+        /**
+         * Check if the tap happens on a bar in the graph.
+         *
+         * @return true if the tap point falls within the bar for the X coordinate, and within the full canvas
+         * height for the Y coordinate. This is a fix to make very small bars tappable.
+         */
         public boolean isPointInside(float x, float y) {
             if (x >= this.mLeft
                     && x <= this.mRight
-                    && y <= this.mBottom
-                    && y >= this.mTop) {
+                    && (this.mBottom - this.mTop) > 1f
+                   ) {
                 return true;
             }
             return false;
