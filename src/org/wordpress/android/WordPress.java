@@ -171,7 +171,6 @@ public class WordPress extends Application {
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
             shouldRestoreSelectedActivity = true;
         }
-        registerForCloudMessaging(this);
 
         // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
@@ -185,6 +184,8 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
         AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+
+        registerForCloudMessaging(this);
 
         super.onCreate();
 
