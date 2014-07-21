@@ -626,11 +626,16 @@
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
 
     <!-- like counts liking users activity-->
+    <string name="reader_label_like">Like</string>
+    <string name="reader_label_liked_by">Liked by</string>
+    <string name="reader_label_liked_by_you">Liked by you</string>
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
+    <string name="reader_likes_one_short">1 person</string>
+    <string name="reader_likes_multi_short">%,d people</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>

@@ -28,12 +28,14 @@ import android.widget.TextView;
 import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -48,15 +50,12 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;
@@ -139,7 +138,7 @@ public class ReaderPostListFragment extends Fragment
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putString(ReaderConstants.ARG_BLOG_URL, blogUrl);
-        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -443,7 +442,7 @@ public class ReaderPostListFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
-        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_native, menu);
             checkActionBar();
         }
@@ -575,7 +574,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)) {
+        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
             // only change if we're not in list navigation mode, since that means the actionBar
             // is already correctly configured
             if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
@@ -952,7 +951,7 @@ public class ReaderPostListFragment extends Fragment
         // this check is purposely done after the "Refreshing" message is shown since we want
         // that to appear in this situation - ReaderActivity will take of re-issuing this
         // update request once tag data has been populated
-        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
             AppLog.d(T.READER, "reader post list > empty followed tags, canceled update");
             return;
         }
@@ -985,7 +984,7 @@ public class ReaderPostListFragment extends Fragment
                     // if the user is viewing posts for a followed tag, posts are already
                     // displayed, and the user has scrolled the list
                     if (!isPostAdapterEmpty()
-                            && getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
+                            && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                             && updateAction == RequestDataAction.LOAD_NEWER
                             && !isListScrolledToTop()) {
                         showNewPostsBar();
@@ -1098,7 +1097,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void checkCurrentTag() {
         if (hasCurrentTag()
-                && getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
+                && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                 && !ReaderTagTable.tagExists(getCurrentTag())) {
             mCurrentTag = ReaderTag.getDefaultTag();
         }
