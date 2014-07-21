@@ -88,6 +88,9 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
 
+    private long mTopMostCommentId;
+    private int mTopMostCommentTop;
+
     private Parcelable mListState;
     private final Handler mHandler = new Handler();
 
@@ -136,6 +139,9 @@ public class ReaderPostDetailFragment extends Fragment
                             }
                             mListState = null;
                         }
+                        if (mTopMostCommentId != 0) {
+                            restoreTopmostComment();
+                        }
                     }
                 }
             };
@@ -168,8 +174,34 @@ public class ReaderPostDetailFragment extends Fragment
         return mCommentAdapter;
     }
 
-    private boolean isCommentAdapterEmpty() {
-        return (mCommentAdapter == null || mCommentAdapter.isEmpty());
+    /*
+     * called before new comments are shown so the current topmost comment is remembered
+     */
+    private void retainTopmostComment() {
+        int position = getListView().getFirstVisiblePosition();
+        int numHeaders = getListView().getHeaderViewsCount();
+        if (position > numHeaders) {
+            mTopMostCommentId = getCommentAdapter().getItemId(position - numHeaders);
+            View v = getListView().getChildAt(0);
+            mTopMostCommentTop = (v != null ? v.getTop() : 0);
+        } else {
+            mTopMostCommentId = 0;
+            mTopMostCommentTop = 0;
+        }
+    }
+
+    /*
+     * called after new comments are shown so the previous topmost comment is scrolled to
+     */
+    private void restoreTopmostComment() {
+        if (mTopMostCommentId != 0) {
+            int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
+            if (position > -1) {
+                getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), mTopMostCommentTop);
+            }
+            mTopMostCommentId = 0;
+            mTopMostCommentTop = 0;
+        }
     }
 
     @Override
@@ -581,6 +613,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 hideProgressFooter();
                 if (result == ReaderActions.UpdateResult.CHANGED) {
+                    retainTopmostComment();
                     refreshComments();
                 }
             }
