@@ -14,6 +14,9 @@
             android:id="@id/android:list"
             style="@style/ReaderListView.NoDivider"
             android:layout_above="@+id/layout_comment_box"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay"
+            android:smoothScrollbar="true"
             tools:listheader="@layout/reader_listitem_post_detail"
             tools:listitem="@layout/reader_listitem_comment" />
 
