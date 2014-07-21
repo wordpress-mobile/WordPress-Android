@@ -264,6 +264,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     PendingIntent.FLAG_UPDATE_CURRENT);
             AnalyticsTrackerMixpanel.showNotification(context, pendingIntent, R.drawable.notification_icon, title,
                     mpMessage);
+            return;
         }
 
         if (!WordPress.hasValidWPComCredentials(context)) {
