@@ -105,13 +105,10 @@
             <intent android:targetClass="org.wordpress.android.ui.prefs.LicensesActivity"
                     android:targetPackage="org.wordpress.android"/>
         </Preference>
-        <Preference android:title="@string/reader_title_applog">
-            <intent android:targetClass="org.wordpress.android.ui.AppLogViewerActivity"
+        <Preference android:title="@string/help_and_support">
+            <intent android:targetClass="org.wordpress.android.ui.accounts.NuxHelpActivity"
                     android:targetPackage="org.wordpress.android"/>
         </Preference>
-        <Preference android:key="wp_pref_contact_us"
-                    android:title="@string/contact_us"
-                    android:summary="@string/contact_us_pref_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory
