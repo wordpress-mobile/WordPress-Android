@@ -153,12 +153,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         //noop
     }
 
-    private boolean hasActivity() {
-        return getActivity() != null;
-    }
-
     private int getNumOfPoints() {
-        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
+        if (isAdded() && DisplayUtils.isTablet(getActivity())) {
             return 30;
         }
 
@@ -169,7 +165,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     }
 
     private int getNumOfHorizontalLabels(int numPoints) {
-        if (hasActivity() && DisplayUtils.isTablet(getActivity())) {
+        if (isAdded() && DisplayUtils.isTablet(getActivity())) {
             return numPoints / 5;
         }
 

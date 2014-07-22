@@ -163,7 +163,7 @@ public class ViewPostFragment extends Fragment {
         // Don't load if the Post object or title are null, see #395
         if (post == null || post.getTitle() == null)
             return;
-        if (!hasActivity() || getView() == null)
+        if (!isAdded() || getView() == null)
             return;
 
         // create handler on UI thread
@@ -205,7 +205,7 @@ public class ViewPostFragment extends Fragment {
                     @Override
                     public void run() {
                         // make sure activity is still valid
-                        if (!hasActivity())
+                        if (!isAdded())
                             return;
 
                         mTitleTextView.setText(title);
@@ -263,15 +263,11 @@ public class ViewPostFragment extends Fragment {
     boolean mIsCommentBoxShowing = false;
     boolean mIsSubmittingComment = false;
 
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     private void showCommentBox() {
         // skip if it's already showing or a comment is being submitted
         if (mIsCommentBoxShowing || mIsSubmittingComment)
             return;
-        if (!hasActivity())
+        if (!isAdded())
             return;
 
         // show the comment box in, force keyboard to appear and highlight the comment button
@@ -303,7 +299,7 @@ public class ViewPostFragment extends Fragment {
     private void hideCommentBox() {
         if (!mIsCommentBoxShowing)
             return;
-        if (!hasActivity())
+        if (!isAdded())
             return;
 
         EditTextUtils.hideSoftInput(mEditComment);
@@ -321,7 +317,7 @@ public class ViewPostFragment extends Fragment {
     }
 
     private void submitComment() {
-        if (!hasActivity() || mIsSubmittingComment || WordPress.currentPost == null || !NetworkUtils.checkConnection(
+        if (!isAdded() || mIsSubmittingComment || WordPress.currentPost == null || !NetworkUtils.checkConnection(
                 getActivity())) {
             return;
         }
@@ -344,7 +340,7 @@ public class ViewPostFragment extends Fragment {
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsSubmittingComment = false;
-                if (!hasActivity())
+                if (!isAdded())
                     return;
 
                 parentActivity.attemptToSelectPost();

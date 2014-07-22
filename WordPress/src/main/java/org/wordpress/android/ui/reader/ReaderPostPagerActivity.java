@@ -295,10 +295,6 @@ public class ReaderPostPagerActivity extends Activity
             return view;
         }
 
-        private boolean hasActivity() {
-            return (getActivity() != null && getView() != null && !isRemoving());
-        }
-
         @Override
         public void setUserVisibleHint(boolean isVisibleToUser) {
             // setUserVisibleHint wasn't available until API 15 (ICE_CREAM_SANDWICH_MR1)
@@ -313,7 +309,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private void showCheckmark() {
-            if (!hasActivity()) {
+            if (!isVisible()) {
                 return;
             }
 
@@ -328,7 +324,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private void hideCheckmark() {
-            if (hasActivity()) {
+            if (isVisible()) {
                 mTxtCheckmark.setVisibility(View.INVISIBLE);
             }
         }

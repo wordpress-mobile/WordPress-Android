@@ -114,12 +114,8 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
         return false;
     }
 
-    protected boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     protected void showError(int messageId) {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
         if (specificShowError(messageId)) {

@@ -250,7 +250,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                 new CreateUserAndBlog.Callback() {
                     @Override
                     public void onStepFinished(CreateUserAndBlog.Step step) {
-                        if (!hasActivity()) {
+                        if (!isAdded()) {
                             return;
                         }
                         switch (step) {
@@ -275,7 +275,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     public void onSuccess(JSONObject createSiteResponse) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
-                        if (hasActivity()) {
+                        if (isAdded()) {
                             finishThisStuff(username);
                         }
                     }
@@ -283,7 +283,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
                     @Override
                     public void onError(int messageId) {
                         endProgress();
-                        if (hasActivity()) {
+                        if (isAdded()) {
                             showError(getString(messageId));
                         }
                     }

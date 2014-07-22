@@ -129,7 +129,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (hasActivity()) {
+                                if (isAdded()) {
                                     mFauxPullToRefreshHelper.setRefreshing(false);
                                 }
                             }
@@ -167,7 +167,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     public void refreshNotes() {
-        if (!hasActivity() || mNotesAdapter == null) {
+        if (!isAdded() || mNotesAdapter == null) {
             return;
         }
 
@@ -223,9 +223,5 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     public void setShouldLoadFirstNote(boolean shouldLoad) {
         mShouldLoadFirstNote = shouldLoad;
-    }
-
-    private boolean hasActivity() {
-        return getActivity() != null;
     }
 }

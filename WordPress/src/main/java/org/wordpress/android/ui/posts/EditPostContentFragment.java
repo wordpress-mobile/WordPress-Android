@@ -469,10 +469,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return false;
     }
 
-    protected boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
 
@@ -677,7 +673,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
 
         protected void onPostExecute(SpannableStringBuilder ssb) {
-            if (!hasActivity()) {
+            if (!isAdded()) {
                 return;
             }
             if (ssb != null && ssb.length() > 0) {
@@ -743,7 +739,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         }
 
         protected void onPostExecute(Uri newUri) {
-            if (!hasActivity()) {
+            if (!isAdded()) {
                 return;
             }
 
@@ -846,7 +842,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
                     @Override
                     public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
-                        if (hasActivity()) {
+                        if (isAdded()) {
                             Toast.makeText(getActivity(), R.string.media_edit_failure, Toast.LENGTH_LONG).show();
                         }
                     }
@@ -889,7 +885,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
 
             @Override
             public void onResponse(ImageLoader.ImageContainer container, boolean arg1) {
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     return;
                 }
 
@@ -927,7 +923,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                     for (WPImageSpan is : spans) {
                         MediaFile mediaFile = is.getMediaFile();
                         if (mediaFile == null) continue;
-                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded() && hasActivity()) {
+                        if (mediaId.equals(mediaFile.getMediaId()) && !is.isNetworkImageLoaded() && isAdded()) {
                             // replace the existing span with a new one with the correct image, re-add it to the same position.
                             int spanStart = s.getSpanStart(is);
                             int spanEnd = s.getSpanEnd(is);
@@ -1115,7 +1111,7 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
      * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
      */
     public int getMaximumThumbnailWidth() {
-        if (mMaximumThumbnailWidth == 0 && hasActivity()) {
+        if (mMaximumThumbnailWidth == 0 && isAdded()) {
             Point size = DisplayUtils.getDisplayPixelSize(getActivity());
             int screenWidth = size.x;
             int screenHeight = size.y;

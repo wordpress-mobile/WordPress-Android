@@ -126,7 +126,7 @@ public class ReaderPostDetailFragment extends Fragment
             ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (hasActivity()) {
+                    if (isAdded()) {
                         // show footer below comments when comments exist
                         mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
                         // restore listView state (scroll position) if it was saved during rotation
@@ -290,10 +290,6 @@ public class ReaderPostDetailFragment extends Fragment
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private boolean hasActivity() {
-        return isAdded() && !isRemoving();
     }
 
     /*
@@ -473,7 +469,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && hasActivity()) {
+                if (!succeeded && isAdded()) {
                     int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                 }
@@ -496,7 +492,7 @@ public class ReaderPostDetailFragment extends Fragment
      * called when user chooses to reblog the post
      */
     private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -514,7 +510,7 @@ public class ReaderPostDetailFragment extends Fragment
      * display the standard Android share chooser to share a link to this post
      */
     private void sharePage() {
-        if (!hasActivity() || !hasPost())
+        if (!isAdded() || !hasPost())
             return;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -576,7 +572,7 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     return;
                 }
                 hideProgressFooter();
@@ -619,7 +615,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private void refreshLikes() {
         AppLog.d(T.READER, "reader post detail > refreshLikes");
-        if (!hasActivity() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
+        if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
             return;
         }
 
@@ -649,7 +645,7 @@ public class ReaderPostDetailFragment extends Fragment
 
                 mHandler.post(new Runnable() {
                     public void run() {
-                        if (!hasActivity()) {
+                        if (!isAdded()) {
                             return;
                         }
 
@@ -737,7 +733,7 @@ public class ReaderPostDetailFragment extends Fragment
      * comment id to reply to a specific comment
      */
     private void showAddCommentBox(final long replyToCommentId) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
 
         // skip if it's already showing or if a comment is currently being submitted
@@ -805,7 +801,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     void hideAddCommentBox() {
-        if (!hasActivity() || !mIsAddCommentBoxShowing) {
+        if (!isAdded() || !mIsAddCommentBoxShowing) {
             return;
         }
 
@@ -868,7 +864,7 @@ public class ReaderPostDetailFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded, ReaderComment newComment) {
                 mIsSubmittingComment = false;
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     return;
                 }
                 if (succeeded) {
@@ -908,7 +904,7 @@ public class ReaderPostDetailFragment extends Fragment
      * refresh the follow button based on whether this is a followed blog
      */
     private void refreshFollowed() {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -946,7 +942,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private boolean showPhotoViewer(String imageUrl, View source, int startX, int startY) {
-        if (!hasActivity() || TextUtils.isEmpty(imageUrl)) {
+        if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
         }
 
@@ -1110,7 +1106,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (hasActivity()) {
+                if (isAdded()) {
                     progress.setVisibility(View.GONE);
                     if (succeeded) {
                         showPost();
@@ -1127,7 +1123,7 @@ public class ReaderPostDetailFragment extends Fragment
      * called when post couldn't be loaded and failed to be returned from server
      */
     private void postFailed() {
-        if (hasActivity()) {
+        if (isAdded()) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_post, ToastUtils.Duration.LONG);
         }
     }
@@ -1229,7 +1225,7 @@ public class ReaderPostDetailFragment extends Fragment
         protected void onPostExecute(Boolean result) {
             mIsPostTaskRunning = false;
 
-            if (!hasActivity()) {
+            if (!isAdded()) {
                 return;
             }
 
@@ -1393,7 +1389,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private void showContent() {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -1415,7 +1411,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @Override
     public ViewGroup onRequestCustomView() {
-        if (hasActivity()) {
+        if (isAdded()) {
             return (ViewGroup) getView().findViewById(R.id.layout_custom_view_container);
         } else {
             return null;
@@ -1427,7 +1423,7 @@ public class ReaderPostDetailFragment extends Fragment
      */
     @Override
     public ViewGroup onRequestContentView() {
-        if (hasActivity()) {
+        if (isAdded()) {
             return (ViewGroup) getView().findViewById(R.id.layout_post_detail_container);
         } else {
             return null;
@@ -1482,7 +1478,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     private ActionBar getActionBar() {
-        if (hasActivity()) {
+        if (isAdded()) {
             return getActivity().getActionBar();
         } else {
             AppLog.w(T.READER, "reader post detail > getActionBar called with no activity");
