@@ -329,6 +329,7 @@
     <string name="stats">Stats</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
+    <string name="stats_totals_views_per_visitor">Views per Visitor</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>

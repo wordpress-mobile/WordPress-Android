@@ -39,8 +39,8 @@ import org.wordpress.android.models.StatsSummary;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsBarChartUnit;
+import org.wordpress.android.ui.stats.StatsUIHelper;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -329,7 +329,7 @@ public class StatsService extends Service {
                             }
 
                             JSONArray results = currentViewsByCountryJsonObject.getJSONArray("country-views");
-                            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                            int count = Math.min(results.length(), StatsUIHelper.STATS_GROUP_MAX_ITEMS);
                             String date = currentViewsByCountryJsonObject.getString("date");
                             long dateMs = StatsUtils.toMs(date);
                             ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
@@ -397,7 +397,7 @@ public class StatsService extends Service {
 
                             JSONArray results = currentSearchEngineTermsJsonObject.getJSONArray("search-terms");
 
-                            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                            int count = Math.min(results.length(), StatsUIHelper.STATS_GROUP_MAX_ITEMS);
                             for (int i = 0; i < count; i++) {
                                 JSONArray result = results.getJSONArray(i);
                                 StatsSearchEngineTerm stat = new StatsSearchEngineTerm(mRequestBlogId, date, result);
@@ -464,7 +464,7 @@ public class StatsService extends Service {
                             JSONArray groups = currentClicksJsonObject.getJSONArray("clicks");
 
                             // insert groups, limited to the number that can actually be displayed
-                            int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                            int groupsCount = Math.min(groups.length(), StatsUIHelper.STATS_GROUP_MAX_ITEMS);
                             for (int i = 0; i < groupsCount; i++) {
                                 JSONObject group = groups.getJSONObject(i);
                                 StatsClickGroup statGroup = new StatsClickGroup(mRequestBlogId, date, group);
@@ -477,7 +477,7 @@ public class StatsService extends Service {
 
                                 // insert children if there are any, limited to the number that can be displayed
                                 JSONArray clicks = group.getJSONArray("results");
-                                int childCount = Math.min(clicks.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                                int childCount = Math.min(clicks.length(), StatsUIHelper.STATS_CHILD_MAX_ITEMS);
                                 if (childCount > 1) {
                                     for (int j = 0; j < childCount; j++) {
                                         StatsClick stat = new StatsClick(mRequestBlogId, date,
@@ -539,7 +539,7 @@ public class StatsService extends Service {
                             operations.add(deleteOp);
 
                             JSONArray groups = currentReferrersJsonObject.getJSONArray("referrers");
-                            int groupsCount = Math.min(groups.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                            int groupsCount = Math.min(groups.length(), StatsUIHelper.STATS_GROUP_MAX_ITEMS);
 
                             // insert groups
                             for (int i = 0; i < groupsCount; i++) {
@@ -553,7 +553,7 @@ public class StatsService extends Service {
 
                                 // insert children, only if there is more than one entry
                                 JSONArray referrers = group.getJSONArray("results");
-                                int childCount = Math.min(referrers.length(), StatsActivity.STATS_CHILD_MAX_ITEMS);
+                                int childCount = Math.min(referrers.length(), StatsUIHelper.STATS_CHILD_MAX_ITEMS);
                                 if (childCount > 1) {
                                     for (int j = 0; j < childCount; j++) {
                                         StatsReferrer stat = new StatsReferrer(mRequestBlogId, date,
@@ -599,7 +599,7 @@ public class StatsService extends Service {
                             }
 
                             JSONArray results = currentTopPostsAndPagesJsonObject.getJSONArray("top-posts");
-                            int count = Math.min(results.length(), StatsActivity.STATS_GROUP_MAX_ITEMS);
+                            int count = Math.min(results.length(), StatsUIHelper.STATS_GROUP_MAX_ITEMS);
 
                             String date = currentTopPostsAndPagesJsonObject.getString("date");
                             long dateMs = StatsUtils.toMs(date);
