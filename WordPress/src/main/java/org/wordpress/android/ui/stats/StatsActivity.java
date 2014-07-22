@@ -72,7 +72,9 @@ public class StatsActivity extends WPActionBarActivity {
     private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
 
-    public static final String STATS_TOUCH_DETECTED = "STATS_TOUCH_DETECTED";
+    public static final String STATS_GESTURE_SHOW_TAP = "STATS_SHOW_TAP";
+    public static final String STATS_GESTURE_SINGLE_TAP_CONFIRMED = "STATS_SINGLE_TAP_CONFIRMED";
+    public static final String STATS_GESTURE_OTHER = "STATS_GESTURE_OTHER";
     public static final String STATS_DETAILS_DATE = "STATS_DETAILS_DATE";
     private GestureDetectorCompat mDetector;
 
@@ -133,6 +135,7 @@ public class StatsActivity extends WPActionBarActivity {
 
         restoreState(savedInstanceState);
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        mDetector.setIsLongpressEnabled(false);
 
         // Refresh stats at startup
         refreshStats();
@@ -188,8 +191,24 @@ public class StatsActivity extends WPActionBarActivity {
             return true;
         }
         @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_TOUCH_DETECTED);
+        public boolean onSingleTapConfirmed(MotionEvent event) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SINGLE_TAP_CONFIRMED);
+            return false;
+        }
+        @Override
+        public void onShowPress(android.view.MotionEvent e) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SHOW_TAP);
+        }
+
+        @Override
+        public boolean onScroll(android.view.MotionEvent e1, android.view.MotionEvent e2, float distanceX, float distanceY) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
+            return false;
+        }
+
+        @Override
+        public boolean onFling(android.view.MotionEvent e1, android.view.MotionEvent e2, float velocityX, float velocityY) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
             return false;
         }
     }
