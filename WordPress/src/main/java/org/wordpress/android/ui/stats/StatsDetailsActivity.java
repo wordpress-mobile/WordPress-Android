@@ -378,7 +378,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
 
         private void parseViewAndVisitorsResponse(final JSONObject response) {
             mVisitorsCount = 0;
-            mViewsPerVisitor = 0;
+            mViewsCount = 0;
             mViewsPerVisitor = 0f;
             if (!response.has(mViewAndVisitorsPath)) {
                 return;
