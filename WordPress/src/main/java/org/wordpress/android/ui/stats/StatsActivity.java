@@ -12,15 +12,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Display;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -32,7 +33,9 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
@@ -41,11 +44,9 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCCallback;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -65,14 +66,14 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity {
-    // Max number of rows to show in a stats fragment
-    public static final int STATS_GROUP_MAX_ITEMS = 10;
-    public static final int STATS_CHILD_MAX_ITEMS = 25;
-
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
+
+    public static final String STATS_TOUCH_DETECTED = "STATS_TOUCH_DETECTED";
+    public static final String STATS_DETAILS_DATE = "STATS_DETAILS_DATE";
+    private GestureDetectorCompat mDetector;
 
     private Dialog mSignInDialog;
     private int mNavPosition = 0;
@@ -84,9 +85,6 @@ public class StatsActivity extends WPActionBarActivity {
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    // Used for tablet UI
-    private static final int TABLET_720DP = 720;
-    private static final int TABLET_600DP = 600;
     private LinearLayout mFragmentContainer;
 
     @Override
@@ -133,6 +131,11 @@ public class StatsActivity extends WPActionBarActivity {
         setTitle(R.string.stats);
 
         restoreState(savedInstanceState);
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
+        // Refresh stats at startup
+        refreshStats();
+        mPullToRefreshHelper.setRefreshing(true);
     }
 
     @Override
@@ -149,20 +152,15 @@ public class StatsActivity extends WPActionBarActivity {
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
-
-        if (!mIsRestoredFromState) {
-            mPullToRefreshHelper.setRefreshing(true);
-            refreshStats();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         mIsInFront = false;
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.unregisterReceiver(mReceiver);
+        mPullToRefreshHelper.setRefreshing(false);
         mPullToRefreshHelper.unregisterReceiver(this);
     }
 
@@ -178,10 +176,27 @@ public class StatsActivity extends WPActionBarActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+        super.onSaveInstanceState(outState);
+    }
+
+    class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_TOUCH_DETECTED);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        this.mDetector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
     }
 
     private void startWPComLoginActivity() {
@@ -197,7 +212,7 @@ public class StatsActivity extends WPActionBarActivity {
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             mResultCode = resultCode;
             if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
-                if (getBlogId() == null) {
+                if (StatsUtils.getBlogId() == null) {
                     final Handler handler = new Handler();
                     final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
@@ -309,8 +324,7 @@ public class StatsActivity extends WPActionBarActivity {
         ft.commit();
 
         // split layout into two for 720DP tablets and 600DP tablets in landscape
-        if (StatsUtils.getSmallestWidthDP() >= TABLET_720DP
-                || (StatsUtils.getSmallestWidthDP() == TABLET_600DP && isInLandscape())) {
+        if (StatsUIHelper.shouldLoadSplitLayout(this)) {
             loadSplitLayout();
         }
     }
@@ -368,13 +382,6 @@ public class StatsActivity extends WPActionBarActivity {
         columnRight.addView(frameView);*/
     }
 
-    private boolean isInLandscape() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        return (point.y < point.x);
-    }
-
     private class VerifyJetpackSettingsCallback implements ApiHelper.GenericCallback {
         private final WeakReference<StatsActivity> mStatsActivityWeakRef;
 
@@ -389,7 +396,7 @@ public class StatsActivity extends WPActionBarActivity {
                 return;
             }
 
-            if (getBlogId() == null) {
+            if (StatsUtils.getBlogId() == null) {
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mPullToRefreshHelper.setRefreshing(false);
@@ -455,36 +462,23 @@ public class StatsActivity extends WPActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            final String blogId = getBlogId();
+            final String blogId = StatsUtils.getBlogId();
             if (blogId == null) {
                 showJetpackMissingAlert(this);
                 return true;
             }
-            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
-            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            // 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
-            // 2. If credentials are empty read the global wpcom credentials
-            // 3. Check that credentials are not empty before launching the activity
-            String statsAuthenticatedUser = WordPress.getCurrentBlog().getDotcom_username();
-            String statsAuthenticatedPassword = WordPress.getCurrentBlog().getDotcom_password();
-
-            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                // Let's try the global wpcom credentials
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-                statsAuthenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
-                statsAuthenticatedPassword = WordPressDB.decryptPassword(
-                        settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
-                );
-            }
-            if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
-                    || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
-                // Still empty. Show Toast.
+            StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
+            if (credentials == null) {
                 Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
             }
 
+            String statsAuthenticatedUser = credentials.getUsername();
+            String statsAuthenticatedPassword =  credentials.getPassword();
+            String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
+
+            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
@@ -581,7 +575,7 @@ public class StatsActivity extends WPActionBarActivity {
             return;
         }
 
-        final String blogId = getBlogId();
+        final String blogId = StatsUtils.getBlogId();
 
         // Make sure the blogId is available.
         if (blogId != null) {
@@ -631,23 +625,6 @@ public class StatsActivity extends WPActionBarActivity {
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         startService(intent);
-    }
-
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    String getBlogId() {
-        Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog.isDotcomFlag()) {
-            return String.valueOf(currentBlog.getRemoteBlogId());
-        } else {
-            return currentBlog.getApi_blogid();
-        }
     }
 
     private void stopStatsService() {

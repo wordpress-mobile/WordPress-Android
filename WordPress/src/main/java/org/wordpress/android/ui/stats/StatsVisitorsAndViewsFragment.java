@@ -33,9 +33,9 @@ import java.util.Locale;
  * A summary of the blog's stats are also shown on each page.
  */
 public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implements RadioGroup.OnCheckedChangeListener {
-    private static final String[] TITLES = new String [] { StatsBarChartUnit.DAY.getLabel(),
+    private static final String[] TITLES = new String [] {StatsBarChartUnit.DAY.getLabel(),
                                                            StatsBarChartUnit.WEEK.getLabel(),
-                                                           StatsBarChartUnit.MONTH.getLabel() };
+                                                           StatsBarChartUnit.MONTH.getLabel()};
 
     private TextView mVisitorsToday;
     private TextView mViewsToday;
@@ -67,8 +67,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         mRadioGroup.setOnCheckedChangeListener(this);
 
         for (int i = 0; i < TITLES.length; i++) {
-            RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(R.layout.stats_radio_button, null, false);
-            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+            RadioButton rb = (RadioButton) LayoutInflater.from(getActivity()).inflate(
+                    R.layout.stats_radio_button,
+                    null,
+                    false);
+            RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(
+                    RadioGroup.LayoutParams.WRAP_CONTENT,
+                    RadioGroup.LayoutParams.WRAP_CONTENT);
             int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
             params.setMargins(0, 0, dp8, 0);
             rb.setMinimumWidth(DisplayUtils.dpToPx(view.getContext(), 80));
@@ -77,8 +82,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             rb.setText(TITLES[i]);
             mRadioGroup.addView(rb);
 
-            if (i == mSelectedButtonIndex)
+            if (i == mSelectedButtonIndex) {
                 rb.setChecked(true);
+            }
         }
         return view;
     }
@@ -129,16 +135,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     private void refreshSummary() {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getCurrentBlog() == null) {
             return;
+        }
 
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
                 String blogId = WordPress.getCurrentBlog().getDotComBlogId();
-                if (TextUtils.isEmpty(blogId))
+                if (TextUtils.isEmpty(blogId)) {
                     blogId = "0";
+                }
                 final StatsSummary summary = StatsUtils.getSummary(blogId);
                 handler.post(new Runnable() {
                     public void run() {
@@ -146,12 +154,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                     }
                 });
             }
-        }.start();
+        } .start();
     }
 
     private void refreshSummary(final StatsSummary stats) {
-        if (getActivity() == null)
+        if (getActivity() == null) {
             return;
+        }
 
         if (stats == null) {
             mVisitorsToday.setText("0");
