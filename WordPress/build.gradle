@@ -85,7 +85,7 @@ wordpress {
     graphview {
         repo 'wordpress-mobile/GraphView'
         subproject 'WordPressGraphView'
-        artifact 'org.wordpress:graphview:3.2.0'
+        artifact 'org.wordpress:graphview:3.2.1'
     }
 }
 
