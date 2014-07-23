@@ -70,7 +70,7 @@ wordpress {
     utils {
         repo 'WordPress-Utils-Android'
         subproject 'WordPressUtils'
-        artifact 'org.wordpress:wordpress-utils:1.0.1'
+        artifact 'org.wordpress:wordpress-utils:1.0.2'
     }
     networking {
         repo 'WordPress-Networking-Android'
