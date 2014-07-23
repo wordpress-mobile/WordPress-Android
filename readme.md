@@ -52,16 +52,6 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
 Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 [Developer Handbook][4] and [Development Blog][5].
 
-## Optional step to create symlinks in libs/ ##
-
-If you don't want to have all dependencies in your libs/ directory, you can
-clone each dependency yourself wherever you like and create a symlink
-in `libs`, here is an example for the WordPress-Utils dependency:
-
-    $ git clone git@github.com:wordpress-mobile/WordPress-Utils-Android.git
-    $ cd WordPress-Android/libs
-    $ ln -s ../../WordPress-Utils-Android/ utils
-
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
