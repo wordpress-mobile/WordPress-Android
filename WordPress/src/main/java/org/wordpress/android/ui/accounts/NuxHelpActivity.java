@@ -14,6 +14,8 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
+import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -48,12 +50,29 @@ public class NuxHelpActivity extends Activity {
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
-
-        WPTextView helpCenterButton = (WPTextView) findViewById(R.id.contact_us_button);
-        helpCenterButton.setOnClickListener(new OnClickListener() {
+        WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
+        contactUsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle extras = getIntent().getExtras();
+                if (extras != null) {
+                    // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
+                    // related code at the same place (Note: value can be null).
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
+                            WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
+                            WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                }
+                HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.LOGIN_SCREEN});
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
+            }
+        });
+
+        WPTextView faqbutton = (WPTextView) findViewById(R.id.faq_button);
+        faqbutton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HelpshiftHelper.getInstance().showFAQ(NuxHelpActivity.this);
             }
         });
     }

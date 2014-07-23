@@ -44,7 +44,8 @@ android {
         targetSdkVersion 19
 
         buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.playstore\""
-        buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProvider\""
+        buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
+                "\"org.wordpress.android.providers.StatsContentProvider\""
     }
 
     productFlavors {
@@ -52,7 +53,8 @@ android {
 
         zbetagroup {
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.beta.build\""
-            buildConfigField "String", "STATS_PROVIDER_AUTHORITY", "\"org.wordpress.android.providers.StatsContentProviderBeta\""
+            buildConfigField "String", "STATS_PROVIDER_AUTHORITY",
+                    "\"org.wordpress.android.providers.StatsContentProviderBeta\""
             applicationId "org.wordpress.android.beta"
         }
     }
@@ -79,6 +81,11 @@ wordpress {
         repo 'Automattic/android-wordpress-com-rest'
         subproject 'WordPressComRest'
         artifact 'com.automattic:wordpresscom-rest:1.0.0'
+    }
+    graphview {
+        repo 'wordpress-mobile/GraphView'
+        subproject 'WordPressGraphView'
+        artifact 'org.wordpress:graphview:3.2.1'
     }
 }
 
@@ -110,7 +117,6 @@ dependencies {
 
     // Provided by the WordPress-Android Repository
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
-    compile 'org.wordpress:graphview:3.1.1' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
     compile 'org.wordpress:android-passcodelock:0.0.5'
@@ -125,7 +131,11 @@ dependencies {
 
 task generateCrashlyticsConfig(group: "generate", description: "Generate Crashlytics config") {
     def outputFile = new File("${rootDir}/WordPress/crashlytics.properties")
-    def inputFile = file("gradle.properties")
+    def inputFile = file("${rootDir}/WordPress/gradle.properties")
+    if (!inputFile.exists()) {
+        throw new StopActionException("Build configuration file:" + inputFile
+                + " doesn't exist, follow README instructions")
+    }
     outputs.file outputFile
     inputs.file inputFile
     doLast {
@@ -141,18 +151,17 @@ apiKey=${crashlyticsApiKey}""")
     }
 }
 
-// Add the generateWPConfig task to every buildType's compile tasks
+// Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
+android.applicationVariants.all { variant ->
+    variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
+}
+
+// Add properties named "wp.xxx" to our BuildConfig
 android.buildTypes.all { buildType ->
     project.properties.any { property ->
         if (property.key.toLowerCase().startsWith("wp.")) {
             buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
                     "\"${property.value}\""
-        }
-    }
-    def name = "generate${buildType.name.capitalize()}BuildConfig"
-    tasks.whenTaskAdded { task ->
-        if (task.name == name) {
-            task.dependsOn(generateCrashlyticsConfig)
         }
     }
 }

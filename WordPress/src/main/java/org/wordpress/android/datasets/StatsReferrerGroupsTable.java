@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import org.wordpress.android.models.StatsReferrerGroup;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.StatsUIHelper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -87,7 +87,7 @@ public class StatsReferrerGroupsTable extends SQLTable {
 
     @Override
     public Cursor query(SQLiteDatabase database, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC LIMIT " + StatsActivity.STATS_GROUP_MAX_ITEMS;
+        String sort = NAME + "." + Columns.TOTAL + " DESC, " + NAME + "." + Columns.NAME + " ASC LIMIT " + StatsUIHelper.STATS_GROUP_MAX_ITEMS;
 
         String timeframe = uri.getQueryParameter("timeframe");
         if (timeframe == null)

@@ -13,6 +13,7 @@ import android.view.View;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
@@ -64,7 +65,7 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_BLOG_URL, blogUrl);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
         context.startActivity(intent);
     }
 
@@ -77,7 +78,7 @@ public class ReaderActivityLauncher {
         }
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.TAG_PREVIEW);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
     }
 
@@ -91,6 +92,20 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderUserListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
+        context.startActivity(intent);
+    }
+
+    /*
+     * show users who liked the passed comment
+     */
+    public static void showReaderLikingUsers(Context context, ReaderComment comment) {
+        if (comment == null) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderUserListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, comment.blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, comment.postId);
+        intent.putExtra(ReaderConstants.ARG_COMMENT_ID, comment.commentId);
         context.startActivity(intent);
     }
 
