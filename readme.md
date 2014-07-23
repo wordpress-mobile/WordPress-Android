@@ -8,19 +8,20 @@ read on.
 
 The [gradle build system][2] will fetch all dependencies and generate
 files you need to build the project. You first need to generate the
-local.properties (replace YOUR_SDK_DIR by your actual android sdk dir) 
-file and create the gradle.properties file, the easiest way is to copy 
+local.properties (replace YOUR_SDK_DIR by your actual android sdk dir)
+file and create the gradle.properties file, the easiest way is to copy
 our example:
 
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
     $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
-    
-After this step, you can invoke gradle to clone local project dependencies:
 
-    $ ./gradlew cloneWordPressLibraries
-    
+After this step, you can invoke git submodule to clone local project dependencies:
+
+    $ git submodule init
+    $ git submodule update
+
 Previous command create a `libs/` directory and clone all dependencies needed
-by the main WordPress for Android project. You can now build, install and 
+by the main WordPress for Android project. You can now build, install and
 test the project:
 
     $ ./gradlew assembleVanillaDebug # assemble the debug .apk
@@ -32,14 +33,14 @@ You can use [Android Studio][3] by importing the project as a Gradle project.
 
 ## Directory structure ##
 
-    |-- libs                    # dependencies used to build debug variants 
+    |-- libs                    # dependencies used to build debug variants
     |-- tools                   # script collection
     `-- WordPress
         |-- build.gradle        # main build script
         |-- gradle.properties   # properties imported by the build script
         `-- src                 # android specific Java code
             |-- androidTest     # test assets, resources and code
-            |-- main            # 
+            |-- main            #
             |   |-- assets      # main project assets
             |   |-- java        # main project java code
             |   `-- res         # main project resources
@@ -53,11 +54,11 @@ Say hello on our IRC channel: `#WordPress-Mobile` (freenode). Read our
 
 ## Optional step to create symlinks in libs/ ##
 
-If you don't want to have all dependencies in your libs/ directory, you can 
-clone each dependency yourself wherever you like and create a symlink 
+If you don't want to have all dependencies in your libs/ directory, you can
+clone each dependency yourself wherever you like and create a symlink
 in `libs`, here is an example for the WordPress-Utils dependency:
 
-    $ git clone git@github.com:wordpress-mobile/WordPress-Utils-Android.git 
+    $ git clone git@github.com:wordpress-mobile/WordPress-Utils-Android.git
     $ cd WordPress-Android/libs
     $ ln -s ../../WordPress-Utils-Android/ utils
 
