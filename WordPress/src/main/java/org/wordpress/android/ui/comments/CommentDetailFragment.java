@@ -223,7 +223,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mIsUsersBlog)
             mRemoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
 
-        if (hasActivity())
+        if (isAdded())
             showComment();
     }
 
@@ -235,7 +235,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
-        if (hasActivity() && mNote != null)
+        if (isAdded() && mNote != null)
             showComment();
     }
 
@@ -268,10 +268,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
-    }
-
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
     }
 
     private boolean hasComment() {
@@ -312,7 +308,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * open the comment for editing
      */
     private void editComment() {
-        if (!hasActivity() || !hasComment())
+        if (!isAdded() || !hasComment())
             return;
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
@@ -327,7 +323,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * display the current comment
      */
     private void showComment() {
-        if (!hasActivity() || getView() == null)
+        if (!isAdded() || getView() == null)
             return;
 
         // these two views contain all the other views except the progress bar
@@ -397,7 +393,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
     private void setPostTitle(TextView txtTitle, String postTitle, boolean isHyperlink) {
-        if (txtTitle == null || !hasActivity())
+        if (txtTitle == null || !isAdded())
             return;
         if (TextUtils.isEmpty(postTitle)) {
             txtTitle.setText(R.string.untitled);
@@ -427,7 +423,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * title above the comment
      */
     private void showPostTitle(final int blogId, final long postId) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
 
         final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
@@ -468,7 +464,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
                     @Override
                     public void onActionResult(boolean succeeded) {
-                        if (!hasActivity())
+                        if (!isAdded())
                             return;
                         // update title if it wasn't set above
                         if (!hasTitle) {
@@ -520,7 +516,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void dismissDialog(int id) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
         try {
             getActivity().dismissDialog(id);
@@ -533,7 +529,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * approve, unapprove, spam, or trash the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
-        if (!hasActivity() || !hasComment() || mIsModeratingComment)
+        if (!isAdded() || !hasComment() || mIsModeratingComment)
             return;
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
@@ -580,7 +576,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
-                if (hasActivity()) {
+                if (isAdded()) {
                     dismissDialog(dlgId);
                     mLayoutButtons.setEnabled(true);
                     if (succeeded) {
@@ -611,7 +607,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!hasActivity() || mIsSubmittingReply)
+        if (!isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -638,7 +634,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsSubmittingReply = false;
                 if (succeeded && mOnCommentChangeListener != null)
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
-                if (hasActivity()) {
+                if (isAdded()) {
                     mEditReply.setEnabled(true);
                     mImgSubmitReply.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
@@ -678,7 +674,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * already marked as spam, and show the current status of the comment
      */
     private void updateStatusViews() {
-        if (!hasActivity() || !hasComment())
+        if (!isAdded() || !hasComment())
             return;
 
         final int moderationDrawResId;  // drawable resource id for moderation button
@@ -825,7 +821,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void requestComment(final int localBlogId,
                                 final int remoteBlogId,
                                 final long commentId) {
-        final ProgressBar progress = (hasActivity() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
+        final ProgressBar progress = (isAdded() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
         if (progress != null)
             progress.setVisibility(View.VISIBLE);
 
@@ -833,7 +829,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onResponse(JSONObject jsonObject) {
                 mIsRequestingComment = false;
-                if (hasActivity()) {
+                if (isAdded()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
                     Comment comment = Comment.fromJSON(jsonObject);
@@ -852,7 +848,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onErrorResponse(VolleyError volleyError) {
                 mIsRequestingComment = false;
                 AppLog.e(T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
-                if (hasActivity()) {
+                if (isAdded()) {
                     if (progress != null)
                         progress.setVisibility(View.GONE);
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);

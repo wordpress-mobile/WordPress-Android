@@ -75,7 +75,7 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.DataLoadedListener dataLoadedListener = new CommentAdapter.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (!hasActivity())
+                    if (!isAdded())
                         return;
                     if (isEmpty) {
                         showEmptyView();
@@ -221,7 +221,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void dismissDialog(int id) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
         try {
             getActivity().dismissDialog(id);
@@ -267,7 +267,7 @@ public class CommentsListFragment extends Fragment {
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
-                if (!hasActivity())
+                if (!isAdded())
                     return;
                 finishActionMode();
                 dismissDialog(dlgId);
@@ -317,7 +317,7 @@ public class CommentsListFragment extends Fragment {
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
-                if (!hasActivity())
+                if (!isAdded())
                     return;
                 finishActionMode();
                 dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
@@ -442,7 +442,7 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         protected CommentList doInBackground(Void... args) {
-            if (!hasActivity())
+            if (!isAdded())
                 return null;
 
             Blog blog = WordPress.getCurrentBlog();
@@ -482,7 +482,7 @@ public class CommentsListFragment extends Fragment {
         protected void onPostExecute(CommentList comments) {
             mIsUpdatingComments = false;
             mUpdateCommentsTask = null;
-            if (!hasActivity()) {
+            if (!isAdded()) {
                 return;
             }
             if (isLoadingMore) {
@@ -523,10 +523,6 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     private void showEmptyView() {
         if (mEmptyView != null)
             mEmptyView.setVisibility(View.VISIBLE);
@@ -541,13 +537,13 @@ public class CommentsListFragment extends Fragment {
      * show/hide progress bar which appears at the bottom when loading more comments
      */
     private void showLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null) {
+        if (isAdded() && mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null) {
+        if (isAdded() && mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
         }
     }

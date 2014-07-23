@@ -583,17 +583,17 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
         @Override
         protected void onPostExecute(final List<Map<String, Object>> userBlogList) {
-            if (mSetupBlog.isErroneousSslCertificates() && hasActivity()) {
+            if (mSetupBlog.isErroneousSslCertificates() && isAdded()) {
                 askForSslTrust();
                 return;
             }
 
-            if (mSetupBlog.isHttpAuthRequired() && hasActivity()) {
+            if (mSetupBlog.isHttpAuthRequired() && isAdded()) {
                 httpAuthRequired();
                 return;
             }
 
-            if (userBlogList == null && mErrorMsgId != 0 && hasActivity()) {
+            if (userBlogList == null && mErrorMsgId != 0 && isAdded()) {
                 signInError();
                 return;
             }
