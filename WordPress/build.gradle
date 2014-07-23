@@ -68,22 +68,18 @@ android {
 
 wordpress {
     utils {
-        repo 'WordPress-Utils-Android'
         subproject 'WordPressUtils'
         artifact 'org.wordpress:wordpress-utils:1.0.1'
     }
     networking {
-        repo 'WordPress-Networking-Android'
         subproject 'WordPressNetworking'
         artifact 'org.wordpress:wordpress-networking:1.0.0'
     }
     wpcomrest {
-        repo 'Automattic/android-wordpress-com-rest'
         subproject 'WordPressComRest'
         artifact 'com.automattic:wordpresscom-rest:1.0.0'
     }
     graphview {
-        repo 'wordpress-mobile/GraphView'
         subproject 'WordPressGraphView'
         artifact 'org.wordpress:graphview:3.2.1'
     }
