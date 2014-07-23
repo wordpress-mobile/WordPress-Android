@@ -1,12 +1,3 @@
-[submodule "libs/WordPress-Networking-Android"]
-	path = libs/WordPress-Networking-Android
-	url = https://github.com/wordpress-mobile/WordPress-Networking-Android.git
-[submodule "libs/WordPress-Utils-Android"]
-	path = libs/WordPress-Utils-Android
-	url = https://github.com/wordpress-mobile/WordPress-Utils-Android.git
-[submodule "libs/GraphView"]
-	path = libs/GraphView
-	url = https://github.com/wordpress-mobile/GraphView.git
 [submodule "libs/graphview"]
 	path = libs/graphview
 	url = https://github.com/wordpress-mobile/GraphView.git
