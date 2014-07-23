@@ -17,8 +17,8 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 

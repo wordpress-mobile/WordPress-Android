@@ -87,7 +87,6 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE = "INVALID_SSL_CERTIFICATE";
     public static final String BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH = "TWO_FA_AUTH";
     public static final String BROADCAST_ACTION_XMLRPC_LOGIN_LIMIT = "LOGIN_LIMIT";
-    public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
     public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;

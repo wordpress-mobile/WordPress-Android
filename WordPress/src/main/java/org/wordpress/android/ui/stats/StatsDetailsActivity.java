@@ -37,11 +37,11 @@ import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
