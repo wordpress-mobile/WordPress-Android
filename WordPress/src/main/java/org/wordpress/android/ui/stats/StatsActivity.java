@@ -192,23 +192,23 @@ public class StatsActivity extends WPActionBarActivity {
             return true;
         }
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent event) {
+        public boolean onSingleTapUp(MotionEvent event) {
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SINGLE_TAP_CONFIRMED);
             return false;
         }
         @Override
-        public void onShowPress(android.view.MotionEvent e) {
+        public void onShowPress(MotionEvent e) {
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SHOW_TAP);
         }
 
         @Override
-        public boolean onScroll(android.view.MotionEvent e1, android.view.MotionEvent e2, float distanceX, float distanceY) {
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
             return false;
         }
 
         @Override
-        public boolean onFling(android.view.MotionEvent e1, android.view.MotionEvent e2, float velocityX, float velocityY) {
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
             return false;
         }
