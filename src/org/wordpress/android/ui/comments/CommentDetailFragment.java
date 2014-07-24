@@ -768,8 +768,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
 
         // animate the buttons in if they're not visible
-        if (mLayoutButtons.getVisibility() != View.VISIBLE && (canMarkAsSpam() || canModerate())) {
-            mLayoutButtons.clearAnimation();
+        boolean isAnimating = (mLayoutButtons.getAnimation() != null && !mLayoutButtons.getAnimation().hasEnded());
+        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate())) {
             AniUtils.flyIn(mLayoutButtons);
         }
     }
