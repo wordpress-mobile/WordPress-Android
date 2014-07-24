@@ -471,11 +471,20 @@ public class ApiHelper {
                     WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
                 }
                 return true;
+            } catch (XMLRPCFault e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                if (e.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
+                mErrorMessage = e.getMessage();
             } catch (XMLRPCException e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
                 mErrorMessage = e.getMessage();
             } catch (IOException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
                 mErrorMessage = e.getMessage();
             } catch (XmlPullParserException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
                 mErrorMessage = e.getMessage();
             }
 
