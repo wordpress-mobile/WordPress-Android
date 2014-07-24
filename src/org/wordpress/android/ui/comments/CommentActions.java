@@ -244,12 +244,16 @@ public class CommentActions {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        actionListener.onActionResult(true);
+                        if (actionListener != null) {
+                            actionListener.onActionResult(true);
+                        }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        actionListener.onActionResult(false);
+                        if (actionListener != null) {
+                            actionListener.onActionResult(false);
+                        }
                     }
                 }
         );
