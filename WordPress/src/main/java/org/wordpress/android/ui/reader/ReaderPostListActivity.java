@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -183,7 +184,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     public void onSignout() {
         super.onSignout();
 
-        AppLog.i(T.READER, "user signed out");
+        AppLog.i(T.READER, "reader post list > user signed out");
         mHasPerformedInitialUpdate = false;
 
         // reader database will have been cleared by the time this is called, but the fragment must
@@ -241,6 +242,20 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
+     * is the list fragment showing posts with the passed tag?
+     */
+    private boolean isListFragmentForTagShowing(String tagName) {
+        if (tagName == null) {
+            return false;
+        }
+        ReaderPostListFragment listFragment = getListFragment();
+        return listFragment != null
+                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                && listFragment.getCurrentTagName().equals(tagName);
+    }
+
+
+    /*
      * initial update performed at startup to ensure we have the latest reader-related info
      */
     private void performInitialUpdate() {
@@ -288,20 +303,66 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 // now that tags have been retrieved, perform the other requests - first update
                 // the current user to ensure we have their user_id as well as their latest info
                 // in case they changed their avatar, name, etc. since last time
-                AppLog.i(T.READER, "reader activity > updating current user");
+                AppLog.d(T.READER, "reader post list > updating current user");
                 ReaderUserActions.updateCurrentUser(null);
 
                 // update followed blogs
-                AppLog.i(T.READER, "reader activity > updating followed blogs");
-                ReaderBlogActions.updateFollowedBlogs(null);
+                AppLog.d(T.READER, "reader post list > updating followed blogs");
+                updateFollowedBlogs();
 
                 // update cookies so that we can show authenticated images in WebViews
-                AppLog.i(T.READER, "reader activity > updating cookies");
+                AppLog.d(T.READER, "reader post list > updating cookies");
                 ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
             }
         };
         ReaderTagActions.updateTags(listener);
     }
+
+    /*
+     * request the latest list of blogs the user is following
+     */
+    private void updateFollowedBlogs() {
+        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
+            @Override
+            public void onUpdateResult(UpdateResult result) {
+                if (!isFinishing() && result == UpdateResult.CHANGED) {
+                    AppLog.d(T.READER, "reader post list > followed blogs have changed");
+                    // if followed blogs have changed, remove posts in blogs that are
+                    // no longer being followed
+                    purgeUnfollowedPosts();
+                }
+            }
+        };
+        ReaderBlogActions.updateFollowedBlogs(listener);
+    }
+
+    /*
+     * remove posts in blogs that are no longer followed
+     */
+    private void purgeUnfollowedPosts() {
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                // purge in the background
+                int numPurged = ReaderPostTable.purgeUnfollowedPosts();
+
+                // if any posts were purged and we're showing posts in followed blogs, refresh the
+                // list fragment so purged posts no longer appear
+                if (numPurged > 0) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            if (isListFragmentForTagShowing(ReaderTag.TAG_NAME_FOLLOWING)) {
+                                getListFragment().refreshPosts();
+                            }
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
 
     /*
      * user tapped a post in the list fragment
@@ -311,7 +372,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         // skip if this activity no longer has the focus - this prevents the post detail from
         // being shown multiple times if the user quickly taps a post more than once
         if (!this.hasWindowFocus()) {
-            AppLog.i(T.READER, "post selected when activity not focused");
+            AppLog.w(T.READER, "reader post list > post selected when activity not focused");
             return;
         }
 
