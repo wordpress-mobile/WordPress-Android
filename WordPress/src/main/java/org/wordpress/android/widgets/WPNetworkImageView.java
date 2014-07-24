@@ -2,12 +2,7 @@ package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -22,9 +17,9 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 /**
@@ -310,7 +305,7 @@ public class WPNetworkImageView extends ImageView {
         }
     }
 
-    public void showErrorImage() {
+    void showErrorImage() {
         switch (mImageType) {
             case NONE:
                 // do nothing
@@ -328,39 +323,6 @@ public class WPNetworkImageView extends ImageView {
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_medium)));
                 break;
         }
-    }
-
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        if (mImageType == ImageType.VIDEO) {
-            drawVideoOverlay(canvas);
-        }
-    }
-
-    private void drawVideoOverlay(Canvas canvas) {
-        if (canvas == null) {
-            return;
-        }
-
-        Bitmap overlay = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_reader_video_overlay, null);
-        int overlaySize = getContext().getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size);
-
-        // use the size of the view rather than the canvas
-        int srcWidth = this.getWidth();
-        int srcHeight = this.getHeight();
-
-        // skip if overlay is larger than source image
-        if (overlaySize > srcWidth || overlaySize > srcHeight) {
-            return;
-        }
-
-        final int left = (srcWidth / 2) - (overlaySize / 2);
-        final int top = (srcHeight / 2) - (overlaySize / 2);
-        final Rect rcDst = new Rect(left, top, left + overlaySize, top + overlaySize);
-
-        canvas.drawBitmap(overlay, null, rcDst, new Paint(Paint.FILTER_BITMAP_FLAG));
-
-        overlay.recycle();
     }
 
     // --------------------------------------------------------------------------------------------------
