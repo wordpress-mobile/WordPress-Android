@@ -454,7 +454,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         if (hasTitle) {
             setPostTitle(txtPostTitle, title, canRequestPost);
-        } else {
+        } else if (canRequestPost) {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
@@ -604,7 +604,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
         mIsModeratingComment = true;
-        CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        // Moderate notifications via REST API, otherwise over XML-RPC
+        if (mNote != null) {
+            CommentActions.moderateCommentForNote(mNote, newStatus, actionListener);
+        } else {
+            CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        }
     }
 
     /*
@@ -763,8 +768,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
 
         // animate the buttons in if they're not visible
-        if (mLayoutButtons.getVisibility() != View.VISIBLE && (canMarkAsSpam() || canModerate())) {
-            mLayoutButtons.clearAnimation();
+        boolean isAnimating = (mLayoutButtons.getAnimation() != null && !mLayoutButtons.getAnimation().hasEnded());
+        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate())) {
             AniUtils.flyIn(mLayoutButtons);
         }
     }
@@ -788,7 +793,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return canModerate();
     }
     private boolean canEdit() {
-        return canModerate();
+        return (mLocalBlogId > 0 && canModerate());
     }
 
     /*
