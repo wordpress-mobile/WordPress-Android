@@ -206,16 +206,12 @@ public class ReaderPostListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        // if the fragment is resuming from a paused state, refresh the adapter to make sure
-        // the follow status of all posts is accurate - this is necessary in case the user
-        // returned from an activity where the follow status may have been changed
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-            if (hasPostAdapter()) {
-                getPostAdapter().checkFollowStatusForAllPosts();
-            }
-
+            // refresh the posts in case the user returned from an activity that
+            // changed one (or more) of the posts
+            refreshPosts();
             // likewise for tags
             refreshTags();
         }
