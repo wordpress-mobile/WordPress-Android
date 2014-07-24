@@ -104,16 +104,16 @@ dependencies {
         exclude group: 'com.android', module: 'volley'
     }
 
-    debugCompile project(path:':libs:utils:WordPressUtils', configuration:'debugCompile')
+    debugCompile project(path:':libs:utils:WordPressUtils')
     releaseCompile 'org.wordpress:wordpress-utils:1.0.2'
 
-    debugCompile project(path:':libs:networking:WordPressNetworking', configuration:'debugCompile')
+    debugCompile project(path:':libs:networking:WordPressNetworking')
     releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
 
-    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration:'debugCompile')
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest')
     releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
 
-    debugCompile project(path:':libs:graphview:WordPressGraphView', configuration:'debugCompile')
+    debugCompile project(path:':libs:graphview:WordPressGraphView')
     releaseCompile 'org.wordpress:graphview:3.2.1'
 }
 
