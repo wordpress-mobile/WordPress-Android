@@ -604,7 +604,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
         mIsModeratingComment = true;
-        CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        // Moderate notifications via REST API, otherwise over XML-RPC
+        if (mNote != null) {
+            CommentActions.moderateCommentForNote(mNote, newStatus, actionListener);
+        } else {
+            CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        }
     }
 
     /*
@@ -788,7 +793,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return canModerate();
     }
     private boolean canEdit() {
-        return canModerate();
+        return (mLocalBlogId > 0 && canModerate());
     }
 
     /*

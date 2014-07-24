@@ -21,8 +21,12 @@ public enum CommentStatus {
             default:
                 return "";
         }
+    }
 
-        /* for future reference, REST API uses these strings:
+    /*
+     * returns the string representation of the passed status, as used by the REST API
+     */
+    public static String toRESTString(CommentStatus status) {
         switch (status) {
             case UNAPPROVED:
                 return "unapproved";
@@ -34,8 +38,8 @@ public enum CommentStatus {
                 return "trash";
             default:
                 return "";
-        } */
-    };
+        }
+    }
 
     /*
      * returns the status associated with the passed strings - handles both XMLRPC and REST
@@ -53,4 +57,4 @@ public enum CommentStatus {
             return TRASH;
         return CommentStatus.UNKNOWN;
     }
-};
+}
