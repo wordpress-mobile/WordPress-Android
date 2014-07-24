@@ -26,21 +26,14 @@ android {
     }
 }
 
-wordpress {
-    utils {
-        repo 'WordPress-Utils-Android'
-        subproject 'WordPressUtils'
-        artifact 'org.wordpress:wordpress-utils:1.0.+'
-    }
-    wpcomrest {
-        repo 'Automattic/android-wordpress-com-rest'
-        subproject 'WordPressComRest'
-        artifact 'com.automattic:wordpresscom-rest:1.0.0'
-    }
-}
-
 dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
+
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration:'debugCompile')
+    releaseCompile 'org.wordpress:wordpress-utils:1.0.2'
+
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration:'debugCompile')
+    releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
 }
 
 uploadArchives {
