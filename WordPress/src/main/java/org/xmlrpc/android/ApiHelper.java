@@ -50,8 +50,9 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
     public enum ErrorType {
-        NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
-        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED}
+        NO_ERROR, UNKNOWN_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
+        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
+    }
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
 
@@ -470,11 +471,20 @@ public class ApiHelper {
                     WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, !loadMore);
                 }
                 return true;
+            } catch (XMLRPCFault e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                if (e.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
+                mErrorMessage = e.getMessage();
             } catch (XMLRPCException e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
                 mErrorMessage = e.getMessage();
             } catch (IOException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
                 mErrorMessage = e.getMessage();
             } catch (XmlPullParserException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
                 mErrorMessage = e.getMessage();
             }
 

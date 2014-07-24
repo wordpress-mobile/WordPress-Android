@@ -525,13 +525,17 @@
 
     <!--  Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
-    <!-- The 4 following messages can\'t be factorized due to i18n -->
+    <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
+
+    <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
+    <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
+    <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_parsing_response">An error occurred while fetching data</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
