@@ -66,25 +66,6 @@ android {
     }
 }
 
-wordpress {
-    utils {
-        subproject 'WordPressUtils'
-        artifact 'org.wordpress:wordpress-utils:1.0.2'
-    }
-    networking {
-        subproject 'WordPressNetworking'
-        artifact 'org.wordpress:wordpress-networking:1.0.0'
-    }
-    wpcomrest {
-        subproject 'WordPressComRest'
-        artifact 'com.automattic:wordpresscom-rest:1.0.0'
-    }
-    graphview {
-        subproject 'WordPressGraphView'
-        artifact 'org.wordpress:graphview:3.2.1'
-    }
-}
-
 dependencies {
     compile 'com.crashlytics.android:crashlytics:+'
 
@@ -103,7 +84,7 @@ dependencies {
 
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
-    compile "com.mixpanel.android:mixpanel-android:4.2.1@aar"
+    compile 'com.mixpanel.android:mixpanel-android:4.2.1@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
@@ -122,6 +103,18 @@ dependencies {
     compile('com.simperium:simperium-android:0.4.8') {
         exclude group: 'com.android', module: 'volley'
     }
+
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration:'debugCompile')
+    releaseCompile 'org.wordpress:wordpress-utils:1.0.2'
+
+    debugCompile project(path:':libs:networking:WordPressNetworking', configuration:'debugCompile')
+    releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
+
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration:'debugCompile')
+    releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
+
+    debugCompile project(path:':libs:graphview:WordPressGraphView', configuration:'debugCompile')
+    releaseCompile 'org.wordpress:graphview:3.2.1'
 }
 
 
