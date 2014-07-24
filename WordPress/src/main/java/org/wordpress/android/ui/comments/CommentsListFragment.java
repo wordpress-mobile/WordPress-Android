@@ -34,6 +34,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -406,12 +408,12 @@ public class CommentsListFragment extends Fragment {
      * task to retrieve latest comments from server
      */
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
-        boolean isError;
-        final boolean isLoadingMore;
+        ErrorType mErrorType = ErrorType.NO_ERROR;
+        final boolean mIsLoadingMore;
         boolean mRetryOnCancelled;
 
         private UpdateCommentsTask(boolean loadMore) {
-            isLoadingMore = loadMore;
+            mIsLoadingMore = loadMore;
         }
 
         public void setRetryOnCancelled(boolean retryOnCancelled) {
@@ -422,7 +424,7 @@ public class CommentsListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 showLoadingProgress();
             }
         }
@@ -447,19 +449,19 @@ public class CommentsListFragment extends Fragment {
 
             Blog blog = WordPress.getCurrentBlog();
             if (blog == null) {
-                isError = true;
+                mErrorType = ErrorType.INVALID_CURRENT_BLOG;
                 return null;
             }
 
             // the first time this is called, make sure comments deleted on server are removed
             // from the local database
-            if (!mHasCheckedDeletedComments && !isLoadingMore) {
+            if (!mHasCheckedDeletedComments && !mIsLoadingMore) {
                 mHasCheckedDeletedComments = true;
                 ApiHelper.removeDeletedComments(blog);
             }
 
             Map<String, Object> hPost = new HashMap<String, Object>();
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
                 hPost.put("offset", numExisting);
                 hPost.put("number", COMMENTS_PER_PAGE);
@@ -473,10 +475,15 @@ public class CommentsListFragment extends Fragment {
                                 hPost };
             try {
                 return ApiHelper.refreshComments(getActivity(), blog, params);
+            } catch (XMLRPCFault xmlrpcFault) {
+                mErrorType = ErrorType.UNKNOWN_ERROR;
+                if (xmlrpcFault.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
             } catch (Exception e) {
-                isError = true;
-                return null;
+                mErrorType = ErrorType.UNKNOWN_ERROR;
             }
+            return null;
         }
 
         protected void onPostExecute(CommentList comments) {
@@ -485,7 +492,7 @@ public class CommentsListFragment extends Fragment {
             if (!isAdded()) {
                 return;
             }
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 hideLoadingProgress();
             }
             mPullToRefreshHelper.setRefreshing(false);
@@ -496,13 +503,16 @@ public class CommentsListFragment extends Fragment {
             mCanLoadMoreComments = (comments != null && comments.size() > 0);
 
             // result will be null on error OR if no more comments exists
-            if (comments == null) {
-                if (isError && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+            if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
+                switch (mErrorType) {
+                    case UNAUTHORIZED:
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        return;
+                    default:
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                        return;
                 }
-                return;
             }
-
             if (comments.size() > 0) {
                 getCommentAdapter().loadComments();
             }

@@ -50,8 +50,9 @@ import javax.net.ssl.SSLHandshakeException;
 
 public class ApiHelper {
     public enum ErrorType {
-        NO_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
-        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED}
+        NO_ERROR, UNKNOWN_ERROR, INVALID_CURRENT_BLOG, NETWORK_XMLRPC, INVALID_CONTEXT,
+        INVALID_RESULT, NO_UPLOAD_FILES_CAP, CAST_EXCEPTION, TASK_CANCELLED, UNAUTHORIZED
+    }
 
     public static final Map<String, String> blogOptionsXMLRPCParameters = new HashMap<String, String>();
 
