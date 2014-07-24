@@ -12,6 +12,8 @@ repositories {
 }
 
 android {
+    defaultPublishConfig 'debug'
+
     compileSdkVersion 20
     buildToolsVersion "19.1.0"
 
