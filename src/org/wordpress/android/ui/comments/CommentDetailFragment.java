@@ -454,7 +454,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         if (hasTitle) {
             setPostTitle(txtPostTitle, title, canRequestPost);
-        } else {
+        } else if (canRequestPost) {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
