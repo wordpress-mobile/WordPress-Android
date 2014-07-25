@@ -139,7 +139,7 @@ abstract public class GraphView extends LinearLayout {
 				paint.setColor(graphViewStyle.getHorizontalLabelsColor());
 				
 				if (horLabelsToShow > 0 && (hors / horLabelsToShow) > 0) {
-					if ( i % (hors / horLabelsToShow) == 0)
+					if ( i % (hors / horLabelsToShow) == 1)
 						canvas.drawText(horlabels[i], x, height - 4, paint);
 				}
 			}
@@ -923,5 +923,9 @@ abstract public class GraphView extends LinearLayout {
 	
     private float dpToPx(int dp) {
        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
-   }
+    }
+
+    protected float getCanvasLeft() {
+        return graphViewContentView.getLeft();
+    }
 }
