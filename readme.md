@@ -15,10 +15,6 @@ our example:
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
     $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
 
-After this step, you can invoke git submodule to clone local project dependencies:
-
-    $ git submodule update --init --recursive
-
 Previous command create a `libs/` directory and clone all dependencies needed
 by the main WordPress for Android project. You can now build, install and
 test the project:
