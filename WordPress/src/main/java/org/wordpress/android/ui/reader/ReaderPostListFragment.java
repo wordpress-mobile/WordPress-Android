@@ -218,6 +218,14 @@ public class ReaderPostListFragment extends Fragment
 
             // likewise for tags
             refreshTags();
+
+            // auto-update the current tag if it's time
+            if (!isUpdating()
+                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+            }
         }
     }
 
