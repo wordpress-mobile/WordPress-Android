@@ -21,3 +21,5 @@ gradle.properties
 
 # OS X
 .DS_Store
+
+# dependencies
