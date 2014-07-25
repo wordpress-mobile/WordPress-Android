@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
@@ -60,6 +61,7 @@ public class ReaderUserListActivity extends Activity {
 
         long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
         long postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+        long commentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
 
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(LIST_STATE);
@@ -74,7 +76,7 @@ public class ReaderUserListActivity extends Activity {
         rootView.getLayoutParams().height = maxHeight;
 
         getListView().setAdapter(getAdapter());
-        loadUsers(blogId, postId);
+        loadUsers(blogId, postId, commentId);
     }
 
     @Override
@@ -91,18 +93,29 @@ public class ReaderUserListActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
-    private void loadUsers(final long blogId, final long postId) {
+    private void loadUsers(final long blogId,
+                           final long postId,
+                           final long commentId) {
         new Thread() {
             @Override
             public void run() {
-                final String title = getTitleString(blogId, postId);
+                final String title = getTitleString(blogId, postId, commentId);
                 final TextView txtTitle = (TextView) findViewById(R.id.text_title);
 
-                final ReaderUserList users =
-                        ReaderUserTable.getUsersWhoLikePost(
-                                blogId,
-                                postId,
-                                ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                final ReaderUserList users;
+                if (commentId == 0) {
+                    // commentId is empty (not passed), so we're showing users who like a post
+                    users = ReaderUserTable.getUsersWhoLikePost(
+                            blogId,
+                            postId,
+                            ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                } else {
+                    // commentId is non-empty, so we're showing users who like a comment
+                    users = ReaderUserTable.getUsersWhoLikeComment(
+                            blogId,
+                            commentId,
+                            ReaderConstants.READER_MAX_USERS_TO_DISPLAY);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -117,9 +130,18 @@ public class ReaderUserListActivity extends Activity {
         }.start();
     }
 
-    private String getTitleString(final long blogId, final long postId) {
-        int numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
-        boolean isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+    private String getTitleString(final long blogId,
+                                  final long postId,
+                                  final long commentId) {
+        final int numLikes;
+        final boolean isLikedByCurrentUser;
+        if (commentId == 0) {
+            numLikes = ReaderPostTable.getNumLikesForPost(blogId, postId);
+            isLikedByCurrentUser = ReaderPostTable.isPostLikedByCurrentUser(blogId, postId);
+        } else {
+            numLikes = ReaderCommentTable.getNumLikesForComment(blogId, postId, commentId);
+            isLikedByCurrentUser = ReaderCommentTable.isCommentLikedByCurrentUser(blogId, postId, commentId);
+        }
 
         if (isLikedByCurrentUser) {
             switch (numLikes) {

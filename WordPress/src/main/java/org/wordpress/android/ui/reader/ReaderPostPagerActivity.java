@@ -23,7 +23,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -141,10 +140,13 @@ public class ReaderPostPagerActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        // if fullscreen video is showing, hide the custom view rather than navigate back
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null && fragment.isCustomViewShowing()) {
+            // if fullscreen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
+        } else if (fragment != null && fragment.isAddCommentBoxShowing()) {
+            // if comment reply entry is showing, hide it rather than navigate back
+            fragment.hideAddCommentBox();
         } else {
             super.onBackPressed();
         }
@@ -293,10 +295,6 @@ public class ReaderPostPagerActivity extends Activity
             return view;
         }
 
-        private boolean hasActivity() {
-            return (getActivity() != null && getView() != null && !isRemoving());
-        }
-
         @Override
         public void setUserVisibleHint(boolean isVisibleToUser) {
             // setUserVisibleHint wasn't available until API 15 (ICE_CREAM_SANDWICH_MR1)
@@ -311,7 +309,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private void showCheckmark() {
-            if (!hasActivity()) {
+            if (!isVisible()) {
                 return;
             }
 
@@ -326,7 +324,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private void hideCheckmark() {
-            if (hasActivity()) {
+            if (isVisible()) {
                 mTxtCheckmark.setVisibility(View.INVISIBLE);
             }
         }

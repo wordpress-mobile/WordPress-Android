@@ -22,13 +22,13 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
-import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -190,7 +190,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                     return;
                 if (!mIsFetchingPosts || isLoadingMorePosts()) {
                     showPost(postsListPost.getPostId());
-                } else if (hasActivity()) {
+                } else if (isAdded()) {
                     Toast.makeText(getActivity(), mIsPage ? R.string.loading_pages : R.string.loading_posts,
                             Toast.LENGTH_SHORT).show();
                 }
@@ -271,7 +271,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     public void requestPosts(boolean loadMore) {
-        if (!hasActivity() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -296,7 +296,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             public void onSuccess(int postCount) {
                 mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
-                if (!hasActivity())
+                if (!isAdded())
                     return;
                 mPullToRefreshHelper.setRefreshing(false);
                 if (mProgressFooterView != null) {
@@ -316,16 +316,26 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                 mCurrentFetchPostsTask = null;
                 mIsFetchingPosts = false;
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     return;
                 }
                 mPullToRefreshHelper.setRefreshing(false);
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
-                if (errorType != ErrorType.TASK_CANCELLED) {
-                    ToastUtils.showToast(getActivity(),
-                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
+                    switch (errorType) {
+                        case UNAUTHORIZED:
+                            ToastUtils.showToast(getActivity(),
+                                    mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
+                                    Duration.LONG);
+                            return;
+                        default:
+                            ToastUtils.showToast(getActivity(),
+                                    mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
+                                    Duration.LONG);
+                            return;
+                    }
                 }
             }
         });
@@ -348,13 +358,9 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         mShouldSelectFirstPost = shouldSelect;
     }
 
-    private boolean hasActivity() {
-        return getActivity() != null;
-    }
-
     @Override
     public void OnPostUploaded(int localBlogId, String postId, boolean isPage) {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -383,7 +389,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onSuccess() {
                     mCurrentFetchSinglePostTask = null;
                     mIsFetchingPosts = false;
-                    if (!hasActivity() || !reloadPosts) {
+                    if (!isAdded() || !reloadPosts) {
                         return;
                     }
                     mPullToRefreshHelper.setRefreshing(false);
@@ -395,7 +401,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onFailure(ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     mCurrentFetchSinglePostTask = null;
                     mIsFetchingPosts = false;
-                    if (!hasActivity() || !reloadPosts) {
+                    if (!isAdded() || !reloadPosts) {
                         return;
                     }
                     if (errorType != ErrorType.TASK_CANCELLED) {

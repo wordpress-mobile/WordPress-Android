@@ -32,8 +32,8 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ToastUtils;
 
 public class NewNotificationsActivity extends WPActionBarActivity
         implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
@@ -104,7 +104,8 @@ public class NewNotificationsActivity extends WPActionBarActivity
         if (SimperiumUtils.getSimperium() != null) {
             User user = SimperiumUtils.getSimperium().getUser();
             if (user != null && user.getStatus() == User.Status.NOT_AUTHORIZED) {
-                ToastUtils.showAuthErrorDialog(this, R.string.sign_in_again, R.string.simperium_connection_error);
+                AuthenticationDialogUtils.showAuthErrorDialog(this, R.string.sign_in_again,
+                        R.string.simperium_connection_error);
             }
         }
     }

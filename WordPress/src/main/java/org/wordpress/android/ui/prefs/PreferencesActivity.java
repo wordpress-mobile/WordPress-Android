@@ -39,22 +39,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.net.MalformedURLException;
@@ -171,7 +168,6 @@ public class PreferencesActivity extends PreferenceActivity {
                     }
                     );
         }
-        initContactUsPreference();
         displayPreferences();
     }
 
@@ -191,16 +187,6 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-    private void initContactUsPreference() {
-        Preference contactUsPreference = findPreference("wp_pref_contact_us");
-        contactUsPreference.setOnPreferenceClickListener(contactUsPreferenceClickListener);
-        if (!ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("wp_pref_app_about_section");
-            if (contactUsPreference != null && preferenceCategory != null) {
-                preferenceCategory.removePreference(contactUsPreference);
-            }
-        }
-    }
 
     @Override
     public void onResume() {
@@ -705,14 +691,6 @@ public class PreferencesActivity extends PreferenceActivity {
             editor.commit();
             ToastUtils.showToast(getBaseContext(), R.string.auto_sharing_preference_reset,
                     ToastUtils.Duration.SHORT);
-            return true;
-        }
-    };
-
-    private OnPreferenceClickListener contactUsPreferenceClickListener = new OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            HelpshiftHelper.getInstance().showConversation(PreferencesActivity.this);
             return true;
         }
     };

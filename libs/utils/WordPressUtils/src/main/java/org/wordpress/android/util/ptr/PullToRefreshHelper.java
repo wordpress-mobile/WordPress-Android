@@ -1,4 +1,4 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.util.ptr;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -11,8 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.util.R;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 
@@ -29,6 +28,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 public class PullToRefreshHelper implements OnRefreshListener {
+    public static final String BROADCAST_ACTION_REFRESH_MENU_PRESSED = "REFRESH_MENU_PRESSED";
     private static final String REFRESH_BUTTON_HIT_COUNT = "REFRESH_BUTTON_HIT_COUNT";
     private static final Set<Integer> TOAST_FREQUENCY = new HashSet<Integer>(Arrays.asList(1, 5, 10, 20, 40, 80, 160,
             320, 640));
@@ -111,7 +111,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             return;
         }
         IntentFilter filter = new IntentFilter();
-        filter.addAction(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+        filter.addAction(BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(context);
         lbm.registerReceiver(mReceiver, filter);
     }
@@ -134,7 +134,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
             if (intent == null || intent.getAction() == null) {
                 return;
             }
-            if (intent.getAction().equals(WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED)) {
+            if (intent.getAction().equals(BROADCAST_ACTION_REFRESH_MENU_PRESSED)) {
                 refreshAction();
             }
         }

@@ -16,13 +16,13 @@ import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 
 import java.util.List;
 import java.util.Map;
@@ -95,7 +95,7 @@ public class ManageBlogsActivity extends ListActivity {
                 finish();
                 return true;
             case R.id.menu_refresh:
-                WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+                WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
                 return true;
         }
         return super.onOptionsItemSelected(item);

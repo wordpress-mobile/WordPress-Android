@@ -135,6 +135,8 @@
         <activity android:name=".ui.stats.StatsWebViewActivity" >
         </activity>
 
+        <activity android:name=".ui.stats.StatsDetailsActivity" >
+        </activity>
 
         <!-- Media Activities -->
         <activity android:name=".ui.media.MediaBrowserActivity" >

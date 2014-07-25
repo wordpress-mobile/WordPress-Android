@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
@@ -14,39 +12,13 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
-/**
- * Provides a simplified way to show toast messages without having to create the toast, set the
- * desired gravity, etc.
- */
-public class ToastUtils {
-    public enum Duration {SHORT, LONG}
+import static org.wordpress.android.util.ToastUtils.showToast;
 
-    private ToastUtils() {
-        throw new AssertionError();
-    }
-
-    public static void showToast(Context context, int stringResId) {
-        showToast(context, stringResId, Duration.SHORT);
-    }
-
-    public static void showToast(Context context, int stringResId, Duration duration) {
-        showToast(context, context.getString(stringResId), duration);
-    }
-
-    public static void showToast(Context context, String text) {
-        showToast(context, text, Duration.SHORT);
-    }
-
-    public static void showToast(Context context, String text, Duration duration) {
-        Toast toast = Toast.makeText(context, text,
-                (duration == Duration.SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG));
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-    }
-
-    /*
+public class AuthenticationDialogUtils {
+    /**
      * Shows a toast message, unless there is an authentication issue which will show an alert dialog.
      */
     public static void showToastOrAuthAlert(Context context, VolleyError error, String friendlyMessage) {

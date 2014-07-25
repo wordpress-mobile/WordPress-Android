@@ -28,14 +28,14 @@ import android.widget.TextView;
 import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -48,15 +48,14 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPListView;
 
 import java.util.HashMap;
@@ -139,7 +138,7 @@ public class ReaderPostListFragment extends Fragment
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putString(ReaderConstants.ARG_BLOG_URL, blogUrl);
-        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -443,7 +442,7 @@ public class ReaderPostListFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         // only followed tag list has a menu
-        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             inflater.inflate(R.menu.reader_native, menu);
             checkActionBar();
         }
@@ -496,7 +495,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!succeeded && hasActivity()) {
+                if (!succeeded && isAdded()) {
                     hideUndoBar();
                     ToastUtils.showToast(getActivity(), R.string.reader_toast_err_block_blog, ToastUtils.Duration.LONG);
                 }
@@ -516,7 +515,7 @@ public class ReaderPostListFragment extends Fragment
             public void onAnimationRepeat(Animation animation) { }
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (hasActivity()) {
+                if (isAdded()) {
                     // remove this specific post, then refresh the adapter so other posts in this
                     // blog no long appear
                     getPostAdapter().removePost(position);
@@ -545,7 +544,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void hideUndoBar() {
-        if (hasActivity()) {
+        if (isAdded()) {
             UndoBarController.clear(getActivity());
         }
     }
@@ -554,14 +553,14 @@ public class ReaderPostListFragment extends Fragment
      * show/hide progress bar which appears at the bottom of the activity when loading more posts
      */
     private void showLoadingProgress() {
-        if (hasActivity() && mProgress != null) {
+        if (isAdded() && mProgress != null) {
             mProgress.bringToFront();
             mProgress.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideLoadingProgress() {
-        if (hasActivity() && mProgress != null) {
+        if (isAdded() && mProgress != null) {
             mProgress.setVisibility(View.GONE);
         }
     }
@@ -575,7 +574,7 @@ public class ReaderPostListFragment extends Fragment
             return;
         }
 
-        if (getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)) {
+        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
             // only change if we're not in list navigation mode, since that means the actionBar
             // is already correctly configured
             if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
@@ -592,7 +591,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void startBoxAndPagesAnimation() {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
 
@@ -613,7 +612,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescriptionForCurrentTag() {
-        if (!hasActivity() || getActionBarAdapter() == null) {
+        if (!isAdded() || getActionBarAdapter() == null) {
             return;
         }
 
@@ -660,7 +659,7 @@ public class ReaderPostListFragment extends Fragment
     private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!hasActivity())
+            if (!isAdded())
                 return;
             // empty text/animation is only show when displaying posts with a specific tag
             if (isEmpty && getPostListType().isTagType()) {
@@ -716,7 +715,7 @@ public class ReaderPostListFragment extends Fragment
     private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
-            if (hasActivity()) {
+            if (isAdded()) {
                 ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, view);
             }
         }
@@ -876,7 +875,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * refresh adapter so latest posts appear
      */
-    private void refreshPosts() {
+    void refreshPosts() {
         if (hasPostAdapter()) {
             getPostAdapter().refresh();
         }
@@ -899,10 +898,6 @@ public class ReaderPostListFragment extends Fragment
         getPostAdapter().reload();
     }
 
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     /*
      * get posts for the current blog from the server
      */
@@ -917,7 +912,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     return;
                 }
                 setIsUpdating(false, updateAction);
@@ -952,7 +947,7 @@ public class ReaderPostListFragment extends Fragment
         // this check is purposely done after the "Refreshing" message is shown since we want
         // that to appear in this situation - ReaderActivity will take of re-issuing this
         // update request once tag data has been populated
-        if (getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
+        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && ReaderTagTable.isEmpty()) {
             AppLog.d(T.READER, "reader post list > empty followed tags, canceled update");
             return;
         }
@@ -967,7 +962,7 @@ public class ReaderPostListFragment extends Fragment
         ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
-                if (!hasActivity()) {
+                if (!isAdded()) {
                     AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
                     return;
                 }
@@ -985,7 +980,7 @@ public class ReaderPostListFragment extends Fragment
                     // if the user is viewing posts for a followed tag, posts are already
                     // displayed, and the user has scrolled the list
                     if (!isPostAdapterEmpty()
-                            && getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
+                            && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                             && updateAction == RequestDataAction.LOAD_NEWER
                             && !isListScrolledToTop()) {
                         showNewPostsBar();
@@ -1006,7 +1001,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
                 @Override
                 public void onPostsBackfilled() {
-                    if (!hasActivity()) {
+                    if (!isAdded()) {
                         AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
                         return;
                     }
@@ -1034,7 +1029,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     void setIsUpdating(boolean isUpdating, RequestDataAction updateAction) {
-        if (!hasActivity() || mIsUpdating == isUpdating) {
+        if (!isAdded() || mIsUpdating == isUpdating) {
             return;
         }
         switch (updateAction) {
@@ -1063,7 +1058,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void showNewPostsBar() {
-        if (!hasActivity() || isNewPostsBarShowing()) {
+        if (!isAdded() || isNewPostsBarShowing()) {
             return;
         }
 
@@ -1072,7 +1067,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void hideNewPostsBar() {
-        if (!hasActivity() || !isNewPostsBarShowing()) {
+        if (!isAdded() || !isNewPostsBarShowing()) {
             return;
         }
 
@@ -1098,7 +1093,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void checkCurrentTag() {
         if (hasCurrentTag()
-                && getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_FOLLOWED)
+                && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
                 && !ReaderTagTable.tagExists(getCurrentTag())) {
             mCurrentTag = ReaderTag.getDefaultTag();
         }
@@ -1108,7 +1103,7 @@ public class ReaderPostListFragment extends Fragment
      * refresh the list of tags shown in the ActionBar
      */
     void refreshTags() {
-        if (!hasActivity()) {
+        if (!isAdded()) {
             return;
         }
         checkCurrentTag();
@@ -1169,7 +1164,7 @@ public class ReaderPostListFragment extends Fragment
             ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (!hasActivity())
+                    if (!isAdded())
                         return;
                     AppLog.d(T.READER, "reader post list > ActionBar adapter loaded");
                     selectTagInActionBar(getCurrentTag());
@@ -1197,7 +1192,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private ActionBar getActionBar() {
-        if (hasActivity()) {
+        if (isAdded()) {
             return getActivity().getActionBar();
         } else {
             AppLog.w(T.READER, "reader post list > null ActionBar");
@@ -1303,13 +1298,13 @@ public class ReaderPostListFragment extends Fragment
                         }
                         @Override
                         public void onBlogInfoFailed() {
-                            if (hasActivity()) {
+                            if (isAdded()) {
                                 // blog couldn't be shown, alert user then back out after a brief delay
                                 ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info);
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if (hasActivity()) {
+                                        if (isAdded()) {
                                             getActivity().onBackPressed();
                                         }
                                     }

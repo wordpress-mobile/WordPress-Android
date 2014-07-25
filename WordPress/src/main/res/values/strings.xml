@@ -314,6 +314,7 @@
     <string name="edit_location">Edit</string>
 
     <!-- preferences -->
+    <string name="help_and_support">Help and support</string>
     <string name="open_source_licenses">Open source licenses</string>
     <string name="wpcom_blogs">WordPress.com blogs</string>
     <string name="self_hosted_blogs">Self-hosted blogs</string>
@@ -329,6 +330,7 @@
     <string name="stats">Stats</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
+    <string name="stats_totals_views_per_visitor">Views per Visitor</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
@@ -523,13 +525,17 @@
 
     <!-- Error Messages -->
     <string name="error_delete_post">An error occurred while deleting the %s</string>
-    <!-- The 4 following messages can\'t be factorized due to i18n -->
+    <!-- The following messages can\'t be factorized due to i18n -->
     <string name="error_refresh_posts">Posts couldn\'t be refreshed at this time</string>
     <string name="error_refresh_pages">Pages couldn\'t be refreshed at this time</string>
     <string name="error_refresh_notifications">Notifications couldn\'t be refreshed at this time</string>
     <string name="error_refresh_comments">Comments couldn\'t be refreshed at this time</string>
     <string name="error_refresh_stats">Stats couldn\'t be refreshed at this time</string>
     <string name="error_refresh_media">Something went wrong while refreshing the media library. Try again later.</string>
+
+    <string name="error_refresh_unauthorized_comments">You don\'t have permission to view or edit comments</string>
+    <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
+    <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_generic">An error occurred</string>
     <string name="error_parsing_response">An error occurred while fetching data</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
@@ -626,12 +632,17 @@
     <string name="reader_label_reached_last_post">You\'ve reached the end</string>
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
 
-    <!-- like counts liking users activity -->
+    <!-- like counts liking users activity-->
+    <string name="reader_label_like">Like</string>
+    <string name="reader_label_liked_by">Liked by</string>
+    <string name="reader_label_liked_by_you">Liked by you</string>
     <string name="reader_likes_one">One person likes this</string>
     <string name="reader_likes_multi">%,d people like this</string>
     <string name="reader_likes_only_you">You like this</string>
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
+    <string name="reader_likes_one_short">1 person</string>
+    <string name="reader_likes_multi_short">%,d people</string>
 
     <!-- toast messages -->
     <string name="reader_toast_reblog_success">Post has been reblogged</string>
@@ -728,6 +739,14 @@
     <string name="nux_welcome_create_account">Create account</string>
     <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
     <string name="nux_oops_not_selfhosted_blog">Sign in to WordPress.com</string>
+    <string name="ssl_certificate_trust">Trust</string>
+    <string name="ssl_certificate_details">Certificate Details</string>
+    <string name="ssl_certificate_do_not_trust">Don\'t trust</string>
+    <string name="ssl_certificate_error">Invalid SSL certificate</string>
+    <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
+    <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+
+    <!-- Help view -->
     <string name="help">Help</string>
     <string name="forgot_password">Lost your password?</string>
     <string name="nux_help_description">Visit the help center to get answers to common questions or visit the forums to ask new ones</string>
@@ -735,12 +754,7 @@
     <string name="contact_us">Contact us</string>
     <string name="contact_us_pref_summary">Get help from Automattic support</string>
     <string name="help_center">Help center</string>
-    <string name="ssl_certificate_trust">Trust</string>
-    <string name="ssl_certificate_details">Certificate Details</string>
-    <string name="ssl_certificate_do_not_trust">Don\'t trust</string>
-    <string name="ssl_certificate_error">Invalid SSL certificate</string>
-    <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
-    <string name="ptr_tip_message">Tip: Pull down to refresh</string>
+    <string name="faq_button">Browse our FAQ</string>
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>

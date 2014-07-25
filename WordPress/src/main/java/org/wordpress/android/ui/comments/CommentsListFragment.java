@@ -24,16 +24,18 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper.ErrorType;
+import org.xmlrpc.android.XMLRPCFault;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,7 +77,7 @@ public class CommentsListFragment extends Fragment {
             CommentAdapter.DataLoadedListener dataLoadedListener = new CommentAdapter.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
-                    if (!hasActivity())
+                    if (!isAdded())
                         return;
                     if (isEmpty) {
                         showEmptyView();
@@ -221,7 +223,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void dismissDialog(int id) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
         try {
             getActivity().dismissDialog(id);
@@ -267,7 +269,7 @@ public class CommentsListFragment extends Fragment {
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList moderatedComments) {
-                if (!hasActivity())
+                if (!isAdded())
                     return;
                 finishActionMode();
                 dismissDialog(dlgId);
@@ -317,7 +319,7 @@ public class CommentsListFragment extends Fragment {
         CommentActions.OnCommentsModeratedListener listener = new CommentActions.OnCommentsModeratedListener() {
             @Override
             public void onCommentsModerated(final CommentList deletedComments) {
-                if (!hasActivity())
+                if (!isAdded())
                     return;
                 finishActionMode();
                 dismissDialog(CommentDialogs.ID_COMMENT_DLG_TRASHING);
@@ -406,12 +408,12 @@ public class CommentsListFragment extends Fragment {
      * task to retrieve latest comments from server
      */
     private class UpdateCommentsTask extends AsyncTask<Void, Void, CommentList> {
-        boolean isError;
-        final boolean isLoadingMore;
+        ErrorType mErrorType = ErrorType.NO_ERROR;
+        final boolean mIsLoadingMore;
         boolean mRetryOnCancelled;
 
         private UpdateCommentsTask(boolean loadMore) {
-            isLoadingMore = loadMore;
+            mIsLoadingMore = loadMore;
         }
 
         public void setRetryOnCancelled(boolean retryOnCancelled) {
@@ -422,7 +424,7 @@ public class CommentsListFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             mIsUpdatingComments = true;
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 showLoadingProgress();
             }
         }
@@ -442,24 +444,24 @@ public class CommentsListFragment extends Fragment {
 
         @Override
         protected CommentList doInBackground(Void... args) {
-            if (!hasActivity())
+            if (!isAdded())
                 return null;
 
             Blog blog = WordPress.getCurrentBlog();
             if (blog == null) {
-                isError = true;
+                mErrorType = ErrorType.INVALID_CURRENT_BLOG;
                 return null;
             }
 
             // the first time this is called, make sure comments deleted on server are removed
             // from the local database
-            if (!mHasCheckedDeletedComments && !isLoadingMore) {
+            if (!mHasCheckedDeletedComments && !mIsLoadingMore) {
                 mHasCheckedDeletedComments = true;
                 ApiHelper.removeDeletedComments(blog);
             }
 
             Map<String, Object> hPost = new HashMap<String, Object>();
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 int numExisting = getCommentAdapter().getCount();
                 hPost.put("offset", numExisting);
                 hPost.put("number", COMMENTS_PER_PAGE);
@@ -473,19 +475,24 @@ public class CommentsListFragment extends Fragment {
                                 hPost };
             try {
                 return ApiHelper.refreshComments(getActivity(), blog, params);
+            } catch (XMLRPCFault xmlrpcFault) {
+                mErrorType = ErrorType.UNKNOWN_ERROR;
+                if (xmlrpcFault.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
             } catch (Exception e) {
-                isError = true;
-                return null;
+                mErrorType = ErrorType.UNKNOWN_ERROR;
             }
+            return null;
         }
 
         protected void onPostExecute(CommentList comments) {
             mIsUpdatingComments = false;
             mUpdateCommentsTask = null;
-            if (!hasActivity()) {
+            if (!isAdded()) {
                 return;
             }
-            if (isLoadingMore) {
+            if (mIsLoadingMore) {
                 hideLoadingProgress();
             }
             mPullToRefreshHelper.setRefreshing(false);
@@ -496,13 +503,16 @@ public class CommentsListFragment extends Fragment {
             mCanLoadMoreComments = (comments != null && comments.size() > 0);
 
             // result will be null on error OR if no more comments exists
-            if (comments == null) {
-                if (isError && !getActivity().isFinishing()) {
-                    ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+            if (comments == null && !getActivity().isFinishing() && mErrorType != ErrorType.NO_ERROR) {
+                switch (mErrorType) {
+                    case UNAUTHORIZED:
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_unauthorized_comments));
+                        return;
+                    default:
+                        ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments));
+                        return;
                 }
-                return;
             }
-
             if (comments.size() > 0) {
                 getCommentAdapter().loadComments();
             }
@@ -523,10 +533,6 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
-    }
-
     private void showEmptyView() {
         if (mEmptyView != null)
             mEmptyView.setVisibility(View.VISIBLE);
@@ -541,13 +547,13 @@ public class CommentsListFragment extends Fragment {
      * show/hide progress bar which appears at the bottom when loading more comments
      */
     private void showLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null) {
+        if (isAdded() && mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideLoadingProgress() {
-        if (hasActivity() && mProgressLoadMore != null) {
+        if (isAdded() && mProgressLoadMore != null) {
             mProgressLoadMore.setVisibility(View.GONE);
         }
     }

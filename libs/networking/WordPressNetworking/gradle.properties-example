@@ -1,0 +1,2 @@
+wp.db_secret = wordpress
+repository = file:///Users/max/work/automattic/WordPress-Android-gh-pages/

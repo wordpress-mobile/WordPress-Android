@@ -1,4 +1,4 @@
-package org.wordpress.android.ui;
+package org.wordpress.android.util.ptr;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import org.wordpress.android.util.R;
+
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
-import uk.co.senab.actionbarpulltorefresh.library.R;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
 public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {

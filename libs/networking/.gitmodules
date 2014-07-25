@@ -1,0 +1,6 @@
+[submodule "libs/wpcomrest"]
+	path = libs/wpcomrest
+	url = https://github.com/Automattic/android-wordpress-com-rest.git
+[submodule "libs/utils"]
+	path = libs/utils
+	url = https://github.com/wordpress-mobile/WordPress-Utils-Android.git

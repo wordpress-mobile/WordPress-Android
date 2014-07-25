@@ -9,6 +9,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -45,7 +46,9 @@ public class ReaderPostTable {
           + "is_videopress,"        // 25
           + "tag_list,"             // 26
           + "primary_tag,"          // 27
-          + "secondary_tag";        // 28
+          + "secondary_tag,"        // 28
+          + "is_likes_enabled,"     // 29
+          + "is_sharing_enabled";   // 30
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -78,6 +81,8 @@ public class ReaderPostTable {
                 + " tag_list            TEXT,"
                 + " primary_tag         TEXT,"
                 + " secondary_tag       TEXT,"
+                + " is_likes_enabled    INTEGER DEFAULT 0,"
+                + " is_sharing_enabled  INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
 
@@ -114,6 +119,22 @@ public class ReaderPostTable {
 
         return numDeleted;
     }
+
+    /*
+     * remove posts in "Blogs I Follow" that are no longer attached to followed blogs
+     */
+    public static int purgeUnfollowedPosts() {
+        String[] args = {ReaderTag.TAG_NAME_FOLLOWING};
+        int numPurged = ReaderDatabase.getWritableDb().delete(
+                "tbl_post_tags",
+                "tag_name=? AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_following!=0)",
+                args);
+        if (numPurged > 0) {
+            AppLog.d(AppLog.T.READER, String.format("purged %d unfollowed posts", numPurged));
+        }
+        return numPurged;
+    }
+
 
     public static boolean isEmpty() {
         return (getNumPosts() == 0);
@@ -372,7 +393,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
@@ -408,8 +429,9 @@ public class ReaderPostTable {
                 stmtPosts.bindString(26, post.getTags());
                 stmtPosts.bindString(27, post.getPrimaryTag());
                 stmtPosts.bindString(28, post.getSecondaryTag());
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isSharingEnabled));
                 stmtPosts.execute();
-                stmtPosts.clearBindings();
             }
 
             // now add to tbl_post_tags if a tag was passed
@@ -423,7 +445,6 @@ public class ReaderPostTable {
                     stmtTags.bindString(4, tagName);
                     stmtTags.bindLong  (5, tagType);
                     stmtTags.execute();
-                    stmtTags.clearBindings();
                 }
             }
 
@@ -558,6 +579,9 @@ public class ReaderPostTable {
         private final int idx_primary_tag;
         private final int idx_secondary_tag;
 
+        private final int idx_is_likes_enabled;
+        private final int idx_is_sharing_enabled;
+
         private PostColumnIndexes(Cursor c) {
             if (c == null)
                 throw new IllegalArgumentException("PostColumnIndexes > null cursor");
@@ -596,6 +620,9 @@ public class ReaderPostTable {
             idx_tag_list = c.getColumnIndex("tag_list");
             idx_primary_tag = c.getColumnIndex("primary_tag");
             idx_secondary_tag = c.getColumnIndex("secondary_tag");
+
+            idx_is_likes_enabled = c.getColumnIndex("is_likes_enabled");
+            idx_is_sharing_enabled = c.getColumnIndex("is_sharing_enabled");
         }
     }
 
@@ -645,6 +672,9 @@ public class ReaderPostTable {
         post.setTags(c.getString(cols.idx_tag_list));
         post.setPrimaryTag(c.getString(cols.idx_primary_tag));
         post.setSecondaryTag(c.getString(cols.idx_secondary_tag));
+
+        post.isLikesEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_likes_enabled));
+        post.isSharingEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_sharing_enabled));
 
         return post;
     }

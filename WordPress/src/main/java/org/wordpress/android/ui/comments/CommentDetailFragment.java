@@ -21,6 +21,10 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.wordpress.rest.RestRequest;
+
+import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -48,6 +52,7 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -221,7 +226,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mIsUsersBlog)
             mRemoteBlogId = WordPress.wpDB.getRemoteBlogIdForLocalTableBlogId(mLocalBlogId);
 
-        if (hasActivity())
+        if (isAdded())
             showComment();
     }
 
@@ -233,7 +238,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void setNote(Note note) {
         mNote = note;
-        if (hasActivity() && mNote != null) {
+        if (isAdded() && mNote != null) {
             showComment();
         }
     }
@@ -267,10 +272,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
-    }
-
-    private boolean hasActivity() {
-        return (getActivity() != null && !isRemoving());
     }
 
     private boolean hasComment() {
@@ -311,7 +312,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * open the comment for editing
      */
     private void editComment() {
-        if (!hasActivity() || !hasComment())
+        if (!isAdded() || !hasComment())
             return;
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
@@ -326,7 +327,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * display the current comment
      */
     private void showComment() {
-        if (!hasActivity() || getView() == null)
+        if (!isAdded() || getView() == null)
             return;
 
         // these two views contain all the other views except the progress bar
@@ -396,7 +397,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * displays the passed post title for the current comment, updates stored title if one doesn't exist
      */
     private void setPostTitle(TextView txtTitle, String postTitle, boolean isHyperlink) {
-        if (txtTitle == null || !hasActivity())
+        if (txtTitle == null || !isAdded())
             return;
         if (TextUtils.isEmpty(postTitle)) {
             txtTitle.setText(R.string.untitled);
@@ -426,7 +427,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * title above the comment
      */
     private void showPostTitle(final int blogId, final long postId) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
 
         final TextView txtPostTitle = (TextView) getView().findViewById(R.id.text_post_title);
@@ -453,7 +454,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         if (hasTitle) {
             setPostTitle(txtPostTitle, title, canRequestPost);
-        } else {
+        } else if (canRequestPost) {
             txtPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
 
@@ -467,7 +468,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 ReaderPostActions.requestPost(blogId, postId, new ReaderActions.ActionListener() {
                     @Override
                     public void onActionResult(boolean succeeded) {
-                        if (!hasActivity())
+                        if (!isAdded())
                             return;
                         // update title if it wasn't set above
                         if (!hasTitle) {
@@ -519,7 +520,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void dismissDialog(int id) {
-        if (!hasActivity())
+        if (!isAdded())
             return;
         try {
             getActivity().dismissDialog(id);
@@ -532,7 +533,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * approve, unapprove, spam, or trash the current comment
      */
     private void moderateComment(final CommentStatus newStatus) {
-        if (!hasActivity() || !hasComment() || mIsModeratingComment)
+        if (!isAdded() || !hasComment() || mIsModeratingComment)
             return;
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
@@ -579,7 +580,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
-                if (hasActivity()) {
+                if (isAdded()) {
                     dismissDialog(dlgId);
                     mLayoutButtons.setEnabled(true);
                     if (succeeded) {
@@ -603,14 +604,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         };
         mIsModeratingComment = true;
-        CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        // Moderate notifications via REST API, otherwise over XML-RPC
+        if (mNote != null) {
+            CommentActions.moderateCommentForNote(mNote, newStatus, actionListener);
+        } else {
+            CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        }
     }
 
     /*
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!hasActivity() || mIsSubmittingReply)
+        if (!isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -637,7 +643,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mIsSubmittingReply = false;
                 if (succeeded && mOnCommentChangeListener != null)
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
-                if (hasActivity()) {
+                if (isAdded()) {
                     mEditReply.setEnabled(true);
                     mImgSubmitReply.setVisibility(View.VISIBLE);
                     progress.setVisibility(View.GONE);
@@ -677,7 +683,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      * already marked as spam, and show the current status of the comment
      */
     private void updateStatusViews() {
-        if (!hasActivity() || !hasComment())
+        if (!isAdded() || !hasComment())
             return;
 
         final int moderationDrawResId;  // drawable resource id for moderation button
@@ -762,8 +768,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
 
         // animate the buttons in if they're not visible
-        if (mLayoutButtons.getVisibility() != View.VISIBLE && (canMarkAsSpam() || canModerate())) {
-            mLayoutButtons.clearAnimation();
+        boolean isAnimating = (mLayoutButtons.getAnimation() != null && !mLayoutButtons.getAnimation().hasEnded());
+        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate())) {
             AniUtils.flyIn(mLayoutButtons);
         }
     }
@@ -787,7 +793,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return canModerate();
     }
     private boolean canEdit() {
-        return canModerate();
+        return (mLocalBlogId > 0 && canModerate());
     }
 
     /*
@@ -837,5 +843,53 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             CommentTable.addComment(localBlogId, comment);
             setComment(localBlogId, note.buildComment());
         }
+    }
+
+    /*
+     * request a comment - note that this uses the REST API rather than XMLRPC, which means the user must
+     * either be wp.com or have Jetpack, but it's safe to do this since this method is only called when
+     * displayed from a notification (and notifications require wp.com/Jetpack)
+     */
+    private void requestComment(final int localBlogId,
+                                final int remoteBlogId,
+                                final long commentId) {
+        final ProgressBar progress = (isAdded() ? (ProgressBar) getView().findViewById(R.id.progress_loading) : null);
+        if (progress != null)
+            progress.setVisibility(View.VISIBLE);
+
+        RestRequest.Listener restListener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                mIsRequestingComment = false;
+                if (isAdded()) {
+                    if (progress != null)
+                        progress.setVisibility(View.GONE);
+                    Comment comment = Comment.fromJSON(jsonObject);
+                    if (comment != null) {
+                        // save comment to local db if localBlogId is valid
+                        if (localBlogId > 0)
+                            CommentTable.addComment(localBlogId, comment);
+                        // now, at long last, show the comment
+                        setComment(localBlogId, comment);
+                    }
+                }
+            }
+        };
+        RestRequest.ErrorListener restErrListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mIsRequestingComment = false;
+                AppLog.e(T.COMMENTS, VolleyUtils.errStringFromVolleyError(volleyError), volleyError);
+                if (isAdded()) {
+                    if (progress != null)
+                        progress.setVisibility(View.GONE);
+                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_comment, ToastUtils.Duration.LONG);
+                }
+            }
+        };
+
+        final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
+        mIsRequestingComment = true;
+        WordPress.getRestClientUtils().get(path, restListener, restErrListener);
     }
 }

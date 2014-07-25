@@ -19,9 +19,9 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.PullToRefreshHelper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -118,7 +118,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (hasActivity()) {
+                                if (isAdded()) {
                                     mFauxPullToRefreshHelper.setRefreshing(false);
                                 }
                             }
@@ -130,7 +130,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        if (!hasActivity()) return;
+        if (!isAdded()) return;
 
         if (!DisplayUtils.isLandscapeTablet(getActivity())) {
             // Animate the row to the top to match with fragment transition animation
@@ -185,7 +185,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
     }
 
     public void refreshNotes() {
-        if (!hasActivity() || mNotesAdapter == null) {
+        if (!isAdded() || mNotesAdapter == null) {
             return;
         }
 
@@ -242,10 +242,6 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
 
     public void setShouldLoadFirstNote(boolean shouldLoad) {
         mShouldLoadFirstNote = shouldLoad;
-    }
-
-    private boolean hasActivity() {
-        return getActivity() != null;
     }
 
     @Override

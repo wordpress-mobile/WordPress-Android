@@ -5,6 +5,7 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_grey">
@@ -42,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="text_name"
+                    tools:text="text_name"
                     android:background="@drawable/reader_transparent_selector"
                     android:layout_toLeftOf="@+id/text_date"
                     android:layout_toRightOf="@+id/image_avatar"
@@ -57,7 +58,7 @@
                     android:background="@drawable/reader_transparent_selector"
                     android:layout_toLeftOf="@+id/text_status"
                     android:layout_alignLeft="@+id/text_name"
-                    android:text="text_post_title"
+                    tools:text="text_post_title"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:paddingTop="@dimen/margin_extra_small"
@@ -74,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
                     android:maxLines="1"
-                    android:text="date" />
+                    tools:text="date" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
@@ -86,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/text_post_title"
                     android:visibility="visible"
-                    android:text="STATUS" />
+                    tools:text="STATUS" />
             </RelativeLayout>
 
             <!--
@@ -97,7 +98,7 @@
                 android:id="@+id/text_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="text_content"
+                tools:text="text_content"
                 android:textColorLink="@color/reader_hyperlink"
                 android:textColor="@color/grey_dark"
                 android:textIsSelectable="false"

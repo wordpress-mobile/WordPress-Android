@@ -20,10 +20,10 @@ import com.android.volley.toolbox.NetworkImageView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.PullToRefreshHelper;
-import org.wordpress.android.ui.PullToRefreshHelper.RefreshListener;
-import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
 import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.ui.themes.ThemeTabAdapter.ScreenshotHolder;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
+import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 

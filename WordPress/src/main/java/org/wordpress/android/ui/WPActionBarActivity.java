@@ -56,6 +56,7 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
@@ -63,6 +64,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
 
@@ -707,7 +709,7 @@ public abstract class WPActionBarActivity extends Activity {
                 dialogBuilder.create().show();
         } else if (item.getItemId()  == R.id.menu_refresh) {
             // Broadcast a refresh action, PullToRefreshHelper should trigger the default pull to refresh action
-            WordPress.sendLocalBroadcast(this, WordPress.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
+            WordPress.sendLocalBroadcast(this, PullToRefreshHelper.BROADCAST_ACTION_REFRESH_MENU_PRESSED);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -1126,15 +1128,16 @@ public abstract class WPActionBarActivity extends Activity {
                 onSignout();
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_CREDENTIALS)) {
-                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
-            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED) &&
-                    WPActionBarActivity.this instanceof NewNotificationsActivity) {
-                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again, R.string.simperium_connection_error);
+            if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
+                    && WPActionBarActivity.this instanceof NewNotificationsActivity) {
+                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again,
+                        R.string.simperium_connection_error);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_TWO_FA_AUTH)) {
                 // TODO: add a specific message like "you must use a specific app password"
-                ToastUtils.showAuthErrorDialog(WPActionBarActivity.this);
+                AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
             if (intent.getAction().equals(WordPress.BROADCAST_ACTION_XMLRPC_INVALID_SSL_CERTIFICATE)) {
                 SelfSignedSSLCertsManager.askForSslTrust(WPActionBarActivity.this);

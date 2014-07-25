@@ -53,6 +53,8 @@
     <color name="stats_alt_row">#EEF6F8</color>
     <color name="stats_div_color">#B7B7B7</color>
     <color name="stats_activity_bg">#E8E8E8</color>
+    <color name="stats_views_hover_color">#f0821e</color>
+    <color name="stats_visitors_hover_color">#d54e21</color>
 
     <!--
         these are from the mobile handbook, handbook color name is in the comment
