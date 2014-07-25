@@ -141,7 +141,7 @@ class StatsBarGraph extends GraphView {
         }
         BarChartRect rect = mSeriesRectsDrawedOnScreen.get(0).get(tappedBar);
 
-        return ((rect.mLeft + rect.mRight ) / 2) + getCanvasLeft();
+        return ((rect.mLeft + rect.mRight) / 2) + getCanvasLeft();
     }
 
     public void highlightAndDismissBar(int barPosition) {

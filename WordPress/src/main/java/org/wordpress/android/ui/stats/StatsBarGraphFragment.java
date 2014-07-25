@@ -107,8 +107,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                 return;
             }
             String action = intent.getAction();
-            // If it's not a "tap confirmed", or a "show tap" event, redraw the graph only if
-            // has one bar in highlighted state
+            // If it's not a "tap confirmed", or a "show tap" event, do nothing.
             if (StatsActivity.STATS_GESTURE_OTHER.equals(action)) {
                 return;
             }
@@ -169,7 +168,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             // Week or Month on the screen. Show a toast.
             GraphViewDataInterface[] views = mViewsSeries.getData();
             GraphViewDataInterface[] visitors = mVisitorsSeries.getData();
-            mTooltip.setValues(date, unit, (int)views[tappedBar].getY(), (int)visitors[tappedBar].getY(),
+            mTooltip.setValues(date, unit, (int) views[tappedBar].getY(), (int) visitors[tappedBar].getY(),
             mGraphView.getMiddlePointOfTappedBar(tappedBar));
             mTooltip.showTooltip(true);
         }
@@ -330,7 +329,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private class Tooltip extends LinearLayout {
         private LinearLayout mInternalContainer;
         private LinearLayout mArrow;
-        private int arrawWidthPixel;
+        private int mArrawWidthPixel;
         private TextView mVisitors;
         private TextView mViews;
         private TextView mViewsForVisitors;
@@ -348,11 +347,11 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             // Setting up internal items: The arrow and the 2nd LL with labels in it.
             // 1. setting up the arrow
             mArrow = new LinearLayout(ctx);
-            arrawWidthPixel = getResources().getDimensionPixelSize(R.dimen.margin_large);
-            mArrow.setLayoutParams(new LinearLayout.LayoutParams(arrawWidthPixel, arrawWidthPixel));
+            mArrawWidthPixel = getResources().getDimensionPixelSize(R.dimen.margin_large);
+            mArrow.setLayoutParams(new LinearLayout.LayoutParams(mArrawWidthPixel, mArrawWidthPixel));
             mArrow.setBackgroundColor(getResources().getColor(R.color.blue_medium));
             mArrow.setRotation(45f);
-            mArrow.setTranslationY(arrawWidthPixel/2);
+            mArrow.setTranslationY(mArrawWidthPixel / 2);
             addView(mArrow);
 
             // 2. setting up the internal LL that holds labels
@@ -369,31 +368,27 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_medium);
             mInternalContainer.setPadding(padding, padding, padding, padding);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            //params.gravity = Gravity.CENTER;
             mDate = new TextView(ctx);
-            mDate.setLayoutParams(params);
-            mDate.setTextColor(Color.WHITE);
-            mInternalContainer.addView(mDate);
+            setupLabel(mDate);
             mViews = new TextView(ctx);
-            mViews.setLayoutParams(params);
-            mViews.setTextColor(Color.WHITE);
-            mInternalContainer.addView(mViews);
+            setupLabel(mViews);
             mVisitors = new TextView(ctx);
-            mVisitors.setLayoutParams(params);
-            mVisitors.setTextColor(Color.WHITE);
-            mInternalContainer.addView(mVisitors);
+            setupLabel(mVisitors);
             mViewsForVisitors = new TextView(ctx);
-            mViewsForVisitors.setLayoutParams(params);
-            mViewsForVisitors.setTextColor(Color.WHITE);
-            mInternalContainer.addView(mViewsForVisitors);
-
+            setupLabel(mViewsForVisitors);
             addView(mInternalContainer);
         }
 
+        private void setupLabel(TextView textView) {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            textView.setLayoutParams(params);
+            textView.setTextColor(Color.WHITE);
+            mInternalContainer.addView(textView);
+        }
+
         public void setValues(String date, StatsBarChartUnit unit, int views, int visitors, float pos) {
-            ObjectAnimator mover = ObjectAnimator.ofFloat(mArrow, "x", pos - ( arrawWidthPixel / 2));
+            ObjectAnimator mover = ObjectAnimator.ofFloat(mArrow, "x", pos - (mArrawWidthPixel / 2));
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.play(mover);
             animatorSet.start();
@@ -416,14 +411,23 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                 visitors = 0;
                 views = 0;
             } else {
-                viewsPerVisitor = (double)views / visitors;
+                viewsPerVisitor = (double) views / visitors;
             }
-            mVisitors.setText(String.format("%s %s", FormatUtils.formatDecimal(visitors), getString(R.string.stats_totals_visitors)));
-            mViews.setText(String.format("%s %s", FormatUtils.formatDecimal(views), getString(R.string.stats_totals_views)));
-            mViewsForVisitors.setText(String.format("%.2f %s", viewsPerVisitor, getString(R.string.stats_totals_views_per_visitor)));
+            mVisitors.setText(String.format("%s %s",
+                    FormatUtils.formatDecimal(visitors),
+                    getString(R.string.stats_totals_visitors))
+            );
+            mViews.setText(String.format("%s %s",
+                    FormatUtils.formatDecimal(views),
+                    getString(R.string.stats_totals_views))
+            );
+            mViewsForVisitors.setText(String.format("%.2f %s",
+                    viewsPerVisitor,
+                    getString(R.string.stats_totals_views_per_visitor))
+            );
         }
 
-        public boolean isVisible(){
+        public boolean isVisible() {
             return getVisibility() == View.VISIBLE;
         }
 
