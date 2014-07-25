@@ -29,6 +29,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
+import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -56,35 +58,18 @@ public class GCMIntentService extends GCMBaseIntentService {
         AppLog.e(T.NOTIFS, "GCM Error: " + errorId);
     }
 
-    @Override
-    protected void onMessage(Context context, Intent intent) {
-        AppLog.v(T.NOTIFS, "Received Message");
-        Bundle extras = intent.getExtras();
-
-        // Handle helpshift PNs
-        if (extras != null && TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
-            return;
-        }
-
-        if (!WordPress.hasValidWPComCredentials(context))
-            return;
-
-
-        if (extras == null) {
-            AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
-            return;
-        }
+    protected void handleDefaultPush(Context context, Bundle extras) {
 
         long wpcomUserID = UserPrefs.getCurrentUserId();
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
-                //TODO: Do not abort the execution here, at least for this release, since there might be an issue for users that update the app.
-                //If they have never used the Reader, then they won't have a userId.
-                //Code for next release is below:
-               /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
-                return;*/
+                // TODO: Do not abort the execution here, at least for this release, since there might be
+                // an issue for users that update the app.
+                // If they have never used the Reader, then they won't have a userId.
+                // Code for next release is below:
+                /* AppLog.e(T.NOTIFS, "No wpcom userId found in the app. Aborting.");
+                   return; */
             } else {
                 if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
                     AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
@@ -94,8 +79,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
 
         String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
-        if (title == null)
-            title = "WordPress";
+        if (title == null) {
+            title = getString(R.string.app_name);
+        }
         String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
         String note_id = extras.getString("note_id");
 
@@ -160,8 +146,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         if (mActiveNotificationsMap.size() <= 1) {
             mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
-                                                     .setContentText(message).setTicker(message).setAutoCancel(true)
-                                                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+                                                           .setContentText(message).setTicker(message).setAutoCancel(true)
+                                                           .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
@@ -220,13 +206,13 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
-                            .setSmallIcon(R.drawable.notification_icon)
-                            .setContentTitle("WordPress")
-                            .setContentText(subject)
-                            .setTicker(message)
-                            .setAutoCancel(true)
-                            .setStyle(inboxStyle);
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setContentTitle("WordPress")
+                    .setContentText(subject)
+                    .setTicker(message)
+                    .setAutoCancel(true)
+                    .setStyle(inboxStyle);
         }
 
         // Call broadcast receiver when notification is dismissed
@@ -253,6 +239,43 @@ public class GCMIntentService extends GCMBaseIntentService {
         broadcastNewNotification(context);
     }
 
+    @Override
+    protected void onMessage(Context context, Intent intent) {
+        AppLog.v(T.NOTIFS, "Received Message");
+        Bundle extras = intent.getExtras();
+
+        if (extras == null) {
+            AppLog.v(T.NOTIFS, "No notification message content received. Aborting.");
+            return;
+        }
+
+        // Handle helpshift PNs
+        if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
+            HelpshiftHelper.getInstance().handlePush(context, intent);
+            return;
+        }
+
+        // Handle mixpanel PNs
+        if (extras.containsKey("mp_message")) {
+            String mpMessage = intent.getExtras().getString("mp_message");
+            String title = getString(R.string.app_name);
+            Intent resultIntent = new Intent(this, PostsActivity.class);
+            resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+            AnalyticsTrackerMixpanel.showNotification(context, pendingIntent, R.drawable.notification_icon, title,
+                    mpMessage);
+            return;
+        }
+
+        if (!WordPress.hasValidWPComCredentials(context)) {
+            return;
+        }
+
+        handleDefaultPush(context, extras);
+    }
+
     public void broadcastNewNotification(Context context) {
         Intent msgIntent = new Intent();
         msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
@@ -277,6 +300,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
                 HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             }
+            AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
 

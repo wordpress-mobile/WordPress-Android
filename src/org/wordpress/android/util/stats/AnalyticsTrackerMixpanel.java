@@ -1,6 +1,11 @@
 package org.wordpress.android.util.stats;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -30,6 +35,23 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel = MixpanelAPI.getInstance(WordPress.getContext(), BuildConfig.MIXPANEL_TOKEN);
     }
 
+    @SuppressWarnings("deprecation")
+    public static void showNotification(Context context, PendingIntent intent, int notificationIcon, CharSequence title,
+                                        CharSequence message) {
+        final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        final Notification.Builder builder = new Notification.Builder(context).setSmallIcon(notificationIcon)
+                .setTicker(message).setWhen(System.currentTimeMillis()).setContentTitle(title).setContentText(message)
+                .setContentIntent(intent);
+        Notification notification;
+        if (Build.VERSION.SDK_INT < 16) {
+            notification = builder.getNotification();
+        } else {
+            notification = builder.build();
+        }
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        nm.notify(0, notification);
+    }
+
     @Override
     public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
@@ -57,13 +79,13 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     private void trackMixpanelPropertiesForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions) {
-        if (instructions.getPeoplePropertyToIncrement() != null
-                && !instructions.getPeoplePropertyToIncrement().isEmpty()) {
+        if (instructions.getPeoplePropertyToIncrement() != null && !instructions.getPeoplePropertyToIncrement()
+                                                                                .isEmpty()) {
             incrementPeopleProperty(instructions.getPeoplePropertyToIncrement());
         }
 
-        if (instructions.getSuperPropertyToIncrement() != null
-                && !instructions.getSuperPropertyToIncrement().isEmpty()) {
+        if (instructions.getSuperPropertyToIncrement() != null && !instructions.getSuperPropertyToIncrement()
+                                                                               .isEmpty()) {
             incrementSuperProperty(instructions.getSuperPropertyToIncrement());
         }
 
@@ -137,7 +159,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             String username = preferences.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
             mMixpanel.identify(username);
             mMixpanel.getPeople().identify(username);
-
             try {
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("$username", username);
@@ -147,6 +168,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 AppLog.e(AppLog.T.UTILS, e);
             }
         }
+    }
+
+    @Override
+    public void registerPushNotificationToken(String regId) {
+        mMixpanel.getPeople().setPushRegistrationId(regId);
     }
 
     @Override
@@ -465,7 +491,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
 
         try {
-            Object valueForProperty  = properties.get(property);
+            Object valueForProperty = properties.get(property);
             return valueForProperty;
         } catch (JSONException e) {
             // We are okay with swallowing this exception as the next line will just return a null value
