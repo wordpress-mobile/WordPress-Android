@@ -45,6 +45,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private GraphViewSeries mVisitorsSeries;
     private String[] mStatsDate;
     private Toast mTappedToast = null;
+    private int mLastTappedBar = -1;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -78,7 +79,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         );
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_TOUCH_DETECTED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_GESTURE_SINGLE_TAP_CONFIRMED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_GESTURE_SHOW_TAP));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsActivity.STATS_GESTURE_OTHER));
     }
 
     @Override
@@ -94,13 +97,29 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (mGraphView == null) {
+                return;
+            }
             String action = intent.getAction();
-            if (StatsActivity.STATS_TOUCH_DETECTED.equals(action)) {
-                int tappedBar;
-                if (mGraphView != null && (tappedBar = mGraphView.getTappedBar()) != -1) {
-                    mGraphView.highlightBar(tappedBar);
-                    handleBarChartTap(tappedBar);
+            // If it's not a "tap confirmed", or a "show tap" event, redraw the graph only if
+            // has one bar in highlighted state
+            if (StatsActivity.STATS_GESTURE_OTHER.equals(action)) {
+                if (mLastTappedBar != -1) {
+                    mLastTappedBar = -1;
+                    mGraphView.highlightBar(-1);
                 }
+                return;
+            }
+
+            if (mLastTappedBar == -1) {
+                mLastTappedBar = mGraphView.getTappedBar();
+            }
+            if (StatsActivity.STATS_GESTURE_SINGLE_TAP_CONFIRMED.equals(action)) {
+                mGraphView.highlightAndDismissBar(mLastTappedBar);
+                handleBarChartTap(mLastTappedBar);
+                mLastTappedBar = -1;
+            } else if (StatsActivity.STATS_GESTURE_SHOW_TAP.equals(action)) {
+                mGraphView.highlightBar(mLastTappedBar);
             }
         }
     };

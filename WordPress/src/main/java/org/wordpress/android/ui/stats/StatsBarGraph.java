@@ -130,7 +130,7 @@ class StatsBarGraph extends GraphView {
         return -1;
     }
 
-    public void highlightBar(int barPosition) {
+    public void highlightAndDismissBar(int barPosition) {
         mBarPositionToHighlight = barPosition;
         if (mBarPositionToHighlight == -1) {
             return;
@@ -144,6 +144,11 @@ class StatsBarGraph extends GraphView {
                 redrawAll();
             }
         }, 500);
+    }
+
+    public void highlightBar(int barPosition) {
+        mBarPositionToHighlight = barPosition;
+        this.redrawAll();
     }
 
     @Override
