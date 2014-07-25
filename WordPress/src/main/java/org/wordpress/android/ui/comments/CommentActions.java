@@ -233,6 +233,33 @@ public class CommentActions {
     }
 
     /**
+     * Moderate a comment from a WPCOM notification
+     */
+    public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
+
+        WordPress.getRestClientUtils().moderateComment(
+                String.valueOf(note.getBlogId()),
+                String.valueOf(note.getCommentId()),
+                CommentStatus.toRESTString(newStatus),
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(true);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(false);
+                        }
+                    }
+                }
+        );
+    }
+
+    /**
      * change the status of a single comment
      */
     static void moderateComment(final int accountId,
