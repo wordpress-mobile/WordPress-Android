@@ -17,8 +17,7 @@ our example:
 
 After this step, you can invoke git submodule to clone local project dependencies:
 
-    $ git submodule init
-    $ git submodule update
+    $ git submodule update --init --recursive
 
 Previous command create a `libs/` directory and clone all dependencies needed
 by the main WordPress for Android project. You can now build, install and
