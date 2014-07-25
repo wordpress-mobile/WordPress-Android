@@ -72,7 +72,7 @@
         <LinearLayout
             android:id="@+id/stats_bar_chart_fragment_container"
             android:layout_width="fill_parent"
-            android:layout_height="128dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical" />
 
         <TextView

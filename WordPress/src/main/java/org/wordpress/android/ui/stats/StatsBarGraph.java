@@ -11,6 +11,7 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,10 @@ class StatsBarGraph extends GraphView {
 
     public StatsBarGraph(Context context) {
         super(context, "");
+
+        int width = LayoutParams.MATCH_PARENT;
+        int height = DisplayUtils.dpToPx(context, 128);
+        setLayoutParams(new LayoutParams(width, height));
 
         setProperties();
     }
@@ -128,6 +133,15 @@ class StatsBarGraph extends GraphView {
             }
         }
         return -1;
+    }
+
+    public float getMiddlePointOfTappedBar(int tappedBar) {
+        if (tappedBar == -1 || mSeriesRectsDrawedOnScreen == null || mSeriesRectsDrawedOnScreen.size() == 0) {
+            return -1;
+        }
+        BarChartRect rect = mSeriesRectsDrawedOnScreen.get(0).get(tappedBar);
+
+        return ((rect.mLeft + rect.mRight ) / 2) + getCanvasLeft();
     }
 
     public void highlightAndDismissBar(int barPosition) {

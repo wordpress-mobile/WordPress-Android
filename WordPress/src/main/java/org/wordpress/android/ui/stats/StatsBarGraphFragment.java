@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.stats;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
@@ -10,15 +12,19 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewDataInterface;
@@ -29,8 +35,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 
 /**
  * A fragment that shows stats bar chart data.
@@ -44,8 +50,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private GraphViewSeries mViewsSeries;
     private GraphViewSeries mVisitorsSeries;
     private String[] mStatsDate;
-    private Toast mTappedToast = null;
     private int mLastTappedBar = -1;
+    private int mLastHighlightedBar = -1;
+    private Tooltip mTooltip;
 
     public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
@@ -91,7 +98,6 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.unregisterReceiver(mReceiver);
-        mTappedToast = null;
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -104,22 +110,35 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             // If it's not a "tap confirmed", or a "show tap" event, redraw the graph only if
             // has one bar in highlighted state
             if (StatsActivity.STATS_GESTURE_OTHER.equals(action)) {
-                if (mLastTappedBar != -1) {
-                    mLastTappedBar = -1;
-                    mGraphView.highlightBar(-1);
-                }
                 return;
             }
 
+            mLastTappedBar = mGraphView.getTappedBar();
             if (mLastTappedBar == -1) {
-                mLastTappedBar = mGraphView.getTappedBar();
+                return;
             }
-            if (StatsActivity.STATS_GESTURE_SINGLE_TAP_CONFIRMED.equals(action)) {
+
+            if (getBarChartUnit() != StatsBarChartUnit.DAY) {
+                if (mTooltip.isVisible()) {
+                    // The same bar is pressed dismiss all
+                    if (mLastHighlightedBar == mLastTappedBar) {
+                        mTooltip.hideTooltip(true);
+                        mLastHighlightedBar = -1;
+                        mGraphView.highlightBar(mLastHighlightedBar);
+                    } else {
+                        mLastHighlightedBar = mLastTappedBar;
+                        // update the values and change the highlight
+                        mGraphView.highlightBar(mLastHighlightedBar);
+                        handleBarChartTap(mLastHighlightedBar);
+                    }
+                } else {
+                    mLastHighlightedBar = mLastTappedBar;
+                    mGraphView.highlightBar(mLastHighlightedBar);
+                    handleBarChartTap(mLastHighlightedBar);
+                }
+            } else {
                 mGraphView.highlightAndDismissBar(mLastTappedBar);
                 handleBarChartTap(mLastTappedBar);
-                mLastTappedBar = -1;
-            } else if (StatsActivity.STATS_GESTURE_SHOW_TAP.equals(action)) {
-                mGraphView.highlightBar(mLastTappedBar);
             }
         }
     };
@@ -150,23 +169,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             // Week or Month on the screen. Show a toast.
             GraphViewDataInterface[] views = mViewsSeries.getData();
             GraphViewDataInterface[] visitors = mVisitorsSeries.getData();
-            String formattedDate;
-
-            if (unit == StatsBarChartUnit.WEEK) {
-                formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "MMM d");
-            } else {
-                // Month
-                formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMM yyyy");
-            }
-
-            String message = String.format("%s - %s %d - %s %d", formattedDate, getString(R.string.stats_totals_views),
-                    (int) views[tappedBar].getY(), getString(R.string.stats_totals_visitors),
-                    (int) visitors[tappedBar].getY());
-            if (mTappedToast != null) {
-                mTappedToast.cancel();
-                mTappedToast = null;
-            }
-            mTappedToast = ToastUtils.showToast(this.getActivity(), message, ToastUtils.Duration.LONG);
+            mTooltip.setValues(date, unit, (int)views[tappedBar].getY(), (int)visitors[tappedBar].getY(),
+            mGraphView.getMiddlePointOfTappedBar(tappedBar));
+            mTooltip.showTooltip(true);
         }
     }
 
@@ -242,6 +247,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             mGraphContainer.removeAllViews();
             mGraphView = new StatsBarGraph(getActivity());
             mGraphContainer.addView(mGraphView);
+            mTooltip = new Tooltip(getActivity());
+            mGraphContainer.addView(mTooltip);
         }
 
         if (mGraphView != null) {
@@ -316,6 +323,141 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         public void onChange(boolean selfChange) {
             if (isAdded()) {
                 getLoaderManager().restartLoader(0, null, StatsBarGraphFragment.this);
+            }
+        }
+    }
+
+    private class Tooltip extends LinearLayout {
+        private LinearLayout mInternalContainer;
+        private LinearLayout mArrow;
+        private int arrawWidthPixel;
+        private TextView mVisitors;
+        private TextView mViews;
+        private TextView mViewsForVisitors;
+        private TextView mDate;
+
+        public Tooltip(Context ctx) {
+            super(ctx);
+            int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LayoutParams.WRAP_CONTENT;
+            setLayoutParams(new LinearLayout.LayoutParams(width, height));
+            setOrientation(LinearLayout.VERTICAL);
+            setGravity(Gravity.CENTER);
+            setVisibility(View.GONE);
+
+            // Setting up internal items: The arrow and the 2nd LL with labels in it.
+            // 1. setting up the arrow
+            mArrow = new LinearLayout(ctx);
+            arrawWidthPixel = getResources().getDimensionPixelSize(R.dimen.margin_large);
+            mArrow.setLayoutParams(new LinearLayout.LayoutParams(arrawWidthPixel, arrawWidthPixel));
+            mArrow.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+            mArrow.setRotation(45f);
+            mArrow.setTranslationY(arrawWidthPixel/2);
+            addView(mArrow);
+
+            // 2. setting up the internal LL that holds labels
+            mInternalContainer = new LinearLayout(ctx);
+            mInternalContainer.setLayoutParams(
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT
+                    )
+            );
+            mInternalContainer.setOrientation(LinearLayout.VERTICAL);
+            mInternalContainer.setGravity(Gravity.CENTER);
+            mInternalContainer.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+            int padding = getResources().getDimensionPixelSize(R.dimen.margin_medium);
+            mInternalContainer.setPadding(padding, padding, padding, padding);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            //params.gravity = Gravity.CENTER;
+            mDate = new TextView(ctx);
+            mDate.setLayoutParams(params);
+            mDate.setTextColor(Color.WHITE);
+            mInternalContainer.addView(mDate);
+            mViews = new TextView(ctx);
+            mViews.setLayoutParams(params);
+            mViews.setTextColor(Color.WHITE);
+            mInternalContainer.addView(mViews);
+            mVisitors = new TextView(ctx);
+            mVisitors.setLayoutParams(params);
+            mVisitors.setTextColor(Color.WHITE);
+            mInternalContainer.addView(mVisitors);
+            mViewsForVisitors = new TextView(ctx);
+            mViewsForVisitors.setLayoutParams(params);
+            mViewsForVisitors.setTextColor(Color.WHITE);
+            mInternalContainer.addView(mViewsForVisitors);
+
+            addView(mInternalContainer);
+        }
+
+        public void setValues(String date, StatsBarChartUnit unit, int views, int visitors, float pos) {
+            ObjectAnimator mover = ObjectAnimator.ofFloat(mArrow, "x", pos - ( arrawWidthPixel / 2));
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(mover);
+            animatorSet.start();
+
+            String formattedDate;
+            if (unit == StatsBarChartUnit.WEEK) {
+                formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy");
+                mDate.setText("Week of " + formattedDate);
+            } else {
+                // Month
+                formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMMM yyyy");
+                mDate.setText(formattedDate);
+            }
+
+            double viewsPerVisitor = 0d;
+            if (visitors == 0) {
+                visitors = 1;
+            }
+            if (views == 0) {
+                visitors = 0;
+                views = 0;
+            } else {
+                viewsPerVisitor = (double)views / visitors;
+            }
+            mVisitors.setText(String.format("%s %s", FormatUtils.formatDecimal(visitors), getString(R.string.stats_totals_visitors)));
+            mViews.setText(String.format("%s %s", FormatUtils.formatDecimal(views), getString(R.string.stats_totals_views)));
+            mViewsForVisitors.setText(String.format("%.2f %s", viewsPerVisitor, getString(R.string.stats_totals_views_per_visitor)));
+        }
+
+        public boolean isVisible(){
+            return getVisibility() == View.VISIBLE;
+        }
+
+        public void showTooltip(boolean animate) {
+            if (getVisibility() != View.VISIBLE) {
+                if (animate) {
+                    Animation expand = new ScaleAnimation(1.0f, 1.0f, 0.0f, 1.0f);
+                    expand.setDuration(250);
+                    expand.setInterpolator(StatsUIHelper.getInterpolator());
+                    startAnimation(expand);
+                }
+                setVisibility(View.VISIBLE);
+            }
+        }
+        public void hideTooltip(boolean animate) {
+            if (getVisibility() != View.GONE) {
+                if (animate) {
+                    Animation expand = new ScaleAnimation(1.0f, 1.0f, 1.0f, 0.0f);
+                    expand.setDuration(250);
+                    expand.setInterpolator(StatsUIHelper.getInterpolator());
+                    expand.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) { }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            setVisibility(View.GONE);
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) { }
+                    });
+                    startAnimation(expand);
+                } else {
+                    setVisibility(View.GONE);
+                }
             }
         }
     }
