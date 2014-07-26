@@ -285,7 +285,7 @@ public class ReaderTagTable {
         if (rowExists) {
             sql = "UPDATE tbl_tag_updates SET " + colName + "=?1 WHERE tag_name=?2 AND tag_type=?3";
         } else {
-            sql = "INSERT INTO tbl_tag_updates (" + colName + " tag_name, tag_type, " + colName + ") VALUES (?1,?2,?3)";
+            sql = "INSERT INTO tbl_tag_updates (" + colName + ", tag_name, tag_type) VALUES (?1,?2,?3)";
         }
 
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
