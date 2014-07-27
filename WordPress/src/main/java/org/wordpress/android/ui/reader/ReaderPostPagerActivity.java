@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -20,12 +21,16 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.util.AppLog;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -224,6 +229,7 @@ public class ReaderPostPagerActivity extends Activity
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderBlogIdPostIdList mIdList;
         private final long END_ID = -1;
+        private final int LOAD_MORE_OFFSET = 3;
 
         // this is used to retain a weak reference to created fragments so we can access them
         // in getFragmentAtPosition() - necessary because we need to pause the web view in
@@ -262,13 +268,12 @@ public class ReaderPostPagerActivity extends Activity
                 fragment = PostPagerEndFragment.newInstance();
             } else {
                 fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
+                if (position > (getCount() - LOAD_MORE_OFFSET) && canRequestMorePosts()) {
+                    requestMorePosts();
+                }
             }
 
             mFragmentMap.put(getItemKey(position), new WeakReference<Fragment>(fragment));
-
-            if ((position >= (mIdList.size() - 3)) && canRequestMorePosts()) {
-                requestMorePosts();
-            }
 
             return fragment;
         }
@@ -295,9 +300,16 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private boolean canRequestMorePosts() {
-            return (mIdList.size() > 1
-                    && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                    && hasCurrentTag());
+            return (mIdList.size() > LOAD_MORE_OFFSET && hasCurrentTag());
+        }
+
+        private void addIds(ReaderBlogIdPostIdList ids) {
+            if (ids == null || ids.size() == 0) {
+                return;
+            }
+
+            mIdList.addAll(mIdList);
+            notifyDataSetChanged();
         }
 
         private void requestMorePosts() {
@@ -312,12 +324,39 @@ public class ReaderPostPagerActivity extends Activity
                     if (isFinishing()) {
                         return;
                     }
-                    if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
 
+                    if (numNewPosts > 0) {
+                        AppLog.d(AppLog.T.READER, "reader pager > older posts received");
+                        final Handler handler = new Handler();
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                int offset = mIdList.size();
+                                ReaderPostList posts = ReaderPostTable.getPostsWithTag(
+                                        getCurrentTag(),
+                                        ReaderConstants.READER_MAX_POSTS_TO_DISPLAY,
+                                        offset);
+                                if (posts.size() > 0) {
+                                    final ReaderBlogIdPostIdList newIds = new ReaderBlogIdPostIdList();
+                                    for (ReaderPost post: posts) {
+                                        newIds.add(new ReaderBlogIdPostId(post.blogId, post.postId));
+                                    }
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            addIds(newIds);
+                                        }
+                                    });
+                                }
+                            }
+                        }.start();
                     }
                 }
             };
+
             mIsRequestingMorePosts = true;
+            AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
+
             ReaderPostActions.updatePostsInTag(
                     getCurrentTag(),
                     ReaderActions.RequestDataAction.LOAD_OLDER,

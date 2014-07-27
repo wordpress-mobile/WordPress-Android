@@ -458,6 +458,9 @@ public class ReaderPostTable {
     }
 
     public static ReaderPostList getPostsWithTag(ReaderTag tag, int maxPosts) {
+        return getPostsWithTag(tag, maxPosts, 0);
+    }
+    public static ReaderPostList getPostsWithTag(ReaderTag tag, int maxPosts, int offset) {
         if (tag == null) {
             return new ReaderPostList();
         }
@@ -482,6 +485,10 @@ public class ReaderPostTable {
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
+            // offset is only permitted when there's a limit
+            if (offset > 0) {
+                sql += " OFFSET " + Integer.toString(offset);
+            }
         }
 
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
