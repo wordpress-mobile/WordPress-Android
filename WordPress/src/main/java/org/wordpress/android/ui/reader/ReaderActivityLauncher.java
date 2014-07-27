@@ -31,7 +31,7 @@ public class ReaderActivityLauncher {
     public static void showReaderPostDetail(Activity activity, long blogId, long postId) {
         ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
         idList.add(new ReaderBlogIdPostId(blogId, postId));
-        showReaderPostPager(activity, null, 0, idList, null);
+        showReaderPostPager(activity, null, null, 0, idList, null);
     }
 
     /*
@@ -39,6 +39,7 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderPostPager(Activity activity,
                                            String title,
+                                           ReaderTag tag,
                                            int position,
                                            ReaderBlogIdPostIdList idList,
                                            ReaderPostListType postListType) {
@@ -47,6 +48,9 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
         if (!TextUtils.isEmpty(title)) {
             intent.putExtra(ReaderPostPagerActivity.ARG_TITLE, title);
+        }
+        if (tag != null) {
+            intent.putExtra(ReaderConstants.ARG_TAG, tag);
         }
         if (postListType != null) {
             intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);

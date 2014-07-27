@@ -382,16 +382,25 @@ public class ReaderPostListActivity extends WPActionBarActivity
             int position = idList.indexOf(blogId, postId);
 
             final String title;
+            final ReaderTag tag;
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
                     title = listFragment.getCurrentTagName();
+                    tag = listFragment.getCurrentTag();
                     break;
                 default:
                     title = (String)this.getTitle();
+                    tag = null;
                     break;
             }
-            ReaderActivityLauncher.showReaderPostPager(this, title, position, idList, getPostListType());
+            ReaderActivityLauncher.showReaderPostPager(
+                    this,
+                    title,
+                    tag,
+                    position,
+                    idList,
+                    getPostListType());
         }
     }
 

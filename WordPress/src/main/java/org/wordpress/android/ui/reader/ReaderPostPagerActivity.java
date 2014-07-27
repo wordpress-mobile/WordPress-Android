@@ -20,7 +20,10 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 
@@ -39,6 +42,9 @@ public class ReaderPostPagerActivity extends Activity
     private PostPagerAdapter mPageAdapter;
     private boolean mIsFullScreen;
     private ReaderPostListType mPostListType;
+    private ReaderTag mCurrentTag;
+
+    private boolean mIsRequestingMorePosts;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,12 +74,18 @@ public class ReaderPostPagerActivity extends Activity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
+            }
         } else {
             position = getIntent().getIntExtra(ARG_POSITION, 0);
             title = getIntent().getStringExtra(ARG_TITLE);
             serializedList = getIntent().getSerializableExtra(ARG_BLOG_POST_ID_LIST);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            }
+            if (getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
             }
         }
 
@@ -115,6 +127,9 @@ public class ReaderPostPagerActivity extends Activity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(ARG_TITLE, (String) this.getTitle());
+        if (hasCurrentTag()) {
+            outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
+        }
         if (mViewPager != null) {
             outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
         }
@@ -150,6 +165,14 @@ public class ReaderPostPagerActivity extends Activity
         } else {
             super.onBackPressed();
         }
+    }
+
+    private ReaderTag getCurrentTag() {
+        return mCurrentTag;
+    }
+
+    private boolean hasCurrentTag() {
+        return mCurrentTag != null;
     }
 
     @Override
@@ -243,6 +266,10 @@ public class ReaderPostPagerActivity extends Activity
 
             mFragmentMap.put(getItemKey(position), new WeakReference<Fragment>(fragment));
 
+            if ((position >= (mIdList.size() - 3)) && canRequestMorePosts()) {
+                requestMorePosts();
+            }
+
             return fragment;
         }
 
@@ -265,6 +292,36 @@ public class ReaderPostPagerActivity extends Activity
                 return null;
             }
             return mFragmentMap.get(key).get();
+        }
+
+        private boolean canRequestMorePosts() {
+            return (mIdList.size() > 1
+                    && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                    && hasCurrentTag());
+        }
+
+        private void requestMorePosts() {
+            if (mIsRequestingMorePosts) {
+                return;
+            }
+
+            ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
+                @Override
+                public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
+                    mIsRequestingMorePosts = false;
+                    if (isFinishing()) {
+                        return;
+                    }
+                    if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
+
+                    }
+                }
+            };
+            mIsRequestingMorePosts = true;
+            ReaderPostActions.updatePostsInTag(
+                    getCurrentTag(),
+                    ReaderActions.RequestDataAction.LOAD_OLDER,
+                    resultListener);
         }
     }
 
