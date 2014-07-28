@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -349,7 +350,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             mArrow = new LinearLayout(ctx);
             mArrawWidthPixel = getResources().getDimensionPixelSize(R.dimen.margin_large);
             mArrow.setLayoutParams(new LinearLayout.LayoutParams(mArrawWidthPixel, mArrawWidthPixel));
-            mArrow.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+            mArrow.setBackgroundColor(getResources().getColor(R.color.grey_light));
             mArrow.setRotation(45f);
             mArrow.setTranslationY(mArrawWidthPixel / 2);
             addView(mArrow);
@@ -364,7 +365,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             );
             mInternalContainer.setOrientation(LinearLayout.VERTICAL);
             mInternalContainer.setGravity(Gravity.CENTER);
-            mInternalContainer.setBackgroundColor(getResources().getColor(R.color.blue_medium));
+            mInternalContainer.setBackgroundColor(getResources().getColor(R.color.grey_light));
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_medium);
             mInternalContainer.setPadding(padding, padding, padding, padding);
 
@@ -383,7 +384,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(params);
-            textView.setTextColor(Color.WHITE);
+            textView.setTextColor(getResources().getColor(R.color.grey_dark));
             mInternalContainer.addView(textView);
         }
 
@@ -393,14 +394,20 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             animatorSet.play(mover);
             animatorSet.start();
 
-            String formattedDate;
             if (unit == StatsBarChartUnit.WEEK) {
-                formattedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy");
-                mDate.setText("Week of " + formattedDate);
+                String formattedDay = StatsUtils.parseDate(date,  "yyyy'W'MM'W'dd", "EEEE");
+                String formattedMonth = StatsUtils.parseDate(date,  "yyyy'W'MM'W'dd", "d MMMM");
+                String formattedYear = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "yyyy");
+                mDate.setText(
+                        Html.fromHtml(
+                                String.format("Week of <b>%s</b>, <b>%s</b>, %s", formattedDay, formattedMonth, formattedYear)
+                        )
+                );
             } else {
                 // Month
-                formattedDate = StatsUtils.parseDate(date, "yyyy-MM", "MMMM yyyy");
-                mDate.setText(formattedDate);
+                String formattedMonth = StatsUtils.parseDate(date, "yyyy-MM", "MMMM");
+                String formattedYear = StatsUtils.parseDate(date, "yyyy-MM", "yyyy");
+                mDate.setText(Html.fromHtml(String.format("<b>%s</b> %s", formattedMonth, formattedYear)));
             }
 
             double viewsPerVisitor = 0d;
@@ -413,17 +420,17 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             } else {
                 viewsPerVisitor = (double) views / visitors;
             }
-            mVisitors.setText(String.format("%s %s",
+            mVisitors.setText(Html.fromHtml(String.format("<b>%s</b> %s",
                     FormatUtils.formatDecimal(visitors),
-                    getString(R.string.stats_totals_visitors))
+                    getString(R.string.stats_totals_visitors)))
             );
-            mViews.setText(String.format("%s %s",
-                    FormatUtils.formatDecimal(views),
-                    getString(R.string.stats_totals_views))
+            mViews.setText(Html.fromHtml(String.format("<b>%s</b> %s",
+                            FormatUtils.formatDecimal(views),
+                            getString(R.string.stats_totals_views)))
             );
-            mViewsForVisitors.setText(String.format("%.2f %s",
+            mViewsForVisitors.setText(Html.fromHtml(String.format("<b>%.2f</b> %s",
                     viewsPerVisitor,
-                    getString(R.string.stats_totals_views_per_visitor))
+                    getString(R.string.stats_totals_views_per_visitor)))
             );
         }
 
