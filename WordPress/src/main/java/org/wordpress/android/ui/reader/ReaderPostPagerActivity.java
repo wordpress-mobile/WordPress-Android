@@ -56,9 +56,6 @@ public class ReaderPostPagerActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
-        // remove the window background since each fragment already has a background color
-        getWindow().setBackgroundDrawable(null);
-
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
