@@ -18,8 +18,6 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.ToastUtils;
 
 public class ReaderActivityLauncher {
@@ -29,38 +27,58 @@ public class ReaderActivityLauncher {
      * with a single post
      */
     public static void showReaderPostDetail(Activity activity, long blogId, long postId) {
-        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
-        idList.add(new ReaderBlogIdPostId(blogId, postId));
-        showReaderPostPager(activity, null, null, 0, idList, null);
+        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        showReaderPostPager(activity, intent);
     }
 
     /*
-     * show a list of posts in the post pager with the post at the passed position made active
+     * show pager view of posts with a specific tag - passed blogId/postId is the post
+     * to select after the pager is populated
      */
-    public static void showReaderPostPager(Activity activity,
-                                           String title,
-                                           ReaderTag tag,
-                                           int position,
-                                           ReaderBlogIdPostIdList idList,
-                                           ReaderPostListType postListType) {
+    public static void showReaderPostPagerForTag(Activity activity,
+                                                 ReaderTag tag,
+                                                 ReaderPostListType postListType,
+                                                 long blogId,
+                                                 long postId) {
+        if (tag == null) {
+            return;
+        }
+
         Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
-        intent.putExtra(ReaderPostPagerActivity.ARG_POSITION, position);
-        intent.putExtra(ReaderPostPagerActivity.ARG_BLOG_POST_ID_LIST, idList);
-        if (!TextUtils.isEmpty(title)) {
-            intent.putExtra(ReaderPostPagerActivity.ARG_TITLE, title);
-        }
-        if (tag != null) {
-            intent.putExtra(ReaderConstants.ARG_TAG, tag);
-        }
-        if (postListType != null) {
-            intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
-        }
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
+        intent.putExtra(ReaderConstants.ARG_TAG, tag);
+        intent.putExtra(ReaderConstants.ARG_TITLE, tag.getTagName());
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+
+        showReaderPostPager(activity, intent);
+    }
+
+    /*
+     * show pager view of posts in a specific blog
+     */
+    public static void showReaderPostPagerForBlog(Activity activity,
+                                                  long blogId,
+                                                  long postId) {
+        Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
+        intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.BLOG_PREVIEW);
+        intent.putExtra(ReaderConstants.ARG_TITLE, activity.getString(R.string.reader_title_blog_preview));
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+
+        showReaderPostPager(activity, intent);
+    }
+
+    private static void showReaderPostPager(Activity activity, Intent intent) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.reader_detail_in,
                 0);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
+
 
     /*
      * show a list of posts in a specific blog

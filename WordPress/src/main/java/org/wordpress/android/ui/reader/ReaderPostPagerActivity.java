@@ -31,16 +31,13 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
+import javax.annotation.Nonnull;
+
 public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
-
-    static final String ARG_BLOG_POST_ID_LIST = "blog_post_id_list";
-    static final String ARG_POSITION = "position";
-    static final String ARG_TITLE = "title";
 
     private ViewPager mViewPager;
     private PostPagerAdapter mPageAdapter;
@@ -68,41 +65,39 @@ public class ReaderPostPagerActivity extends Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final int position;
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+
         final String title;
-        final Serializable serializedList;
+        final long blogId;
+        final long postId;
         if (savedInstanceState != null) {
-            position = savedInstanceState.getInt(ARG_POSITION, 0);
-            title = savedInstanceState.getString(ARG_TITLE);
-            serializedList = savedInstanceState.getSerializable(ARG_BLOG_POST_ID_LIST);
+            title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
+            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
-                mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
-            }
+            mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
         } else {
-            position = getIntent().getIntExtra(ARG_POSITION, 0);
-            title = getIntent().getStringExtra(ARG_TITLE);
-            serializedList = getIntent().getSerializableExtra(ARG_BLOG_POST_ID_LIST);
+            title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
+            blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+            postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            if (getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
-                mCurrentTag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
-            }
+            mCurrentTag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+        }
+
+        if (mPostListType == null) {
+            mPostListType = ReaderPostListType.TAG_FOLLOWED;
         }
 
         if (!TextUtils.isEmpty(title)) {
             this.setTitle(title);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mPageAdapter = new PostPagerAdapter(getFragmentManager(), new ReaderBlogIdPostIdList(serializedList));
+        mPageAdapter = new PostPagerAdapter(getFragmentManager(), blogId, postId);
         mViewPager.setAdapter(mPageAdapter);
-        if (mPageAdapter.isValidPosition(position)) {
-            mViewPager.setCurrentItem(position);
-        }
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -129,19 +124,20 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(ARG_TITLE, (String) this.getTitle());
+    protected void onSaveInstanceState(@Nonnull Bundle outState) {
+        outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
         }
-        if (mViewPager != null) {
-            outState.putInt(ARG_POSITION, mViewPager.getCurrentItem());
-        }
-        if (mPageAdapter != null) {
-            outState.putSerializable(ARG_BLOG_POST_ID_LIST, mPageAdapter.mIdList);
-        }
         if (mPostListType != null) {
             outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, mPostListType);
+        }
+        if (mPageAdapter != null) {
+            ReaderBlogIdPostId id = mPageAdapter.getCurrentBlogIdPostId();
+            if (id != null) {
+                outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
+                outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
+            }
         }
         super.onSaveInstanceState(outState);
     }
@@ -226,10 +222,10 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private final ReaderBlogIdPostIdList mIdList;
+        private final ReaderBlogIdPostIdList mIdList = new ReaderBlogIdPostIdList();
         private boolean mAllPostsLoaded;
         private final long END_ID = -1;
-        private final int LOAD_MORE_OFFSET = 3;
+        private final int LOAD_MORE_OFFSET = 5;
 
         // this is used to retain a weak reference to created fragments so we can access them
         // in getFragmentAtPosition() - necessary because we need to pause the web view in
@@ -238,15 +234,9 @@ public class ReaderPostPagerActivity extends Activity
         private final HashMap<String, WeakReference<Fragment>> mFragmentMap =
                 new HashMap<String, WeakReference<Fragment>>();
 
-        PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList idList) {
+        PostPagerAdapter(FragmentManager fm, long selectedBlogId, long selectedPostId) {
             super(fm);
-            mIdList = (ReaderBlogIdPostIdList) idList.clone();
-            // add a bogus entry to the end of the list so we can show PostPagerEndFragment
-            // when the user scrolls beyond the last post - note that this is only done
-            // if there's more than one post
-            if (mIdList.size() > 1 && mIdList.indexOf(END_ID, END_ID) == -1) {
-                mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
-            }
+            loadPosts(selectedBlogId, selectedPostId);
         }
 
         boolean isValidPosition(int position) {
@@ -299,47 +289,62 @@ public class ReaderPostPagerActivity extends Activity
             return mFragmentMap.get(key).get();
         }
 
+        private ReaderBlogIdPostId getCurrentBlogIdPostId() {
+            int position = mViewPager.getCurrentItem();
+            if (isValidPosition(position)) {
+                return mIdList.get(position);
+            } else {
+                return null;
+            }
+        }
+
         private boolean canRequestMorePosts() {
             return (!mAllPostsLoaded
                     && mIdList.size() > LOAD_MORE_OFFSET
                     && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                    && hasCurrentTag());
+                    && hasCurrentTag()); // TODO: support blog preview
         }
 
-        private void replaceIds(ReaderBlogIdPostIdList ids) {
-            if (ids == null) {
-                return;
-            }
-
-            int curIndex = mViewPager.getCurrentItem();
-            long blogId = mIdList.get(curIndex).getBlogId();
-            long postId = mIdList.get(curIndex).getPostId();
-
-            mIdList.clear();
-            mIdList.addAll(ids);
-            mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
-            notifyDataSetChanged();
-
-            int newIndex = mIdList.indexOf(blogId, postId);
-            if (newIndex > -1) {
-                mViewPager.setCurrentItem(newIndex);
-            }
-        }
-
-        private void loadNewPosts() {
+        private void loadPosts(final long blogId, final long postId) {
             final Handler handler = new Handler();
             new Thread() {
                 @Override
                 public void run() {
-                    ReaderPostList posts = ReaderPostTable.getPostsWithTag(
-                            getCurrentTag(),
-                            ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+                    final ReaderPostList posts;
+                    int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+                    switch (getPostListType()) {
+                        case TAG_FOLLOWED:
+                        case TAG_PREVIEW:
+                            posts = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            break;
+                        case BLOG_PREVIEW:
+                            posts = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                            break;
+                        default :
+                            return;
+                    }
+
                     if (posts.size() > 0) {
-                        final ReaderBlogIdPostIdList allIds = posts.getBlogIdPostIdList();
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                replaceIds(allIds);
+                                mIdList.clear();
+                                mIdList.addAll(posts.getBlogIdPostIdList());
+
+                                // add a bogus entry to the end of the list so we can show PostPagerEndFragment
+                                // when the user scrolls beyond the last post - note that this is only done
+                                // if there's more than one post
+                                if (mIdList.size() > 1 && mIdList.indexOf(END_ID, END_ID) == -1) {
+                                    mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
+                                }
+
+                                notifyDataSetChanged();
+
+                                // select the passed post
+                                int selectedIndex = mIdList.indexOf(blogId, postId);
+                                if (isValidPosition(selectedIndex)) {
+                                    mViewPager.setCurrentItem(selectedIndex);
+                                }
                             }
                         });
                     }
@@ -359,7 +364,10 @@ public class ReaderPostPagerActivity extends Activity
                     if (!isFinishing()) {
                         if (numNewPosts > 0) {
                             AppLog.d(AppLog.T.READER, "reader pager > older posts received");
-                            loadNewPosts();
+                            ReaderBlogIdPostId id = getCurrentBlogIdPostId();
+                            long blogId = (id != null ? id.getBlogId() : 0);
+                            long postId = (id != null ? id.getPostId() : 0);
+                            loadPosts(blogId, postId);
                         } else {
                             mAllPostsLoaded = true;
                         }

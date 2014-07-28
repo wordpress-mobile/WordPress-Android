@@ -23,6 +23,7 @@ public class ReaderConstants {
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
+    static final String ARG_TITLE             = "title";
 
     static final String KEY_ALREADY_UPDATED   = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";

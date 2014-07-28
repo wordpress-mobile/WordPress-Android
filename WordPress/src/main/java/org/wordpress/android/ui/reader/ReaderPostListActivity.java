@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -378,29 +377,26 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
-            ReaderBlogIdPostIdList idList = listFragment.getBlogIdPostIdList();
-            int position = idList.indexOf(blogId, postId);
-
-            final String title;
-            final ReaderTag tag;
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
-                    title = listFragment.getCurrentTagName();
-                    tag = listFragment.getCurrentTag();
+                    ReaderActivityLauncher.showReaderPostPagerForTag(
+                            this,
+                            listFragment.getCurrentTag(),
+                            getPostListType(),
+                            blogId,
+                            postId);
+                    break;
+                case BLOG_PREVIEW:
+                    ReaderActivityLauncher.showReaderPostPagerForBlog(
+                            this,
+                            blogId,
+                            postId);
+
                     break;
                 default:
-                    title = (String)this.getTitle();
-                    tag = null;
-                    break;
+                    return;
             }
-            ReaderActivityLauncher.showReaderPostPager(
-                    this,
-                    title,
-                    tag,
-                    position,
-                    idList,
-                    getPostListType());
         }
     }
 
