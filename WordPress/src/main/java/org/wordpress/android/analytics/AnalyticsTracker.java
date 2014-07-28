@@ -68,6 +68,7 @@ public final class AnalyticsTracker {
         void beginSession();
         void endSession();
         void clearAllData();
+        void registerPushNotificationToken(String regId);
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<Tracker>();
@@ -133,6 +134,15 @@ public final class AnalyticsTracker {
         }
         for (Tracker tracker : TRACKERS) {
             tracker.endSession();
+        }
+    }
+
+    public static void registerPushNotificationToken(String regId) {
+        if (mHasUserOptedOut) {
+            return;
+        }
+        for (Tracker tracker : TRACKERS) {
+            tracker.registerPushNotificationToken(regId);
         }
     }
 
