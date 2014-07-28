@@ -403,10 +403,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");
                 break;
-            case CREATED_SITE:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsForEventName("Created Site");
-                break;
             case SHARED_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor("number_of_items_share");
