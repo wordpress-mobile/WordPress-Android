@@ -41,11 +41,14 @@ public class ReaderPostPagerActivity extends Activity
 
     private ViewPager mViewPager;
     private PostPagerAdapter mPageAdapter;
-    private boolean mIsFullScreen;
     private ReaderPostListType mPostListType;
     private ReaderTag mCurrentTag;
 
+    private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
+
+    private final long END_ID = -1;
+    private final int LOAD_MORE_OFFSET = 5;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,9 @@ public class ReaderPostPagerActivity extends Activity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
+
+        // remove the window background since each fragment already has a background color
+        getWindow().setBackgroundDrawable(null);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -93,8 +99,7 @@ public class ReaderPostPagerActivity extends Activity
             this.setTitle(title);
         }
 
-        mPageAdapter = new PostPagerAdapter(getFragmentManager(), blogId, postId);
-        mViewPager.setAdapter(mPageAdapter);
+        loadPosts(blogId, postId);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -164,6 +169,43 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    private void loadPosts(final long blogId, final long postId) {
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                final ReaderPostList posts;
+                int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+                switch (getPostListType()) {
+                    case TAG_FOLLOWED:
+                    case TAG_PREVIEW:
+                        posts = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                        break;
+                    case BLOG_PREVIEW:
+                        posts = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                        break;
+                    default :
+                        return;
+                }
+
+                final ReaderBlogIdPostIdList ids = posts.getBlogIdPostIdList();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPageAdapter = new PostPagerAdapter(getFragmentManager(), ids);
+                        mViewPager.setAdapter(mPageAdapter);
+
+                        // select the passed post
+                        int selectedIndex = ids.indexOf(blogId, postId);
+                        if (selectedIndex > -1) {
+                            mViewPager.setCurrentItem(selectedIndex);
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
     private ReaderTag getCurrentTag() {
         return mCurrentTag;
     }
@@ -219,10 +261,8 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private final ReaderBlogIdPostIdList mIdList = new ReaderBlogIdPostIdList();
+        private final ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
-        private final long END_ID = -1;
-        private final int LOAD_MORE_OFFSET = 5;
 
         // this is used to retain a weak reference to created fragments so we can access them
         // in getFragmentAtPosition() - necessary because we need to pause the web view in
@@ -231,9 +271,9 @@ public class ReaderPostPagerActivity extends Activity
         private final HashMap<String, WeakReference<Fragment>> mFragmentMap =
                 new HashMap<String, WeakReference<Fragment>>();
 
-        PostPagerAdapter(FragmentManager fm, long selectedBlogId, long selectedPostId) {
+        PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
-            loadPosts(selectedBlogId, selectedPostId);
+            mIdList = (ReaderBlogIdPostIdList)ids.clone();
         }
 
         boolean isValidPosition(int position) {
@@ -302,7 +342,7 @@ public class ReaderPostPagerActivity extends Activity
                     && hasCurrentTag()); // TODO: support blog preview
         }
 
-        private void loadPosts(final long blogId, final long postId) {
+        /*private void loadPosts(final long blogId, final long postId) {
             final Handler handler = new Handler();
             new Thread() {
                 @Override
@@ -325,6 +365,7 @@ public class ReaderPostPagerActivity extends Activity
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                boolean hasData = (getCount() > 0);
                                 mIdList.clear();
                                 mIdList.addAll(posts.getBlogIdPostIdList());
 
@@ -347,7 +388,7 @@ public class ReaderPostPagerActivity extends Activity
                     }
                 }
             }.start();
-        }
+        }*/
 
         private void requestMorePosts() {
             if (mIsRequestingMorePosts) {
@@ -360,7 +401,7 @@ public class ReaderPostPagerActivity extends Activity
                     mIsRequestingMorePosts = false;
                     if (!isFinishing()) {
                         if (numNewPosts > 0) {
-                            AppLog.d(AppLog.T.READER, "reader pager > older posts received");
+                            AppLog.i(AppLog.T.READER, "reader pager > older posts received");
                             ReaderBlogIdPostId id = getCurrentBlogIdPostId();
                             long blogId = (id != null ? id.getBlogId() : 0);
                             long postId = (id != null ? id.getPostId() : 0);
@@ -373,7 +414,7 @@ public class ReaderPostPagerActivity extends Activity
             };
 
             mIsRequestingMorePosts = true;
-            AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
+            AppLog.i(AppLog.T.READER, "reader pager > requesting older posts");
 
             ReaderPostActions.updatePostsInTag(
                     getCurrentTag(),
