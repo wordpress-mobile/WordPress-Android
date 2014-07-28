@@ -395,19 +395,10 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             animatorSet.start();
 
             if (unit == StatsBarChartUnit.WEEK) {
-                String formattedDay = StatsUtils.parseDate(date,  "yyyy'W'MM'W'dd", "EEEE");
-                String formattedMonth = StatsUtils.parseDate(date,  "yyyy'W'MM'W'dd", "d MMMM");
-                String formattedYear = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "yyyy");
-                mDate.setText(
-                        Html.fromHtml(
-                                String.format("Week of <b>%s</b>, <b>%s</b>, %s", formattedDay, formattedMonth, formattedYear)
-                        )
-                );
+                mDate.setText("Week of " + StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy"));
             } else {
                 // Month
-                String formattedMonth = StatsUtils.parseDate(date, "yyyy-MM", "MMMM");
-                String formattedYear = StatsUtils.parseDate(date, "yyyy-MM", "yyyy");
-                mDate.setText(Html.fromHtml(String.format("<b>%s</b> %s", formattedMonth, formattedYear)));
+                mDate.setText(StatsUtils.parseDate(date, "yyyy-MM", "MMMM yyyy"));
             }
 
             double viewsPerVisitor = 0d;
