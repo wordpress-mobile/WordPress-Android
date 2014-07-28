@@ -288,10 +288,10 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                         @Override
                         public void run() {
                             ((TextView) findViewById(R.id.stats_visitors_and_views_today_visitors_count)).setText(
-                                    String.format("%s", mVisitorsCount)
+                                    FormatUtils.formatDecimal(mVisitorsCount)
                             );
                             ((TextView) findViewById(R.id.stats_visitors_and_views_today_views_count)).setText(
-                                    String.format("%s", mViewsCount)
+                                    FormatUtils.formatDecimal(mViewsCount)
                             );
                             ((TextView) findViewById(R.id.stats_visitors_and_views_best_ever_views_count)).setText(
                                     String.format("%.2f", mViewsPerVisitor)

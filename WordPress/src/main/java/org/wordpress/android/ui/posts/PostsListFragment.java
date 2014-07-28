@@ -323,9 +323,19 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 if (mProgressFooterView != null) {
                     mProgressFooterView.setVisibility(View.GONE);
                 }
-                if (errorType != ErrorType.TASK_CANCELLED) {
-                    ToastUtils.showToast(getActivity(),
-                            mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                if (errorType != ErrorType.TASK_CANCELLED && errorType != ErrorType.NO_ERROR) {
+                    switch (errorType) {
+                        case UNAUTHORIZED:
+                            ToastUtils.showToast(getActivity(),
+                                    mIsPage ? R.string.error_refresh_unauthorized_pages : R.string.error_refresh_unauthorized_posts,
+                                    Duration.LONG);
+                            return;
+                        default:
+                            ToastUtils.showToast(getActivity(),
+                                    mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
+                                    Duration.LONG);
+                            return;
+                    }
                 }
             }
         });

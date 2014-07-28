@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies { classpath 'com.android.tools.build:gradle:0.12.+' }
+}
+
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenCentral()
+}
+
+android {
+    defaultPublishConfig 'debug'
+
+    compileSdkVersion 20
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        applicationId "com.wordpress.rest"
+        versionName "1.0.0"
+        versionCode 1
+        minSdkVersion 14
+        targetSdkVersion 20
+    }
+}
+
+dependencies {
+    compile 'com.mcxiaoke.volley:library:1.0.+'
+}
