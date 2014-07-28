@@ -55,7 +55,8 @@ public class Note extends Syncable {
     private long mTimestamp;
 
     private transient String mCommentPreview;
-    private Spannable mSubject;
+    private JSONObject mSubject;
+    private Spannable mFormattedSubject;
     private transient String mIconUrl;
     private transient String mNoteType;
 
@@ -111,17 +112,23 @@ public class Note extends Syncable {
         return isType(NOTE_MATCHER_TYPE);
     }
 
-    public Spannable getSubject() {
+    public JSONObject getSubject() {
         if (mSubject == null) {
             try {
-                JSONObject subject = mNoteJSON.getJSONObject("subject");
-                mSubject = NotificationUtils.getSpannableTextFromIndices(subject, null);
+                mSubject = mNoteJSON.getJSONObject("subject");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
         return mSubject;
+    }
+
+    public Spannable getFormattedSubject() {
+        if (mFormattedSubject == null && getSubject() != null) {
+            mFormattedSubject = NotificationUtils.getSpannableTextFromIndices(getSubject(), null);
+        }
+        return mFormattedSubject;
     }
 
     public String getIconURL() {

@@ -115,19 +115,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!hasActivity()) return;
 
-            NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
-            if (clickedSpan.shouldShowBlogPreview()) {
-                // Show blog preview
-                notificationsActivity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
-            } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
-                // Show post detail
-                notificationsActivity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
-            } else {
-                // We don't know what type of id this is, let's see if it has a URL and push a webview if so
-                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                    notificationsActivity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                }
-            }
+            NotificationUtils.handleNoteBlockSpanClick((NewNotificationsActivity)getActivity(), clickedSpan);
         }
     };
 

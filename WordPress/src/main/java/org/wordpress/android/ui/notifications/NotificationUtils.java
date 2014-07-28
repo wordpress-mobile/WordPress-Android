@@ -26,6 +26,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -264,5 +265,20 @@ public class NotificationUtils {
         spannableStringBuilder.setSpan(clickableSpan, 0, spannableStringBuilder.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         return spannableStringBuilder;
+    }
+
+    public static void handleNoteBlockSpanClick(NewNotificationsActivity activty, NoteBlockClickableSpan clickedSpan) {
+        if (clickedSpan.shouldShowBlogPreview()) {
+            // Show blog preview
+            activty.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
+        } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
+            // Show post detail
+            activty.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
+        } else {
+            // We don't know what type of id this is, let's see if it has a URL and push a webview if so
+            if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                activty.showWebViewActivityForUrl(clickedSpan.getUrl());
+            }
+        }
     }
 }

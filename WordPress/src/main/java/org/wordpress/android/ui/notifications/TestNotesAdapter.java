@@ -84,7 +84,7 @@ class TestNotesAdapter extends CursorAdapter {
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
-        noteViewHolder.txtLabel.setText(note.getSubject());
+        noteViewHolder.txtLabel.setText(note.getFormattedSubject());
         if (note.isCommentType()) {
             noteViewHolder.txtLabel.setMaxLines(2);
             noteViewHolder.txtDetail.setText(note.getCommentPreview());

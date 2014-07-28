@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.blocks.NoteBlock;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockLinkMovementMethod;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -55,8 +58,15 @@ public class NotificationsDetailFragment extends Fragment implements Notificatio
                 noticonTextView.setText(mNote.getNoticonCharacter());
 
                 WPTextView subjectTextView = (WPTextView) view.findViewById(R.id.notification_header_subject);
-                subjectTextView.setText(mNote.getSubject());
-
+                subjectTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
+                subjectTextView.setText(NotificationUtils.getSpannableTextFromIndices(mNote.getSubject(), new NoteBlock.OnNoteBlockTextClickListener() {
+                    @Override
+                    public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
+                        if (isAdded()) {
+                            NotificationUtils.handleNoteBlockSpanClick((NewNotificationsActivity) getActivity(), clickedSpan);
+                        }
+                    }
+                }));
             }
 
             if (mSubFragment != null) {
