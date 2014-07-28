@@ -1,0 +1,3 @@
+include ':WordPressNetworking'
+include ':libs:wpcomrest:WordPressComRest'
+include ':libs:utils:WordPressUtils'
