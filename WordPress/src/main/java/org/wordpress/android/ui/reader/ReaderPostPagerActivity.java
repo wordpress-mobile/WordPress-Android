@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -40,15 +41,16 @@ public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
 
     private ViewPager mViewPager;
-    private PostPagerAdapter mPageAdapter;
-    private ReaderPostListType mPostListType;
     private ReaderTag mCurrentTag;
+    private ReaderPostListType mPostListType;
 
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
+    private boolean mIsSinglePostView;
 
-    private final long END_ID = -1;
+    private final long END_FRAGMENT_ID = -1;
     private final int LOAD_MORE_OFFSET = 5;
+    protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class ReaderPostPagerActivity extends Activity
             title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
             blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -85,6 +88,7 @@ public class ReaderPostPagerActivity extends Activity
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -128,14 +132,16 @@ public class ReaderPostPagerActivity extends Activity
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
+        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
         }
-        if (mPostListType != null) {
-            outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, mPostListType);
+        if (getPostListType() != null) {
+            outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         }
-        if (mPageAdapter != null) {
-            ReaderBlogIdPostId id = mPageAdapter.getCurrentBlogIdPostId();
+        if (mViewPager != null && mViewPager.getAdapter() != null) {
+            PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
+            ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
             if (id != null) {
                 outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
                 outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
@@ -174,26 +180,34 @@ public class ReaderPostPagerActivity extends Activity
         new Thread() {
             @Override
             public void run() {
-                final ReaderPostList posts;
-                int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
-                switch (getPostListType()) {
-                    case TAG_FOLLOWED:
-                    case TAG_PREVIEW:
-                        posts = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
-                        break;
-                    case BLOG_PREVIEW:
-                        posts = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
-                        break;
-                    default :
+                final ReaderPostList postList;
+                if (mIsSinglePostView) {
+                    ReaderPost post = ReaderPostTable.getPost(blogId, postId);
+                    if (post == null) {
                         return;
+                    }
+                    postList = new ReaderPostList();
+                    postList.add(post);
+                } else {
+                    int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+                    switch (getPostListType()) {
+                        case TAG_FOLLOWED:
+                        case TAG_PREVIEW:
+                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            break;
+                        case BLOG_PREVIEW:
+                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                            break;
+                        default:
+                            return;
+                    }
                 }
 
-                final ReaderBlogIdPostIdList ids = posts.getBlogIdPostIdList();
+                final ReaderBlogIdPostIdList ids = postList.getBlogIdPostIdList();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mPageAdapter = new PostPagerAdapter(getFragmentManager(), ids);
-                        mViewPager.setAdapter(mPageAdapter);
+                        mViewPager.setAdapter(new PostPagerAdapter(getFragmentManager(), ids));
 
                         // select the passed post
                         int selectedIndex = ids.indexOf(blogId, postId);
@@ -248,11 +262,13 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private ReaderPostDetailFragment getActiveDetailFragment() {
-        if (mViewPager == null || mPageAdapter == null) {
+        if (mViewPager == null || mViewPager.getAdapter() == null) {
             return null;
         }
 
-        Fragment fragment = mPageAdapter.getFragmentAtPosition(mViewPager.getCurrentItem());
+        PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
+        Fragment fragment = adapter.getFragmentAtPosition(mViewPager.getCurrentItem());
+
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {
@@ -260,6 +276,9 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    /**
+     * pager adapter containing post detail fragments
+     **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
@@ -274,6 +293,12 @@ public class ReaderPostPagerActivity extends Activity
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
+            // add a bogus entry to the end of the list so we can show PostPagerEndFragment
+            // when the user scrolls beyond the last post - note that this is only done
+            // if there's more than one post
+            if (mIdList.size() > 1 && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
+                mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
+            }
         }
 
         boolean isValidPosition(int position) {
@@ -291,7 +316,7 @@ public class ReaderPostPagerActivity extends Activity
             long postId = mIdList.get(position).getPostId();
 
             Fragment fragment;
-            if (blogId == END_ID && postId == END_ID) {
+            if (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID) {
                 fragment = PostPagerEndFragment.newInstance();
             } else {
                 fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
@@ -337,58 +362,11 @@ public class ReaderPostPagerActivity extends Activity
 
         private boolean canRequestMorePosts() {
             return (!mAllPostsLoaded
+                    && !mIsRequestingMorePosts
                     && mIdList.size() > LOAD_MORE_OFFSET
                     && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     && hasCurrentTag()); // TODO: support blog preview
         }
-
-        /*private void loadPosts(final long blogId, final long postId) {
-            final Handler handler = new Handler();
-            new Thread() {
-                @Override
-                public void run() {
-                    final ReaderPostList posts;
-                    int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
-                    switch (getPostListType()) {
-                        case TAG_FOLLOWED:
-                        case TAG_PREVIEW:
-                            posts = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
-                            break;
-                        case BLOG_PREVIEW:
-                            posts = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
-                            break;
-                        default :
-                            return;
-                    }
-
-                    if (posts.size() > 0) {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                boolean hasData = (getCount() > 0);
-                                mIdList.clear();
-                                mIdList.addAll(posts.getBlogIdPostIdList());
-
-                                // add a bogus entry to the end of the list so we can show PostPagerEndFragment
-                                // when the user scrolls beyond the last post - note that this is only done
-                                // if there's more than one post
-                                if (mIdList.size() > 1 && mIdList.indexOf(END_ID, END_ID) == -1) {
-                                    mIdList.add(new ReaderBlogIdPostId(END_ID, END_ID));
-                                }
-
-                                notifyDataSetChanged();
-
-                                // select the passed post
-                                int selectedIndex = mIdList.indexOf(blogId, postId);
-                                if (isValidPosition(selectedIndex)) {
-                                    mViewPager.setCurrentItem(selectedIndex);
-                                }
-                            }
-                        });
-                    }
-                }
-            }.start();
-        }*/
 
         private void requestMorePosts() {
             if (mIsRequestingMorePosts) {
