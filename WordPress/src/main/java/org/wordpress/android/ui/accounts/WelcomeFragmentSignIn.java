@@ -47,6 +47,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -598,7 +599,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
+            Map<String, Boolean> properties = new HashMap<String, Boolean>();
+            properties.put("dotcom_user", mSetupBlog.isDotComBlog());
+
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
 
             refreshFirstBlogContent(userBlogList);
 
