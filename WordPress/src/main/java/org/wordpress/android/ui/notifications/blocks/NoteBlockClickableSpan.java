@@ -63,6 +63,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
                 return Typeface.BOLD;
             case SITE:
             case POST:
+            case COMMENT:
                 return Typeface.ITALIC;
             default:
                 return Typeface.NORMAL;
