@@ -48,8 +48,8 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    private final long END_FRAGMENT_ID = -1;
-    private final int LOAD_MORE_OFFSET = 5;
+    private static final long END_FRAGMENT_ID = -1;
+    private static final int LOAD_MORE_OFFSET = 5;
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
@@ -83,7 +83,9 @@ public class ReaderPostPagerActivity extends Activity
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_TAG);
+            }
         } else {
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
@@ -92,7 +94,9 @@ public class ReaderPostPagerActivity extends Activity
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            mCurrentTag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+            if (getIntent().hasExtra(ReaderConstants.ARG_TAG)) {
+                mCurrentTag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
+            }
         }
 
         if (mPostListType == null) {
@@ -133,12 +137,14 @@ public class ReaderPostPagerActivity extends Activity
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
         outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
         }
         if (getPostListType() != null) {
             outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         }
+
         if (mViewPager != null && mViewPager.getAdapter() != null) {
             PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
             ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
@@ -147,6 +153,7 @@ public class ReaderPostPagerActivity extends Activity
                 outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
             }
         }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -296,7 +303,7 @@ public class ReaderPostPagerActivity extends Activity
             // add a bogus entry to the end of the list so we can show PostPagerEndFragment
             // when the user scrolls beyond the last post - note that this is only done
             // if there's more than one post
-            if (mIdList.size() > 1 && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
+            if (!mIsSinglePostView && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
             }
         }
@@ -362,10 +369,10 @@ public class ReaderPostPagerActivity extends Activity
 
         private boolean canRequestMorePosts() {
             return (!mAllPostsLoaded
-                    && !mIsRequestingMorePosts
-                    && mIdList.size() > LOAD_MORE_OFFSET
-                    && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                    && hasCurrentTag()); // TODO: support blog preview
+                 && !mIsRequestingMorePosts
+                 && !mIsSinglePostView
+                 && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                 && hasCurrentTag()); // TODO: support blog preview
         }
 
         private void requestMorePosts() {
