@@ -598,6 +598,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
+
             refreshFirstBlogContent(userBlogList);
 
             if (mSelfHosted) {
