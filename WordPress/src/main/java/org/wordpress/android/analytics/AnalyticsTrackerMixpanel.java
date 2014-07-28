@@ -269,6 +269,16 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         mixpanelInstructionsForEventName("Editor - Created Post");
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_created_post");
                 break;
+            case EDITOR_SAVED_DRAFT:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Saved Draft");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_saved_draft");
+                break;
+            case EDITOR_CLOSED_POST:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Editor - Closed");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_editor_closed");
+                break;
             case EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Added Photo via Local Library");
