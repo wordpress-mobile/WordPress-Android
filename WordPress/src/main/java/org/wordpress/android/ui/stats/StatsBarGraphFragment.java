@@ -395,7 +395,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             animatorSet.start();
 
             if (unit == StatsBarChartUnit.WEEK) {
-                mDate.setText("Week of " + StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy"));
+                mDate.setText(getString(R.string.stats_tooltip_week_of)
+                        + " " + StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy"));
             } else {
                 // Month
                 mDate.setText(StatsUtils.parseDate(date, "yyyy-MM", "MMMM yyyy"));
