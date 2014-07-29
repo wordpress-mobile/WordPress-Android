@@ -514,7 +514,7 @@ public class CommentsListFragment extends Fragment {
                         return;
                 }
             }
-            if (comments != null && comments.size() > 0) {
+            if (!getActivity().isFinishing() && comments != null && comments.size() > 0) {
                 getCommentAdapter().loadComments();
             }
         }
