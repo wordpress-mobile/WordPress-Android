@@ -1,6 +1,13 @@
 package org.wordpress.android.analytics;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 public class AnalyticsTrackerMixpanelInstructionsForStat {
     private String mMixpanelEventName;
@@ -11,6 +18,12 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
     private AnalyticsTracker.Stat mStat;
     private String mPropertyToIncrement;
     private boolean mDisableForSelfHosted;
+    private Map<String, Object> mPeoplePropertiesToAssign;
+
+    public AnalyticsTrackerMixpanelInstructionsForStat() {
+        mSuperPropertiesToFlag = new ArrayList<String>();
+        mPeoplePropertiesToAssign = new HashMap<String, Object>();
+    }
 
     public static AnalyticsTrackerMixpanelInstructionsForStat mixpanelInstructionsForEventName(String eventName) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = new AnalyticsTrackerMixpanelInstructionsForStat();
@@ -99,11 +112,23 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
     }
 
     public void addSuperPropertyToFlag(String superPropertyToFlag) {
-        if( mSuperPropertiesToFlag == null) {
-            mSuperPropertiesToFlag = new ArrayList<String>();
-        }
         if (!mSuperPropertiesToFlag.contains(superPropertyToFlag)) {
             mSuperPropertiesToFlag.add(superPropertyToFlag);
         }
     }
+
+    public void setCurrentDateForPeopleProperty(String property) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        setPeoplePropertyToValue(property, dateFormat.format(new Date()));
+    }
+
+    public void setPeoplePropertyToValue(String property, Object value) {
+        mPeoplePropertiesToAssign.put(property, value);
+    }
+
+    public Map<String, Object> getPeoplePropertiesToAssign() {
+       return mPeoplePropertiesToAssign;
+    }
+
 }
