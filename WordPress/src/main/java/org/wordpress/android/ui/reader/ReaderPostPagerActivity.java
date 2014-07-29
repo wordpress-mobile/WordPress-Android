@@ -47,7 +47,6 @@ public class ReaderPostPagerActivity extends Activity
         implements ReaderUtils.FullScreenListener {
 
     private ViewPager mViewPager;
-    private ProgressBar mProgress;
     private ReaderTag mCurrentTag;
     private ReaderPostListType mPostListType;
 
@@ -56,7 +55,7 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsSinglePostView;
 
     private static final long END_FRAGMENT_ID = -1;
-    private static final int LOAD_MORE_OFFSET = 2;
+    private static final int LOAD_MORE_OFFSET = 3;
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
@@ -75,7 +74,6 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mProgress = (ProgressBar) findViewById(R.id.progress_pager);
 
         final String title;
         final long blogId;
@@ -307,15 +305,17 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private void showLoadingProgress() {
-        if (!isFinishing() && mProgress != null) {
-            mProgress.bringToFront();
-            mProgress.setVisibility(View.VISIBLE);
+        if (!isFinishing()) {
+            ProgressBar progress = (ProgressBar) findViewById(R.id.progress_pager);
+            progress.bringToFront();
+            progress.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideLoadingProgress() {
-        if (!isFinishing() && mProgress != null) {
-            mProgress.setVisibility(View.GONE);
+        if (!isFinishing()) {
+            ProgressBar progress = (ProgressBar) findViewById(R.id.progress_pager);
+            progress.setVisibility(View.GONE);
         }
     }
 
@@ -330,8 +330,7 @@ public class ReaderPostPagerActivity extends Activity
         // in getFragmentAtPosition() - necessary because we need to pause the web view in
         // the active fragment when the user swipes away from it, but the adapter provides
         // no way to access the active fragment
-        private final HashMap<String, WeakReference<Fragment>> mFragmentMap =
-                new HashMap<String, WeakReference<Fragment>>();
+        private final HashMap<String, WeakReference<Fragment>> mFragmentMap = new HashMap<String, WeakReference<Fragment>>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
