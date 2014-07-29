@@ -62,9 +62,6 @@ public class ReaderPostPagerActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reader_activity_post_pager);
 
-        // remove the window background since each fragment already has a background color
-        getWindow().setBackgroundDrawable(null);
-
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
@@ -316,10 +313,17 @@ public class ReaderPostPagerActivity extends Activity
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
-            // add a bogus entry to the end of the list so we can show PostPagerEndFragment
-            // when the user scrolls beyond the last post - note that this is only done
-            // if there's more than one post
-            if (!mIsSinglePostView && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
+            checkEndFragment();
+        }
+
+        /*
+         * add a bogus entry to the end of the list so we can show PostPagerEndFragment
+         * when the user scrolls beyond the last post - note that this is only done
+         * when infinite scroll can't be used (ie: when in single post view, or no
+         * more posts can be requested)
+         */
+        private void checkEndFragment() {
+            if (!canRequestMorePosts() && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
             }
         }
@@ -338,7 +342,7 @@ public class ReaderPostPagerActivity extends Activity
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
 
-            Fragment fragment;
+            final Fragment fragment;
             if (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID) {
                 fragment = PostPagerEndFragment.newInstance();
             } else {
@@ -409,6 +413,7 @@ public class ReaderPostPagerActivity extends Activity
                             loadPosts(blogId, postId);
                         } else {
                             mAllPostsLoaded = true;
+                            checkEndFragment();
                         }
                     }
                 }
