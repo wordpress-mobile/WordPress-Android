@@ -185,16 +185,6 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     /*
-     * ensures that the follow status of each post in the list reflects what is currently
-     * stored in the reader post table
-     */
-    public void checkFollowStatusForAllPosts() {
-        if (ReaderPostTable.checkFollowStatusOnPosts(mPosts)) {
-            notifyDataSetChanged();
-        }
-    }
-
-    /*
      * sets the follow status of each post in the passed blog
      */
     void updateFollowStatusOnPostsForBlog(long blogId, String blogUrl, boolean followStatus) {

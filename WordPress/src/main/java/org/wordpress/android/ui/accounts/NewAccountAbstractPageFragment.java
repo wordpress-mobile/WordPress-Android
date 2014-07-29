@@ -100,9 +100,11 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
                 mPasswordVisible = !mPasswordVisible;
                 if (mPasswordVisible) {
                     passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_open));
                     passwordEditText.setTransformationMethod(null);
                 } else {
                     passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_closed));
                     passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
                 passwordEditText.setSelection(passwordEditText.length());

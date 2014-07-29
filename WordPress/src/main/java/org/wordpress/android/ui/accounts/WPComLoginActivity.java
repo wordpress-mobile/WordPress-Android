@@ -120,9 +120,11 @@ public class WPComLoginActivity extends Activity implements TextWatcher {
                 mPasswordVisible = !mPasswordVisible;
                 if (mPasswordVisible) {
                     passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_open);
+                    passwordVisibilityToggleView.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_open));
                     passwordEditText.setTransformationMethod(null);
                 } else {
                     passwordVisibilityToggleView.setImageResource(R.drawable.dashicon_eye_closed);
+                    passwordVisibilityToggleView.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_closed));
                     passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
                 passwordEditText.setSelection(passwordEditText.length());
