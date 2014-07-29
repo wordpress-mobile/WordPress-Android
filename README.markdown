@@ -9,7 +9,7 @@ At the moment there are two different types:
 <li>Bar Charts</li>
 </ul>
 
-Tested on Android 1.6, 2.2, 2.3 and 3.0 (honeycomb, tablet), 4.0.
+Tested on Android 1.6, 2.2, 2.3 and 3.0 (honeycomb, tablet), 4.0, 4.1, 4.3 and 4.4.
 
 <img src="https://github.com/jjoe64/GraphView/raw/master/GVLine.jpg" height="200" />
 <img src="https://github.com/jjoe64/GraphView/raw/master/GVBar.png" height="200" />
