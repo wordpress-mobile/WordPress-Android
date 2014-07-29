@@ -89,20 +89,22 @@
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textColor">@color/calypso_blue</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textColor">@color/grey_medium</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/calypso_blue</item>
         <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/reader_hyperlink</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">@color/calypso_blue_dark</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="ReaderTextView.Comment.Text" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>

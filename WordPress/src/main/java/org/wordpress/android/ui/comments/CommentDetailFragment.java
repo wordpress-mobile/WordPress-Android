@@ -357,9 +357,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mComment.getDatePublished()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz);
-
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
+
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz, avatarSz, avatarSz);
+
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(PhotonUtils.fixAvatar(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);
         } else if (mComment.hasAuthorEmail()) {

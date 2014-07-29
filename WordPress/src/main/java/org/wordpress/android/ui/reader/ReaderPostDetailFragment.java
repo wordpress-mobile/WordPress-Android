@@ -84,6 +84,12 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
+
+    public void setScrollToCommentId(long scrollToCommentId) {
+        this.mScrollToCommentId = scrollToCommentId;
+    }
+
+    private long mScrollToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
@@ -141,6 +147,8 @@ public class ReaderPostDetailFragment extends Fragment
                         }
                         if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
+                        } else if (mScrollToCommentId > 0) {
+                            scrollToCommentId(mScrollToCommentId);
                         }
                     }
                 }

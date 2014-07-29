@@ -12,7 +12,7 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/note_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/text_sz_large"
         android:textColor="@color/notifications_blue_dark"
         android:textColorLink="@color/notifications_blue_dark" />
