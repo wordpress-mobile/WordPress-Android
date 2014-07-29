@@ -152,7 +152,7 @@ public class StatsUIHelper {
     /*
      * interpolator for all expand/collapse animations
     */
-    private static Interpolator getInterpolator() {
+    public static Interpolator getInterpolator() {
         return new AccelerateInterpolator();
     }
 

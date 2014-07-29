@@ -114,7 +114,7 @@ dependencies {
     releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
 
     debugCompile project(path:':libs:graphview:WordPressGraphView')
-    releaseCompile 'org.wordpress:graphview:3.2.1'
+    releaseCompile 'org.wordpress:graphview:3.2.2'
 }
 
 
