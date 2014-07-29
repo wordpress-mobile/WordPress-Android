@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="signin_label">Sign In</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="no_notifications">No notifications</string>
+</resources>
