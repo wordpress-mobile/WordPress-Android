@@ -107,6 +107,10 @@ public class NotificationsActivity extends WPActionBarActivity
         // Remove notification if it is showing when we resume this activity.
         NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+
+        if (SimperiumUtils.isUserAuthorized()) {
+            SimperiumUtils.startBuckets();
+        }
     }
 
     @Override
