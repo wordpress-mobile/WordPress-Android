@@ -29,7 +29,7 @@ class StatsBarGraph extends GraphView {
         super(context, "");
 
         int width = LayoutParams.MATCH_PARENT;
-        int height = DisplayUtils.dpToPx(context, 128);
+        int height = getResources().getDimensionPixelSize(R.dimen.stats_barchart_height);
         setLayoutParams(new LayoutParams(width, height));
 
         setProperties();

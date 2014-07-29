@@ -73,7 +73,7 @@
             android:id="@+id/stats_bar_chart_fragment_container"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:minHeight="128dp"
+            android:minHeight="@dimen/stats_barchart_height"
             android:orientation="vertical" />
 
         <TextView
