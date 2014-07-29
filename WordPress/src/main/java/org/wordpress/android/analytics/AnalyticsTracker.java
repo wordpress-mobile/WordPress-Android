@@ -69,6 +69,7 @@ public final class AnalyticsTracker {
         void track(Stat stat, Map<String, ?> properties);
         void beginSession();
         void endSession();
+        void refreshMetadata();
         void clearAllData();
         void registerPushNotificationToken(String regId);
     }
@@ -151,6 +152,12 @@ public final class AnalyticsTracker {
     public static void clearAllData() {
         for (Tracker tracker : TRACKERS) {
             tracker.clearAllData();
+        }
+    }
+
+    public static void refreshMetadata() {
+        for (Tracker tracker : TRACKERS) {
+            tracker.refreshMetadata();
         }
     }
 }

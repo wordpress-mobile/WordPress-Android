@@ -130,15 +130,25 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     @Override
     public void beginSession() {
-        // Tracking session count will help us isolate users who just installed the app
+        refreshMetadata();
+    }
+
+    @Override
+    public void registerPushNotificationToken(String regId) {
+        mMixpanel.getPeople().setPushRegistrationId(regId);
+    }
+
+    @Override
+    public void endSession() {
+        mAggregatedProperties.clear();
+        mMixpanel.flush();
+    }
+
+    @Override
+    public void refreshMetadata() {
+        // Register super properties
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
         int sessionCount = preferences.getInt(SESSION_COUNT, 0);
-        sessionCount++;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(SESSION_COUNT, sessionCount);
-        editor.commit();
-
-        // Register super properties
         boolean connected = WordPress.hasValidWPComCredentials(WordPress.getContext());
         boolean jetpackUser = WordPress.wpDB.hasAnyJetpackBlogs();
         int numBlogs = WordPress.wpDB.getVisibleAccounts().size();
@@ -171,17 +181,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     @Override
-    public void registerPushNotificationToken(String regId) {
-        mMixpanel.getPeople().setPushRegistrationId(regId);
-    }
-
-    @Override
-    public void endSession() {
-        mAggregatedProperties.clear();
-        mMixpanel.flush();
-    }
-
-    @Override
     public void clearAllData() {
         mMixpanel.clearSuperProperties();
         mMixpanel.getPeople().clearPushRegistrationId();
@@ -194,6 +193,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
                 instructions.setSuperPropertyToIncrement("Application Opened");
+                incrementSessionCount();
                 break;
             case APPLICATION_CLOSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
@@ -519,6 +519,16 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
 
         savePropertyValueForStat(property, Integer.toString(currentValue), stat);
+    }
+
+    private void incrementSessionCount() {
+        // Tracking session count will help us isolate users who just installed the app
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        int sessionCount = preferences.getInt(SESSION_COUNT, 0);
+        sessionCount++;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SESSION_COUNT, sessionCount);
+        editor.commit();
     }
 }
 

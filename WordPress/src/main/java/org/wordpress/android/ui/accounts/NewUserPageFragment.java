@@ -273,6 +273,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
 
                     @Override
                     public void onSuccess(JSONObject createSiteResponse) {
+                        AnalyticsTracker.refreshMetadata();
                         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                         endProgress();
                         if (isAdded()) {

@@ -45,6 +45,11 @@ public class AnalyticsTrackerWPCom implements AnalyticsTracker.Tracker {
     }
 
     @Override
+    public void refreshMetadata() {
+       // No-op
+    }
+
+    @Override
     public void clearAllData() {
         // No-op
     }

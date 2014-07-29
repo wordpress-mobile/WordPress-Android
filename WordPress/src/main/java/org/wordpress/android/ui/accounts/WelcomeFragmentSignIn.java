@@ -627,6 +627,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 }, null);
             }
 
+            AnalyticsTracker.refreshMetadata();
+
             if (userBlogList != null) {
                 if (getActivity() != null) {
                     getActivity().setResult(Activity.RESULT_OK);
