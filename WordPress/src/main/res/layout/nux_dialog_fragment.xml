@@ -74,8 +74,7 @@
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
+        android:layout_width="fill_parent"
         android:layout_marginLeft="36dp"
         android:layout_marginRight="36dp">
 
@@ -87,8 +86,9 @@
             android:text="@string/cancel"
             android:padding="8dp"
             android:singleLine="true"
-            android:layout_alignParentStart="true"
-            android:gravity="center_vertical" />
+            android:layout_alignParentStart="false"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/nux_dialog_get_started_button"
@@ -98,9 +98,8 @@
             android:text="@string/nux_tutorial_get_started_title"
             android:padding="8dp"
             android:singleLine="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_vertical" />
-
+            android:layout_alignParentEnd="false"
+            android:gravity="center_vertical"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
-
 </LinearLayout>

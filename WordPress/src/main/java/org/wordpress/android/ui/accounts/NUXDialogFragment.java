@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NUXDialogFragment extends DialogFragment {
@@ -33,6 +36,7 @@ public class NUXDialogFragment extends DialogFragment {
 
     public static int ACTION_FINISH = 1;
     public static int ACTION_OPEN_URL = 2;
+    public static int ACTION_OPEN_SUPPORT_CHAT = 3;
 
     public NUXDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -69,14 +73,14 @@ public class NUXDialogFragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
         View v = inflater.inflate(R.layout.nux_dialog_fragment, container, false);
 
-        mImageView = (ImageView)v.findViewById(R.id.nux_dialog_image);
-        mTitleTextView = (WPTextView)v.findViewById(R.id.nux_dialog_title);
-        mDescriptionTextView = (WPTextView)v.findViewById(R.id.nux_dialog_description);
-        mFooterOneButton = (WPTextView)v.findViewById(R.id.nux_dialog_footer_1_button);
+        mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
+        mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
+        mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
+        mFooterOneButton = (WPTextView) v.findViewById(R.id.nux_dialog_footer_1_button);
         mFooterTwoButtons = (RelativeLayout) v.findViewById(R.id.nux_dialog_footer_2_buttons);
-        mFooterRightButton = (WPTextView)v.findViewById(R.id.nux_dialog_get_started_button);
-        mFooterLeftButton = (WPTextView)v.findViewById(R.id.nux_dialog_learn_more_button);
-        Bundle args = this.getArguments();
+        mFooterRightButton = (WPTextView) v.findViewById(R.id.nux_dialog_get_started_button);
+        mFooterLeftButton = (WPTextView) v.findViewById(R.id.nux_dialog_learn_more_button);
+        final Bundle args = getArguments();
 
         mTitleTextView.setText(args.getString(ARG_TITLE));
         mDescriptionTextView.setText(args.getString(ARG_DESCRIPTION));
@@ -108,6 +112,18 @@ public class NUXDialogFragment extends DialogFragment {
                 if (action == ACTION_OPEN_URL) {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(param));
                     startActivity(intent);
+                    dismissAllowingStateLoss();
+                }
+                if (action == ACTION_OPEN_SUPPORT_CHAT) {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    Activity activity = getActivity();
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, args.getString(
+                            WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, args.getString(
+                            WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                    HelpshiftHelper.getInstance().showConversation(activity);
                     dismissAllowingStateLoss();
                 }
             }

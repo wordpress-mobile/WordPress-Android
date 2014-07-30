@@ -75,7 +75,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private int mWPComErroneousLogInCount;
+    private int mErroneousLogInCount;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -323,16 +323,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mUsernameEditText.requestFocus();
     }
 
-    private void showPasswordError(int messageId, String param) {
-        mPasswordEditText.setError(getString(messageId, param));
-        mPasswordEditText.requestFocus();
-    }
-
-    private void showUsernameError(int messageId, String param) {
-        mUsernameEditText.setError(getString(messageId, param));
-        mUsernameEditText.requestFocus();
-    }
-
     private void showUrlError(int messageId) {
         mUrlEditText.setError(getString(messageId));
         mUrlEditText.requestFocus();
@@ -536,15 +526,23 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
 
         private void handleInvalidUsernameOrPassword() {
-            if (isWPComLogin()) {
-                mWPComErroneousLogInCount += 1;
-                if (mWPComErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
-                    mErrorMsgId = R.string.username_or_password_incorrect_selfhosted_hint;
-                }
-            }
-            if (mErrorMsgId == R.string.username_or_password_incorrect_selfhosted_hint) {
-                showUsernameError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
-                showPasswordError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
+            mErroneousLogInCount += 1;
+            if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
+                // Clear previous errors
+                mPasswordEditText.setError(null);
+                mUsernameEditText.setError(null);
+                // Show a dialog
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                        getString(R.string.username_or_password_incorrect_third_time), "", R.drawable.nux_icon_alert,
+                        true, getString(R.string.contact_us), NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT, null);
+                // Put entered url and entered username args, that could help our support team
+                Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+                bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                nuxAlert.setArguments(bundle);
+                ft.add(nuxAlert, "alert");
+                ft.commitAllowingStateLoss();
             } else {
                 showUsernameError(mErrorMsgId);
                 showPasswordError(mErrorMsgId);
