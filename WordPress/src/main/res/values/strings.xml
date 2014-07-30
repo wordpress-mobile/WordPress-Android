@@ -754,7 +754,8 @@
     <string name="contact_us">Contact us</string>
     <string name="contact_us_pref_summary">Get help from Automattic support</string>
     <string name="help_center">Help center</string>
-    <string name="faq_button">Browse our FAQ</string>
+    <string name="browse_our_faq_button">Browse our FAQ</string>
+    <string name="faq_button">FAQ</string>
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>

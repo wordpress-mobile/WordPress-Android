@@ -60,26 +60,18 @@
 
     </LinearLayout>
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/nux_dialog_footer_1_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="8dp"
-        android:layout_marginBottom="28dp"
-        style="@style/WordPress.NUXPrimaryButton"/>
-
     <RelativeLayout
-        android:id="@+id/nux_dialog_footer_2_buttons"
+        android:id="@+id/nux_dialog_footer"
         android:layout_height="48dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:layout_width="fill_parent"
-        android:layout_marginLeft="36dp"
-        android:layout_marginRight="36dp">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_gravity="center_horizontal">
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_learn_more_button"
+            android:id="@+id/nux_dialog_left_button"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
             android:textColor="@color/white"
@@ -91,10 +83,23 @@
             android:layout_alignParentLeft="true"/>
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/nux_dialog_get_started_button"
+            android:id="@+id/nux_dialog_center_button"
+            style="@style/WordPress.NUXPrimaryButton"
             android:layout_width="wrap_content"
             android:layout_height="38dp"
+            android:textColor="@color/white"
+            android:text="@string/faq_button"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:gravity="center_horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/nux_dialog_right_button"
             style="@style/WordPress.NUXPrimaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
             android:text="@string/nux_tutorial_get_started_title"
             android:padding="8dp"
             android:singleLine="true"
