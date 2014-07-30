@@ -1,6 +1,5 @@
 package org.wordpress.android.datasets;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -237,82 +236,66 @@ public class ReaderTagTable {
         ReaderDatabase.getWritableDb().delete("tbl_tag_updates", "tag_name=? AND tag_type=?", args);
     }
 
+
     /**
      * tbl_tag_updates routines
      **/
     public static String getTagNewestDate(ReaderTag tag) {
-        if (tag == null) {
-            return "";
-        }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT date_newest FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
-                args);
+        return getDateColumn(tag, "date_newest");
     }
     public static void setTagNewestDate(ReaderTag tag, String date) {
-        if (tag == null) {
-            return;
-        }
-
-        ContentValues values = new ContentValues();
-        values.put("tag_name", tag.getTagName());
-        values.put("tag_type", tag.tagType.toInt());
-        values.put("date_newest", date);
-        try {
-            ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        } catch (SQLException e) {
-            AppLog.e(T.READER, e);
-        }
+        setDateColumn(tag, "date_newest", date);
     }
 
     public static String getTagOldestDate(ReaderTag tag) {
-        if (tag == null) {
-            return "";
-        }
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT date_oldest FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
-                args);
+        return getDateColumn(tag, "date_oldest");
     }
     public static void setTagOldestDate(ReaderTag tag, String date) {
-        if (tag == null) {
-            return;
-        }
-
-        ContentValues values = new ContentValues();
-        values.put("tag_name", tag.getTagName());
-        values.put("tag_type", tag.tagType.toInt());
-        values.put("date_oldest", date);
-        try {
-            ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        } catch (SQLException e) {
-            AppLog.e(T.READER, e);
-        }
+        setDateColumn(tag, "date_oldest", date);
     }
 
     private static String getTagLastUpdated(ReaderTag tag) {
+        return getDateColumn(tag, "date_updated");
+    }
+    public static void setTagLastUpdated(ReaderTag tag, String date) {
+        setDateColumn(tag, "date_updated", date);
+    }
+
+    private static String getDateColumn(ReaderTag tag, String colName) {
         if (tag == null) {
             return "";
         }
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT date_updated FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                "SELECT " + colName + " FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
                 args);
     }
-
-    public static void setTagLastUpdated(ReaderTag tag, String date) {
+    private static void setDateColumn(ReaderTag tag, String colName, String date) {
         if (tag == null) {
             return;
         }
 
-        ContentValues values = new ContentValues();
-        values.put("tag_name", tag.getTagName());
-        values.put("tag_type", tag.tagType.toInt());
-        values.put("date_updated", date);
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        boolean rowExists = SqlUtils.boolForQuery(
+                ReaderDatabase.getReadableDb(),
+                "SELECT 1 FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                args);
+
+        final String sql;
+        if (rowExists) {
+            sql = "UPDATE tbl_tag_updates SET " + colName + "=?1 WHERE tag_name=?2 AND tag_type=?3";
+        } else {
+            sql = "INSERT INTO tbl_tag_updates (" + colName + ", tag_name, tag_type) VALUES (?1,?2,?3)";
+        }
+
+        SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
-            ReaderDatabase.getWritableDb().insertWithOnConflict("tbl_tag_updates", null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        } catch (SQLException e) {
-            AppLog.e(T.READER, e);
+            stmt.bindString(1, date);
+            stmt.bindString(2, tag.getTagName());
+            stmt.bindLong  (3, tag.tagType.toInt());
+            stmt.execute();
+        } finally {
+            SqlUtils.closeStatement(stmt);
         }
     }
 
