@@ -18,6 +18,7 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -385,6 +386,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(params);
             textView.setTextColor(getResources().getColor(R.color.grey_dark));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mGraphView.getGraphViewStyle().getTextSize());
             mInternalContainer.addView(textView);
         }
 
@@ -396,7 +398,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
             if (unit == StatsBarChartUnit.WEEK) {
                 mDate.setText(getString(R.string.stats_tooltip_week_of)
-                        + " " + StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, d MMMM, yyyy"));
+                        + " " + StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "EEEE, MMMM d, yyyy"));
             } else {
                 // Month
                 mDate.setText(StatsUtils.parseDate(date, "yyyy-MM", "MMMM yyyy"));
