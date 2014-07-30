@@ -99,10 +99,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             }
         }
 
-        if  (instructions.getPeoplePropertiesToAssign() != null && instructions.getPeoplePropertiesToAssign().size() > 0) {
+        if  (instructions.getPeoplePropertiesToAssign() != null
+                && instructions.getPeoplePropertiesToAssign().size() > 0) {
             Iterator it = instructions.getPeoplePropertiesToAssign().entrySet().iterator();
             while (it.hasNext()) {
-                Map.Entry<String, Object> entry = (Map.Entry<String, Object>)it.next();
+                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) it.next();
                 setValueForPeopleProperty(entry.getKey(), entry.getValue());
             }
         }
@@ -198,7 +199,8 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         mMixpanel.getPeople().clearPushRegistrationId();
     }
 
-    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
+    private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(
+            AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
             case APPLICATION_OPENED:
@@ -284,7 +286,8 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case READER_COMMENTED_ON_ARTICLE:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Commented on Article");
-                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_commented_on_reader_article");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement(
+                        "number_of_times_commented_on_reader_article");
                 instructions.setCurrentDateForPeopleProperty("last_time_commented_on_article");
                 break;
             case READER_FOLLOWED_SITE:

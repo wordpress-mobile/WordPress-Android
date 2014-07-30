@@ -130,5 +130,4 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
     public Map<String, Object> getPeoplePropertiesToAssign() {
        return mPeoplePropertiesToAssign;
     }
-
 }

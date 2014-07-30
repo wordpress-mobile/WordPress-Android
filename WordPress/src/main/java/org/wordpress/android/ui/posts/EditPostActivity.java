@@ -266,6 +266,8 @@ public class EditPostActivity extends Activity {
                 case DRAFT:
                     AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
                     break;
+                default:
+                    // No-op
             }
 
             savePost(false);
