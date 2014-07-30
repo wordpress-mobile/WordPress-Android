@@ -277,6 +277,10 @@ public class Note extends Syncable {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
     }
 
+    public int getCommentNestLevel() {
+        return JSONUtil.queryJSON(mNoteJSON, "body[last].nest_level", 0);
+    }
+
     public long getUserId() {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.user", 0);
     }

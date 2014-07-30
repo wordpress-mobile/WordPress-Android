@@ -96,6 +96,7 @@ public class ReaderComment {
         comment.authorName = mNote.getCommentAuthorName();
         comment.authorAvatar = mNote.getIconURL();
         comment.authorUrl = mNote.getCommentAuthorUrl();
+        comment.level = mNote.getCommentNestLevel();
 
         return comment;
     }

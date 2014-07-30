@@ -19,20 +19,21 @@
 
         <org.wordpress.android.widgets.NoticonTextView
             android:id="@+id/notification_header_icon"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/margin_extra_large"
-            android:background="@drawable/shape_oval_grey"
+            android:layout_marginRight="@dimen/margin_medium"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="26sp" />
+            android:textColor="@color/notifications_grey"
+            android:textSize="18sp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/notification_header_subject"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/notifications_blue"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textSize="@dimen/text_sz_medium" />
 
 
