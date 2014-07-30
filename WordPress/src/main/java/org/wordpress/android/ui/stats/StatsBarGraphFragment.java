@@ -386,7 +386,8 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
                     LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             textView.setLayoutParams(params);
             textView.setTextColor(getResources().getColor(R.color.grey_dark));
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mGraphView.getGraphViewStyle().getTextSize());
+            int textSize = getResources().getDimensionPixelSize(R.dimen.text_sz_small);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
             mInternalContainer.addView(textView);
         }
 
