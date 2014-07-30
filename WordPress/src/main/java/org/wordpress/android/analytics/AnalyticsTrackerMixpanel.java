@@ -223,6 +223,12 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_changed_theme");
                 instructions.setCurrentDateForPeopleProperty("last_time_changed_theme");
                 break;
+            case THEMES_PREVIEWED_SITE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Themes - Previewed Theme for Site");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_previewed_a_theme");
+                instructions.setCurrentDateForPeopleProperty("last_time_previewed_a_theme");
+                break;
             case READER_ACCESSED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Reader - Accessed");
