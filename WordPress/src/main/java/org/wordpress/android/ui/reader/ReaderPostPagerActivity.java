@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -58,9 +57,11 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    private static final long END_FRAGMENT_ID = -1;
-    private static final int LOAD_MORE_OFFSET = 3;
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
+
+    // IDs for non-post fragments (end & loading) - must be < 0
+    private static final long END_FRAGMENT_ID = -1;
+    private static final long LOADING_FRAGMENT_ID = -2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,16 @@ public class ReaderPostPagerActivity extends Activity
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
+                // request older posts when the loading fragment appears
+                if (mViewPager.getAdapter() != null) {
+                    PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
+                    ReaderBlogIdPostId id = adapter.mIdList.get(position);
+                    if (id != null
+                            && id.getBlogId() == LOADING_FRAGMENT_ID
+                            && id.getPostId() == LOADING_FRAGMENT_ID) {
+                        adapter.requestMorePosts();
+                    }
+                }
             }
 
             @Override
@@ -223,15 +234,24 @@ public class ReaderPostPagerActivity extends Activity
                 }
 
                 final ReaderBlogIdPostIdList ids = postList.getBlogIdPostIdList();
+                final int currentPosition = mViewPager.getCurrentItem();
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mViewPager.setAdapter(new PostPagerAdapter(getFragmentManager(), ids));
+                        PostPagerAdapter adapter = new PostPagerAdapter(getFragmentManager(), ids);
+                        mViewPager.setAdapter(adapter);
 
-                        // select the passed post
-                        int selectedIndex = ids.indexOf(blogId, postId);
-                        if (selectedIndex > -1) {
-                            mViewPager.setCurrentItem(selectedIndex);
+                        int newPosition;
+                        if (blogId < 0 && postId < 0) {
+                            // passed IDs indicate end/loading fragment, so keep current position
+                            newPosition = currentPosition;
+                        } else {
+                            // otherwise, make the passed post active
+                            newPosition = ids.indexOf(blogId, postId);
+                        }
+                        if (adapter.isValidPosition(newPosition)) {
+                            mViewPager.setCurrentItem(newPosition);
                         }
                     }
                 });
@@ -310,21 +330,6 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
-    private void showLoadingProgress() {
-        if (!isFinishing()) {
-            ProgressBar progress = (ProgressBar) findViewById(R.id.progress_pager);
-            progress.bringToFront();
-            progress.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void hideLoadingProgress() {
-        if (!isFinishing()) {
-            ProgressBar progress = (ProgressBar) findViewById(R.id.progress_pager);
-            progress.setVisibility(View.GONE);
-        }
-    }
-
     /**
      * pager adapter containing post detail fragments
      **/
@@ -341,27 +346,36 @@ public class ReaderPostPagerActivity extends Activity
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
-            checkEndFragment();
+            checkLastFragment();
         }
 
         /*
-         * add a bogus entry to the end of the list so we can show PostPagerEndFragment
-         * when the user scrolls beyond the last post - note that this is only done
-         * when infinite scroll can't be used (ie: when in single post view, or no
-         * more posts can be requested)
+         * add a bogus entry to the end of the list which tells the adapter to show
+         * the end or loading fragment after the last post
          */
-        private void checkEndFragment() {
-            if (!canRequestMorePosts() && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
+        private void checkLastFragment() {
+            int endIndex = mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID);
+            int loadingIndex = mIdList.indexOf(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID);
+
+            boolean canRequestMore =
+                    !mAllPostsLoaded
+                 && !mIsSinglePostView
+                 && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                 && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
+
+            if (canRequestMore && loadingIndex == -1) {
+                if (endIndex >= 0) {
+                    mIdList.remove(endIndex);
+                }
+                mIdList.add(new ReaderBlogIdPostId(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID));
+                notifyDataSetChanged();
+            } else if (!canRequestMore && endIndex == -1) {
+                if (loadingIndex >= 0) {
+                    mIdList.remove(loadingIndex);
+                }
                 mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
                 notifyDataSetChanged();
             }
-        }
-
-        private boolean isEndFragmentActive() {
-            ReaderBlogIdPostId id = getCurrentBlogIdPostId();
-            return (id != null
-                    && id.getBlogId() == END_FRAGMENT_ID
-                    && id.getPostId() == END_FRAGMENT_ID);
         }
 
         boolean isValidPosition(int position) {
@@ -377,23 +391,19 @@ public class ReaderPostPagerActivity extends Activity
         public Fragment getItem(int position) {
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
+
             boolean isEndFragment = (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID);
+            boolean isLoadingFragment = (blogId == LOADING_FRAGMENT_ID && postId == LOADING_FRAGMENT_ID);
 
             final Fragment fragment;
             if (isEndFragment) {
                 fragment = PostPagerEndFragment.newInstance();
+            } else if (isLoadingFragment) {
+                fragment = PostPagerLoadingFragment.newInstance();
             } else {
                 fragment = ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
             }
             mFragmentMap.put(getItemKey(position), new WeakReference<Fragment>(fragment));
-
-            // request older posts as the user approaches the last fragment
-            if (!isEndFragment
-                    && !mIsRequestingMorePosts
-                    && position >= (getCount() - LOAD_MORE_OFFSET)
-                    && canRequestMorePosts()) {
-                requestMorePosts();
-            }
 
             return fragment;
         }
@@ -428,22 +438,12 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
-        private boolean canRequestMorePosts() {
-            return (!mAllPostsLoaded
-                 && !mIsSinglePostView
-                 && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
-        }
-
         private void requestMorePosts() {
             if (mIsRequestingMorePosts) {
                 return;
             }
-            if (!NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this)) {
-                return;
-            }
 
             mIsRequestingMorePosts = true;
-            showLoadingProgress();
             AppLog.i(AppLog.T.READER, "reader pager > requesting older posts");
 
             switch (getPostListType()) {
@@ -482,25 +482,39 @@ public class ReaderPostPagerActivity extends Activity
                 return;
             }
 
-            hideLoadingProgress();
             mIsRequestingMorePosts = false;
 
-            // show the new posts unless the end fragment is showing
-            if (hasNewPosts && !isEndFragmentActive()) {
+            if (hasNewPosts) {
+                // remember which post to keep active
                 ReaderBlogIdPostId id = getCurrentBlogIdPostId();
                 long blogId = (id != null ? id.getBlogId() : 0);
                 long postId = (id != null ? id.getPostId() : 0);
                 loadPosts(blogId, postId);
             } else {
                 mAllPostsLoaded = true;
-                checkEndFragment();
+                checkLastFragment();
             }
         }
     }
 
-    /*
+    /**
+     * fragment that appears while loading older posts
+     **/
+    public static class PostPagerLoadingFragment extends Fragment {
+
+        private static PostPagerLoadingFragment newInstance() {
+            return new PostPagerLoadingFragment();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.reader_fragment_loading, container, false);
+        }
+    }
+
+    /**
      * fragment that appears when user scrolls beyond the last post
-     */
+     **/
     public static class PostPagerEndFragment extends Fragment {
         private TextView mTxtCheckmark;
 
