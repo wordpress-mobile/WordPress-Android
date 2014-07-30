@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.animation.Animator;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -31,6 +33,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
@@ -77,19 +80,16 @@ public class ReaderPostDetailFragment extends Fragment
 
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
+    private ViewGroup mHeaderDetail;
     private WPListView mListView;
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private ReaderWebView mReaderWebView;
+    private View mNotificationCommentView;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
 
-    public void setScrollToCommentId(long scrollToCommentId) {
-        this.mScrollToCommentId = scrollToCommentId;
-    }
-
-    private long mScrollToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
@@ -101,6 +101,9 @@ public class ReaderPostDetailFragment extends Fragment
     private final Handler mHandler = new Handler();
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
+
+    // Used for loading a comment notification
+    private Note mNote;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, null);
@@ -137,7 +140,7 @@ public class ReaderPostDetailFragment extends Fragment
                 public void onDataLoaded(boolean isEmpty) {
                     if (isAdded()) {
                         // show footer below comments when comments exist
-                        mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+                        mCommentFooter.setVisibility(isEmpty && mNote == null ? View.GONE : View.VISIBLE);
                         // restore listView state (scroll position) if it was saved during rotation
                         if (mListState != null) {
                             if (!isEmpty) {
@@ -147,9 +150,39 @@ public class ReaderPostDetailFragment extends Fragment
                         }
                         if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
-                        } else if (mScrollToCommentId > 0) {
-                            scrollToCommentId(mScrollToCommentId);
                         }
+
+                        if (mNote != null && !isEmpty && mListView.getVisibility() == View.INVISIBLE) {
+                            scrollToCommentId(mNote.getCommentId());
+
+                            mListView.setAlpha(0.0f);
+                            mListView.setVisibility(View.VISIBLE);
+                            mListView.animate().alpha(1.0f).setStartDelay(300).setListener(new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animation) {
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    mHeaderDetail.setAlpha(0.0f);
+                                    mHeaderDetail.setVisibility(View.VISIBLE);
+                                    mHeaderDetail.animate().alpha(1.0f).setStartDelay(300);
+
+                                    if (mNotificationCommentView != null) {
+                                        mNotificationCommentView.setVisibility(View.GONE);
+                                    }
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animation) {
+                                }
+                            });
+                        }
+
                     }
                 }
             };
@@ -236,8 +269,8 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // add post detail as header to listView - must be done before setting adapter
-        ViewGroup headerDetail = (ViewGroup) inflater.inflate(R.layout.reader_listitem_post_detail, mListView, false);
-        mListView.addHeaderView(headerDetail, null, false);
+        mHeaderDetail = (ViewGroup) inflater.inflate(R.layout.reader_listitem_post_detail, mListView, false);
+        mListView.addHeaderView(mHeaderDetail, null, false);
 
         // add listView footer containing progress bar - footer appears whenever there are comments,
         // progress bar appears when loading new comments
@@ -260,6 +293,18 @@ public class ReaderPostDetailFragment extends Fragment
         mListView.setVisibility(View.INVISIBLE);
         mReaderWebView.setVisibility(View.INVISIBLE);
         mLayoutIcons.setVisibility(View.INVISIBLE);
+
+        // if loaded with a note, we'll load the note instantly in a special ReaderComment view
+        if (mNote != null) {
+            mHeaderDetail.setVisibility(View.INVISIBLE);
+            ReaderComment comment = ReaderComment.fromNote(mNote);
+            mNotificationCommentView = getCommentAdapter().getViewForComment(comment);
+
+            if (mNotificationCommentView != null) {
+                RelativeLayout viewContainer = (RelativeLayout) view.findViewById(R.id.layout_post_detail_container);
+                viewContainer.addView(mNotificationCommentView);
+            }
+        }
 
         return view;
     }
@@ -387,6 +432,10 @@ public class ReaderPostDetailFragment extends Fragment
         mLayoutIcons.clearAnimation();
         mLayoutIcons.startAnimation(animation);
         mLayoutIcons.setVisibility(isAnimatingIn ? View.VISIBLE : View.GONE);
+    }
+
+    public void setNote(Note note) {
+        this.mNote = note;
     }
 
     @Override
@@ -1399,15 +1448,20 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             // listView is hidden in onCreateView()
-            if (getListView().getVisibility() != View.VISIBLE) {
+            if (mNote == null && getListView().getVisibility() != View.VISIBLE) {
                 getListView().setVisibility(View.VISIBLE);
+            }
+
+            // If we are loading from a notification, we need to set the post in the adapter
+            if (mNote != null) {
+                getCommentAdapter().setPost(mPost);
             }
 
             // webView is hidden in onCreateView() and will be made visible by readerWebViewClient
             // once it finishes loading, so if it's already visible go ahead and show likes/comments
             // right away, otherwise show them after a brief delay - this gives content time to
             // load before likes/comments appear
-            if (mReaderWebView.getVisibility() == View.VISIBLE) {
+            if (mReaderWebView.getVisibility() == View.VISIBLE || mNote != null) {
                 showContent();
             } else {
                 showContentDelayed();
@@ -1434,7 +1488,10 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        mReaderWebView.setVisibility(View.VISIBLE);
+        // we don't want to show the post until we've loaded the comments if loading from a notification
+        if (mNote != null) {
+            mReaderWebView.setVisibility(View.VISIBLE);
+        }
 
         // show likes & comments
         refreshLikes();

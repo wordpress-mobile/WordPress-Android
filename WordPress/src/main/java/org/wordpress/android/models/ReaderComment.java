@@ -79,6 +79,27 @@ public class ReaderComment {
         return comment;
     }
 
+    // build a reader comment from a WP.com notification object
+    public static ReaderComment fromNote(Note mNote) {
+        ReaderComment comment = new ReaderComment();
+
+        comment.blogId = mNote.getBlogId();
+        comment.postId = mNote.getPostId();
+        comment.commentId = mNote.getCommentId();
+        comment.parentId = mNote.getCommentParentId();
+        comment.text = mNote.getCommentText();
+        comment.timestamp = mNote.getTimestamp();
+        comment.published = DateTimeUtils.timestampToIso8601Str(comment.timestamp);
+
+        comment.authorId = mNote.getUserId();
+        comment.authorBlogId = mNote.getCommentAuthorBlogId();
+        comment.authorName = mNote.getCommentAuthorName();
+        comment.authorAvatar = mNote.getIconURL();
+        comment.authorUrl = mNote.getCommentAuthorUrl();
+
+        return comment;
+    }
+
     public String getAuthorName() {
         return StringUtils.notNullStr(authorName);
     }

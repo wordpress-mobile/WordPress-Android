@@ -20,22 +20,25 @@ public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static void displayHtmlComment(TextView textView, String content, int maxImageSize, int textOffsetX, int textOffsetY) {
+    public static CharSequence displayHtmlComment(TextView textView, String content, int maxImageSize) {
         if (textView == null)
-            return;
+            return null;
 
         if (content == null) {
             textView.setText(null);
-            return;
+            return null;
         }
 
         // skip performance hit of html conversion if content doesn't contain html
         if (!content.contains("<") && !content.contains("&")) {
-            textView.setText(content.trim());
+            content = content.trim();
+            textView.setText(content);
             // make sure unnamed links are clickable
-            if (content.contains("://"))
+            if (content.contains("://")) {
                 Linkify.addLinks(textView, Linkify.WEB_URLS);
-            return;
+            }
+
+            return content;
         }
 
         // convert emoticons first (otherwise they'll be downloaded)
@@ -63,19 +66,23 @@ public class CommentUtils {
             end--;
         }
 
+        textView.setText(source);
 
-        // Configure textView to wrap its content around the avatar
+        return source;
+    }
+
+    public static void wrapTextAroundAvatar(TextView textView, CharSequence commentText, int textOffsetX, int textOffsetY) {
         if (textOffsetX > 0) {
             float textLineHeight = textView.getPaint().getTextSize();
 
             // Set the span according to the number of lines and width of the image
             int lines = Math.round(textOffsetY / textLineHeight);
             //For an html text you can use this line: SpannableStringBuilder ss = (SpannableStringBuilder)Html.fromHtml(text);
-            SpannableString ss = new SpannableString(source.subSequence(start, end));
+            SpannableString ss = new SpannableString(commentText.toString().trim());
             ss.setSpan(new TextWrappingLeadingMarginSpan(lines, textOffsetX), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(ss);
         } else {
-            textView.setText(source.subSequence(start, end));
+            textView.setText(commentText);
         }
     }
 

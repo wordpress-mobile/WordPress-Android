@@ -273,6 +273,14 @@ public class Note extends Syncable {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
     }
 
+    public long getCommentParentId() {
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
+    }
+
+    public long getUserId() {
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.user", 0);
+    }
+
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
@@ -298,7 +306,7 @@ public class Note extends Syncable {
         );
     }
 
-    private String getCommentAuthorName() {
+    public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
         for (int i=0; i < bodyArray.length(); i++) {
@@ -315,11 +323,11 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentText() {
+    public String getCommentText() {
         return queryJSON("body[last].text", "");
     }
 
-    private String getCommentAuthorUrl() {
+    public String getCommentAuthorUrl() {
         JSONArray bodyArray = getBody();
 
         for (int i=0; i < bodyArray.length(); i++) {
@@ -336,7 +344,24 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentStatus() {
+    public long getCommentAuthorBlogId() {
+        JSONArray bodyArray = getBody();
+
+        for (int i=0; i < bodyArray.length(); i++) {
+            try {
+                JSONObject bodyItem = bodyArray.getJSONObject(i);
+                if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
+                    return JSONUtil.queryJSON(bodyItem, "meta.ids.site", 0);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return 0;
+    }
+
+    public String getCommentStatus() {
         EnumSet<EnabledActions> enabledActions = getEnabledActions();
 
         if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
