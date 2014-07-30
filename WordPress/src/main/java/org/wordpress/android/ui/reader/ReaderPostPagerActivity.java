@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -60,7 +59,7 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsSinglePostView;
 
     private static final long END_FRAGMENT_ID = -1;
-    private static final int LOAD_MORE_OFFSET = 1;
+    private static final int LOAD_MORE_OFFSET = 3;
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
