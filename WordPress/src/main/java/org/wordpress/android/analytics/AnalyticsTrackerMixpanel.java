@@ -446,6 +446,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Created Account");
                 instructions.setCurrentDateForPeopleProperty("$created");
+                instructions.addSuperPropertyToFlag("created_account_on_mobile");
                 break;
             case SHARED_ITEM:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
