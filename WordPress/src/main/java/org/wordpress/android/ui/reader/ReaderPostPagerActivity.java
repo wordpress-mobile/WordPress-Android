@@ -22,12 +22,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
@@ -48,6 +52,7 @@ public class ReaderPostPagerActivity extends Activity
 
     private ViewPager mViewPager;
     private ReaderTag mCurrentTag;
+    private long mCurrentBlogId;
     private ReaderPostListType mPostListType;
 
     private boolean mIsFullScreen;
@@ -55,7 +60,7 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsSinglePostView;
 
     private static final long END_FRAGMENT_ID = -1;
-    private static final int LOAD_MORE_OFFSET = 3;
+    private static final int LOAD_MORE_OFFSET = 1;
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
@@ -104,6 +109,8 @@ public class ReaderPostPagerActivity extends Activity
 
         if (mPostListType == null) {
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
+        } else if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
+            mCurrentBlogId = blogId;
         }
 
         if (!TextUtils.isEmpty(title)) {
@@ -425,45 +432,70 @@ public class ReaderPostPagerActivity extends Activity
         private boolean canRequestMorePosts() {
             return (!mAllPostsLoaded
                  && !mIsSinglePostView
-                 && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                 && hasCurrentTag()); // TODO: support blog preview
+                 && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
         }
 
         private void requestMorePosts() {
             if (mIsRequestingMorePosts) {
                 return;
             }
-
-            ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
-                @Override
-                public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
-                    mIsRequestingMorePosts = false;
-                    if (isFinishing()) {
-                        return;
-                    }
-                    hideLoadingProgress();
-                    // show the new posts unless the end fragment is showing
-                    if (numNewPosts > 0 && !isEndFragmentActive()) {
-                        AppLog.i(AppLog.T.READER, "reader pager > older posts received");
-                        ReaderBlogIdPostId id = getCurrentBlogIdPostId();
-                        long blogId = (id != null ? id.getBlogId() : 0);
-                        long postId = (id != null ? id.getPostId() : 0);
-                        loadPosts(blogId, postId);
-                    } else {
-                        mAllPostsLoaded = true;
-                        checkEndFragment();
-                    }
-                }
-            };
+            if (!NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this)) {
+                return;
+            }
 
             mIsRequestingMorePosts = true;
             showLoadingProgress();
             AppLog.i(AppLog.T.READER, "reader pager > requesting older posts");
 
-            ReaderPostActions.updatePostsInTag(
-                    getCurrentTag(),
-                    ReaderActions.RequestDataAction.LOAD_OLDER,
-                    resultListener);
+            switch (getPostListType()) {
+                case TAG_PREVIEW:
+                case TAG_FOLLOWED:
+                    UpdateResultAndCountListener resultListener = new UpdateResultAndCountListener() {
+                        @Override
+                        public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
+                            doAfterUpdate(numNewPosts > 0);
+                        }
+                    };
+                    ReaderPostActions.updatePostsInTag(
+                            getCurrentTag(),
+                            ReaderActions.RequestDataAction.LOAD_OLDER,
+                            resultListener);
+                    break;
+
+                case BLOG_PREVIEW:
+                    ActionListener actionListener = new ActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            doAfterUpdate(succeeded);
+                        }
+                    };
+                    ReaderPostActions.requestPostsForBlog(
+                            mCurrentBlogId,
+                            null,
+                            ReaderActions.RequestDataAction.LOAD_OLDER,
+                            actionListener);
+                    break;
+            }
+        }
+
+        private void doAfterUpdate(boolean hasNewPosts) {
+            if (isFinishing()) {
+                return;
+            }
+
+            hideLoadingProgress();
+            mIsRequestingMorePosts = false;
+
+            // show the new posts unless the end fragment is showing
+            if (hasNewPosts && !isEndFragmentActive()) {
+                ReaderBlogIdPostId id = getCurrentBlogIdPostId();
+                long blogId = (id != null ? id.getBlogId() : 0);
+                long postId = (id != null ? id.getPostId() : 0);
+                loadPosts(blogId, postId);
+            } else {
+                mAllPostsLoaded = true;
+                checkEndFragment();
+            }
         }
     }
 
