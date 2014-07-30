@@ -126,6 +126,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
+
+
+
         return rootView;
     }
 
@@ -534,8 +537,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 // Show a dialog
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                        getString(R.string.username_or_password_incorrect_third_time), "", R.drawable.nux_icon_alert,
-                        true, getString(R.string.contact_us), NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT, null);
+                        getString(R.string.username_or_password_incorrect_third_time), R.drawable.nux_icon_alert, 3,
+                        getString(R.string.cancel), getString(R.string.faq_button), getString(R.string.contact_us),
+                        NUXDialogFragment.ACTION_OPEN_FAQ, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
                 // Put entered url and entered username args, that could help our support team
                 Bundle bundle = nuxAlert.getArguments();
                 bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
@@ -555,10 +559,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             NUXDialogFragment nuxAlert;
             if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
-                        getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
+                        R.drawable.nux_icon_alert, 2, getString(R.string.cancel), getString(
+                                R.string.visit_security_settings), "", NUXDialogFragment.ACTION_OPEN_URL, 0);
+                Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
                         "https://wordpress.com/settings/security/?ssl=forced");
+                nuxAlert.setArguments(bundle);
             } else {
                 if (mErrorMsgId == R.string.username_or_password_incorrect) {
                     handleInvalidUsernameOrPassword();
@@ -570,7 +577,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     return;
                 } else {
                     nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                            mErrorMsgId), R.drawable.nux_icon_alert, getString(R.string.nux_tap_continue));
                 }
             }
             ft.add(nuxAlert, "alert");
