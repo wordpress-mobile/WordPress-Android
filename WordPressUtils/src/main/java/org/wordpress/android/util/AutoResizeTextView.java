@@ -18,15 +18,15 @@ import android.widget.TextView;
  */
 public class AutoResizeTextView extends TextView {
     // Minimum text size for this text view
-    public static final float MIN_TEXT_SIZE = 20;
+    private static final float MIN_TEXT_SIZE = 20;
 
     // Interface for resize notifications
     public interface OnTextResizeListener {
         void onTextResize(TextView textView, float oldSize, float newSize);
     }
 
-    // Our ellipse string
-    private static final String M_ELLIPSIS = "...";
+    // Our ellipse string - Unicode Character 'HORIZONTAL ELLIPSIS'
+    private static final String M_ELLIPSIS = "\u2026";
 
     // Registered resize listener
     private OnTextResizeListener mTextResizeListener;
@@ -179,7 +179,7 @@ public class AutoResizeTextView extends TextView {
     /**
      * Reset the text to the original size
      */
-    public void resetTextSize() {
+    private void resetTextSize() {
         if (mTextSize > 0) {
             super.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
             mMaxTextSize = mTextSize;
