@@ -64,7 +64,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         void onRequestReply(long commentId);
     }
 
-    private static ReaderCommentList mComments = new ReaderCommentList();
+    private ReaderCommentList mComments = new ReaderCommentList();
     private final RequestReplyListener mReplyListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
