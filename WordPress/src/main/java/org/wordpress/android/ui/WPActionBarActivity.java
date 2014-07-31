@@ -108,7 +108,7 @@ public abstract class WPActionBarActivity extends Activity {
         THEMES("Themes"),
         STATS("Stats"),
         VIEW_SITE("View Site"),
-        DASHBOARD("Dashboard"),
+        POST_EDITOR("Post Editor"),
         LOGIN("Login Screen");
 
         private final String mStringValue;
@@ -121,8 +121,30 @@ public abstract class WPActionBarActivity extends Activity {
             return mStringValue;
         }
 
-        public boolean isAutoRestorable() {
-            return this != UNKNOWN && this != DASHBOARD && this != LOGIN;
+        public static void trackLastActivity(Context context, ActivityId activityId) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE, activityId.name());
+            editor.apply();
+        }
+
+        /**
+         * Map special cases of activities that can't be restored
+         */
+        public ActivityId autoRestoreMapper() {
+            switch (this) {
+                // Login screen can't be restored
+                case LOGIN:
+                    return UNKNOWN;
+
+                // In case the post editor was selected, restore the post list instead.
+                case POST_EDITOR:
+                    return POSTS;
+
+                // All other screen can be restored
+                default:
+                    return this;
+            }
         }
     }
 
@@ -328,11 +350,8 @@ public abstract class WPActionBarActivity extends Activity {
                     return;
                 MenuDrawerItem item = mAdapter.getItem(menuPosition);
                 // if the item has an id, remember it for launch
-                if (item.hasItemId()){
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(LAST_ACTIVITY_PREFERENCE, item.getItemId().name());
-                    editor.commit();
+                if (item.hasItemId()) {
+                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
                 }
                 // only perform selection if the item isn't already selected
                 if (!item.isSelected())
@@ -770,11 +789,7 @@ public abstract class WPActionBarActivity extends Activity {
                 }
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()) {
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-                            WPActionBarActivity.this);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(LAST_ACTIVITY_PREFERENCE, item.getItemId().name());
-                    editor.commit();
+                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
                 }
                 break;
             }

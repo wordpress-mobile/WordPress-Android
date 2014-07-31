@@ -88,11 +88,11 @@ public class PostsActivity extends WPActionBarActivity
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             String lastActivityString = settings.getString(LAST_ACTIVITY_PREFERENCE, ActivityId.UNKNOWN.name());
             ActivityId lastActivity = ActivityId.valueOf(lastActivityString);
-            if (lastActivity.isAutoRestorable()) {
+            if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
                 for (MenuDrawerItem item : mMenuItems) {
                     // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivity && !item.isSelected() &&
-                            item.isVisible()) {
+                    if (item.hasItemId() && item.getItemId() == lastActivity.autoRestoreMapper() && !item.isSelected()
+                            && item.isVisible()) {
                         mFirstLaunch = true;
                         item.selectItem();
                         finish();
