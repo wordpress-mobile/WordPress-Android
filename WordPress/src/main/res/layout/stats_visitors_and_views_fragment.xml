@@ -101,14 +101,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large">
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     android:id="@+id/stats_visitors_and_views_today_visitors_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,14 +124,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large">
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     android:id="@+id/stats_visitors_and_views_today_views_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -157,14 +157,14 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:padding="@dimen/margin_extra_large">
 
-            <TextView
+            <org.wordpress.android.util.AutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_best_ever_views_count"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0" />
 
-            <TextView
+            <org.wordpress.android.util.AutoResizeTextView
                 style="@style/StatsHeaderTotalsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -197,14 +197,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large">
 
-                <TextView
+                    <org.wordpress.android.util.AutoResizeTextView
                     android:id="@+id/stats_visitors_and_views_all_time_view_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -220,14 +220,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large">
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     android:id="@+id/stats_visitors_and_views_all_time_comment_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.util.AutoResizeTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
