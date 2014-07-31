@@ -1488,7 +1488,10 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        mReaderWebView.setVisibility(View.VISIBLE);
+        // we don't want to show the post until we've loaded the comments if loading from a notification
+        if (mNote != null) {
+            mReaderWebView.setVisibility(View.VISIBLE);
+        }
 
         // show likes & comments
         refreshLikes();
