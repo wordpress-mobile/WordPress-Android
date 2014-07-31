@@ -285,9 +285,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            ReaderPostDetailFragment readerPostDetailFragment = ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
-            readerPostDetailFragment.setScrollToCommentId(note.getCommentId());
-            fragment.setFragment(readerPostDetailFragment);
+            fragment.setFragment(CommentDetailFragment.newInstance(note));
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above

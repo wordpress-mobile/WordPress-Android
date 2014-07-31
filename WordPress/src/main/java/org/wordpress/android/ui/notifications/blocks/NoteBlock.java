@@ -38,15 +38,6 @@ public class NoteBlock {
     private JSONObject mNoteData;
     private OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
-    private boolean mIsCommentReply;
-
-    public void setIsCommentReply(boolean isCommentReply) {
-        mIsCommentReply = isCommentReply;
-    }
-
-    public void setCommentReply(boolean isCommentReply) {
-        mIsCommentReply = isCommentReply;
-    }
 
     public interface OnNoteBlockTextClickListener {
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -145,7 +136,6 @@ public class NoteBlock {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
                 noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
             }
-
             noteBlockHolder.getTextView().setText(getNoteText());
             noteBlockHolder.getTextView().setVisibility(View.VISIBLE);
         } else {
@@ -159,7 +149,7 @@ public class NoteBlock {
         return new BasicNoteBlockHolder(view);
     }
 
-    protected static class BasicNoteBlockHolder {
+    private static class BasicNoteBlockHolder {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
 

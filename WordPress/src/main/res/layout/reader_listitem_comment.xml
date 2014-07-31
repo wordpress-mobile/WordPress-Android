@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/calypso_blue_light"
+    android:background="@color/grey_extra_light"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_large"
     android:paddingRight="@dimen/margin_large"
@@ -22,13 +22,12 @@
         style="@style/ReaderImageView.Avatar.Small"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/margin_small"
-        android:layout_toRightOf="@+id/spacer_comment_indent"
-        android:layout_marginTop="6dp"/>
+        android:layout_toRightOf="@+id/spacer_comment_indent" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_author"
         style="@style/ReaderTextView.Comment.Author"
-        android:layout_alignTop="@+id/spacer_comment_indent"
+        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toLeftOf="@+id/text_comment_date"
@@ -38,11 +37,11 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_date"
-        style="@style/ReaderTextView.Date.Large"
+        style="@style/ReaderTextView.Date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/text_comment_author"
+        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
         tools:text="date" />
@@ -50,11 +49,12 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_text"
         style="@style/ReaderTextView.Comment.Text"
-        android:layout_alignLeft="@+id/image_comment_avatar"
-        android:layout_below="@+id/text_comment_date"
+        android:layout_alignLeft="@+id/text_comment_author"
+        android:layout_below="@+id/text_comment_author"
+        android:layout_marginTop="@dimen/margin_small"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        tools:text="Some sample comment text!" />
+        tools:text="text_comment_text" />
 
     <LinearLayout
         android:id="@+id/layout_comment_actions"

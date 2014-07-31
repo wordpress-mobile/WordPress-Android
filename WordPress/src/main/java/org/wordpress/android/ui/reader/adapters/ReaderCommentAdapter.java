@@ -1,11 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.AsyncTask;
-import android.text.Layout;
-import android.text.style.LeadingMarginSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +25,6 @@ import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -82,10 +77,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
-        mBgColorNormal = context.getResources().getColor(R.color.calypso_blue_light);
+        mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
 
-        mLinkColor = context.getResources().getColor(R.color.calypso_blue_dark);
+        mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
 
         mLike = context.getString(R.string.reader_label_like);
@@ -140,9 +135,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         holder.txtAuthor.setText(comment.getAuthorName());
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        int textWrapMarginOffset = mAvatarSz + DisplayUtils.dpToPx(convertView.getContext(), 12);
-        int textWrapHeightOffset = Math.round(mAvatarSz - holder.txtAuthor.getPaint().getTextSize());
-        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz, textWrapMarginOffset, textWrapHeightOffset);
+        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
