@@ -359,8 +359,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
 
-        CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz);
-        // TODO wrap text around avatar here?
+        CommentUtils.displayHtmlComment(mTxtContent, mComment.getCommentText(), maxImageSz, avatarSz, avatarSz);
 
         if (mComment.hasProfileImageUrl()) {
             imgAvatar.setImageUrl(PhotonUtils.fixAvatar(mComment.getProfileImageUrl(), avatarSz), WPNetworkImageView.ImageType.AVATAR);

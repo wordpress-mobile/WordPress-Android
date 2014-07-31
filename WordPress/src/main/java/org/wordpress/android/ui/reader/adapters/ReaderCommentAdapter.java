@@ -18,7 +18,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -37,8 +36,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderCommentAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
-
-    private ReaderPost mPost;
+    private final ReaderPost mPost;
     private boolean mMoreCommentsExist;
 
     private static final int MAX_INDENT_LEVEL = 2;
@@ -64,7 +62,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         void onRequestReply(long commentId);
     }
 
-    private static ReaderCommentList mComments = new ReaderCommentList();
+    private ReaderCommentList mComments = new ReaderCommentList();
     private final RequestReplyListener mReplyListener;
     private final ReaderActions.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -97,18 +95,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mLikesMulti = context.getString(R.string.reader_likes_multi_short);
     }
 
-    public void setPost(ReaderPost post) {
-        mPost = post;
-    }
-
     public void refreshComments() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader comment adapter > Load comments task already running");
         }
-
-        if (mPost != null) {
-            new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        new LoadCommentsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -137,29 +128,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReaderComment comment = mComments.get(position);
-
-        convertView = getViewForComment(comment, convertView, parent);
-
-        CommentHolder holder = (CommentHolder)convertView.getTag();
-        if (holder != null) {
-            showLikeStatus(holder, comment, position);
-        }
-
-        // if we're nearing the end of the comments and we know more exist on the server,
-        // fire request to load more
-        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getCount()-1)) {
-            mDataRequestedListener.onRequestData();
-        }
-
-        return convertView;
-    }
-
-    // Returns the view for a ReaderComment. See ReaderPostDetailFragment
-    public View getViewForComment(ReaderComment comment) {
-        return getViewForComment(comment, null, null);
-    }
-
-    private View getViewForComment(final ReaderComment comment, View convertView, ViewGroup parent) {
         final CommentHolder holder;
 
         if (convertView == null) {
@@ -174,8 +142,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
         int textWrapMarginOffset = mAvatarSz + DisplayUtils.dpToPx(convertView.getContext(), 12);
         int textWrapHeightOffset = Math.round(mAvatarSz - holder.txtAuthor.getPaint().getTextSize());
-        CharSequence formattedCommentText = CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
-        CommentUtils.wrapTextAroundAvatar(holder.txtText, formattedCommentText, textWrapMarginOffset, textWrapHeightOffset);
+        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz, textWrapMarginOffset, textWrapHeightOffset);
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -209,7 +176,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             // different background for highlighted comment, with optional progress bar
             convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
-        } else if (mPost != null && comment.authorId == mPost.authorId) {
+        } else if (comment.authorId == mPost.authorId) {
             // different background color for comments from the post's author
             convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(View.GONE);
@@ -228,6 +195,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
             };
             holder.txtReply.setOnClickListener(replyClickListener);
             holder.imgReply.setOnClickListener(replyClickListener);
+        }
+
+        showLikeStatus(holder, comment, position);
+
+        // if we're nearing the end of the comments and we know more exist on the server,
+        // fire request to load more
+        if (mMoreCommentsExist && mDataRequestedListener != null && (position >= getCount()-1)) {
+            mDataRequestedListener.onRequestData();
         }
 
         return convertView;
@@ -274,7 +249,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private void showLikeStatus(final CommentHolder holder,
                                 final ReaderComment comment,
                                 final int position) {
-        if (mPost != null && mPost.isLikesEnabled) {
+        if (mPost.isLikesEnabled) {
             holder.imgLike.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
             holder.txtLike.setVisibility(View.VISIBLE);
