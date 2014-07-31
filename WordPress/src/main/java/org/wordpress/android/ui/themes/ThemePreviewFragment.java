@@ -142,6 +142,7 @@ public class ThemePreviewFragment extends Fragment {
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
+        mWebView.getSettings().setJavaScriptEnabled(true);
 
         loadAuthenticatedUrl(previewURL);
 
