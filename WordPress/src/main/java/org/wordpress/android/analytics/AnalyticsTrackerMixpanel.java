@@ -101,9 +101,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
         if  (instructions.getPeoplePropertiesToAssign() != null
                 && instructions.getPeoplePropertiesToAssign().size() > 0) {
-            Iterator it = instructions.getPeoplePropertiesToAssign().entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) it.next();
+            for (Map.Entry<String, Object> entry: instructions.getPeoplePropertiesToAssign().entrySet()) {
                 setValueForPeopleProperty(entry.getKey(), entry.getValue());
             }
         }
