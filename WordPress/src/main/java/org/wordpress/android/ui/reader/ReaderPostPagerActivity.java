@@ -59,8 +59,8 @@ public class ReaderPostPagerActivity extends Activity
 
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
-    // IDs for non-post fragments (end & loading) - must be < 0
-    private static final long END_FRAGMENT_ID = -1;
+    // IDs for non-post fragments (no more posts & loading posts) - must be < 0
+    private static final long NO_MORE_FRAGMENT_ID = -1;
     private static final long LOADING_FRAGMENT_ID = -2;
 
     @Override
@@ -244,7 +244,7 @@ public class ReaderPostPagerActivity extends Activity
 
                         int newPosition;
                         if (blogId < 0 && postId < 0) {
-                            // passed IDs indicate end/loading fragment, so keep current position
+                            // passed IDs indicate no more or loading fragment, so keep current position
                             newPosition = currentPosition;
                         } else {
                             // otherwise, make the passed post active
@@ -351,10 +351,10 @@ public class ReaderPostPagerActivity extends Activity
 
         /*
          * add a bogus entry to the end of the list which tells the adapter to show
-         * the end or loading fragment after the last post
+         * the "no more posts" or loading fragment after the last post
          */
         private void checkLastFragment() {
-            int endIndex = mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID);
+            int noMoreIndex = mIdList.indexOf(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID);
             int loadingIndex = mIdList.indexOf(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID);
 
             boolean canRequestMore =
@@ -364,16 +364,16 @@ public class ReaderPostPagerActivity extends Activity
                  && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
 
             if (canRequestMore && loadingIndex == -1) {
-                if (endIndex >= 0) {
-                    mIdList.remove(endIndex);
+                if (noMoreIndex >= 0) {
+                    mIdList.remove(noMoreIndex);
                 }
                 mIdList.add(new ReaderBlogIdPostId(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID));
                 notifyDataSetChanged();
-            } else if (!canRequestMore && endIndex == -1) {
+            } else if (!canRequestMore && noMoreIndex == -1) {
                 if (loadingIndex >= 0) {
                     mIdList.remove(loadingIndex);
                 }
-                mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
+                mIdList.add(new ReaderBlogIdPostId(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID));
                 notifyDataSetChanged();
             }
         }
@@ -392,12 +392,12 @@ public class ReaderPostPagerActivity extends Activity
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
 
-            boolean isEndFragment = (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID);
+            boolean isNoMoreFragment = (blogId == NO_MORE_FRAGMENT_ID && postId == NO_MORE_FRAGMENT_ID);
             boolean isLoadingFragment = (blogId == LOADING_FRAGMENT_ID && postId == LOADING_FRAGMENT_ID);
 
             final Fragment fragment;
-            if (isEndFragment) {
-                fragment = PostPagerEndFragment.newInstance();
+            if (isNoMoreFragment) {
+                fragment = PostPagerNoMoreFragment.newInstance();
             } else if (isLoadingFragment) {
                 fragment = PostPagerLoadingFragment.newInstance();
             } else {
@@ -513,18 +513,18 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     /**
-     * fragment that appears when user scrolls beyond the last post
+     * fragment that appears when user scrolls beyond the last post and no more posts can be loaded
      **/
-    public static class PostPagerEndFragment extends Fragment {
+    public static class PostPagerNoMoreFragment extends Fragment {
         private TextView mTxtCheckmark;
 
-        private static PostPagerEndFragment newInstance() {
-            return new PostPagerEndFragment();
+        private static PostPagerNoMoreFragment newInstance() {
+            return new PostPagerNoMoreFragment();
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.reader_fragment_end, container, false);
+            View view = inflater.inflate(R.layout.reader_fragment_no_more, container, false);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
