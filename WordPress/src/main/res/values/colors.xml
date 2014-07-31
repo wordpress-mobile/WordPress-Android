@@ -115,4 +115,7 @@
     <color name="calypso_blue_light">#e8f0f6</color>
     <color name="calypso_blue">#90aec2</color>
     <color name="calypso_blue_dark">#324155</color>
+    <color name="calypso_yellow_light">#fff8e6</color>
+    <color name="calypso_yellow">#fdb92c</color>
+    <color name="calypso_burnt_orange">#d5813e</color>
 </resources>

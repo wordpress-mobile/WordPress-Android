@@ -151,4 +151,8 @@ public class ReaderComment {
     public boolean hasAuthorBlogId() {
         return (authorBlogId != 0);
     }
+
+    public boolean isUnapproved() {
+        return CommentStatus.fromString(getStatus()) == CommentStatus.UNAPPROVED;
+    }
 }

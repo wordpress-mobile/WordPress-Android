@@ -13,6 +13,7 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderUserTable;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -34,6 +35,7 @@ public class ReaderCommentActions {
      **/
     public static void updateCommentsForPost(final ReaderPost post,
                                              final boolean requestNewer,
+                                             final boolean includeUnapproved,
                                              final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
@@ -48,6 +50,11 @@ public class ReaderCommentActions {
             if (numLocalComments > 0) {
                 path += "&offset=" + Integer.toString(numLocalComments);
             }
+        }
+
+        // Request 'all' comment statuses
+        if (includeUnapproved) {
+            path += "&status=all";
         }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -93,6 +100,13 @@ public class ReaderCommentActions {
                     if (jsonCommentList != null) {
                         for (int i = 0; i < jsonCommentList.length(); i++) {
                             JSONObject jsonComment = jsonCommentList.optJSONObject(i);
+
+                            // only allow 'approve' or 'unapprove' comments
+                            String commentStatus = jsonComment.optString("status");
+                            if (!commentStatus.equals(CommentStatus.toRESTString(CommentStatus.APPROVED)) &&
+                                    !commentStatus.equals(CommentStatus.toRESTString(CommentStatus.UNAPPROVED))) {
+                                continue;
+                            }
 
                             // extract this comment and add it to the list
                             ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
