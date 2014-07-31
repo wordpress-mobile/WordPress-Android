@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -192,6 +193,7 @@ public class EditPostActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
     }
 
     @Override
@@ -252,10 +254,20 @@ public class EditPostActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
-            if (mPost.isUploaded()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
-            } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+            PostStatus status = mPost.getStatusEnum();
+            switch (status) {
+                case PUBLISHED:
+                    if (mPost.isUploaded()) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                    } else {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+                    }
+                    break;
+                case DRAFT:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
+                    break;
+                default:
+                    // No-op
             }
 
             savePost(false);

@@ -132,7 +132,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_alignParentRight="true"
-                    android:tint="@color/nux_eye_icon_color"/>
+                    android:tint="@color/nux_eye_icon_color_closed"/>
             </RelativeLayout>
 
 

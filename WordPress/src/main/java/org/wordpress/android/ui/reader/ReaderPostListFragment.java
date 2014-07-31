@@ -206,18 +206,22 @@ public class ReaderPostListFragment extends Fragment
     public void onResume() {
         super.onResume();
 
-        // if the fragment is resuming from a paused state, refresh the adapter to make sure
-        // the follow status of all posts is accurate - this is necessary in case the user
-        // returned from an activity where the follow status may have been changed
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
-            if (hasPostAdapter()) {
-                getPostAdapter().checkFollowStatusForAllPosts();
-            }
-
+            // refresh the posts in case the user returned from an activity that
+            // changed one (or more) of the posts
+            refreshPosts();
             // likewise for tags
             refreshTags();
+
+            // auto-update the current tag if it's time
+            if (!isUpdating()
+                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+            }
         }
     }
 
@@ -329,6 +333,7 @@ public class ReaderPostListFragment extends Fragment
                 if (position >= 0 && mPostSelectedListener != null) {
                     ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                     if (post != null) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                         mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                     }
                 }
@@ -506,6 +511,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {

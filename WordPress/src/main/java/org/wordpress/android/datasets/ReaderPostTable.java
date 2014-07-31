@@ -279,25 +279,6 @@ public class ReaderPostTable {
                 args);
     }
 
-    /*
-     * updates the follow status of all posts in the passed list, returns true if any changed
-     */
-    public static boolean checkFollowStatusOnPosts(ReaderPostList posts) {
-        if (posts == null || posts.size() == 0) {
-            return false;
-        }
-
-        boolean isChanged = false;
-        for (ReaderPost post: posts) {
-            boolean isFollowed = isPostFollowed(post);
-            if (isFollowed != post.isFollowedByCurrentUser) {
-                post.isFollowedByCurrentUser = isFollowed;
-                isChanged = true;
-            }
-        }
-        return isChanged;
-    }
-
     public static int deletePostsWithTag(final ReaderTag tag) {
         if (tag == null) {
             return 0;

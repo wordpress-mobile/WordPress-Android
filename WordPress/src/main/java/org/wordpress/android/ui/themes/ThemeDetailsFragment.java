@@ -164,8 +164,10 @@ public class ThemeDetailsFragment extends DialogFragment {
         mLivePreviewButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mPreviewURL != null && hasCallback())
+                if (mPreviewURL != null && hasCallback()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.THEMES_PREVIEWED_SITE);
                     mCallback.onLivePreviewClicked(getThemeId(), mPreviewURL);
+                }
             }
         });
 
