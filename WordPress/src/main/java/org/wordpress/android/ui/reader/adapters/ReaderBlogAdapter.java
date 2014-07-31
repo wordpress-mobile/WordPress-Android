@@ -180,6 +180,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     holder.txtTitle.setText(domain);
                 }
                 holder.txtUrl.setText(domain);
+                holder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
                 break;
 
             default:
@@ -227,14 +228,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
 
+            // followed blogs don't have a description
             switch (getBlogType()) {
                 case FOLLOWED:
                     txtDescription.setVisibility(View.GONE);
-                    imgBlog.setVisibility(View.GONE);
                     break;
                 case RECOMMENDED:
                     txtDescription.setVisibility(View.VISIBLE);
-                    imgBlog.setVisibility(View.VISIBLE);
                     break;
             }
         }
