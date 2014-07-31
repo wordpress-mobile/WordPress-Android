@@ -94,22 +94,37 @@ public abstract class WPActionBarActivity extends Activity {
     private static final int AUTHENTICATE_REQUEST = 300;
 
     /**
-     * Used to restore active activity on app creation
+     * Used to restore active activity on app creation and by the analytics tracker
      */
-    protected static final int READER_ACTIVITY = 0;
-    protected static final int POSTS_ACTIVITY = 1;
-    protected static final int MEDIA_ACTIVITY = 2;
-    protected static final int PAGES_ACTIVITY = 3;
-    protected static final int COMMENTS_ACTIVITY = 4;
-    protected static final int THEMES_ACTIVITY = 5;
-    protected static final int STATS_ACTIVITY = 6;
-    protected static final int QUICK_PHOTO_ACTIVITY = 7;
-    protected static final int QUICK_VIDEO_ACTIVITY = 8;
-    protected static final int VIEW_SITE_ACTIVITY = 9;
-    protected static final int DASHBOARD_ACTIVITY = 10;
-    protected static final int NOTIFICATIONS_ACTIVITY = 11;
+    public static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity_string";
+    public static enum ActivityId {
+        UNKNOWN("Unknown"),
+        READER("Reader"),
+        NOTIFICATIONS("Notifications"),
+        POSTS("Post List"),
+        MEDIA("Media Library"),
+        PAGES("Page List"),
+        COMMENTS("Comments"),
+        THEMES("Themes"),
+        STATS("Stats"),
+        VIEW_SITE("View Site"),
+        DASHBOARD("Dashboard"),
+        LOGIN("Login Screen");
 
-    protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
+        private final String mStringValue;
+
+        private ActivityId(final String stringValue) {
+            mStringValue = stringValue;
+        }
+
+        public String toString() {
+            return mStringValue;
+        }
+
+        public boolean isAutoRestorable() {
+            return this != UNKNOWN && this != DASHBOARD && this != LOGIN;
+        }
+    }
 
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
@@ -316,7 +331,7 @@ public abstract class WPActionBarActivity extends Activity {
                 if (item.hasItemId()){
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
+                    editor.putString(LAST_ACTIVITY_PREFERENCE, item.getItemId().name());
                     editor.commit();
                 }
                 // only perform selection if the item isn't already selected
@@ -758,7 +773,7 @@ public abstract class WPActionBarActivity extends Activity {
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                             WPActionBarActivity.this);
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
+                    editor.putString(LAST_ACTIVITY_PREFERENCE, item.getItemId().name());
                     editor.commit();
                 }
                 break;
@@ -809,7 +824,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ReaderMenuItem extends MenuDrawerItem {
         ReaderMenuItem(){
-            super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
+            super(ActivityId.READER, R.string.reader, R.drawable.dashboard_icon_subs);
         }
 
         @Override
@@ -834,7 +849,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PostsMenuItem extends MenuDrawerItem {
         PostsMenuItem() {
-            super(POSTS_ACTIVITY, R.string.posts, R.drawable.dashboard_icon_posts);
+            super(ActivityId.POSTS, R.string.posts, R.drawable.dashboard_icon_posts);
         }
 
         @Override
@@ -862,7 +877,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class MediaMenuItem extends MenuDrawerItem {
         MediaMenuItem(){
-            super(MEDIA_ACTIVITY, R.string.media, R.drawable.dashboard_icon_media);
+            super(ActivityId.MEDIA, R.string.media, R.drawable.dashboard_icon_media);
         }
         @Override
         public Boolean isSelected(){
@@ -886,7 +901,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
-            super(PAGES_ACTIVITY, R.string.pages, R.drawable.dashboard_icon_pages);
+            super(ActivityId.PAGES, R.string.pages, R.drawable.dashboard_icon_pages);
         }
         @Override
         public Boolean isSelected(){
@@ -915,7 +930,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class CommentsMenuItem extends MenuDrawerItem {
         CommentsMenuItem(){
-            super(COMMENTS_ACTIVITY, R.string.tab_comments, R.drawable.dashboard_icon_comments);
+            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashboard_icon_comments);
         }
         @Override
         public Boolean isSelected(){
@@ -957,7 +972,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ThemesMenuItem extends MenuDrawerItem {
         ThemesMenuItem(){
-            super(THEMES_ACTIVITY, R.string.themes, R.drawable.dashboard_icon_themes);
+            super(ActivityId.THEMES, R.string.themes, R.drawable.dashboard_icon_themes);
         }
         @Override
         public Boolean isSelected(){
@@ -983,7 +998,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
-            super(STATS_ACTIVITY, R.string.tab_stats, R.drawable.dashboard_icon_stats);
+            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashboard_icon_stats);
         }
         @Override
         public Boolean isSelected(){
@@ -1050,7 +1065,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ViewSiteMenuItem extends MenuDrawerItem {
         ViewSiteMenuItem(){
-            super(VIEW_SITE_ACTIVITY, R.string.view_site, R.drawable.dashboard_icon_view);
+            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.dashboard_icon_view);
         }
         @Override
         public Boolean isSelected(){
@@ -1074,7 +1089,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
-            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_notifications);
+            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.dashboard_icon_notifications);
         }
         @Override
         public Boolean isVisible(){
