@@ -117,10 +117,17 @@ public class AnalyticsTrackerMixpanelInstructionsForStat {
         }
     }
 
+    private static final ThreadLocal<DateFormat> AnalyticsDateFormat = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return format;
+        }
+    };
+
     public void setCurrentDateForPeopleProperty(String property) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        setPeoplePropertyToValue(property, dateFormat.format(new Date()));
+        setPeoplePropertyToValue(property, AnalyticsDateFormat.get().format(new Date()));
     }
 
     public void setPeoplePropertyToValue(String property, Object value) {
