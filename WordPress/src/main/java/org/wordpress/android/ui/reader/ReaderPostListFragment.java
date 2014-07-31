@@ -511,6 +511,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {

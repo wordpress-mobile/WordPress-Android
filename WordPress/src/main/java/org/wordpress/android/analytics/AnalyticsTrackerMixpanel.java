@@ -296,6 +296,12 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_followed_site");
                 instructions.setCurrentDateForPeopleProperty("last_time_followed_site");
                 break;
+            case READER_BLOCKED_BLOG:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Reader - Blocked Blog");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_blocked_a_blog");
+                instructions.setCurrentDateForPeopleProperty("last_time_blocked_a_blog");
+                break;
             case EDITOR_CREATED_POST:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Editor - Created Post");
