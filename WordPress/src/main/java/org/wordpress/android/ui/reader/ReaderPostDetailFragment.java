@@ -671,7 +671,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(mPost, requestNewer, mNote != null, resultListener);
+        ReaderCommentActions.updateCommentsForPost(mPost, requestNewer, resultListener);
     }
 
     /*

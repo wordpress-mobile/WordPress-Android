@@ -36,19 +36,6 @@
         android:background="@drawable/reader_transparent_selector"
         tools:text="text_comment_author" />
 
-    <org.wordpress.android.widgets.NoticonTextView
-        android:id="@+id/text_comment_date_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/text_comment_date"
-        android:layout_alignTop="@+id/text_comment_author"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:textColor="@color/calypso_blue_dark"
-        android:textSize="17sp"
-        android:text="\uf303"
-        />
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_date"
         style="@style/ReaderTextView.Date.Large"
@@ -56,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/text_comment_author"
+        android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
         tools:text="date" />
 
@@ -110,61 +98,6 @@
             android:visibility="gone"
             tools:text="@string/reader_likes_one_short"
             tools:visibility="visible"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_comment_moderation_actions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/text_comment_author"
-        android:layout_below="@+id/text_comment_text"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/image_comment_approve"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="@dimen/margin_medium"
-            android:src="@drawable/ic_cab_approve"
-            android:tint="@color/reader_hyperlink" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_approve"
-            style="@style/ReaderTextView.Comment.Action"
-            android:text="@string/mnu_comment_approve"
-            android:textColor="@color/reader_hyperlink" />
-
-        <ImageView
-            android:id="@+id/image_comment_spam"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:src="@drawable/ic_cab_spam"
-            android:tint="@color/reader_hyperlink"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_spam"
-            style="@style/ReaderTextView.Comment.Action"
-            android:textColor="@color/reader_hyperlink"
-            android:text="@string/mnu_comment_spam"
-            tools:text="@string/reader_label_like" />
-
-        <ImageView
-            android:id="@+id/image_comment_trash"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:src="@drawable/ic_cab_trash"
-            android:tint="@color/reader_hyperlink"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_trash"
-            style="@style/ReaderTextView.Comment.Action"
-            android:textColor="@color/reader_hyperlink"
-            android:text="@string/mnu_comment_trash"
-            tools:text="@string/reader_label_like" />
     </LinearLayout>
 
     <ProgressBar

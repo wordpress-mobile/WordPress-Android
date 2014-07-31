@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.text.Layout;
+import android.text.style.LeadingMarginSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderCommentList;
 import org.wordpress.android.models.ReaderPost;
@@ -46,12 +49,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
 
-    private final ColorDrawable mBgColorNormal;
-    private final ColorDrawable mBgColorHighlight;
-    private final Drawable mBgDrawableUnapproved;
-    private final int mTextColorNormal;
-    private final int mTextColorNoLink;
-    private final int mTextColorUnapproved;
+    private final int mBgColorNormal;
+    private final int mBgColorHighlight;
+    private final int mLinkColor;
+    private final int mNoLinkColor;
 
     private final String mLike;
     private final String mLikedBy;
@@ -83,13 +84,11 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
-        mBgColorNormal = new ColorDrawable(context.getResources().getColor(R.color.calypso_blue_light));
-        mBgColorHighlight = new ColorDrawable(context.getResources().getColor(R.color.grey_light));
-        mBgDrawableUnapproved = context.getResources().getDrawable(R.drawable.reader_comment_unmoderated_background);
+        mBgColorNormal = context.getResources().getColor(R.color.calypso_blue_light);
+        mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
 
-        mTextColorNormal = context.getResources().getColor(R.color.calypso_blue_dark);
-        mTextColorNoLink = context.getResources().getColor(R.color.grey_medium);
-        mTextColorUnapproved = context.getResources().getColor(R.color.calypso_burnt_orange);
+        mLinkColor = context.getResources().getColor(R.color.calypso_blue_dark);
+        mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
 
         mLike = context.getString(R.string.reader_label_like);
         mLikedBy = context.getString(R.string.reader_label_liked_by);
@@ -191,9 +190,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             };
             holder.imgAvatar.setOnClickListener(authorListener);
             holder.txtAuthor.setOnClickListener(authorListener);
-            holder.txtAuthor.setTextColor(comment.isUnapproved() ? mTextColorUnapproved : mTextColorNormal);
+            holder.txtAuthor.setTextColor(mLinkColor);
         } else {
-            holder.txtAuthor.setTextColor(comment.isUnapproved() ? mTextColorUnapproved : mTextColorNoLink);
+            holder.txtAuthor.setTextColor(mNoLinkColor);
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -208,41 +207,15 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (mHighlightCommentId == comment.commentId) {
             // different background for highlighted comment, with optional progress bar
-            convertView.setBackgroundDrawable(mBgColorHighlight);
+            convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else if (mPost != null && comment.authorId == mPost.authorId) {
             // different background color for comments from the post's author
-            convertView.setBackgroundDrawable(mBgColorHighlight);
-            holder.progress.setVisibility(View.GONE);
-        } else if (comment.isUnapproved()) {
-            // mBgDrawableUnapproved uses a layer list, which eats padding :(
-            // get the padding values and restore them after setting the bg resource
-            int paddingLeft = convertView.getPaddingLeft();
-            int paddingTop = convertView.getPaddingTop();
-            int paddingRight = convertView.getPaddingRight();
-            int paddingBottom = convertView.getPaddingBottom();
-
-            convertView.setBackgroundDrawable(mBgDrawableUnapproved);
-            convertView.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
-
+            convertView.setBackgroundColor(mBgColorHighlight);
             holder.progress.setVisibility(View.GONE);
         } else {
-            convertView.setBackgroundDrawable(mBgColorNormal);
+            convertView.setBackgroundColor(mBgColorNormal);
             holder.progress.setVisibility(View.GONE);
-        }
-
-        if (comment.isUnapproved()) {
-            holder.commentActions.setVisibility(View.GONE);
-            holder.commentModerationActions.setVisibility(View.VISIBLE);
-            holder.txtText.setTextColor(mTextColorUnapproved);
-            holder.txtDate.setTextColor(mTextColorUnapproved);
-            holder.txtDateIcon.setTextColor(mTextColorUnapproved);
-        } else {
-            holder.commentModerationActions.setVisibility(View.GONE);
-            holder.commentActions.setVisibility(View.VISIBLE);
-            holder.txtText.setTextColor(mTextColorNormal);
-            holder.txtDate.setTextColor(mTextColorNormal);
-            holder.txtDateIcon.setTextColor(mTextColorNormal);
         }
 
         // tapping reply icon tells activity to show reply box
@@ -261,13 +234,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
     }
 
     private static class CommentHolder {
-        private final View commentActions;
-        private final View commentModerationActions;
-
         private final TextView txtAuthor;
         private final TextView txtText;
         private final TextView txtDate;
-        private final TextView txtDateIcon;
 
         private final WPNetworkImageView imgAvatar;
         private final View spacerIndent;
@@ -281,13 +250,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtLikeCount;
 
         CommentHolder(View view) {
-            commentActions = view.findViewById(R.id.layout_comment_actions);
-            commentModerationActions = view.findViewById(R.id.layout_comment_moderation_actions);
-
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
-            txtDateIcon = (TextView) view.findViewById(R.id.text_comment_date_icon);
 
             txtReply = (TextView) view.findViewById(R.id.text_comment_reply);
             imgReply = (ImageView) view.findViewById(R.id.image_comment_reply);
@@ -317,17 +282,17 @@ public class ReaderCommentAdapter extends BaseAdapter {
             if (comment.numLikes == 0) {
                 // no likes, so show "Like" as the caption with no count
                 holder.txtLike.setText(mLike);
-                holder.txtLike.setTextColor(mTextColorNormal);
+                holder.txtLike.setTextColor(mLinkColor);
                 holder.txtLikeCount.setVisibility(View.GONE);
             } else if (comment.numLikes == 1 && comment.isLikedByCurrentUser) {
                 // comment is liked only by the current user, so show "Liked by you" with no count
                 holder.txtLike.setText(mLikedByYou);
-                holder.txtLike.setTextColor(mTextColorNormal);
+                holder.txtLike.setTextColor(mLinkColor);
                 holder.txtLikeCount.setVisibility(View.GONE);
             } else {
                 // otherwise show "Liked by" followed by the like count
                 holder.txtLike.setText(mLikedBy);
-                holder.txtLike.setTextColor(mTextColorNoLink);
+                holder.txtLike.setTextColor(mNoLinkColor);
                 holder.txtLikeCount.setText(comment.numLikes == 1 ? mLikesSingle : String.format(mLikesMulti, comment.numLikes));
                 holder.txtLikeCount.setSelected(comment.isLikedByCurrentUser);
                 holder.txtLikeCount.setVisibility(View.VISIBLE);

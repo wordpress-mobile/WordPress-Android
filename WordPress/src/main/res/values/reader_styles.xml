@@ -94,7 +94,8 @@
     </style>
     <style name="ReaderTextView.Date.Large" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">@color/calypso_blue_dark</item>
+        <item name="android:textColor">@color/calypso_blue</item>
+        <item name="android:drawableLeft">@drawable/noticon_clock</item>
     </style>
     <style name="ReaderTextView.Comment.Author" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
