@@ -693,6 +693,7 @@ public abstract class WPActionBarActivity extends Activity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
+                            AnalyticsTracker.refreshMetadata();
                             WordPress.signOut(WPActionBarActivity.this);
                             refreshMenuDrawer();
                         }
