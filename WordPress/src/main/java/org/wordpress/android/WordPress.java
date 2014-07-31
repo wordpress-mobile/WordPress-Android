@@ -46,6 +46,7 @@ import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -61,6 +62,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -623,7 +625,9 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("last_visible_screen", ActivityUtils.getTopActivityClassName(getContext()));
+                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
             } else {
                 isInBackground = false;
