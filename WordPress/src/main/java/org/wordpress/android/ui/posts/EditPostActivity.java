@@ -18,6 +18,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.WPActionBarActivity.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPViewPager;
@@ -168,6 +169,7 @@ public class EditPostActivity extends Activity {
                 }
             }
         });
+        ActivityId.trackLastActivity(this, ActivityId.POST_EDITOR);
     }
 
     class AutoSaveTask extends TimerTask {
