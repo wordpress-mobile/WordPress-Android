@@ -35,6 +35,7 @@ import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -628,6 +629,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             }
 
             AnalyticsTracker.refreshMetadata();
+
+            // get the user's reader tags so they're available as soon as the Reader is accessed
+            if (!mSelfHosted) {
+                ReaderTagActions.updateTags(null);
+            }
 
             if (userBlogList != null) {
                 if (getActivity() != null) {
