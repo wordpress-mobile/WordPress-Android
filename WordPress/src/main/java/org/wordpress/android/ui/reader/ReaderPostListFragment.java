@@ -333,6 +333,7 @@ public class ReaderPostListFragment extends Fragment
                 if (position >= 0 && mPostSelectedListener != null) {
                     ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                     if (post != null) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                         mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                     }
                 }
@@ -510,6 +511,7 @@ public class ReaderPostListFragment extends Fragment
         // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {

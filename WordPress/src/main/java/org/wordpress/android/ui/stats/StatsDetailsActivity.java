@@ -136,7 +136,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
 
         // Setting up the main date label
        ((TextView) findViewById(R.id.stats_views_visitors_date)).setText(
-               StatsUtils.parseDate(mStatsDate, "yyyy-MM-dd", "EEEE, d MMMM, yyyy")
+               StatsUtils.parseDate(mStatsDate, "yyyy-MM-dd", "EEEE, MMMM d, yyyy")
        );
 
         // Setting up top posts and pages

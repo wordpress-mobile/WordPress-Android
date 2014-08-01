@@ -17,6 +17,7 @@ public final class AnalyticsTracker {
         APPLICATION_CLOSED,
         THEMES_ACCESSED_THEMES_BROWSER,
         THEMES_CHANGED_THEME,
+        THEMES_PREVIEWED_SITE,
         READER_ACCESSED,
         READER_OPENED_ARTICLE,
         READER_LIKED_ARTICLE,
@@ -28,13 +29,16 @@ public final class AnalyticsTracker {
         READER_LOADED_TAG,
         READER_LOADED_FRESHLY_PRESSED,
         READER_COMMENTED_ON_ARTICLE,
+        READER_BLOCKED_BLOG,
         STATS_ACCESSED,
         EDITOR_CREATED_POST,
         EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY,
         EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY,
         EDITOR_UPDATED_POST,
         EDITOR_SCHEDULED_POST,
+        EDITOR_CLOSED_POST,
         EDITOR_PUBLISHED_POST,
+        EDITOR_SAVED_DRAFT,
         EDITOR_PUBLISHED_POST_WITH_PHOTO,
         EDITOR_PUBLISHED_POST_WITH_VIDEO,
         EDITOR_PUBLISHED_POST_WITH_CATEGORIES,
@@ -54,9 +58,9 @@ public final class AnalyticsTracker {
         OPENED_MEDIA_LIBRARY,
         OPENED_SETTINGS,
         CREATED_ACCOUNT,
-        CREATED_SITE,
         SHARED_ITEM,
         ADDED_SELF_HOSTED_SITE,
+        SIGNED_IN,
         SIGNED_INTO_JETPACK,
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
@@ -67,6 +71,7 @@ public final class AnalyticsTracker {
         void track(Stat stat, Map<String, ?> properties);
         void beginSession();
         void endSession();
+        void refreshMetadata();
         void clearAllData();
         void registerPushNotificationToken(String regId);
     }
@@ -149,6 +154,12 @@ public final class AnalyticsTracker {
     public static void clearAllData() {
         for (Tracker tracker : TRACKERS) {
             tracker.clearAllData();
+        }
+    }
+
+    public static void refreshMetadata() {
+        for (Tracker tracker : TRACKERS) {
+            tracker.refreshMetadata();
         }
     }
 }

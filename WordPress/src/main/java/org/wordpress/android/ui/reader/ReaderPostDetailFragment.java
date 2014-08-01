@@ -104,7 +104,6 @@ public class ReaderPostDetailFragment extends Fragment
                                                        long postId,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);

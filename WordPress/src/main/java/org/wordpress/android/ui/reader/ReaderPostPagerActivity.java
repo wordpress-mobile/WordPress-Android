@@ -21,6 +21,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
@@ -92,6 +93,7 @@ public class ReaderPostPagerActivity extends Activity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
             }
