@@ -150,6 +150,23 @@ public class RestClientUtils {
     }
 
     /**
+     * Like or unlike a comment.
+     */
+    public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        String path = String.format("sites/%s/comments/%s/likes/", siteId, commentId);
+
+        if (!isLiked) {
+            path += "mine/delete";
+        } else {
+            path += "new";
+        }
+
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Get all a site's themes
      */
     public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {

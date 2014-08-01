@@ -200,6 +200,7 @@
     <string name="mnu_comment_unspam">Not spam</string>
     <string name="mnu_comment_trash">Trash</string>
     <string name="mnu_comment_edit">Edit</string>
+    <string name="mnu_comment_liked">Liked</string>
 
     <!-- comment dialogs - must be worded to work for moderation of single/multiple comments -->
     <string name="dlg_approving_comments">Approving</string>

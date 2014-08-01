@@ -77,6 +77,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
+    private TextView mBtnLikeComment;
     private TextView mBtnModerateComment;
     private TextView mBtnSpamComment;
     private TextView mBtnEditComment;
@@ -145,6 +146,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
         mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+        mBtnLikeComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_like);
         mBtnModerateComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
@@ -157,6 +159,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
+
+        // hide comment like button until we know it can be enabled in showCommentForNote()
+        mBtnLikeComment.setVisibility(View.GONE);
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
@@ -205,6 +210,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             @Override
             public void onClick(View v) {
                 confirmDeleteComment();
+            }
+        });
+
+        mBtnLikeComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likeComment();
             }
         });
 
@@ -726,6 +738,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return;
         }
 
+        if (mNote != null && canLike()) {
+            mBtnLikeComment.setVisibility(View.VISIBLE);
+
+            toggleLikeButton(mNote.hasLikedComment());
+        } else {
+            mBtnLikeComment.setVisibility(View.GONE);
+        }
+
         // comment status is only shown if this comment is from one of this user's blogs and the
         // comment hasn't been approved
         if (mIsUsersBlog && mComment.getStatusEnum() != CommentStatus.APPROVED) {
@@ -769,7 +789,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // animate the buttons in if they're not visible
         boolean isAnimating = (mLayoutButtons.getAnimation() != null && !mLayoutButtons.getAnimation().hasEnded());
-        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate())) {
+        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate() || canLike())) {
             AniUtils.flyIn(mLayoutButtons);
         }
     }
@@ -794,6 +814,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
     private boolean canEdit() {
         return (mLocalBlogId > 0 && canModerate());
+    }
+    private boolean canLike() {
+        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
     /*
@@ -891,5 +914,42 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         mIsRequestingComment = true;
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
+    }
+
+    // Like or unlike a comment via the REST API
+    private void likeComment() {
+        if (mNote == null) return;
+
+        toggleLikeButton(!mBtnLikeComment.isSelected());
+
+        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getBlogId()),
+                String.valueOf(mNote.getCommentId()),
+                !mBtnLikeComment.isSelected(),
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (response != null && !response.optBoolean("success"))  {
+                            // Failed, so switch the button state back
+                            toggleLikeButton(mBtnLikeComment.isSelected());
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        toggleLikeButton(mBtnLikeComment.isSelected());
+                    }
+                });
+    }
+
+    private void toggleLikeButton(boolean isLiked) {
+        if (isLiked) {
+            mBtnLikeComment.setText(getResources().getString(R.string.mnu_comment_liked));
+            mBtnLikeComment.setSelected(true);
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_cab_like_active);
+        } else {
+            mBtnLikeComment.setText(getResources().getString(R.string.reader_label_like));
+            mBtnLikeComment.setSelected(false);
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_cab_like);
+        }
     }
 }

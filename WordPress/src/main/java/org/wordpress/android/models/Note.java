@@ -41,12 +41,14 @@ public class Note extends Syncable {
     private static final String ACTION_KEY_APPROVE = "approve-comment";
     private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
     private static final String ACTION_KEY_SPAM = "spam-comment";
+    private static final String ACTION_KEY_LIKE = "like-comment";
 
     public static enum EnabledActions {
         ACTION_REPLY,
         ACTION_APPROVE,
         ACTION_UNAPPROVE,
-        ACTION_SPAM
+        ACTION_SPAM,
+        ACTION_LIKE
     }
 
     private JSONObject mActions;
@@ -248,16 +250,26 @@ public class Note extends Syncable {
     public EnumSet<EnabledActions> getEnabledActions() {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
         JSONObject jsonActions = getCommentActions();
-        if (jsonActions == null || jsonActions.length() == 0)
+        if (jsonActions == null || jsonActions.length() == 0) {
             return actions;
-        if (jsonActions.has(ACTION_KEY_REPLY))
+        }
+
+        if (jsonActions.has(ACTION_KEY_REPLY)) {
             actions.add(EnabledActions.ACTION_REPLY);
-        if (jsonActions.has(ACTION_KEY_APPROVE) && jsonActions.optBoolean(ACTION_KEY_APPROVE, false))
-            actions.add(EnabledActions.ACTION_UNAPPROVE);
-        if (jsonActions.has(ACTION_KEY_APPROVE) && !jsonActions.optBoolean(ACTION_KEY_APPROVE, false))
+        }
+        if (jsonActions.has(ACTION_KEY_APPROVE) && jsonActions.optBoolean(ACTION_KEY_APPROVE, false)) {
             actions.add(EnabledActions.ACTION_APPROVE);
-        if (jsonActions.has(ACTION_KEY_SPAM))
+        }
+        if (jsonActions.has(ACTION_KEY_APPROVE) && !jsonActions.optBoolean(ACTION_KEY_APPROVE, false)) {
+            actions.add(EnabledActions.ACTION_UNAPPROVE);
+        }
+        if (jsonActions.has(ACTION_KEY_SPAM)) {
             actions.add(EnabledActions.ACTION_SPAM);
+        }
+        if (jsonActions.has(ACTION_KEY_LIKE)) {
+            actions.add(EnabledActions.ACTION_LIKE);
+        }
+
         return actions;
     }
 
@@ -273,6 +285,18 @@ public class Note extends Syncable {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
     }
 
+    public long getCommentParentId() {
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
+    }
+
+    public int getCommentNestLevel() {
+        return JSONUtil.queryJSON(mNoteJSON, "body[last].nest_level", 0);
+    }
+
+    public long getUserId() {
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.user", 0);
+    }
+
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */
@@ -285,12 +309,12 @@ public class Note extends Syncable {
      */
     public Comment buildComment() {
         return new Comment(
-                queryJSON("meta.ids.post", -1),
-                queryJSON("meta.ids.comment", -1),
+                getPostId(),
+                getCommentId(),
                 getCommentAuthorName(),
                 DateTimeUtils.timestampToIso8601Str(getTimestamp()),
                 getCommentText(),
-                getCommentStatus(),
+                CommentStatus.toString(CommentStatus.fromString(getCommentStatus())),
                 "", // post title is unavailable in note model
                 getCommentAuthorUrl(),
                 "", // user email is unavailable in note model
@@ -298,7 +322,7 @@ public class Note extends Syncable {
         );
     }
 
-    private String getCommentAuthorName() {
+    public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
         for (int i=0; i < bodyArray.length(); i++) {
@@ -315,11 +339,11 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentText() {
+    public String getCommentText() {
         return queryJSON("body[last].text", "");
     }
 
-    private String getCommentAuthorUrl() {
+    public String getCommentAuthorUrl() {
         JSONArray bodyArray = getBody();
 
         for (int i=0; i < bodyArray.length(); i++) {
@@ -336,7 +360,24 @@ public class Note extends Syncable {
         return "";
     }
 
-    private String getCommentStatus() {
+    public long getCommentAuthorBlogId() {
+        JSONArray bodyArray = getBody();
+
+        for (int i=0; i < bodyArray.length(); i++) {
+            try {
+                JSONObject bodyItem = bodyArray.getJSONObject(i);
+                if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
+                    return JSONUtil.queryJSON(bodyItem, "meta.ids.site", 0);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return 0;
+    }
+
+    public String getCommentStatus() {
         EnumSet<EnabledActions> enabledActions = getEnabledActions();
 
         if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
@@ -347,6 +388,11 @@ public class Note extends Syncable {
             return CommentStatus.toString(CommentStatus.UNAPPROVED);
         }
 
+    }
+
+    public boolean hasLikedComment() {
+        JSONObject jsonActions = getCommentActions();
+        return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
     }
 
     /**

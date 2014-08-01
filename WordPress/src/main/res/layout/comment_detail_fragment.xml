@@ -124,6 +124,15 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/text_btn_like"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_cab_like"
+                android:text="@string/reader_label_like"
+                style="@style/WordPress.ModerateButton" />
+
+            <TextView
                 android:id="@+id/text_btn_moderate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
