@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.Window;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPActionBarActivity.ActivityId;
+import org.wordpress.android.ui.ActivityId;
 
 // TODO: this will probably be merged with New Account Activity (maybe add a tab bar)
 public class WelcomeActivity extends Activity {

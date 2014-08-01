@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;

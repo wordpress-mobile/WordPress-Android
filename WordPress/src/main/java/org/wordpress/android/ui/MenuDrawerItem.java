@@ -7,8 +7,6 @@ package org.wordpress.android.ui;
 
 import android.view.View;
 
-import org.wordpress.android.ui.WPActionBarActivity.ActivityId;
-
 public abstract class MenuDrawerItem {
     /**
      * Called when the menu item is selected.
