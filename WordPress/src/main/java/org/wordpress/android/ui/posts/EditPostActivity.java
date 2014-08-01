@@ -16,13 +16,14 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPViewPager;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -169,6 +170,7 @@ public class EditPostActivity extends Activity {
                 }
             }
         });
+        ActivityId.trackLastActivity(this, ActivityId.POST_EDITOR);
     }
 
     class AutoSaveTask extends TimerTask {

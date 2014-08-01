@@ -39,6 +39,8 @@ import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
@@ -61,6 +63,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -623,7 +626,13 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED);
+                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+                String lastActivityString = settings.getString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE,
+                        ActivityId.UNKNOWN.name());
+                ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+                Map<String, String> properties = new HashMap<String, String>();
+                properties.put("last_visible_screen", lastActivity.toString());
+                AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
             } else {
                 isInBackground = false;

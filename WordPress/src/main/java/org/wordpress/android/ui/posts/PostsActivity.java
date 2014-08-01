@@ -21,9 +21,11 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -34,9 +36,8 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.util.WPMeShortlinks;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
@@ -45,7 +46,6 @@ import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
 
 import java.io.IOException;
-import java.util.Iterator;
 
 public class PostsActivity extends WPActionBarActivity
         implements OnPostSelectedListener, PostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -84,19 +84,16 @@ public class PostsActivity extends WPActionBarActivity
 
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
-            !(this instanceof PagesActivity)) {
-
+                !(this instanceof PagesActivity)) {
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            int lastActivitySelection = settings.getInt(LAST_ACTIVITY_PREFERENCE, -1);
-            if (lastActivitySelection > MenuDrawerItem.NO_ITEM_ID &&
-                lastActivitySelection != WPActionBarActivity.DASHBOARD_ACTIVITY) {
-                Iterator<MenuDrawerItem> itemIterator = mMenuItems.iterator();
-                while (itemIterator.hasNext()) {
-                    MenuDrawerItem item = itemIterator.next();
+            String lastActivityString = settings.getString(LAST_ACTIVITY_PREFERENCE, ActivityId.UNKNOWN.name());
+            ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+            if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
+                for (MenuDrawerItem item : mMenuItems) {
                     // if we have a matching item id, and it's not selected and it's visible, call it
-                    if (item.hasItemId() && item.getItemId() == lastActivitySelection && !item.isSelected() &&
-                        item.isVisible()) {
+                    if (item.hasItemId() && item.getItemId() == lastActivity.autoRestoreMapper() && !item.isSelected()
+                            && item.isVisible()) {
                         mFirstLaunch = true;
                         item.selectItem();
                         finish();
@@ -189,7 +186,7 @@ public class PostsActivity extends WPActionBarActivity
         // Manually set last selection to notifications
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(LAST_ACTIVITY_PREFERENCE, NOTIFICATIONS_ACTIVITY);
+        editor.putString(LAST_ACTIVITY_PREFERENCE, ActivityId.NOTIFICATIONS.name());
         editor.commit();
 
         Intent i = new Intent(this, NotificationsActivity.class);
