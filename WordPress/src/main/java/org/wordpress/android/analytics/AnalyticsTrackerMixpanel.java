@@ -496,6 +496,12 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_tapped_stats_bar_chart");
                 instructions.setCurrentDateForPeopleProperty("last_time_tapped_stats_bar_chart");
                 break;
+            case STATS_SCROLLED_TO_BOTTOM:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats - Scrolled to Bottom");
+                instructions.setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_scrolled_to_bottom_of_stats");
+                instructions.setCurrentDateForPeopleProperty("last_time_scrolled_to_bottom_of_stats");
+                break;
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
