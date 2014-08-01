@@ -87,7 +87,7 @@ public class PostsActivity extends WPActionBarActivity
             WordPress.shouldRestoreSelectedActivity = false;
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
             String lastActivityString = settings.getString(LAST_ACTIVITY_PREFERENCE, ActivityId.UNKNOWN.name());
-            ActivityId lastActivity = ActivityId.valueOf(lastActivityString);
+            ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
             if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
                 for (MenuDrawerItem item : mMenuItems) {
                     // if we have a matching item id, and it's not selected and it's visible, call it

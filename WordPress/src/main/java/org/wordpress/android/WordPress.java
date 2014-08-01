@@ -629,7 +629,7 @@ public class WordPress extends Application {
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
                 String lastActivityString = settings.getString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE,
                         ActivityId.UNKNOWN.name());
-                ActivityId lastActivity = ActivityId.valueOf(lastActivityString);
+                ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, String> properties = new HashMap<String, String>();
                 properties.put("last_visible_screen", lastActivity.toString());
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);

@@ -146,6 +146,15 @@ public abstract class WPActionBarActivity extends Activity {
                     return this;
             }
         }
+
+        public static ActivityId getActivityIdFromName(String activityString) {
+            try {
+                return ActivityId.valueOf(activityString);
+            } catch (IllegalArgumentException e) {
+                // default to UNKNOWN in case the activityString is bogus
+                return ActivityId.UNKNOWN;
+            }
+        }
     }
 
     protected MenuDrawer mMenuDrawer;
