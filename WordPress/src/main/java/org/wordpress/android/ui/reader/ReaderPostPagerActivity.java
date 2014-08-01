@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader;
 
-import android.animation.AnimatorSet;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -500,26 +503,37 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
-    /**
-     * fragment that appears while loading older posts
-     **/
-    public static class PostPagerLoadingFragment extends Fragment {
-
-        private static PostPagerLoadingFragment newInstance() {
-            return new PostPagerLoadingFragment();
+    /*
+     * used to animate in the checkmark or progress bar on end fragments
+     */
+    private static void animateIn(final View target) {
+        // don't animate if the target view is already visible
+        if (target == null || target.getVisibility() == View.VISIBLE) {
+            return;
         }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.reader_fragment_loading, container, false);
-        }
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.25f, 1.0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.25f, 1.0f);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(750);
+        animator.setInterpolator(new OvershootInterpolator());
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                target.setVisibility(View.VISIBLE);
+            }
+        });
+
+        animator.start();
     }
 
     /**
      * fragment that appears when user scrolls beyond the last post and no more posts can be loaded
      **/
     public static class PostPagerNoMoreFragment extends Fragment {
-        private TextView mTxtCheckmark;
 
         private static PostPagerNoMoreFragment newInstance() {
             return new PostPagerNoMoreFragment();
@@ -536,9 +550,6 @@ public class ReaderPostPagerActivity extends Activity
                     }
                 }
             });
-
-            mTxtCheckmark = (TextView) view.findViewById(R.id.text_checkmark);
-
             return view;
         }
 
@@ -548,31 +559,40 @@ public class ReaderPostPagerActivity extends Activity
             if (Build.VERSION.SDK_INT >= 15) {
                 super.setUserVisibleHint(isVisibleToUser);
             }
-            if (isVisibleToUser) {
-                showCheckmark();
-            } else {
-                hideCheckmark();
+
+            if (getView() != null) {
+                TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
+                if (isVisibleToUser) {
+                    animateIn(txtCheckmark);
+                } else {
+                    txtCheckmark.setVisibility(View.GONE);
+                }
             }
         }
+    }
 
-        private void showCheckmark() {
-            if (!isVisible()) {
-                return;
-            }
+    /**
+     * fragment that appears while loading older posts
+     **/
+    public static class PostPagerLoadingFragment extends Fragment {
 
-            mTxtCheckmark.setVisibility(View.VISIBLE);
-
-            AnimatorSet set = new AnimatorSet();
-            set.setDuration(750);
-            set.setInterpolator(new OvershootInterpolator());
-            set.playTogether(ObjectAnimator.ofFloat(mTxtCheckmark, "scaleX", 0.25f, 1f),
-                             ObjectAnimator.ofFloat(mTxtCheckmark, "scaleY", 0.25f, 1f));
-            set.start();
+        private static PostPagerLoadingFragment newInstance() {
+            return new PostPagerLoadingFragment();
         }
 
-        private void hideCheckmark() {
-            if (isVisible()) {
-                mTxtCheckmark.setVisibility(View.INVISIBLE);
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.reader_fragment_loading, container, false);
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            if (Build.VERSION.SDK_INT >= 15) {
+                super.setUserVisibleHint(isVisibleToUser);
+            }
+            if (isVisibleToUser && getView() != null) {
+                ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
+                animateIn(progress);
             }
         }
     }
