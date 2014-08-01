@@ -15,7 +15,6 @@ repositories {
     mavenCentral()
     maven { url 'http://wordpress-mobile.github.io/WordPress-Android' }
     maven { url 'http://download.crashlytics.com/maven' }
-    maven { url "http://simperium.github.io/simperium-android" }
 }
 
 apply plugin: 'com.android.application'
@@ -38,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0-rc-2"
-        versionCode 122
+        versionName "3.0"
+        versionCode 123
         minSdkVersion 14
         targetSdkVersion 19
 
@@ -100,12 +99,10 @@ dependencies {
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
-    compile('com.simperium:simperium-android:0.4.8') {
-        exclude group: 'com.android', module: 'volley'
-    }
+    compile('com.simperium.android:simperium:0.4.11')
 
     debugCompile project(path:':libs:utils:WordPressUtils')
-    releaseCompile 'org.wordpress:wordpress-utils:1.0.2'
+    releaseCompile 'org.wordpress:wordpress-utils:1.1.0'
 
     debugCompile project(path:':libs:networking:WordPressNetworking')
     releaseCompile 'org.wordpress:wordpress-networking:1.0.0'

@@ -98,6 +98,10 @@ public class SetupBlog {
         return mErroneousSslCertificate;
     }
 
+    public boolean isDotComBlog() {
+        return mUsername != null && mPassword != null && mSelfHostedURL == null;
+    }
+
     private void handleXmlRpcFault(XMLRPCFault xmlRpcFault) {
         AppLog.e(T.NUX, "XMLRPCFault received from XMLRPC call wp.getUsersBlogs", xmlRpcFault);
         switch (xmlRpcFault.getFaultCode()) {
