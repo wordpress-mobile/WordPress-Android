@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.OvershootInterpolator;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -62,10 +61,7 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsSinglePostView;
 
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
-
-    // IDs for non-post fragments (no more posts & loading posts) - must be < 0
-    private static final long NO_MORE_FRAGMENT_ID = -1;
-    private static final long LOADING_FRAGMENT_ID = -2;
+    private static final long END_FRAGMENT_ID = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,17 +123,21 @@ public class ReaderPostPagerActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-
                 onRequestFullScreen(false);
-                // request older posts when the loading fragment appears
+
                 if (mViewPager.getAdapter() != null) {
                     PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
-                    ReaderBlogIdPostId id = adapter.mIdList.get(position);
-                    if (id != null
-                            && id.getBlogId() == LOADING_FRAGMENT_ID
-                            && id.getPostId() == LOADING_FRAGMENT_ID) {
-                        adapter.requestMorePosts();
+                    Fragment fragment = adapter.getFragmentAtPosition(position);
+                    if (fragment instanceof ReaderPostDetailFragment) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+                    } else if (fragment instanceof PostPagerEndFragment) {
+                        PostPagerEndFragment endFragment = (PostPagerEndFragment)fragment;
+                        if (adapter.canRequestMostPosts()) {
+                            endFragment.setFragmentType(EndFragmentType.LOADING);
+                            adapter.requestMorePosts();
+                        } else {
+                            endFragment.setFragmentType(EndFragmentType.NO_MORE);
+                        }
                     }
                 }
             }
@@ -346,90 +346,40 @@ public class ReaderPostPagerActivity extends Activity
         private boolean mAllPostsLoaded;
 
         // this is used to retain a weak reference to created fragments so we can access them
-        // in getFragmentAtPosition() - necessary because we need to pause the web view in
-        // the active fragment when the user swipes away from it, but the adapter provides
-        // no way to access the active fragment
+        // in getFragmentAtPosition() - necessary because the pager provides no built-in
+        // way to do this
         private final SparseArray<WeakReference<Fragment>> mFragmentMap =
                 new SparseArray<WeakReference<Fragment>>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
-            checkLastFragment();
+            // add a bogus entry to the end of the list which tells the adapter to show
+            // the "no more posts" / loading fragment after the last post
+            if (!mIsSinglePostView && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
+                mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
+            }
         }
 
-        /*
-         * add a bogus entry to the end of the list which tells the adapter to show
-         * the "no more posts" or loading fragment after the last post depending
-         * on whether more posts can be requested
-         */
-        private void checkLastFragment() {
-            // no end fragment in single post view
-            if (mIsSinglePostView) {
-                return;
-            }
-
-            boolean canRequestMore = !mAllPostsLoaded
+        private boolean canRequestMostPosts() {
+            return !mAllPostsLoaded
                     && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
-
-            if (canRequestMore) {
-                ensureLoadingPageExists();
-            } else {
-                ensureNoMorePageExists();
-            }
         }
 
-        private void ensureLoadingPageExists() {
-            int noMoreIndex = mIdList.indexOf(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID);
-            int loadingIndex = mIdList.indexOf(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID);
-            boolean isChanged = false;
-
-            if (loadingIndex == -1) {
-                if (noMoreIndex >= 0) {
-                    // loading page doesn't exist but "no more" page does, so replace the
-                    // "no more" page with the loading page (should never happen)
-                    mIdList.set(noMoreIndex, new ReaderBlogIdPostId(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID));
+        private void checkLastFragment() {
+            int position = mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID);
+            if (!isValidPosition(position)) {
+                return;
+            }
+            Fragment fragment = getFragmentAtPosition(position);
+            if (fragment instanceof PostPagerEndFragment) {
+                PostPagerEndFragment endFragment = (PostPagerEndFragment)fragment;
+                if (canRequestMostPosts()) {
+                    endFragment.setFragmentType(EndFragmentType.LOADING);
                 } else {
-                    // loading page doesn't exist and "no more" page doesn't exist, so add
-                    // the loading page at the end
-                    mIdList.add(new ReaderBlogIdPostId(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID));
+                    endFragment.setFragmentType(EndFragmentType.NO_MORE);
                 }
-                isChanged = true;
-            } else if (noMoreIndex >= 0) {
-                // loading page already exists, make sure the "no more" page is removed
-                mIdList.remove(noMoreIndex);
-                isChanged = true;
-            }
-
-            if (isChanged) {
-                notifyDataSetChanged();
-            }
-        }
-
-        private void ensureNoMorePageExists() {
-            int noMoreIndex = mIdList.indexOf(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID);
-            int loadingIndex = mIdList.indexOf(LOADING_FRAGMENT_ID, LOADING_FRAGMENT_ID);
-            boolean isChanged = false;
-
-            if (noMoreIndex == -1) {
-                if (loadingIndex >= 0) {
-                    // "no more" page doesn't exist but loading page does, so replace the loading
-                    // page with the "no more page"
-                    mIdList.set(loadingIndex, new ReaderBlogIdPostId(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID));
-                } else {
-                    // loading page doesn't exist, so add "no more" page to the end of the list
-                    mIdList.add(new ReaderBlogIdPostId(NO_MORE_FRAGMENT_ID, NO_MORE_FRAGMENT_ID));
-                }
-                isChanged = true;
-            } else if (loadingIndex >= 0) {
-                // "no more" page already exists, make sure the loading page is removed
-                mIdList.remove(loadingIndex);
-                isChanged = true;
-            }
-
-            if (isChanged) {
-                notifyDataSetChanged();
             }
         }
 
@@ -447,10 +397,8 @@ public class ReaderPostPagerActivity extends Activity
             long blogId = mIdList.get(position).getBlogId();
             long postId = mIdList.get(position).getPostId();
 
-            if (blogId == NO_MORE_FRAGMENT_ID && postId == NO_MORE_FRAGMENT_ID) {
-                return PostPagerNoMoreFragment.newInstance();
-            } else if (blogId == LOADING_FRAGMENT_ID && postId == LOADING_FRAGMENT_ID) {
-                return PostPagerLoadingFragment.newInstance();
+            if (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID) {
+                return PostPagerEndFragment.newInstance();
             } else {
                 return ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
             }
@@ -550,7 +498,9 @@ public class ReaderPostPagerActivity extends Activity
                 boolean gotoNext;
                 // if this is an end fragment, get the previous post and
                 // tell loadPosts() to move to the post after it
-                if (id != null && id.getBlogId() < 0 && id.getPostId() < 0) {
+                if (id != null
+                        && id.getBlogId() == END_FRAGMENT_ID
+                        && id.getPostId() == END_FRAGMENT_ID) {
                     id = getPreviousBlogIdPostId();
                     gotoNext = true;
                 } else {
@@ -567,54 +517,53 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
-    /*
-     * used to animate in the checkmark or progress bar on end fragments
-     */
-    private static void animateIn(final View target) {
-        // don't animate if the target view is already visible
-        if (target == null || target.getVisibility() == View.VISIBLE) {
-            return;
-        }
-
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.25f, 1.0f);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.25f, 1.0f);
-
-        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
-        animator.setDuration(750);
-        animator.setInterpolator(new OvershootInterpolator());
-
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                target.setVisibility(View.VISIBLE);
-            }
-        });
-
-        animator.start();
-    }
-
     /**
-     * fragment that appears when user scrolls beyond the last post and no more posts can be loaded
+     * fragment that appears when user scrolls beyond the last post
      **/
-    public static class PostPagerNoMoreFragment extends Fragment {
+    private static enum EndFragmentType { EMPTY, LOADING, NO_MORE }
+    public static class PostPagerEndFragment extends Fragment {
+        private EndFragmentType mFragmentType = EndFragmentType.EMPTY;
 
-        private static PostPagerNoMoreFragment newInstance() {
-            return new PostPagerNoMoreFragment();
+        private static PostPagerEndFragment newInstance() {
+            PostPagerEndFragment fragment = new PostPagerEndFragment();
+            return fragment;
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.reader_fragment_no_more, container, false);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (getActivity() != null) {
-                        getActivity().finish();
-                    }
+            return inflater.inflate(R.layout.reader_fragment_pager_end, container, false);
+        }
+
+        private void setFragmentType(EndFragmentType fragmentType) {
+            mFragmentType = fragmentType;
+
+            if (getView() != null) {
+                ViewGroup layoutLoading = (ViewGroup) getView().findViewById(R.id.layout_loading);
+                ViewGroup layoutNoMore = (ViewGroup) getView().findViewById(R.id.layout_no_more);
+
+                switch (mFragmentType) {
+                    case LOADING:
+                        layoutLoading.setVisibility(View.VISIBLE);
+                        layoutNoMore.setVisibility(View.GONE);
+                        break;
+                    case NO_MORE:
+                        layoutLoading.setVisibility(View.GONE);
+                        layoutNoMore.setVisibility(View.VISIBLE);
+                        layoutNoMore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (getActivity() != null) {
+                                    getActivity().finish();
+                                }
+                            }
+                        });
+                        break;
+                    default:
+                        layoutLoading.setVisibility(View.GONE);
+                        layoutNoMore.setVisibility(View.GONE);
+                        break;
                 }
-            });
-            return view;
+            }
         }
 
         @Override
@@ -624,40 +573,38 @@ public class ReaderPostPagerActivity extends Activity
                 super.setUserVisibleHint(isVisibleToUser);
             }
 
-            if (getView() != null) {
-                TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
-                if (isVisibleToUser) {
-                    animateIn(txtCheckmark);
-                } else {
-                    txtCheckmark.setVisibility(View.GONE);
+            if (isAdded()
+                    && getView() != null
+                    && isVisibleToUser
+                    && mFragmentType == EndFragmentType.NO_MORE) {
+                animateCheckmark();
+            }
+        }
+
+        private void animateCheckmark() {
+            final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
+
+            // don't animate if it's already visible
+            if (txtCheckmark == null || txtCheckmark.getVisibility() == View.VISIBLE) {
+                return;
+            }
+
+            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.25f, 1.0f);
+            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.25f, 1.0f);
+
+            ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(txtCheckmark, scaleX, scaleY);
+            animator.setDuration(750);
+            animator.setInterpolator(new OvershootInterpolator());
+
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    txtCheckmark.setVisibility(View.VISIBLE);
                 }
-            }
-        }
-    }
+            });
 
-    /**
-     * fragment that appears while loading older posts
-     **/
-    public static class PostPagerLoadingFragment extends Fragment {
-
-        private static PostPagerLoadingFragment newInstance() {
-            return new PostPagerLoadingFragment();
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.reader_fragment_loading, container, false);
-        }
-
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            if (Build.VERSION.SDK_INT >= 15) {
-                super.setUserVisibleHint(isVisibleToUser);
-            }
-            if (isVisibleToUser && getView() != null) {
-                ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_loading);
-                animateIn(progress);
-            }
+            animator.start();
         }
     }
 }
