@@ -34,11 +34,15 @@ import com.jjoe64.graphview.GraphViewSeries;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A fragment that shows stats bar chart data.
@@ -151,6 +155,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         String date = mStatsDate[tappedBar];
         StatsBarChartUnit unit = getBarChartUnit();
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put("unit", unit.name());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART, properties);
         if (unit == StatsBarChartUnit.DAY) {
             StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
             if (credentials == null) {
