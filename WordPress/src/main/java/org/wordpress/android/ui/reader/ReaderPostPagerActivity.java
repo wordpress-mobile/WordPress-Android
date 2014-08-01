@@ -21,6 +21,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
@@ -123,6 +124,8 @@ public class ReaderPostPagerActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
+
                 onRequestFullScreen(false);
                 // request older posts when the loading fragment appears
                 if (mViewPager.getAdapter() != null) {

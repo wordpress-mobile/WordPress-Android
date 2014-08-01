@@ -333,7 +333,6 @@ public class ReaderPostListFragment extends Fragment
                 if (position >= 0 && mPostSelectedListener != null) {
                     ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                     if (post != null) {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                         mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                     }
                 }
