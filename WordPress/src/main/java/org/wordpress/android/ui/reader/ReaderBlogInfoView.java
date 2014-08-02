@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.content.Context;
 import android.graphics.Matrix;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +87,8 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
+        boolean wasEmpty = (mBlogInfo == null);
         mBlogInfo = blogInfo;
-        layoutInner.setVisibility(View.VISIBLE);
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
@@ -129,13 +130,23 @@ class ReaderBlogInfoView extends FrameLayout {
         txtFollowCnt.setText(numFollowers);
 
         ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
-        txtFollowBtn.setVisibility(View.VISIBLE);
         txtFollowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleBlogFollowStatus(txtFollowBtn, blogInfo);
             }
         });
+
+        // layout is invisible at design time, animate it in after a brief delay
+        // the first time it's shown
+        if (layoutInner.getVisibility() != View.VISIBLE) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.MEDIUM);
+                }
+            }, 250);
+        }
 
         // show the mshot if it hasn't already been shown
         if (mImageMshot.getUrl() == null) {

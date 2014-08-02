@@ -52,7 +52,9 @@
             android:layout_marginRight="@dimen/reader_list_margin"
             android:orientation="vertical"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_large">
+            android:paddingRight="@dimen/margin_large"
+            android:visibility="invisible"
+            tools:visibility="visible">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_name"
@@ -71,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_blog_name"
-                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="3"
@@ -81,16 +83,17 @@
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_count"
-                style="@style/ReaderTextView.Label.Large"
+                style="@style/ReaderTextView.Label.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_blog_description"
+                android:layout_alignBaseline="@+id/text_follow_blog"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_toRightOf="@+id/text_follow_blog"
                 tools:text="followers" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_blog"
                 style="@style/ReaderTextView.Follow"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/text_blog_description" />
 
         </RelativeLayout>
