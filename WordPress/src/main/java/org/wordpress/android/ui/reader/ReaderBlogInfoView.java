@@ -70,7 +70,6 @@ class ReaderBlogInfoView extends FrameLayout {
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
         final TextView txtDescription = (TextView) findViewById(R.id.text_blog_description);
-        final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
         final TextView txtFollowBtn = (TextView) findViewById(R.id.text_follow_blog);
 
         if (blogInfo.hasUrl()) {
@@ -101,16 +100,12 @@ class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        String numFollowers = getResources().getString(
-                R.string.reader_label_followers,
-                FormatUtils.formatInt(blogInfo.numSubscribers));
-        txtFollowCnt.setText(numFollowers);
-
+        showFollowerCount(blogInfo.numSubscribers);
         ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
         txtFollowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toggleBlogFollowStatus(txtFollowBtn, blogInfo);
+                toggleBlogFollowStatus(txtFollowBtn);
             }
         });
 
@@ -135,6 +130,14 @@ class ReaderBlogInfoView extends FrameLayout {
         }
     }
 
+    private void showFollowerCount(int numFollowers) {
+        final TextView txtFollowCnt = (TextView) findViewById(R.id.text_follow_count);
+        String count = getResources().getString(
+                R.string.reader_label_followers,
+                FormatUtils.formatInt(numFollowers));
+        txtFollowCnt.setText(count);
+    }
+
     public boolean isEmpty() {
         return mBlogInfo == null;
     }
@@ -156,15 +159,43 @@ class ReaderBlogInfoView extends FrameLayout {
         ReaderBlogActions.updateBlogInfo(blogId, blogUrl, listener);
     }
 
-    private void toggleBlogFollowStatus(TextView txtFollow, ReaderBlog blogInfo) {
-        if (blogInfo == null || txtFollow == null) {
+    private void toggleBlogFollowStatus(final TextView txtFollow) {
+        if (mBlogInfo == null || txtFollow == null) {
             return;
         }
 
+        final boolean isAskingToFollow = !mBlogInfo.isFollowing;
+        final int currentCount = mBlogInfo.numSubscribers;
+
+        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                // revert to original state if follow/unfollow failed
+                if (!succeeded) {
+                    mBlogInfo.isFollowing = !isAskingToFollow;
+                    mBlogInfo.numSubscribers = currentCount;
+                    showFollowerCount(currentCount);
+                    ReaderUtils.showFollowStatus(txtFollow, !isAskingToFollow);
+                }
+            }
+        };
+
         ReaderAnim.animateFollowButton(txtFollow);
 
-        boolean isAskingToFollow = !blogInfo.isFollowing;
-        if (ReaderBlogActions.performFollowAction(blogInfo.blogId, blogInfo.getUrl(), isAskingToFollow, null)) {
+        if (ReaderBlogActions.performFollowAction(
+                mBlogInfo.blogId,
+                mBlogInfo.getUrl(),
+                isAskingToFollow,
+                followListener)) {
+            int newCount;
+            if (isAskingToFollow) {
+                newCount = currentCount + 1;
+            } else {
+                newCount = (currentCount > 0 ? currentCount - 1 : currentCount);
+            }
+            mBlogInfo.isFollowing = isAskingToFollow;
+            mBlogInfo.numSubscribers = newCount;
+            showFollowerCount(newCount);
             ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
         }
     }
