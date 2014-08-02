@@ -213,6 +213,12 @@ class ReaderBlogInfoView extends FrameLayout {
             return;
         }
 
+        // even though the mshot here is a thumbnail, request it using the full width of
+        // the display - this ensures that the cached mshot will be the same if/when the
+        // user taps to view it full size
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(getContext());
+        final String mshotUrl = blogInfo.getMshotsUrl(displayWidth);
+
         WPNetworkImageView.ImageListener imageListener = new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
@@ -220,13 +226,13 @@ class ReaderBlogInfoView extends FrameLayout {
                     mImageMshot.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // now that the mshot has loaded, show full-size mshot when tapped
-                            int displayWidth = DisplayUtils.getDisplayPixelWidth(getContext());
+                            // mshot loaded successfully, so enable tapping it to view it
+                            // full size in the photo viewer
                             int startX = mImageMshot.getLeft();
                             int startY = mImageMshot.getTop();
                             ReaderActivityLauncher.showReaderPhotoViewer(
                                     getContext(),
-                                    blogInfo.getMshotsUrl(displayWidth),
+                                    mshotUrl,
                                     mImageMshot,
                                     startX,
                                     startY);
@@ -236,9 +242,8 @@ class ReaderBlogInfoView extends FrameLayout {
             }
         };
 
-        int mshotWidth = getContext().getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_width);
         mImageMshot.setImageUrl(
-                blogInfo.getMshotsUrl(mshotWidth),
+                mshotUrl,
                 WPNetworkImageView.ImageType.MSHOT,
                 imageListener);
     }
