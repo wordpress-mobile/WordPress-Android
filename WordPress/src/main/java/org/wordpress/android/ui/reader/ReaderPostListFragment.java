@@ -1264,12 +1264,12 @@ public class ReaderPostListFragment extends Fragment
      * scale & reposition blog info based on the listView's scroll position
      */
     private void repositionBlogInfoView() {
-        int scrollPos = mListView.getVerticalScrollOffset();
         if (mBlogInfoView == null) {
             return;
         }
 
         // scale the mshot based on the scroll position
+        int scrollPos = mListView.getVerticalScrollOffset();
         mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
 
         // get the first child of the listView and determine whether it's the mshot spacer
@@ -1297,7 +1297,10 @@ public class ReaderPostListFragment extends Fragment
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
-            mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
+            mBlogInfoView.loadBlogInfo(
+                    mCurrentBlogId,
+                    mCurrentBlogUrl,
+                    new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
                         public void onBlogInfoLoaded() {
                             // nop

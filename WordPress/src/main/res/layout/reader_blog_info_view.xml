@@ -11,9 +11,9 @@
 
     <FrameLayout
         android:id="@+id/layout_mshot_container"
-        android:background="@color/grey_light"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/grey_light">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_mshot"
@@ -34,9 +34,9 @@
         android:id="@+id/layout_bloginfo_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:translationY="@dimen/reader_mshot_image_height"
-        android:background="@color/white">
+        android:translationY="@dimen/reader_mshot_image_height">
 
         <View
             android:layout_width="match_parent"
@@ -46,23 +46,23 @@
 
         <RelativeLayout
             android:id="@+id/layout_bloginfo_container_inner"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_large"
-            android:layout_marginLeft="@dimen/reader_list_margin"
-            android:layout_marginRight="@dimen/reader_list_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginLeft="@dimen/reader_list_margin"
+            android:layout_marginRight="@dimen/reader_list_margin"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_name"
                 style="@style/ReaderTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/reader_transparent_selector"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/reader_hyperlink"
-                android:background="@drawable/reader_transparent_selector"
                 android:textSize="@dimen/text_sz_extra_large"
                 tools:text="text_blog_name" />
 
@@ -71,35 +71,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text_blog_name"
-                android:layout_toLeftOf="@+id/text_follow_blog"
-                android:textSize="@dimen/text_sz_medium"
-                android:textColor="@color/grey_medium_dark"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="3"
+                android:textColor="@color/grey_medium_dark"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_description" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_count"
-                style="@style/ReaderTextView.Label"
+                style="@style/ReaderTextView.Label.Large"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/text_follow_blog"
                 android:layout_below="@+id/text_blog_description"
                 tools:text="followers" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow_blog"
                 style="@style/ReaderTextView.Follow"
-                android:layout_below="@+id/text_blog_name"
-                android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text_blog_description" />
 
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_large"
             android:background="@color/grey_light" />
     </LinearLayout>

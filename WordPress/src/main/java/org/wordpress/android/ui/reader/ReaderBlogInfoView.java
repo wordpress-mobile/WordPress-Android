@@ -124,15 +124,9 @@ class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        // only show the follower count if there are subscribers
-        if (blogInfo.numSubscribers > 0) {
-            String numFollowers = getResources().getString(R.string.reader_label_followers,
-                    FormatUtils.formatInt(blogInfo.numSubscribers));
-            txtFollowCnt.setText(numFollowers);
-            txtFollowCnt.setVisibility(View.VISIBLE);
-        } else {
-            txtFollowCnt.setVisibility(View.INVISIBLE);
-        }
+        String numFollowers = getResources().getString(R.string.reader_label_followers,
+                FormatUtils.formatInt(blogInfo.numSubscribers));
+        txtFollowCnt.setText(numFollowers);
 
         ReaderUtils.showFollowStatus(txtFollowBtn, blogInfo.isFollowing);
         txtFollowBtn.setVisibility(View.VISIBLE);
