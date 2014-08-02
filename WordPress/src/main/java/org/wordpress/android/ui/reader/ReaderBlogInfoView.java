@@ -116,7 +116,7 @@ class ReaderBlogInfoView extends FrameLayout {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.MEDIUM);
+                    ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.SHORT);
                 }
             }, 250);
         }
