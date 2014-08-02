@@ -61,6 +61,12 @@ public class ReaderPostPagerActivity extends Activity
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
     private static final long END_FRAGMENT_ID = -1;
 
+    private static boolean isEndFragmentId(ReaderBlogIdPostId id) {
+        return (id != null
+                && id.getBlogId() == END_FRAGMENT_ID
+                && id.getPostId() == END_FRAGMENT_ID);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (isFullScreenSupported()) {
@@ -361,6 +367,7 @@ public class ReaderPostPagerActivity extends Activity
 
         private boolean canRequestMostPosts() {
             return !mAllPostsLoaded
+                    && !mIsSinglePostView
                     && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
         }
@@ -376,13 +383,15 @@ public class ReaderPostPagerActivity extends Activity
 
         @Override
         public Fragment getItem(int position) {
-            long blogId = mIdList.get(position).getBlogId();
-            long postId = mIdList.get(position).getPostId();
-
-            if (blogId == END_FRAGMENT_ID && postId == END_FRAGMENT_ID) {
-                return PostPagerEndFragment.newInstance();
+            if (isEndFragmentId(mIdList.get(position))) {
+                PostPagerEndFragment endFragment = PostPagerEndFragment.newInstance();
+                endFragment.setEndFragmentType(canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
+                return endFragment;
             } else {
-                return ReaderPostDetailFragment.newInstance(blogId, postId, getPostListType());
+                return ReaderPostDetailFragment.newInstance(
+                        mIdList.get(position).getBlogId(),
+                        mIdList.get(position).getPostId(),
+                        getPostListType());
             }
         }
 
@@ -402,8 +411,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private Fragment getActiveFragment() {
-            int position = mViewPager.getCurrentItem();
-            return getFragmentAtPosition(position);
+            return getFragmentAtPosition(mViewPager.getCurrentItem());
         }
 
         private Fragment getFragmentAtPosition(int position) {
@@ -472,22 +480,20 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         private void doAfterUpdate(boolean hasNewPosts) {
+            mIsRequestingMorePosts = false;
+
             if (isFinishing()) {
                 return;
             }
-
-            mIsRequestingMorePosts = false;
 
             if (hasNewPosts) {
                 AppLog.d(AppLog.T.READER, "reader pager > older posts received");
                 // remember which post to keep active
                 ReaderBlogIdPostId id = getCurrentBlogIdPostId();
                 boolean gotoNext;
-                // if this is an end fragment, get the previous post and
-                // tell loadPosts() to move to the post after it
-                if (id != null
-                        && id.getBlogId() == END_FRAGMENT_ID
-                        && id.getPostId() == END_FRAGMENT_ID) {
+                // if this is an end fragment, get the previous post and tell loadPosts() to
+                // move to the post after it (ie: show the first new post)
+                if (isEndFragmentId(id)) {
                     id = getPreviousBlogIdPostId();
                     gotoNext = true;
                 } else {
@@ -510,12 +516,8 @@ public class ReaderPostPagerActivity extends Activity
         private void updateEndFragmentIfActive() {
             Fragment fragment = getActiveFragment();
             if (fragment instanceof PostPagerEndFragment) {
-                PostPagerEndFragment endFragment = (PostPagerEndFragment) fragment;
-                if (canRequestMostPosts()) {
-                    endFragment.setEndFragmentType(EndFragmentType.LOADING);
-                } else {
-                    endFragment.setEndFragmentType(EndFragmentType.NO_MORE);
-                }
+                ((PostPagerEndFragment) fragment).setEndFragmentType(
+                        canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
             }
         }
     }
@@ -523,7 +525,10 @@ public class ReaderPostPagerActivity extends Activity
     /**
      * fragment that appears when user scrolls beyond the last post
      **/
-    private static enum EndFragmentType { EMPTY, LOADING, NO_MORE }
+    private static enum EndFragmentType {
+                            EMPTY,
+                            LOADING,
+                            NO_MORE }
     public static class PostPagerEndFragment extends Fragment {
         private EndFragmentType mFragmentType = EndFragmentType.EMPTY;
 
@@ -544,10 +549,14 @@ public class ReaderPostPagerActivity extends Activity
                 ViewGroup layoutNoMore = (ViewGroup) getView().findViewById(R.id.layout_no_more);
 
                 switch (mFragmentType) {
+                    // indicates that more posts can be loaded - request to get older posts
+                    // will occur when this page becomes active
                     case LOADING:
                         layoutLoading.setVisibility(View.VISIBLE);
                         layoutNoMore.setVisibility(View.GONE);
                         break;
+                    // indicates the user has reached the end (there are no more posts) - tapping
+                    // this will return to the previous activity
                     case NO_MORE:
                         layoutLoading.setVisibility(View.GONE);
                         layoutNoMore.setVisibility(View.VISIBLE);
@@ -560,6 +569,7 @@ public class ReaderPostPagerActivity extends Activity
                             }
                         });
                         break;
+                    // fragment type hasn't been set yet (still EMPTY), which shouldn't happen
                     default:
                         layoutLoading.setVisibility(View.GONE);
                         layoutNoMore.setVisibility(View.GONE);
@@ -574,6 +584,7 @@ public class ReaderPostPagerActivity extends Activity
             if (Build.VERSION.SDK_INT >= 15) {
                 super.setUserVisibleHint(isVisibleToUser);
             }
+            // animate in the checkmark if this is a "no more posts fragment
             if (isVisibleToUser && mFragmentType == EndFragmentType.NO_MORE) {
                 animateCheckmark();
             }
@@ -584,9 +595,8 @@ public class ReaderPostPagerActivity extends Activity
                 return;
             }
 
+            // don't animate checkmark if it's already visible
             final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
-
-            // don't animate if it's already visible
             if (txtCheckmark == null || txtCheckmark.getVisibility() == View.VISIBLE) {
                 return;
             }
