@@ -29,20 +29,15 @@ class ReaderBlogInfoView extends FrameLayout {
         void onBlogInfoLoaded();
         void onBlogInfoFailed();
     }
-    private BlogInfoListener mBlogInfoListener;
 
     private final WPNetworkImageView mImageMshot;
-    private final int mMshotWidth;
+    private BlogInfoListener mBlogInfoListener;
     private ReaderBlog mBlogInfo;
 
     public ReaderBlogInfoView(Context context){
         super(context);
-
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.reader_blog_info_view, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);
-
-        mMshotWidth = context.getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_width);
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
     }
 
@@ -106,7 +101,8 @@ class ReaderBlogInfoView extends FrameLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        String numFollowers = getResources().getString(R.string.reader_label_followers,
+        String numFollowers = getResources().getString(
+                R.string.reader_label_followers,
                 FormatUtils.formatInt(blogInfo.numSubscribers));
         txtFollowCnt.setText(numFollowers);
 
@@ -192,19 +188,27 @@ class ReaderBlogInfoView extends FrameLayout {
                     mImageMshot.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // now that the mshot has loaded, show full-size mshot
-                            // in photo viewer when tapped
+                            // now that the mshot has loaded, show full-size mshot when tapped
                             int displayWidth = DisplayUtils.getDisplayPixelWidth(getContext());
-                            String mshotUrlFull = blogInfo.getMshotsUrl(displayWidth);
-                            ReaderActivityLauncher.showReaderPhotoViewer(getContext(), mshotUrlFull);
+                            int startX = mImageMshot.getLeft();
+                            int startY = mImageMshot.getTop();
+                            ReaderActivityLauncher.showReaderPhotoViewer(
+                                    getContext(),
+                                    blogInfo.getMshotsUrl(displayWidth),
+                                    mImageMshot,
+                                    startX,
+                                    startY);
                         }
                     });
                 }
             }
         };
 
-        String mshotUrl = blogInfo.getMshotsUrl(mMshotWidth);
-        mImageMshot.setImageUrl(mshotUrl, WPNetworkImageView.ImageType.MSHOT, imageListener);
+        int mshotWidth = getContext().getResources().getDimensionPixelSize(R.dimen.reader_mshot_image_width);
+        mImageMshot.setImageUrl(
+                blogInfo.getMshotsUrl(mshotWidth),
+                WPNetworkImageView.ImageType.MSHOT,
+                imageListener);
     }
 
 }

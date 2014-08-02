@@ -1212,7 +1212,8 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * tell the blog info view to show the current blog if it's not already loaded
+     * used by blog preview - tell the blog info view to show the current blog
+     * if it's not already loaded
      */
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
