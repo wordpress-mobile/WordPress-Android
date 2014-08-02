@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -73,15 +72,6 @@ public class StatsWebViewActivity extends WebViewActivity {
         } catch (UnsupportedEncodingException e) {
             AppLog.e(AppLog.T.STATS, e);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        // The 2 lines below fix an issue where this activity has leaked window
-        // android.widget.ZoomButtonsController$Container
-        mWebView.getSettings().setBuiltInZoomControls(false);
-        mWebView.setVisibility(View.GONE);
-        super.onDestroy();
     }
 
     @Override

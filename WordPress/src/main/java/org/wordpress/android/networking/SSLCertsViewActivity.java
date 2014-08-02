@@ -22,7 +22,6 @@ public class SSLCertsViewActivity extends WebViewActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
-        mWebView.getSettings().setBuiltInZoomControls(false);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null && extras.containsKey(CERT_DETAILS_KEYS)) {
