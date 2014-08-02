@@ -39,8 +39,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 
-import java.lang.ref.WeakReference;
-
 import javax.annotation.Nonnull;
 
 /*
@@ -131,12 +129,14 @@ public class ReaderPostPagerActivity extends Activity
                     if (fragment instanceof ReaderPostDetailFragment) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                     } else if (fragment instanceof PostPagerEndFragment) {
+                        // if the end fragment is now active, set the type based on whether
+                        // more posts can be loaded, and if they can request them now
                         PostPagerEndFragment endFragment = (PostPagerEndFragment)fragment;
                         if (adapter.canRequestMostPosts()) {
-                            endFragment.setFragmentType(EndFragmentType.LOADING);
+                            endFragment.setEndFragmentType(EndFragmentType.LOADING);
                             adapter.requestMorePosts();
                         } else {
-                            endFragment.setFragmentType(EndFragmentType.NO_MORE);
+                            endFragment.setEndFragmentType(EndFragmentType.NO_MORE);
                         }
                     }
                 }
@@ -261,6 +261,7 @@ public class ReaderPostPagerActivity extends Activity
                         } else if (adapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                         }
+                        adapter.updateEndFragmentIfActive();
                     }
                 });
             }
@@ -328,9 +329,7 @@ public class ReaderPostPagerActivity extends Activity
             return null;
         }
 
-        PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
-        Fragment fragment = adapter.getFragmentAtPosition(mViewPager.getCurrentItem());
-
+        Fragment fragment = ((PostPagerAdapter) mViewPager.getAdapter()).getActiveFragment();
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {
@@ -345,17 +344,16 @@ public class ReaderPostPagerActivity extends Activity
         private final ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
 
-        // this is used to retain a weak reference to created fragments so we can access them
-        // in getFragmentAtPosition() - necessary because the pager provides no built-in
-        // way to do this
-        private final SparseArray<WeakReference<Fragment>> mFragmentMap =
-                new SparseArray<WeakReference<Fragment>>();
+        // this is used to retain created fragments so we can access them in
+        // getFragmentAtPosition() - necessary because the pager provides no
+        // built-in way to do this
+        private final SparseArray<Fragment> mFragmentMap = new SparseArray<Fragment>();
 
         PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
             super(fm);
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
             // add a bogus entry to the end of the list which tells the adapter to show
-            // the "no more posts" / loading fragment after the last post
+            // the end fragment after the last post
             if (!mIsSinglePostView && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
                 mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
             }
@@ -365,22 +363,6 @@ public class ReaderPostPagerActivity extends Activity
             return !mAllPostsLoaded
                     && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
                     && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
-        }
-
-        private void checkLastFragment() {
-            int position = mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID);
-            if (!isValidPosition(position)) {
-                return;
-            }
-            Fragment fragment = getFragmentAtPosition(position);
-            if (fragment instanceof PostPagerEndFragment) {
-                PostPagerEndFragment endFragment = (PostPagerEndFragment)fragment;
-                if (canRequestMostPosts()) {
-                    endFragment.setFragmentType(EndFragmentType.LOADING);
-                } else {
-                    endFragment.setFragmentType(EndFragmentType.NO_MORE);
-                }
-            }
         }
 
         boolean isValidPosition(int position) {
@@ -408,7 +390,7 @@ public class ReaderPostPagerActivity extends Activity
         public Object instantiateItem(ViewGroup container, int position) {
             Object item = super.instantiateItem(container, position);
             if (item instanceof Fragment) {
-                mFragmentMap.put(position, new WeakReference<Fragment>((Fragment) item));
+                mFragmentMap.put(position, (Fragment) item);
             }
             return item;
         }
@@ -419,9 +401,14 @@ public class ReaderPostPagerActivity extends Activity
             super.destroyItem(container, position, object);
         }
 
+        private Fragment getActiveFragment() {
+            int position = mViewPager.getCurrentItem();
+            return getFragmentAtPosition(position);
+        }
+
         private Fragment getFragmentAtPosition(int position) {
-            if (isValidPosition(position) && mFragmentMap.get(position) != null) {
-                return mFragmentMap.get(position).get();
+            if (isValidPosition(position)) {
+                return mFragmentMap.get(position);
             } else {
                 return null;
             }
@@ -512,7 +499,23 @@ public class ReaderPostPagerActivity extends Activity
             } else {
                 AppLog.d(AppLog.T.READER, "reader pager > all posts loaded");
                 mAllPostsLoaded = true;
-                checkLastFragment();
+                updateEndFragmentIfActive();
+            }
+        }
+
+        /*
+         * if the end fragment is active, make sure it reflects whether more posts can
+         * be requested or we've hit the last post
+         */
+        private void updateEndFragmentIfActive() {
+            Fragment fragment = getActiveFragment();
+            if (fragment instanceof PostPagerEndFragment) {
+                PostPagerEndFragment endFragment = (PostPagerEndFragment) fragment;
+                if (canRequestMostPosts()) {
+                    endFragment.setEndFragmentType(EndFragmentType.LOADING);
+                } else {
+                    endFragment.setEndFragmentType(EndFragmentType.NO_MORE);
+                }
             }
         }
     }
@@ -525,8 +528,7 @@ public class ReaderPostPagerActivity extends Activity
         private EndFragmentType mFragmentType = EndFragmentType.EMPTY;
 
         private static PostPagerEndFragment newInstance() {
-            PostPagerEndFragment fragment = new PostPagerEndFragment();
-            return fragment;
+            return new PostPagerEndFragment();
         }
 
         @Override
@@ -534,10 +536,10 @@ public class ReaderPostPagerActivity extends Activity
             return inflater.inflate(R.layout.reader_fragment_pager_end, container, false);
         }
 
-        private void setFragmentType(EndFragmentType fragmentType) {
+        private void setEndFragmentType(EndFragmentType fragmentType) {
             mFragmentType = fragmentType;
 
-            if (getView() != null) {
+            if (isAdded() && getView() != null) {
                 ViewGroup layoutLoading = (ViewGroup) getView().findViewById(R.id.layout_loading);
                 ViewGroup layoutNoMore = (ViewGroup) getView().findViewById(R.id.layout_no_more);
 
@@ -572,16 +574,16 @@ public class ReaderPostPagerActivity extends Activity
             if (Build.VERSION.SDK_INT >= 15) {
                 super.setUserVisibleHint(isVisibleToUser);
             }
-
-            if (isAdded()
-                    && getView() != null
-                    && isVisibleToUser
-                    && mFragmentType == EndFragmentType.NO_MORE) {
+            if (isVisibleToUser && mFragmentType == EndFragmentType.NO_MORE) {
                 animateCheckmark();
             }
         }
 
         private void animateCheckmark() {
+            if (!isAdded() || getView() == null) {
+                return;
+            }
+
             final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
 
             // don't animate if it's already visible
