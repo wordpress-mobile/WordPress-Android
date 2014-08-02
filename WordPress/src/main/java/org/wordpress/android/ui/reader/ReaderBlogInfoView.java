@@ -20,9 +20,9 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 /*
- * header view showing blog name, description, follower count, follow button, and
- * mshot of the blog - designed for use in ReaderPostListFragment when previewing posts
- * in a blog (blog preview) but can reused elsewhere
+ * header view showing blog name, description, follower count, follow button, and mshot
+ * of the blog - designed for use in ReaderPostListFragment when previewing posts in a
+ * blog (blog preview) but can reused elsewhere
  */
 class ReaderBlogInfoView extends FrameLayout {
     public interface BlogInfoListener {
@@ -54,6 +54,7 @@ class ReaderBlogInfoView extends FrameLayout {
      * show blog header with info from passed blog filled in
      */
     private void showBlogInfo(final ReaderBlog blogInfo) {
+        // this is the layout containing all of the blog info, including the mshot
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_inner);
 
         if (blogInfo == null) {

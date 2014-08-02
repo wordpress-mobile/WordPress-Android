@@ -58,10 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/text_follow_blog"
             android:layout_marginLeft="@dimen/margin_large"
-            android:layout_toRightOf="@+id/text_follow_blog"
             android:layout_toLeftOf="@+id/image_mshot"
-            android:maxLines="1"
+            android:layout_toRightOf="@+id/text_follow_blog"
             android:ellipsize="end"
+            android:maxLines="1"
             tools:text="followers" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -73,9 +73,9 @@
             android:id="@+id/image_mshot"
             android:layout_width="@dimen/reader_mshot_image_width"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_medium"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_medium" />
 
     </RelativeLayout>
 
