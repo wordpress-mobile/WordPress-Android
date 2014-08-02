@@ -58,7 +58,6 @@ public class DashboardActivity extends Activity {
 
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
-        mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Window;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.ActivityId;
 
 // TODO: this will probably be merged with New Account Activity (maybe add a tab bar)
 public class WelcomeActivity extends Activity {
@@ -24,9 +25,9 @@ public class WelcomeActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
         FragmentManager fragmentManager = getFragmentManager();
-        mWelcomeFragmentSignIn = (WelcomeFragmentSignIn) fragmentManager.
-                findFragmentById(R.id.sign_in_fragment);
+        mWelcomeFragmentSignIn = (WelcomeFragmentSignIn) fragmentManager.findFragmentById(R.id.sign_in_fragment);
         actionMode(getIntent().getExtras());
+        ActivityId.trackLastActivity(this, ActivityId.LOGIN);
     }
 
     private void actionMode(Bundle extras) {
