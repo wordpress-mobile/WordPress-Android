@@ -213,8 +213,8 @@ public class UserNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", "0"));
-                    long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", "0"));
+                    long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0));
+                    long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", 0));
                     if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
                         mGravatarClickedListener.onGravatarClicked(siteId, userId);
                     }
