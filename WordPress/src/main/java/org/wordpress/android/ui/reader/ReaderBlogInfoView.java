@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.reader;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,9 +25,11 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 /*
  * header view showing blog name, description, follower count, follow button, and mshot
  * of the blog - designed for use in ReaderPostListFragment when previewing posts in a
- * blog (blog preview) but can be reused elsewhere
+ * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show the
+ * info for a specific blog
  */
-class ReaderBlogInfoView extends FrameLayout {
+class ReaderBlogInfoView extends LinearLayout {
+
     public interface BlogInfoListener {
         void onBlogInfoLoaded();
         void onBlogInfoFailed();
@@ -37,6 +41,7 @@ class ReaderBlogInfoView extends FrameLayout {
 
     public ReaderBlogInfoView(Context context){
         super(context);
+
         View view = LayoutInflater.from(context).inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
@@ -229,8 +234,8 @@ class ReaderBlogInfoView extends FrameLayout {
         }
 
         // even though the mshot here is a thumbnail, request it using the full width of
-        // the display - this ensures that the cached mshot will be the same if/when the
-        // user taps to view it full size
+        // the display to ensure that the cached mshot will be the same if/when the user
+        // taps to view it full size
         int displayWidth = DisplayUtils.getDisplayPixelWidth(getContext());
         final String mshotUrl = blogInfo.getMshotsUrl(displayWidth);
 
@@ -238,19 +243,28 @@ class ReaderBlogInfoView extends FrameLayout {
             @Override
             public void onImageLoaded(boolean succeeded) {
                 if (succeeded) {
-                    mImageMshot.setOnClickListener(new OnClickListener() {
+                    mImageMshot.setOnTouchListener(new OnTouchListener() {
                         @Override
-                        public void onClick(View v) {
-                            // mshot loaded successfully, so enable tapping it to view it
-                            // full size in the photo viewer
-                            int startX = mImageMshot.getLeft();
-                            int startY = mImageMshot.getTop();
-                            ReaderActivityLauncher.showReaderPhotoViewer(
-                                    getContext(),
-                                    mshotUrl,
-                                    mImageMshot,
-                                    startX,
-                                    startY);
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // highlight the image on touch down
+                            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                int color = v.getResources().getColor(R.color.blue_extra_light);
+                                mImageMshot.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                            } else {
+                                mImageMshot.clearColorFilter();
+                            }
+
+                            // show mshot in photo viewer activity on touch up
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                ReaderActivityLauncher.showReaderPhotoViewer(
+                                        getContext(),
+                                        mshotUrl,
+                                        mImageMshot,
+                                        (int) event.getX(),
+                                        (int) event.getY());
+                            }
+
+                            return true;
                         }
                     });
                 }
