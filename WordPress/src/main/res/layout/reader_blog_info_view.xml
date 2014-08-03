@@ -76,7 +76,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:adjustViewBounds="true"
-            android:layout_marginLeft="@dimen/margin_medium" />
+            android:layout_marginLeft="@dimen/margin_large" />
 
     </RelativeLayout>
 

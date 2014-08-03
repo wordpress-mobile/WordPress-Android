@@ -22,7 +22,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 /*
  * header view showing blog name, description, follower count, follow button, and mshot
  * of the blog - designed for use in ReaderPostListFragment when previewing posts in a
- * blog (blog preview) but can reused elsewhere
+ * blog (blog preview) but can be reused elsewhere
  */
 class ReaderBlogInfoView extends FrameLayout {
     public interface BlogInfoListener {
@@ -139,7 +139,7 @@ class ReaderBlogInfoView extends FrameLayout {
         txtFollowCnt.setText(count);
     }
 
-    public boolean isEmpty() {
+    protected boolean isEmpty() {
         return mBlogInfo == null;
     }
 
@@ -153,6 +153,10 @@ class ReaderBlogInfoView extends FrameLayout {
                 if (blogInfo != null) {
                     showBlogInfo(blogInfo);
                 } else if (isEmpty() && mBlogInfoListener != null) {
+                    // only fire the failed event if blogInfo is empty - we don't want to fire
+                    // the failed event if the blogInfo successfully loaded from the local db
+                    // already, since ReaderPostListFragment interprets failure here to mean
+                    // the blog is invalid
                     mBlogInfoListener.onBlogInfoFailed();
                 }
             }
@@ -207,7 +211,8 @@ class ReaderBlogInfoView extends FrameLayout {
         }
 
         // mshot for private blogs will just be a login screen, so show a lock icon
-        // instead of requesting the mshot
+        // instead of requesting the mshot - note adjustViewBounds = true for the
+        // imageView, so the lock will resize (ie: it won't be a tiny lock drawable)
         if (blogInfo.isPrivate) {
             mImageMshot.setImageResource(R.drawable.ic_action_secure);
             return;
