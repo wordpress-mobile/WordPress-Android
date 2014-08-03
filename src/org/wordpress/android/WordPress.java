@@ -182,8 +182,6 @@ public class WordPress extends Application {
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
-        AnalyticsTracker.beginSession();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
 
         registerForCloudMessaging(this);
 
@@ -618,7 +616,8 @@ public class WordPress extends Application {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
         private Date lastPingDate;
 
-        boolean isInBackground = false;
+        boolean isInBackground = true;
+        boolean isFirstStart = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -704,21 +703,34 @@ public class WordPress extends Application {
             }
         }
 
+        /**
+         * This method is called when:
+         * 1. the app starts
+         * 2. the app was in background and is now foreground
+         */
+        public void onFromBackground() {
+            AnalyticsTracker.beginSession();
+            AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+            if (NetworkUtils.isNetworkAvailable(mContext) && !isFirstStart) {
+                // Rate limited PN Token Update
+                updatePushNotificationTokenIfNotLimited();
+
+                // Rate limited Stats Update
+                sUpdateCurrentBlogStats.runIfNotLimited();
+
+                // Rate limited WPCom blog list Update
+                sUpdateWordPressComBlogList.runIfNotLimited();
+            }
+            isFirstStart = false;
+        }
+
         @Override
         public void onActivityResumed(Activity activity) {
-            // isNetworkAvailableAndComeFromBackground return false on Application start (doesn't come from background)
-            if (!isNetworkAvailableAndComeFromBackground()) {
-                return;
+            if (isInBackground) {
+                // was in background before
+                onFromBackground();
             }
-
-            // Rate limited PN Token Update
-            updatePushNotificationTokenIfNotLimited();
-
-            // Rate limited Stats Update
-            sUpdateCurrentBlogStats.runIfNotLimited();
-
-            // Rate limited WPCom blog list Update
-            sUpdateWordPressComBlogList.runIfNotLimited();
+            isInBackground = false;
         }
 
         @Override
