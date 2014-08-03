@@ -69,14 +69,17 @@
             style="@style/ReaderTextView.Follow"
             android:layout_below="@+id/text_blog_description" />
 
+        <!-- actual size is set at runtime based on display -->
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_mshot"
-            android:layout_width="@dimen/reader_mshot_image_width"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_large"
             android:adjustViewBounds="true"
-            android:layout_marginLeft="@dimen/margin_large" />
+            tools:layout_height="64dp"
+            tools:layout_width="96dp" />
 
     </RelativeLayout>
 

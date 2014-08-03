@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -39,6 +40,15 @@ class ReaderBlogInfoView extends FrameLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.reader_blog_info_view, this, true);
         view.setId(R.id.layout_blog_info_view);
         mImageMshot = (WPNetworkImageView) view.findViewById(R.id.image_mshot);
+
+        // set mshot width based on display width
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(getContext());
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageMshot.getLayoutParams();
+        if (DisplayUtils.isLandscape(context)) {
+            params.width = (int) (displayWidth * 0.15f);
+        } else {
+            params.width = (int)(displayWidth * 0.25f);
+        }
     }
 
     /*
