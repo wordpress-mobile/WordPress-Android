@@ -134,6 +134,7 @@ public class PostUploadService extends Service {
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
         private Post mPost;
+        private Blog mBlog;
         private PostUploadNotifier mPostUploadNotifier;
 
         private String mErrorMessage = "";
@@ -164,8 +165,8 @@ public class PostUploadService extends Service {
             String uploadingPostTitle = String.format(getString(R.string.uploading_post), postTitle);
             mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, getString(R.string.sending_content), null);
 
-            Blog blog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
-            if (blog == null) {
+            mBlog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
+            if (mBlog == null) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;
             }
@@ -192,68 +193,11 @@ public class PostUploadService extends Service {
             Boolean hasTag = !mPost.getKeywords().equals("");
 
 
-            String descriptionContent = "", moreContent = "";
-            int moreCount = 1;
-            if (!TextUtils.isEmpty(mPost.getMoreText()))
-                moreCount++;
-            String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
-            Pattern pattern = Pattern.compile(imgTags);
+            String descriptionContent = processPostMedia(mPost.getDescription());
 
-            for (int x = 0; x < moreCount; x++) {
-                if (x == 0)
-                    descriptionContent = mPost.getDescription();
-                else
-                    moreContent = mPost.getMoreText();
-
-                Matcher matcher;
-
-                if (x == 0) {
-                    matcher = pattern.matcher(descriptionContent);
-                } else {
-                    matcher = pattern.matcher(moreContent);
-                }
-
-                List<String> imageTags = new ArrayList<String>();
-                while (matcher.find()) {
-                    imageTags.add(matcher.group());
-                }
-
-                for (String tag : imageTags) {
-                    Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
-                    Matcher m = p.matcher(tag);
-                    if (m.find()) {
-                        String imgPath = m.group(1);
-                        if (!imgPath.equals("")) {
-                            MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, mPost);
-                            if (mf != null) {
-                                if (mf.isVideo()) {
-                                    hasVideo = true;
-                                } else {
-                                    hasImage = true;
-                                }
-                                mPostUploadNotifier.updateNotificationMessage(
-                                        null,
-                                        mf.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
-                                        null
-                                );
-                                String imgHTML = uploadMediaFile(mf, blog);
-                                if (imgHTML != null) {
-                                    if (x == 0) {
-                                        descriptionContent = descriptionContent.replace(tag, imgHTML);
-                                    } else {
-                                        moreContent = moreContent.replace(tag, imgHTML);
-                                    }
-                                } else {
-                                    if (x == 0)
-                                        descriptionContent = descriptionContent.replace(tag, "");
-                                    else
-                                        moreContent = moreContent.replace(tag, "");
-                                    mIsMediaError = true;
-                                }
-                            }
-                        }
-                    }
-                }
+            String moreContent = "";
+            if (!TextUtils.isEmpty(mPost.getMoreText())) {
+                moreContent = processPostMedia(mPost.getMoreText());
             }
 
             // If media file upload failed, let's stop here and prompt the user
@@ -390,8 +334,8 @@ public class PostUploadService extends Service {
             if (featuredImageID != -1) {
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
             }
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
                 client.addQuickPostHeader(mPost.getQuickPostType());
             }
@@ -401,10 +345,10 @@ public class PostUploadService extends Service {
 
             Object[] params;
             if (mPost.isLocalDraft() && !mPost.isUploaded())
-                params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
+                params = new Object[]{mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
                         contentStruct, publishThis};
             else
-                params = new Object[]{mPost.getRemotePostId(), blog.getUsername(), blog.getPassword(), contentStruct,
+                params = new Object[]{mPost.getRemotePostId(), mBlog.getUsername(), mBlog.getPassword(), contentStruct,
                         publishThis};
 
             try {
@@ -446,6 +390,47 @@ public class PostUploadService extends Service {
             }
 
             return false;
+        }
+
+        /**
+         * Finds media in post content, uploads them, and returns the HTML to insert in the post
+         */
+        private String processPostMedia(String postContent) {
+            String imageTagsPattern = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
+            Pattern pattern = Pattern.compile(imageTagsPattern);
+            Matcher matcher = pattern.matcher(postContent);
+
+            List<String> imageTags = new ArrayList<String>();
+            while (matcher.find()) {
+                imageTags.add(matcher.group());
+            }
+
+            for (String tag : imageTags) {
+                Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
+                Matcher m = p.matcher(tag);
+                if (m.find()) {
+                    String imgPath = m.group(1);
+                    if (!imgPath.equals("")) {
+                        MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, mPost);
+                        if (mf != null) {
+                            mPostUploadNotifier.updateNotificationMessage(
+                                    null,
+                                    mf.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
+                                    null
+                            );
+                            String imgHTML = uploadMediaFile(mf, mBlog);
+                            if (imgHTML != null) {
+                                postContent = postContent.replace(tag, imgHTML);
+                            } else {
+                                postContent = postContent.replace(tag, "");
+                                mIsMediaError = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return postContent;
         }
 
 
