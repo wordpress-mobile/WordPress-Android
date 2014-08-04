@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.blocks.CommentReplyNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
@@ -149,11 +150,17 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {
+
                         JSONObject noteObject = bodyArray.getJSONObject(i);
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
-                        if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
+
+                        if (mNote.isCommentType() && bodyArray.length() > 2 && i == 1) {
+                            // Hacky way to determine if this is a comment reply
+                            // Should the API also have a comment_reply type to make this easier?
+                            noteBlock = new CommentReplyNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                        } else if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
                             noteBlock = new UserNoteBlock(
                                     noteObject,
                                     mOnNoteBlockTextClickListener,
@@ -163,6 +170,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
+
+
 
                         mNoteBlockArray.add(noteBlock);
                     } catch (JSONException e) {

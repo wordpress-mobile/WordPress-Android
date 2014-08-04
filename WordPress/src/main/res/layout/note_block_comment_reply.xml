@@ -5,15 +5,17 @@
     android:layout_gravity="center"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
     android:orientation="vertical">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/note_text"
+        android:textStyle="italic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/calypso_blue_dark"
-        android:textColorLink="@color/calypso_blue_dark" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:maxLines="4"
+        android:textSize="@dimen/text_sz_medium"
+        android:textColor="@color/calypso_blue"
+        android:textColorLink="@color/calypso_blue" />
 </LinearLayout>

@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:textColor="@color/notifications_blue_dark"
+            android:textColor="@color/calypso_blue_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="Bob Ross commented on your post Happy Trees" />
 
@@ -67,7 +67,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/notifications_blue"
+            android:textColor="@color/calypso_blue"
             android:textSize="@dimen/text_sz_medium"
             android:visibility="gone"
             tools:visibility="visible"

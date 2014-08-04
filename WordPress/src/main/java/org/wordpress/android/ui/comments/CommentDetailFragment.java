@@ -924,19 +924,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getBlogId()),
                 String.valueOf(mNote.getCommentId()),
-                !mBtnLikeComment.isSelected(),
+                mBtnLikeComment.isSelected(),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (response != null && !response.optBoolean("success"))  {
                             // Failed, so switch the button state back
-                            toggleLikeButton(mBtnLikeComment.isSelected());
+                            toggleLikeButton(!mBtnLikeComment.isSelected());
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        toggleLikeButton(mBtnLikeComment.isSelected());
+                        toggleLikeButton(!mBtnLikeComment.isSelected());
                     }
                 });
     }

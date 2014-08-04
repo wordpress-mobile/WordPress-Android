@@ -32,7 +32,7 @@
             android:id="@+id/notification_header_subject"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/notifications_blue"
+            android:textColor="@color/calypso_blue"
             android:textSize="@dimen/text_sz_medium" />
 
 

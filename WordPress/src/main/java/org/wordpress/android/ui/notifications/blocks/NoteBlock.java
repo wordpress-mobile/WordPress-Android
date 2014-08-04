@@ -149,7 +149,7 @@ public class NoteBlock {
         return new BasicNoteBlockHolder(view);
     }
 
-    private static class BasicNoteBlockHolder {
+    protected static class BasicNoteBlockHolder {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
 

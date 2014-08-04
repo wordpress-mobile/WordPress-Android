@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/notifications_blue"
+                android:textColor="@color/calypso_blue"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="www.bobross.com" />
 
