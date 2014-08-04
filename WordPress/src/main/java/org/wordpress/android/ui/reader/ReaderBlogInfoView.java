@@ -133,7 +133,7 @@ class ReaderBlogInfoView extends LinearLayout {
                 public void run() {
                     ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.SHORT);
                 }
-            }, 250);
+            }, 500);
         }
 
         // show the mshot if it hasn't already been shown
