@@ -103,6 +103,14 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
@@ -210,6 +218,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
      * show fragment containing list of latest posts for a specific tag
      */
     private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
         getFragmentManager()
                 .beginTransaction()
@@ -221,6 +232,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
      * show fragment containing list of latest posts in a specific blog
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
         getFragmentManager()
                 .beginTransaction()
