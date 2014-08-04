@@ -190,9 +190,6 @@ public class WordPress extends Application {
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
         registerActivityLifecycleCallbacks(pnBackendMonitor);
-
-        sUpdateCurrentBlogStats.runIfNotLimited();
-        sUpdateWordPressComBlogList.runIfNotLimited();
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -617,7 +614,6 @@ public class WordPress extends Application {
         private Date lastPingDate;
 
         boolean isInBackground = true;
-        boolean isFirstStart = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -711,7 +707,7 @@ public class WordPress extends Application {
         public void onFromBackground() {
             AnalyticsTracker.beginSession();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
-            if (NetworkUtils.isNetworkAvailable(mContext) && !isFirstStart) {
+            if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Rate limited PN Token Update
                 updatePushNotificationTokenIfNotLimited();
 
@@ -721,7 +717,6 @@ public class WordPress extends Application {
                 // Rate limited WPCom blog list Update
                 sUpdateWordPressComBlogList.runIfNotLimited();
             }
-            isFirstStart = false;
         }
 
         @Override
