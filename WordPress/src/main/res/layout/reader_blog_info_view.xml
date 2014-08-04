@@ -85,11 +85,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="1dp"
         android:background="@color/grey_light" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_small"
-        android:background="@color/grey_extra_light" />
 </LinearLayout>
