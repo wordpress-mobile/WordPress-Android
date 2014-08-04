@@ -8,8 +8,6 @@
     android:id="@+id/layout_blog_info_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/reader_list_margin"
-    android:layout_marginRight="@dimen/reader_list_margin"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -17,6 +15,8 @@
         android:id="@+id/layout_bloginfo_inner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:paddingRight="@dimen/margin_large"
@@ -46,7 +46,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_toLeftOf="@+id/image_mshot"
             android:ellipsize="end"
-            android:maxLines="4"
+            android:maxLines="3"
             android:textColor="@color/grey_medium_dark"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_blog_description" />
