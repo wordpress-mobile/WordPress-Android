@@ -5,7 +5,6 @@
     android:layout_gravity="center"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium"
     android:orientation="vertical">
 

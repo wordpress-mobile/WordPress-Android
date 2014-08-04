@@ -7,7 +7,6 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.notifications.blocks.CommentReplyNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.FormattedCommentNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
@@ -156,10 +155,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
 
-                        if (mNote.isCommentType() && bodyArray.length() > 2 && i == 1) {
-                            // Hacky way to determine if this is a comment reply
+                        if ((mNote.isCommentLikeType() || mNote.isCommentType()) && bodyArray.length() > 2 && i == 1) {
+                            // Hacky way to determine if this is a comment with special formatting
                             // Should the API also have a comment_reply type to make this easier?
-                            noteBlock = new CommentReplyNoteBlock(noteObject, mOnNoteBlockTextClickListener);
+                            noteBlock = new FormattedCommentNoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         } else if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
                             noteBlock = new UserNoteBlock(
                                     noteObject,

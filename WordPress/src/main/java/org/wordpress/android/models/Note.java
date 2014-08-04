@@ -34,6 +34,7 @@ public class Note extends Syncable {
 
     private static final String NOTE_UNKNOWN_TYPE = "unknown";
     private static final String NOTE_COMMENT_TYPE = "comment";
+    private static final String NOTE_COMMENT_LIKE_TYPE = "comment_like";
     private static final String NOTE_MATCHER_TYPE = "automattcher";
 
     // JSON action keys
@@ -108,6 +109,10 @@ public class Note extends Syncable {
     public Boolean isCommentType() {
         return (isAutomattcherType() && JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
                 isType(NOTE_COMMENT_TYPE);
+    }
+
+    public Boolean isCommentLikeType() {
+        return isType(NOTE_COMMENT_LIKE_TYPE);
     }
 
     public Boolean isAutomattcherType() {
