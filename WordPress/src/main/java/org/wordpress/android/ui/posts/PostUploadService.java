@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -8,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
@@ -31,8 +32,6 @@ import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.ui.media.MediaUtils;
-import org.wordpress.android.ui.posts.PagesActivity;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -60,7 +59,6 @@ import java.util.regex.Pattern;
 public class PostUploadService extends Service {
     private static Context context;
     private static final ArrayList<Post> listOfPosts = new ArrayList<Post>();
-    private static NotificationManager nm;
     private static Post currentUploadingPost = null;
     private UploadPostTask currentTask = null;
     private FeatureSet mFeatureSet;
@@ -135,48 +133,22 @@ public class PostUploadService extends Service {
     }
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
-        private Post post;
+        private Post mPost;
+        private PostUploadNotifier mPostUploadNotifier;
+
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
         private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
-        private int notificationID;
-        private Notification n;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
             if (postUploadedSuccessfully) {
-                WordPress.postUploaded(post.getLocalTableBlogId(), post.getRemotePostId(), post.isPage());
-                nm.cancel(notificationID);
-                WordPress.wpDB.deleteMediaFilesForPost(post);
+                WordPress.postUploaded(mPost.getLocalTableBlogId(), mPost.getRemotePostId(), mPost.isPage());
+                mPostUploadNotifier.cancelNotification();
+                WordPress.wpDB.deleteMediaFilesForPost(mPost);
             } else {
-                String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
-                        .getText(R.string.post_id));
-                Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
-                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                          | Intent.FLAG_ACTIVITY_NEW_TASK
-                                          | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                notificationIntent.setAction(Intent.ACTION_MAIN);
-                notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
-                notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
-                if (mErrorUnavailableVideoPress) {
-                    notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
-                    notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
-                }
-                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                        notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                n.flags |= Notification.FLAG_AUTO_CANCEL;
-                n.icon = android.R.drawable.stat_notify_error;
-                String errorText = context.getResources().getText(R.string.upload_failed).toString();
-                if (mIsMediaError)
-                    errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
-                n.setLatestEventInfo(context, (mIsMediaError) ? errorText : context.getResources().getText(R.string.upload_failed),
-                        (mIsMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage, pendingIntent);
-
-                nm.notify(notificationID, n); // needs a unique id
+                mPostUploadNotifier.updateNotificationWithError(mErrorMessage, mIsMediaError, mPost.isPage(), mErrorUnavailableVideoPress);
             }
 
             postUploaded();
@@ -185,47 +157,29 @@ public class PostUploadService extends Service {
         @Override
         protected Boolean doInBackground(Post... posts) {
             mErrorUnavailableVideoPress = false;
-            post = posts[0];
+            mPost = posts[0];
 
-            // add the uploader to the notification bar
-            nm = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
+            mPostUploadNotifier = new PostUploadNotifier(mPost);
+            String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
+            String uploadingPostTitle = String.format(getString(R.string.uploading_post), postTitle);
+            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, getString(R.string.sending_content), null);
 
-            String postOrPage = (String) (post.isPage() ? context.getResources().getText(R.string.page_id) : context.getResources()
-                    .getText(R.string.post_id));
-            String message = context.getResources().getText(R.string.uploading) + " " + postOrPage;
-            n = new Notification(R.drawable.notification_icon, message, System.currentTimeMillis());
-
-            Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
-            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                      | Intent.FLAG_ACTIVITY_NEW_TASK
-                                      | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-            notificationIntent.setAction(Intent.ACTION_MAIN);
-            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
-            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            n.setLatestEventInfo(context, message, message, pendingIntent);
-
-            notificationID = (new Random()).nextInt() + post.getLocalTableBlogId();
-            nm.notify(notificationID, n); // needs a unique id
-
-            Blog blog = WordPress.wpDB.instantiateBlogByLocalId(post.getLocalTableBlogId());
+            Blog blog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
             if (blog == null) {
                 mErrorMessage = context.getString(R.string.blog_not_found);
                 return false;
             }
 
             boolean isFirstTimePublishing = false;
-            if (TextUtils.isEmpty(post.getPostStatus())) {
-                post.setPostStatus("publish");
+            if (TextUtils.isEmpty(mPost.getPostStatus())) {
+                mPost.setPostStatus("publish");
             }
 
-            if (post.hasChangedFromLocalDraftToPublished()) {
+            if (mPost.hasChangedFromLocalDraftToPublished()) {
                 isFirstTimePublishing = true;
             }
 
-            if (!post.isUploaded() && post.getPostStatus().equals("publish")) {
+            if (!mPost.isUploaded() && mPost.getPostStatus().equals("publish")) {
                 isFirstTimePublishing = true;
             }
 
@@ -235,21 +189,21 @@ public class PostUploadService extends Service {
             Boolean hasImage = false;
             Boolean hasVideo = false;
             Boolean hasCategory = false;
-            Boolean hasTag = !post.getKeywords().equals("");
+            Boolean hasTag = !mPost.getKeywords().equals("");
 
 
             String descriptionContent = "", moreContent = "";
             int moreCount = 1;
-            if (!TextUtils.isEmpty(post.getMoreText()))
+            if (!TextUtils.isEmpty(mPost.getMoreText()))
                 moreCount++;
             String imgTags = "<img[^>]+android-uri\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>";
             Pattern pattern = Pattern.compile(imgTags);
 
             for (int x = 0; x < moreCount; x++) {
                 if (x == 0)
-                    descriptionContent = post.getDescription();
+                    descriptionContent = mPost.getDescription();
                 else
-                    moreContent = post.getMoreText();
+                    moreContent = mPost.getMoreText();
 
                 Matcher matcher;
 
@@ -270,13 +224,18 @@ public class PostUploadService extends Service {
                     if (m.find()) {
                         String imgPath = m.group(1);
                         if (!imgPath.equals("")) {
-                            MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, post);
+                            MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, mPost);
                             if (mf != null) {
                                 if (mf.isVideo()) {
                                     hasVideo = true;
                                 } else {
                                     hasImage = true;
                                 }
+                                mPostUploadNotifier.updateNotificationMessage(
+                                        null,
+                                        mf.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
+                                        null
+                                );
                                 String imgHTML = uploadMediaFile(mf, blog);
                                 if (imgHTML != null) {
                                     if (x == 0) {
@@ -301,7 +260,7 @@ public class PostUploadService extends Service {
             if (mIsMediaError)
                 return false;
 
-            JSONArray categoriesJsonArray = post.getJSONCategories();
+            JSONArray categoriesJsonArray = mPost.getJSONCategories();
             String[] postCategories = null;
             if (categoriesJsonArray != null) {
                 if (categoriesJsonArray.length() > 0) {
@@ -320,7 +279,7 @@ public class PostUploadService extends Service {
 
             Map<String, Object> contentStruct = new HashMap<String, Object>();
 
-            if (!post.isPage() && post.isLocalDraft()) {
+            if (!mPost.isPage() && mPost.isLocalDraft()) {
                 // add the tagline
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -336,16 +295,16 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // post format
-            if (!post.isPage()) {
-                if (!TextUtils.isEmpty(post.getPostFormat())) {
-                    contentStruct.put("wp_post_format", post.getPostFormat());
+            // mPost format
+            if (!mPost.isPage()) {
+                if (!TextUtils.isEmpty(mPost.getPostFormat())) {
+                    contentStruct.put("wp_post_format", mPost.getPostFormat());
                 }
             }
 
-            contentStruct.put("post_type", (post.isPage()) ? "page" : "post");
-            contentStruct.put("title", post.getTitle());
-            long pubDate = post.getDate_created_gmt();
+            contentStruct.put("post_type", (mPost.isPage()) ? "page" : "post");
+            contentStruct.put("title", mPost.getTitle());
+            long pubDate = mPost.getDate_created_gmt();
             if (pubDate != 0) {
                 Date date_created_gmt = new Date(pubDate);
                 contentStruct.put("date_created_gmt", date_created_gmt);
@@ -355,11 +314,11 @@ public class PostUploadService extends Service {
 
             if (!moreContent.equals("")) {
                 descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
-                post.setMoreText("");
+                mPost.setMoreText("");
             }
 
             // get rid of the p and br tags that the editor adds.
-            if (post.isLocalDraft()) {
+            if (mPost.isLocalDraft()) {
                 descriptionContent = descriptionContent.replace("<p>", "").replace("</p>", "\n").replace("<br>", "");
             }
 
@@ -367,20 +326,20 @@ public class PostUploadService extends Service {
             descriptionContent = descriptionContent.replaceAll("\uFFFC", "");
 
             contentStruct.put("description", descriptionContent);
-            if (!post.isPage()) {
-                contentStruct.put("mt_keywords", post.getKeywords());
+            if (!mPost.isPage()) {
+                contentStruct.put("mt_keywords", mPost.getKeywords());
 
                 if (postCategories != null && postCategories.length > 0)
                     contentStruct.put("categories", postCategories);
             }
 
-            contentStruct.put("mt_excerpt", post.getPostExcerpt());
+            contentStruct.put("mt_excerpt", mPost.getPostExcerpt());
 
-            contentStruct.put((post.isPage()) ? "page_status" : "post_status", post.getPostStatus());
-            if (post.supportsLocation()) {
-                JSONObject remoteGeoLatitude = post.getCustomField("geo_latitude");
-                JSONObject remoteGeoLongitude = post.getCustomField("geo_longitude");
-                JSONObject remoteGeoPublic = post.getCustomField("geo_public");
+            contentStruct.put((mPost.isPage()) ? "page_status" : "post_status", mPost.getPostStatus());
+            if (mPost.supportsLocation()) {
+                JSONObject remoteGeoLatitude = mPost.getCustomField("geo_latitude");
+                JSONObject remoteGeoLongitude = mPost.getCustomField("geo_longitude");
+                JSONObject remoteGeoPublic = mPost.getCustomField("geo_public");
 
                 Map<Object, Object> hLatitude = new HashMap<Object, Object>();
                 Map<Object, Object> hLongitude = new HashMap<Object, Object>();
@@ -399,8 +358,8 @@ public class PostUploadService extends Service {
                         hPublic.put("id", remoteGeoPublic.getInt("id"));
                     }
 
-                    if (post.hasLocation()) {
-                        PostLocation location = post.getLocation();
+                    if (mPost.hasLocation()) {
+                        PostLocation location = mPost.getLocation();
                         if (!hLatitude.containsKey("id")) {
                             hLatitude.put("key", "geo_latitude");
                         }
@@ -433,35 +392,34 @@ public class PostUploadService extends Service {
             }
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
-            if (!TextUtils.isEmpty(post.getQuickPostType())) {
-                client.addQuickPostHeader(post.getQuickPostType());
+            if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
+                client.addQuickPostHeader(mPost.getQuickPostType());
             }
-            n.setLatestEventInfo(context, message, message, n.contentIntent);
-            nm.notify(notificationID, n);
 
-            contentStruct.put("wp_password", post.getPassword());
+
+            contentStruct.put("wp_password", mPost.getPassword());
 
             Object[] params;
-            if (post.isLocalDraft() && !post.isUploaded())
+            if (mPost.isLocalDraft() && !mPost.isUploaded())
                 params = new Object[]{blog.getRemoteBlogId(), blog.getUsername(), blog.getPassword(),
                         contentStruct, publishThis};
             else
-                params = new Object[]{post.getRemotePostId(), blog.getUsername(), blog.getPassword(), contentStruct,
+                params = new Object[]{mPost.getRemotePostId(), blog.getUsername(), blog.getPassword(), contentStruct,
                         publishThis};
 
             try {
-                if (post.isLocalDraft() && !post.isUploaded()) {
+                if (mPost.isLocalDraft() && !mPost.isUploaded()) {
                     Object newPostId = client.call("metaWeblog.newPost", params);
                     if (newPostId instanceof String) {
-                        post.setRemotePostId((String) newPostId);
+                        mPost.setRemotePostId((String) newPostId);
                     }
                 } else {
                     client.call("metaWeblog.editPost", params);
                 }
 
-                post.setUploaded(true);
-                post.setLocalChange(false);
-                WordPress.wpDB.updatePost(post);
+                mPost.setUploaded(true);
+                mPost.setLocalChange(false);
+                WordPress.wpDB.updatePost(mPost);
 
                 if (isFirstTimePublishing) {
                     if (hasImage) {
@@ -492,7 +450,7 @@ public class PostUploadService extends Service {
 
 
         private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), post.isPage() ? context
+            mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), mPost.isPage() ? context
                     .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
                     + " " + e.getMessage();
             mIsMediaError = false;
@@ -780,10 +738,10 @@ public class PostUploadService extends Service {
                     alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
                 }
 
-                // Check if we uploaded a featured picture that is not added to the post content (normal case)
+                // Check if we uploaded a featured picture that is not added to the mPost content (normal case)
                 if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
                         (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
-                    return ""; // Not featured in post. Do not add to the content.
+                    return ""; // Not featured in mPost. Do not add to the content.
                 }
 
                 if (fullSizeUrl == null && resizedPictureURL != null) {
@@ -870,5 +828,90 @@ public class PostUploadService extends Service {
 
     private File createTempUploadFile(String fileExtension) throws IOException {
         return File.createTempFile("wp-", fileExtension, context.getCacheDir());
+    }
+
+    private class PostUploadNotifier {
+
+        private NotificationManager mNotificationManager;
+        private NotificationCompat.Builder mNotificationBuilder;
+        private int mNotificationId;
+
+
+        public PostUploadNotifier(Post post) {
+            // add the uploader to the notification bar
+            mNotificationManager = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
+
+            mNotificationBuilder =
+                    new NotificationCompat.Builder(getApplicationContext())
+                            .setSmallIcon(R.drawable.notification_icon);
+
+            Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            notificationIntent.setAction(Intent.ACTION_MAIN);
+            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
+            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            mNotificationBuilder.setContentIntent(pendingIntent);
+
+            mNotificationId = (new Random()).nextInt() + post.getLocalTableBlogId();
+        }
+
+
+        public void updateNotificationMessage(String title, String message, Bitmap icon) {
+            if (title != null) {
+                mNotificationBuilder.setContentTitle(title);
+            }
+
+            if (message != null) {
+                mNotificationBuilder.setContentText(message);
+            }
+
+            if (icon != null) {
+                mNotificationBuilder.setLargeIcon(icon);
+            }
+
+            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
+
+        public void cancelNotification() {
+            mNotificationManager.cancel(mNotificationId);
+        }
+
+        public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage, boolean isVideoPressError) {
+            String postOrPage = (String) (isPage ? context.getResources().getText(R.string.page_id) : context.getResources()
+                    .getText(R.string.post_id));
+            Intent notificationIntent = new Intent(context, isPage ? PagesActivity.class : PostsActivity.class);
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NEW_TASK
+                    | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+            notificationIntent.setAction(Intent.ACTION_MAIN);
+            notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, isPage);
+            notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_MSG, mErrorMessage);
+            if (isVideoPressError) {
+                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_TITLE, getString(R.string.learn_more));
+                notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
+            }
+            notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                    notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            String errorText = context.getResources().getText(R.string.upload_failed).toString();
+            if (isMediaError) {
+                errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
+            }
+
+            mNotificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
+            mNotificationBuilder.setContentTitle((isMediaError) ? errorText : context.getResources().getText(R.string.upload_failed));
+            mNotificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage);
+            mNotificationBuilder.setContentIntent(pendingIntent);
+            mNotificationBuilder.setAutoCancel(true);
+
+            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
     }
 }
