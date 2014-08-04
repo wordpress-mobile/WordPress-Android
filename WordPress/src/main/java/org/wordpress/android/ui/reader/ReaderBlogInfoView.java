@@ -260,8 +260,8 @@ class ReaderBlogInfoView extends LinearLayout {
                                         getContext(),
                                         mshotUrl,
                                         mImageMshot,
-                                        (int) event.getX(),
-                                        (int) event.getY());
+                                        (int) event.getRawX(),
+                                        (int) event.getRawY());
                             }
 
                             return true;
