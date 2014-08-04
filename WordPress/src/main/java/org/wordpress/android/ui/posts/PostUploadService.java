@@ -31,6 +31,7 @@ import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -171,27 +172,25 @@ public class PostUploadService extends Service {
                 return false;
             }
 
+            // Create the XML-RPC client
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
+                    mBlog.getHttppassword());
+
             boolean isFirstTimePublishing = false;
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
-                mPost.setPostStatus("publish");
+                mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
 
-            if (mPost.hasChangedFromLocalDraftToPublished()) {
+            if (mPost.hasChangedFromLocalDraftToPublished() ||
+                    (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
                 isFirstTimePublishing = true;
             }
-
-            if (!mPost.isUploaded() && mPost.getPostStatus().equals("publish")) {
-                isFirstTimePublishing = true;
-            }
-
-            Boolean publishThis = false;
 
             // These are used for stats purposes
             Boolean hasImage = false;
             Boolean hasVideo = false;
             Boolean hasCategory = false;
             Boolean hasTag = !mPost.getKeywords().equals("");
-
 
             String descriptionContent = processPostMedia(mPost.getDescription());
 
@@ -201,8 +200,9 @@ public class PostUploadService extends Service {
             }
 
             // If media file upload failed, let's stop here and prompt the user
-            if (mIsMediaError)
+            if (mIsMediaError) {
                 return false;
+            }
 
             JSONArray categoriesJsonArray = mPost.getJSONCategories();
             String[] postCategories = null;
@@ -239,7 +239,7 @@ public class PostUploadService extends Service {
                 }
             }
 
-            // mPost format
+            // Post format
             if (!mPost.isPage()) {
                 if (!TextUtils.isEmpty(mPost.getPostFormat())) {
                     contentStruct.put("wp_post_format", mPost.getPostFormat());
@@ -256,7 +256,7 @@ public class PostUploadService extends Service {
                 contentStruct.put("dateCreated", dateCreated);
             }
 
-            if (!moreContent.equals("")) {
+            if (!TextUtils.isEmpty(moreContent)) {
                 descriptionContent = descriptionContent.trim() + "<!--more-->" + moreContent;
                 mPost.setMoreText("");
             }
@@ -273,13 +273,15 @@ public class PostUploadService extends Service {
             if (!mPost.isPage()) {
                 contentStruct.put("mt_keywords", mPost.getKeywords());
 
-                if (postCategories != null && postCategories.length > 0)
+                if (postCategories != null && postCategories.length > 0) {
                     contentStruct.put("categories", postCategories);
+                }
             }
 
             contentStruct.put("mt_excerpt", mPost.getPostExcerpt());
-
             contentStruct.put((mPost.isPage()) ? "page_status" : "post_status", mPost.getPostStatus());
+
+            // Geolocation
             if (mPost.supportsLocation()) {
                 JSONObject remoteGeoLatitude = mPost.getCustomField("geo_latitude");
                 JSONObject remoteGeoLongitude = mPost.getCustomField("geo_longitude");
@@ -334,22 +336,20 @@ public class PostUploadService extends Service {
             if (featuredImageID != -1) {
                 contentStruct.put("wp_post_thumbnail", featuredImageID);
             }
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
-                    mBlog.getHttppassword());
+
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
                 client.addQuickPostHeader(mPost.getQuickPostType());
             }
-
 
             contentStruct.put("wp_password", mPost.getPassword());
 
             Object[] params;
             if (mPost.isLocalDraft() && !mPost.isUploaded())
                 params = new Object[]{mBlog.getRemoteBlogId(), mBlog.getUsername(), mBlog.getPassword(),
-                        contentStruct, publishThis};
+                        contentStruct, false};
             else
                 params = new Object[]{mPost.getRemotePostId(), mBlog.getUsername(), mBlog.getPassword(), contentStruct,
-                        publishThis};
+                        false};
 
             try {
                 if (mPost.isLocalDraft() && !mPost.isUploaded()) {
