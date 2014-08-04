@@ -53,6 +53,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 import org.wordpress.android.widgets.WPListView;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -178,9 +179,11 @@ public class ReaderPostListFragment extends Fragment
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
             if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
-                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
-                mTagPreviewHistory.clear();
-                mTagPreviewHistory.addAll(backStack);
+                Serializable serializable = savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
+                if (serializable instanceof Stack) {
+                    mTagPreviewHistory.clear();
+                    mTagPreviewHistory.addAll((Stack) serializable);
+                }
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
