@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -36,10 +37,14 @@ import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.ApiHelper;
+import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
 import org.xmlrpc.android.XMLRPCException;
 import org.xmlrpc.android.XMLRPCFactory;
@@ -167,8 +172,12 @@ public class PostUploadService extends Service {
 
             mPostUploadNotifier = new PostUploadNotifier(mPost);
             String postTitle = TextUtils.isEmpty(mPost.getTitle()) ? getString(R.string.untitled) : mPost.getTitle();
-            String uploadingPostTitle = String.format(getString(R.string.uploading_post), postTitle);
-            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, getString(R.string.sending_content), null);
+            String uploadingPostTitle = String.format(getString(R.string.posting_post), postTitle);
+            String uploadingPostMessage = String.format(
+                    getString(R.string.sending_content),
+                    mPost.isPage() ? getString(R.string.page).toLowerCase() : getString(R.string.post).toLowerCase()
+            );
+            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
 
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
             if (mBlog == null) {
@@ -179,7 +188,6 @@ public class PostUploadService extends Service {
             // Create the XML-RPC client
             mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
-
 
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
@@ -197,6 +205,8 @@ public class PostUploadService extends Service {
             if (!TextUtils.isEmpty(mPost.getMoreText())) {
                 moreContent = processPostMedia(mPost.getMoreText());
             }
+
+            mPostUploadNotifier.updateNotificationMessage(uploadingPostTitle, uploadingPostMessage);
 
             // If media file upload failed, let's stop here and prompt the user
             if (mIsMediaError) {
@@ -399,24 +409,40 @@ public class PostUploadService extends Service {
             Pattern pattern = Pattern.compile(imageTagsPattern);
             Matcher matcher = pattern.matcher(postContent);
 
+            int totalMediaItems = 0;
             List<String> imageTags = new ArrayList<String>();
             while (matcher.find()) {
                 imageTags.add(matcher.group());
+                totalMediaItems++;
             }
 
+            mPostUploadNotifier.setTotalMediaItems(totalMediaItems);
+
+            int mediaItemCount = 0;
             for (String tag : imageTags) {
                 Pattern p = Pattern.compile("android-uri=\"([^\"]+)\"");
                 Matcher m = p.matcher(tag);
                 if (m.find()) {
-                    String imgPath = m.group(1);
-                    if (!imgPath.equals("")) {
-                        MediaFile mediaFile = WordPress.wpDB.getMediaFile(imgPath, mPost);
+                    String imageUri = m.group(1);
+                    if (!imageUri.equals("")) {
+                        MediaFile mediaFile = WordPress.wpDB.getMediaFile(imageUri, mPost);
                         if (mediaFile != null) {
-                            mPostUploadNotifier.updateNotificationMessage(
-                                    null,
-                                    mediaFile.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
-                                    null
+                            // Get image thumbnail for notification icon
+                            Bitmap imageIcon = ImageUtils.getWPImageSpanThumbnailFromFilePath(
+                                    mContext,
+                                    imageUri,
+                                    DisplayUtils.dpToPx(mContext, 128)
                             );
+
+                            // Crop the thumbnail to be squared in the center
+                            if (imageIcon != null) {
+                                int squaredSize = DisplayUtils.dpToPx(mContext, 64);
+                                imageIcon = ThumbnailUtils.extractThumbnail(imageIcon, squaredSize, squaredSize);
+                            }
+
+                            mediaItemCount++;
+                            mPostUploadNotifier.setCurrentMediaItem(mediaItemCount);
+                            mPostUploadNotifier.updateNotificationIcon(imageIcon);
 
                             String mediaUploadOutput;
                             if (mediaFile.isVideo()) {
@@ -667,7 +693,7 @@ public class PostUploadService extends Service {
                     return null;
                 }
 
-                Object result = uploadFileHelper(mClient, params, tempFile);
+                Object result = uploadFileHelper(params, tempFile);
                 Map<?, ?> resultMap = (HashMap<?, ?>) result;
                 if (resultMap != null && resultMap.containsKey("url")) {
                     String resultURL = resultMap.get("url").toString();
@@ -701,8 +727,6 @@ public class PostUploadService extends Service {
         }
 
         private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                    blog.getHttppassword());
 
             // create temporary upload file
             File tempFile;
@@ -716,7 +740,7 @@ public class PostUploadService extends Service {
             }
 
             Object[] params = {1, blog.getUsername(), blog.getPassword(), pictureParams};
-            Object result = uploadFileHelper(client, params, tempFile);
+            Object result = uploadFileHelper(params, tempFile);
             if (result == null) {
                 mIsMediaError = true;
                 return null;
@@ -740,9 +764,22 @@ public class PostUploadService extends Service {
             return pictureURL;
         }
 
-        private Object uploadFileHelper(XMLRPCClientInterface client, Object[] params, File tempFile) {
+        private Object uploadFileHelper(Object[] params, final File tempFile) {
+            // Create listener for tracking upload progress in the notification
+            if (mClient instanceof XMLRPCClient) {
+                XMLRPCClient xmlrpcClient = (XMLRPCClient)mClient;
+                xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
+                    @Override
+                    public void onBytesUploaded(long uploadedBytes) {
+                        float percentage = (uploadedBytes * 100) / tempFile.length();
+                        mPostUploadNotifier.updateNotificationProgress(Math.round(percentage));
+                    }
+                });
+            }
+
+
             try {
-                return client.call("wp.uploadFile", params, tempFile);
+                return mClient.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
                 mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
@@ -771,8 +808,10 @@ public class PostUploadService extends Service {
 
         private NotificationManager mNotificationManager;
         private NotificationCompat.Builder mNotificationBuilder;
-        private int mNotificationId;
 
+        private int mNotificationId;
+        private int mTotalMediaItems;
+        private int mCurrentMediaItem;
 
         public PostUploadNotifier(Post post) {
             // add the uploader to the notification bar
@@ -798,7 +837,7 @@ public class PostUploadService extends Service {
         }
 
 
-        public void updateNotificationMessage(String title, String message, Bitmap icon) {
+        public void updateNotificationMessage(String title, String message) {
             if (title != null) {
                 mNotificationBuilder.setContentTitle(title);
             }
@@ -807,11 +846,20 @@ public class PostUploadService extends Service {
                 mNotificationBuilder.setContentText(message);
             }
 
+            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
+
+        public void updateNotificationIcon(Bitmap icon) {
             if (icon != null) {
                 mNotificationBuilder.setLargeIcon(icon);
             }
 
             mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
+
+        public void removeProgressBar() {
+            // clear any progress
+            mNotificationBuilder.setProgress(0, 0, false);
         }
 
         public void cancelNotification() {
@@ -849,6 +897,33 @@ public class PostUploadService extends Service {
             mNotificationBuilder.setAutoCancel(true);
 
             mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
+
+        public void updateNotificationProgress(int progress) {
+            if (mTotalMediaItems == 0) return;
+
+            // Simple way to show progress of entire post upload
+            // Would be better if we could get total bytes for all media items.
+            int itemProgressSize = 100 / mTotalMediaItems;
+
+            int currentChunkProgress = (itemProgressSize * progress) / 100;
+
+            if (mCurrentMediaItem > 1) {
+                currentChunkProgress += itemProgressSize * (mCurrentMediaItem - 1);
+            }
+
+            mNotificationBuilder.setProgress(100, currentChunkProgress, false);
+            mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
+        }
+
+        public void setTotalMediaItems(int totalMediaItems) {
+            mTotalMediaItems = totalMediaItems;
+        }
+
+        public void setCurrentMediaItem(int currentItem) {
+            mCurrentMediaItem = currentItem;
+
+            mNotificationBuilder.setContentText(String.format(getString(R.string.uploading_total), mCurrentMediaItem, mTotalMediaItems));
         }
     }
 }
