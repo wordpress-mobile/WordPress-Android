@@ -136,8 +136,7 @@ public class ReaderPost {
             }
 
             // if we still don't have a featured image, parse the content for an image that's
-            // suitable as a featured image - this is done since featured_media seems to miss
-            // some images that would work well as featured images on mobile
+            // suitable as a featured image
             if (!post.hasFeaturedImage()) {
                 post.featuredImage = ReaderHtmlUtils.findFeaturedImage(post.text);
             }
@@ -380,7 +379,7 @@ public class ReaderPost {
             this.primaryTag = StringUtils.notNullStr(tagName);
         }
     }
-    public boolean hasPrimaryTag() {
+    boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
 
