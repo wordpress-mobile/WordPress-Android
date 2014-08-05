@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -140,7 +141,7 @@ public class ReaderPost {
             // suitable as a featured image - this is done since featured_media seems to miss
             // some images that would work well as featured images on mobile
             if (!post.hasFeaturedImage()) {
-                post.featuredImage = findFeaturedImage(post.text);
+                post.featuredImage = ReaderHtmlUtils.findFeaturedImage(post.text);
             }
         }
 
@@ -274,75 +275,28 @@ public class ReaderPost {
     }
 
     /*
-     * called when a post doesn't have a featured image, searches post's content for an image that
-     * may still be suitable as a featured image - only works with WP posts due to the search for
-     * specific WP image classes (but will also work with RSS posts that come from WP blogs)
-     */
-    private static String findFeaturedImage(final String text) {
-        if (text==null || !text.contains("<img "))
-            return null;
-
-        final String className;
-        if (text.contains("size-full")) {
-            className = "size-full";
-        } else if (text.contains("size-large")) {
-            className = "size-large";
-        } else if (text.contains("size-medium")) {
-            className = "size-medium";
-        } else {
-            return null;
-        }
-
-        // determine whether attributes are single- or double- quoted
-        boolean usesSingleQuotes = text.contains("src='");
-
-        int imgStart = text.indexOf("<img ");
-        while (imgStart > -1) {
-            int imgEnd = text.indexOf(">", imgStart);
-            if (imgEnd == -1)
-                return null;
-
-            String img = text.substring(imgStart, imgEnd+1);
-            if (img.contains(className)) {
-                int srcStart = img.indexOf(usesSingleQuotes ? "src='" : "src=\"");
-                if (srcStart == -1)
-                    return null;
-                int srcEnd = img.indexOf(usesSingleQuotes ? "'" : "\"", srcStart+5);
-                if (srcEnd == -1)
-                    return null;
-                return img.substring(srcStart+5, srcEnd);
-            }
-
-            imgStart = text.indexOf("<img ", imgEnd);
-        }
-
-        // if we get this far, no suitable image was found
-        return null;
-    }
-
-    /*
         returns the actual image url from a Freshly Pressed featured image url - this is necessary because the
         featured image returned by the API is often an ImagePress url that formats the actual image url for a
         specific size, and we want to define the size in the app when the image is requested.
         here's an example of an ImagePress featured image url from a freshly-pressed post:
         https://s1.wp.com/imgpress?crop=0px%2C0px%2C252px%2C160px&url=https%3A%2F%2Fs2.wp.com%2Fimgpress%3Fw%3D252%26url%3Dhttp%253A%252F%252Fmostlybrightideas.files.wordpress.com%252F2013%252F08%252Ftablet.png&unsharpmask=80,0.5,3
      */
-    private static String getImageUrlFromFeaturedImageUrl(final String featuredImageUrl) {
-        if (TextUtils.isEmpty(featuredImageUrl))
+    private static String getImageUrlFromFeaturedImageUrl(final String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl))
             return null;
 
         // if this is an mshots image, return the actual url without the query string (?h=n&w=n),
         // and change it from https: to http: so it can be cached (it's only https because it's
         // being returned by an authenticated REST endpoint - these images are found only in
         // FP posts so they don't require https)
-        if (PhotonUtils.isMshotsUrl(featuredImageUrl))
-            return UrlUtils.removeQuery(featuredImageUrl).replaceFirst("https", "http");
+        if (PhotonUtils.isMshotsUrl(imageUrl))
+            return UrlUtils.removeQuery(imageUrl).replaceFirst("https", "http");
 
-        if (featuredImageUrl.contains("imgpress")) {
+        if (imageUrl.contains("imgpress")) {
             // parse the url parameter
-            String actualImageUrl = Uri.parse(featuredImageUrl).getQueryParameter("url");
+            String actualImageUrl = Uri.parse(imageUrl).getQueryParameter("url");
             if (actualImageUrl==null)
-                return featuredImageUrl;
+                return imageUrl;
 
             // at this point the imageUrl may still be an ImagePress url, so check the url param again (see above example)
             if (actualImageUrl.contains("url=")) {
@@ -354,47 +308,12 @@ public class ReaderPost {
 
         // for all other featured images, return the passed url w/o the query string (since the query string
         // often contains Photon sizing params that we don't want here)
-        int pos = featuredImageUrl.lastIndexOf("?");
+        int pos = imageUrl.lastIndexOf("?");
         if (pos == -1)
-            return featuredImageUrl;
+            return imageUrl;
 
-        return featuredImageUrl.substring(0, pos);
+        return imageUrl.substring(0, pos);
     }
-
-    /*
-     * This is necessary to get VideoPress videos to work in the Reader since the v1
-     * REST API returns VideoPress videos in a script block that relies on jQuery - which obviously
-     * fails on mobile - here we extract the video thumbnail and insert a DIV at the top of the
-     * post content which links the thumbnail IMG to the video so the user can tap the thumb to
-     * play the video
-     * iOS: https://github.com/wordpress-mobile/WordPress-iOS/blob/develop/WordPress/Classes/ReaderPost.m#L702
-     */
-    /*private static void cleanupVideoPress(ReaderPost post) {
-        if (post==null || !post.hasText() || !post.hasFeaturedVideo())
-            return;
-
-        // extract the video thumbnail from them "videopress-poster" image class
-        String text = post.getText();
-        int pos = text.indexOf("videopress-poster");
-        if (pos == -1)
-            return;
-        int srcStart = text.indexOf("src=\"", pos);
-        if (srcStart == -1)
-            return;
-        srcStart += 5;
-        int srcEnd = text.indexOf("\"", srcStart);
-        if (srcEnd == -1)
-            return;
-
-        // set the featured image to the thumbnail if a featured image isn't already assigned
-        String thumb = text.substring(srcStart, srcEnd);
-        if (!post.hasFeaturedImage())
-            post.featuredImage = thumb;
-
-        // add the thumbnail linked to the actual video to the top of the content
-        String videoLink = String.format("<div><a href='%s'><img src='%s'/></a></div>", post.getFeaturedVideo(), thumb);
-        post.text = videoLink + text;
-    }*/
 
     // --------------------------------------------------------------------------------------------
 
