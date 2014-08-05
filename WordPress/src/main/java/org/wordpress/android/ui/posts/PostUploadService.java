@@ -89,16 +89,19 @@ public class PostUploadService extends Service {
                 return;
             }
         }
+
         uploadNextPost();
     }
 
     private FeatureSet synchronousGetFeatureSet() {
-        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag())
+        if (WordPress.getCurrentBlog() == null || !WordPress.getCurrentBlog().isDotcomFlag()) {
             return null;
+        }
         ApiHelper.GetFeatures task = new ApiHelper.GetFeatures();
         List<Object> apiArgs = new ArrayList<Object>();
         apiArgs.add(WordPress.getCurrentBlog());
         mFeatureSet = task.doSynchronously(apiArgs);
+
         return mFeatureSet;
     }
 
@@ -126,11 +129,8 @@ public class PostUploadService extends Service {
     }
 
     public static boolean isUploading(Post post) {
-        if (mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post))
-            return true;
-        if (mPostsList.size() > 0 && mPostsList.contains(post))
-            return true;
-        return false;
+        return mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post) ||
+                mPostsList.size() > 0 && mPostsList.contains(post);
     }
 
     private class UploadPostTask extends AsyncTask<Post, Boolean, Boolean> {
@@ -143,6 +143,9 @@ public class PostUploadService extends Service {
         private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
         private XMLRPCClientInterface mClient;
+
+        // Used for analytics
+        private boolean mHasImage, mHasVideo, mHasCategory;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
@@ -177,21 +180,16 @@ public class PostUploadService extends Service {
             mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
-            boolean isFirstTimePublishing = false;
+
             if (TextUtils.isEmpty(mPost.getPostStatus())) {
                 mPost.setPostStatus(PostStatus.toString(PostStatus.PUBLISHED));
             }
 
+            boolean isFirstTimePublishing = false;
             if (mPost.hasChangedFromLocalDraftToPublished() ||
                     (!mPost.isUploaded() && mPost.getStatusEnum() == PostStatus.PUBLISHED)) {
                 isFirstTimePublishing = true;
             }
-
-            // These are used for stats purposes
-            Boolean hasImage = false;
-            Boolean hasVideo = false;
-            Boolean hasCategory = false;
-            Boolean hasTag = !mPost.getKeywords().equals("");
 
             String descriptionContent = processPostMedia(mPost.getDescription());
 
@@ -209,7 +207,7 @@ public class PostUploadService extends Service {
             String[] postCategories = null;
             if (categoriesJsonArray != null) {
                 if (categoriesJsonArray.length() > 0) {
-                    hasCategory = true;
+                    mHasCategory = true;
                 }
 
                 postCategories = new String[categoriesJsonArray.length()];
@@ -367,16 +365,16 @@ public class PostUploadService extends Service {
                 WordPress.wpDB.updatePost(mPost);
 
                 if (isFirstTimePublishing) {
-                    if (hasImage) {
+                    if (mHasImage) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_PHOTO);
                     }
-                    if (hasVideo) {
+                    if (mHasVideo) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_VIDEO);
                     }
-                    if (hasCategory) {
+                    if (mHasCategory) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_CATEGORIES);
                     }
-                    if (hasTag) {
+                    if (!TextUtils.isEmpty(mPost.getKeywords())) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST_WITH_TAGS);
                     }
                 }
@@ -422,8 +420,10 @@ public class PostUploadService extends Service {
 
                             String mediaUploadOutput;
                             if (mediaFile.isVideo()) {
+                                mHasVideo = true;
                                 mediaUploadOutput = uploadVideo(mediaFile);
                             } else {
+                                mHasImage = true;
                                 mediaUploadOutput = uploadImage(mediaFile);
                             }
 
