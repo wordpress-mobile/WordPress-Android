@@ -8,9 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /*
- * used when a post doesn't have a featured image assigned, searches post's content for an
- * image that may still be suitable as a featured image - only works with posts from wp
- * blogs since it checks for the existence of specific wp classes or attributes
+ * used when a post doesn't have a featured image assigned, searches post's content
+ * for an image that may be large enough to be suitable as a featured image
+ * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
  */
 public class ReaderFeaturedImageFinder {
     private final String mContent;
