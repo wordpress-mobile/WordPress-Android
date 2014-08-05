@@ -102,11 +102,11 @@ public class PostUploadService extends Service {
         return mFeatureSet;
     }
 
-    private void uploadNextPost(){
+    private void uploadNextPost() {
         synchronized (mPostsList) {
-            if( mCurrentTask == null ) { //make sure nothing is running
+            if (mCurrentTask == null) { //make sure nothing is running
                 mCurrentUploadingPost = null;
-                if ( mPostsList.size() > 0 ) {
+                if (mPostsList.size() > 0) {
                     mCurrentUploadingPost = mPostsList.remove(0);
                     mCurrentTask = new UploadPostTask();
                     mCurrentTask.execute(mCurrentUploadingPost);
@@ -126,9 +126,9 @@ public class PostUploadService extends Service {
     }
 
     public static boolean isUploading(Post post) {
-        if ( mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post) )
+        if (mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post))
             return true;
-        if( mPostsList.size() > 0 && mPostsList.contains(post))
+        if (mPostsList.size() > 0 && mPostsList.contains(post))
             return true;
         return false;
     }
@@ -719,7 +719,7 @@ public class PostUploadService extends Service {
                 return null;
             }
 
-            Object[] params = { 1, blog.getUsername(), blog.getPassword(), pictureParams };
+            Object[] params = {1, blog.getUsername(), blog.getPassword(), pictureParams};
             Object result = uploadFileHelper(client, params, tempFile);
             if (result == null) {
                 mIsMediaError = true;
