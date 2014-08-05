@@ -455,9 +455,8 @@ public class PostUploadService extends Service {
 
                 Cursor cur = mContext.getContentResolver().query(imageUri, projection, null, null, null);
                 if (cur != null && cur.moveToFirst()) {
-                    int dataColumn, mimeTypeColumn;
-                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                    mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+                    int dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    int mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
 
                     String thumbData = cur.getString(dataColumn);
                     mimeType = cur.getString(mimeTypeColumn);
@@ -603,11 +602,9 @@ public class PostUploadService extends Service {
                 Cursor cur = mContext.getContentResolver().query(videoUri, projection, null, null, null);
 
                 if (cur != null && cur.moveToFirst()) {
-                    int mimeTypeColumn, resolutionColumn, dataColumn;
-
-                    dataColumn = cur.getColumnIndex(Video.Media.DATA);
-                    mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
-                    resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
+                    int dataColumn = cur.getColumnIndex(Video.Media.DATA);
+                    int mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+                    int resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
 
                     mediaFile = new MediaFile();
 
@@ -677,15 +674,17 @@ public class PostUploadService extends Service {
                 Map<?, ?> resultMap = (HashMap<?, ?>) result;
                 if (resultMap != null && resultMap.containsKey("url")) {
                     String resultURL = resultMap.get("url").toString();
-                    if (resultMap.containsKey("videopress_shortcode")) {
-                        resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
+                    if (resultMap.containsKey(MediaFile.VIDEOPRESS_SHORTCODE_ID)) {
+                        resultURL = resultMap.get(MediaFile.VIDEOPRESS_SHORTCODE_ID).toString() + "\n";
                     } else {
                         resultURL = String.format(
                                 "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
                                 xRes, yRes, resultURL, mimeType, resultURL);
                     }
+
                     return resultURL;
                 } else {
+                    mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
                     return null;
                 }
             } else {

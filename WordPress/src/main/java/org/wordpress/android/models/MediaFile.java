@@ -33,7 +33,7 @@ public class MediaFile {
     private String uploadState = null;
     private String mediaId;
 
-    private static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
+    public static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
 
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
