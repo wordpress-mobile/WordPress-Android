@@ -1,5 +1,11 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.net.Uri;
+import android.text.TextUtils;
+
+import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.UrlUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,6 +96,50 @@ public class ReaderHtmlUtils {
         } else {
             return null;
         }
+    }
+
+    /*
+     *  returns the actual image url from a Freshly Pressed featured image url - this is necessary because the
+     *  featured image returned by the API is often an ImagePress url that formats the actual image url for a
+     *  specific size, and we want to define the size in the app when the image is requested.
+     *  here's an example of an ImagePress featured image url from a freshly-pressed post:
+     *  https://s1.wp.com/imgpress?crop=0px%2C0px%2C252px%2C160px&url=https%3A%2F%2Fs2.wp.com%2Fimgpress%3Fw%3D252%26url%3Dhttp%253A%252F%252Fmostlybrightideas.files.wordpress.com%252F2013%252F08%252Ftablet.png&unsharpmask=80,0.5,3
+     */
+    public static String getImageUrlFromFeaturedImageUrl(final String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return null;
+        }
+
+        // if this is an mshots image, return the actual url without the query string (?h=n&w=n),
+        // and change it from https: to http: so it can be cached (it's only https because it's
+        // being returned by an authenticated REST endpoint - these images are found only in
+        // FP posts so they don't require https)
+        if (PhotonUtils.isMshotsUrl(imageUrl)) {
+            return UrlUtils.removeQuery(imageUrl).replaceFirst("https", "http");
+        }
+
+        if (imageUrl.contains("imgpress")) {
+            // parse the url parameter
+            String actualImageUrl = Uri.parse(imageUrl).getQueryParameter("url");
+            if (actualImageUrl==null)
+                return imageUrl;
+
+            // at this point the imageUrl may still be an ImagePress url, so check the url param again (see above example)
+            if (actualImageUrl.contains("url=")) {
+                return Uri.parse(actualImageUrl).getQueryParameter("url");
+            } else {
+                return actualImageUrl;
+            }
+        }
+
+        // for all other featured images, return the passed url w/o the query string (since the query string
+        // often contains Photon sizing params that we don't want here)
+        int pos = imageUrl.lastIndexOf("?");
+        if (pos == -1) {
+            return imageUrl;
+        }
+
+        return imageUrl.substring(0, pos);
     }
 
 }
