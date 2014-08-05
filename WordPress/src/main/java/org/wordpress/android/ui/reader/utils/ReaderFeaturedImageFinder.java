@@ -21,9 +21,9 @@ public class ReaderFeaturedImageFinder {
             "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)/>",
             Pattern.DOTALL| Pattern.CASE_INSENSITIVE);
 
-    // regex for matching class attributes in tags
-    private static final Pattern CLASS_ATTR_PATTERN = Pattern.compile(
-            "class\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
+    // regex for matching width attributes in tags
+    private static final Pattern WIDTH_ATTR_PATTERN = Pattern.compile(
+            "width\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
     // regex for matching src attributes in tags
@@ -35,57 +35,47 @@ public class ReaderFeaturedImageFinder {
         mContent = contentOfPost;
     }
 
-    public String getFeaturedImage() {
+    /*
+     * returns the url of the largest image based on the w= query param and/or the width
+     * attribute, provided that the width is at least MIN_FEATURED_IMAGE_WIDTH
+     */
+    public String getBestFeaturedImage() {
         if (mContent == null || !mContent.contains("<img ")) {
             return null;
         }
 
-        // pick the class name we want to match, starting with the largest wp img class - if no
-        // match is found we'll fall back to check the w= query param
-        final String classToFind;
-        if (mContent.contains("size-full")) {
-            classToFind = "size-full";
-        } else if (mContent.contains("size-large")) {
-            classToFind = "size-large";
-        } else if (mContent.contains("size-medium")) {
-            classToFind = "size-medium";
-        } else {
-            classToFind = null;
-        }
+        String currentImageUrl = null;
+        int currentMaxWidth = MIN_FEATURED_IMAGE_WIDTH;
 
         Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
         while (imgMatcher.find()) {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
-            if (classToFind != null) {
-                String classAttr = getClassAttrValue(imgTag);
-                if (classAttr != null && classAttr.contains(classToFind)) {
-                    return getSrcAttrValue(imgTag);
-                }
-            } else {
-                String imageUrl = getSrcAttrValue(imgTag);
-                if (getIntQueryParam(imageUrl, "w") >= MIN_FEATURED_IMAGE_WIDTH) {
-                    return imageUrl;
-                }
+            String imageUrl = getSrcAttrValue(imgTag);
+
+            int width = Math.max(getWidthAttrValue(imgTag), getIntQueryParam(imageUrl, "w"));
+            if (width > currentMaxWidth) {
+                currentImageUrl = imageUrl;
+                currentMaxWidth = width;
             }
         }
 
-        return null;
+        return currentImageUrl;
     }
 
     /*
-     * returns the value from the class attribute in the passed html tag
+     * returns the integer value from the width attribute in the passed html tag
      */
-    private String getClassAttrValue(final String tag) {
+    private int getWidthAttrValue(final String tag) {
         if (tag == null) {
-            return null;
+            return 0;
         }
 
-        Matcher matcher = CLASS_ATTR_PATTERN.matcher(tag);
+        Matcher matcher = WIDTH_ATTR_PATTERN.matcher(tag);
         if (matcher.find()) {
-            // remove "class=" and quotes from the result
-            return tag.substring(matcher.start() + 7, matcher.end() - 1);
+            // remove "width=" and quotes from the result
+            return StringUtils.stringToInt(tag.substring(matcher.start() + 7, matcher.end() - 1), 0);
         } else {
-            return null;
+            return 0;
         }
     }
 
