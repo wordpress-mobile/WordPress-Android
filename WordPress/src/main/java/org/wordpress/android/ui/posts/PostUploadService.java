@@ -58,15 +58,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostUploadService extends Service {
-    private static Context context;
-    private static final ArrayList<Post> listOfPosts = new ArrayList<Post>();
-    private static Post currentUploadingPost = null;
-    private UploadPostTask currentTask = null;
+    private static Context mContext;
+    private static final ArrayList<Post> mPostsList = new ArrayList<Post>();
+    private static Post mCurrentUploadingPost = null;
+    private UploadPostTask mCurrentTask = null;
     private FeatureSet mFeatureSet;
 
     public static void addPostToUpload(Post currentPost) {
-        synchronized (listOfPosts) {
-            listOfPosts.add(currentPost);
+        synchronized (mPostsList) {
+            mPostsList.add(currentPost);
         }
     }
 
@@ -78,13 +78,13 @@ public class PostUploadService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this.getApplicationContext();
+        mContext = this.getApplicationContext();
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
-        synchronized (listOfPosts) {
-            if (listOfPosts.size() == 0 || context == null) {
+        synchronized (mPostsList) {
+            if (mPostsList.size() == 0 || mContext == null) {
                 this.stopSelf();
                 return;
             }
@@ -103,13 +103,13 @@ public class PostUploadService extends Service {
     }
 
     private void uploadNextPost(){
-        synchronized (listOfPosts) {
-            if( currentTask == null ) { //make sure nothing is running
-                currentUploadingPost = null;
-                if ( listOfPosts.size() > 0 ) {
-                    currentUploadingPost = listOfPosts.remove(0);
-                    currentTask = new UploadPostTask();
-                    currentTask.execute(currentUploadingPost);
+        synchronized (mPostsList) {
+            if( mCurrentTask == null ) { //make sure nothing is running
+                mCurrentUploadingPost = null;
+                if ( mPostsList.size() > 0 ) {
+                    mCurrentUploadingPost = mPostsList.remove(0);
+                    mCurrentTask = new UploadPostTask();
+                    mCurrentTask.execute(mCurrentUploadingPost);
                 } else {
                     this.stopSelf();
                 }
@@ -118,17 +118,17 @@ public class PostUploadService extends Service {
     }
 
     private void postUploaded() {
-        synchronized (listOfPosts) {
-            currentTask = null;
-            currentUploadingPost = null;
+        synchronized (mPostsList) {
+            mCurrentTask = null;
+            mCurrentUploadingPost = null;
         }
         uploadNextPost();
     }
 
     public static boolean isUploading(Post post) {
-        if ( currentUploadingPost != null && currentUploadingPost.equals(post) )
+        if ( mCurrentUploadingPost != null && mCurrentUploadingPost.equals(post) )
             return true;
-        if( listOfPosts != null && listOfPosts.size() > 0 && listOfPosts.contains(post))
+        if( mPostsList.size() > 0 && mPostsList.contains(post))
             return true;
         return false;
     }
@@ -142,6 +142,7 @@ public class PostUploadService extends Service {
         private boolean mIsMediaError = false;
         private boolean mErrorUnavailableVideoPress = false;
         private int featuredImageID = -1;
+        private XMLRPCClientInterface mClient;
 
         @Override
         protected void onPostExecute(Boolean postUploadedSuccessfully) {
@@ -168,12 +169,12 @@ public class PostUploadService extends Service {
 
             mBlog = WordPress.wpDB.instantiateBlogByLocalId(mPost.getLocalTableBlogId());
             if (mBlog == null) {
-                mErrorMessage = context.getString(R.string.blog_not_found);
+                mErrorMessage = mContext.getString(R.string.blog_not_found);
                 return false;
             }
 
             // Create the XML-RPC client
-            XMLRPCClientInterface client = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
+            mClient = XMLRPCFactory.instantiate(mBlog.getUri(), mBlog.getHttpuser(),
                     mBlog.getHttppassword());
 
             boolean isFirstTimePublishing = false;
@@ -225,7 +226,7 @@ public class PostUploadService extends Service {
 
             if (!mPost.isPage() && mPost.isLocalDraft()) {
                 // add the tagline
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
 
                 if (prefs.getBoolean("wp_pref_signature_enabled", false)) {
                     String tagline = prefs.getString("wp_pref_post_signature", "");
@@ -338,7 +339,7 @@ public class PostUploadService extends Service {
             }
 
             if (!TextUtils.isEmpty(mPost.getQuickPostType())) {
-                client.addQuickPostHeader(mPost.getQuickPostType());
+                mClient.addQuickPostHeader(mPost.getQuickPostType());
             }
 
             contentStruct.put("wp_password", mPost.getPassword());
@@ -353,12 +354,12 @@ public class PostUploadService extends Service {
 
             try {
                 if (mPost.isLocalDraft() && !mPost.isUploaded()) {
-                    Object newPostId = client.call("metaWeblog.newPost", params);
+                    Object newPostId = mClient.call("metaWeblog.newPost", params);
                     if (newPostId instanceof String) {
                         mPost.setRemotePostId((String) newPostId);
                     }
                 } else {
-                    client.call("metaWeblog.editPost", params);
+                    mClient.call("metaWeblog.editPost", params);
                 }
 
                 mPost.setUploaded(true);
@@ -411,16 +412,23 @@ public class PostUploadService extends Service {
                 if (m.find()) {
                     String imgPath = m.group(1);
                     if (!imgPath.equals("")) {
-                        MediaFile mf = WordPress.wpDB.getMediaFile(imgPath, mPost);
-                        if (mf != null) {
+                        MediaFile mediaFile = WordPress.wpDB.getMediaFile(imgPath, mPost);
+                        if (mediaFile != null) {
                             mPostUploadNotifier.updateNotificationMessage(
                                     null,
-                                    mf.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
+                                    mediaFile.isVideo() ? getString(R.string.sending_video) : getString(R.string.sending_image),
                                     null
                             );
-                            String imgHTML = uploadMediaFile(mf, mBlog);
-                            if (imgHTML != null) {
-                                postContent = postContent.replace(tag, imgHTML);
+
+                            String mediaUploadOutput;
+                            if (mediaFile.isVideo()) {
+                                mediaUploadOutput = uploadVideo(mediaFile);
+                            } else {
+                                mediaUploadOutput = uploadImage(mediaFile);
+                            }
+
+                            if (mediaUploadOutput != null) {
+                                postContent = postContent.replace(tag, mediaUploadOutput);
                             } else {
                                 postContent = postContent.replace(tag, "");
                                 mIsMediaError = true;
@@ -433,322 +441,270 @@ public class PostUploadService extends Service {
             return postContent;
         }
 
-
-        private void setUploadPostErrorMessage(Exception e) {
-            mErrorMessage = String.format(context.getResources().getText(R.string.error_upload).toString(), mPost.isPage() ? context
-                    .getResources().getText(R.string.page).toString() : context.getResources().getText(R.string.post).toString())
-                    + " " + e.getMessage();
-            mIsMediaError = false;
-            AppLog.e(T.EDITOR, mErrorMessage, e);
-        }
-
-        public String uploadMediaFile(MediaFile mediaFile, Blog blog) {
-            String content = "";
-
-            String curImagePath = mediaFile.getFilePath();
-            if (curImagePath == null) {
+        private String uploadImage(MediaFile mediaFile) {
+            if (mediaFile.getFilePath() == null) {
                 return null;
             }
 
-            if (curImagePath.contains("video")) {
-                // Upload the video
-                XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
-                        blog.getHttppassword());
-                // create temp file for media upload
-                String tempFileName = "wp-" + System.currentTimeMillis();
+            Uri imageUri = Uri.parse(mediaFile.getFilePath());
+            File imageFile = null;
+            String mimeType = "", path = "";
+
+            if (imageUri.toString().contains("content:")) {
+                String[] projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
+
+                Cursor cur = mContext.getContentResolver().query(imageUri, projection, null, null, null);
+                if (cur != null && cur.moveToFirst()) {
+                    int dataColumn, mimeTypeColumn;
+                    dataColumn = cur.getColumnIndex(Images.Media.DATA);
+                    mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
+
+                    String thumbData = cur.getString(dataColumn);
+                    mimeType = cur.getString(mimeTypeColumn);
+                    imageFile = new File(thumbData);
+                    path = thumbData;
+                    mediaFile.setFilePath(imageFile.getPath());
+                }
+            } else { // file is not in media library
+                path = imageUri.toString().replace("file://", "");
+                imageFile = new File(path);
+                mediaFile.setFilePath(path);
+            }
+
+            // check if the file exists
+            if (imageFile == null) {
+                mErrorMessage = mContext.getString(R.string.file_not_found);
+                mIsMediaError = true;
+                return null;
+            }
+
+            if (TextUtils.isEmpty(mimeType)) {
+                mimeType = MediaUtils.getMediaFileMimeType(imageFile);
+            }
+            String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+
+            int orientation = ImageUtils.getImageOrientation(mContext, path);
+
+            String resizedPictureURL = null;
+
+            // We need to upload a resized version of the picture when the blog settings != original size, or when
+            // the user has selected a smaller size for the current picture in the picture settings screen
+            // We won't resize gif images to keep them awesome.
+            boolean shouldUploadResizedVersion = false;
+            // If it's not a gif and blog don't keep original size, there is a chance we need to resize
+            if (!mimeType.equals("image/gif") && !mBlog.getMaxImageWidth().equals("Original Size")) {
+                //check the picture settings
+                int pictureSettingWidth = mediaFile.getWidth();
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, options);
+                int imageHeight = options.outHeight;
+                int imageWidth = options.outWidth;
+                int[] dimensions = {imageWidth, imageHeight};
+                if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
+                    shouldUploadResizedVersion = true;
+                }
+            }
+
+            boolean shouldAddImageWidthCSS = false;
+
+            if (shouldUploadResizedVersion) {
+                MediaFile resizedMediaFile = new MediaFile(mediaFile);
+                // Create resized image
+                byte[] bytes = ImageUtils.createThumbnailFromUri(mContext, imageUri, resizedMediaFile.getWidth(),
+                        fileExtension, orientation);
+
+                if (bytes == null) {
+                    // We weren't able to resize the image, so we will upload the full size image with css to resize it
+                    shouldUploadResizedVersion = false;
+                    shouldAddImageWidthCSS = true;
+                } else {
+                    // Save temp image
+                    String tempFilePath;
+                    File resizedImageFile;
+                    try {
+                        resizedImageFile = File.createTempFile("wp-image-", fileExtension);
+                        FileOutputStream out = new FileOutputStream(resizedImageFile);
+                        out.write(bytes);
+                        out.close();
+                        tempFilePath = resizedImageFile.getPath();
+                    } catch (IOException e) {
+                        AppLog.w(T.POSTS, "failed to create image temp file");
+                        mErrorMessage = mContext.getString(R.string.error_media_upload);
+                        mIsMediaError = true;
+                        return null;
+                    }
+
+                    // upload resized picture
+                    if (!TextUtils.isEmpty(tempFilePath)) {
+                        resizedMediaFile.setFilePath(tempFilePath);
+                        Map<String, Object> parameters = new HashMap<String, Object>();
+
+                        parameters.put("name", fileName);
+                        parameters.put("type", mimeType);
+                        parameters.put("bits", resizedMediaFile);
+                        parameters.put("overwrite", true);
+                        resizedPictureURL = uploadImageFile(parameters, resizedMediaFile, mBlog);
+                        if (resizedPictureURL == null) {
+                            AppLog.w(T.POSTS, "failed to upload resized picture");
+                            return null;
+                        } else if (resizedImageFile.exists()) {
+                            resizedImageFile.delete();
+                        }
+                    } else {
+                        AppLog.w(T.POSTS, "failed to create resized picture");
+                        mErrorMessage = mContext.getString(R.string.out_of_memory);
+                        mIsMediaError = true;
+                        return null;
+                    }
+                }
+            }
+
+            String fullSizeUrl = null;
+            // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
+            if (!shouldUploadResizedVersion || mBlog.isFullSizeImage()) {
+                Map<String, Object> parameters = new HashMap<String, Object>();
+                parameters.put("name", fileName);
+                parameters.put("type", mimeType);
+                parameters.put("bits", mediaFile);
+                parameters.put("overwrite", true);
+
+                fullSizeUrl = uploadImageFile(parameters, mediaFile, mBlog);
+                if (fullSizeUrl == null) {
+                    return null;
+                }
+            }
+
+            return mediaFile.getImageHtmlForUrls(fullSizeUrl, resizedPictureURL, shouldAddImageWidthCSS);
+        }
+
+        private String uploadVideo(MediaFile mediaFile) {
+            // create temp file for media upload
+            String tempFileName = "wp-" + System.currentTimeMillis();
+            try {
+                mContext.openFileOutput(tempFileName, Context.MODE_PRIVATE);
+            } catch (FileNotFoundException e) {
+                mErrorMessage = getResources().getString(R.string.file_error_create);
+                mIsMediaError = true;
+                return null;
+            }
+
+            if (mediaFile.getFilePath() == null) {
+                return null;
+            }
+
+            Uri videoUri = Uri.parse(mediaFile.getFilePath());
+            File videoFile = null;
+            String mimeType = "", xRes = "", yRes = "";
+
+            if (videoUri.toString().contains("content:")) {
+                String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
+                Cursor cur = mContext.getContentResolver().query(videoUri, projection, null, null, null);
+
+                if (cur != null && cur.moveToFirst()) {
+                    int mimeTypeColumn, resolutionColumn, dataColumn;
+
+                    dataColumn = cur.getColumnIndex(Video.Media.DATA);
+                    mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
+                    resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
+
+                    mediaFile = new MediaFile();
+
+                    String thumbData = cur.getString(dataColumn);
+                    mimeType = cur.getString(mimeTypeColumn);
+
+                    videoFile = new File(thumbData);
+                    mediaFile.setFilePath(videoFile.getPath());
+                    String resolution = cur.getString(resolutionColumn);
+                    if (resolution != null) {
+                        String[] resolutions = resolution.split("x");
+                        if (resolutions.length >= 2) {
+                            xRes = resolutions[0];
+                            yRes = resolutions[1];
+                        }
+                    } else {
+                        // set the width of the video to the thumbnail width, else 640x480
+                        if (!mBlog.getMaxImageWidth().equals("Original Size")) {
+                            xRes = mBlog.getMaxImageWidth();
+                            yRes = String.valueOf(Math.round(Integer.valueOf(mBlog.getMaxImageWidth()) * 0.75));
+                        } else {
+                            xRes = "640";
+                            yRes = "480";
+                        }
+                    }
+                }
+            } else { // file is not in media library
+                String filePath = videoUri.toString().replace("file://", "");
+                mediaFile.setFilePath(filePath);
+                videoFile = new File(filePath);
+            }
+
+            if (videoFile == null) {
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload);
+                return null;
+            }
+
+            if (TextUtils.isEmpty(mimeType)) {
+                mimeType = MediaUtils.getMediaFileMimeType(videoFile);
+            }
+            String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
+
+            // try to upload the video
+            Map<String, Object> m = new HashMap<String, Object>();
+            m.put("name", videoName);
+            m.put("type", mimeType);
+            m.put("bits", mediaFile);
+            m.put("overwrite", true);
+
+            Object[] params = {1, mBlog.getUsername(), mBlog.getPassword(), m};
+
+            FeatureSet featureSet = synchronousGetFeatureSet();
+            boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
+            boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
+            if (isVideoEnabled) {
+                File tempFile;
                 try {
-                    context.openFileOutput(tempFileName, Context.MODE_PRIVATE);
-                } catch (FileNotFoundException e) {
+                    String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
+                    tempFile = createTempUploadFile(fileExtension);
+                } catch (IOException e) {
                     mErrorMessage = getResources().getString(R.string.file_error_create);
                     mIsMediaError = true;
                     return null;
                 }
 
-                Uri videoUri = Uri.parse(curImagePath);
-                File videoFile = null;
-                String mimeType = "", xRes = "", yRes = "";
-
-                if (videoUri.toString().contains("content:")) {
-                    String[] projection = new String[]{Video.Media._ID, Video.Media.DATA, Video.Media.MIME_TYPE, Video.Media.RESOLUTION};
-                    Cursor cur = context.getContentResolver().query(videoUri, projection, null, null, null);
-
-                    if (cur != null && cur.moveToFirst()) {
-                        int mimeTypeColumn, resolutionColumn, dataColumn;
-
-                        dataColumn = cur.getColumnIndex(Video.Media.DATA);
-                        mimeTypeColumn = cur.getColumnIndex(Video.Media.MIME_TYPE);
-                        resolutionColumn = cur.getColumnIndex(Video.Media.RESOLUTION);
-
-                        mediaFile = new MediaFile();
-
-                        String thumbData = cur.getString(dataColumn);
-                        mimeType = cur.getString(mimeTypeColumn);
-
-                        videoFile = new File(thumbData);
-                        mediaFile.setFilePath(videoFile.getPath());
-                        String resolution = cur.getString(resolutionColumn);
-                        if (resolution != null) {
-                            String[] resx = resolution.split("x");
-                            xRes = resx[0];
-                            yRes = resx[1];
-                        } else {
-                            // set the width of the video to the thumbnail width, else 640x480
-                            if (!blog.getMaxImageWidth().equals("Original Size")) {
-                                xRes = blog.getMaxImageWidth();
-                                yRes = String.valueOf(Math.round(Integer.valueOf(blog.getMaxImageWidth()) * 0.75));
-                            } else {
-                                xRes = "640";
-                                yRes = "480";
-                            }
-                        }
-                    }
-                } else { // file is not in media library
-                    String filePath = videoUri.toString().replace("file://", "");
-                    mediaFile.setFilePath(filePath);
-                    videoFile = new File(filePath);
-                }
-
-                if (videoFile == null) {
-                    mErrorMessage = context.getResources().getString(R.string.error_media_upload);
-                    return null;
-                }
-
-                if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = MediaUtils.getMediaFileMimeType(videoFile);
-                }
-                String videoName = MediaUtils.getMediaFileName(videoFile, mimeType);
-
-                // try to upload the video
-                Map<String, Object> m = new HashMap<String, Object>();
-                m.put("name", videoName);
-                m.put("type", mimeType);
-                m.put("bits", mediaFile);
-                m.put("overwrite", true);
-
-                Object[] params = {1, blog.getUsername(), blog.getPassword(), m};
-
-                FeatureSet featureSet = synchronousGetFeatureSet();
-                boolean selfHosted = WordPress.currentBlog != null && !WordPress.currentBlog.isDotcomFlag();
-                boolean isVideoEnabled = selfHosted || (featureSet != null && mFeatureSet.isVideopressEnabled());
-                if (isVideoEnabled) {
-                    File tempFile;
-                    try {
-                        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(videoName);
-                        tempFile = createTempUploadFile(fileExtension);
-                    } catch (IOException e) {
-                        mErrorMessage = getResources().getString(R.string.file_error_create);
-                        mIsMediaError = true;
-                        return null;
-                    }
-
-                    Object result = uploadFileHelper(client, params, tempFile);
-                    Map<?, ?> resultMap = (HashMap<?, ?>) result;
-                    if (resultMap != null && resultMap.containsKey("url")) {
-                        String resultURL = resultMap.get("url").toString();
-                        if (resultMap.containsKey("videopress_shortcode")) {
-                            resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
-                        } else {
-                            resultURL = String.format(
-                                    "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
-                                    xRes, yRes, resultURL, mimeType, resultURL);
-                        }
-                        content = content + resultURL;
+                Object result = uploadFileHelper(mClient, params, tempFile);
+                Map<?, ?> resultMap = (HashMap<?, ?>) result;
+                if (resultMap != null && resultMap.containsKey("url")) {
+                    String resultURL = resultMap.get("url").toString();
+                    if (resultMap.containsKey("videopress_shortcode")) {
+                        resultURL = resultMap.get("videopress_shortcode").toString() + "\n";
                     } else {
-                        return null;
+                        resultURL = String.format(
+                                "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                                xRes, yRes, resultURL, mimeType, resultURL);
                     }
+                    return resultURL;
                 } else {
-                    mErrorMessage = getString(R.string.media_no_video_message);
-                    mErrorUnavailableVideoPress = true;
                     return null;
                 }
             } else {
-                // Upload the image
-                curImagePath = mediaFile.getFilePath();
-
-                Uri imageUri = Uri.parse(curImagePath);
-                File imageFile = null;
-                String mimeType = "", path = "";
-                int orientation;
-
-                if (imageUri.toString().contains("content:")) {
-                    String[] projection;
-                    Uri imgPath;
-
-                    projection = new String[]{Images.Media._ID, Images.Media.DATA, Images.Media.MIME_TYPE};
-
-                    imgPath = imageUri;
-
-                    Cursor cur = context.getContentResolver().query(imgPath, projection, null, null, null);
-                    if (cur != null && cur.moveToFirst()) {
-                        int dataColumn, mimeTypeColumn;
-                        dataColumn = cur.getColumnIndex(Images.Media.DATA);
-                        mimeTypeColumn = cur.getColumnIndex(Images.Media.MIME_TYPE);
-
-                        String thumbData = cur.getString(dataColumn);
-                        mimeType = cur.getString(mimeTypeColumn);
-                        imageFile = new File(thumbData);
-                        path = thumbData;
-                        mediaFile.setFilePath(imageFile.getPath());
-                    }
-                } else { // file is not in media library
-                    path = imageUri.toString().replace("file://", "");
-                    imageFile = new File(path);
-                    mediaFile.setFilePath(path);
-                }
-
-                // check if the file exists
-                if (imageFile == null) {
-                    mErrorMessage = context.getString(R.string.file_not_found);
-                    mIsMediaError = true;
-                    return null;
-                }
-
-                if (TextUtils.isEmpty(mimeType)) {
-                    mimeType = MediaUtils.getMediaFileMimeType(imageFile);
-                }
-                String fileName = MediaUtils.getMediaFileName(imageFile, mimeType);
-                String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
-
-                orientation = ImageUtils.getImageOrientation(context, path);
-
-                String resizedPictureURL = null;
-
-                // We need to upload a resized version of the picture when the blog settings != original size, or when
-                // the user has selected a smaller size for the current picture in the picture settings screen
-                // We won't resize gif images to keep them awesome.
-                boolean shouldUploadResizedVersion = false;
-                // If it's not a gif and blog don't keep original size, there is a chance we need to resize
-                if (!mimeType.equals("image/gif") && !blog.getMaxImageWidth().equals("Original Size")) {
-                    //check the picture settings
-                    int pictureSettingWidth = mediaFile.getWidth();
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-                    BitmapFactory.decodeFile(path, options);
-                    int imageHeight = options.outHeight;
-                    int imageWidth = options.outWidth;
-                    int[] dimensions = {imageWidth, imageHeight};
-                    if (dimensions[0] != 0 && dimensions[0] != pictureSettingWidth) {
-                        shouldUploadResizedVersion = true;
-                    }
-                }
-
-                boolean shouldAddImageWidthCSS = false;
-
-                if (shouldUploadResizedVersion) {
-                    MediaFile resizedMediaFile = new MediaFile(mediaFile);
-                    // Create resized image
-                    byte[] bytes = ImageUtils.createThumbnailFromUri(context, imageUri, resizedMediaFile.getWidth(),
-                            fileExtension, orientation);
-
-                    if (bytes == null) {
-                        // We weren't able to resize the image, so we will upload the full size image with css to resize it
-                        shouldUploadResizedVersion = false;
-                        shouldAddImageWidthCSS = true;
-                    } else {
-                        // Save temp image
-                        String tempFilePath;
-                        File resizedImageFile;
-                        try {
-                            resizedImageFile = File.createTempFile("wp-image-", fileExtension);
-                            FileOutputStream out = new FileOutputStream(resizedImageFile);
-                            out.write(bytes);
-                            out.close();
-                            tempFilePath = resizedImageFile.getPath();
-                        } catch (IOException e) {
-                            AppLog.w(T.POSTS, "failed to create image temp file");
-                            mErrorMessage = context.getString(R.string.error_media_upload);
-                            mIsMediaError = true;
-                            return null;
-                        }
-
-                        // upload resized picture
-                        if (!TextUtils.isEmpty(tempFilePath)) {
-                            resizedMediaFile.setFilePath(tempFilePath);
-                            Map<String, Object> parameters = new HashMap<String, Object>();
-
-                            parameters.put("name", fileName);
-                            parameters.put("type", mimeType);
-                            parameters.put("bits", resizedMediaFile);
-                            parameters.put("overwrite", true);
-                            resizedPictureURL = uploadPicture(parameters, resizedMediaFile, blog);
-                            if (resizedPictureURL == null) {
-                                AppLog.w(T.POSTS, "failed to upload resized picture");
-                                return null;
-                            } else if (resizedImageFile != null && resizedImageFile.exists()) {
-                                resizedImageFile.delete();
-                            }
-                        } else {
-                            AppLog.w(T.POSTS, "failed to create resized picture");
-                            mErrorMessage = context.getString(R.string.out_of_memory);
-                            mIsMediaError = true;
-                            return null;
-                        }
-                    }
-                }
-
-                String fullSizeUrl = null;
-                // Upload the full size picture if "Original Size" is selected in settings, or if 'link to full size' is checked.
-                if (!shouldUploadResizedVersion || blog.isFullSizeImage()) {
-                    // try to upload the image
-                    Map<String, Object> parameters = new HashMap<String, Object>();
-                    parameters.put("name", fileName);
-                    parameters.put("type", mimeType);
-                    parameters.put("bits", mediaFile);
-                    parameters.put("overwrite", true);
-
-                    fullSizeUrl = uploadPicture(parameters, mediaFile, blog);
-                    if (fullSizeUrl == null)
-                        return null;
-                }
-
-                String alignment = "";
-                switch (mediaFile.getHorizontalAlignment()) {
-                    case 0:
-                        alignment = "alignnone";
-                        break;
-                    case 1:
-                        alignment = "alignleft";
-                        break;
-                    case 2:
-                        alignment = "aligncenter";
-                        break;
-                    case 3:
-                        alignment = "alignright";
-                        break;
-                }
-
-                String alignmentCSS = "class=\"" + alignment + " size-full\" ";
-
-                if (shouldAddImageWidthCSS) {
-                    alignmentCSS += "style=\"max-width: " + mediaFile.getWidth() + "px\" ";
-                }
-
-                // Check if we uploaded a featured picture that is not added to the mPost content (normal case)
-                if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
-                        (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
-                    return ""; // Not featured in mPost. Do not add to the content.
-                }
-
-                if (fullSizeUrl == null && resizedPictureURL != null) {
-                    fullSizeUrl = resizedPictureURL;
-                } else if (fullSizeUrl != null && resizedPictureURL == null){
-                    resizedPictureURL = fullSizeUrl;
-                }
-
-                String mediaTitle = TextUtils.isEmpty(mediaFile.getTitle()) ? "" : mediaFile.getTitle();
-
-                content = content + "<a href=\"" + fullSizeUrl + "\"><img title=\"" + mediaTitle + "\" "
-                        + alignmentCSS + "alt=\"image\" src=\"" + resizedPictureURL + "\" /></a>";
-
-                if (!TextUtils.isEmpty(mediaFile.getCaption())) {
-                    content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
-                            alignment, mediaFile.getWidth(), TextUtils.htmlEncode(mediaFile.getCaption()), content);
-                }
+                mErrorMessage = getString(R.string.media_no_video_message);
+                mErrorUnavailableVideoPress = true;
+                return null;
             }
-            return content;
         }
 
-        private String uploadPicture(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
+
+        private void setUploadPostErrorMessage(Exception e) {
+            mErrorMessage = String.format(mContext.getResources().getText(R.string.error_upload).toString(), mPost.isPage() ? mContext
+                    .getResources().getText(R.string.page).toString() : mContext.getResources().getText(R.string.post).toString())
+                    + " " + e.getMessage();
+            mIsMediaError = false;
+            AppLog.e(T.EDITOR, mErrorMessage, e);
+        }
+
+        private String uploadImageFile(Map<String, Object> pictureParams, MediaFile mf, Blog blog) {
             XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
                     blog.getHttppassword());
 
@@ -759,7 +715,7 @@ public class PostUploadService extends Service {
                 tempFile = createTempUploadFile(fileExtension);
             } catch (IOException e) {
                 mIsMediaError = true;
-                mErrorMessage = context.getString(R.string.file_not_found);
+                mErrorMessage = mContext.getString(R.string.file_not_found);
                 return null;
             }
 
@@ -793,15 +749,15 @@ public class PostUploadService extends Service {
                 return client.call("wp.uploadFile", params, tempFile);
             } catch (XMLRPCException e) {
                 AppLog.e(T.API, e);
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (IOException e) {
                 AppLog.e(T.API, e);
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } catch (XmlPullParserException e) {
                 AppLog.e(T.API, e);
-                mErrorMessage = context.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
+                mErrorMessage = mContext.getResources().getString(R.string.error_media_upload) + ": " + e.getMessage();
                 return null;
             } finally {
                 // remove the temporary upload file now that we're done with it
@@ -812,7 +768,7 @@ public class PostUploadService extends Service {
     }
 
     private File createTempUploadFile(String fileExtension) throws IOException {
-        return File.createTempFile("wp-", fileExtension, context.getCacheDir());
+        return File.createTempFile("wp-", fileExtension, mContext.getCacheDir());
     }
 
     private class PostUploadNotifier {
@@ -824,13 +780,13 @@ public class PostUploadService extends Service {
 
         public PostUploadNotifier(Post post) {
             // add the uploader to the notification bar
-            mNotificationManager = (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) SystemServiceFactory.get(mContext, Context.NOTIFICATION_SERVICE);
 
             mNotificationBuilder =
                     new NotificationCompat.Builder(getApplicationContext())
                             .setSmallIcon(R.drawable.notification_icon);
 
-            Intent notificationIntent = new Intent(context, post.isPage() ? PagesActivity.class : PostsActivity.class);
+            Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -838,7 +794,7 @@ public class PostUploadService extends Service {
             notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
             notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
             mNotificationBuilder.setContentIntent(pendingIntent);
 
@@ -867,9 +823,9 @@ public class PostUploadService extends Service {
         }
 
         public void updateNotificationWithError(String mErrorMessage, boolean isMediaError, boolean isPage, boolean isVideoPressError) {
-            String postOrPage = (String) (isPage ? context.getResources().getText(R.string.page_id) : context.getResources()
+            String postOrPage = (String) (isPage ? mContext.getResources().getText(R.string.page_id) : mContext.getResources()
                     .getText(R.string.post_id));
-            Intent notificationIntent = new Intent(context, isPage ? PagesActivity.class : PostsActivity.class);
+            Intent notificationIntent = new Intent(mContext, isPage ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_NEW_TASK
                     | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
@@ -882,16 +838,16 @@ public class PostUploadService extends Service {
                 notificationIntent.putExtra(PostsActivity.EXTRA_ERROR_INFO_LINK, Constants.videoPressURL);
             }
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
                     notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            String errorText = context.getResources().getText(R.string.upload_failed).toString();
+            String errorText = mContext.getResources().getText(R.string.upload_failed).toString();
             if (isMediaError) {
-                errorText = context.getResources().getText(R.string.media) + " " + context.getResources().getText(R.string.error);
+                errorText = mContext.getResources().getText(R.string.media) + " " + mContext.getResources().getText(R.string.error);
             }
 
             mNotificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);
-            mNotificationBuilder.setContentTitle((isMediaError) ? errorText : context.getResources().getText(R.string.upload_failed));
+            mNotificationBuilder.setContentTitle((isMediaError) ? errorText : mContext.getResources().getText(R.string.upload_failed));
             mNotificationBuilder.setContentText((isMediaError) ? mErrorMessage : postOrPage + " " + errorText + ": " + mErrorMessage);
             mNotificationBuilder.setContentIntent(pendingIntent);
             mNotificationBuilder.setAutoCancel(true);
