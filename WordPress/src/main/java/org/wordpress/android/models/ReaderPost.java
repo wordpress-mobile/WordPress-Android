@@ -1,15 +1,17 @@
 package org.wordpress.android.models;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderUtils;
-import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
+import org.wordpress.android.ui.reader.utils.ReaderFeaturedImageFinder;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
 import java.util.Iterator;
@@ -97,7 +99,7 @@ public class ReaderPost {
         if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
-            post.featuredImage = ReaderHtmlUtils.getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
+            post.featuredImage = getImageUrlFromFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
             post.setPrimaryTag(JSONUtil.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
             // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
             post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
@@ -138,7 +140,7 @@ public class ReaderPost {
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image
             if (!post.hasFeaturedImage()) {
-                post.featuredImage = ReaderHtmlUtils.findFeaturedImage(post.text);
+                post.featuredImage = new ReaderFeaturedImageFinder(post.text).getFeaturedImage();
             }
         }
 
@@ -241,7 +243,7 @@ public class ReaderPost {
     }
 
     /*
-     * extracts a title from a post's excerpt
+     * extracts a title from a post's excerpt - used when the post has no title
      */
     private static String extractTitle(final String excerpt, int maxLen) {
         if (TextUtils.isEmpty(excerpt))
@@ -269,6 +271,51 @@ public class ReaderPost {
         if (totalLen==0)
             return null;
         return result.toString().trim() + "...";
+    }
+
+    /*
+     *  returns the actual image url from a Freshly Pressed featured image url - this is necessary
+     *  because the featured image returned by the API is often an ImagePress url that formats the
+     *  actual image url for a specific size, and we want to define the size in the app when the
+     *  image is requested. example of an ImagePress featured image url from a freshly-pressed post:
+     *  https://s1.wp.com/imgpress?crop=0px%2C0px%2C252px%2C160px&url=https%3A%2F%2Fs2.wp.com%2Fimgpress%3Fw%3D252%26url%3Dhttp%253A%252F%252Fmostlybrightideas.files.wordpress.com%252F2013%252F08%252Ftablet.png&unsharpmask=80,0.5,3
+     */
+    public static String getImageUrlFromFeaturedImageUrl(final String imageUrl) {
+        if (TextUtils.isEmpty(imageUrl)) {
+            return null;
+        }
+
+        // if this is an mshots image, return the actual url without the query string (?h=n&w=n),
+        // and change it from https: to http: so it can be cached (it's only https because it's
+        // being returned by an authenticated REST endpoint - these images are found only in
+        // FP posts so they don't require https)
+        if (PhotonUtils.isMshotsUrl(imageUrl)) {
+            return UrlUtils.removeQuery(imageUrl).replaceFirst("https", "http");
+        }
+
+        if (imageUrl.contains("imgpress")) {
+            // parse the url parameter
+            String actualImageUrl = Uri.parse(imageUrl).getQueryParameter("url");
+            if (actualImageUrl == null) {
+                return imageUrl;
+            }
+
+            // at this point the imageUrl may still be an ImagePress url, so check the url param again (see above example)
+            if (actualImageUrl.contains("url=")) {
+                return Uri.parse(actualImageUrl).getQueryParameter("url");
+            } else {
+                return actualImageUrl;
+            }
+        }
+
+        // for all other featured images, return the passed url w/o the query string (since the query string
+        // often contains Photon sizing params that we don't want here)
+        int pos = imageUrl.lastIndexOf("?");
+        if (pos == -1) {
+            return imageUrl;
+        }
+
+        return imageUrl.substring(0, pos);
     }
 
     // --------------------------------------------------------------------------------------------
