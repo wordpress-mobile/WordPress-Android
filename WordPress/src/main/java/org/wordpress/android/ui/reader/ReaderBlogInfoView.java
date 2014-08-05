@@ -131,7 +131,10 @@ class ReaderBlogInfoView extends LinearLayout {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.SHORT);
+                    // make sure it's still invisible before animating it
+                    if (layoutInner.getVisibility() != View.VISIBLE) {
+                        ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.SHORT);
+                    }
                 }
             }, 500);
         }
