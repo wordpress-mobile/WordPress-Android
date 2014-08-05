@@ -473,7 +473,6 @@ public class PostUploadService extends Service {
             // check if the file exists
             if (imageFile == null) {
                 mErrorMessage = mContext.getString(R.string.file_not_found);
-                mIsMediaError = true;
                 return null;
             }
 
@@ -531,7 +530,6 @@ public class PostUploadService extends Service {
                     } catch (IOException e) {
                         AppLog.w(T.POSTS, "failed to create image temp file");
                         mErrorMessage = mContext.getString(R.string.error_media_upload);
-                        mIsMediaError = true;
                         return null;
                     }
 
@@ -554,7 +552,6 @@ public class PostUploadService extends Service {
                     } else {
                         AppLog.w(T.POSTS, "failed to create resized picture");
                         mErrorMessage = mContext.getString(R.string.out_of_memory);
-                        mIsMediaError = true;
                         return null;
                     }
                 }
@@ -571,6 +568,7 @@ public class PostUploadService extends Service {
 
                 fullSizeUrl = uploadImageFile(parameters, mediaFile, mBlog);
                 if (fullSizeUrl == null) {
+                    mErrorMessage = mContext.getString(R.string.error_media_upload);
                     return null;
                 }
             }
@@ -585,11 +583,11 @@ public class PostUploadService extends Service {
                 mContext.openFileOutput(tempFileName, Context.MODE_PRIVATE);
             } catch (FileNotFoundException e) {
                 mErrorMessage = getResources().getString(R.string.file_error_create);
-                mIsMediaError = true;
                 return null;
             }
 
             if (mediaFile.getFilePath() == null) {
+                mErrorMessage = mContext.getString(R.string.error_media_upload);
                 return null;
             }
 
@@ -666,7 +664,6 @@ public class PostUploadService extends Service {
                     tempFile = createTempUploadFile(fileExtension);
                 } catch (IOException e) {
                     mErrorMessage = getResources().getString(R.string.file_error_create);
-                    mIsMediaError = true;
                     return null;
                 }
 
