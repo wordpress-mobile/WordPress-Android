@@ -95,7 +95,7 @@ dependencies {
     compile 'org.wordpress:gcm:1.0.0' // not found in maven central
     compile 'org.wordpress:drag-sort-listview:0.6.1' // not found in maven central
     compile 'org.wordpress:slidinguppanel:1.0.0' // not found in maven central
-    compile 'org.wordpress:android-passcodelock:0.0.5'
+    compile 'org.wordpress:android-passcodelock:0.0.6'
     compile 'org.wordpress:emailchecker:0.3'
 
     // Simperium
