@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.models.MediaFile;
@@ -36,13 +37,10 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.SystemServiceFactory;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClient;
 import org.xmlrpc.android.XMLRPCClientInterface;
@@ -767,7 +765,7 @@ public class PostUploadService extends Service {
         private Object uploadFileHelper(Object[] params, final File tempFile) {
             // Create listener for tracking upload progress in the notification
             if (mClient instanceof XMLRPCClient) {
-                XMLRPCClient xmlrpcClient = (XMLRPCClient)mClient;
+                XMLRPCClient xmlrpcClient = (XMLRPCClient) mClient;
                 xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
@@ -806,10 +804,10 @@ public class PostUploadService extends Service {
 
     private class PostUploadNotifier {
 
-        private NotificationManager mNotificationManager;
-        private NotificationCompat.Builder mNotificationBuilder;
+        private final NotificationManager mNotificationManager;
+        private final NotificationCompat.Builder mNotificationBuilder;
 
-        private int mNotificationId;
+        private final int mNotificationId;
         private int mTotalMediaItems;
         private int mCurrentMediaItem;
 
@@ -829,7 +827,7 @@ public class PostUploadService extends Service {
             notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
             notificationIntent.setData((Uri.parse("custom://wordpressNotificationIntent" + post.getLocalTableBlogId())));
             notificationIntent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, post.isPage());
-            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             mNotificationBuilder.setContentIntent(pendingIntent);
 
@@ -855,11 +853,6 @@ public class PostUploadService extends Service {
             }
 
             mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
-        }
-
-        public void removeProgressBar() {
-            // clear any progress
-            mNotificationBuilder.setProgress(0, 0, false);
         }
 
         public void cancelNotification() {
