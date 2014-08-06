@@ -34,7 +34,6 @@ import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -220,11 +219,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     public ReaderBlogIdPostIdList getBlogIdPostIdList() {
-        ReaderBlogIdPostIdList ids = new ReaderBlogIdPostIdList();
-        for (ReaderPost post: mPosts) {
-            ids.add(new ReaderBlogIdPostId(post.blogId, post.postId));
-        }
-        return ids;
+        return mPosts.getBlogIdPostIdList();
     }
 
     @Override

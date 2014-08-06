@@ -26,7 +26,6 @@ import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -116,6 +115,14 @@ public class ReaderPostListActivity extends WPActionBarActivity
         if (!mHasPerformedInitialUpdate) {
             performInitialUpdate();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -211,6 +218,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
      * show fragment containing list of latest posts for a specific tag
      */
     private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
         getFragmentManager()
                 .beginTransaction()
@@ -222,6 +232,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
      * show fragment containing list of latest posts in a specific blog
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
         getFragmentManager()
                 .beginTransaction()
@@ -378,20 +391,26 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
         ReaderPostListFragment listFragment = getListFragment();
         if (listFragment != null) {
-            ReaderBlogIdPostIdList idList = listFragment.getBlogIdPostIdList();
-            int position = idList.indexOf(blogId, postId);
-
-            final String title;
             switch (getPostListType()) {
                 case TAG_FOLLOWED:
                 case TAG_PREVIEW:
-                    title = listFragment.getCurrentTagName();
+                    ReaderActivityLauncher.showReaderPostPagerForTag(
+                            this,
+                            listFragment.getCurrentTag(),
+                            getPostListType(),
+                            blogId,
+                            postId);
+                    break;
+                case BLOG_PREVIEW:
+                    ReaderActivityLauncher.showReaderPostPagerForBlog(
+                            this,
+                            blogId,
+                            postId);
+
                     break;
                 default:
-                    title = (String)this.getTitle();
-                    break;
+                    return;
             }
-            ReaderActivityLauncher.showReaderPostPager(this, title, position, idList, getPostListType());
         }
     }
 
