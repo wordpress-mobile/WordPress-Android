@@ -135,14 +135,10 @@ public class ReaderPostPagerActivity extends Activity
                     if (fragment instanceof ReaderPostDetailFragment) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                     } else if (fragment instanceof PostPagerEndFragment) {
-                        // if the end fragment is now active, set the type based on whether
-                        // more posts can be loaded, and if they can request them now
-                        PostPagerEndFragment endFragment = (PostPagerEndFragment)fragment;
+                        // if the end fragment is now active and more posts can be requested,
+                        // request them now
                         if (adapter.canRequestMostPosts()) {
-                            endFragment.setEndFragmentType(EndFragmentType.LOADING);
                             adapter.requestMorePosts();
-                        } else {
-                            endFragment.setEndFragmentType(EndFragmentType.NO_MORE);
                         }
                     }
                 }
@@ -384,8 +380,9 @@ public class ReaderPostPagerActivity extends Activity
         @Override
         public Fragment getItem(int position) {
             if (isEndFragmentId(mIdList.get(position))) {
-                PostPagerEndFragment endFragment = PostPagerEndFragment.newInstance();
-                endFragment.setEndFragmentType(canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
+                EndFragmentType fragmentType =
+                        (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
+                PostPagerEndFragment endFragment = PostPagerEndFragment.newInstance(fragmentType);
                 return endFragment;
             } else {
                 return ReaderPostDetailFragment.newInstance(
@@ -526,55 +523,74 @@ public class ReaderPostPagerActivity extends Activity
      * fragment that appears when user scrolls beyond the last post
      **/
     private static enum EndFragmentType {
-                            EMPTY,
                             LOADING,
                             NO_MORE }
-    public static class PostPagerEndFragment extends Fragment {
-        private EndFragmentType mFragmentType = EndFragmentType.EMPTY;
+    private static final String ARG_END_FRAGMENT_TYPE = "end_fragment_type";
 
-        private static PostPagerEndFragment newInstance() {
-            return new PostPagerEndFragment();
+    public static class PostPagerEndFragment extends Fragment {
+        private EndFragmentType mFragmentType = EndFragmentType.LOADING;
+
+        private static PostPagerEndFragment newInstance(EndFragmentType fragmentType) {
+            PostPagerEndFragment fragment = new PostPagerEndFragment();
+            Bundle bundle = new Bundle();
+            if (fragmentType != null) {
+                bundle.putSerializable(ARG_END_FRAGMENT_TYPE, fragmentType);
+            }
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
+        @Override
+        public void setArguments(Bundle args) {
+            super.setArguments(args);
+            if (args != null && args.containsKey(ARG_END_FRAGMENT_TYPE)) {
+                mFragmentType = (EndFragmentType) args.getSerializable(ARG_END_FRAGMENT_TYPE);
+            }
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.reader_fragment_pager_end, container, false);
+            View view = inflater.inflate(R.layout.reader_fragment_pager_end, container, false);
+            setEndFragmentType(view, mFragmentType);
+            return view;
         }
 
-        private void setEndFragmentType(EndFragmentType fragmentType) {
+        void setEndFragmentType(EndFragmentType fragmentType) {
+            setEndFragmentType(getView(), fragmentType);
+        }
+        void setEndFragmentType(View view, EndFragmentType fragmentType) {
             mFragmentType = fragmentType;
+            AppLog.d(AppLog.T.READER, "reader pager > setting end fragment type to " + fragmentType.toString());
 
-            if (isAdded() && getView() != null) {
-                ViewGroup layoutLoading = (ViewGroup) getView().findViewById(R.id.layout_loading);
-                ViewGroup layoutNoMore = (ViewGroup) getView().findViewById(R.id.layout_no_more);
+            if (view == null) {
+                AppLog.w(AppLog.T.READER, "reader pager > null view setting end fragment type");
+                return;
+            }
 
-                switch (mFragmentType) {
-                    // indicates that more posts can be loaded - request to get older posts
-                    // will occur when this page becomes active
-                    case LOADING:
-                        layoutLoading.setVisibility(View.VISIBLE);
-                        layoutNoMore.setVisibility(View.GONE);
-                        break;
-                    // indicates the user has reached the end (there are no more posts) - tapping
-                    // this will return to the previous activity
-                    case NO_MORE:
-                        layoutLoading.setVisibility(View.GONE);
-                        layoutNoMore.setVisibility(View.VISIBLE);
-                        layoutNoMore.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (getActivity() != null) {
-                                    getActivity().finish();
-                                }
+            ViewGroup layoutLoading = (ViewGroup) view.findViewById(R.id.layout_loading);
+            ViewGroup layoutNoMore = (ViewGroup) view.findViewById(R.id.layout_no_more);
+
+            switch (mFragmentType) {
+                // indicates that more posts can be loaded - request to get older posts
+                // will occur when this page becomes active
+                case LOADING:
+                    layoutLoading.setVisibility(View.VISIBLE);
+                    layoutNoMore.setVisibility(View.GONE);
+                    break;
+                // indicates the user has reached the end (there are no more posts) - tapping
+                // this will return to the previous activity
+                case NO_MORE:
+                    layoutLoading.setVisibility(View.GONE);
+                    layoutNoMore.setVisibility(View.VISIBLE);
+                    layoutNoMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (getActivity() != null) {
+                                getActivity().finish();
                             }
-                        });
-                        break;
-                    // fragment type hasn't been set yet (still EMPTY), which shouldn't happen
-                    default:
-                        layoutLoading.setVisibility(View.GONE);
-                        layoutNoMore.setVisibility(View.GONE);
-                        break;
-                }
+                        }
+                    });
+                    break;
             }
         }
 
@@ -585,7 +601,7 @@ public class ReaderPostPagerActivity extends Activity
                 super.setUserVisibleHint(isVisibleToUser);
             }
             // animate in the checkmark if this is a "no more posts fragment
-            if (isVisibleToUser && mFragmentType == EndFragmentType.NO_MORE) {
+            if (mFragmentType == EndFragmentType.NO_MORE) {
                 animateCheckmark();
             }
         }
