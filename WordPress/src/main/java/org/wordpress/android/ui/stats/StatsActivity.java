@@ -505,6 +505,7 @@ public class StatsActivity extends WPActionBarActivity {
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
             statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
             startActivityWithDelay(statsWebViewIntent);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
             onBackPressed();

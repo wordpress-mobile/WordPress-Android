@@ -19,25 +19,7 @@ public class ReaderBlog {
     private String name;
     private String description;
     private String url;
-
-    /*{
-    "ID": 3584907,
-    "name": "WordPress.com News",
-    "description": "The latest news on WordPress.com and the WordPress community.",
-    "URL": "http:\/\/en.blog.wordpress.com",
-    "jetpack": false,
-    "subscribers_count": 9222924,
-    "is_private": false,
-    "is_following": false,
-    "meta": {
-        "links": {
-            "self": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/3584907",
-            "help": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/3584907\/help",
-            "posts": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/3584907\/posts\/",
-            "comments": "https:\/\/public-api.wordpress.com\/rest\/v1\/sites\/3584907\/comments\/"
-        }
-    }
-    }*/
+    private String imageUrl;
 
     public static ReaderBlog fromJson(JSONObject json) {
         ReaderBlog blog = new ReaderBlog();
@@ -55,24 +37,26 @@ public class ReaderBlog {
             blog.setName(JSONUtil.getStringDecoded(jsonSite, "name"));
             blog.setDescription(JSONUtil.getStringDecoded(jsonSite, "description"));
             blog.setUrl(JSONUtil.getString(jsonSite, "URL"));
-
             blog.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
             blog.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
             blog.isFollowing = JSONUtil.getBool(jsonSite, "is_following");
             blog.numSubscribers = jsonSite.optInt("subscribers_count");
+            JSONObject jsonIcon = jsonSite.optJSONObject("icon");
+            if (jsonIcon != null) {
+                blog.setImageUrl(JSONUtil.getString(jsonIcon, "img"));
+            }
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
             blog.setName(JSONUtil.getStringDecoded(jsonFeed, "name"));
             blog.setUrl(JSONUtil.getString(jsonFeed, "URL"));
             blog.numSubscribers = jsonFeed.optInt("subscribers_count");
-            // TODO: read/following/mine doesn't include is_following for feeds, so assume to be true
+            // read/following/mine doesn't include is_following for feeds, so assume to be true
             blog.isFollowing = true;
         } else {
             blog.blogId = json.optLong("ID");
             blog.setName(JSONUtil.getStringDecoded(json, "name"));
             blog.setDescription(JSONUtil.getStringDecoded(json, "description"));
             blog.setUrl(JSONUtil.getString(json, "URL"));
-
             blog.isJetpack = JSONUtil.getBool(json, "jetpack");
             blog.isPrivate = JSONUtil.getBool(json, "is_private");
             blog.isFollowing = JSONUtil.getBool(json, "is_following");
@@ -94,6 +78,13 @@ public class ReaderBlog {
     }
     public void setDescription(String description) {
         this.description = StringUtils.notNullStr(description).trim();
+    }
+
+    public String getImageUrl() {
+        return StringUtils.notNullStr(imageUrl);
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = StringUtils.notNullStr(imageUrl);
     }
 
     public String getUrl() {
@@ -139,6 +130,7 @@ public class ReaderBlog {
             && this.numSubscribers == blogInfo.numSubscribers
             && this.getName().equals(blogInfo.getName())
             && this.getDescription().equals(blogInfo.getDescription())
-            && this.getUrl().equals(blogInfo.getUrl());
+            && this.getUrl().equals(blogInfo.getUrl())
+            && this.getImageUrl().equals(blogInfo.getImageUrl());
     }
 }
