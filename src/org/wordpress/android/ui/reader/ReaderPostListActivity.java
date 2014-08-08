@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,12 +17,13 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskCallbacks;
+import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskResult;
+import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskType;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
@@ -29,18 +31,21 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
 
+import javax.annotation.Nonnull;
+
 /*
  * this activity serves as the host for ReaderPostListFragment
  */
 
 public class ReaderPostListActivity extends WPActionBarActivity
                                     implements OnPostSelectedListener,
-                                               OnTagSelectedListener {
+                                               OnTagSelectedListener,
+                                               ReaderTaskCallbacks {
 
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
-    private ReaderTypes.ReaderPostListType mPostListType;
+    private ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         }
 
         if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
@@ -80,7 +85,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-            if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+            if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
                 showListFragmentForBlog(blogId, blogUrl);
@@ -93,7 +98,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     tag = UserPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
 
@@ -103,7 +108,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
@@ -200,7 +205,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         removeListFragment();
     }
 
-    ReaderTypes.ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
@@ -217,7 +222,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+    private void showListFragmentForTag(final ReaderTag tag, ReaderPostListType listType) {
         if (isFinishing()) {
             return;
         }
@@ -252,69 +257,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
     private boolean hasListFragment() {
         return (getListFragment() != null);
-    }
-
-    /*
-     * initial update performed at startup to ensure we have the latest reader-related info
-     */
-    private void performInitialUpdate() {
-        if (!NetworkUtils.isNetworkAvailable(this)) {
-            return;
-        }
-
-        // remember whether we have any tags and posts before updating
-        final boolean isTagTableEmpty = ReaderTagTable.isEmpty();
-        final boolean isPostTableEmpty = ReaderPostTable.isEmpty();
-
-        // request the list of tags first and don't perform other calls until it returns - this
-        // way changes to tags can be shown as quickly as possible (esp. important when tags
-        // don't already exist)
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(UpdateResult result) {
-                if (isFinishing()) {
-                    return;
-                }
-                if (result != UpdateResult.FAILED) {
-                    mHasPerformedInitialUpdate = true;
-                }
-                if (result == UpdateResult.CHANGED) {
-                    // if the post list fragment is viewing followed tags, tell it to refresh
-                    // the list of tags
-                    ReaderPostListFragment listFragment = getListFragment();
-                    if (listFragment == null) {
-                        // list fragment doesn't exist yet (can happen if user signed out) - create
-                        // it now showing the default tag
-                        showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-                    } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
-                        listFragment.refreshTags();
-                        // if the tag and posts tables were empty (first run), tell the list
-                        // fragment to get posts with the current tag now that we have tags
-                        if (isTagTableEmpty && isPostTableEmpty) {
-                            listFragment.updatePostsWithTag(
-                                    listFragment.getCurrentTag(),
-                                    RequestDataAction.LOAD_NEWER,
-                                    ReaderTypes.RefreshType.AUTOMATIC);
-                        }
-                    }
-                }
-
-                // now that tags have been retrieved, perform the other requests - first update
-                // the current user to ensure we have their user_id as well as their latest info
-                // in case they changed their avatar, name, etc. since last time
-                AppLog.i(T.READER, "reader activity > updating current user");
-                ReaderUserActions.updateCurrentUser(null);
-
-                // update followed blogs
-                AppLog.i(T.READER, "reader activity > updating followed blogs");
-                ReaderBlogActions.updateFollowedBlogs(null);
-
-                // update cookies so that we can show authenticated images in WebViews
-                AppLog.i(T.READER, "reader activity > updating cookies");
-                ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
-            }
-        };
-        ReaderTagActions.updateTags(listener);
     }
 
     /*
@@ -354,12 +296,84 @@ public class ReaderPostListActivity extends WPActionBarActivity
     @Override
     public void onTagSelected(String tagName) {
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
             getListFragment().setCurrentTag(tag);
         } else {
             // user isn't previewing a tag, so open in tag preview
             ReaderActivityLauncher.showReaderTagPreview(this, tag);
+        }
+    }
+
+    /*
+     * initial update performed at startup to ensure we have the latest reader-related
+     * data - relies on ReaderTaskFragment to perform the tag update to avoid the
+     * problems caused by configuration changes while the update is in progress
+     */
+    private void performInitialUpdate() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            return;
+        }
+
+        String fragmentTag = getString(R.string.fragment_tag_reader_task);
+        FragmentManager fm = getFragmentManager();
+
+        // if the Fragment is non-null, then it is currently being retained across a
+        // configuration change - otherwise create it here, telling it to update tags
+        if (fm.findFragmentByTag(fragmentTag) == null) {
+            fm.beginTransaction().add(
+                    ReaderTaskFragment.newInstance(ReaderTaskType.UPDATE_TAGS), fragmentTag).commit();
+        }
+    }
+
+    @Override
+    public void onPreExecuteTask(ReaderTaskType task) {
+        AppLog.i(T.READER, "starting task " + task.toString());
+    }
+
+    @Override
+    public void onPostExecuteTask(ReaderTaskType task, ReaderTaskResult result) {
+        if (isFinishing()) {
+            return;
+        }
+
+        AppLog.i(T.READER, "completed task " + task.toString() + ", result = " + result.toString());
+
+        switch (task) {
+            case UPDATE_TAGS:
+                if (result != ReaderTaskResult.FAILED) {
+                    mHasPerformedInitialUpdate = true;
+                }
+
+                if (result == ReaderTaskResult.HAS_CHANGES) {
+                    ReaderPostListFragment listFragment = getListFragment();
+                    if (listFragment == null) {
+                        // list fragment doesn't exist yet, so create it now showing the default tag
+                        showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderPostListType.TAG_FOLLOWED);
+                    } else if (listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+                        // list fragment exists, so make sure it's showing the latest tags
+                        listFragment.refreshTags();
+                        // if list fragment isn't showing any posts (first run), update posts
+                        // in the current tag
+                        if (listFragment.isPostAdapterEmpty()) {
+                            listFragment.updatePostsWithTag(
+                                    listFragment.getCurrentTag(),
+                                    RequestDataAction.LOAD_NEWER,
+                                    ReaderTypes.RefreshType.AUTOMATIC);
+                        }
+                    }
+                }
+
+                // now that tags have been retrieved, perform the other requests - first update
+                // the current user to ensure we have their user_id as well as their latest info
+                // in case they changed their avatar, name, etc. since last time
+                ReaderUserActions.updateCurrentUser(null);
+
+                // update followed blogs
+                ReaderBlogActions.updateFollowedBlogs(null);
+
+                // update cookies so that we can show authenticated images in WebViews
+                ReaderAuthActions.updateCookies(ReaderPostListActivity.this);
         }
     }
 }
