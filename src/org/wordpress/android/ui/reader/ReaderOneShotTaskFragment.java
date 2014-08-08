@@ -18,7 +18,7 @@ import org.wordpress.android.util.AppLog;
  * note that this currently supports a single task (updating reader tags) but can easily
  * be expanded to perform additional tasks
  */
-public class ReaderTaskFragment extends Fragment {
+public class ReaderOneShotTaskFragment extends Fragment {
 
     private static final String ARG_TASK_TYPE = "task_type";
     static enum ReaderTaskType { UPDATE_TAGS }
@@ -48,7 +48,7 @@ public class ReaderTaskFragment extends Fragment {
     private ReaderTaskCallbacks mCallbacks;
     private ReaderTaskType mTaskType;
 
-    static ReaderTaskFragment newInstance(ReaderTaskType taskType) {
+    static ReaderOneShotTaskFragment newInstance(ReaderTaskType taskType) {
         if (taskType == null) {
             throw new IllegalArgumentException("task type cannot be null");
 
@@ -59,7 +59,7 @@ public class ReaderTaskFragment extends Fragment {
         Bundle args = new Bundle();
         args.putSerializable(ARG_TASK_TYPE, taskType);
 
-        ReaderTaskFragment fragment = new ReaderTaskFragment();
+        ReaderOneShotTaskFragment fragment = new ReaderOneShotTaskFragment();
         fragment.setArguments(args);
 
         return fragment;

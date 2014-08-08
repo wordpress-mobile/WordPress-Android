@@ -17,9 +17,9 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
-import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskCallbacks;
-import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskResult;
-import org.wordpress.android.ui.reader.ReaderTaskFragment.ReaderTaskType;
+import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskCallbacks;
+import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskResult;
+import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -322,15 +322,21 @@ public class ReaderPostListActivity extends WPActionBarActivity
         // configuration change - otherwise create it here, telling it to update tags
         if (fm.findFragmentByTag(fragmentTag) == null) {
             fm.beginTransaction().add(
-                    ReaderTaskFragment.newInstance(ReaderTaskType.UPDATE_TAGS), fragmentTag).commit();
+                    ReaderOneShotTaskFragment.newInstance(ReaderTaskType.UPDATE_TAGS), fragmentTag).commit();
         }
     }
 
+    /*
+     * called by ReaderTaskFragment before a task is started
+     */
     @Override
     public void onPreExecuteTask(ReaderTaskType task) {
         AppLog.i(T.READER, "starting task " + task.toString());
     }
 
+    /*
+     * called by ReaderTaskFragment after a task is completed
+     */
     @Override
     public void onPostExecuteTask(ReaderTaskType task, ReaderTaskResult result) {
         if (isFinishing()) {
