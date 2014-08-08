@@ -15,11 +15,11 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskCallbacks;
 import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskResult;
 import org.wordpress.android.ui.reader.ReaderOneShotTaskFragment.ReaderTaskType;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -126,6 +126,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
             ReaderDatabase.purgeAsync();
         }
         if (!mHasPerformedInitialUpdate) {
+            mHasPerformedInitialUpdate = true;
             performInitialUpdate();
         }
     }
@@ -185,6 +186,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
             case WPComLoginActivity.REQUEST_CODE:
                 if (isResultOK) {
                     removeListFragment();
+                    removeTaskFragment();
                     mHasPerformedInitialUpdate = false;
                     performInitialUpdate();
                 }
@@ -203,6 +205,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         // be removed or else they will continue to show the same articles - onResume() will take
         // care of re-displaying the correct fragment if necessary
         removeListFragment();
+        removeTaskFragment();
     }
 
     ReaderPostListType getPostListType() {
@@ -307,7 +310,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
     /*
      * initial update performed at startup to ensure we have the latest reader-related
-     * data - relies on ReaderTaskFragment to perform the tag update to avoid the
+     * data - relies on ReaderOneShotTaskFragment to perform the tag update to avoid the
      * problems caused by configuration changes while the update is in progress
      */
     private void performInitialUpdate() {
@@ -323,6 +326,16 @@ public class ReaderPostListActivity extends WPActionBarActivity
         if (fm.findFragmentByTag(fragmentTag) == null) {
             fm.beginTransaction().add(
                     ReaderOneShotTaskFragment.newInstance(ReaderTaskType.UPDATE_TAGS), fragmentTag).commit();
+        }
+    }
+
+    private void removeTaskFragment() {
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(getString(R.string.fragment_tag_reader_task));
+        if (fragment != null) {
+            fm.beginTransaction()
+              .remove(fragment)
+              .commit();
         }
     }
 
@@ -347,10 +360,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
         switch (task) {
             case UPDATE_TAGS:
-                if (result != ReaderTaskResult.FAILED) {
-                    mHasPerformedInitialUpdate = true;
-                }
-
                 if (result == ReaderTaskResult.HAS_CHANGES) {
                     ReaderPostListFragment listFragment = getListFragment();
                     if (listFragment == null) {

@@ -11,12 +11,12 @@ import org.wordpress.android.util.AppLog;
 
 /**
  * worker fragment to safely perform reader-related tasks from within activities without
- * the side effects of configuration changes - activity MUST implement ReaderTaskCallbacks
+ * the side effects of configuration changes - activities with use this fragment MUST
+ * implement ReaderTaskCallbacks
  *
  * http://www.androiddesignpatterns.com/2013/04/retaining-objects-across-config-changes.html
  *
- * note that this currently supports a single task (updating reader tags) but can easily
- * be expanded to perform additional tasks
+ * note that this can easily be expanded to perform additional tasks
  */
 public class ReaderOneShotTaskFragment extends Fragment {
 
