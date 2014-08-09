@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class ReaderFeaturedImageFinder {
     private final String mContent;
-    private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
+    private static final int MIN_FEATURED_IMAGE_WIDTH = 640;
 
     // regex for matching img tags in html content
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
