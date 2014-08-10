@@ -2,7 +2,9 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
 
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,5 +111,42 @@ public class ReaderFeaturedImageFinder {
             return 0;
         }
         return StringUtils.stringToInt(Uri.parse(url).getQueryParameter(param));
+    }
+
+    /*
+     * returns the actual image url from a Freshly Pressed featured image url - this is necessary because the
+     * featured image returned by the API is often an ImagePress url that formats the actual image url for a
+     * specific size, and we want to define the size in the app when the image is requested.
+     * here's an example of an ImagePress featured image url from a freshly-pressed post:
+     *   https://s1.wp.com/imgpress?crop=0px%2C0px%2C252px%2C160px
+     *          &url=https%3A%2F%2Fs2.wp.com%2Fimgpress%3Fw%3D252%26url%3Dhttp%253A%252F%252Fmostlybrightideas.files.wordpress.com%252F2013%252F08%252Ftablet.png
+     *          &unsharpmask=80,0.5,3
+     */
+    public static String getImageUrlFromFPFeaturedImageUrl(final String url) {
+        if (url == null || !url.startsWith("http")) {
+            return null;
+        } else if (url.contains("/imgpress")) {
+            return getImageUrlFromImagepressUrl(url);
+        } else if (PhotonUtils.isMshotsUrl(url)) {
+            // if this is an mshots image, return the actual url without the query string (?h=n&w=n),
+            // and change it from https to http so it can be cached
+            return UrlUtils.removeQuery(url).replaceFirst("https", "http");
+        } else {
+            return url;
+        }
+    }
+
+    private static String getImageUrlFromImagepressUrl(final String url) {
+        if (url == null) {
+            return null;
+        }
+
+        String imageUrl = Uri.parse(url).getQueryParameter("url");
+        if (imageUrl != null && imageUrl.contains("url=")) {
+            // url still contains a url= param, process it again
+            return getImageUrlFromImagepressUrl(imageUrl);
+        } else {
+            return UrlUtils.removeQuery(imageUrl);
+        }
     }
 }
