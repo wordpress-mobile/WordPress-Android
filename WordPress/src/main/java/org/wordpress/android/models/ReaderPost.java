@@ -205,7 +205,6 @@ public class ReaderPost {
 
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
-            String tagName = JSONUtil.getString(jsonThisTag, "name");
 
             // if the number of posts on this blog that use this tag is higher than previous,
             // set this as the most popular tag, and set the second most popular tag to
@@ -213,7 +212,7 @@ public class ReaderPost {
             int postCount = jsonThisTag.optInt("post_count");
             if (postCount > popularCount) {
                 nextMostPopularTag = mostPopularTag;
-                mostPopularTag = tagName;
+                mostPopularTag = JSONUtil.getString(jsonThisTag, "name");
                 popularCount = postCount;
             }
         }
