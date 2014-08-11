@@ -169,7 +169,7 @@ public class NoteBlock {
         public ImageView getImageView() {
             if (mImageView == null) {
                 mImageView = new ImageView(mRootLayout.getContext());
-                int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 220);
+                int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 180);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 mImageView.setLayoutParams(layoutParams);
