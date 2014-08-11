@@ -9,6 +9,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.StringMap;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.AppLog.T;
 
 public class ABTestingUtils {
     private static StringMap sRemoteControlMap;
@@ -40,7 +41,8 @@ public class ABTestingUtils {
             // async refresh current data
             fetchRemoteData.runIfNotLimited();
             // return current value (we don't need to wait for the data to be refreshed)
-            return MapUtils.getMapBool(sRemoteControlMap, fieldName);
+            String value = MapUtils.getMapStr(sRemoteControlMap, fieldName);
+            return value.equalsIgnoreCase("true");
         } else {
             // if it's null, request it and return default value
             fetchRemoteData.runIfNotLimited();
@@ -63,14 +65,15 @@ public class ABTestingUtils {
                 try {
                     sRemoteControlMap = gson.fromJson(response, StringMap.class);
                 } catch (JsonSyntaxException jsonSyntaxException) {
-                    AppLog.e(AppLog.T.UTILS, jsonSyntaxException);
+                    AppLog.e(T.UTILS, jsonSyntaxException);
                 }
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                AppLog.w(AppLog.T.UTILS, "Unable to fetch: " + REMOTE_CONTROL_URL);
+                AppLog.w(T.UTILS, "Unable to fetch: " + REMOTE_CONTROL_URL);
+                AppLog.e(T.UTILS, volleyError);
             }
         };
         StringRequest req = new StringRequest(Request.Method.GET, REMOTE_CONTROL_URL, listener, errorListener);
