@@ -45,6 +45,8 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -311,6 +313,9 @@ public class WordPress extends Application {
             // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
             // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
             AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
+        } catch (Exception e) {
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC);
+            AppLog.e(T.NOTIFS, e);
         }
         return regId;
     }
