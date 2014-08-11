@@ -166,6 +166,11 @@ public class WordPress extends Application {
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
+        AnalyticsTracker.init();
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
+
         configureSimperium();
 
         // Volley networking setup
@@ -184,11 +189,6 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
-
-        AnalyticsTracker.init();
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
-        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
 
