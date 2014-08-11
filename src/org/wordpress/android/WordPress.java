@@ -155,6 +155,7 @@ public class WordPress extends Application {
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.enableCrashlytics(true);
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
         }
