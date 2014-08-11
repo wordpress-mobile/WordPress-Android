@@ -190,6 +190,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
+            case APPLICATION_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Started");
+                instructions.setSuperPropertyToIncrement("Application Started");
+                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");

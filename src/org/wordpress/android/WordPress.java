@@ -54,6 +54,7 @@ import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.stats.AnalyticsTracker.Stat;
 import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 import org.wordpress.android.util.stats.AnalyticsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
@@ -148,6 +149,7 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
@@ -182,10 +184,9 @@ public class WordPress extends Application {
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
-
-        super.onCreate();
 
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
