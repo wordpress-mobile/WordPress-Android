@@ -190,6 +190,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private AnalyticsTrackerMixpanelInstructionsForStat instructionsForStat(AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
+            case APPLICATION_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Started");
+                instructions.setSuperPropertyToIncrement("Application Started");
+                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
@@ -423,6 +428,30 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
+                break;
+            case MEMORY_TRIMMED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Memory Trimmed");
+                break;
+            case PUSH_NOTIFICATION_RECEIVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Notification Received");
+                break;
+            case SIMPERIUM_USER_AUTHORIZED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Simperium User Authorized");
+                break;
+            case SIMPERIUM_USER_NOT_AUTHORIZED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Simperium User Not Authorized");
+                break;
+            case SIMPERIUM_USER_UNKNOWN_STATUS:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Simperium User Unknown Status");
+                break;
+            case FEEDBACK_API_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Feedback API Requested");
                 break;
             default:
                 instructions = null;

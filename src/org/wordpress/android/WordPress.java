@@ -45,6 +45,8 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
@@ -54,6 +56,7 @@ import org.wordpress.android.util.SimperiumUtils;
 import org.wordpress.android.util.Utils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.stats.AnalyticsTracker.Stat;
 import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 import org.wordpress.android.util.stats.AnalyticsTrackerWPCom;
 import org.wordpress.passcodelock.AppLockManager;
@@ -62,6 +65,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -148,9 +152,11 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
+        AppLog.enableCrashlytics(true);
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
         }
@@ -182,10 +188,9 @@ public class WordPress extends Application {
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
-
-        super.onCreate();
 
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
@@ -310,6 +315,9 @@ public class WordPress extends Application {
             // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
             // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
             AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
+        } catch (Exception e) {
+            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC);
+            AppLog.e(T.NOTIFS, e);
         }
         return regId;
     }
@@ -637,6 +645,9 @@ public class WordPress extends Application {
             // Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15;
             // - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
             if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
+                Map<String, Integer> properties = new HashMap<String, Integer>();
+                properties.put("level", level);
+                AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
                 mBitmapCache.evictAll();
             }
         }
