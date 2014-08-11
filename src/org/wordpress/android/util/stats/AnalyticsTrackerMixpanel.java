@@ -449,6 +449,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Simperium User Unknown Status");
                 break;
+            case FEEDBACK_API_REQUESTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Feedback API Requested");
+                break;
             default:
                 instructions = null;
                 break;

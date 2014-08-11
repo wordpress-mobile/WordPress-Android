@@ -66,6 +66,7 @@ public final class AnalyticsTracker {
         SIMPERIUM_USER_AUTHORIZED,
         SIMPERIUM_USER_NOT_AUTHORIZED,
         SIMPERIUM_USER_UNKNOWN_STATUS,
+        FEEDBACK_API_REQUESTED,
     }
 
     public interface Tracker {
