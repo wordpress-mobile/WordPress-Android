@@ -15,6 +15,7 @@ import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -94,6 +95,8 @@ class TestNotesAdapter extends CursorAdapter {
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
 
+        noteViewHolder.txtTime.setText(DateTimeUtils.timestampToTimeSpan(note.getTimestamp()));
+
         String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
@@ -119,6 +122,7 @@ class TestNotesAdapter extends CursorAdapter {
     private static class NoteViewHolder {
         private final TextView txtLabel;
         private final TextView txtDetail;
+        private final TextView txtTime;
         private final View unreadIndicator;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
@@ -126,6 +130,7 @@ class TestNotesAdapter extends CursorAdapter {
         NoteViewHolder(View view) {
             txtLabel = (TextView) view.findViewById(R.id.note_label);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
+            txtTime = (TextView) view.findViewById(R.id.note_time);
             unreadIndicator = view.findViewById(R.id.unread_indicator);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);

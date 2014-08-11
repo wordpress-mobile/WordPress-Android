@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/list_bg_selector"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/list_bg_selector"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_medium"
-    android:orientation="horizontal">
+    android:paddingTop="@dimen/margin_medium">
 
     <View
         android:id="@+id/unread_indicator"
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:layout_marginLeft="-5dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="-5dp"
         android:background="@drawable/shape_oval_blue" />
 
     <FrameLayout
@@ -45,24 +45,42 @@
 
     </FrameLayout>
 
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/note_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:textColor="@color/calypso_blue_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Bob Ross commented on your post Happy Trees" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/note_label"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/note_time"
+                android:ellipsize="end"
+                android:textColor="@color/calypso_blue_dark"
+                android:textSize="@dimen/text_sz_large"
+                tools:text="Bob Ross commented on your post Happy Trees" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/note_time"
+                style="@style/Calypso.Date"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignBaseline="@id/note_label"
+                tools:text="10m" />
+
+        </RelativeLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_detail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
@@ -70,8 +88,7 @@
             android:textColor="@color/calypso_blue"
             android:textSize="@dimen/text_sz_medium"
             android:visibility="gone"
-            tools:visibility="visible"
-            tools:text="What an amazing post!" />
+            tools:text="What an amazing post!"
+            tools:visibility="visible" />
     </LinearLayout>
-
 </LinearLayout>

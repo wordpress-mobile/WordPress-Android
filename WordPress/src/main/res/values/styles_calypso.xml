@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Calysp (WP.com homepage) styles
+-->
+<resources>
+    <style name="Calypso.Date" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/calypso_grey</item>
+    </style>
+</resources>
