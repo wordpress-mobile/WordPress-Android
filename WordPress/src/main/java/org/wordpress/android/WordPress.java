@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -149,6 +150,7 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
@@ -186,11 +188,9 @@ public class WordPress extends Application {
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
-
-        super.onCreate();
 
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
