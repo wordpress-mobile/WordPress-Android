@@ -69,23 +69,11 @@ public class ReaderPostListFragment extends Fragment
                    ViewTreeObserver.OnScrollChangedListener,
                    ActionBar.OnNavigationListener {
 
-    static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
-    }
-
-    public static interface OnTagSelectedListener {
-        public void onTagSelected(String tagName);
-    }
-
-    public static interface OnPostPopupListener {
-        public void onShowPostPopup(View view, ReaderPost post, int position);
-    }
-
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
 
-    private OnPostSelectedListener mPostSelectedListener;
-    private OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private WPListView mListView;
@@ -386,11 +374,11 @@ public class ReaderPostListFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof OnPostSelectedListener) {
-            mPostSelectedListener = (OnPostSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnPostSelectedListener) {
+            mPostSelectedListener = (ReaderInterfaces.OnPostSelectedListener) activity;
         }
-        if (activity instanceof OnTagSelectedListener) {
-            mOnTagSelectedListener = (OnTagSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
+            mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
         }
     }
 
@@ -468,7 +456,7 @@ public class ReaderPostListFragment extends Fragment
      * called when user taps dropdown arrow icon next to a post - shows a popup menu
      * that enables blocking the blog the post is in
      */
-    private final OnPostPopupListener mOnPostPopupListener = new OnPostPopupListener() {
+    private final ReaderInterfaces.OnPostPopupListener mOnPostPopupListener = new ReaderInterfaces.OnPostPopupListener() {
         @Override
         public void onShowPostPopup(View view, final ReaderPost post, final int position) {
             if (view == null || post == null) {
