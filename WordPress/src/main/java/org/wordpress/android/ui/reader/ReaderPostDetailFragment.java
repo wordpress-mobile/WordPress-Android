@@ -88,6 +88,8 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
 
+    private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
+
     private long mTopMostCommentId;
     private int mTopMostCommentTop;
 
@@ -299,6 +301,13 @@ public class ReaderPostDetailFragment extends Fragment
         return (mPost != null);
     }
 
+    private boolean canBlockBlog() {
+        return mPost != null
+                && !mPost.isExternal
+                && (mOnPopupListener != null)
+                && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -412,6 +421,10 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (activity instanceof ReaderUtils.FullScreenListener) {
             mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
+        }
+
+        if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
+            mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
         }
     }
 
@@ -1204,6 +1217,7 @@ public class ReaderPostDetailFragment extends Fragment
         ImageView imgBtnReblog;
         ImageView imgBtnLike;
         ImageView imgBtnComment;
+        ImageView imgDropDown;
 
         WPNetworkImageView imgAvatar;
         WPNetworkImageView imgFeatured;
@@ -1243,6 +1257,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
+            imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
             imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
@@ -1387,6 +1402,21 @@ public class ReaderPostDetailFragment extends Fragment
                 mLayoutIcons.setVisibility(View.VISIBLE);
             } else {
                 mLayoutIcons.setVisibility(View.GONE);
+            }
+
+            // enable blocking the associated blog
+            if (canBlockBlog()) {
+                imgDropDown.setVisibility(View.VISIBLE);
+                imgDropDown.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnPopupListener != null) {
+                            mOnPopupListener.onShowPostPopup(v, mPost, -1);
+                        }
+                    }
+                });
+            } else {
+                imgDropDown.setVisibility(View.GONE);
             }
 
             // enable JavaScript in the webView if it's safe to do so

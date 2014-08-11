@@ -11,6 +11,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -20,8 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+
+import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -34,10 +39,12 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
@@ -47,7 +54,8 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends Activity
-        implements ReaderUtils.FullScreenListener {
+        implements ReaderUtils.FullScreenListener,
+                   ReaderInterfaces.OnPostPopupListener {
 
     private ViewPager mViewPager;
     private ReaderTag mCurrentTag;
@@ -336,6 +344,92 @@ public class ReaderPostPagerActivity extends Activity
             return (ReaderPostDetailFragment) fragment;
         } else {
             return null;
+        }
+    }
+
+    /*
+     * user tapped the dropdown arrow to the right of the title on a detail fragment
+     */
+    @Override
+    public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+        if (view == null || post == null) {
+            return;
+        }
+
+        PopupMenu popup = new PopupMenu(this, view);
+        MenuItem menuItem = popup.getMenu().add(getString(R.string.reader_menu_block_blog));
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                blockBlogForPost(post, position);
+                return true;
+            }
+        });
+        popup.show();
+    }
+
+    /*
+     * blocks the blog associated with the passed post and removes all posts in that blog
+     * from the adapter - passed position is the index of the post in the adapter
+     */
+    private void blockBlogForPost(final ReaderPost post, final int position) {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!succeeded && !isFinishing()) {
+                    hideUndoBar();
+                    ToastUtils.showToast(
+                            ReaderPostPagerActivity.this,
+                            R.string.reader_toast_err_block_blog,
+                            ToastUtils.Duration.LONG);
+                }
+            }
+        };
+
+        // perform call to block this blog - returns list of posts deleted by blocking so
+        // they can be restored if the user undoes the block
+        final ReaderPostList postsToRestore =
+                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
+
+        // animate out the post the user chose to block from, then remove the post from the adapter
+        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (!isFinishing()) {
+                    // TODO: remove this specific post, then refresh the adapter so other posts in this
+                    // blog no long appear
+                }
+            }
+        };
+
+
+        // show the undo bar enabling the user to undo the block
+        UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
+            @Override
+            public void onUndo(Parcelable parcelable) {
+                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                // TODO: reload adapter
+            }
+        };
+        new UndoBarController.UndoBar(this)
+                .message(getString(R.string.reader_toast_blog_blocked))
+                .listener(undoListener)
+                .translucent(true)
+                .show();
+    }
+
+    private void hideUndoBar() {
+        if (!isFinishing()) {
+            UndoBarController.clear(this);
         }
     }
 

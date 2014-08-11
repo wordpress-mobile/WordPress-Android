@@ -10,10 +10,11 @@
     android:orientation="vertical"
     android:padding="@dimen/margin_large">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_small"
@@ -28,7 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/image_avatar"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -48,7 +49,21 @@
                 style="@style/ReaderTextView.Follow" />
         </LinearLayout>
 
-    </RelativeLayout>
+        <ImageView
+            android:id="@+id/image_dropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:background="@drawable/reader_transparent_selector"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:src="@drawable/reader_arrow_dropdown" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_detail_title"
