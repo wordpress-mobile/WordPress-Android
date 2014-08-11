@@ -17,6 +17,7 @@ public class AppLog {
     // T for Tag
     public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM}
     public static final String TAG = "WordPress";
+    public static final int HEADER_LINE_COUNT = 2;
 
     private static boolean mEnableRecording = false;
 
@@ -170,24 +171,18 @@ public class AppLog {
     /*
      * returns entire log as html for display (see AppLogViewerActivity)
      */
-    public static String toHtml(Context context) {
-        StringBuilder sb = new StringBuilder();
+    public static ArrayList<String> toHtmlList(Context context) {
+        ArrayList<String> items = new ArrayList<String>();
 
-        // add version & device info
-        sb.append("WordPress Android version: " + ProfilingUtils.getVersionName(context)).append("<br />")
-          .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("<br />");
+        // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
+        items.add("<strong>WordPress Android version: " + ProfilingUtils.getVersionName(context) + "</strong>");
+        items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
-        int lineNum = 1;
         while (it.hasNext()) {
-            sb.append("<font color='silver'>")
-              .append(String.format("%02d", lineNum))
-              .append("</font> ")
-              .append(it.next().toHtml())
-              .append("<br />");
-            lineNum++;
+            items.add(it.next().toHtml());
         }
-        return sb.toString();
+        return items;
     }
 
 
