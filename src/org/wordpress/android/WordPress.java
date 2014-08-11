@@ -648,10 +648,14 @@ public class WordPress extends Application {
                 mBitmapCache.evictAll();
             }
 
-            if (level != ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            if (level != ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && level != ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
                 Map<String, Integer> properties = new HashMap<String, Integer>();
                 properties.put("level", level);
                 AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
+            }
+
+            if (level == ComponentCallbacks2.TRIM_MEMORY_COMPLETE) {
+                AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
             }
         }
 
