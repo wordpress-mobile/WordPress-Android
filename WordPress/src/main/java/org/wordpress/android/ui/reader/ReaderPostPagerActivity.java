@@ -381,7 +381,6 @@ public class ReaderPostPagerActivity extends Activity
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter
      */
     private void blockBlogForPost(final long blogId, final long postId) {
         if (!NetworkUtils.checkConnection(this)) {
@@ -418,7 +417,7 @@ public class ReaderPostPagerActivity extends Activity
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                // restore deleted posts, reselect the one the blog was blocked from
+                // restore deleted posts, and reselect the one the blog was blocked from
                 ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore);
                 loadPosts(blogId, postId, false);
             }
@@ -534,6 +533,11 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
+        /*
+         * return the id pair "adjacent" to the passed one - if passed id isn't the first
+         * one return the previous id, if passed id *is* the first one return the next
+         * one unless there are no other ids (in which case return null)
+         */
         private ReaderBlogIdPostId getAdjacentId(long blogId, long postId) {
             int index = mIdList.indexOf(blogId, postId);
             if (index == -1) {
