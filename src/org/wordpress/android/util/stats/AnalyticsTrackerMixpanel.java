@@ -433,6 +433,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Memory Trimmed");
                 break;
+            case MEMORY_TRIMMED_COMPLETE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Memory Trimmed Complete");
+                break;
+
             case PUSH_NOTIFICATION_RECEIVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Push Notification Received");
@@ -452,6 +457,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case FEEDBACK_API_REQUESTED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Feedback API Requested");
+                break;
+            case STATS_TASK_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats Task Started");
                 break;
             default:
                 instructions = null;

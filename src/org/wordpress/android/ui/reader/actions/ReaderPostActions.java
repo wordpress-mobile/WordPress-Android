@@ -18,7 +18,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -550,7 +549,7 @@ public class ReaderPostActions {
             return null;
         }
 
-        return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeTagName(tag.getTagName()));
+        return String.format("/read/tags/%s/posts", ReaderTagActions.sanitizeTitle(tag.getTagName()));
     }
 
     /*

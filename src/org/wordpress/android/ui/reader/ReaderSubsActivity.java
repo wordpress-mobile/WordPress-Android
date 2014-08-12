@@ -219,14 +219,13 @@ public class ReaderSubsActivity extends Activity
      * follow the tag or url the user typed into the EditText
      */
     private void addCurrentEntry() {
-        String entry = EditTextUtils.getText(mEditAdd).trim();
+        String entry = EditTextUtils.getText(mEditAdd);
         if (TextUtils.isEmpty(entry)) {
             return;
         }
 
         // is it a url or a tag?
-        boolean isUrl = !entry.contains(" ")
-                     && (entry.contains(".") || entry.contains("://"));
+        boolean isUrl = !entry.contains(" ") && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -242,13 +241,13 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        if (!ReaderTag.isValidTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
+        if (ReaderTagTable.isFollowedTagName(entry)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
             return;
         }
 
-        if (ReaderTagTable.isFollowedTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
+        if (!ReaderTag.isValidTagName(entry)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
             return;
         }
 

@@ -60,8 +60,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0.2-beta-1"
-        versionCode 126
+        versionName "3.0.2-beta-2"
+        versionCode 127
         minSdkVersion 14
         targetSdkVersion 19
     }
@@ -74,7 +74,6 @@ android {
         compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
         compile 'com.github.chrisbanes.photoview:library:1.2.3'
         compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
-        compile 'com.helpshift:android-aar:3.4.1'
         compile 'com.mcxiaoke.volley:library:1.0.+'
 
         androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'

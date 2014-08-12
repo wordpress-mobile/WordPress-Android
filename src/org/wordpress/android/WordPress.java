@@ -40,15 +40,10 @@ import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
@@ -160,18 +155,20 @@ public class WordPress extends Application {
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        HelpshiftHelper.init(this);
         versionName = getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
 
+        AnalyticsTracker.init();
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
+        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
+
         configureSimperium();
 
         // Volley networking setup
         setupVolleyQueue();
-
-        ABTestingUtils.init();
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
@@ -184,11 +181,6 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
-
-        AnalyticsTracker.init();
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
-        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
 
@@ -292,53 +284,27 @@ public class WordPress extends Application {
         AppLog.w(T.UTILS, "Strict mode enabled");
     }
 
-    /**
-     * Register the device to Google Cloud Messaging service or return registration id if it's already registered.
-     *
-     * @return registration id or empty string if it's not registered.
-     */
-    private static String gcmRegisterIfNot(Context context) {
-        String regId = "";
-        try {
-            GCMRegistrar.checkDevice(context);
-            GCMRegistrar.checkManifest(context);
-            regId = GCMRegistrar.getRegistrationId(context);
-            String gcmId = BuildConfig.GCM_ID;
-            if (gcmId != null && TextUtils.isEmpty(regId)) {
-                GCMRegistrar.register(context, gcmId);
-            }
-        } catch (UnsupportedOperationException e) {
-            // GCMRegistrar.checkDevice throws an UnsupportedOperationException if the device
-            // doesn't support GCM (ie. non-google Android)
-            AppLog.e(T.NOTIFS, "Device doesn't support GCM: " + e.getMessage());
-        } catch (IllegalStateException e) {
-            // GCMRegistrar.checkManifest or GCMRegistrar.register throws an IllegalStateException if Manifest
-            // configuration is incorrect (missing a permission for instance) or if GCM dependencies are missing
-            AppLog.e(T.NOTIFS, "APK (manifest error or dependency missing) doesn't support GCM: " + e.getMessage());
-        } catch (Exception e) {
-            CrashlyticsUtils.logException(e, ExceptionType.SPECIFIC);
-            AppLog.e(T.NOTIFS, e);
-        }
-        return regId;
-    }
-
-    public static void registerForCloudMessaging(Context context) {
-        String regId = gcmRegisterIfNot(context);
-
-        // Register to WordPress.com notifications
-        if (WordPress.hasValidWPComCredentials(context)) {
-            if (!TextUtils.isEmpty(regId)) {
-                // Send the token to WP.com in case it was invalidated
-                NotificationUtils.registerDeviceForPushNotifications(context, regId);
-                AppLog.v(T.NOTIFS, "Already registered for GCM");
+    public static void registerForCloudMessaging(Context ctx) {
+        if (WordPress.hasValidWPComCredentials(ctx)) {
+            String token = null;
+            try {
+                // Register for Google Cloud Messaging
+                GCMRegistrar.checkDevice(ctx);
+                GCMRegistrar.checkManifest(ctx);
+                token = GCMRegistrar.getRegistrationId(ctx);
+                String gcmId = BuildConfig.GCM_ID;
+                if (gcmId != null && token.equals("")) {
+                    GCMRegistrar.register(ctx, gcmId);
+                } else {
+                    // Send the token to WP.com in case it was invalidated
+                    NotificationUtils.registerDeviceForPushNotifications(ctx, token);
+                    AnalyticsTracker.registerPushNotificationToken(token);
+                    AppLog.v(T.NOTIFS, "Already registered for GCM");
+                }
+            } catch (Exception e) {
+                AppLog.e(T.NOTIFS, "Could not register for GCM: " + e.getMessage());
             }
         }
-
-        // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
-        AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
     public interface OnPostUploadedListener {
@@ -642,12 +608,26 @@ public class WordPress extends Application {
                 isInBackground = false;
             }
 
-            // Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15;
-            // - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
-            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
-                Map<String, Integer> properties = new HashMap<String, Integer>();
-                properties.put("level", level);
-                AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
+            boolean evictBitmaps = false;
+            switch (level) {
+                case TRIM_MEMORY_COMPLETE:
+                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
+                    evictBitmaps = true;
+                    break;
+                case TRIM_MEMORY_MODERATE:
+                case TRIM_MEMORY_RUNNING_MODERATE:
+                case TRIM_MEMORY_RUNNING_CRITICAL:
+                case TRIM_MEMORY_RUNNING_LOW:
+                    Map<String, Integer> properties = new HashMap<String, Integer>();
+                    properties.put("level", level);
+                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
+                    evictBitmaps = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (evictBitmaps && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
         }

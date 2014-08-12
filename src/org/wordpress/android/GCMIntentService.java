@@ -22,11 +22,8 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.util.stats.AnalyticsTracker;
@@ -60,7 +57,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-
         long wpcomUserID = UserPrefs.getCurrentUserId();
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
@@ -253,7 +249,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         // Handle helpshift PNs
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -287,7 +282,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onRegistered(Context context, String regId) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!TextUtils.isEmpty(regId)) {
+        if (regId != null && regId.length() > 0) {
             // Get or create UUID for WP.com notes api
             String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
@@ -298,10 +293,6 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
-
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            }
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
