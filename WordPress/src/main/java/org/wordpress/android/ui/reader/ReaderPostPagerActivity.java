@@ -408,17 +408,20 @@ public class ReaderPostPagerActivity extends Activity
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // smooth scroll to the position of the next/previous post that isn't in the same blog
-        int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
+        final int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
         if (newPosition > -1) {
             mViewPager.setCurrentItem(newPosition, true);
         }
 
-        // remove the posts in this blog after a brief delay (to allow for smooth scroll to complete)
+        // reload the posts after a brief delay (to allow for smooth scroll to complete)
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    getPagerAdapter().removePostsInBlog(blogId);
+                    ReaderBlogIdPostId newId = getPagerAdapter().getBlogIdPostIdAtPosition(newPosition);
+                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
+                    long newPostId = (newId != null ? newId.getPostId() : 0);
+                    loadPosts(newBlogId, newPostId, false);
                 }
             }
         }, 600); // 600 = ViewPager.MAX_SETTLE_DURATION
@@ -545,6 +548,14 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
+        private ReaderBlogIdPostId getBlogIdPostIdAtPosition(int position) {
+            if (isValidPosition(position)) {
+                return mIdList.get(position);
+            } else {
+                return null;
+            }
+        }
+
         /*
          * returns the position of the next or previous post that isn't in the same blog
          * as the one at the passed position
@@ -575,19 +586,6 @@ public class ReaderPostPagerActivity extends Activity
             }
 
             return -1;
-        }
-
-        void removePostsInBlog(long blogId) {
-            ReaderBlogIdPostIdList removeIds = new ReaderBlogIdPostIdList();
-            for (ReaderBlogIdPostId id: mIdList) {
-                if (id.getBlogId() == blogId) {
-                    removeIds.add(id);
-                }
-            }
-            if (removeIds.size() > 0) {
-                mIdList.removeAll(removeIds);
-                notifyDataSetChanged();
-            }
         }
 
         private void requestMorePosts() {
