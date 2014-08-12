@@ -58,6 +58,8 @@ public class ReaderPostPagerActivity extends Activity
                    ReaderInterfaces.OnPostPopupListener {
 
     private ViewPager mViewPager;
+    private PostPagerAdapter mPagerAdapter;
+
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private ReaderPostListType mPostListType;
@@ -138,15 +140,14 @@ public class ReaderPostPagerActivity extends Activity
                 onRequestFullScreen(false);
 
                 if (hasPagerAdapter()) {
-                    PostPagerAdapter adapter = getPagerAdapter();
-                    Fragment fragment = adapter.getFragmentAtPosition(position);
+                    Fragment fragment = getPagerAdapter().getFragmentAtPosition(position);
                     if (fragment instanceof ReaderPostDetailFragment) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                     } else if (fragment instanceof PostPagerEndFragment) {
                         // if the end fragment is now active and more posts can be requested,
                         // request them now
-                        if (adapter.canRequestMostPosts()) {
-                            adapter.requestMorePosts();
+                        if (getPagerAdapter().canRequestMostPosts()) {
+                            getPagerAdapter().requestMorePosts();
                         }
                     }
                 }
@@ -170,15 +171,11 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private boolean hasPagerAdapter() {
-        return (mViewPager != null && mViewPager.getAdapter() != null);
+        return (mPagerAdapter != null);
     }
 
     private PostPagerAdapter getPagerAdapter() {
-        if (hasPagerAdapter()) {
-            return (PostPagerAdapter) mViewPager.getAdapter();
-        } else {
-            return null;
-        }
+        return mPagerAdapter;
     }
 
     @Override
@@ -194,8 +191,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         if (hasPagerAdapter()) {
-            PostPagerAdapter adapter = getPagerAdapter();
-            ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
+            ReaderBlogIdPostId id = getPagerAdapter().getCurrentBlogIdPostId();
             if (id != null) {
                 outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
                 outState.putLong(ReaderConstants.ARG_POST_ID, id.getPostId());
@@ -276,14 +272,14 @@ public class ReaderPostPagerActivity extends Activity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        PostPagerAdapter adapter = new PostPagerAdapter(getFragmentManager(), ids);
-                        mViewPager.setAdapter(adapter);
-                        if (adapter.isValidPosition(newPosition)) {
+                        mPagerAdapter = new PostPagerAdapter(getFragmentManager(), ids);
+                        mViewPager.setAdapter(mPagerAdapter);
+                        if (mPagerAdapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
-                        } else if (adapter.isValidPosition(currentPosition)) {
+                        } else if (mPagerAdapter.isValidPosition(currentPosition)) {
                             mViewPager.setCurrentItem(currentPosition);
                         }
-                        adapter.updateEndFragmentIfActive();
+                        mPagerAdapter.updateEndFragmentIfActive();
                     }
                 });
             }
