@@ -9,6 +9,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -23,7 +24,7 @@ public class ReaderAnim {
         MEDIUM,
         LONG;
 
-        private long toMillis(Context context) {
+        public long toMillis(Context context) {
             switch (this) {
                 case LONG:
                     return context.getResources().getInteger(android.R.integer.config_longAnimTime);
@@ -108,6 +109,31 @@ public class ReaderAnim {
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 target.setVisibility(View.VISIBLE);
+            }
+        });
+
+        animator.start();
+    }
+
+    public static void scaleOut(final View target,
+                                final int endVisibility,
+                                Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateInterpolator());
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationStart(animation);
+                target.setVisibility(endVisibility);
             }
         });
 

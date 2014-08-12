@@ -392,24 +392,26 @@ public class ReaderPostPagerActivity extends Activity
                 ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // smooth scroll to the position of the next/previous post that isn't in the same blog
-        final int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
-        if (newPosition > -1) {
-            mViewPager.setCurrentItem(newPosition, true);
+        // scale out the active fragment
+        ReaderAnim.Duration animDuration = ReaderAnim.Duration.SHORT;
+        Fragment fragment = getActiveDetailFragment();
+        if (fragment != null && fragment.getView() != null) {
+            ReaderAnim.scaleOut(fragment.getView(), View.GONE, animDuration);
         }
 
-        // reload the posts after a brief delay (to allow for smooth scroll to complete)
+        // reload the posts after a delay equal to the animation duration
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!isFinishing()) {
+                    int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
                     ReaderBlogIdPostId newId = getPagerAdapter().getBlogIdPostIdAtPosition(newPosition);
                     long newBlogId = (newId != null ? newId.getBlogId() : 0);
                     long newPostId = (newId != null ? newId.getPostId() : 0);
                     loadPosts(newBlogId, newPostId, false);
                 }
             }
-        }, 600); // 600 = ViewPager.MAX_SETTLE_DURATION
+        }, animDuration.toMillis(this));
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
