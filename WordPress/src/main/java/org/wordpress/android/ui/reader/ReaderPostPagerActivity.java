@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -363,7 +362,7 @@ public class ReaderPostPagerActivity extends Activity
      * user tapped the dropdown arrow to the right of the title on a detail fragment
      */
     @Override
-    public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+    public void onShowPostPopup(View view, final ReaderPost post) {
         if (view == null || post == null) {
             return;
         }
@@ -373,7 +372,7 @@ public class ReaderPostPagerActivity extends Activity
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                blockBlogForPost(post, position);
+                blockBlogForPost(post.blogId, post.postId);
                 return true;
             }
         });
@@ -382,9 +381,9 @@ public class ReaderPostPagerActivity extends Activity
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter - passed position is the index of the post in the adapter
+     * from the adapter
      */
-    private void blockBlogForPost(final ReaderPost post, final int position) {
+    private void blockBlogForPost(final long blogId, final long postId) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -405,31 +404,23 @@ public class ReaderPostPagerActivity extends Activity
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore =
-                ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+                ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // animate out the post the user chose to block from, then remove the post from the adapter
-        Animation.AnimationListener aniListener = new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { }
-            @Override
-            public void onAnimationRepeat(Animation animation) { }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (!isFinishing()) {
-                    // TODO: remove this specific post, then refresh the adapter so other posts in this
-                    // blog no long appear
-                }
-            }
-        };
-
+        // posts have been removed from the db, reload the adapter and select the
+        // post adjacent to the deleted one
+        ReaderBlogIdPostId idAdjacent = getPagerAdapter().getAdjacentId(blogId, postId);
+        long adjacentBlogId = (idAdjacent != null ? idAdjacent.getBlogId() : 0);
+        long adjacentPostId = (idAdjacent != null ? idAdjacent.getPostId() : 0);
+        loadPosts(adjacentBlogId, adjacentPostId, false);
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
-                // TODO: reload adapter
+                // restore deleted posts, reselect the one the blog was blocked from
+                ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore);
+                loadPosts(blogId, postId, false);
             }
         };
         new UndoBarController.UndoBar(this)
@@ -538,6 +529,20 @@ public class ReaderPostPagerActivity extends Activity
             int position = mViewPager.getCurrentItem() - 1;
             if (isValidPosition(position)) {
                 return mIdList.get(position);
+            } else {
+                return null;
+            }
+        }
+
+        private ReaderBlogIdPostId getAdjacentId(long blogId, long postId) {
+            int index = mIdList.indexOf(blogId, postId);
+            if (index == -1) {
+                return null;
+            }
+            if (index > 0) {
+                return mIdList.get(index - 1);
+            } else if (getCount() > 0) {
+                return mIdList.get(index + 1);
             } else {
                 return null;
             }

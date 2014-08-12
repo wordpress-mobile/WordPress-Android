@@ -458,7 +458,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final ReaderInterfaces.OnPostPopupListener mOnPostPopupListener = new ReaderInterfaces.OnPostPopupListener() {
         @Override
-        public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+        public void onShowPostPopup(View view, final ReaderPost post) {
             if (view == null || post == null) {
                 return;
             }
@@ -468,7 +468,7 @@ public class ReaderPostListFragment extends Fragment
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post, position);
+                    blockBlogForPost(post);
                     return true;
                 }
             });
@@ -478,9 +478,13 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter - passed position is the index of the post in the adapter
+     * from the adapter
      */
-    private void blockBlogForPost(final ReaderPost post, final int position) {
+    private void blockBlogForPost(final ReaderPost post) {
+        if (post == null || !hasPostAdapter()) {
+            return;
+        }
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -502,6 +506,7 @@ public class ReaderPostListFragment extends Fragment
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
+        final int position = getPostAdapter().indexOfPost(post);
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }

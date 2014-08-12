@@ -172,7 +172,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * reload a single post
      */
     public void reloadPost(ReaderPost post) {
-        int index = mPosts.indexOfPost(post);
+        int index = indexOfPost(post);
         if (index == -1) {
             return;
         }
@@ -182,6 +182,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             mPosts.set(index, updatedPost);
             notifyDataSetChanged();
         }
+    }
+
+    public int indexOfPost(ReaderPost post) {
+        return mPosts.indexOfPost(post);
     }
 
     /*
@@ -414,7 +418,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     if (mOnPostPopupListener != null) {
-                        mOnPostPopupListener.onShowPostPopup(view, post, position);
+                        mOnPostPopupListener.onShowPostPopup(view, post);
                     }
                 }
             });

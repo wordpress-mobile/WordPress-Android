@@ -1409,9 +1409,9 @@ public class ReaderPostDetailFragment extends Fragment
                 imgDropDown.setVisibility(View.VISIBLE);
                 imgDropDown.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         if (mOnPopupListener != null) {
-                            mOnPopupListener.onShowPostPopup(v, mPost, -1);
+                            mOnPopupListener.onShowPostPopup(view, mPost);
                         }
                     }
                 });

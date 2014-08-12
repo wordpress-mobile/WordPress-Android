@@ -14,6 +14,6 @@ public class ReaderInterfaces {
     }
 
     public static interface OnPostPopupListener {
-        public void onShowPostPopup(View view, ReaderPost post, int position);
+        public void onShowPostPopup(View view, ReaderPost post);
     }
 }
