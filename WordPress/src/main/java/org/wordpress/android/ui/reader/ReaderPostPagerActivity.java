@@ -1,15 +1,10 @@
 package org.wordpress.android.ui.reader;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -17,14 +12,11 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.OvershootInterpolator;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
 
@@ -35,6 +27,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
@@ -69,13 +62,6 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsSinglePostView;
 
     protected static final String ARG_IS_SINGLE_POST = "is_single_post";
-    private static final long END_FRAGMENT_ID = -1;
-
-    private static boolean isEndFragmentId(ReaderBlogIdPostId id) {
-        return (id != null
-                && id.getBlogId() == END_FRAGMENT_ID
-                && id.getPostId() == END_FRAGMENT_ID);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,7 +129,7 @@ public class ReaderPostPagerActivity extends Activity
                     Fragment fragment = getPagerAdapter().getFragmentAtPosition(position);
                     if (fragment instanceof ReaderPostDetailFragment) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
-                    } else if (fragment instanceof PostPagerEndFragment) {
+                    } else if (fragment instanceof ReaderPostPagerEndFragment) {
                         // if the end fragment is now active and more posts can be requested,
                         // request them now
                         if (getPagerAdapter().canRequestMostPosts()) {
@@ -168,6 +154,8 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
+
+        mViewPager.setPageTransformer(false, new PostPageTransformer());
     }
 
     private boolean hasPagerAdapter() {
@@ -272,7 +260,8 @@ public class ReaderPostPagerActivity extends Activity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mPagerAdapter = new PostPagerAdapter(getFragmentManager(), ids);
+                        mPagerAdapter = new PostPagerAdapter(getFragmentManager());
+                        mPagerAdapter.showPosts(ids);
                         mViewPager.setAdapter(mPagerAdapter);
                         if (mPagerAdapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
@@ -448,7 +437,7 @@ public class ReaderPostPagerActivity extends Activity
      * pager adapter containing post detail fragments
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private final ReaderBlogIdPostIdList mIdList;
+        private ReaderBlogIdPostIdList mIdList;
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
@@ -456,13 +445,16 @@ public class ReaderPostPagerActivity extends Activity
         // built-in way to do this
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<Fragment>();
 
-        PostPagerAdapter(FragmentManager fm, ReaderBlogIdPostIdList ids) {
+        PostPagerAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        void showPosts(ReaderBlogIdPostIdList ids) {
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
             // add a bogus entry to the end of the list which tells the adapter to show
             // the end fragment after the last post
-            if (!mIsSinglePostView && mIdList.indexOf(END_FRAGMENT_ID, END_FRAGMENT_ID) == -1) {
-                mIdList.add(new ReaderBlogIdPostId(END_FRAGMENT_ID, END_FRAGMENT_ID));
+            if (!mIsSinglePostView && mIdList.indexOf(ReaderPostPagerEndFragment.END_FRAGMENT_ID, ReaderPostPagerEndFragment.END_FRAGMENT_ID) == -1) {
+                mIdList.add(new ReaderBlogIdPostId(ReaderPostPagerEndFragment.END_FRAGMENT_ID, ReaderPostPagerEndFragment.END_FRAGMENT_ID));
             }
         }
 
@@ -484,11 +476,10 @@ public class ReaderPostPagerActivity extends Activity
 
         @Override
         public Fragment getItem(int position) {
-            if (isEndFragmentId(mIdList.get(position))) {
+            if (ReaderPostPagerEndFragment.isEndFragmentId(mIdList.get(position))) {
                 EndFragmentType fragmentType =
                         (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
-                PostPagerEndFragment endFragment = PostPagerEndFragment.newInstance(fragmentType);
-                return endFragment;
+                return ReaderPostPagerEndFragment.newInstance(fragmentType);
             } else {
                 boolean disableBlockBlog = mIsSinglePostView;
                 return ReaderPostDetailFragment.newInstance(
@@ -637,7 +628,7 @@ public class ReaderPostPagerActivity extends Activity
                 boolean gotoNext;
                 // if this is an end fragment, get the previous post and tell loadPosts() to
                 // move to the post after it (ie: show the first new post)
-                if (isEndFragmentId(id)) {
+                if (ReaderPostPagerEndFragment.isEndFragmentId(id)) {
                     id = getPreviousBlogIdPostId();
                     gotoNext = true;
                 } else {
@@ -659,127 +650,50 @@ public class ReaderPostPagerActivity extends Activity
          */
         private void updateEndFragmentIfActive() {
             Fragment fragment = getActiveFragment();
-            if (fragment instanceof PostPagerEndFragment) {
-                ((PostPagerEndFragment) fragment).setEndFragmentType(
+            if (fragment instanceof ReaderPostPagerEndFragment) {
+                ((ReaderPostPagerEndFragment) fragment).setEndFragmentType(
                         canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
             }
         }
     }
 
-    /**
-     * fragment that appears when user scrolls beyond the last post
-     **/
-    private static enum EndFragmentType {
-                            LOADING,
-                            NO_MORE }
-    private static final String ARG_END_FRAGMENT_TYPE = "end_fragment_type";
+    /*
+     * https://stuff.mit.edu/afs/sipb/project/android/docs/training/animation/screen-slide.html#pagetransformer
+     */
+    public static class PostPageTransformer implements ViewPager.PageTransformer {
+        private static final float MIN_SCALE = 0.75f;
 
-    public static class PostPagerEndFragment extends Fragment {
-        private EndFragmentType mFragmentType = EndFragmentType.LOADING;
+        public void transformPage(View view, float position) {
+            int pageWidth = view.getWidth();
 
-        private static PostPagerEndFragment newInstance(EndFragmentType fragmentType) {
-            PostPagerEndFragment fragment = new PostPagerEndFragment();
-            Bundle bundle = new Bundle();
-            if (fragmentType != null) {
-                bundle.putSerializable(ARG_END_FRAGMENT_TYPE, fragmentType);
+            if (position < -1) { // [-Infinity,-1)
+                // This page is way off-screen to the left.
+                view.setAlpha(0);
+
+            } else if (position <= 0) { // [-1,0]
+                // Use the default slide transition when moving to the left page
+                view.setAlpha(1);
+                view.setTranslationX(0);
+                view.setScaleX(1);
+                view.setScaleY(1);
+
+            } else if (position <= 1) { // (0,1]
+                // Fade the page out.
+                view.setAlpha(1 - position);
+
+                // Counteract the default slide transition
+                view.setTranslationX(pageWidth * -position);
+
+                // Scale the page down (between MIN_SCALE and 1)
+                float scaleFactor = MIN_SCALE
+                        + (1 - MIN_SCALE) * (1 - Math.abs(position));
+                view.setScaleX(scaleFactor);
+                view.setScaleY(scaleFactor);
+
+            } else { // (1,+Infinity]
+                // This page is way off-screen to the right.
+                view.setAlpha(0);
             }
-            fragment.setArguments(bundle);
-            return fragment;
-        }
-
-        @Override
-        public void setArguments(Bundle args) {
-            super.setArguments(args);
-            if (args != null && args.containsKey(ARG_END_FRAGMENT_TYPE)) {
-                mFragmentType = (EndFragmentType) args.getSerializable(ARG_END_FRAGMENT_TYPE);
-            }
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.reader_fragment_pager_end, container, false);
-            setEndFragmentType(view, mFragmentType);
-            return view;
-        }
-
-        void setEndFragmentType(EndFragmentType fragmentType) {
-            setEndFragmentType(getView(), fragmentType);
-        }
-        void setEndFragmentType(View view, EndFragmentType fragmentType) {
-            mFragmentType = fragmentType;
-            AppLog.d(AppLog.T.READER, "reader pager > setting end fragment type to " + fragmentType.toString());
-
-            if (view == null) {
-                AppLog.w(AppLog.T.READER, "reader pager > null view setting end fragment type");
-                return;
-            }
-
-            ViewGroup layoutLoading = (ViewGroup) view.findViewById(R.id.layout_loading);
-            ViewGroup layoutNoMore = (ViewGroup) view.findViewById(R.id.layout_no_more);
-
-            switch (mFragmentType) {
-                // indicates that more posts can be loaded - request to get older posts
-                // will occur when this page becomes active
-                case LOADING:
-                    layoutLoading.setVisibility(View.VISIBLE);
-                    layoutNoMore.setVisibility(View.GONE);
-                    break;
-                // indicates the user has reached the end (there are no more posts) - tapping
-                // this will return to the previous activity
-                case NO_MORE:
-                    layoutLoading.setVisibility(View.GONE);
-                    layoutNoMore.setVisibility(View.VISIBLE);
-                    layoutNoMore.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (getActivity() != null) {
-                                getActivity().finish();
-                            }
-                        }
-                    });
-                    break;
-            }
-        }
-
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            // setUserVisibleHint wasn't available until API 15 (ICE_CREAM_SANDWICH_MR1)
-            if (Build.VERSION.SDK_INT >= 15) {
-                super.setUserVisibleHint(isVisibleToUser);
-            }
-            // animate in the checkmark if this is a "no more posts fragment
-            if (mFragmentType == EndFragmentType.NO_MORE) {
-                animateCheckmark();
-            }
-        }
-
-        private void animateCheckmark() {
-            if (!isAdded() || getView() == null) {
-                return;
-            }
-
-            // don't animate checkmark if it's already visible
-            final TextView txtCheckmark = (TextView) getView().findViewById(R.id.text_checkmark);
-            if (txtCheckmark == null || txtCheckmark.getVisibility() == View.VISIBLE) {
-                return;
-            }
-
-            PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0.25f, 1.0f);
-            PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0.25f, 1.0f);
-
-            ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(txtCheckmark, scaleX, scaleY);
-            animator.setDuration(750);
-            animator.setInterpolator(new OvershootInterpolator());
-
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    txtCheckmark.setVisibility(View.VISIBLE);
-                }
-            });
-
-            animator.start();
         }
     }
 }
