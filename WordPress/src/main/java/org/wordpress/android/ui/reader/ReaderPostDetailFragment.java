@@ -309,6 +309,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean canBlockBlog() {
         return mPost != null
                 && !mIsBlockBlogDisabled
+                && !mPost.isPrivate
                 && !mPost.isExternal
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
