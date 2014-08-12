@@ -11,6 +11,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -406,12 +407,25 @@ public class ReaderPostPagerActivity extends Activity
                 ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // posts have been removed from the db, reload the adapter and select the
-        // post adjacent to the deleted one
-        ReaderBlogIdPostId idAdjacent = getPagerAdapter().getAdjacentId(blogId, postId);
-        long adjacentBlogId = (idAdjacent != null ? idAdjacent.getBlogId() : 0);
-        long adjacentPostId = (idAdjacent != null ? idAdjacent.getPostId() : 0);
-        loadPosts(adjacentBlogId, adjacentPostId, false);
+        // find the position of the next post that isn't in the same blog
+        final int newPosition = getPagerAdapter().getNextPositionNotInSameBlog(mViewPager.getCurrentItem());
+        if (newPosition > -1) {
+            // smooth scroll to the new position
+            mViewPager.setCurrentItem(newPosition, true);
+            // reload the posts after a brief delay (to allow for smooth scroll to complete)
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ReaderBlogIdPostId newId = getPagerAdapter().getBlogIdPostIdAtPos(newPosition);
+                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
+                    long newPostId = (newId != null ? newId.getPostId() : 0);
+                    loadPosts(newBlogId, newPostId, false);
+                }
+            }, 600); // 600 = ViewPager.MAX_SETTLE_DURATION
+        } else {
+            // couldn't locate a post not in this same blog, so load posts and show the end fragment
+            loadPosts(END_FRAGMENT_ID, END_FRAGMENT_ID, false);
+        }
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -474,6 +488,11 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         @Override
+        public int getItemPosition(Object object) {
+            return super.getItemPosition(object);
+        }
+
+        @Override
         public Fragment getItem(int position) {
             if (isEndFragmentId(mIdList.get(position))) {
                 EndFragmentType fragmentType =
@@ -533,23 +552,40 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
-        /*
-         * return the id pair "adjacent" to the passed one - if passed id isn't the first
-         * one return the previous id, if passed id *is* the first one return the next
-         * one unless there are no other ids (in which case return null)
-         */
-        private ReaderBlogIdPostId getAdjacentId(long blogId, long postId) {
-            int index = mIdList.indexOf(blogId, postId);
-            if (index == -1) {
-                return null;
-            }
-            if (index > 0) {
-                return mIdList.get(index - 1);
-            } else if (getCount() > 0) {
-                return mIdList.get(index + 1);
+        private ReaderBlogIdPostId getBlogIdPostIdAtPos(int position) {
+            if (isValidPosition(position)) {
+                return mIdList.get(position);
             } else {
                 return null;
             }
+        }
+
+        private int getNextPositionNotInSameBlog(int position) {
+            if (!isValidPosition(position)) {
+                return -1;
+            }
+
+            long blogId = mIdList.get(position).getBlogId();
+
+            // search forwards
+            if (position < getCount() - 1) {
+                for (int index = position + 1; index < getCount(); index++) {
+                    if (mIdList.get(index).getBlogId() != blogId) {
+                        return index;
+                    }
+                }
+            }
+
+            // search backwards
+            if (position > 0) {
+                for (int index = position - 1; index >= 0; index--) {
+                    if (mIdList.get(index).getBlogId() != blogId) {
+                        return index;
+                    }
+                }
+            }
+
+            return -1;
         }
 
         private void requestMorePosts() {
