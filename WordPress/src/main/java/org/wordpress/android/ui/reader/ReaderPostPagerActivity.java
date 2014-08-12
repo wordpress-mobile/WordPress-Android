@@ -407,25 +407,21 @@ public class ReaderPostPagerActivity extends Activity
                 ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // find the position of the next post that isn't in the same blog
-        final int newPosition = getPagerAdapter().getNextPositionNotInSameBlog(mViewPager.getCurrentItem());
+        // smooth scroll to the position of the next/previous post that isn't in the same blog
+        int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
         if (newPosition > -1) {
-            // smooth scroll to the new position
             mViewPager.setCurrentItem(newPosition, true);
-            // reload the posts after a brief delay (to allow for smooth scroll to complete)
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ReaderBlogIdPostId newId = getPagerAdapter().getBlogIdPostIdAtPos(newPosition);
-                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
-                    long newPostId = (newId != null ? newId.getPostId() : 0);
-                    loadPosts(newBlogId, newPostId, false);
-                }
-            }, 600); // 600 = ViewPager.MAX_SETTLE_DURATION
-        } else {
-            // couldn't locate a post not in this same blog, so load posts and show the end fragment
-            loadPosts(END_FRAGMENT_ID, END_FRAGMENT_ID, false);
         }
+
+        // remove the posts in this blog after a brief delay (to allow for smooth scroll to complete)
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    getPagerAdapter().removePostsInBlog(blogId);
+                }
+            }
+        }, 600); // 600 = ViewPager.MAX_SETTLE_DURATION
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -488,11 +484,6 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         @Override
-        public int getItemPosition(Object object) {
-            return super.getItemPosition(object);
-        }
-
-        @Override
         public Fragment getItem(int position) {
             if (isEndFragmentId(mIdList.get(position))) {
                 EndFragmentType fragmentType =
@@ -500,9 +491,11 @@ public class ReaderPostPagerActivity extends Activity
                 PostPagerEndFragment endFragment = PostPagerEndFragment.newInstance(fragmentType);
                 return endFragment;
             } else {
+                boolean disableBlockBlog = mIsSinglePostView;
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
+                        disableBlockBlog,
                         getPostListType());
             }
         }
@@ -552,25 +545,21 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
-        private ReaderBlogIdPostId getBlogIdPostIdAtPos(int position) {
-            if (isValidPosition(position)) {
-                return mIdList.get(position);
-            } else {
-                return null;
-            }
-        }
-
-        private int getNextPositionNotInSameBlog(int position) {
+        /*
+         * returns the position of the next or previous post that isn't in the same blog
+         * as the one at the passed position
+         */
+        private int getPositionNotInSameBlog(int position) {
             if (!isValidPosition(position)) {
                 return -1;
             }
 
-            long blogId = mIdList.get(position).getBlogId();
+            long skipBlogId = mIdList.get(position).getBlogId();
 
             // search forwards
             if (position < getCount() - 1) {
                 for (int index = position + 1; index < getCount(); index++) {
-                    if (mIdList.get(index).getBlogId() != blogId) {
+                    if (mIdList.get(index).getBlogId() != skipBlogId) {
                         return index;
                     }
                 }
@@ -579,13 +568,26 @@ public class ReaderPostPagerActivity extends Activity
             // search backwards
             if (position > 0) {
                 for (int index = position - 1; index >= 0; index--) {
-                    if (mIdList.get(index).getBlogId() != blogId) {
+                    if (mIdList.get(index).getBlogId() != skipBlogId) {
                         return index;
                     }
                 }
             }
 
             return -1;
+        }
+
+        void removePostsInBlog(long blogId) {
+            ReaderBlogIdPostIdList removeIds = new ReaderBlogIdPostIdList();
+            for (ReaderBlogIdPostId id: mIdList) {
+                if (id.getBlogId() == blogId) {
+                    removeIds.add(id);
+                }
+            }
+            if (removeIds.size() > 0) {
+                mIdList.removeAll(removeIds);
+                notifyDataSetChanged();
+            }
         }
 
         private void requestMorePosts() {

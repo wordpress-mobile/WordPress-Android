@@ -68,6 +68,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
+    static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
     private long mPostId;
     private long mBlogId;
@@ -87,6 +88,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
+    private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
 
@@ -99,17 +101,19 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderUtils.FullScreenListener mFullScreenListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, null);
+        return newInstance(blogId, postId, true, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
+                                                       boolean disableBlockBlog,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
+        args.putBoolean(ARG_DISABLE_BLOCK_BLOG, disableBlockBlog);
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -211,6 +215,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
+            mIsBlockBlogDisabled = args.getBoolean(ARG_DISABLE_BLOCK_BLOG);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -303,6 +308,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canBlockBlog() {
         return mPost != null
+                && !mIsBlockBlogDisabled
                 && !mPost.isExternal
                 && (mOnPopupListener != null)
                 && (getPostListType() == ReaderPostListType.TAG_FOLLOWED);
@@ -396,6 +402,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
+        outState.putBoolean(ARG_DISABLE_BLOCK_BLOG, mIsBlockBlogDisabled);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -449,6 +456,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
+            mIsBlockBlogDisabled = savedInstanceState.getBoolean(ARG_DISABLE_BLOCK_BLOG);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -597,7 +605,7 @@ public class ReaderPostDetailFragment extends Fragment
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (result != ReaderActions.UpdateResult.FAILED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (numLikesBefore != mPost.numLikes) {
+                    if (mPost != null && numLikesBefore != mPost.numLikes) {
                         refreshLikes();
                     }
                     updateComments(false);
