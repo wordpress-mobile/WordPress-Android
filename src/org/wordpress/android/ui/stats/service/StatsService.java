@@ -45,6 +45,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StatUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.stats.AnalyticsTracker;
+import org.wordpress.android.util.stats.AnalyticsTracker.Stat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -147,6 +149,7 @@ public class StatsService extends Service {
     }
 
     private void startTasks(final String blogId, final int startId) {
+        AnalyticsTracker.track(Stat.STATS_TASK_STARTED);
         setServiceBlogId(blogId);
         this.mServiceStartId = startId;
         this.mErrorObject = null;

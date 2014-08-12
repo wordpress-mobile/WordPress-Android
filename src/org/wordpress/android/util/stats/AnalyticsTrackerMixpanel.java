@@ -458,6 +458,10 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Feedback API Requested");
                 break;
+            case STATS_TASK_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Stats Task Started");
+                break;
             default:
                 instructions = null;
                 break;
