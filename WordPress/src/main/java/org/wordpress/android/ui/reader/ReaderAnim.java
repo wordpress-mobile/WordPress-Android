@@ -107,7 +107,6 @@ public class ReaderAnim {
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
                 target.setVisibility(View.VISIBLE);
             }
         });
@@ -132,7 +131,6 @@ public class ReaderAnim {
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationStart(animation);
                 target.setVisibility(endVisibility);
             }
         });
@@ -159,12 +157,10 @@ public class ReaderAnim {
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
                 target.setVisibility(View.VISIBLE);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 target.setVisibility(View.GONE);
             }
         });
