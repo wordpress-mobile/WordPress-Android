@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.text.format.DateUtils;
+import android.text.format.Time;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -144,5 +145,32 @@ public class DateTimeUtils {
     public static String timestampToTimeSpan(long timeStamp) {
         Date dtGmt = timestampToDate(timeStamp);
         return javaDateToTimeSpan(dtGmt);
+    }
+
+    /**
+     * @return true if the supplied when is yesterday else false
+     * Based on isToday from DateUtils class
+     */
+    public static boolean isYesterday(long when) {
+        Time time = new Time();
+        time.set(when);
+
+        int thenYear = time.year;
+        int thenMonth = time.month;
+        int thenMonthDay = time.monthDay;
+
+        time.set(System.currentTimeMillis());
+        return (thenYear == time.year)
+                && (thenMonth == time.month)
+                && (thenMonthDay == time.monthDay - 1);
+    }
+
+    /**
+     * @return true if the supplied when is within 7 days of now
+     */
+    public static boolean isWithinSameWeek(long when) {
+        long oneWeekMillis = 60 * 60 * 24 * 7 * 1000;
+
+        return System.currentTimeMillis() - when <= oneWeekMillis;
     }
 }

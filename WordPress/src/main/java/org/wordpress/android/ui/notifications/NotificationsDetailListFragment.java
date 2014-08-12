@@ -149,7 +149,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {
-
                         JSONObject noteObject = bodyArray.getJSONObject(i);
                         // Determine NoteBlock type and add it to the array
                         NoteBlock noteBlock;
@@ -169,8 +168,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
-
-
 
                         mNoteBlockArray.add(noteBlock);
                     } catch (JSONException e) {

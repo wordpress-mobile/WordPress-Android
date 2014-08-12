@@ -107,7 +107,7 @@
     <!-- calypso colors -->
     <color name="calypso_blue_unread">#00aadc</color>
     <color name="calypso_blue_dark">#324155</color>
-    <color name="calypso_grey">#b2c6d3</color>
+    <color name="calypso_grey">#aac0cf</color>
     <color name="calypso_blue">#90aec2</color>
-    <color name="calypso_blue_light">#e8f0f5</color>
+    <color name="calypso_blue_light">#f4f8fa</color>
 </resources>

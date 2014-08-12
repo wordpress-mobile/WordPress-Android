@@ -5,6 +5,7 @@ package org.wordpress.android.models;
 
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -52,6 +53,13 @@ public class Note extends Syncable {
         ACTION_LIKE
     }
 
+    public static enum NoteTimeGroup {
+        GROUP_TODAY,
+        GROUP_YESTERDAY,
+        GROUP_LAST_WEEK,
+        GROUP_OLDER
+    }
+
     private JSONObject mActions;
     private JSONObject mNoteJSON;
 
@@ -62,6 +70,8 @@ public class Note extends Syncable {
     private Spannable mFormattedSubject;
     private transient String mIconUrl;
     private transient String mNoteType;
+    private NoteTimeGroup mTimeGroup;
+
 
     /**
      * Create a note using JSON from Simperium
@@ -168,6 +178,23 @@ public class Note extends Syncable {
         }
 
         return mCommentPreview;
+    }
+
+    public NoteTimeGroup getTimeGroup() {
+        if (mTimeGroup == null) {
+            long timestamp = getTimestamp() * 1000;
+            if (DateUtils.isToday(timestamp)) {
+                mTimeGroup =  NoteTimeGroup.GROUP_TODAY;
+            } else if (DateTimeUtils.isYesterday(timestamp)) {
+                mTimeGroup =  NoteTimeGroup.GROUP_YESTERDAY;
+            }  else if (DateTimeUtils.isWithinSameWeek(timestamp)) {
+                mTimeGroup =  NoteTimeGroup.GROUP_LAST_WEEK;
+            } else {
+                mTimeGroup = NoteTimeGroup.GROUP_OLDER;
+            }
+        }
+
+        return mTimeGroup;
     }
 
     /**

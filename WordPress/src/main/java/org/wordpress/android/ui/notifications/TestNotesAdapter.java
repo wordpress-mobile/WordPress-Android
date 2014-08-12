@@ -15,7 +15,6 @@ import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -26,6 +25,8 @@ class TestNotesAdapter extends CursorAdapter {
     private final Query mQuery;
     private int mSelectedPosition = ListView.INVALID_POSITION;
     private boolean mShouldHighlightRows;
+    private int mReadBackgroundResId;
+    private int mUnreadBackgroundResId;
 
     TestNotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
@@ -34,6 +35,8 @@ class TestNotesAdapter extends CursorAdapter {
         mQuery = bucket.query().order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
+        mReadBackgroundResId = R.drawable.list_bg_selector;
+        mUnreadBackgroundResId = R.drawable.list_unread_bg_selector;
     }
 
     public void closeCursor() {
@@ -85,6 +88,30 @@ class TestNotesAdapter extends CursorAdapter {
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
+        // TODO This is probably bad for scrolling performance, optimize
+        // Get the previous note to compare timestamps for header display
+        Note previousNote = null;
+        if (bucketCursor.moveToPrevious()) {
+            previousNote = bucketCursor.getObject();
+            bucketCursor.moveToNext();
+        }
+
+        if (previousNote != null && previousNote.getTimeGroup() == note.getTimeGroup()) {
+            noteViewHolder.headerView.setVisibility(View.GONE);
+        } else {
+            if (note.getTimeGroup() == Note.NoteTimeGroup.GROUP_TODAY) {
+                noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_today).toUpperCase());
+            } else if (note.getTimeGroup() == Note.NoteTimeGroup.GROUP_YESTERDAY) {
+                noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_yesterday).toUpperCase());
+            } else if (note.getTimeGroup() == Note.NoteTimeGroup.GROUP_LAST_WEEK) {
+                noteViewHolder.headerText.setText(context.getString(R.string.last_week).toUpperCase());
+            } else {
+                noteViewHolder.headerText.setText(context.getString(R.string.older).toUpperCase());
+            }
+
+            noteViewHolder.headerView.setVisibility(View.VISIBLE);
+        }
+
         noteViewHolder.txtLabel.setText(note.getFormattedSubject());
         if (note.isCommentType()) {
             noteViewHolder.txtLabel.setMaxLines(2);
@@ -94,8 +121,6 @@ class TestNotesAdapter extends CursorAdapter {
             noteViewHolder.txtLabel.setMaxLines(3);
             noteViewHolder.txtDetail.setVisibility(View.GONE);
         }
-
-        noteViewHolder.txtTime.setText(DateTimeUtils.timestampToTimeSpan(note.getTimestamp()));
 
         String avatarUrl = PhotonUtils.fixAvatar(note.getIconURL(), mAvatarSz);
         noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
@@ -112,7 +137,11 @@ class TestNotesAdapter extends CursorAdapter {
             noteViewHolder.noteIcon.setVisibility(View.GONE);
         }
 
-        noteViewHolder.unreadIndicator.setVisibility(note.isUnread() ? View.VISIBLE : View.INVISIBLE);
+        if (note.isUnread()) {
+            view.setBackgroundResource(mUnreadBackgroundResId);
+        } else {
+            view.setBackgroundResource(mReadBackgroundResId);
+        }
     }
 
     public void setShouldHighlightRows(boolean shouldHighlightRows) {
@@ -120,18 +149,19 @@ class TestNotesAdapter extends CursorAdapter {
     }
 
     private static class NoteViewHolder {
+        private final View headerView;
+        private final TextView headerText;
+
         private final TextView txtLabel;
         private final TextView txtDetail;
-        private final TextView txtTime;
-        private final View unreadIndicator;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
 
         NoteViewHolder(View view) {
+            headerView = view.findViewById(R.id.time_header);
+            headerText = (TextView)view.findViewById(R.id.header_date_text);
             txtLabel = (TextView) view.findViewById(R.id.note_label);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            txtTime = (TextView) view.findViewById(R.id.note_time);
-            unreadIndicator = view.findViewById(R.id.unread_indicator);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
         }
