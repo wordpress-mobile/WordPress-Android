@@ -14,7 +14,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.util.AppLog;
 
 /**
@@ -23,13 +22,6 @@ import org.wordpress.android.util.AppLog;
 
 public class ReaderPostPagerEndFragment extends Fragment {
     static final long END_FRAGMENT_ID = -1;
-
-    static boolean isEndFragmentId(ReaderBlogIdPostId id) {
-        return (id != null
-                && id.getBlogId() == END_FRAGMENT_ID
-                && id.getPostId() == END_FRAGMENT_ID);
-    }
-
     static enum EndFragmentType { LOADING, NO_MORE }
     private static final String ARG_END_FRAGMENT_TYPE = "end_fragment_type";
 

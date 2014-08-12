@@ -433,36 +433,51 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    private static boolean isEndFragmentId(ReaderBlogIdPostId id) {
+        return (id != null
+                && id.getBlogId() == ReaderPostPagerEndFragment.END_FRAGMENT_ID
+                && id.getPostId() == ReaderPostPagerEndFragment.END_FRAGMENT_ID);
+    }
+
     /**
      * pager adapter containing post detail fragments
      **/
     private class PostPagerAdapter extends FragmentStatePagerAdapter {
-        private ReaderBlogIdPostIdList mIdList;
+        private ReaderBlogIdPostIdList mIdList = new ReaderBlogIdPostIdList();
         private boolean mAllPostsLoaded;
 
         // this is used to retain created fragments so we can access them in
         // getFragmentAtPosition() - necessary because the pager provides no
-        // built-in way to do this
+        // built-in way to do this - note that destroyItem() removes fragments
+        // from this map when they're removed from the adapter, so this doesn't
+        // retain *every* fragment
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<Fragment>();
 
         PostPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        private boolean hasEndFragment() {
+            return (mIdList.indexOf(
+                        ReaderPostPagerEndFragment.END_FRAGMENT_ID,
+                        ReaderPostPagerEndFragment.END_FRAGMENT_ID) > -1);
+        }
+
         void showPosts(ReaderBlogIdPostIdList ids) {
             mIdList = (ReaderBlogIdPostIdList)ids.clone();
             // add a bogus entry to the end of the list which tells the adapter to show
             // the end fragment after the last post
-            if (!mIsSinglePostView && mIdList.indexOf(ReaderPostPagerEndFragment.END_FRAGMENT_ID, ReaderPostPagerEndFragment.END_FRAGMENT_ID) == -1) {
-                mIdList.add(new ReaderBlogIdPostId(ReaderPostPagerEndFragment.END_FRAGMENT_ID, ReaderPostPagerEndFragment.END_FRAGMENT_ID));
+            if (!mIsSinglePostView && !hasEndFragment()) {
+                mIdList.add(new ReaderBlogIdPostId(ReaderPostPagerEndFragment.END_FRAGMENT_ID,
+                                                   ReaderPostPagerEndFragment.END_FRAGMENT_ID));
             }
         }
 
         private boolean canRequestMostPosts() {
             return !mAllPostsLoaded
-                    && !mIsSinglePostView
-                    && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
-                    && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
+                && !mIsSinglePostView
+                && mIdList.size() < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+                && NetworkUtils.isNetworkAvailable(ReaderPostPagerActivity.this);
         }
 
         boolean isValidPosition(int position) {
@@ -476,7 +491,7 @@ public class ReaderPostPagerActivity extends Activity
 
         @Override
         public Fragment getItem(int position) {
-            if (ReaderPostPagerEndFragment.isEndFragmentId(mIdList.get(position))) {
+            if (isEndFragmentId(mIdList.get(position))) {
                 EndFragmentType fragmentType =
                         (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
                 return ReaderPostPagerEndFragment.newInstance(fragmentType);
@@ -628,7 +643,7 @@ public class ReaderPostPagerActivity extends Activity
                 boolean gotoNext;
                 // if this is an end fragment, get the previous post and tell loadPosts() to
                 // move to the post after it (ie: show the first new post)
-                if (ReaderPostPagerEndFragment.isEndFragmentId(id)) {
+                if (isEndFragmentId(id)) {
                     id = getPreviousBlogIdPostId();
                     gotoNext = true;
                 } else {
