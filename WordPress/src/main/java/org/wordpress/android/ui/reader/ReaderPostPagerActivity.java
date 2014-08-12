@@ -137,8 +137,8 @@ public class ReaderPostPagerActivity extends Activity
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
 
-                if (mViewPager.getAdapter() != null) {
-                    PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
+                if (hasPagerAdapter()) {
+                    PostPagerAdapter adapter = getPagerAdapter();
                     Fragment fragment = adapter.getFragmentAtPosition(position);
                     if (fragment instanceof ReaderPostDetailFragment) {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
@@ -169,6 +169,18 @@ public class ReaderPostPagerActivity extends Activity
         });
     }
 
+    private boolean hasPagerAdapter() {
+        return (mViewPager != null && mViewPager.getAdapter() != null);
+    }
+
+    private PostPagerAdapter getPagerAdapter() {
+        if (hasPagerAdapter()) {
+            return (PostPagerAdapter) mViewPager.getAdapter();
+        } else {
+            return null;
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
@@ -181,8 +193,8 @@ public class ReaderPostPagerActivity extends Activity
             outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
         }
 
-        if (mViewPager != null && mViewPager.getAdapter() != null) {
-            PostPagerAdapter adapter = (PostPagerAdapter) mViewPager.getAdapter();
+        if (hasPagerAdapter()) {
+            PostPagerAdapter adapter = getPagerAdapter();
             ReaderBlogIdPostId id = adapter.getCurrentBlogIdPostId();
             if (id != null) {
                 outState.putLong(ReaderConstants.ARG_BLOG_ID, id.getBlogId());
@@ -335,11 +347,11 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     private ReaderPostDetailFragment getActiveDetailFragment() {
-        if (mViewPager == null || mViewPager.getAdapter() == null) {
+        if (!hasPagerAdapter()) {
             return null;
         }
 
-        Fragment fragment = ((PostPagerAdapter) mViewPager.getAdapter()).getActiveFragment();
+        Fragment fragment = getPagerAdapter().getActiveFragment();
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {
