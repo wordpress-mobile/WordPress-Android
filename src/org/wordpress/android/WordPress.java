@@ -621,6 +621,7 @@ public class WordPress extends Application {
                     Map<String, Integer> properties = new HashMap<String, Integer>();
                     properties.put("level", level);
                     AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
+                    evictBitmaps = true;
                     break;
                 default:
                     break;
