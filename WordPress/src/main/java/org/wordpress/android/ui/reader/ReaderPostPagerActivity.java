@@ -666,47 +666,49 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     /*
-     * https://stuff.mit.edu/afs/sipb/project/android/docs/training/animation/screen-slide.html#pagetransformer
+     * based on http://developer.android.com/training/animation/screen-slide.html#pagetransformer
      */
     public static class PostPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.75f;
 
         public void transformPage(View view, float position) {
-            int pageWidth = view.getWidth();
-            if (position < -1) { // [-Infinity,-1)
-                // this page is way off-screen to the left.
+            if (position <= -1) {
+                // page is off-screen to the left
                 view.setAlpha(0);
-            } else if (position <= 0) { // [-1,0]
+                view.setVisibility(View.INVISIBLE);
+            } else if (position <= 0) { // between -1 and 0
                 // use the default slide transition when moving to the left page
                 view.setAlpha(1);
                 view.setTranslationX(0);
                 view.setScaleX(1);
                 view.setScaleY(1);
-
-            } else if (position <= 1) { // (0,1]
-                // fade the page out.
+                view.setVisibility(View.VISIBLE);
+            } else if (position <= 1) { // between 0 and 1
+                // fade the page out
                 view.setAlpha(1 - position);
 
                 // counteract the default slide transition
+                int pageWidth = view.getWidth();
                 view.setTranslationX(pageWidth * -position);
 
                 // scale the page down (between MIN_SCALE and 1)
-                float scaleFactor = MIN_SCALE
-                        + (1 - MIN_SCALE) * (1 - Math.abs(position));
+                float scaleFactor =
+                        MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);
 
-            } else { // (1,+Infinity]
-                // this page is way off-screen to the right.
+                if (position == 1) {
+                    view.setVisibility(View.INVISIBLE);
+                } else {
+                    view.setVisibility(View.VISIBLE);
+                }
+            } else {
+                // page is off-screen to the right
                 view.setAlpha(0);
+                view.setVisibility(View.INVISIBLE);
             }
 
-            // make sure the active page is in front - important since otherwise touch events
-            // may be passed to the wrong view - this is due to the z-order potentially being
-            // changed by the animation above
-            if (position == 0) {
-                view.bringToFront();
-            }
+            AppLog.w(AppLog.T.READER, "position = " + position);
         }
     }
 }
