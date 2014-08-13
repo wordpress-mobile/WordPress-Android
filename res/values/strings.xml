@@ -666,6 +666,7 @@
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="fragment_tag_reader_task" translatable="false">fragment_tag_reader_task</string>
     <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
