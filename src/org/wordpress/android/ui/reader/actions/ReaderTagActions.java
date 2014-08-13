@@ -14,7 +14,6 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.JSONUtil;
@@ -52,7 +51,7 @@ public class ReaderTagActions {
         }
 
         final String path;
-        final String tagNameForApi = ReaderUtils.sanitizeTagName(tag.getTagName());
+        final String tagNameForApi = sanitizeTitle(tag.getTagName());
 
         switch (action) {
             case DELETE:
@@ -123,6 +122,29 @@ public class ReaderTagActions {
         WordPress.getRestClientUtils().post(path, listener, errorListener);
 
         return true;
+    }
+
+    /*
+     * returns the passed tagName formatted for use with our API
+     * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
+     */
+    static String sanitizeTitle(final String tagName) {
+        if (tagName == null) {
+            return "";
+        }
+
+        // remove ampersands and number signs, replace spaces & periods with dashes
+        String sanitized = tagName.replace("&", "")
+                                  .replace("#", "")
+                                  .replace(" ", "-")
+                                  .replace(".", "-");
+
+        // replace double dashes with single dash (may have been added above)
+        while (sanitized.contains("--")) {
+            sanitized = sanitized.replace("--", "-");
+        }
+
+        return sanitized.trim();
     }
 
     /**

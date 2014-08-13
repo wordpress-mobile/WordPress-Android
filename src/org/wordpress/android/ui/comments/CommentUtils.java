@@ -6,7 +6,6 @@ import android.text.util.Linkify;
 import android.widget.TextView;
 
 import org.wordpress.android.util.Emoticons;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.WPImageGetter;
 
 public class CommentUtils {
@@ -37,9 +36,9 @@ public class CommentUtils {
         // now convert to HTML with an image getter that enforces a max image size
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
-            html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize));
+            html = Html.fromHtml(content, new WPImageGetter(textView, maxImageSize), null);
         } else {
-            html = HtmlUtils.fromHtml(content);
+            html = Html.fromHtml(content);
         }
 
         // remove extra \n\n added by Html.convert()

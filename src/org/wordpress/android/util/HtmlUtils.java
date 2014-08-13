@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.QuoteSpan;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -113,13 +111,13 @@ public class HtmlUtils {
     /**
      * an alternative to Html.fromHtml() supporting <ul>, <ol>, <blockquote> tags and replacing Emoticons with Emojis
      */
-    public static SpannableStringBuilder fromHtml(String source, WPImageGetter wpImageGetter) {
+    public static SpannableStringBuilder fromHtml(String source) {
         SpannableStringBuilder html;
         try {
-            html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, new WPHtmlTagHandler());
+            html = (SpannableStringBuilder) Html.fromHtml(source, null, new WPHtmlTagHandler());
         } catch (RuntimeException runtimeException) {
             // In case our tag handler fails
-            html = (SpannableStringBuilder) Html.fromHtml(source, wpImageGetter, null);
+            html = (SpannableStringBuilder) Html.fromHtml(source, null, null);
             // Log the exception and text that produces the error
             CrashlyticsUtils.setString(ExtraKey.NOTE_HTMLDATA, source);
             CrashlyticsUtils.logException(runtimeException, ExceptionType.SPECIFIC, T.NOTIFS);
@@ -129,14 +127,8 @@ public class HtmlUtils {
         for (QuoteSpan span : spans) {
             html.setSpan(new WPHtml.WPQuoteSpan(), html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(
                     span));
-            html.setSpan(new ForegroundColorSpan(0xFF666666),html.getSpanStart(span), html.getSpanEnd(span), html.getSpanFlags(
-                    span));
             html.removeSpan(span);
         }
         return html;
-    }
-
-    public static Spanned fromHtml(String source) {
-        return fromHtml(source, null);
     }
 }
