@@ -553,14 +553,6 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
-        private ReaderBlogIdPostId getBlogIdPostIdAtPosition(int position) {
-            if (isValidPosition(position)) {
-                return mIdList.get(position);
-            } else {
-                return null;
-            }
-        }
-
         /*
          * returns the id pair of the previous/next post that isn't in the same blog
          * as the one at the passed position
@@ -681,34 +673,39 @@ public class ReaderPostPagerActivity extends Activity
 
         public void transformPage(View view, float position) {
             int pageWidth = view.getWidth();
-
             if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
+                // this page is way off-screen to the left.
                 view.setAlpha(0);
-
             } else if (position <= 0) { // [-1,0]
-                // Use the default slide transition when moving to the left page
+                // use the default slide transition when moving to the left page
                 view.setAlpha(1);
                 view.setTranslationX(0);
                 view.setScaleX(1);
                 view.setScaleY(1);
 
             } else if (position <= 1) { // (0,1]
-                // Fade the page out.
+                // fade the page out.
                 view.setAlpha(1 - position);
 
-                // Counteract the default slide transition
+                // counteract the default slide transition
                 view.setTranslationX(pageWidth * -position);
 
-                // Scale the page down (between MIN_SCALE and 1)
+                // scale the page down (between MIN_SCALE and 1)
                 float scaleFactor = MIN_SCALE
                         + (1 - MIN_SCALE) * (1 - Math.abs(position));
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);
 
             } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
+                // this page is way off-screen to the right.
                 view.setAlpha(0);
+            }
+
+            // make sure the active page is in front - important since otherwise touch events
+            // may be passed to the wrong view - this is due to the z-order potentially being
+            // changed by the animation above
+            if (position == 0) {
+                view.bringToFront();
             }
         }
     }
