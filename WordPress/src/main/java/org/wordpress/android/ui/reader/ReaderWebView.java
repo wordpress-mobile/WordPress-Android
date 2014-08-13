@@ -20,13 +20,17 @@ class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
         public boolean onUrlClick(String url);
+
         public boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
 
     public interface ReaderCustomViewListener {
         public void onCustomViewShown();
+
         public void onCustomViewHidden();
+
         public ViewGroup onRequestCustomView();
+
         public ViewGroup onRequestContentView();
     }
 
@@ -53,9 +57,7 @@ class ReaderWebView extends WebView {
         if (!isInEditMode()) {
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
-
             this.setWebViewClient(new ReaderWebViewClient(this));
-            this.setOnTouchListener(mOnTouchListener);
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
         }
     }
@@ -98,30 +100,28 @@ class ReaderWebView extends WebView {
             mReaderChromeClient.onHideCustomView();
         }
     }
+
     /*
      * detect when an image is tapped
      */
-    private final OnTouchListener mOnTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_UP:
-                    HitTestResult hr = ((WebView) view).getHitTestResult();
-                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                        String imageUrl = hr.getExtra();
-                        if (isValidClickedUrl(imageUrl) && mUrlClickListener != null) {
-                            return mUrlClickListener.onImageUrlClick(imageUrl, view, (int) event.getX(), (int) event.getY());
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                default:
-                    return false;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
+            HitTestResult hr = getHitTestResult();
+            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE
+                            || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                String imageUrl = hr.getExtra();
+                if (isValidClickedUrl(imageUrl) ) {
+                    return mUrlClickListener.onImageUrlClick(
+                            imageUrl,
+                            this,
+                            (int) event.getX(),
+                            (int) event.getY());
+                }
             }
         }
-    };
+        return super.onTouchEvent(event);
+    }
 
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
