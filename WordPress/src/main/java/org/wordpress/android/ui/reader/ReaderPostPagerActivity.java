@@ -707,8 +707,6 @@ public class ReaderPostPagerActivity extends Activity
                 view.setAlpha(0);
                 view.setVisibility(View.INVISIBLE);
             }
-
-            AppLog.w(AppLog.T.READER, "position = " + position);
         }
     }
 }
