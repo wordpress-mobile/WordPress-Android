@@ -396,16 +396,18 @@ public class ReaderPostPagerActivity extends Activity
         ReaderAnim.Duration animDuration = ReaderAnim.Duration.SHORT;
         Fragment fragment = getActiveDetailFragment();
         if (fragment != null && fragment.getView() != null) {
-            ReaderAnim.scaleOut(fragment.getView(), View.GONE, animDuration);
+            ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, animDuration);
         }
 
-        // reload the posts after a delay equal to the animation duration
+        // reload the adapter after a delay equal to the animation duration
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    int newPosition = getPagerAdapter().getPositionNotInSameBlog(mViewPager.getCurrentItem());
-                    ReaderBlogIdPostId newId = getPagerAdapter().getBlogIdPostIdAtPosition(newPosition);
+                    // when posts are reloaded, ensure the ViewPager moves to the best
+                    // post that isn't in the blocked blog
+                    int position = mViewPager.getCurrentItem();
+                    ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
                     long newBlogId = (newId != null ? newId.getBlogId() : 0);
                     long newPostId = (newId != null ? newId.getPostId() : 0);
                     loadPosts(newBlogId, newPostId, false);
@@ -561,35 +563,33 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         /*
-         * returns the position of the next or previous post that isn't in the same blog
+         * returns the id pair of the previous/next post that isn't in the same blog
          * as the one at the passed position
          */
-        private int getPositionNotInSameBlog(int position) {
+        private ReaderBlogIdPostId getBestIdNotInBlog(int position, long blogId) {
             if (!isValidPosition(position)) {
-                return -1;
-            }
-
-            long skipBlogId = mIdList.get(position).getBlogId();
-
-            // search forwards
-            if (position < getCount() - 1) {
-                for (int index = position + 1; index < getCount(); index++) {
-                    if (mIdList.get(index).getBlogId() != skipBlogId) {
-                        return index;
-                    }
-                }
+                return null;
             }
 
             // search backwards
             if (position > 0) {
                 for (int index = position - 1; index >= 0; index--) {
-                    if (mIdList.get(index).getBlogId() != skipBlogId) {
-                        return index;
+                    if (mIdList.get(index).getBlogId() != blogId) {
+                        return mIdList.get(index);
                     }
                 }
             }
 
-            return -1;
+            // search forwards
+            if (position < getCount() - 1) {
+                for (int index = position + 1; index < getCount(); index++) {
+                    if (mIdList.get(index).getBlogId() != blogId) {
+                        return mIdList.get(index);
+                    }
+                }
+            }
+
+            return null;
         }
 
         private void requestMorePosts() {
