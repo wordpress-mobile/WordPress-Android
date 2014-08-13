@@ -77,18 +77,17 @@ public class WPHtml {
      * Customzed QuoteSpan for use in SpannableString's
      */
     public static class WPQuoteSpan extends QuoteSpan {
-        public static final int STRIPE_COLOR = 0xFF21759B;
+        public static final int STRIPE_COLOR = 0xFFbbbbbb;
         private static final int STRIPE_WIDTH = 5;
         private static final int GAP_WIDTH = 20;
 
-        public WPQuoteSpan(){
+        public WPQuoteSpan() {
             super(STRIPE_COLOR);
         }
 
         @Override
         public int getLeadingMargin(boolean first) {
-            int margin = GAP_WIDTH * 2 + STRIPE_WIDTH;
-            return margin;
+            return GAP_WIDTH * 2 + STRIPE_WIDTH;
         }
 
         /**
@@ -96,15 +95,17 @@ public class WPHtml {
          * bug on older devices that does not respect the increased margin.
          */
         @Override
-        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom,
-                                      CharSequence text, int start, int end, boolean first, Layout layout) {
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
+                                      int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end,
+                                      boolean first, Layout layout) {
             Paint.Style style = p.getStyle();
             int color = p.getColor();
 
             p.setStyle(Paint.Style.FILL);
             p.setColor(STRIPE_COLOR);
 
-            c.drawRect(GAP_WIDTH + x, top, x + dir * STRIPE_WIDTH, bottom, p);
+            c.drawRect(x + GAP_WIDTH, top, x + GAP_WIDTH + dir * STRIPE_WIDTH, bottom, p);
 
             p.setStyle(style);
             p.setColor(color);
