@@ -100,6 +100,17 @@ public class StatsService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) {
+            AppLog.d(T.STATS, "StatsService was killed and restarted with a null intent.");
+            // if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)),
+            // then leave it in the started state but don't retain this delivered intent.
+            // Later the system will try to re-create the service.
+            // Because it is in the started state, it will guarantee to call onStartCommand(Intent, int, int) after creating the new service instance;
+            // if there are not any pending start commands to be delivered to the service, it will be called with a null intent object.
+            stopRefresh();
+            return START_NOT_STICKY;
+        }
+
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
         final String currentServiceBlogId = getServiceBlogId();
 
