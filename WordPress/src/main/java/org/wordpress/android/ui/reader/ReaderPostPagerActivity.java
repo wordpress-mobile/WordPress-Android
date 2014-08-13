@@ -373,6 +373,8 @@ public class ReaderPostPagerActivity extends Activity
             return;
         }
 
+        // perform call to block this blog - returns list of posts deleted by blocking so
+        // they can be restored if the user undoes the block
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
@@ -385,35 +387,9 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         };
-
-        // perform call to block this blog - returns list of posts deleted by blocking so
-        // they can be restored if the user undoes the block
         final ReaderPostList postsToRestore =
                 ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
-
-        // scale out the active fragment
-        ReaderAnim.Duration animDuration = ReaderAnim.Duration.SHORT;
-        Fragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.getView() != null) {
-            ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, animDuration);
-        }
-
-        // reload the adapter after a delay equal to the animation duration
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    // when posts are reloaded, ensure the ViewPager moves to the best
-                    // post that isn't in the blocked blog
-                    int position = mViewPager.getCurrentItem();
-                    ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
-                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
-                    long newPostId = (newId != null ? newId.getPostId() : 0);
-                    loadPosts(newBlogId, newPostId, false);
-                }
-            }
-        }, animDuration.toMillis(this));
 
         // show the undo bar enabling the user to undo the block
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
@@ -429,6 +405,29 @@ public class ReaderPostPagerActivity extends Activity
                 .listener(undoListener)
                 .translucent(true)
                 .show();
+
+        // animate out the active fragment
+        ReaderAnim.Duration animDuration = ReaderAnim.Duration.SHORT;
+        Fragment fragment = getActiveDetailFragment();
+        if (fragment != null && fragment.getView() != null) {
+            ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, animDuration);
+        }
+
+        // reload the adapter after a delay slightly larger than the animation duration
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    // when posts are reloaded, ensure the ViewPager moves to the best
+                    // post that isn't in the blocked blog
+                    int position = mViewPager.getCurrentItem();
+                    ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
+                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
+                    long newPostId = (newId != null ? newId.getPostId() : 0);
+                    loadPosts(newBlogId, newPostId, false);
+                }
+            }
+        }, animDuration.toMillis(this) + 100);
     }
 
     private void hideUndoBar() {

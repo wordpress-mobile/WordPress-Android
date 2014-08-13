@@ -85,6 +85,7 @@ public class ReaderPostTable {
                 + " is_sharing_enabled  INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
+        db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
                 + "   post_id     INTEGER NOT NULL,"
