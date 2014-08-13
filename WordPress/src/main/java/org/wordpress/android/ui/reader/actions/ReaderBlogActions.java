@@ -12,6 +12,7 @@ import com.wordpress.rest.RestRequest;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlog;
@@ -27,7 +28,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 public class ReaderBlogActions {
 
@@ -397,7 +397,10 @@ public class ReaderBlogActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 boolean success = (jsonObject != null && jsonObject.optBoolean("success"));
-                if (!success) {
+                if (success) {
+                    // blocking endpoint unfollows the blog, so do the same here
+                    ReaderBlogTable.setIsFollowedBlogId(blogId, false);
+                } else {
                     AppLog.w(T.READER, "failed to block blog " + blogId);
                     ReaderPostTable.addOrUpdatePosts(null, deletedPosts);
                 }
