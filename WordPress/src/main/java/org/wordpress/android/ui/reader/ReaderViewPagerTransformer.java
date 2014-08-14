@@ -4,8 +4,10 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 /*
- * custom ViewPager transformation animation invoked whenever a visible/attached
- * page is is scrolled
+ * ViewPager transformation animation invoked when a visible/attached page is scrolled - before
+ * changing this, first see https://code.google.com/p/android/issues/detail?id=58918
+ *
+ * note: based on examples here, with many fixes and simplifications:
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
 class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
@@ -21,77 +23,51 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     private static final float MIN_ALPHA_ZOOM = 0.5f;
 
     public void transformPage(View view, float position) {
+        float alpha;
+        float scale;
+        float translationX;
+
         switch (mTransformType) {
             case DEPTH:
-                if (position <= -1) {
-                    // page is off-screen to the left
-                    view.setAlpha(0);
-                    view.setVisibility(View.INVISIBLE);
-                } else if (position <= 0) { // between -1 and 0
-                    // use the default slide transition when moving to the left page
-                    view.setAlpha(1);
-                    view.setTranslationX(0);
-                    view.setScaleX(1);
-                    view.setScaleY(1);
-                    view.setVisibility(View.VISIBLE);
-                } else if (position <= 1) { // between 0 and 1
-                    // fade the page out
-                    view.setAlpha(1 - position);
-
-                    // counteract the default slide transition
-                    int pageWidth = view.getWidth();
-                    view.setTranslationX(pageWidth * -position);
-
-                    // scale the page down (between MIN_SCALE and 1)
-                    float scaleFactor =
-                            MIN_SCALE_DEPTH + (1 - MIN_SCALE_DEPTH) * (1 - Math.abs(position));
-                    view.setScaleX(scaleFactor);
-                    view.setScaleY(scaleFactor);
-
-                    if (position == 1) {
-                        view.setVisibility(View.INVISIBLE);
-                    } else {
-                        view.setVisibility(View.VISIBLE);
-                    }
+                if (position > 0 && position < 1) {
+                    // moving to the right
+                    alpha = (1 - position);
+                    scale = MIN_SCALE_DEPTH + (1 - MIN_SCALE_DEPTH) * (1 - Math.abs(position));
+                    translationX = (view.getWidth() * -position);
                 } else {
-                    // page is off-screen to the right
-                    view.setAlpha(0);
-                    view.setVisibility(View.INVISIBLE);
+                    // use default for all other cases
+                    alpha = 1;
+                    scale = 1;
+                    translationX = 0;
                 }
                 break;
 
             case ZOOM:
-                if (position < -1) {
-                    // page is way off-screen to the left.
-                    view.setAlpha(0);
-                } else if (position <= 1) {
-                    // modify the default slide transition to shrink the page as well
-                    int pageWidth = view.getWidth();
-                    int pageHeight = view.getHeight();
-
-                    float scaleFactor = Math.max(MIN_SCALE_ZOOM, 1 - Math.abs(position));
-                    float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-                    float horzMargin = pageWidth * (1 - scaleFactor) / 2;
+                if (position >= -1 && position <= 1) {
+                    scale = Math.max(MIN_SCALE_ZOOM, 1 - Math.abs(position));
+                    alpha = MIN_ALPHA_ZOOM +
+                            (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM);
+                    float vMargin = view.getHeight() * (1 - scale) / 2;
+                    float hMargin = view.getWidth() * (1 - scale) / 2;
                     if (position < 0) {
-                        view.setTranslationX(horzMargin - vertMargin / 2);
+                        translationX = (hMargin - vMargin / 2);
                     } else {
-                        view.setTranslationX(-horzMargin + vertMargin / 2);
+                        translationX = (-hMargin + vMargin / 2);
                     }
-
-                    // scale the page down (between MIN_SCALE and 1)
-                    view.setScaleX(scaleFactor);
-                    view.setScaleY(scaleFactor);
-
-                    // fade the page relative to its size.
-                    view.setAlpha(MIN_ALPHA_ZOOM +
-                            (scaleFactor - MIN_SCALE_ZOOM) /
-                                    (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM));
-
                 } else {
-                    // This page is way off-screen to the right.
-                    view.setAlpha(0);
+                    alpha = 1;
+                    scale = 1;
+                    translationX = 0;
                 }
                 break;
+
+            default:
+                return;
         }
+
+        view.setAlpha(alpha);
+        view.setTranslationX(translationX);
+        view.setScaleX(scale);
+        view.setScaleY(scale);
     }
 }
