@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.util.AppLog;
@@ -59,13 +60,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private ReaderCommentList mComments = new ReaderCommentList();
     private final RequestReplyListener mReplyListener;
-    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,
                                 RequestReplyListener replyListener,
-                                ReaderActions.DataLoadedListener dataLoadedListener,
+                                ReaderInterfaces.DataLoadedListener dataLoadedListener,
                                 ReaderActions.DataRequestedListener dataRequestedListener) {
         mPost = post;
         mReplyListener = replyListener;

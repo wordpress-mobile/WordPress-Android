@@ -26,6 +26,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostPopupListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
@@ -67,8 +68,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private OnTagSelectedListener mOnTagSelectedListener;
     private OnPostPopupListener mOnPostPopupListener;
-    private final ReaderActions.RequestReblogListener mReblogListener;
-    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderInterfaces.RequestReblogListener mReblogListener;
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     private final boolean mEnableImagePreload;
@@ -77,8 +78,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public ReaderPostAdapter(Context context,
                              ReaderPostListType postListType,
-                             ReaderActions.RequestReblogListener reblogListener,
-                             ReaderActions.DataLoadedListener dataLoadedListener,
+                             ReaderInterfaces.RequestReblogListener reblogListener,
+                             ReaderInterfaces.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 

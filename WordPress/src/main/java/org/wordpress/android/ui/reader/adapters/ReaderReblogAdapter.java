@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.reader.actions.ReaderActions.DataLoadedListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 

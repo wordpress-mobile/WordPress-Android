@@ -131,7 +131,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
-            ReaderActions.DataLoadedListener dataLoadedListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (isAdded()) {

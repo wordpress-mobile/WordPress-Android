@@ -655,7 +655,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when data has been loaded
      */
-    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (!isAdded())
@@ -711,7 +711,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when user requests to reblog a post
      */
-    private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
+    private final ReaderInterfaces.RequestReblogListener mReblogListener = new ReaderInterfaces.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
             if (isAdded()) {
@@ -1160,7 +1160,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())

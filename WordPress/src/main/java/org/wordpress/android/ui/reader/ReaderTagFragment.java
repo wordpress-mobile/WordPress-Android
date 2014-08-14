@@ -13,7 +13,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
@@ -112,7 +111,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
             return;
         }
         if (!TextUtils.isEmpty(scrollToTagName)) {
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     scrollToTagName(scrollToTagName);
