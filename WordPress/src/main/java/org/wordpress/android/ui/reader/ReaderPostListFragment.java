@@ -32,7 +32,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.networking.NetworkUtils;
@@ -501,7 +500,7 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderPostList postsToRestore =
+        final ReaderBlogActions.BlockedBlogResult blockResult =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
@@ -531,7 +530,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };

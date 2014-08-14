@@ -389,7 +389,7 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         };
-        final ReaderPostList postsToRestore =
+        final ReaderBlogActions.BlockedBlogResult blockResult =
                 ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
@@ -398,7 +398,7 @@ public class ReaderPostPagerActivity extends Activity
             @Override
             public void onUndo(Parcelable parcelable) {
                 // restore deleted posts, and reselect the one the blog was blocked from
-                ReaderBlogActions.unblockBlogFromReader(blogId, postsToRestore);
+                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 loadPosts(blogId, postId, false);
             }
         };
