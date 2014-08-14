@@ -7,10 +7,14 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActivityId;
 
 public class UserPrefs {
     // id of the current user
     private static final String PREFKEY_USER_ID = "wp_userid";
+
+    // name of last shown activity
+    private static final String PREFKEY_LAST_ACTIVITY_STR = "wp_pref_last_activity_string";
 
     // last selected tag in the reader
     private static final String PREFKEY_READER_TAG_NAME = "reader_tag_name";
@@ -138,5 +142,19 @@ public class UserPrefs {
     }
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(PREFKEY_READER_SUBS_PAGE_TITLE, pageTitle);
+    }
+
+    /*
+     * name of the last shown activity - used at startup to restore the previously selected
+     * activity, also used by analytics tracker
+     */
+    public static String getLastActivityStr() {
+        return getString(PREFKEY_LAST_ACTIVITY_STR, ActivityId.UNKNOWN.name());
+    }
+    public static void setLastActivityStr(String value) {
+        setString(PREFKEY_LAST_ACTIVITY_STR, value);
+    }
+    public static void resetLastActivityStr() {
+        remove(PREFKEY_LAST_ACTIVITY_STR);
     }
 }
