@@ -40,7 +40,7 @@ public class UserPrefs {
                .remove(PREFKEY_READER_TAG_TYPE)
                .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
                .remove(PREFKEY_READER_SUBS_PAGE_TITLE)
-               .commit();
+               .apply();
     }
 
 
@@ -57,7 +57,7 @@ public class UserPrefs {
         } else {
             editor.putString(key, value);
         }
-        editor.commit();
+        editor.apply();
     }
 
     private static long getLong(String key) {
@@ -85,7 +85,7 @@ public class UserPrefs {
     }
 
     private static void remove(String key) {
-        prefs().edit().remove(key).commit();
+        prefs().edit().remove(key).apply();
     }
 
     public static long getCurrentUserId() {
@@ -115,7 +115,7 @@ public class UserPrefs {
             prefs().edit()
                    .remove(PREFKEY_READER_TAG_NAME)
                    .remove(PREFKEY_READER_TAG_TYPE)
-                   .commit();
+                   .apply();
         }
     }
 
