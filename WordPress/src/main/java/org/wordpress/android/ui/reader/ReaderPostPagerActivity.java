@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
@@ -154,6 +155,9 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
+
+        mViewPager.setPageTransformer(false,
+                new ReaderViewPagerTransformer(TransformType.DEPTH));
     }
 
     private boolean hasPagerAdapter() {
