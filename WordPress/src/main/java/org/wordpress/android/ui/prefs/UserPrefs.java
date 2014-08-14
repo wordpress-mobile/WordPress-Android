@@ -31,7 +31,7 @@ public class UserPrefs {
     }
 
     /*
-     * remove all reader-related preferences
+     * remove all user-related preferences
      */
     public static void reset() {
         prefs().edit()
@@ -40,6 +40,7 @@ public class UserPrefs {
                .remove(PREFKEY_READER_TAG_TYPE)
                .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
                .remove(PREFKEY_READER_SUBS_PAGE_TITLE)
+               .remove(PREFKEY_LAST_ACTIVITY_STR)
                .apply();
     }
 
