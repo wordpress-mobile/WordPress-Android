@@ -154,8 +154,6 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
-
-        mViewPager.setPageTransformer(false, new PostPageTransformer());
     }
 
     private boolean hasPagerAdapter() {
@@ -661,51 +659,6 @@ public class ReaderPostPagerActivity extends Activity
             if (fragment instanceof ReaderPostPagerEndFragment) {
                 ((ReaderPostPagerEndFragment) fragment).setEndFragmentType(
                         canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
-            }
-        }
-    }
-
-    /*
-     * based on http://developer.android.com/training/animation/screen-slide.html#pagetransformer
-     */
-    public static class PostPageTransformer implements ViewPager.PageTransformer {
-        private static final float MIN_SCALE = 0.75f;
-
-        public void transformPage(View view, float position) {
-            if (position <= -1) {
-                // page is off-screen to the left
-                view.setAlpha(0);
-                view.setVisibility(View.INVISIBLE);
-            } else if (position <= 0) { // between -1 and 0
-                // use the default slide transition when moving to the left page
-                view.setAlpha(1);
-                view.setTranslationX(0);
-                view.setScaleX(1);
-                view.setScaleY(1);
-                view.setVisibility(View.VISIBLE);
-            } else if (position <= 1) { // between 0 and 1
-                // fade the page out
-                view.setAlpha(1 - position);
-
-                // counteract the default slide transition
-                int pageWidth = view.getWidth();
-                view.setTranslationX(pageWidth * -position);
-
-                // scale the page down (between MIN_SCALE and 1)
-                float scaleFactor =
-                        MIN_SCALE + (1 - MIN_SCALE) * (1 - Math.abs(position));
-                view.setScaleX(scaleFactor);
-                view.setScaleY(scaleFactor);
-
-                if (position == 1) {
-                    view.setVisibility(View.INVISIBLE);
-                } else {
-                    view.setVisibility(View.VISIBLE);
-                }
-            } else {
-                // page is off-screen to the right
-                view.setAlpha(0);
-                view.setVisibility(View.INVISIBLE);
             }
         }
     }
