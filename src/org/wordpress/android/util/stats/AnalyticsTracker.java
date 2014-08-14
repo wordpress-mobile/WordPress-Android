@@ -61,6 +61,8 @@ public final class AnalyticsTracker {
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
         APPLICATION_STARTED,
+        MEMORY_TRIMMED_COMPLETE,
+        PUSH_NOTIFICATION_RECEIVED,
     }
 
     public interface Tracker {

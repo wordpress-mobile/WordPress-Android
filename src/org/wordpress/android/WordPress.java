@@ -608,6 +608,7 @@ public class WordPress extends Application {
             boolean evictBitmaps = false;
             switch (level) {
                 case TRIM_MEMORY_COMPLETE:
+                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
                 case TRIM_MEMORY_MODERATE:
                 case TRIM_MEMORY_RUNNING_MODERATE:
                 case TRIM_MEMORY_RUNNING_CRITICAL:
