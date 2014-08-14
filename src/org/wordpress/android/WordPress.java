@@ -151,7 +151,6 @@ public class WordPress extends Application {
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.enableCrashlytics(true);
         if (!Utils.isDebugBuild()) {
             Crashlytics.start(this);
         }
@@ -175,7 +174,6 @@ public class WordPress extends Application {
             shouldRestoreSelectedActivity = true;
         }
 
-        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
