@@ -27,7 +27,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ImageHelper;
 import org.wordpress.android.util.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.util.stats.AnalyticsTracker;
-import org.wordpress.android.util.stats.AnalyticsTracker.Stat;
 import org.wordpress.android.util.stats.AnalyticsTrackerMixpanel;
 
 import java.io.UnsupportedEncodingException;
@@ -239,7 +238,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
-        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED);
         Bundle extras = intent.getExtras();
 
         if (extras == null) {

@@ -16,8 +16,6 @@ import com.simperium.client.User;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.util.stats.AnalyticsTracker;
-import org.wordpress.android.util.stats.AnalyticsTracker.Stat;
 
 public class SimperiumUtils {
     public static final String BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED = "simperium-not-authorized";
@@ -57,7 +55,6 @@ public class SimperiumUtils {
                             case AUTHORIZED:
                                 mNotesBucket.start();
                                 mMetaBucket.start();
-                                AnalyticsTracker.track(Stat.SIMPERIUM_USER_AUTHORIZED);
                                 break;
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
@@ -65,10 +62,8 @@ public class SimperiumUtils {
                                 Intent simperiumNotAuthorizedIntent = new Intent();
                                 simperiumNotAuthorizedIntent.setAction(BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(simperiumNotAuthorizedIntent);
-                                AnalyticsTracker.track(Stat.SIMPERIUM_USER_NOT_AUTHORIZED);
                                 break;
                             default:
-                                AnalyticsTracker.track(Stat.SIMPERIUM_USER_UNKNOWN_STATUS);
                                 AppLog.d(AppLog.T.SIMPERIUM, "User not authorized yet");
                                 break;
                         }

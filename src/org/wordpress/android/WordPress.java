@@ -60,7 +60,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -609,16 +608,10 @@ public class WordPress extends Application {
             boolean evictBitmaps = false;
             switch (level) {
                 case TRIM_MEMORY_COMPLETE:
-                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
-                    evictBitmaps = true;
-                    break;
                 case TRIM_MEMORY_MODERATE:
                 case TRIM_MEMORY_RUNNING_MODERATE:
                 case TRIM_MEMORY_RUNNING_CRITICAL:
                 case TRIM_MEMORY_RUNNING_LOW:
-                    Map<String, Integer> properties = new HashMap<String, Integer>();
-                    properties.put("level", level);
-                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED, properties);
                     evictBitmaps = true;
                     break;
                 default:
