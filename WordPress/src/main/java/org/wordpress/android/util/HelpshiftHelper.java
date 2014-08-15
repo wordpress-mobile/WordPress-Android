@@ -12,14 +12,12 @@ import com.helpshift.Helpshift;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HelpshiftHelper {
     private static HelpshiftHelper mInstance = null;
-    private static Application mApplication = null;
     private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
     public enum MetadataKey {
@@ -68,18 +66,14 @@ public class HelpshiftHelper {
 
     public static synchronized HelpshiftHelper getInstance() {
         if (mInstance == null) {
-            if (mApplication == null) {
-                AppLog.e(T.UTILS, "You must call HelpshiftHelper.init(Application application) before getInstance()");
-            }
             mInstance = new HelpshiftHelper();
-            Helpshift.install(mApplication, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
-                    BuildConfig.HELPSHIFT_API_ID);
         }
         return mInstance;
     }
 
     public static void init(Application application) {
-        mApplication = application;
+        Helpshift.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+                BuildConfig.HELPSHIFT_API_ID);
     }
 
     /**
