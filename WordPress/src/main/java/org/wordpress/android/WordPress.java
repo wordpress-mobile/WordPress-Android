@@ -41,7 +41,6 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
@@ -172,8 +171,8 @@ public class WordPress extends Application {
 
         ABTestingUtils.init();
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
+        String lastActivityStr = UserPrefs.getLastActivityStr();
+        if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
             shouldRestoreSelectedActivity = true;
         }
 
@@ -626,9 +625,7 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String lastActivityString = settings.getString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE,
-                        ActivityId.UNKNOWN.name());
+                String lastActivityString = UserPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, String> properties = new HashMap<String, String>();
                 properties.put("last_visible_screen", lastActivity.toString());
