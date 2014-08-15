@@ -41,9 +41,8 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
-import org.wordpress.android.ui.reader.services.ReaderBlogService;
-import org.wordpress.android.ui.reader.services.ReaderServiceActions;
-import org.wordpress.android.ui.reader.services.ReaderTagService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
 import org.wordpress.android.util.AppLog;
@@ -53,7 +52,10 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
@@ -144,11 +146,12 @@ public class ReaderSubsActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderServiceActions.ACTION_RECOMMENDED_TAGS_CHANGED);
-        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED);
-        filter.addAction(ReaderServiceActions.ACTION_RECOMMENDED_BLOGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
 
         // update list of tags and blogs from the server
@@ -162,8 +165,11 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        ReaderTagService.startService(this);
-        ReaderBlogService.startService(this);
+        ReaderUpdateService.startService(this,
+                EnumSet.of(UpdateTask.TAGS,
+                           UpdateTask.FOLLOWED_BLOGS,
+                           UpdateTask.RECOMMENDED_BLOGS));
+
         mHasPerformedUpdate = true;
     }
 
@@ -198,7 +204,7 @@ public class ReaderSubsActivity extends Activity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
@@ -590,14 +596,14 @@ public class ReaderSubsActivity extends Activity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
 
-            if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED)) {
+            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
                 mTagsChanged = true;
                 getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderServiceActions.ACTION_RECOMMENDED_TAGS_CHANGED)) {
+            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED)) {
                 getPageAdapter().refreshTagFragments();
-            } else if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED)) {
+            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-            } else if (action.equals(ReaderServiceActions.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
+            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
             }
         }

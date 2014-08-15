@@ -282,11 +282,8 @@
             android:label="Stats Update Service"
             android:exported="false" />
 
-        <service android:name=".ui.reader.services.ReaderTagService"
-            android:label="Reader Tag Service"
-            android:exported="false"/>
-        <service android:name=".ui.reader.services.ReaderBlogService"
-            android:label="Reader Blog Service"
+        <service android:name=".ui.reader.services.ReaderUpdateService"
+            android:label="Reader Update Service"
             android:exported="false"/>
 
         <service android:name="org.wordpress.android.GCMIntentService"/>

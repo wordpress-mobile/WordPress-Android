@@ -27,12 +27,13 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.services.ReaderBlogService;
-import org.wordpress.android.ui.reader.services.ReaderServiceActions;
-import org.wordpress.android.ui.reader.services.ReaderTagService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.EnumSet;
 
 /*
  * this activity serves as the host for ReaderPostListFragment
@@ -117,8 +118,8 @@ public class ReaderPostListActivity extends WPActionBarActivity
     protected void onResume() {
         super.onResume();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -281,13 +282,10 @@ public class ReaderPostListActivity extends WPActionBarActivity
             return;
         }
 
-        // remember whether we have any tags and posts before updating
-        final boolean isTagTableEmpty = ReaderTagTable.isEmpty();
-        final boolean isPostTableEmpty = ReaderPostTable.isEmpty();
-
         // start background service to get the latest followed tags and blogs
-        ReaderTagService.startService(this);
-        ReaderBlogService.startService(this);
+        ReaderUpdateService.startService(this,
+                EnumSet.of(UpdateTask.TAGS,
+                           UpdateTask.FOLLOWED_BLOGS));
         mHasPerformedInitialUpdate = true;
 
         // update current user to ensure we have their user_id as well as their latest info
@@ -387,7 +385,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(T.READER, "reader post list > received broadcast " + action);
 
-            if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED)) {
+            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
                 ReaderPostListFragment listFragment = getListFragment();
                 if (listFragment == null) {
                     // list fragment doesn't exist yet (can happen if user signed out) - create
@@ -397,7 +395,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     // list fragment is viewing followed tags, tell it to refresh the list of tags
                     listFragment.refreshTags();
                 }
-            } else if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED)) {
+            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
                 AppLog.d(T.READER, "reader post list > followed blogs have changed");
                 // followed blogs have changed, so remove posts in blogs that are
                 // no longer being followed
