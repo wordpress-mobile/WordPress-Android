@@ -71,7 +71,7 @@ dependencies {
     // Provided by maven central
     compile 'com.google.code.gson:gson:2.2.2'
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
-    compile 'com.android.support:support-v13:19.0.+'
+    compile 'com.android.support:support-v13:20.0.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.helpshift:android-aar:3.4.1'
     compile 'commons-lang:commons-lang:2.6'

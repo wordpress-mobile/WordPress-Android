@@ -469,6 +469,7 @@
     <string name="tooltip_follow">Follow or unfollow this blog</string>
     <string name="reply_failed">Reply failed</string>
     <string name="notifications_empty_list">No notifications</string>
+    <string name="sending_comment_reply">Sending reply</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
