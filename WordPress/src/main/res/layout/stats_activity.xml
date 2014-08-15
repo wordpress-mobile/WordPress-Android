@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <org.wordpress.android.ui.stats.ScrollViewExt xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/scroll_view_stats"
@@ -127,5 +127,5 @@
                 android:layout_marginRight="@dimen/margin_medium" /> -->
 
         </LinearLayout>
-    </ScrollView>
+    </org.wordpress.android.ui.stats.ScrollViewExt>
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
