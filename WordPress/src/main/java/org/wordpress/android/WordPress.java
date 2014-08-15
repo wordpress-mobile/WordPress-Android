@@ -46,8 +46,6 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -156,7 +154,6 @@ public class WordPress extends Application {
         if (!BuildUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        HelpshiftHelper.init(this);
         versionName = ProfilingUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
@@ -169,19 +166,18 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
-        ABTestingUtils.init();
-
         String lastActivityStr = UserPrefs.getLastActivityStr();
         if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
             shouldRestoreSelectedActivity = true;
         }
 
-        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
+
+        HelpshiftHelper.init(this);
 
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
@@ -334,9 +330,7 @@ public class WordPress extends Application {
         }
 
         // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
+        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
