@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
@@ -28,7 +29,12 @@ import java.util.Iterator;
 
 public class ReaderTagService extends Service {
 
-    public static final String BROADCAST_FOLLOWED_TAGS_CHANGED = "reader_tags_changed";
+    public static final String ACTION_FOLLOWED_TAGS_CHANGED = "reader_tags_changed";
+
+    public static void startService(Context context) {
+        Intent intent = new Intent(context, ReaderTagService.class);
+        context.startService(intent);
+    }
 
     @Override
     public void onCreate() {
@@ -49,13 +55,7 @@ public class ReaderTagService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent == null) {
-            AppLog.w(AppLog.T.READER, "reader tag service > started with null intent");
-            return START_NOT_STICKY;
-        }
-
         updateTags();
-
         return START_NOT_STICKY;
     }
 
@@ -108,22 +108,17 @@ public class ReaderTagService extends Service {
                 ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
                 ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
                 if (!serverRecommended.isSameList(localRecommended)) {
-                    AppLog.d(AppLog.T.READER, "recommended topics changed");
+                    AppLog.d(AppLog.T.READER, "reader tag service > recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
                 }
 
                 // send broadcast if there are changes to followed tags
                 if (isFollowedTagsChanged) {
-                    sendLocalBroadcast(new Intent().setAction(BROADCAST_FOLLOWED_TAGS_CHANGED));
+                    AppLog.d(AppLog.T.READER, "reader tag service > followed topics changed");
+                    sendLocalBroadcast(new Intent().setAction(ACTION_FOLLOWED_TAGS_CHANGED));
                 }
             }
         }.start();
-    }
-
-    private void sendLocalBroadcast(Intent intent) {
-        if (intent != null) {
-            LocalBroadcastManager.getInstance(ReaderTagService.this).sendBroadcast(intent);
-        }
     }
 
     /*
@@ -170,6 +165,12 @@ public class ReaderTagService extends Service {
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
+        }
+    }
+
+    private void sendLocalBroadcast(Intent intent) {
+        if (intent != null) {
+            LocalBroadcastManager.getInstance(ReaderTagService.this).sendBroadcast(intent);
         }
     }
 }

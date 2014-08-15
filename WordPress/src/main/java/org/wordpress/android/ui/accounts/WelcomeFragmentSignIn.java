@@ -32,14 +32,14 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.services.ReaderTagService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -632,7 +632,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             // get the user's reader tags so they're available as soon as the Reader is accessed
             if (!mSelfHosted) {
-                ReaderTagActions.updateTags(null);
+                ReaderTagService.startService(getActivity());
             }
 
             if (userBlogList != null) {

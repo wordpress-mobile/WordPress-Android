@@ -5,9 +5,13 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -23,10 +27,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -35,12 +41,13 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
+import org.wordpress.android.ui.reader.services.ReaderTagService;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -131,11 +138,25 @@ public class ReaderSubsActivity extends Activity
         }
     }
 
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mReceiver, new IntentFilter(ReaderTagService.ACTION_FOLLOWED_TAGS_CHANGED));
+    }
+
     private void performUpdate() {
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
-        updateTagList();
+
+        ReaderTagService.startService(this);
         updateFollowedBlogs();
         updateRecommendedBlogs();
         mHasPerformedUpdate = true;
@@ -441,22 +462,6 @@ public class ReaderSubsActivity extends Activity
     }
 
     /*
-     * request latest list of tags from the server
-     */
-    void updateTagList() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    mTagsChanged = true;
-                    getPageAdapter().refreshTagFragments();
-                }
-            }
-        };
-        ReaderTagActions.updateTags(listener);
-    }
-
-    /*
      * request latest recommended blogs
      */
     void updateRecommendedBlogs() {
@@ -598,4 +603,24 @@ public class ReaderSubsActivity extends Activity
             }
         }
     }
+
+    /*
+    * receiver which is notified when followed tags have changed
+    */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isFinishing()) {
+                return;
+            }
+
+            String action = StringUtils.notNullStr(intent.getAction());
+            AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
+
+            if (action.equals(ReaderTagService.ACTION_FOLLOWED_TAGS_CHANGED)) {
+                mTagsChanged = true;
+                getPageAdapter().refreshTagFragments();
+            }
+        }
+    };
 }
