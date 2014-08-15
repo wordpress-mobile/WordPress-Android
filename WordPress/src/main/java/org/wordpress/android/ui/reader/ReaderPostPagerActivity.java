@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -77,6 +78,11 @@ public class ReaderPostPagerActivity extends Activity
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            // make the ActionBar translucent
+            if (isFullScreenSupported()) {
+                int actionBarColor = getResources().getColor(R.color.reader_translucent_actionbar);
+                actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+            }
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
