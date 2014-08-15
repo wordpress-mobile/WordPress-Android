@@ -12,11 +12,13 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -80,8 +82,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnLikeComment;
     private TextView mBtnModerateComment;
     private TextView mBtnSpamComment;
-    private TextView mBtnEditComment;
     private TextView mBtnTrashComment;
+    private TextView mBtnEditComment;
+    private TextView mBtnMore;
 
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
@@ -145,16 +148,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
-        mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+        mLayoutButtons = (ViewGroup) inflater.inflate(R.layout.comment_action_footer, null, false);
         mBtnLikeComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_like);
         mBtnModerateComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
-        mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
+        mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
+        mBtnMore = (TextView)mLayoutButtons.findViewById(R.id.text_btn_more);
 
-        setTextDrawable(mBtnSpamComment, R.drawable.ic_cab_spam);
+        setTextDrawable(mBtnSpamComment, R.drawable.ic_comment_moderate_spam);
+        setTextDrawable(mBtnTrashComment, R.drawable.ic_comment_moderate_trash);
         setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit);
-        setTextDrawable(mBtnTrashComment, R.drawable.ic_cab_trash);
+
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -206,6 +211,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
+
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,8 +226,53 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
+        mBtnMore.setOnClickListener(mMoreBtnClickListener);
+
         return view;
     }
+
+    private View.OnClickListener mMoreBtnClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            PopupMenu popup = new PopupMenu(getActivity(), mBtnMore);
+
+            if (canModerate() && mBtnModerateComment.getVisibility() == View.GONE) {
+                String moderateTitle = getString(R.string.mnu_comment_unapprove);
+                if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED) {
+                    moderateTitle = getString(R.string.mnu_comment_approve);
+                }
+
+                final MenuItem menuItem = popup.getMenu().add(moderateTitle);
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
+                            moderateComment(CommentStatus.UNAPPROVED);
+                        } else {
+                            moderateComment(CommentStatus.APPROVED);
+                        }
+                        return true;
+                    }
+                });
+            }
+
+            if (canEdit() && mBtnEditComment.getVisibility() == View.GONE) {
+                MenuItem menuItem = popup.getMenu().add(getString(R.string.mnu_comment_edit));
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        editComment();
+                        return true;
+                    }
+                });
+            }
+
+            if (popup.getMenu().size() > 0) {
+                popup.show();
+            }
+        }
+    };
 
     void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
@@ -352,14 +403,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             layoutBottom.setVisibility(View.GONE);
 
             // if a notification was passed, request its associated comment
-            if (mNote != null && !mIsRequestingComment)
+            if (mNote != null && !mIsRequestingComment) {
                 showCommentForNote(mNote);
+            }
 
             return;
         }
 
         scrollView.setVisibility(View.VISIBLE);
         layoutBottom.setVisibility(View.VISIBLE);
+
+        // Add action buttons footer
+        if (mNote == null && mLayoutButtons.getParent() == null) {
+            ViewGroup commentContentLayout = (ViewGroup) getView().findViewById(R.id.comment_content_container);
+            commentContentLayout.addView(mLayoutButtons);
+        }
 
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) getView().findViewById(R.id.image_avatar);
         final TextView txtName = (TextView) getView().findViewById(R.id.text_name);
@@ -577,10 +635,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // disable buttons during request
         mLayoutButtons.setEnabled(false);
 
-        // animate the buttons out (updateStatusViews will re-display them when request completes)
-        mLayoutButtons.clearAnimation();
-        AniUtils.flyOut(mLayoutButtons);
-
         // hide status (updateStatusViews will un-hide it)
         if (mTxtStatus.getVisibility() == View.VISIBLE) {
             mTxtStatus.clearAnimation();
@@ -644,10 +698,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mImgSubmitReply.setVisibility(View.GONE);
         final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
         progress.setVisibility(View.VISIBLE);
-
-        // animate the buttons out (updateStatusViews will re-display them when request completes)
-        mLayoutButtons.clearAnimation();
-        AniUtils.flyOut(mLayoutButtons);
 
         CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
@@ -738,7 +788,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return;
         }
 
+        int commentActionCount = 0;
+
         if (mNote != null && canLike()) {
+            commentActionCount++;
             mBtnLikeComment.setVisibility(View.VISIBLE);
 
             toggleLikeButton(mNote.hasLikedComment());
@@ -760,6 +813,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canModerate()) {
+            commentActionCount++;
             setTextDrawable(mBtnModerateComment, moderationDrawResId);
             mBtnModerateComment.setText(moderationTextResId);
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
@@ -774,6 +828,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canMarkAsSpam()) {
+            commentActionCount++;
             mBtnSpamComment.setVisibility(View.VISIBLE);
             if (mComment.getStatusEnum() == CommentStatus.SPAM) {
                 mBtnSpamComment.setText(R.string.mnu_comment_unspam);
@@ -784,14 +839,43 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnSpamComment.setVisibility(View.GONE);
         }
 
-        mBtnTrashComment.setVisibility(canTrash() ? View.VISIBLE : View.GONE);
-        mBtnEditComment.setVisibility(canEdit() ? View.VISIBLE : View.GONE);
-
-        // animate the buttons in if they're not visible
-        boolean isAnimating = (mLayoutButtons.getAnimation() != null && !mLayoutButtons.getAnimation().hasEnded());
-        if ((mLayoutButtons.getVisibility() != View.VISIBLE || isAnimating) && (canMarkAsSpam() || canModerate() || canLike())) {
-            AniUtils.flyIn(mLayoutButtons);
+        if (canTrash()) {
+            commentActionCount++;
+            mBtnTrashComment.setVisibility(View.VISIBLE);
+        } else {
+            mBtnTrashComment.setVisibility(View.GONE);
         }
+
+        if (canEdit()) {
+            commentActionCount++;
+            mBtnEditComment.setVisibility(View.VISIBLE);
+        } else {
+            mBtnEditComment.setVisibility(View.GONE);
+        }
+
+
+        if (commentActionCount > 3) {
+            // Configure buttons for overflow menu
+            if (commentActionCount >= 4 && canEdit()) {
+                mBtnEditComment.setVisibility(View.GONE);
+            }
+
+            if (commentActionCount == 5) {
+                if (mComment.getStatusEnum() == CommentStatus.APPROVED && canModerate()) {
+                    // Already approved layout: [Like][Spam][Trash][More]
+                    mBtnModerateComment.setVisibility(View.GONE);
+                } else if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED && canMarkAsSpam()) {
+                    // Unmoderated layout: [Like][Approve][Spam][More]
+                    mBtnSpamComment.setVisibility(View.GONE);
+                }
+            }
+
+            mBtnMore.setVisibility(View.VISIBLE);
+        } else {
+            mBtnMore.setVisibility(View.GONE);
+        }
+
+        mLayoutButtons.setVisibility(View.VISIBLE);
     }
 
     /*
@@ -841,6 +925,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         NotificationsDetailListFragment fragment = NotificationsDetailListFragment.newInstance(note);
+        fragment.setFooterView(mLayoutButtons);
         fragmentTransaction.add(R.id.comment_content_container, fragment);
         fragmentTransaction.commitAllowingStateLoss();
 
@@ -944,12 +1029,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void toggleLikeButton(boolean isLiked) {
         if (isLiked) {
             mBtnLikeComment.setText(getResources().getString(R.string.mnu_comment_liked));
-            mBtnLikeComment.setSelected(true);
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_cab_like_active);
+            mBtnLikeComment.setTextColor(getResources().getColor(R.color.orange_medium));
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_comment_moderate_like_active);
         } else {
             mBtnLikeComment.setText(getResources().getString(R.string.reader_label_like));
-            mBtnLikeComment.setSelected(false);
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_cab_like);
+            mBtnLikeComment.setTextColor(getResources().getColor(R.color.calypso_blue));
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_comment_moderate_like);
         }
     }
 }

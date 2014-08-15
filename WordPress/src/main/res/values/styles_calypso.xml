@@ -3,6 +3,10 @@
     Calysp (WP.com homepage) styles
 -->
 <resources>
+    <style name="CalypsoTheme" parent="@style/WordPress">
+        <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
+    </style>
+
     <style name="Calypso.Text.Date" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textColor">@color/calypso_grey</item>

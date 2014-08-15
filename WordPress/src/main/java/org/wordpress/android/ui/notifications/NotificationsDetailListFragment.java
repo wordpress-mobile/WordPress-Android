@@ -32,6 +32,7 @@ import java.util.List;
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
     private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
+    private ViewGroup mFooterView;
 
     public NotificationsDetailListFragment() {
     }
@@ -51,10 +52,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
 
-        ListView list = getListView();
-        list.setDivider(null);
-        list.setDividerHeight(0);
-        list.setHeaderDividersEnabled(false);
+        ListView listView = getListView();
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
+        listView.setHeaderDividersEnabled(false);
+
+        if (mFooterView != null) {
+           listView.addFooterView(mFooterView);
+        }
 
         if (mNote == null) {
             return;
@@ -75,6 +80,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public void reloadNoteBlocks() {
         new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void setFooterView(ViewGroup footerView) {
+        mFooterView = footerView;
     }
 
     private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {

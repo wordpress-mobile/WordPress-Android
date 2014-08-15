@@ -101,7 +101,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/calypso_blue_dark"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" />
 
 
@@ -113,7 +113,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="@color/calypso_blue"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 android:visibility="gone"
                 tools:text="What an amazing post!"
                 tools:visibility="visible" />

@@ -471,6 +471,7 @@
     <string name="notifications_empty_list">No notifications</string>
     <string name="last_week">Last week</string>
     <string name="older">Older</string>
+    <string name="more">More</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>

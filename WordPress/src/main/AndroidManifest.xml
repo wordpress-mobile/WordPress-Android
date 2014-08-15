@@ -83,7 +83,8 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity" />
+            android:name=".ui.comments.CommentsActivity"
+            android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.comments.EditCommentActivity" />
 
@@ -240,7 +241,8 @@
         <!-- Notifications activities -->
         <activity
             android:name=".ui.notifications.NewNotificationsActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/CalypsoTheme" />
 
         <activity
             android:name=".ui.notifications.NotificationsWebViewActivity"

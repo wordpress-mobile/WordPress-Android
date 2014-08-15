@@ -136,7 +136,7 @@
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">@dimen/menu_drawer_width</item>
-        <item name="mdContentBackground">@color/background_grey</item>
+        <item name="mdContentBackground">@color/calypso_blue_light</item>
     </style>
 
     <style name="MenuDrawer.Button">
@@ -314,12 +314,13 @@
         moderation views on comment detail
     -->
     <style name="WordPress.ModerateButton">
-        <item name="android:textColor">@color/moderate_button_text</item>
+        <item name="android:textColor">@color/calypso_blue</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:singleLine">true</item>
+        <item name ="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:background">@drawable/moderate_button_selector</item>
         <item name="android:padding">@dimen/margin_small</item>
+        <item name="android:drawablePadding">-4dp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
