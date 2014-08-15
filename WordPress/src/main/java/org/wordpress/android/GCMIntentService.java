@@ -19,6 +19,7 @@ import com.google.android.gcm.GCMBaseIntentService;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationUtils;
@@ -59,7 +60,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-
         long wpcomUserID = UserPrefs.getCurrentUserId();
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
@@ -242,6 +242,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
+        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED);
         Bundle extras = intent.getExtras();
 
         if (extras == null) {

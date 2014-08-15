@@ -93,10 +93,6 @@ public abstract class WPActionBarActivity extends Activity {
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
-    /**
-     * Used to restore active activity on app creation and by the analytics tracker
-     */
-    public static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity_string";
 
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;

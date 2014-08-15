@@ -8,11 +8,9 @@ import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +30,7 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -86,9 +85,7 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
                 !(this instanceof PagesActivity)) {
             WordPress.shouldRestoreSelectedActivity = false;
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-            String lastActivityString = settings.getString(LAST_ACTIVITY_PREFERENCE, ActivityId.UNKNOWN.name());
-            ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
+            ActivityId lastActivity = ActivityId.getActivityIdFromName(UserPrefs.getLastActivityStr());
             if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
                 for (MenuDrawerItem item : mMenuItems) {
                     // if we have a matching item id, and it's not selected and it's visible, call it
@@ -184,10 +181,7 @@ public class PostsActivity extends WPActionBarActivity
 
     private void startNotificationsActivity(Bundle extras) {
         // Manually set last selection to notifications
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(LAST_ACTIVITY_PREFERENCE, ActivityId.NOTIFICATIONS.name());
-        editor.commit();
+        UserPrefs.setLastActivityStr(ActivityId.NOTIFICATIONS.name());
 
         Intent i = new Intent(this, NotificationsActivity.class);
         i.putExtras(extras);
