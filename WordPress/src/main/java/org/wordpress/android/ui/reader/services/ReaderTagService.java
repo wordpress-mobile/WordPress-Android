@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.reader.services;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -27,9 +24,7 @@ import java.util.Iterator;
  * background service for keeping list of followed tags updated
  */
 
-public class ReaderTagService extends Service {
-
-    public static final String ACTION_FOLLOWED_TAGS_CHANGED = "reader_tags_changed";
+public class ReaderTagService extends ReaderBaseService {
 
     public static void startService(Context context) {
         Intent intent = new Intent(context, ReaderTagService.class);
@@ -46,11 +41,6 @@ public class ReaderTagService extends Service {
     public void onDestroy() {
         AppLog.i(AppLog.T.READER, "reader tag service > destroyed");
         super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 
     @Override
@@ -94,14 +84,16 @@ public class ReaderTagService extends Service {
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
-                boolean isFollowedTagsChanged = !localTopics.isSameList(serverTopics);
 
-                if (isFollowedTagsChanged) {
+                if (!localTopics.isSameList(serverTopics)) {
+                    AppLog.d(AppLog.T.READER, "reader tag service > followed topics changed");
                     // if any local topics have been removed from the server, make sure to delete
                     // them locally (including their posts)
                     deleteTags(localTopics.getDeletions(serverTopics));
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
+                    // broadcast the fact that there are changes
+                    sendLocalBroadcast(new Intent().setAction(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED));
                 }
 
                 // save changes to recommended topics
@@ -110,12 +102,7 @@ public class ReaderTagService extends Service {
                 if (!serverRecommended.isSameList(localRecommended)) {
                     AppLog.d(AppLog.T.READER, "reader tag service > recommended topics changed");
                     ReaderTagTable.setRecommendedTags(serverRecommended);
-                }
-
-                // send broadcast if there are changes to followed tags
-                if (isFollowedTagsChanged) {
-                    AppLog.d(AppLog.T.READER, "reader tag service > followed topics changed");
-                    sendLocalBroadcast(new Intent().setAction(ACTION_FOLLOWED_TAGS_CHANGED));
+                    sendLocalBroadcast(new Intent().setAction(ReaderServiceActions.ACTION_RECOMMENDED_TAGS_CHANGED));
                 }
             }
         }.start();
@@ -165,12 +152,6 @@ public class ReaderTagService extends Service {
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
-        }
-    }
-
-    private void sendLocalBroadcast(Intent intent) {
-        if (intent != null) {
-            LocalBroadcastManager.getInstance(ReaderTagService.this).sendBroadcast(intent);
         }
     }
 }

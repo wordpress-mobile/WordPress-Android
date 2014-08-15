@@ -41,6 +41,8 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
+import org.wordpress.android.ui.reader.services.ReaderBlogService;
+import org.wordpress.android.ui.reader.services.ReaderServiceActions;
 import org.wordpress.android.ui.reader.services.ReaderTagService;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
@@ -131,11 +133,6 @@ public class ReaderSubsActivity extends Activity
                 UserPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
-
-        // update list of tags and blogs from the server
-        if (!mHasPerformedUpdate) {
-            performUpdate();
-        }
     }
 
     @Override
@@ -147,8 +144,17 @@ public class ReaderSubsActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this)
-                .registerReceiver(mReceiver, new IntentFilter(ReaderTagService.ACTION_FOLLOWED_TAGS_CHANGED));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED);
+        filter.addAction(ReaderServiceActions.ACTION_RECOMMENDED_TAGS_CHANGED);
+        filter.addAction(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED);
+        filter.addAction(ReaderServiceActions.ACTION_RECOMMENDED_BLOGS_CHANGED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
+
+        // update list of tags and blogs from the server
+        if (!mHasPerformedUpdate) {
+            performUpdate();
+        }
     }
 
     private void performUpdate() {
@@ -157,8 +163,7 @@ public class ReaderSubsActivity extends Activity
         }
 
         ReaderTagService.startService(this);
-        updateFollowedBlogs();
-        updateRecommendedBlogs();
+        ReaderBlogService.startService(this);
         mHasPerformedUpdate = true;
     }
 
@@ -462,38 +467,6 @@ public class ReaderSubsActivity extends Activity
     }
 
     /*
-     * request latest recommended blogs
-     */
-    void updateRecommendedBlogs() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-                }
-            }
-        };
-        ReaderBlogActions.updateRecommendedBlogs(listener);
-    }
-
-    /*
-     * request latest followed blogs
-     */
-    void updateFollowedBlogs() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing()) {
-                    if (result == ReaderActions.UpdateResult.CHANGED) {
-                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    }
-                }
-            }
-        };
-        ReaderBlogActions.updateFollowedBlogs(listener);
-    }
-
-    /*
      * return to the previously selected page in the viewPager
      */
     private void restorePreviousPage() {
@@ -617,9 +590,15 @@ public class ReaderSubsActivity extends Activity
             String action = StringUtils.notNullStr(intent.getAction());
             AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
 
-            if (action.equals(ReaderTagService.ACTION_FOLLOWED_TAGS_CHANGED)) {
+            if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_TAGS_CHANGED)) {
                 mTagsChanged = true;
                 getPageAdapter().refreshTagFragments();
+            } else if (action.equals(ReaderServiceActions.ACTION_RECOMMENDED_TAGS_CHANGED)) {
+                getPageAdapter().refreshTagFragments();
+            } else if (action.equals(ReaderServiceActions.ACTION_FOLLOWED_BLOGS_CHANGED)) {
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+            } else if (action.equals(ReaderServiceActions.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
             }
         }
     };
