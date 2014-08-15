@@ -35,6 +35,14 @@
             android:text="@string/mnu_comment_approve"
             style="@style/WordPress.ModerateButton" />
 
+        <TextView
+            android:id="@+id/image_trash_comment"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_comment_moderate_trash"
+            android:text="@string/mnu_comment_trash" />
 
         <TextView
             android:id="@+id/text_btn_spam"
@@ -44,15 +52,6 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_comment_moderate_spam"
             android:text="@string/mnu_comment_spam" />
-
-        <TextView
-            android:id="@+id/image_trash_comment"
-            style="@style/WordPress.ModerateButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_moderate_trash"
-            android:text="@string/mnu_comment_trash" />
 
         <TextView
             android:id="@+id/image_edit_comment"

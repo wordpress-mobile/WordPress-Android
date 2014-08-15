@@ -41,7 +41,6 @@ public class Note extends Syncable {
     // JSON action keys
     private static final String ACTION_KEY_REPLY = "replyto-comment";
     private static final String ACTION_KEY_APPROVE = "approve-comment";
-    private static final String ACTION_KEY_UNAPPROVE = "unapprove-comment";
     private static final String ACTION_KEY_SPAM = "spam-comment";
     private static final String ACTION_KEY_LIKE = "like-comment";
 
@@ -290,10 +289,10 @@ public class Note extends Syncable {
             actions.add(EnabledActions.ACTION_REPLY);
         }
         if (jsonActions.has(ACTION_KEY_APPROVE) && jsonActions.optBoolean(ACTION_KEY_APPROVE, false)) {
-            actions.add(EnabledActions.ACTION_APPROVE);
+            actions.add(EnabledActions.ACTION_UNAPPROVE);
         }
         if (jsonActions.has(ACTION_KEY_APPROVE) && !jsonActions.optBoolean(ACTION_KEY_APPROVE, false)) {
-            actions.add(EnabledActions.ACTION_UNAPPROVE);
+            actions.add(EnabledActions.ACTION_APPROVE);
         }
         if (jsonActions.has(ACTION_KEY_SPAM)) {
             actions.add(EnabledActions.ACTION_SPAM);
@@ -414,12 +413,13 @@ public class Note extends Syncable {
 
         if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
             return CommentStatus.toString(CommentStatus.APPROVED);
+        } else if (enabledActions.contains(EnabledActions.ACTION_APPROVE)) {
+            return CommentStatus.toString(CommentStatus.UNAPPROVED);
         } else if (enabledActions.contains(EnabledActions.ACTION_SPAM)) {
             return CommentStatus.toString(CommentStatus.SPAM);
-        } else {
-            return CommentStatus.toString(CommentStatus.UNAPPROVED);
         }
 
+        return CommentStatus.toString(CommentStatus.UNKNOWN);
     }
 
     public boolean hasLikedComment() {

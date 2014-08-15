@@ -238,20 +238,22 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             PopupMenu popup = new PopupMenu(getActivity(), mBtnMore);
 
             if (canModerate() && mBtnModerateComment.getVisibility() == View.GONE) {
-                String moderateTitle = getString(R.string.mnu_comment_unapprove);
-                if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED) {
-                    moderateTitle = getString(R.string.mnu_comment_approve);
-                }
-
-                final MenuItem menuItem = popup.getMenu().add(moderateTitle);
+                final MenuItem menuItem = popup.getMenu().add(mBtnModerateComment.getText());
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
-                            moderateComment(CommentStatus.UNAPPROVED);
-                        } else {
-                            moderateComment(CommentStatus.APPROVED);
-                        }
+                        mBtnModerateComment.performClick();
+                        return true;
+                    }
+                });
+            }
+
+            if (canTrash() && mBtnTrashComment.getVisibility() == View.GONE) {
+                final MenuItem menuItem = popup.getMenu().add(mBtnTrashComment.getText());
+                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        mBtnTrashComment.performClick();
                         return true;
                     }
                 });
@@ -756,21 +758,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                moderationDrawResId = R.drawable.ic_cab_unapprove;
+                moderationDrawResId = R.drawable.ic_comment_moderate_unapprove;
                 moderationTextResId = R.string.mnu_comment_unapprove;
                 newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_approved);
                 break;
             case UNAPPROVED:
-                moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_unapproved);
                 break;
             case SPAM:
-                moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_spam;
@@ -778,7 +780,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
             case TRASH:
                 // should never get here
-                moderationDrawResId = R.drawable.ic_cab_approve;
+                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_trash;
@@ -855,7 +857,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
 
         if (commentActionCount > 3) {
-            // Configure buttons for overflow menu
+            // Hide buttons that will show in the overflow menu
             if (commentActionCount >= 4 && canEdit()) {
                 mBtnEditComment.setVisibility(View.GONE);
             }
@@ -864,9 +866,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 if (mComment.getStatusEnum() == CommentStatus.APPROVED && canModerate()) {
                     // Already approved layout: [Like][Spam][Trash][More]
                     mBtnModerateComment.setVisibility(View.GONE);
-                } else if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED && canMarkAsSpam()) {
+                } else if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED && canTrash()) {
                     // Unmoderated layout: [Like][Approve][Spam][More]
-                    mBtnSpamComment.setVisibility(View.GONE);
+                    mBtnTrashComment.setVisibility(View.GONE);
                 }
             }
 
