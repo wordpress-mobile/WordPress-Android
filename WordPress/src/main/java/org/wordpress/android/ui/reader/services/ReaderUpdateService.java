@@ -242,6 +242,8 @@ public class ReaderUpdateService extends Service {
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS, true);
             }
         };
+
+        AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
         // request using ?meta=site,feed to get extra info
         WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
@@ -281,6 +283,7 @@ public class ReaderUpdateService extends Service {
             }
         };
 
+        AppLog.d(AppLog.T.READER, "reader service > updating recommended blogs");
         String path = "/read/recommendations/mine/"
                 + "?source=mobile"
                 + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);

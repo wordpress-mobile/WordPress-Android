@@ -373,7 +373,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
-     * receiver which is notified when followed tags have changed
+     * receiver which is notified when followed tags and/or blogs have changed
      */
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override

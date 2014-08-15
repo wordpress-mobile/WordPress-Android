@@ -95,8 +95,11 @@ public class ReaderSubsActivity extends Activity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
         tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
@@ -602,6 +605,7 @@ public class ReaderSubsActivity extends Activity
             } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED)) {
                 getPageAdapter().refreshTagFragments();
             } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
+                mBlogsChanged = true;
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
             } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
                 getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
