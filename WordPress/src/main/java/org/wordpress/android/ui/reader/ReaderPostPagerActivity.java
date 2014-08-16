@@ -219,6 +219,9 @@ public class ReaderPostPagerActivity extends Activity
             fragment.hideAddCommentBox();
         } else {
             super.onBackPressed();
+            if (isFullScreenSupported()) {
+                overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_activity_slide_out);
+            }
         }
     }
 
