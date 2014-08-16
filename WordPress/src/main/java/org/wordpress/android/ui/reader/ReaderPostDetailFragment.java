@@ -1312,6 +1312,13 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
+            // enable JavaScript in the webView if it's safe to do so
+            mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
+
+            // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
+            // https://code.google.com/p/android/issues/detail?id=4401
+            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
             ReaderUtils.showFollowStatus(txtFollow, mPost.isFollowedByCurrentUser);
@@ -1429,13 +1436,6 @@ public class ReaderPostDetailFragment extends Fragment
             } else {
                 imgDropDown.setVisibility(View.GONE);
             }
-
-            // enable JavaScript in the webView if it's safe to do so
-            mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
-
-            // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
-            // https://code.google.com/p/android/issues/detail?id=4401
-            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
