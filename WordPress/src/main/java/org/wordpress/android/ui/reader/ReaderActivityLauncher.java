@@ -75,8 +75,8 @@ public class ReaderActivityLauncher {
     private static void showReaderPostPager(Activity activity, Intent intent) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
-                R.anim.reader_detail_in,
-                R.anim.reader_activity_exit_scale);
+                R.anim.reader_activity_slide_in,
+                R.anim.reader_activity_scale_out);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 

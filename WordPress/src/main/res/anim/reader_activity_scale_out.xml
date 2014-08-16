@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-    android:duration="@android:integer/config_shortAnimTime">
+    android:duration="@integer/reader_activity_anim_time">
 
     <scale
         android:fromXScale="100%p"
         android:fromYScale="100%p"
         android:pivotX="50%p"
         android:pivotY="50%p"
-        android:toXScale="95%p"
-        android:toYScale="95%p" />
+        android:toXScale="90%p"
+        android:toYScale="90%p" />
 
     <alpha
         android:fromAlpha="1"
