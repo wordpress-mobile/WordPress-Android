@@ -76,7 +76,7 @@ public class ReaderActivityLauncher {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 activity,
                 R.anim.reader_detail_in,
-                0);
+                R.anim.reader_activity_exit_scale);
         ActivityCompat.startActivity(activity, intent, options.toBundle());
     }
 
