@@ -8,8 +8,8 @@
         android:fromYScale="100%p"
         android:pivotX="50%p"
         android:pivotY="50%p"
-        android:toXScale="90%p"
-        android:toYScale="90%p" />
+        android:toXScale="80%p"
+        android:toYScale="80%p" />
 
     <alpha
         android:fromAlpha="1"
