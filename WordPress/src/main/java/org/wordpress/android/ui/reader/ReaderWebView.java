@@ -20,23 +20,24 @@ class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
         public boolean onUrlClick(String url);
-
         public boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
 
     public interface ReaderCustomViewListener {
         public void onCustomViewShown();
-
         public void onCustomViewHidden();
-
         public ViewGroup onRequestCustomView();
-
         public ViewGroup onRequestContentView();
+    }
+
+    public interface ReaderWebViewPageFinishedListener {
+        public void onPageFinished(WebView view, String url);
     }
 
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
     private ReaderWebViewUrlClickListener mUrlClickListener;
+    private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
     public ReaderWebView(Context context) {
         super(context);
@@ -72,6 +73,18 @@ class ReaderWebView extends WebView {
 
     private boolean hasUrlClickListener() {
         return (mUrlClickListener != null);
+    }
+
+    private ReaderWebViewPageFinishedListener getPageFinishedListener() {
+        return mPageFinishedListener;
+    }
+
+    void setPageFinishedListener(ReaderWebViewPageFinishedListener listener) {
+        mPageFinishedListener = listener;
+    }
+
+    private boolean hasPageFinishedListener() {
+        return (mPageFinishedListener != null);
     }
 
     void setCustomViewListener(ReaderCustomViewListener listener) {
@@ -135,9 +148,8 @@ class ReaderWebView extends WebView {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            // show the webView now that it has loaded (ReaderPostDetailFragment may have hidden it)
-            if (view.getVisibility() != View.VISIBLE) {
-                view.setVisibility(View.VISIBLE);
+            if (mReaderWebView.hasPageFinishedListener()) {
+                mReaderWebView.getPageFinishedListener().onPageFinished(view, url);
             }
         }
 

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderWebView.ReaderCustomViewListener;
+import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewPageFinishedListener;
 import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -64,11 +66,12 @@ import java.util.ArrayList;
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener,
                    ReaderCustomViewListener,
+                   ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
 
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
+    private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
     private long mPostId;
     private long mBlogId;
@@ -253,10 +256,9 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
         mReaderWebView.setCustomViewListener(this);
         mReaderWebView.setUrlClickListener(this);
+        mReaderWebView.setPageFinishedListener(this);
 
-        // hide these views until the post is loaded
-        mListView.setVisibility(View.INVISIBLE);
-        mReaderWebView.setVisibility(View.INVISIBLE);
+        // hide icons until the post is loaded
         mLayoutIcons.setVisibility(View.INVISIBLE);
 
         return view;
@@ -1442,53 +1444,41 @@ public class ReaderPostDetailFragment extends Fragment
             if (getListView().getAdapter() == null) {
                 getListView().setAdapter(getCommentAdapter());
             }
-
-            // listView is hidden in onCreateView()
-            if (getListView().getVisibility() != View.VISIBLE) {
-                getListView().setVisibility(View.VISIBLE);
-            }
-
-            // webView is hidden in onCreateView() and will be made visible by readerWebViewClient
-            // once it finishes loading, so if it's already visible go ahead and show likes/comments
-            // right away, otherwise show them after a brief delay - this gives content time to
-            // load before likes/comments appear
-            if (mReaderWebView.getVisibility() == View.VISIBLE) {
-                showContent();
-            } else {
-                showContentDelayed();
-            }
         }
     }
 
-    /*
-     * webView is hidden in onCreateView() and then shown after a brief delay once post is loaded
-     * to give webView content a short time to load before it appears - after it appears we can
-     * then get likes & comments
-     */
-    private void showContentDelayed() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showContent();
-            }
-        }, 1000L);
-    }
 
-    private void showContent() {
+    /*
+     * called by the web view when the content finishes loading - likes & comments aren't displayed
+     * until this is triggered, to avoid having them appear before the webView content
+     */
+    @Override
+    public void onPageFinished(WebView view, String url) {
         if (!isAdded()) {
             return;
         }
 
-        mReaderWebView.setVisibility(View.VISIBLE);
+        if (url != null && url.equals("about:blank")) {
+            // brief delay before loading comments & likes to give a little time for page to render
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isAdded()) {
+                        return;
+                    }
 
-        // show likes & comments
-        refreshLikes();
-        refreshComments();
+                    refreshLikes();
+                    refreshComments();
 
-        // request the latest info for this post if we haven't updated it already
-        if (!mHasAlreadyUpdatedPost) {
-            updatePost();
-            mHasAlreadyUpdatedPost = true;
+                    // request the latest info for this post if we haven't updated it already
+                    if (!mHasAlreadyUpdatedPost) {
+                        mHasAlreadyUpdatedPost = true;
+                        updatePost();
+                    }
+                }
+            }, 500);
+        } else {
+            AppLog.w(T.READER, "reader post detail > page finished - " + url);
         }
     }
 
