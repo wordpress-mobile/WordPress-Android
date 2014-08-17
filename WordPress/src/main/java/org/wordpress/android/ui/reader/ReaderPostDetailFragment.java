@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -100,6 +101,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private Parcelable mListState;
     private final Handler mHandler = new Handler();
+    private ResourceVars mResourceVars;
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
 
@@ -125,6 +127,56 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
+    }
+
+    /*
+     * class which holds all resource-based variables used by this fragment
+     */
+    private static class ResourceVars {
+        final int displayWidth;
+        final int marginLarge;
+        final int marginSmall;
+        final int marginExtraSmall;
+        final int listMarginWidth;
+        final int fullSizeImageWidth;
+        final int likeAvatarSize;
+        final int videoOverlaySize;
+
+        final int colorGreyExtraLight;
+        final int mediumAnimTime;
+
+        final String linkColorStr;
+        final String greyLightStr;
+        final String greyExtraLightStr;
+
+        private ResourceVars(Context context) {
+            Resources resources = context.getResources();
+
+            displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+            marginLarge = resources.getDimensionPixelSize(R.dimen.margin_large);
+            marginSmall = resources.getDimensionPixelSize(R.dimen.margin_small);
+            marginExtraSmall = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
+            listMarginWidth = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
+            likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
+            videoOverlaySize = resources.getDimensionPixelSize(R.dimen.reader_video_overlay_size);
+
+            colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
+            mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
+
+            linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
+            greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
+            greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
+
+            int imageWidth = displayWidth - (listMarginWidth * 2);
+            boolean hasStaticMenuDrawer =
+                    (context instanceof WPActionBarActivity)
+                            && (((WPActionBarActivity) context).isStaticMenuDrawer());
+            if (hasStaticMenuDrawer) {
+                int drawerWidth = resources.getDimensionPixelOffset(R.dimen.menu_drawer_width);
+                imageWidth -= drawerWidth;
+            }
+            fullSizeImageWidth = imageWidth;
+        }
     }
 
     /*
@@ -226,6 +278,21 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mResourceVars = new ResourceVars(activity);
+
+        if (activity instanceof ReaderUtils.FullScreenListener) {
+            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
+        }
+
+        if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
+            mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
@@ -244,7 +311,7 @@ public class ReaderPostDetailFragment extends Fragment
         // progress bar appears when loading new comments
         mCommentFooter = (ViewGroup) inflater.inflate(R.layout.reader_footer_progress, mListView, false);
         mCommentFooter.setVisibility(View.GONE);
-        mCommentFooter.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
+        mCommentFooter.setBackgroundColor(mResourceVars.colorGreyExtraLight);
         mProgressFooter = (ProgressBar) mCommentFooter.findViewById(R.id.progress_footer);
         mProgressFooter.setVisibility(View.INVISIBLE);
         mListView.addFooterView(mCommentFooter);
@@ -391,7 +458,7 @@ public class ReaderPostDetailFragment extends Fragment
                     0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
         }
 
-        animation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        animation.setDuration(mResourceVars.mediumAnimTime);
 
         mLayoutIcons.clearAnimation();
         mLayoutIcons.startAnimation(animation);
@@ -423,19 +490,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        if (activity instanceof ReaderUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
-        }
-
-        if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
-            mOnPopupListener = (ReaderInterfaces.OnPostPopupListener) activity;
-        }
     }
 
     @Override
@@ -699,20 +753,15 @@ public class ReaderPostDetailFragment extends Fragment
 
                 final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
                 final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
-
-                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-                final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
+                final int likeAvatarSizeWithMargin = mResourceVars.likeAvatarSize + (mResourceVars.marginExtraSmall * 2);
 
                 // determine how many avatars will fit the space
-                final int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                final int spaceForAvatars = displayWidth - (marginLarge * 2);
+                final int spaceForAvatars = mResourceVars.displayWidth - (mResourceVars.marginLarge * 2);
                 final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
 
                 // get avatar URLs of liking users up to the max, sized to fit
                 ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(mPost);
-                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, likeAvatarSize);
+                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mResourceVars.likeAvatarSize);
 
                 mHandler.post(new Runnable() {
                     public void run() {
@@ -1000,8 +1049,7 @@ public class ReaderPostDetailFragment extends Fragment
             videoUrl = "http:" + videoUrl;
         }
 
-        int overlaySz = getResources().getDimensionPixelSize(R.dimen.reader_video_overlay_size) / 2;
-
+        int overlaySz = mResourceVars.videoOverlaySize / 2;
         if (TextUtils.isEmpty(thumbnailUrl)) {
             return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
         } else {
@@ -1031,25 +1079,6 @@ public class ReaderPostDetailFragment extends Fragment
         return true;
     }
 
-    private boolean hasStaticMenuDrawer() {
-        return (getActivity() instanceof WPActionBarActivity)
-                && (((WPActionBarActivity) getActivity()).isStaticMenuDrawer());
-    }
-
-    /*
-     * size to use for images that fit the full width of the listView item
-     */
-    private int getFullSizeImageWidth(Context context) {
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int marginWidth = getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
-        int imageWidth = displayWidth - (marginWidth * 2);
-        if (hasStaticMenuDrawer()) {
-            int drawerWidth = getResources().getDimensionPixelOffset(R.dimen.menu_drawer_width);
-            imageWidth -= drawerWidth;
-        }
-        return imageWidth;
-    }
-
     /*
      * build html for post's content
      */
@@ -1074,15 +1103,6 @@ public class ReaderPostDetailFragment extends Fragment
             content = "";
         }
 
-        int marginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
-        int marginSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_small);
-        int marginExtraSmall = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-        int fullSizeImageWidth = getFullSizeImageWidth(context);
-
-        final String linkColor = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-        final String greyLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
-        final String greyExtraLight = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
-
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't strictly necessary, but source is invalid html5 without one
@@ -1104,28 +1124,28 @@ public class ReaderPostDetailFragment extends Fragment
         sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", marginSmall, marginSmall))
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", mResourceVars.marginSmall, mResourceVars.marginSmall))
               .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
-              .append("        border: 1px solid ").append(greyLight).append("; ")
-              .append("        background-color: ").append(greyExtraLight).append("; ")
-              .append("        padding: ").append(marginSmall).append("px; }");
+              .append("        border: 1px solid ").append(mResourceVars.greyLightStr).append("; ")
+              .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
+              .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
 
         // add a left border to blockquotes
-        sbHtml.append("  blockquote { margin-left: ").append(marginSmall).append("px; ")
-              .append("               padding-left: ").append(marginSmall).append("px; ")
-              .append("               border-left: 3px solid ").append(greyLight).append("; }");
+        sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmall).append("px; ")
+              .append("               padding-left: ").append(mResourceVars.marginSmall).append("px; ")
+              .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
 
         // show links in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(linkColor).append("; }");
+        sbHtml.append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript()) {
-            int videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
+            int videoWidth = DisplayUtils.pxToDp(context, mResourceVars.fullSizeImageWidth - (mResourceVars.marginLarge * 2));
             int videoHeight = (int) (videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
@@ -1148,13 +1168,13 @@ public class ReaderPostDetailFragment extends Fragment
         // params with ones that make images fit the width of the listView item, then adjust the
         // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
         if (content.contains("tiled-gallery-item")) {
-            String widthParam = "w=" + Integer.toString(fullSizeImageWidth);
+            String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidth);
             content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
                   .append("  div.tiled-gallery-item img { ")
                   .append("     width: auto !important; height: auto !important;")
-                  .append("     margin-top: ").append(marginExtraSmall).append("px; ")
-                  .append("     margin-bottom: ").append(marginExtraSmall).append("px; ")
+                  .append("     margin-top: ").append(mResourceVars.marginExtraSmall).append("px; ")
+                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmall).append("px; ")
                   .append("  }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
@@ -1287,7 +1307,7 @@ public class ReaderPostDetailFragment extends Fragment
                     showFeaturedImage = true;
                     // note that only the width is used here - the imageView will adjust
                     // the height to match that of the image once loaded
-                    featuredImageUrl = mPost.getFeaturedImageForDisplay(getFullSizeImageWidth(container.getContext()), 0);
+                    featuredImageUrl = mPost.getFeaturedImageForDisplay(mResourceVars.fullSizeImageWidth, 0);
                 }
             }
 
@@ -1348,8 +1368,7 @@ public class ReaderPostDetailFragment extends Fragment
             }
 
             if (mPost.hasPostAvatar()) {
-                int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(avatarSz), WPNetworkImageView.ImageType.AVATAR);
+                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(mResourceVars.likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
