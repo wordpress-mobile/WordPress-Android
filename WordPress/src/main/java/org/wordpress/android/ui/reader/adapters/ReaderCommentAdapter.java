@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.Layout;
@@ -465,7 +466,12 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 }
             }
 
-            return super.onTouchEvent(textView, buffer, event);
+            try {
+                return super.onTouchEvent(textView, buffer, event);
+            } catch (ActivityNotFoundException e) {
+                AppLog.e(AppLog.T.UTILS, e);
+                return false;
+            }
         }
     }
 }
