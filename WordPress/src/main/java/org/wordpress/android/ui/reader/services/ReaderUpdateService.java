@@ -30,6 +30,12 @@ import java.util.Iterator;
 
 public class ReaderUpdateService extends Service {
 
+    /*
+     * service which updates followed/recommended tags and blogs for the Reader, only
+     * sends broadcast when changes are found (ie: no broadcast for update start/stop
+     * or for unchanged/failed)
+     */
+
     public static final String ACTION_FOLLOWED_TAGS_CHANGED     = "reader_followed_tags_changed";
     public static final String ACTION_RECOMMENDED_TAGS_CHANGED  = "reader_recommended_tags_changed";
     public static final String ACTION_FOLLOWED_BLOGS_CHANGED    = "reader_followed_blogs_changed";
