@@ -124,6 +124,9 @@ public class ReaderActivityLauncher {
     /*
      * show the passed imageUrl in the fullscreen photo activity
      */
+    public static void showReaderPhotoViewer(Context context, String imageUrl) {
+        showReaderPhotoViewer(context, imageUrl, null, 0, 0);
+    }
     public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
                                              View source,

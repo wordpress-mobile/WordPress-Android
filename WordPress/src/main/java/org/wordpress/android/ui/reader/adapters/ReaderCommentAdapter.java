@@ -2,7 +2,12 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -26,6 +31,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -135,7 +141,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         holder.txtAuthor.setText(comment.getAuthorName());
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+
         CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
+        holder.txtText.setMovementMethod(CommentLinkMovementMethod.getInstance());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -408,6 +416,51 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 mDataLoadedListener.onDataLoaded(isEmpty());
             }
             mIsTaskRunning = false;
+        }
+    }
+
+    /*
+     * custom LinkMovementMethod which enables zooming tapped images in comments
+     */
+    private static class CommentLinkMovementMethod extends LinkMovementMethod {
+        private static CommentLinkMovementMethod mMovementMethod;
+
+        public static CommentLinkMovementMethod getInstance() {
+            if (mMovementMethod == null) {
+                mMovementMethod = new CommentLinkMovementMethod();
+            }
+            return mMovementMethod;
+        }
+
+        @Override
+        public boolean onTouchEvent(TextView textView, Spannable buffer, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                return handleTap(textView.getContext(), buffer);
+            } else {
+                return super.onTouchEvent(textView, buffer, event) ;
+            }
+        }
+
+        private boolean handleTap(Context context, Spannable buffer) {
+            if (buffer == null) {
+                return false;
+            }
+
+            ImageSpan imgSpans[] = buffer.getSpans(0, buffer.length(), ImageSpan.class);
+            if (imgSpans.length > 0) {
+                String imageUrl = StringUtils.notNullStr(imgSpans[0].getSource());
+                ReaderActivityLauncher.showReaderPhotoViewer(context, imageUrl);
+                return true;
+            }
+
+            URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
+            if (urlSpans.length > 0) {
+                String url = StringUtils.notNullStr(urlSpans[0].getURL());
+                ReaderActivityLauncher.openUrl(context, url);
+                return true;
+            }
+
+            return false;
         }
     }
 }
