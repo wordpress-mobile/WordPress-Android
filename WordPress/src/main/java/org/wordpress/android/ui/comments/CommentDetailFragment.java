@@ -237,23 +237,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         public void onClick(View v) {
             PopupMenu popup = new PopupMenu(getActivity(), mBtnMore);
 
-            if (canModerate() && mBtnModerateComment.getVisibility() == View.GONE) {
-                final MenuItem menuItem = popup.getMenu().add(mBtnModerateComment.getText());
+            if (canMarkAsSpam() && mBtnSpamComment.getVisibility() == View.GONE) {
+                final MenuItem menuItem = popup.getMenu().add(mBtnSpamComment.getText());
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        mBtnModerateComment.performClick();
-                        return true;
-                    }
-                });
-            }
-
-            if (canTrash() && mBtnTrashComment.getVisibility() == View.GONE) {
-                final MenuItem menuItem = popup.getMenu().add(mBtnTrashComment.getText());
-                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        mBtnTrashComment.performClick();
+                        mBtnSpamComment.performClick();
                         return true;
                     }
                 });
@@ -862,14 +851,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnEditComment.setVisibility(View.GONE);
             }
 
-            if (commentActionCount == 5) {
-                if (mComment.getStatusEnum() == CommentStatus.APPROVED && canModerate()) {
-                    // Already approved layout: [Like][Spam][Trash][More]
-                    mBtnModerateComment.setVisibility(View.GONE);
-                } else if (mComment.getStatusEnum() == CommentStatus.UNAPPROVED && canTrash()) {
-                    // Unmoderated layout: [Like][Approve][Spam][More]
-                    mBtnTrashComment.setVisibility(View.GONE);
-                }
+            if (commentActionCount == 5 && canMarkAsSpam()) {
+                mBtnSpamComment.setVisibility(View.GONE);
             }
 
             mBtnMore.setVisibility(View.VISIBLE);
