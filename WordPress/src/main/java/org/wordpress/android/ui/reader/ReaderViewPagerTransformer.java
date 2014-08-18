@@ -11,7 +11,12 @@ import android.view.View;
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
 class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
-    static enum TransformType { FLOW, DEPTH, ZOOM }
+    static enum TransformType {
+        FLOW,
+        DEPTH,
+        ZOOM,
+        SLIDE_OVER
+    }
     private final TransformType mTransformType;
 
     ReaderViewPagerTransformer(TransformType transformType) {
@@ -21,16 +26,35 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE_DEPTH = 0.75f;
     private static final float MIN_SCALE_ZOOM = 0.85f;
     private static final float MIN_ALPHA_ZOOM = 0.5f;
+    private static final float SCALE_FACTOR_SLIDE = 0.95f;
 
     public void transformPage(View view, float position) {
-        float alpha;
-        float scale;
-        float translationX;
+        final float alpha;
+        final float scale;
+        final float translationX;
 
         switch (mTransformType) {
             case FLOW:
                 view.setRotationY(position * -30f);
                 return;
+
+            case SLIDE_OVER:
+                alpha = 1;
+                if (position <= 0) {
+                    // apply effect only to pages on the left
+                    scale = Math.abs(Math.abs(position) - 1) * (1.0f - SCALE_FACTOR_SLIDE) + SCALE_FACTOR_SLIDE;
+                    int pageWidth = view.getWidth();
+                    float translateValue = position * -pageWidth;
+                    if (translateValue > -pageWidth) {
+                        translationX = translateValue;
+                    } else {
+                        translationX = 0;
+                    }
+                } else {
+                    scale = 1;
+                    translationX = 0;
+                }
+                break;
 
             case DEPTH:
                 if (position > 0 && position < 1) {

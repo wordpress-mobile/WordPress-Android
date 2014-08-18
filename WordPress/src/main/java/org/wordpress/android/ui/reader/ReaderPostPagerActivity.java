@@ -155,6 +155,9 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
+
+        mViewPager.setPageTransformer(false,
+                new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
     }
 
     private boolean hasPagerAdapter() {
