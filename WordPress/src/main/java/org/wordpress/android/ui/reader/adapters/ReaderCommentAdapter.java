@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -34,6 +35,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import javax.annotation.Nonnull;
 
 public class ReaderCommentAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
@@ -433,31 +436,33 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
 
         @Override
-        public boolean onTouchEvent(TextView textView, Spannable buffer, MotionEvent event) {
+        public boolean onTouchEvent(@Nonnull TextView textView,
+                                    @Nonnull Spannable buffer,
+                                    @Nonnull MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                return handleTap(textView.getContext(), buffer);
-            } else {
-                return super.onTouchEvent(textView, buffer, event) ;
-            }
-        }
+                // handle image tap
+                ImageSpan imgSpans[] = buffer.getSpans(0, buffer.length(), ImageSpan.class);
+                if (imgSpans.length > 0) {
+                    String imageUrl = StringUtils.notNullStr(imgSpans[0].getSource());
+                    ReaderActivityLauncher.showReaderPhotoViewer(
+                            textView.getContext(),
+                            imageUrl,
+                            textView,
+                            (int) event.getX(),
+                            (int) event.getY());
+                    return true;
+                }
 
-        private boolean handleTap(Context context, Spannable buffer) {
-            if (buffer == null) {
-                return false;
-            }
-
-            ImageSpan imgSpans[] = buffer.getSpans(0, buffer.length(), ImageSpan.class);
-            if (imgSpans.length > 0) {
-                String imageUrl = StringUtils.notNullStr(imgSpans[0].getSource());
-                ReaderActivityLauncher.showReaderPhotoViewer(context, imageUrl);
-                return true;
-            }
-
-            URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
-            if (urlSpans.length > 0) {
-                String url = StringUtils.notNullStr(urlSpans[0].getURL());
-                ReaderActivityLauncher.openUrl(context, url);
-                return true;
+                // handle link tap
+                URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
+                if (urlSpans.length > 0) {
+                    String url = StringUtils.notNullStr(urlSpans[0].getURL());
+                    if (Uri.parse(url).getScheme() == null) {
+                        url = "http://" + url.trim();
+                    }
+                    ReaderActivityLauncher.openUrl(textView.getContext(), url);
+                    return true;
+                }
             }
 
             return false;
