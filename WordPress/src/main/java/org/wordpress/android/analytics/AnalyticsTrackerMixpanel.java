@@ -201,6 +201,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             AnalyticsTracker.Stat stat) {
         AnalyticsTrackerMixpanelInstructionsForStat instructions = null;
         switch (stat) {
+            case APPLICATION_STARTED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Application Started");
+                instructions.setSuperPropertyToIncrement("Application Started");
+                break;
             case APPLICATION_OPENED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Application Opened");
@@ -505,6 +510,14 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             case STATS_SELECTED_INSTALL_JETPACK:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsForEventName("Selected Install Jetpack");
+                break;
+            case MEMORY_TRIMMED_COMPLETE:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Memory Trimmed Complete");
+                break;
+            case PUSH_NOTIFICATION_RECEIVED:
+                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
+                        mixpanelInstructionsForEventName("Push Notification Received");
                 break;
             default:
                 instructions = null;

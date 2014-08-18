@@ -7,10 +7,14 @@ import android.text.TextUtils;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.ActivityId;
 
 public class UserPrefs {
     // id of the current user
     private static final String PREFKEY_USER_ID = "wp_userid";
+
+    // name of last shown activity
+    private static final String PREFKEY_LAST_ACTIVITY_STR = "wp_pref_last_activity_string";
 
     // last selected tag in the reader
     private static final String PREFKEY_READER_TAG_NAME = "reader_tag_name";
@@ -27,7 +31,7 @@ public class UserPrefs {
     }
 
     /*
-     * remove all reader-related preferences
+     * remove all user-related preferences
      */
     public static void reset() {
         prefs().edit()
@@ -36,7 +40,8 @@ public class UserPrefs {
                .remove(PREFKEY_READER_TAG_TYPE)
                .remove(PREFKEY_READER_RECOMMENDED_OFFSET)
                .remove(PREFKEY_READER_SUBS_PAGE_TITLE)
-               .commit();
+               .remove(PREFKEY_LAST_ACTIVITY_STR)
+               .apply();
     }
 
 
@@ -53,7 +58,7 @@ public class UserPrefs {
         } else {
             editor.putString(key, value);
         }
-        editor.commit();
+        editor.apply();
     }
 
     private static long getLong(String key) {
@@ -81,7 +86,7 @@ public class UserPrefs {
     }
 
     private static void remove(String key) {
-        prefs().edit().remove(key).commit();
+        prefs().edit().remove(key).apply();
     }
 
     public static long getCurrentUserId() {
@@ -111,7 +116,7 @@ public class UserPrefs {
             prefs().edit()
                    .remove(PREFKEY_READER_TAG_NAME)
                    .remove(PREFKEY_READER_TAG_TYPE)
-                   .commit();
+                   .apply();
         }
     }
 
@@ -138,5 +143,19 @@ public class UserPrefs {
     }
     public static void setReaderSubsPageTitle(String pageTitle) {
         setString(PREFKEY_READER_SUBS_PAGE_TITLE, pageTitle);
+    }
+
+    /*
+     * name of the last shown activity - used at startup to restore the previously selected
+     * activity, also used by analytics tracker
+     */
+    public static String getLastActivityStr() {
+        return getString(PREFKEY_LAST_ACTIVITY_STR, ActivityId.UNKNOWN.name());
+    }
+    public static void setLastActivityStr(String value) {
+        setString(PREFKEY_LAST_ACTIVITY_STR, value);
+    }
+    public static void resetLastActivityStr() {
+        remove(PREFKEY_LAST_ACTIVITY_STR);
     }
 }
