@@ -5,9 +5,10 @@ import android.view.View;
 
 /*
  * ViewPager transformation animation invoked when a visible/attached page is scrolled - before
- * changing this, first see https://code.google.com/p/android/issues/detail?id=58918
+ * changing this, first see https://code.google.com/p/android/issues/detail?id=58918#c5
+ * tl;dr make sure to remove X translation when a page is no longer fully visible
  *
- * note: based on examples here, with many fixes and simplifications:
+ * zoom & depth are based on examples here, with many fixes and simplifications:
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
 class ReaderViewPagerTransformer implements ViewPager.PageTransformer {

@@ -71,8 +71,8 @@ public class ReaderTagAdapter extends BaseAdapter {
         refresh(null);
     }
 
-    public int indexOfTag(ReaderTag tag) {
-        return mTags.indexOfTag(tag);
+    public int indexOfTagName(final String tagName) {
+        return mTags.indexOfTagName(tagName);
     }
 
     @Override

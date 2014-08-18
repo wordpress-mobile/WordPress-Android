@@ -96,8 +96,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     }
 
     private void scrollToTagName(String tagName) {
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        int index = getTagAdapter().indexOfTag(tag);
+        int index = getTagAdapter().indexOfTagName(tagName);
         if (index > -1) {
             mListView.smoothScrollToPosition(index);
         }
@@ -159,7 +158,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 break;
         }
 
-        int index = getTagAdapter().indexOfTag(tag);
+        int index = getTagAdapter().indexOfTagName(tag.getTagName());
         if (animateRemoval && index > -1) {
             Animation.AnimationListener aniListener = new Animation.AnimationListener() {
                 @Override
