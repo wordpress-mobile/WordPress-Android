@@ -43,6 +43,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -66,7 +67,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity {
+public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
@@ -140,6 +141,11 @@ public class StatsActivity extends WPActionBarActivity {
         // Refresh stats at startup
         refreshStats();
         mPullToRefreshHelper.setRefreshing(true);
+
+        ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
+        if (scrollView != null) {
+            scrollView.setScrollViewListener(this);
+        }
     }
 
     @Override
@@ -712,6 +718,25 @@ public class StatsActivity extends WPActionBarActivity {
                     }
                 } // End error check
             }
+        }
+    };
+
+    @Override
+    public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
+        // We take the last son in the scrollview
+        View view = (View) scrollView.getChildAt(scrollView.getChildCount() - 1);
+        int diff = (view.getBottom() - (scrollView.getHeight() + scrollView.getScrollY() + view.getTop()));
+
+        // if diff is zero, then the bottom has been reached
+        if (diff == 0) {
+            sTrackBottomReachedStats.runIfNotLimited();
+        }
+    }
+
+    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+        protected boolean run() {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
+            return true;
         }
     };
 }

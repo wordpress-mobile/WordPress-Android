@@ -147,26 +147,31 @@ public class ReaderActivityLauncher {
     /*
      * show the passed imageUrl in the fullscreen photo activity
      */
-    public static void showReaderPhotoViewer(Activity activity,
+    public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
                                              View source,
                                              int startX,
                                              int startY) {
-        if (TextUtils.isEmpty(imageUrl)) {
+        if (context == null || TextUtils.isEmpty(imageUrl)) {
             return;
         }
 
-        Intent intent = new Intent(activity, ReaderPhotoViewerActivity.class);
+        Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
 
-        // use built-in scale animation on jb+, fall back to our own animation on pre-jb
-        if (source != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ActivityOptionsCompat options =
-                    ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
-            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        if (context instanceof Activity) {
+            // use built-in scale animation on jb+, fall back to our own animation on pre-jb
+            Activity activity = (Activity) context;
+            if (source != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                ActivityOptionsCompat options =
+                        ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
+                ActivityCompat.startActivity(activity, intent, options.toBundle());
+            } else {
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.reader_photo_in, 0);
+            }
         } else {
-            activity.startActivity(intent);
-            activity.overridePendingTransition(R.anim.reader_photo_in, 0);
+            context.startActivity(intent);
         }
     }
 

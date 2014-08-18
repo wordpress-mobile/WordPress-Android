@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -22,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
@@ -47,10 +45,10 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -65,7 +63,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
-                   ViewTreeObserver.OnScrollChangedListener,
                    ActionBar.OnNavigationListener {
 
     private ReaderActionBarTagAdapter mActionBarAdapter;
@@ -81,10 +78,7 @@ public class ReaderPostListFragment extends Fragment
     private ProgressBar mProgress;
 
     private ViewGroup mTagInfoView;
-
     private ReaderBlogInfoView mBlogInfoView;
-    private View mMshotSpacerView;
-    private static final String MSHOT_SPACER_TAG = "mshot_spacer";
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -269,39 +263,7 @@ public class ReaderPostListFragment extends Fragment
                 // inflate the blog info and make it full size
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
                 rootView.addView(mBlogInfoView);
-                mBlogInfoView.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-
-                // add a blank header to the listView that's the same height as the mshot with a fudge
-                // factor to account for the info container - global layout listener below will
-                // use the actual container height once it's known - note that this "fudge factor"
-                // is based on the height of the info container with a two-line description
-                int spacerHeight = mBlogInfoView.getMshotHeight() + DisplayUtils.dpToPx(container.getContext(), 105);
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, spacerHeight);
-
-                // tag the spacer so we can identify it later
-                mMshotSpacerView.setTag(MSHOT_SPACER_TAG);
-
-                // make sure blog info is in front of the listView
-                mBlogInfoView.bringToFront();
-
-                // assign a global layout listener to detect changes to the size of the blogInfo so
-                // we can resize the mshot spacer accordingly
-                mBlogInfoView.getViewTreeObserver().addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                int currentHeight = mMshotSpacerView.getLayoutParams().height;
-                                int newHeight = mBlogInfoView.getInfoContainerHeight()
-                                              + mBlogInfoView.getMshotHeight();
-                                if (currentHeight != newHeight) {
-                                    mMshotSpacerView.getLayoutParams().height = newHeight;
-                                }
-                            }
-                        }
-                );
-
+                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 break;
         }
 
@@ -417,9 +379,6 @@ public class ReaderPostListFragment extends Fragment
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfo();
-                // listen for scroll changes so we can scale the mshot and reposition the blogInfo
-                // as the user scrolls
-                mListView.setOnScrollChangedListener(this);
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
@@ -1245,51 +1204,17 @@ public class ReaderPostListFragment extends Fragment
         return true;
     }
 
-    @Override
-    public void onScrollChanged() {
-        // onScrollChanged is only called when previewing posts in a specific blog so we
-        // can scale & reposition the blogInfo that appears above the listView
-        repositionBlogInfoView();
-    }
-
     /*
-     * scale & reposition blog info based on the listView's scroll position
-     */
-    private void repositionBlogInfoView() {
-        int scrollPos = mListView.getVerticalScrollOffset();
-        if (mBlogInfoView == null) {
-            return;
-        }
-
-        // scale the mshot based on the scroll position
-        mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
-
-        // get the first child of the listView and determine whether it's the mshot spacer
-        // we added in onCreateVew
-        View firstChild = mListView.getChildAt(0);
-        boolean isSpacer = (firstChild != null && MSHOT_SPACER_TAG.equals(firstChild.getTag()));
-
-        // if it is the spacer, the top of the blog info container should move to match the top
-        // of the spacer (which will be negative if list is scrolled) plus the height of the
-        // mshot - and if it's not the spacer, then it means the spacer has been scrolled out
-        // of view which means the blog info container should stick to the top
-        final int infoTop;
-        if (isSpacer) {
-            infoTop = Math.max(0, firstChild.getTop() + mBlogInfoView.getMshotHeight());
-        } else {
-            infoTop = 0;
-        }
-
-        mBlogInfoView.moveInfoContainer(infoTop);
-    }
-
-    /*
-     * tell the blog info view to show the current blog if it's not already loaded
+     * used by blog preview - tell the blog info view to show the current blog
+     * if it's not already loaded
      */
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
-            mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
+            mBlogInfoView.loadBlogInfo(
+                    mCurrentBlogId,
+                    mCurrentBlogUrl,
+                    new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
                         public void onBlogInfoLoaded() {
                             // nop

@@ -1,8 +1,8 @@
 package org.wordpress.android.ui;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import org.wordpress.android.ui.prefs.UserPrefs;
 
 public enum ActivityId {
     UNKNOWN("Unknown"),
@@ -29,10 +29,9 @@ public enum ActivityId {
     }
 
     public static void trackLastActivity(Context context, ActivityId activityId) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE, activityId.name());
-        editor.apply();
+        if (activityId != null) {
+            UserPrefs.setLastActivityStr(activityId.name());
+        }
     }
 
     /**
@@ -55,6 +54,9 @@ public enum ActivityId {
     }
 
     public static ActivityId getActivityIdFromName(String activityString) {
+        if (activityString == null) {
+            return ActivityId.UNKNOWN;
+        }
         try {
             return ActivityId.valueOf(activityString);
         } catch (IllegalArgumentException e) {
