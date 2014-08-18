@@ -23,6 +23,7 @@ import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
@@ -35,6 +36,8 @@ import org.wordpress.android.util.StringUtils;
 
 import java.util.EnumSet;
 
+import javax.annotation.Nonnull;
+
 /*
  * this activity serves as the host for ReaderPostListFragment
  */
@@ -46,7 +49,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     private static boolean mHasPerformedInitialUpdate;
     private static boolean mHasPerformedPurge;
 
-    private ReaderTypes.ReaderPostListType mPostListType;
+    private ReaderPostListType mPostListType;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +63,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         }
 
         if (intent.hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
-            mPostListType = (ReaderTypes.ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
+            mPostListType = (ReaderPostListType) intent.getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
         } else {
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
@@ -86,7 +89,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
 
-            if (mPostListType == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
+            if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
                 long blogId = intent.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                 String blogUrl = intent.getStringExtra(ReaderConstants.ARG_BLOG_URL);
                 showListFragmentForBlog(blogId, blogUrl);
@@ -99,13 +102,21 @@ public class ReaderPostListActivity extends WPActionBarActivity
                     tag = UserPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
-                if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
+                if (mPostListType == ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {
                     tag = ReaderTag.getDefaultTag();
                 }
 
                 showListFragmentForTag(tag, mPostListType);
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
+        if (outState.isEmpty()) {
+            outState.putBoolean("bug_19917_fix", true);
+        }
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -212,7 +223,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         removeListFragment();
     }
 
-    ReaderTypes.ReaderPostListType getPostListType() {
+    ReaderPostListType getPostListType() {
         return (mPostListType != null ? mPostListType : ReaderTypes.DEFAULT_POST_LIST_TYPE);
     }
 
@@ -229,7 +240,10 @@ public class ReaderPostListActivity extends WPActionBarActivity
     /*
      * show fragment containing list of latest posts for a specific tag
      */
-    private void showListFragmentForTag(final ReaderTag tag, ReaderTypes.ReaderPostListType listType) {
+    private void showListFragmentForTag(final ReaderTag tag, ReaderPostListType listType) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(tag, listType);
         getFragmentManager()
                 .beginTransaction()
@@ -241,6 +255,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
      * show fragment containing list of latest posts in a specific blog
      */
     private void showListFragmentForBlog(long blogId, String blogUrl) {
+        if (isFinishing()) {
+            return;
+        }
         Fragment fragment = ReaderPostListFragment.newInstance(blogId, blogUrl);
         getFragmentManager()
                 .beginTransaction()
@@ -269,7 +286,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
         }
         ReaderPostListFragment listFragment = getListFragment();
         return listFragment != null
-                && listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                && listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED
                 && listFragment.getCurrentTagName().equals(tagName);
     }
 
@@ -363,7 +380,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
     @Override
     public void onTagSelected(String tagName) {
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderTypes.ReaderPostListType.TAG_PREVIEW)) {
+        if (hasListFragment() && getListFragment().getPostListType().equals(ReaderPostListType.TAG_PREVIEW)) {
             // user is already previewing a tag, so change current tag in existing preview
             getListFragment().setCurrentTag(tag);
         } else {
@@ -390,8 +407,8 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 if (listFragment == null) {
                     // list fragment doesn't exist yet (can happen if user signed out) - create
                     // it now showing the default tag
-                    showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderTypes.ReaderPostListType.TAG_FOLLOWED);
-                } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
+                    showListFragmentForTag(ReaderTag.getDefaultTag(), ReaderPostListType.TAG_FOLLOWED);
+                } else if (listFragment.getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
                     // list fragment is viewing followed tags, tell it to refresh the list of tags
                     listFragment.refreshTags();
                 }
