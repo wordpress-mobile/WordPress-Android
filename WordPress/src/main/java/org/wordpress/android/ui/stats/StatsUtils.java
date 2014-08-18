@@ -97,7 +97,8 @@ public class StatsUtils {
     public static void saveSummary(String blogId, JSONObject stat) {
         try {
             JSONObject statsObject = stat.getJSONObject("stats");
-            statsObject.put("date", getCurrentDate());
+            String day = stat.getString("day");
+            statsObject.put("day", day);
             FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_SUMMARY + blogId, Context.MODE_PRIVATE);
             fos.write(statsObject.toString().getBytes());
             fos.close();

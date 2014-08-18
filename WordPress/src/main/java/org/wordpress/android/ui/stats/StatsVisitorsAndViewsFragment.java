@@ -38,6 +38,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                                                            StatsBarChartUnit.MONTH.getLabel()};
 
     private TextView mVisitorsToday;
+    private TextView mVisitorsTodayLabel;
     private TextView mViewsToday;
     private TextView mViewsBestEver;
     private TextView mViewsAllTime;
@@ -57,6 +58,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
+        mVisitorsTodayLabel = (TextView) view.findViewById(R.id.stats_visitors_and_views_header_label);
         mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);
         mViewsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
         mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
@@ -160,6 +162,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     private void refreshSummary(final StatsSummary stats) {
         if (getActivity() == null) {
             return;
+        }
+
+        if (stats != null
+                && stats.getDay() != null
+                && StatsUtils.toMs(stats.getDay()) != StatsUtils.getCurrentDateMs()
+                ) {
+            mVisitorsTodayLabel.setText(stats.getDay());
+        } else {
+            // set the default "Today" label
+            mVisitorsTodayLabel.setText(R.string.stats_visitors_and_views_header_today);
         }
 
         if (stats == null) {
