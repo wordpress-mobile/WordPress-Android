@@ -77,7 +77,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private int mWPComErroneousLogInCount;
+    private int mErroneousLogInCount;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -128,6 +128,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
+
+
+
         return rootView;
     }
 
@@ -322,16 +325,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     private void showUsernameError(int messageId) {
         mUsernameEditText.setError(getString(messageId));
-        mUsernameEditText.requestFocus();
-    }
-
-    private void showPasswordError(int messageId, String param) {
-        mPasswordEditText.setError(getString(messageId, param));
-        mPasswordEditText.requestFocus();
-    }
-
-    private void showUsernameError(int messageId, String param) {
-        mUsernameEditText.setError(getString(messageId, param));
         mUsernameEditText.requestFocus();
     }
 
@@ -538,15 +531,24 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
 
         private void handleInvalidUsernameOrPassword() {
-            if (isWPComLogin()) {
-                mWPComErroneousLogInCount += 1;
-                if (mWPComErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
-                    mErrorMsgId = R.string.username_or_password_incorrect_selfhosted_hint;
-                }
-            }
-            if (mErrorMsgId == R.string.username_or_password_incorrect_selfhosted_hint) {
-                showUsernameError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
-                showPasswordError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
+            mErroneousLogInCount += 1;
+            if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
+                // Clear previous errors
+                mPasswordEditText.setError(null);
+                mUsernameEditText.setError(null);
+                // Show a dialog
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
+                        getString(R.string.username_or_password_incorrect_third_time), R.drawable.nux_icon_alert, 3,
+                        getString(R.string.cancel), getString(R.string.faq_button), getString(R.string.contact_us),
+                        NUXDialogFragment.ACTION_OPEN_FAQ, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+                // Put entered url and entered username args, that could help our support team
+                Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+                bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                nuxAlert.setArguments(bundle);
+                ft.add(nuxAlert, "alert");
+                ft.commitAllowingStateLoss();
             } else {
                 showUsernameError(mErrorMsgId);
                 showPasswordError(mErrorMsgId);
@@ -559,10 +561,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             NUXDialogFragment nuxAlert;
             if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
-                        getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
+                        R.drawable.nux_icon_alert, 2, getString(R.string.cancel), getString(
+                                R.string.visit_security_settings), "", NUXDialogFragment.ACTION_OPEN_URL, 0);
+                Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
                         "https://wordpress.com/settings/security/?ssl=forced");
+                nuxAlert.setArguments(bundle);
             } else {
                 if (mErrorMsgId == R.string.username_or_password_incorrect) {
                     handleInvalidUsernameOrPassword();
@@ -574,7 +579,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     return;
                 } else {
                     nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                            mErrorMsgId), R.drawable.nux_icon_alert, getString(R.string.nux_tap_continue));
                 }
             }
             ft.add(nuxAlert, "alert");

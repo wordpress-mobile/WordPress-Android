@@ -52,7 +52,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
-                    android:text="@string/faq_button"
+                    android:text="@string/browse_our_faq_button"
                     android:id="@+id/faq_button"
                     android:layout_width="match_parent"
                     android:gravity="center"/>

@@ -12,7 +12,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -56,7 +55,6 @@ public class NuxHelpActivity extends Activity {
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
                 }
-                HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.LOGIN_SCREEN});
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
         });
