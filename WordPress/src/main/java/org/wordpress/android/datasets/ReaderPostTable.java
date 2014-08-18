@@ -44,11 +44,10 @@ public class ReaderPostTable {
           + "is_external,"          // 23
           + "is_private,"           // 24
           + "is_videopress,"        // 25
-          + "tag_list,"             // 26
-          + "primary_tag,"          // 27
-          + "secondary_tag,"        // 28
-          + "is_likes_enabled,"     // 29
-          + "is_sharing_enabled";   // 30
+          + "primary_tag,"          // 26
+          + "secondary_tag,"        // 27
+          + "is_likes_enabled,"     // 28
+          + "is_sharing_enabled";   // 29
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -78,7 +77,6 @@ public class ReaderPostTable {
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
-                + " tag_list            TEXT,"
                 + " primary_tag         TEXT,"
                 + " secondary_tag       TEXT,"
                 + " is_likes_enabled    INTEGER DEFAULT 0,"
@@ -375,7 +373,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
@@ -408,11 +406,10 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindString(26, post.getTags());
-                stmtPosts.bindString(27, post.getPrimaryTag());
-                stmtPosts.bindString(28, post.getSecondaryTag());
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
-                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isSharingEnabled));
+                stmtPosts.bindString(26, post.getPrimaryTag());
+                stmtPosts.bindString(27, post.getSecondaryTag());
+                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isSharingEnabled));
                 stmtPosts.execute();
             }
 
@@ -557,7 +554,6 @@ public class ReaderPostTable {
         private final int idx_is_private;
         private final int idx_is_videopress;
 
-        private final int idx_tag_list;
         private final int idx_primary_tag;
         private final int idx_secondary_tag;
 
@@ -599,7 +595,6 @@ public class ReaderPostTable {
             idx_is_private = c.getColumnIndex("is_private");
             idx_is_videopress = c.getColumnIndex("is_videopress");
 
-            idx_tag_list = c.getColumnIndex("tag_list");
             idx_primary_tag = c.getColumnIndex("primary_tag");
             idx_secondary_tag = c.getColumnIndex("secondary_tag");
 
@@ -651,7 +646,6 @@ public class ReaderPostTable {
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(cols.idx_is_private));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(cols.idx_is_videopress));
 
-        post.setTags(c.getString(cols.idx_tag_list));
         post.setPrimaryTag(c.getString(cols.idx_primary_tag));
         post.setSecondaryTag(c.getString(cols.idx_secondary_tag));
 

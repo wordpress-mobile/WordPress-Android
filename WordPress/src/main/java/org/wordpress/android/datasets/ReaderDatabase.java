@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 82;
+    private static final int DB_VERSION = 83;
 
     /*
      * version history
@@ -39,6 +39,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
      *   81 - added image_url to tbl_blog_info
      *   82 - added idx_posts_timestamp to tbl_posts
+     *   83 - removed tag_list from tbl_posts
      */
 
     /*
