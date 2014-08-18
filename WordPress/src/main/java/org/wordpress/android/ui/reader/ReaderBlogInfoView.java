@@ -61,14 +61,14 @@ class ReaderBlogInfoView extends LinearLayout {
      */
     public void loadBlogInfo(long blogId, String blogUrl, BlogInfoListener blogInfoListener) {
         mBlogInfoListener = blogInfoListener;
-        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl));
+        showBlogInfo(ReaderBlogTable.getBlogInfo(blogId, blogUrl), false);
         requestBlogInfo(blogId, blogUrl);
     }
 
     /*
      * show blog header with info from passed blog filled in
      */
-    private void showBlogInfo(final ReaderBlog blogInfo) {
+    private void showBlogInfo(final ReaderBlog blogInfo, boolean animateIn) {
         // this is the layout containing all of the blog info, including the mshot
         final ViewGroup layoutInner = (ViewGroup) findViewById(R.id.layout_bloginfo_inner);
 
@@ -125,18 +125,20 @@ class ReaderBlogInfoView extends LinearLayout {
             }
         });
 
-        // layout is invisible at design time, animate it in after a brief delay
-        // the first time it's shown
+        // layout is invisible at design time
         if (layoutInner.getVisibility() != View.VISIBLE) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // make sure it's still invisible before animating it
-                    if (layoutInner.getVisibility() != View.VISIBLE) {
-                        ReaderAnim.scaleIn(layoutInner, ReaderAnim.Duration.SHORT);
+            if (animateIn) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (layoutInner.getVisibility() != View.VISIBLE) {
+                            ReaderAnim.fadeIn(layoutInner, ReaderAnim.Duration.SHORT);
+                        }
                     }
-                }
-            }, 500);
+                }, 500);
+            } else {
+                layoutInner.setVisibility(View.VISIBLE);
+            }
         }
 
         // show the mshot if it hasn't already been shown
@@ -169,7 +171,9 @@ class ReaderBlogInfoView extends LinearLayout {
             @Override
             public void onResult(ReaderBlog blogInfo) {
                 if (blogInfo != null) {
-                    showBlogInfo(blogInfo);
+                    // animate it in if it wasn't already loaded from local db
+                    boolean animateIn = isEmpty();
+                    showBlogInfo(blogInfo, animateIn);
                 } else if (isEmpty() && mBlogInfoListener != null) {
                     // only fire the failed event if blogInfo is empty - we don't want to fire
                     // the failed event if the blogInfo successfully loaded from the local db
