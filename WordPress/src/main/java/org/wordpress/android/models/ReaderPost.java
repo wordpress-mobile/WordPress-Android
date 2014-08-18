@@ -3,8 +3,8 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderFeaturedImageFinder;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;

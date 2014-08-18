@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -40,14 +41,11 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -149,13 +147,13 @@ public class WordPress extends Application {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
         if (!BuildUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        HelpshiftHelper.init(this);
         versionName = ProfilingUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
@@ -168,29 +166,26 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
-        ABTestingUtils.init();
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (settings.getInt("wp_pref_last_activity", -1) >= 0) {
+        String lastActivityStr = UserPrefs.getLastActivityStr();
+        if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
             shouldRestoreSelectedActivity = true;
         }
 
-        // Uncomment this line if you want to test the app locking feature
         AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
         if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
 
+        HelpshiftHelper.init(this);
+
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
         AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
+        AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
         registerForCloudMessaging(this);
-
-        super.onCreate();
 
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
@@ -335,9 +330,7 @@ public class WordPress extends Application {
         }
 
         // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
+        HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
@@ -626,9 +619,7 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String lastActivityString = settings.getString(WPActionBarActivity.LAST_ACTIVITY_PREFERENCE,
-                        ActivityId.UNKNOWN.name());
+                String lastActivityString = UserPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, String> properties = new HashMap<String, String>();
                 properties.put("last_visible_screen", lastActivity.toString());
@@ -638,9 +629,21 @@ public class WordPress extends Application {
                 isInBackground = false;
             }
 
-            // Levels that we need to consider are  TRIM_MEMORY_RUNNING_CRITICAL = 15;
-            // - TRIM_MEMORY_RUNNING_LOW = 10; - TRIM_MEMORY_RUNNING_MODERATE = 5;
-            if (level < ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN && mBitmapCache != null) {
+            boolean evictBitmaps = false;
+            switch (level) {
+                case TRIM_MEMORY_COMPLETE:
+                    AnalyticsTracker.track(Stat.MEMORY_TRIMMED_COMPLETE);
+                case TRIM_MEMORY_MODERATE:
+                case TRIM_MEMORY_RUNNING_MODERATE:
+                case TRIM_MEMORY_RUNNING_CRITICAL:
+                case TRIM_MEMORY_RUNNING_LOW:
+                    evictBitmaps = true;
+                    break;
+                default:
+                    break;
+            }
+
+            if (evictBitmaps && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
         }
