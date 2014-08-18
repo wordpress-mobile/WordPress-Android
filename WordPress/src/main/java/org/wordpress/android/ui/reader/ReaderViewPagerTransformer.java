@@ -28,23 +28,24 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE_ZOOM = 0.85f;
     private static final float MIN_ALPHA_ZOOM = 0.5f;
     private static final float SCALE_FACTOR_SLIDE = 0.95f;
+    private static final float MIN_ALPHA_SLIDE = 0.5f;
 
-    public void transformPage(View view, float position) {
+    public void transformPage(View page, float position) {
         final float alpha;
         final float scale;
         final float translationX;
 
         switch (mTransformType) {
             case FLOW:
-                view.setRotationY(position * -30f);
+                page.setRotationY(position * -30f);
                 return;
 
             case SLIDE_OVER:
-                alpha = 1;
-                if (position <= 0) {
-                    // apply effect only to pages on the left
+                if (position < 0 && position > -1) {
+                    // this is the page to the left
                     scale = Math.abs(Math.abs(position) - 1) * (1.0f - SCALE_FACTOR_SLIDE) + SCALE_FACTOR_SLIDE;
-                    int pageWidth = view.getWidth();
+                    alpha = Math.max(MIN_ALPHA_SLIDE, 1 - Math.abs(position));
+                    int pageWidth = page.getWidth();
                     float translateValue = position * -pageWidth;
                     if (translateValue > -pageWidth) {
                         translationX = translateValue;
@@ -52,6 +53,7 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
                         translationX = 0;
                     }
                 } else {
+                    alpha = 1;
                     scale = 1;
                     translationX = 0;
                 }
@@ -62,7 +64,7 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
                     // moving to the right
                     alpha = (1 - position);
                     scale = MIN_SCALE_DEPTH + (1 - MIN_SCALE_DEPTH) * (1 - Math.abs(position));
-                    translationX = (view.getWidth() * -position);
+                    translationX = (page.getWidth() * -position);
                 } else {
                     // use default for all other cases
                     alpha = 1;
@@ -76,8 +78,8 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
                     scale = Math.max(MIN_SCALE_ZOOM, 1 - Math.abs(position));
                     alpha = MIN_ALPHA_ZOOM +
                             (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM);
-                    float vMargin = view.getHeight() * (1 - scale) / 2;
-                    float hMargin = view.getWidth() * (1 - scale) / 2;
+                    float vMargin = page.getHeight() * (1 - scale) / 2;
+                    float hMargin = page.getWidth() * (1 - scale) / 2;
                     if (position < 0) {
                         translationX = (hMargin - vMargin / 2);
                     } else {
@@ -94,9 +96,9 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
                 return;
         }
 
-        view.setAlpha(alpha);
-        view.setTranslationX(translationX);
-        view.setScaleX(scale);
-        view.setScaleY(scale);
+        page.setAlpha(alpha);
+        page.setTranslationX(translationX);
+        page.setScaleX(scale);
+        page.setScaleY(scale);
     }
 }
