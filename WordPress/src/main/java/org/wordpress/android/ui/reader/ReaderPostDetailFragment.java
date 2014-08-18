@@ -134,13 +134,15 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private static class ResourceVars {
         final int displayWidth;
+        final int actionBarHeight;
+        final int likeAvatarSize;
+        final int videoOverlaySize;
+
         final int marginLarge;
         final int marginSmall;
         final int marginExtraSmall;
         final int listMarginWidth;
         final int fullSizeImageWidth;
-        final int likeAvatarSize;
-        final int videoOverlaySize;
 
         final int colorGreyExtraLight;
         final int mediumAnimTime;
@@ -153,12 +155,14 @@ public class ReaderPostDetailFragment extends Fragment
             Resources resources = context.getResources();
 
             displayWidth = DisplayUtils.getDisplayPixelWidth(context);
+            actionBarHeight = DisplayUtils.getActionBarHeight(context);
+            likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
+            videoOverlaySize = resources.getDimensionPixelSize(R.dimen.reader_video_overlay_size);
+
             marginLarge = resources.getDimensionPixelSize(R.dimen.margin_large);
             marginSmall = resources.getDimensionPixelSize(R.dimen.margin_small);
             marginExtraSmall = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
             listMarginWidth = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
-            likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
-            videoOverlaySize = resources.getDimensionPixelSize(R.dimen.reader_video_overlay_size);
 
             colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
             mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
@@ -300,7 +304,7 @@ public class ReaderPostDetailFragment extends Fragment
         mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
-            ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(container.getContext()));
+            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeight);
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -1124,7 +1128,8 @@ public class ReaderPostDetailFragment extends Fragment
         sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }", mResourceVars.marginSmall, mResourceVars.marginSmall))
+        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }",
+                mResourceVars.marginSmall, mResourceVars.marginSmall))
               .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
@@ -1145,7 +1150,8 @@ public class ReaderPostDetailFragment extends Fragment
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript()) {
-            int videoWidth = DisplayUtils.pxToDp(context, mResourceVars.fullSizeImageWidth - (mResourceVars.marginLarge * 2));
+            int videoWidth = DisplayUtils.pxToDp(context,
+                    mResourceVars.fullSizeImageWidth - (mResourceVars.marginLarge * 2));
             int videoHeight = (int) (videoWidth * 0.5625f);
             sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
                   .append("                  height: ").append(videoHeight).append("px !important; }");
@@ -1362,13 +1368,15 @@ public class ReaderPostDetailFragment extends Fragment
             // show date and author name if author name exists and is different than the blog name,
             // otherwise just show the date
             if (mPost.hasAuthorName() && !mPost.getAuthorName().equals(mPost.getBlogName())) {
-                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()) + " / " + mPost.getAuthorName());
+                txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(
+                        mPost.getDatePublished()) + " / " + mPost.getAuthorName());
             } else {
                 txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
             }
 
             if (mPost.hasPostAvatar()) {
-                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(mResourceVars.likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
+                imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
+                        mResourceVars.likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
@@ -1385,8 +1393,8 @@ public class ReaderPostDetailFragment extends Fragment
                 imgFeatured.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int startX = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
-                        int startY = (DisplayUtils.getDisplayPixelWidth(getActivity()) / 2);
+                        int startX = mResourceVars.displayWidth / 2;
+                        int startY = mResourceVars.displayWidth / 2;
                         showPhotoViewer(mPost.getFeaturedImage(), view, startX, startY);
                     }
                 });

@@ -11,7 +11,7 @@ import android.view.View;
  * http://developer.android.com/training/animation/screen-slide.html#pagetransformer
  */
 class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
-    static enum TransformType { DEPTH, ZOOM }
+    static enum TransformType { FLOW, DEPTH, ZOOM }
     private final TransformType mTransformType;
 
     ReaderViewPagerTransformer(TransformType transformType) {
@@ -28,6 +28,10 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
         float translationX;
 
         switch (mTransformType) {
+            case FLOW:
+                view.setRotationY(position * -30f);
+                return;
+
             case DEPTH:
                 if (position > 0 && position < 1) {
                     // moving to the right

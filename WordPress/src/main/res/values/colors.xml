@@ -86,7 +86,6 @@
     <color name="reader_message_bar_blue">@color/semi_transparent_blue_medium</color>     <!-- blue_medium with alpha -->
     <color name="reader_message_bar_orange">#ccf1831e</color>       <!-- orange_medium with alpha -->
     <color name="reader_list_selector">#77c8eefc</color>            <!-- blue_extra_light with alpha -->
-    <color name="reader_translucent_actionbar">#cc2EA2CC</color>    <!-- blue_new_kid with alpha -->
 
     <!-- comment status colors -->
     <color name="comment_status_approved">@color/blue_extra_dark</color>

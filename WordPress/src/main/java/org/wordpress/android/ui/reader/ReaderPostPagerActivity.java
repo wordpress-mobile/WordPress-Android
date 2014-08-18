@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -30,7 +29,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
@@ -78,11 +76,6 @@ public class ReaderPostPagerActivity extends Activity
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            // make the ActionBar translucent
-            if (isFullScreenSupported()) {
-                int actionBarColor = getResources().getColor(R.color.reader_translucent_actionbar);
-                actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
-            }
         }
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -161,9 +154,6 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         });
-
-        mViewPager.setPageTransformer(false,
-                new ReaderViewPagerTransformer(TransformType.DEPTH));
     }
 
     private boolean hasPagerAdapter() {
