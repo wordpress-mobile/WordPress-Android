@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
-import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -440,10 +439,22 @@ public class ReaderCommentAdapter extends BaseAdapter {
                                     @Nonnull Spannable buffer,
                                     @Nonnull MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                // handle image tap
-                ImageSpan imgSpans[] = buffer.getSpans(0, buffer.length(), ImageSpan.class);
-                if (imgSpans.length > 0) {
-                    String imageUrl = StringUtils.notNullStr(imgSpans[0].getSource());
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                x -= textView.getTotalPaddingLeft();
+                y -= textView.getTotalPaddingTop();
+
+                x += textView.getScrollX();
+                y += textView.getScrollY();
+
+                Layout layout = textView.getLayout();
+                int line = layout.getLineForVertical(y);
+                int off = layout.getOffsetForHorizontal(line, x);
+
+                ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
+                if (images != null && images.length > 0) {
+                    String imageUrl = StringUtils.notNullStr(images[0].getSource());
                     ReaderActivityLauncher.showReaderPhotoViewer(
                             textView.getContext(),
                             imageUrl,
@@ -452,20 +463,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
                             (int) event.getY());
                     return true;
                 }
-
-                // handle link tap
-                URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
-                if (urlSpans.length > 0) {
-                    String url = StringUtils.notNullStr(urlSpans[0].getURL());
-                    if (Uri.parse(url).getScheme() == null) {
-                        url = "http://" + url.trim();
-                    }
-                    ReaderActivityLauncher.openUrl(textView.getContext(), url);
-                    return true;
-                }
             }
 
-            return false;
+            return super.onTouchEvent(textView, buffer, event);
         }
     }
 }
