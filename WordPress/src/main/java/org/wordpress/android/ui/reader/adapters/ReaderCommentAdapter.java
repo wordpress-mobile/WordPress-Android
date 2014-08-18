@@ -1,14 +1,8 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.Layout;
-import android.text.Spannable;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -28,15 +22,12 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
-
-import javax.annotation.Nonnull;
 
 public class ReaderCommentAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
@@ -144,9 +135,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         holder.txtAuthor.setText(comment.getAuthorName());
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-
         CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
-        holder.txtText.setMovementMethod(CommentLinkMovementMethod.getInstance());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -244,9 +233,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
             txtLike = (TextView) view.findViewById(R.id.text_comment_like);
             txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
-            // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);
-            txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
+            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance());
         }
     }
 
@@ -419,59 +407,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 mDataLoadedListener.onDataLoaded(isEmpty());
             }
             mIsTaskRunning = false;
-        }
-    }
-
-    /*
-     * custom LinkMovementMethod which enables zooming tapped images in comments
-     */
-    private static class CommentLinkMovementMethod extends LinkMovementMethod {
-        private static CommentLinkMovementMethod mMovementMethod;
-
-        public static CommentLinkMovementMethod getInstance() {
-            if (mMovementMethod == null) {
-                mMovementMethod = new CommentLinkMovementMethod();
-            }
-            return mMovementMethod;
-        }
-
-        @Override
-        public boolean onTouchEvent(@Nonnull TextView textView,
-                                    @Nonnull Spannable buffer,
-                                    @Nonnull MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-
-                x -= textView.getTotalPaddingLeft();
-                y -= textView.getTotalPaddingTop();
-
-                x += textView.getScrollX();
-                y += textView.getScrollY();
-
-                Layout layout = textView.getLayout();
-                int line = layout.getLineForVertical(y);
-                int off = layout.getOffsetForHorizontal(line, x);
-
-                ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
-                if (images != null && images.length > 0) {
-                    String imageUrl = StringUtils.notNullStr(images[0].getSource());
-                    ReaderActivityLauncher.showReaderPhotoViewer(
-                            textView.getContext(),
-                            imageUrl,
-                            textView,
-                            (int) event.getX(),
-                            (int) event.getY());
-                    return true;
-                }
-            }
-
-            try {
-                return super.onTouchEvent(textView, buffer, event);
-            } catch (ActivityNotFoundException e) {
-                AppLog.e(AppLog.T.UTILS, e);
-                return false;
-            }
         }
     }
 }
