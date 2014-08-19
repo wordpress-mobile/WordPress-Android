@@ -152,13 +152,14 @@ public class ReaderPostActions {
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site,likes";
+    public static void updatePost(final ReaderPost originalPost,
+                                  final ReaderActions.UpdateResultListener resultListener) {
+        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostResponse(post, jsonObject, resultListener);
+                handleUpdatePostResponse(originalPost, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -174,7 +175,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostResponse(final ReaderPost post,
+    private static void handleUpdatePostResponse(final ReaderPost originalPost,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -190,27 +191,34 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                final boolean hasChanges = (updatedPost.numReplies != post.numReplies
-                                         || updatedPost.numLikes != post.numLikes
-                                         || updatedPost.isCommentsOpen != post.isCommentsOpen
-                                         || updatedPost.isLikedByCurrentUser != post.isLikedByCurrentUser
-                                         || updatedPost.isFollowedByCurrentUser != post.isFollowedByCurrentUser);
+                final boolean hasChanges =
+                         ( updatedPost.numReplies != originalPost.numReplies
+                        || updatedPost.numLikes != originalPost.numLikes
+                        || updatedPost.isCommentsOpen != originalPost.isCommentsOpen
+                        || updatedPost.isLikedByCurrentUser != originalPost.isLikedByCurrentUser
+                        || updatedPost.isFollowedByCurrentUser != originalPost.isFollowedByCurrentUser);
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // the endpoint for requesting a single post doesn't support featured images,
-                    // so if the original post had a featured image, set the featured image for
-                    // the updated post to that of the original post - this should be done even
-                    // if the updated post has a featured image since that was most likely
-                    // assigned by ReaderPost.findFeaturedImage()
-                    if (post.hasFeaturedImage()) {
-                        updatedPost.setFeaturedImage(post.getFeaturedImage());
+                    // set the featured image for the updated post to that of the original
+                    // post - this should be done even if the updated post has a featured
+                    // image since that may have been set by ReaderPost.findFeaturedImage()
+                    if (originalPost.hasFeaturedImage()) {
+                        updatedPost.setFeaturedImage(originalPost.getFeaturedImage());
                     }
+
                     // likewise for featured video
-                    if (post.hasFeaturedVideo()) {
-                        updatedPost.setFeaturedVideo(post.getFeaturedVideo());
-                        updatedPost.isVideoPress = post.isVideoPress;
+                    if (originalPost.hasFeaturedVideo()) {
+                        updatedPost.setFeaturedVideo(originalPost.getFeaturedVideo());
+                        updatedPost.isVideoPress = originalPost.isVideoPress;
                     }
+
+                    // retain the pubDate and timestamp of the original post - this is important
+                    // since these control how the post is sorted in the list view, and we don't
+                    // want that sorting to change
+                    updatedPost.timestamp = originalPost.timestamp;
+                    updatedPost.setPublished(originalPost.getPublished());
+
                     ReaderPostTable.addOrUpdatePost(updatedPost);
                 }
 
