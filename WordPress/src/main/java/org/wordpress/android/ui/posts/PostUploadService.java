@@ -770,7 +770,7 @@ public class PostUploadService extends Service {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
                         float percentage = (uploadedBytes * 100) / tempFile.length();
-                        mPostUploadNotifier.updateNotificationProgress(Math.round(percentage));
+                        mPostUploadNotifier.updateNotificationProgress(percentage);
                     }
                 });
             }
@@ -810,6 +810,7 @@ public class PostUploadService extends Service {
         private final int mNotificationId;
         private int mTotalMediaItems;
         private int mCurrentMediaItem;
+        private float mItemProgressSize;
 
         public PostUploadNotifier(Post post) {
             // add the uploader to the notification bar
@@ -892,25 +893,28 @@ public class PostUploadService extends Service {
             mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
         }
 
-        public void updateNotificationProgress(int progress) {
+        public void updateNotificationProgress(float progress) {
             if (mTotalMediaItems == 0) return;
 
             // Simple way to show progress of entire post upload
             // Would be better if we could get total bytes for all media items.
-            int itemProgressSize = 100 / mTotalMediaItems;
-
-            int currentChunkProgress = (itemProgressSize * progress) / 100;
+            double currentChunkProgress = (mItemProgressSize * progress) / 100;
 
             if (mCurrentMediaItem > 1) {
-                currentChunkProgress += itemProgressSize * (mCurrentMediaItem - 1);
+                currentChunkProgress += mItemProgressSize * (mCurrentMediaItem - 1);
             }
 
-            mNotificationBuilder.setProgress(100, currentChunkProgress, false);
+            mNotificationBuilder.setProgress(100, (int)Math.ceil(currentChunkProgress), false);
             mNotificationManager.notify(mNotificationId, mNotificationBuilder.build());
         }
 
         public void setTotalMediaItems(int totalMediaItems) {
+            if (totalMediaItems <= 0) {
+                totalMediaItems = 1;
+            }
+
             mTotalMediaItems = totalMediaItems;
+            mItemProgressSize = 100.0f / mTotalMediaItems;
         }
 
         public void setCurrentMediaItem(int currentItem) {
