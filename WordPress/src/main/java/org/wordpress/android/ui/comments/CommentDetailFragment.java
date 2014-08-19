@@ -747,18 +747,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                moderationDrawResId = R.drawable.ic_comment_moderate_unapprove;
-                moderationTextResId = R.string.mnu_comment_unapprove;
+                moderationDrawResId = R.drawable.ic_comment_moderate_approve_active;
+                moderationTextResId = R.string.comment_status_approved;
                 newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = getActivity().getResources().getColor(R.color.comment_status_approved);
+                statusColor = getActivity().getResources().getColor(R.color.calypso_orange);
+                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange));
                 break;
             case UNAPPROVED:
                 moderationDrawResId = R.drawable.ic_comment_moderate_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = getActivity().getResources().getColor(R.color.comment_status_unapproved);
+                statusColor = getActivity().getResources().getColor(R.color.calypso_orange);
+                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case SPAM:
                 moderationDrawResId = R.drawable.ic_comment_moderate_approve;
