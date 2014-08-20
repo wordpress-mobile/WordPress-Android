@@ -39,12 +39,23 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
      * does passed list contain the same posts as this list?
      */
     public boolean isSameList(ReaderPostList posts) {
-        if (posts==null || posts.size()!=this.size())
+        if (posts == null || posts.size() != this.size()) {
             return false;
+        }
 
         for (ReaderPost post: posts) {
-            if (indexOfPost(post.blogId, post.postId) == -1)
+            int index = indexOfPost(post.blogId, post.postId);
+            if (index == -1) {
                 return false;
+            }
+            ReaderPost thisPost = this.get(index);
+            if (thisPost.numLikes != post.numLikes
+                    || thisPost.numReplies != post.numReplies
+                    || thisPost.isFollowedByCurrentUser != post.isFollowedByCurrentUser
+                    || thisPost.isLikedByCurrentUser != post.isLikedByCurrentUser
+                    || thisPost.isRebloggedByCurrentUser != post.isRebloggedByCurrentUser) {
+                return  false;
+            }
         }
 
         return true;

@@ -30,7 +30,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostPopupListene
 import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -181,16 +181,6 @@ public class ReaderPostAdapter extends BaseAdapter {
         final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         if (updatedPost != null) {
             mPosts.set(index, updatedPost);
-            notifyDataSetChanged();
-        }
-    }
-
-    /*
-     * ensures that the follow status of each post in the list reflects what is currently
-     * stored in the reader post table
-     */
-    public void checkFollowStatusForAllPosts() {
-        if (ReaderPostTable.checkFollowStatusOnPosts(mPosts)) {
             notifyDataSetChanged();
         }
     }

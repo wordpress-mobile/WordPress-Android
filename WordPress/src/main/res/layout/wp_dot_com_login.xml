@@ -33,7 +33,7 @@
         android:src="@drawable/dashicon_eye_closed"
         android:layout_marginRight="@dimen/margin_medium"
         android:layout_alignParentRight="true"
-        android:tint="@color/nux_eye_icon_color"
+        android:tint="@color/nux_eye_icon_color_closed"
         android:layout_alignBottom="@+id/dotcomPassword"
         android:layout_marginBottom="16dp"
         android:layout_alignParentEnd="false"

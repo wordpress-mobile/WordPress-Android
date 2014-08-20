@@ -374,9 +374,10 @@ public class ReaderBlogActions {
             }
         };
 
-        // TODO: may be a leak here - http://stackoverflow.com/a/23549486/1673548
+        // TODO: this should be a HEAD request, but even though Volley supposedly supports HEAD
+        // using it results in "java.lang.IllegalStateException: Unknown method type"
         StringRequest request = new StringRequest(
-                Request.Method.HEAD,
+                Request.Method.GET,
                 blogUrl,
                 listener,
                 errorListener);

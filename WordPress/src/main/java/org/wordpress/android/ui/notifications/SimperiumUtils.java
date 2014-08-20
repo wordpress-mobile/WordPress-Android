@@ -55,8 +55,7 @@ public class SimperiumUtils {
                     public void onUserStatusChange(User.Status status) {
                         switch (status) {
                             case AUTHORIZED:
-                                mNotesBucket.start();
-                                mMetaBucket.start();
+                                startBuckets();
                                 break;
                             case NOT_AUTHORIZED:
                                 mNotesBucket.stop();
@@ -93,6 +92,28 @@ public class SimperiumUtils {
 
         // we'll assume the user is AUTHORIZED, and catch NOT_AUTHORIZED if something goes wrong.
         user.setStatus(User.Status.AUTHORIZED);
+    }
+
+    public static boolean isUserAuthorized() {
+        return mSimperium != null &&
+                mSimperium.getUser() != null &&
+                mSimperium.getUser().getStatus() == User.Status.AUTHORIZED;
+    }
+
+    public static boolean isUserNotAuthorized() {
+        return mSimperium != null &&
+                mSimperium.getUser() != null &&
+                mSimperium.getUser().getStatus() == User.Status.NOT_AUTHORIZED;
+    }
+
+    public static void startBuckets() {
+        if (mNotesBucket != null) {
+            mNotesBucket.start();
+        }
+
+        if (mMetaBucket != null) {
+            mMetaBucket.start();
+        }
     }
 
     public static void resetBucketsAndDeauthorize() {

@@ -101,12 +101,9 @@ public class NewNotificationsActivity extends WPActionBarActivity
         getWindow().setBackgroundDrawable(null);
 
         // Show an auth alert if we don't have an authorized Simperium user
-        if (SimperiumUtils.getSimperium() != null) {
-            User user = SimperiumUtils.getSimperium().getUser();
-            if (user != null && user.getStatus() == User.Status.NOT_AUTHORIZED) {
-                AuthenticationDialogUtils.showAuthErrorDialog(this, R.string.sign_in_again,
-                        R.string.simperium_connection_error);
-            }
+        if (SimperiumUtils.isUserNotAuthorized()) {
+            AuthenticationDialogUtils.showAuthErrorDialog(this, R.string.sign_in_again,
+                    R.string.simperium_connection_error);
         }
     }
 
@@ -124,6 +121,10 @@ public class NewNotificationsActivity extends WPActionBarActivity
         // Remove notification if it is showing when we resume this activity.
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.cancel(GCMIntentService.PUSH_NOTIFICATION_ID);
+
+        if (SimperiumUtils.isUserAuthorized()) {
+            SimperiumUtils.startBuckets();
+        }
     }
 
     @Override

@@ -132,7 +132,6 @@ public class ThemePreviewFragment extends Fragment {
 
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.getSettings().setUserAgentString(DESKTOP_UA);
-        mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         mWebView.setWebChromeClient(new WPWebChromeClient(getActivity(), (ProgressBar) view.findViewById(
@@ -142,6 +141,7 @@ public class ThemePreviewFragment extends Fragment {
 
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setSavePassword(false);
+        mWebView.getSettings().setJavaScriptEnabled(true);
 
         loadAuthenticatedUrl(previewURL);
 

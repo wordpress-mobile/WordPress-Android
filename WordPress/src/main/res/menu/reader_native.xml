@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_tags"
-        android:icon="@drawable/ic_action_labels"
+        android:icon="@drawable/ic_action_tag"
         android:showAsAction="always"
         android:title="@string/reader_menu_tags" />
 

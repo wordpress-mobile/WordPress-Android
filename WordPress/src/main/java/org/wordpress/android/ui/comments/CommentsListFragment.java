@@ -497,8 +497,9 @@ public class CommentsListFragment extends Fragment {
             }
             mPullToRefreshHelper.setRefreshing(false);
 
-            if (isCancelled())
+            if (isCancelled()) {
                 return;
+            }
 
             mCanLoadMoreComments = (comments != null && comments.size() > 0);
 
@@ -513,7 +514,7 @@ public class CommentsListFragment extends Fragment {
                         return;
                 }
             }
-            if (comments.size() > 0) {
+            if (!getActivity().isFinishing() && comments != null && comments.size() > 0) {
                 getCommentAdapter().loadComments();
             }
         }

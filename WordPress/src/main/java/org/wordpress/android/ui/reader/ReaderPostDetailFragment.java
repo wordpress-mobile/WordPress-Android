@@ -44,6 +44,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -104,7 +105,6 @@ public class ReaderPostDetailFragment extends Fragment
                                                        long postId,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
@@ -523,19 +523,34 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * called when user chooses to reblog the post
      */
-    private void doPostReblog(ImageView imgBtnReblog, ReaderPost post) {
-        if (!isAdded()) {
+    private void reblogPost() {
+        if (!isAdded() || !hasPost()) {
             return;
         }
 
-        if (post.isRebloggedByCurrentUser) {
+        if (mPost.isRebloggedByCurrentUser) {
             ToastUtils.showToast(getActivity(), R.string.reader_toast_err_already_reblogged);
             return;
         }
 
-        imgBtnReblog.setSelected(true);
+        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
         ReaderAnim.animateReblogButton(imgBtnReblog);
-        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), post, imgBtnReblog);
+        ReaderActivityLauncher.showReaderReblogForResult(getActivity(), mPost, imgBtnReblog);
+    }
+
+    /*
+     * called after the post has been reblogged
+     */
+    void doPostReblogged() {
+        if (!isAdded()) {
+            return;
+        }
+
+        // get the post again since reblog status has changed
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+
+        final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
+        imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
     }
 
     /*
@@ -1335,7 +1350,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnReblog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        doPostReblog(imgBtnReblog, mPost);
+                        reblogPost();
                     }
                 });
             } else {

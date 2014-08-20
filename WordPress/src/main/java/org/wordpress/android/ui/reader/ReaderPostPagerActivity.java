@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -20,9 +21,11 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -91,6 +94,7 @@ public class ReaderPostPagerActivity extends Activity
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                 super.onPageSelected(position);
                 onRequestFullScreen(false);
             }
@@ -149,6 +153,21 @@ public class ReaderPostPagerActivity extends Activity
             fragment.hideAddCommentBox();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        boolean isResultOK = (resultCode == Activity.RESULT_OK);
+        if (isResultOK && requestCode == ReaderConstants.INTENT_READER_REBLOG) {
+            // update the reblog status in the detail view if the user returned
+            // from the reblog activity after successfully reblogging
+            ReaderPostDetailFragment fragment = getActiveDetailFragment();
+            if (fragment != null) {
+                fragment.doPostReblogged();
+            }
         }
     }
 

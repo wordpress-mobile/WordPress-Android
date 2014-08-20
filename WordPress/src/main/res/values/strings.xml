@@ -332,6 +332,7 @@
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
     <string name="stats_totals_views_per_visitor">Views per Visitor</string>
+    <string name="stats_tooltip_week_of">Week of</string>
 
     <!-- stats: labels for the views -->
     <string name="stats_view_visitors_and_views">Visitors and Views</string>
@@ -686,6 +687,7 @@
     <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
+    <string name="fragment_tag_reader_task" translatable="false">fragment_tag_reader_task</string>
     <string name="dual_pane_mode" translatable="false">dual_pane_mode</string>
 
     <!-- NUX strings -->
