@@ -19,6 +19,10 @@ import org.wordpress.android.R;
 
 public class ReaderAnim {
 
+    public static interface AnimationEndListener {
+        public void onAnimationEnd();
+    }
+
     public static enum Duration {
         SHORT,
         MEDIUM,
@@ -116,7 +120,8 @@ public class ReaderAnim {
 
     public static void scaleOut(final View target,
                                 final int endVisibility,
-                                Duration duration) {
+                                Duration duration,
+                                final AnimationEndListener endListener) {
         if (target == null || duration == null) {
             return;
         }
@@ -132,6 +137,9 @@ public class ReaderAnim {
             @Override
             public void onAnimationEnd(Animator animation) {
                 target.setVisibility(endVisibility);
+                if (endListener != null) {
+                    endListener.onAnimationEnd();
+                }
             }
         });
 

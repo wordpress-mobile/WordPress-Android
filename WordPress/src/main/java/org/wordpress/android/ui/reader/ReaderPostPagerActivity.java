@@ -33,10 +33,13 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.ReaderAnim.Duration;
+import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -378,6 +381,11 @@ public class ReaderPostPagerActivity extends Activity
             return;
         }
 
+        Fragment fragment = getPagerAdapter().getActiveFragment();
+        if (fragment == null) {
+            return;
+        }
+
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
         ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
@@ -392,47 +400,50 @@ public class ReaderPostPagerActivity extends Activity
                 }
             }
         };
-        final ReaderBlogActions.BlockedBlogResult blockResult =
-                ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
+        final BlockedBlogResult blockResult = ReaderBlogActions.blockBlogFromReader(blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
-        // show the undo bar enabling the user to undo the block
+        // animate out the active fragment
+        AnimationEndListener animEndListener = new AnimationEndListener() {
+            @Override
+            public void onAnimationEnd() {
+                blockBlogForPostCompleted(blogId, postId, blockResult);
+            }
+        };
+        ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, Duration.SHORT, animEndListener);
+    }
+
+    /*
+     * called after successfully blocking a blog and animating out the active fragment
+     */
+    private void blockBlogForPostCompleted(final long blogId,
+                                           final long postId,
+                                           final BlockedBlogResult blockResult) {
+        if (isFinishing()) {
+            return;
+        }
+
+        // show the undo bar - on undo we restore the deleted posts, and reselect the
+        // one the blog was blocked from
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                // restore deleted posts, and reselect the one the blog was blocked from
                 ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 loadPosts(blogId, postId, false);
             }
         };
-        new UndoBarController.UndoBar(this)
+        new UndoBarController.UndoBar(ReaderPostPagerActivity.this)
                 .message(getString(R.string.reader_toast_blog_blocked))
                 .listener(undoListener)
                 .translucent(true)
                 .show();
 
-        // animate out the active fragment
-        ReaderAnim.Duration animDuration = ReaderAnim.Duration.SHORT;
-        Fragment fragment = getActiveDetailFragment();
-        if (fragment != null && fragment.getView() != null) {
-            ReaderAnim.scaleOut(fragment.getView(), View.INVISIBLE, animDuration);
-        }
-
-        // reload the adapter after a delay slightly larger than the animation duration
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isFinishing()) {
-                    // when posts are reloaded, ensure the ViewPager moves to the best
-                    // post that isn't in the blocked blog
-                    int position = mViewPager.getCurrentItem();
-                    ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
-                    long newBlogId = (newId != null ? newId.getBlogId() : 0);
-                    long newPostId = (newId != null ? newId.getPostId() : 0);
-                    loadPosts(newBlogId, newPostId, false);
-                }
-            }
-        }, animDuration.toMillis(this) + 100);
+        // reload the adapter and move to the best post not in the blocked blog
+        int position = mViewPager.getCurrentItem();
+        ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
+        long newBlogId = (newId != null ? newId.getBlogId() : 0);
+        long newPostId = (newId != null ? newId.getPostId() : 0);
+        loadPosts(newBlogId, newPostId, false);
     }
 
     private void hideUndoBar() {
