@@ -769,12 +769,13 @@ public class PostUploadService extends Service {
                 xmlrpcClient.setOnBytesUploadedListener(new XMLRPCClient.OnBytesUploadedListener() {
                     @Override
                     public void onBytesUploaded(long uploadedBytes) {
+                        if (tempFile.length() == 0) return;
+
                         float percentage = (uploadedBytes * 100) / tempFile.length();
                         mPostUploadNotifier.updateNotificationProgress(percentage);
                     }
                 });
             }
-
 
             try {
                 return mClient.call("wp.uploadFile", params, tempFile);
@@ -818,7 +819,8 @@ public class PostUploadService extends Service {
 
             mNotificationBuilder =
                     new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(R.drawable.notification_icon);
+                            .setSmallIcon(android.R.drawable.stat_sys_upload)
+                            .setOngoing(true);
 
             Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
