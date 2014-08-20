@@ -191,6 +191,7 @@ public class StatsUtils {
                 fileContent.append(new String(buffer, 0, bytesRead, "ISO-8859-1"));
                 bytesRead = fis.read(buffer);
             }
+            fis.close();
 
             Gson gson = new Gson();
             stat = gson.fromJson(fileContent.toString(), StatsSummary.class);
