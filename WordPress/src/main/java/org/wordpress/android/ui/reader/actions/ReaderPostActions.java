@@ -16,6 +16,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -191,7 +192,7 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                final boolean hasChanges =
+                boolean hasChanges =
                          ( updatedPost.numReplies != originalPost.numReplies
                         || updatedPost.numLikes != originalPost.numLikes
                         || updatedPost.isCommentsOpen != originalPost.isCommentsOpen
@@ -224,12 +225,16 @@ public class ReaderPostActions {
 
                 // always update liking users regardless of whether changes were detected - this
                 // ensures that the liking avatars are immediately available to post detail
-                handlePostLikes(updatedPost, jsonObject);
+                if (handlePostLikes(updatedPost, jsonObject)) {
+                    hasChanges = true;
+                }
 
                 if (resultListener != null) {
+                    final ReaderActions.UpdateResult result =
+                            (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
-                            resultListener.onUpdateResult(hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
                         }
                     });
                 }
@@ -239,21 +244,29 @@ public class ReaderPostActions {
 
     /*
      * updates local liking users based on the "likes" meta section of the post's json - requires
-     * using the /sites/ endpoint with ?meta=likes
+     * using the /sites/ endpoint with ?meta=likes - returns true if likes have changed
      */
-    private static void handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
+    private static boolean handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
         if (post == null || jsonPost == null) {
-            return;
+            return false;
         }
 
         JSONObject jsonLikes = JSONUtil.getJSONChild(jsonPost, "meta/data/likes");
         if (jsonLikes == null) {
-            return;
+            return false;
         }
 
         ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
+        ReaderUserIdList likingUserIds = likingUsers.getUserIds();
+
+        ReaderUserIdList existingIds = ReaderLikeTable.getLikesForPost(post);
+        if (likingUserIds.isSameList(existingIds)) {
+            return false;
+        }
+
         ReaderUserTable.addOrUpdateUsers(likingUsers);
-        ReaderLikeTable.setLikesForPost(post, likingUsers.getUserIds());
+        ReaderLikeTable.setLikesForPost(post, likingUserIds);
+        return true;
     }
 
     /**

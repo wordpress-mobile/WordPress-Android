@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -575,16 +576,12 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final int numLikesBefore = mPost.numLikes;
-
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result != ReaderActions.UpdateResult.FAILED) {
+                if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (numLikesBefore != mPost.numLikes) {
-                        refreshLikes();
-                    }
+                    refreshLikes();
                     updateComments(false);
                 }
             }
