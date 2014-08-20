@@ -662,7 +662,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
-        txtLikeCount.setText(ReaderUtils.getLikeCountToText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
+        txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
 
         final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
         imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
