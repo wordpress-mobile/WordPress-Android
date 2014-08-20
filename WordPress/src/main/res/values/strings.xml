@@ -77,6 +77,7 @@
     <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
+    <string name="posting_post">Posting \"%s\"</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -256,6 +257,8 @@
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
+    <string name="sending_content">Uploading %s content</string>
+    <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>
