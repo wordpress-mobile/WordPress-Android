@@ -189,6 +189,7 @@ public class StatsService extends Service {
                 String todayStats = StatsUtils.getCurrentDate();
                 String yesterdayStats = StatsUtils.getYesterdaysDate();
                 // Calculate the correct today and yesterday values by using the blog time_zone offset
+                // fallback to device settings if option is null
                 if (mServiceBlogTimezone != null) {
                     todayStats = StatsUtils.getCurrentDateTZ(mServiceBlogTimezone);
                     yesterdayStats = StatsUtils.getYesterdaysDateTZ(mServiceBlogTimezone);

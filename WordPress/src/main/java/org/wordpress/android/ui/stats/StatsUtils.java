@@ -95,7 +95,6 @@ public class StatsUtils {
                 gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOption));
             }
         }
-        AppLog.e(T.STATS, "OFFSET - " + gmtDf.format(date));
         return gmtDf.format(date);
     }
 
