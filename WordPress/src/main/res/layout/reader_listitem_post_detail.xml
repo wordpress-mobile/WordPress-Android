@@ -113,7 +113,7 @@
             android:textSize="@dimen/text_sz_large"
             tools:text="text_like_count" />
 
-        <!-- liking avatars are inserted into this LinearLayout at runtime -->
+        <!-- liking avatars are inserted into this view at runtime -->
         <org.wordpress.android.ui.reader.ReaderLikingUsersView
             android:id="@+id/layout_liking_users_view"
             android:layout_width="match_parent"

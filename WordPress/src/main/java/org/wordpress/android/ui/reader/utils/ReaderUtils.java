@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -172,5 +173,22 @@ public class ReaderUtils {
         }
 
         return sanitized.trim();
+    }
+
+    /*
+     * returns the text to use for a like label ("Liked by 3 people", etc.)
+     */
+    public static String getLikeCountToText(Context context, int numLikes, boolean isLikedByCurrentUser) {
+        if (numLikes == 0) {
+            return "";
+        } else if (isLikedByCurrentUser) {
+            if (numLikes == 1) {
+                return context.getString(R.string.reader_likes_only_you);
+            } else {
+                return (numLikes == 2 ? context.getString(R.string.reader_likes_you_and_one) : context.getString(R.string.reader_likes_you_and_multi, numLikes - 1));
+            }
+        } else {
+            return (numLikes == 1 ? context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+        }
     }
 }
