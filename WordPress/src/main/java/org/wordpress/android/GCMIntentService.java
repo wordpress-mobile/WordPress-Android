@@ -48,9 +48,6 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
 
-    // 64dp - 8dp for padding
-    private static int NOTIFICATION_ICON_SIZE = 56;
-
     @Override
     protected String[] getSenderIds(Context context) {
         String[] senderIds = new String[1];
@@ -124,8 +121,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (iconUrl != null) {
             try {
                 iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int iconSize = DisplayUtils.dpToPx(context, NOTIFICATION_ICON_SIZE);
-                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, iconSize, iconSize);
+                int largeIconSize = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
                 largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
             } catch (UnsupportedEncodingException e) {
                 AppLog.e(T.NOTIFS, e);
