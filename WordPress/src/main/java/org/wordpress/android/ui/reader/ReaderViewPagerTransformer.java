@@ -27,8 +27,8 @@ class ReaderViewPagerTransformer implements ViewPager.PageTransformer {
     private static final float MIN_SCALE_DEPTH = 0.75f;
     private static final float MIN_SCALE_ZOOM = 0.85f;
     private static final float MIN_ALPHA_ZOOM = 0.5f;
-    private static final float SCALE_FACTOR_SLIDE = 0.95f;
-    private static final float MIN_ALPHA_SLIDE = 0.5f;
+    private static final float SCALE_FACTOR_SLIDE = 0.85f;
+    private static final float MIN_ALPHA_SLIDE = 0.35f;
 
     public void transformPage(View page, float position) {
         final float alpha;
