@@ -1,8 +1,5 @@
 package org.wordpress.android.util;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.SystemClock;
 
 import org.wordpress.android.util.AppLog.T;
@@ -75,17 +72,6 @@ public class ProfilingUtils {
             AppLog.d(T.PROFILING, mLabel + ":      " + (now - prev) + " ms, " + splitLabel);
         }
         AppLog.d(T.PROFILING, mLabel + ": end, " + (now - first) + " ms");
-    }
-
-    // Returns app version name String
-    public static String getVersionName(Context context) {
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
-            return pi.versionName == null ? "" : pi.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            return "";
-        }
     }
 }
 
