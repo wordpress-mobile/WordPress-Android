@@ -149,16 +149,7 @@ public class StatsService extends Service {
             String timezone = null;
             if (mServiceBlogId != null) {
                 Blog blog = WordPress.wpDB.getBlogForDotComBlogId(value);
-                JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
-                if (jsonOptions != null && jsonOptions.has("time_zone")) {
-                    try {
-                        timezone = jsonOptions.getJSONObject("time_zone").getString("value");
-                    } catch (JSONException e) {
-                        AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
-                    }
-                } else {
-                    AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
-                }
+                timezone = StatsUtils.getBlogTimezone(blog);
             }
             if (timezone != null) {
                 mServiceBlogTimezone = timezone;

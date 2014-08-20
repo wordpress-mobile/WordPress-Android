@@ -164,9 +164,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             return;
         }
 
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getCurrentBlog());
+        long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
+
         if (stats != null
                 && stats.getDay() != null
-                && StatsUtils.toMs(stats.getDay()) != StatsUtils.getCurrentDateMs()
+                && StatsUtils.toMs(stats.getDay()) != currentDate
                 ) {
             mVisitorsTodayLabel.setText(stats.getDay());
         } else {

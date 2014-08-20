@@ -80,6 +80,21 @@ public class StatsUtils {
         return toMs(getCurrentDate());
     }
 
+    public static String getBlogTimezone(Blog blog) {
+        JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
+        String timezone = null;
+        if (jsonOptions != null && jsonOptions.has("time_zone")) {
+            try {
+                timezone = jsonOptions.getJSONObject("time_zone").getString("value");
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
+            }
+        } else {
+            AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
+        }
+        return timezone;
+    }
+
     public static String getCurrentDateTZ(String blogTimeZoneOption) {
         Date date = new Date();
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
@@ -103,6 +118,10 @@ public class StatsUtils {
         long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
         return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
+    }
+
+    public static long getCurrentDateMsTZ(String blogTimeZoneOption) {
+        return toMs(getCurrentDateTZ(blogTimeZoneOption));
     }
 
     public static String parseDate(String timestamp, String fromFormat, String toFormat) {
