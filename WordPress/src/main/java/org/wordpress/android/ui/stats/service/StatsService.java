@@ -156,6 +156,8 @@ public class StatsService extends Service {
                     } catch (JSONException e) {
                         AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
                     }
+                } else {
+                    AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
                 }
             }
             if (timezone != null) {
