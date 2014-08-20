@@ -137,7 +137,7 @@ public class Post implements Serializable {
         try {
             jArray = new JSONArray(customFields);
         } catch (JSONException e) {
-            AppLog.e(T.POSTS, e);
+            AppLog.e(T.POSTS, "No custom fields found for post.");
         }
         return jArray;
     }
