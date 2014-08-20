@@ -80,27 +80,27 @@ public class StatsUtils {
         return toMs(getCurrentDate());
     }
 
-    public static String getCurrentDateTZ(String blogTimeZoneOptione) {
+    public static String getCurrentDateTZ(String blogTimeZoneOption) {
         Date date = new Date();
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (blogTimeZoneOptione.equalsIgnoreCase("0")) {
+        if (blogTimeZoneOption.equalsIgnoreCase("0")) {
             gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        } else if (blogTimeZoneOptione.startsWith("-")) {
-            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOptione));
+        } else if (blogTimeZoneOption.startsWith("-")) {
+            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
         } else {
-            if (blogTimeZoneOptione.startsWith("+")) {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOptione));
+            if (blogTimeZoneOption.startsWith("+")) {
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
             } else {
-                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOptione));
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOption));
             }
         }
         AppLog.e(T.STATS, "OFFSET - " + gmtDf.format(date));
         return gmtDf.format(date);
     }
 
-    public static String getYesterdaysDateTZ(String blogTimeZoneOptione) {
-        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOptione);
+    public static String getYesterdaysDateTZ(String blogTimeZoneOption) {
+        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOption);
         long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
         return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
