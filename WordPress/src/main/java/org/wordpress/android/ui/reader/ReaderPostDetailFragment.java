@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -64,6 +65,7 @@ import java.util.ArrayList;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener,
+                   AbsListView.OnScrollListener,
                    ReaderCustomViewListener,
                    ReaderWebViewUrlClickListener {
 
@@ -88,6 +90,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
+    private int mPrevScrollState = SCROLL_STATE_IDLE;
 
     private long mTopMostCommentId;
     private int mTopMostCommentTop;
@@ -224,6 +227,7 @@ public class ReaderPostDetailFragment extends Fragment
         mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
+            mListView.setOnScrollListener(this);
             ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(container.getContext()));
         }
 
@@ -294,6 +298,24 @@ public class ReaderPostDetailFragment extends Fragment
             // enable full screen when scrolling down
             setIsFullScreen(true);
         }
+    }
+
+    /*
+     * detect when listView fling completes so we can return from full screen if necessary
+     */
+    @Override
+    public void onScrollStateChanged(AbsListView absListView, int scrollState) {
+        if (scrollState == SCROLL_STATE_IDLE && mPrevScrollState == SCROLL_STATE_FLING) {
+            if (isFullScreen() && !mListView.canScrollDown()) {
+                setIsFullScreen(false);
+            }
+        }
+        mPrevScrollState = scrollState;
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        // nop
     }
 
     private boolean hasPost() {
