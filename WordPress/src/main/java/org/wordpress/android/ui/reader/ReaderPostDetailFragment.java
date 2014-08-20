@@ -82,6 +82,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private ReaderWebView mReaderWebView;
+    private ReaderLikingUsersView mLikingUsersView;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
@@ -242,6 +243,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
+        mLikingUsersView = (ReaderLikingUsersView) mLayoutLikes.findViewById(R.id.layout_liking_users_view);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -736,42 +738,11 @@ public class ReaderPostDetailFragment extends Fragment
                             ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
                         }
 
-                        showLikingAvatars(avatars);
+                        mLikingUsersView.showLikingAvatars(avatars);
                     }
                 });
             }
         }.start();
-    }
-
-    /*
-     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
-     * display (never called when there are no likes) - note that the passed list of avatar urls
-     * has already been Photon-ized, so there's no need to do that here
-     */
-    private void showLikingAvatars(final ArrayList<String> avatarUrls) {
-        ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // remove excess existing views
-        int numExistingViews = layoutLikingAvatars.getChildCount();
-        if (numExistingViews > avatarUrls.size()) {
-            int numToRemove = numExistingViews - avatarUrls.size();
-            layoutLikingAvatars.removeViews(numExistingViews - numToRemove, numToRemove);
-        }
-
-        int index = 0;
-        for (String url : avatarUrls) {
-            WPNetworkImageView imgAvatar;
-            // reuse existing view when possible, otherwise inflate a new one
-            if (index < numExistingViews) {
-                imgAvatar = (WPNetworkImageView) layoutLikingAvatars.getChildAt(index);
-            } else {
-                imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                layoutLikingAvatars.addView(imgAvatar);
-            }
-            imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
-            index++;
-        }
     }
 
     /*
