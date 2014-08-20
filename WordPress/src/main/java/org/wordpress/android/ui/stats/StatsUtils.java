@@ -1,18 +1,15 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.view.Display;
 
 import com.google.gson.Gson;
 
@@ -40,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * A utility class to help with date parsing and saving summaries in stats
@@ -80,6 +78,32 @@ public class StatsUtils {
 
     public static long getCurrentDateMs() {
         return toMs(getCurrentDate());
+    }
+
+    public static String getCurrentDateTZ(String blogTimeZoneOptione) {
+        Date date = new Date();
+        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+
+        if (blogTimeZoneOptione.equalsIgnoreCase("0")) {
+            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        } else if (blogTimeZoneOptione.startsWith("-")) {
+            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOptione));
+        } else {
+            if (blogTimeZoneOptione.startsWith("+")) {
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOptione));
+            } else {
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOptione));
+            }
+        }
+        AppLog.e(T.STATS, "OFFSET - " + gmtDf.format(date));
+        return gmtDf.format(date);
+    }
+
+    public static String getYesterdaysDateTZ(String blogTimeZoneOptione) {
+        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOptione);
+        long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
+        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+        return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
     }
 
     public static String parseDate(String timestamp, String fromFormat, String toFormat) {
