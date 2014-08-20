@@ -76,6 +76,8 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1px"
-        android:background="@drawable/list_divider_full_width" />
+        android:background="@drawable/list_divider_full_width"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_large" />
 
 </LinearLayout>
