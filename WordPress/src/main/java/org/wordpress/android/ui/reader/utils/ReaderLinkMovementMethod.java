@@ -51,6 +51,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
                 ReaderActivityLauncher.showReaderPhotoViewer(
                         textView.getContext(),
                         imageUrl,
+                        null,
                         textView,
                         (int) event.getX(),
                         (int) event.getY());

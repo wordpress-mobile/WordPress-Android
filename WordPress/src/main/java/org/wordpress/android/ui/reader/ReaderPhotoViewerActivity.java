@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner.ImageList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -26,6 +28,8 @@ public class ReaderPhotoViewerActivity extends Activity {
 
     private String mImageUrl;
     private boolean mIsPrivate;
+    private String mContent;
+    private ImageList mImageList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,22 +40,56 @@ public class ReaderPhotoViewerActivity extends Activity {
         if (savedInstanceState != null) {
             mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+            mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
         } else if (getIntent() != null) {
             mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
+            mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
-        loadImage(mImageUrl);
+        loadImageList();
+    }
+
+    private void loadImageList() {
+        new Thread() {
+            @Override
+            public void run() {
+                // parse list of images from content that was (optionally) passed to
+                // this activity, and make sure the list includes the passed url
+                final ImageList imageList = new ReaderImageScanner(mContent).getImageList();
+                if (!imageList.hasImageUrl(mImageUrl)) {
+                    imageList.addImageUrl(mImageUrl);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isFinishing()) {
+                            setImageList(imageList);
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void setImageList(ImageList imageList) {
+        if (imageList != null) {
+            mImageList = (ImageList) imageList.clone();
+        } else {
+            mImageList = new ImageList();
+        }
+        showImage(mImageUrl);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
+        outState.putString(ReaderConstants.ARG_CONTENT, mContent);
         super.onSaveInstanceState(outState);
     }
 
-    private void loadImage(String imageUrl) {
+    private void showImage(String imageUrl) {
         if (TextUtils.isEmpty(imageUrl)) {
             handleImageLoadFailure();
             return;

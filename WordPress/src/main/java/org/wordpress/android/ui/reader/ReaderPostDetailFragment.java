@@ -1028,7 +1028,14 @@ public class ReaderPostDetailFragment extends Fragment
             imageUrl = UrlUtils.makeHttps(imageUrl);
         }
 
-        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl, source, startX, startY);
+        ReaderActivityLauncher.showReaderPhotoViewer(
+                getActivity(),
+                imageUrl,
+                mPost.getText(),
+                source,
+                startX,
+                startY);
+
         return true;
     }
 

@@ -145,11 +145,14 @@ public class ReaderActivityLauncher {
     }
 
     /*
-     * show the passed imageUrl in the fullscreen photo activity
+     * show the passed imageUrl in the fullscreen photo activity - optional content is the
+     * content of the post the image is in, used by the activity to show all images in
+     * the post
      */
     public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
-                                             View source,
+                                             String content,
+                                             View sourceView,
                                              int startX,
                                              int startY) {
         if (context == null || TextUtils.isEmpty(imageUrl)) {
@@ -158,13 +161,16 @@ public class ReaderActivityLauncher {
 
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
+        if (!TextUtils.isEmpty(content)) {
+            intent.putExtra(ReaderConstants.ARG_CONTENT, content);
+        }
 
         if (context instanceof Activity) {
             // use built-in scale animation on jb+, fall back to our own animation on pre-jb
             Activity activity = (Activity) context;
-            if (source != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (sourceView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 ActivityOptionsCompat options =
-                        ActivityOptionsCompat.makeScaleUpAnimation(source, startX, startY, 0, 0);
+                        ActivityOptionsCompat.makeScaleUpAnimation(sourceView, startX, startY, 0, 0);
                 ActivityCompat.startActivity(activity, intent, options.toBundle());
             } else {
                 activity.startActivity(intent);
