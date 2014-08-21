@@ -20,7 +20,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -162,13 +162,9 @@ public class ShareIntentReceiverActivity extends Activity implements OnItemSelec
             mAccountIDs = new int[accounts.size()];
             Blog blog;
             for (int i = 0; i < accounts.size(); i++) {
-                Map<String, Object> curHash = accounts.get(i);
-                try {
-                    blogNames[i] = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                } catch (Exception e) {
-                    blogNames[i] = curHash.get("url").toString();
-                }
-                mAccountIDs[i] = (Integer) curHash.get("id");
+                Map<String, Object> account = accounts.get(i);
+                blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
+                mAccountIDs[i] = (Integer) account.get("id");
                 blog = WordPress.wpDB.instantiateBlogByLocalId(mAccountIDs[i]);
                 if (blog == null) {
                     ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
