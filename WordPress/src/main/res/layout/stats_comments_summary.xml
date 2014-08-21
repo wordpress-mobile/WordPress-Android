@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_large" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,14 +56,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_comments_summary_total_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,13 +89,13 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:padding="@dimen/margin_extra_large" >
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_comments_summary_most_active_day_text"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/StatsHeaderTotalsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -110,13 +110,13 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:padding="@dimen/margin_extra_large" >
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_comments_summary_most_active_time_text"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/StatsHeaderTotalsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -131,13 +131,13 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:padding="@dimen/margin_extra_large" >
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_comments_summary_most_commented_text"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/StatsHeaderTotalsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                 android:text="@string/stats_comments_summary_label_most_commented" />
         </RelativeLayout>
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             style="@style/StatsHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

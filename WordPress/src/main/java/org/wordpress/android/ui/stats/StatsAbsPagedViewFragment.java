@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -91,6 +92,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                                                                          RadioGroup.LayoutParams.WRAP_CONTENT);
+            Typeface typeface = Typeface.createFromAsset(getActivity().getApplicationContext().getAssets(), "fonts/OpenSans-Regular.ttf");
+            rb.setTypeface(typeface);
+
             params.setMargins(0, 0, dp8, 0);
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
