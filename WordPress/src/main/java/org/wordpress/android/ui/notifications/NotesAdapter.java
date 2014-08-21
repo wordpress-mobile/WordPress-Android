@@ -19,7 +19,7 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-class TestNotesAdapter extends CursorAdapter {
+class NotesAdapter extends CursorAdapter {
 
     final private int mAvatarSz;
     private final Query mQuery;
@@ -28,7 +28,7 @@ class TestNotesAdapter extends CursorAdapter {
     private int mReadBackgroundResId;
     private int mUnreadBackgroundResId;
 
-    TestNotesAdapter(Context context, Bucket<Note> bucket) {
+    NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
 
         // build a query that sorts by timestamp descending

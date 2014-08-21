@@ -21,7 +21,7 @@ import com.android.volley.toolbox.ImageLoader;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPTextView;

@@ -10,13 +10,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -46,7 +44,7 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.notifications.NewNotificationsActivity;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -59,7 +57,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -1059,13 +1057,13 @@ public abstract class WPActionBarActivity extends Activity {
         }
         @Override
         public Boolean isSelected(){
-            return WPActionBarActivity.this instanceof NewNotificationsActivity;
+            return WPActionBarActivity.this instanceof NotificationsActivity;
         }
         @Override
         public void onSelectItem(){
-            if (!(WPActionBarActivity.this instanceof NewNotificationsActivity))
+            if (!(WPActionBarActivity.this instanceof NotificationsActivity))
                 mShouldFinish = true;
-            Intent intent = new Intent(WPActionBarActivity.this, NewNotificationsActivity.class);
+            Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -1108,7 +1106,7 @@ public abstract class WPActionBarActivity extends Activity {
                 AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this);
             }
             if (intent.getAction().equals(SimperiumUtils.BROADCAST_ACTION_SIMPERIUM_NOT_AUTHORIZED)
-                    && WPActionBarActivity.this instanceof NewNotificationsActivity) {
+                    && WPActionBarActivity.this instanceof NotificationsActivity) {
                 AuthenticationDialogUtils.showAuthErrorDialog(WPActionBarActivity.this, R.string.sign_in_again,
                         R.string.simperium_connection_error);
             }

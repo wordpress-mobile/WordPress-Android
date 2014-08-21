@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.notifications;
+package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,7 +10,6 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 
@@ -25,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
@@ -281,7 +281,7 @@ public class NotificationUtils {
         return spannableStringBuilder;
     }
 
-    public static void handleNoteBlockSpanClick(NewNotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
+    public static void handleNoteBlockSpanClick(NotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
             activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());

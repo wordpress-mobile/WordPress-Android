@@ -11,7 +11,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 
 public class OAuthAuthenticator implements Authenticator {
     @Override

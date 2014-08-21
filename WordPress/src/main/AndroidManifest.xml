@@ -240,7 +240,7 @@
 
         <!-- Notifications activities -->
         <activity
-            android:name=".ui.notifications.NewNotificationsActivity"
+            android:name=".ui.notifications.NotificationsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/CalypsoTheme" />
 

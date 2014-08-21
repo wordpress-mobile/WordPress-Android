@@ -19,15 +19,16 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-public class NewNotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
+public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
     private PullToRefreshHelper mFauxPullToRefreshHelper;
-    private TestNotesAdapter mNotesAdapter;
+    private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private boolean mShouldLoadFirstNote;
 
@@ -61,7 +62,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         }
 
         if (mBucket != null && mNotesAdapter == null) {
-            mNotesAdapter = new TestNotesAdapter(getActivity(), mBucket);
+            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
             setListAdapter(mNotesAdapter);
         } else if (mBucket == null) {
             ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
@@ -138,7 +139,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
             float yOffset = -v.getY();
             v.animate().translationY(yOffset)
                     .alpha(0.0f)
-                    .setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+                    .setDuration(NotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
         }
 
         Note note = mNotesAdapter.getNote(position);
@@ -251,7 +252,7 @@ public class NewNotificationsListFragment extends ListFragment implements Bucket
         }
 
         ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f)
-                .setDuration(NewNotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
+                .setDuration(NotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
 
         return exitAnimation;
     }

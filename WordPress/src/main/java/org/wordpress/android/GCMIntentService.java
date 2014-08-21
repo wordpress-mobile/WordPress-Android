@@ -18,12 +18,12 @@ import android.text.TextUtils;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.wordpress.android.ui.notifications.NewNotificationsActivity;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
-import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.utils.NotificationUtils;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -140,7 +140,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
-        resultIntent.putExtra(NewNotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+        resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (mActiveNotificationsMap.size() <= 1) {
             mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
@@ -148,7 +148,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                                                            .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 
             if (note_id != null) {
-                resultIntent.putExtra(NewNotificationsActivity.NOTE_ID_EXTRA, note_id);
+                resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
             }
 
             // Add some actions if this is a comment notification
@@ -160,10 +160,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 commentReplyIntent.setAction("android.intent.action.MAIN");
                 commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
                 commentReplyIntent.addCategory("comment-reply");
-                commentReplyIntent.putExtra(NewNotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
-                commentReplyIntent.putExtra(NewNotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
+                commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
+                commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
                 if (note_id != null) {
-                    commentReplyIntent.putExtra(NewNotificationsActivity.NOTE_ID_EXTRA, note_id);
+                    commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
                         commentReplyIntent,
@@ -277,7 +277,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     public void broadcastNewNotification(Context context) {
         Intent msgIntent = new Intent();
-        msgIntent.setAction(NewNotificationsActivity.NOTIFICATION_ACTION);
+        msgIntent.setAction(NotificationsActivity.NOTIFICATION_ACTION);
         LocalBroadcastManager.getInstance(context).sendBroadcast(msgIntent);
     }
 

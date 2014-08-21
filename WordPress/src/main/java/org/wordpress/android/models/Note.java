@@ -4,7 +4,6 @@
 package org.wordpress.android.models;
 
 import android.text.Spannable;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -14,18 +13,13 @@ import com.simperium.client.Syncable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.ui.notifications.utils.NotificationUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Note extends Syncable {
     private static final String TAG = "NoteModel";

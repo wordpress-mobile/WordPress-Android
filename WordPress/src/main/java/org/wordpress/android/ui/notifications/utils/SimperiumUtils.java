@@ -2,7 +2,7 @@
  * Simperium integration with WordPress.com
  * Currently used with Notifications
  */
-package org.wordpress.android.ui.notifications;
+package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
 import android.content.Intent;

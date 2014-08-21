@@ -16,7 +16,6 @@ import android.widget.AbsListView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
-import com.simperium.client.User;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
@@ -27,6 +26,7 @@ import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
@@ -35,7 +35,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DisplayUtils;
 
-public class NewNotificationsActivity extends WPActionBarActivity
+public class NotificationsActivity extends WPActionBarActivity
         implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
         NotificationFragment.OnCommentClickListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
@@ -47,7 +47,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
     private static final String TAG_LIST_VIEW = "listView";
     private static final String TAG_DETAIL_VIEW = "detailView";
 
-    private NewNotificationsListFragment mNotesList;
+    private NotificationsListFragment mNotesList;
     private Fragment mDetailFragment;
     private String mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
@@ -63,9 +63,9 @@ public class NewNotificationsActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         if (fm.findFragmentByTag(TAG_LIST_VIEW) != null) {
-            mNotesList = (NewNotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
+            mNotesList = (NotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
         } else {
-            mNotesList = new NewNotificationsListFragment();
+            mNotesList = new NotificationsListFragment();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
             fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
             fragmentTransaction.commit();
@@ -371,7 +371,7 @@ public class NewNotificationsActivity extends WPActionBarActivity
         startActivity(intent);
     }
 
-    private class NoteClickListener implements NewNotificationsListFragment.OnNoteClickListener {
+    private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note, float yPosition) {
             if (note == null)

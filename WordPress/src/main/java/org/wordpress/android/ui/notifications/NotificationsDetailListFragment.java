@@ -18,11 +18,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.notifications.blocks.FormattedCommentNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
+import org.wordpress.android.ui.notifications.utils.NotificationUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.ToastUtils;
 
@@ -124,7 +124,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!hasActivity()) return;
 
-            NotificationUtils.handleNoteBlockSpanClick((NewNotificationsActivity)getActivity(), clickedSpan);
+            NotificationUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
         }
     };
 
@@ -142,7 +142,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onGravatarClicked(long siteId, long userId) {
             if (!hasActivity()) return;
 
-            NewNotificationsActivity notificationsActivity = (NewNotificationsActivity)getActivity();
+            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
             notificationsActivity.showBlogPreviewForSiteId(siteId, null);
         }
     };
