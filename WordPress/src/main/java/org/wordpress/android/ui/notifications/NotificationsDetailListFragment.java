@@ -24,7 +24,6 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationUtils;
 import org.wordpress.android.util.JSONUtil;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,15 +127,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
-    private UserNoteBlock.OnSiteFollowListener mOnSiteFollowListener = new UserNoteBlock.OnSiteFollowListener() {
-        @Override
-        public void onSiteFollow(boolean success) {
-            if (hasActivity() && !success) {
-                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_follow_blog);
-            }
-        }
-    };
-
     private UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
         public void onGravatarClicked(long siteId, long userId) {
@@ -167,7 +157,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock = new UserNoteBlock(
                                     noteObject,
                                     mOnNoteBlockTextClickListener,
-                                    mOnSiteFollowListener,
                                     mOnGravatarClickedListener
                             );
                         } else {

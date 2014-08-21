@@ -26,15 +26,9 @@ import org.wordpress.android.widgets.WPTextView;
  * Will display an action button if available (e.g. follow button)
  */
 public class UserNoteBlock extends NoteBlock {
-    private boolean mIsFollowing;
-    private OnSiteFollowListener mSiteFollowListener;
     private OnGravatarClickedListener mGravatarClickedListener;
 
     private static int GRAVATAR_ANIMATION_DURATION = 150;
-
-    public interface OnSiteFollowListener {
-        public void onSiteFollow(boolean success);
-    }
 
     public interface OnGravatarClickedListener {
         public void onGravatarClicked(long userId, long siteId);
@@ -43,10 +37,8 @@ public class UserNoteBlock extends NoteBlock {
     public UserNoteBlock(
             JSONObject noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-            OnSiteFollowListener onSiteFollowListener,
             OnGravatarClickedListener onGravatarClickedListener) {
         super(noteObject, onNoteBlockTextClickListener);
-        mSiteFollowListener = onSiteFollowListener;
         mGravatarClickedListener = onGravatarClickedListener;
     }
 
@@ -82,24 +74,7 @@ public class UserNoteBlock extends NoteBlock {
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
-        if (hasAction()) {
-            configureActionButton(noteBlockHolder.mActionButton);
-            noteBlockHolder.mActionButton.setVisibility(View.VISIBLE);
-        } else {
-            noteBlockHolder.mActionButton.setVisibility(View.GONE);
-        }
-
         return view;
-    }
-
-    private void configureActionButton(WPTextView actionButton) {
-        // For now we will support the follow action
-        try {
-            mIsFollowing = getNoteData().getJSONObject("actions").getBoolean("follow");
-            ReaderUtils.showFollowStatus(actionButton, mIsFollowing);
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.NOTIFS, "Unexpected action button value: " + e.getMessage());
-        }
     }
 
     @Override
@@ -110,47 +85,13 @@ public class UserNoteBlock extends NoteBlock {
     private class UserActionNoteBlockHolder {
         private WPTextView mNameTextView;
         private WPTextView mUrlTextView;
-        private WPTextView mActionButton;
         private NetworkImageView mAvatarImageView;
 
         public UserActionNoteBlockHolder(View view) {
             mNameTextView = (WPTextView) view.findViewById(R.id.name);
             mUrlTextView = (WPTextView) view.findViewById(R.id.url);
             mUrlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            mActionButton = (WPTextView) view.findViewById(R.id.action_button);
-            mActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleFollow(mActionButton);
-                }
-            });
             mAvatarImageView = (NetworkImageView) view.findViewById(R.id.avatar);
-        }
-    }
-
-    // Follow/unfollow a site
-    private void toggleFollow(final WPTextView followButton) {
-        mIsFollowing = !mIsFollowing;
-
-        ReaderUtils.showFollowStatus(followButton, mIsFollowing);
-
-        long siteId = JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0);
-        if (siteId > 0 && mSiteFollowListener != null) {
-            WordPress.getRestClientUtils().followSite(String.valueOf(siteId), new RestRequest.Listener() {
-                @Override
-                public void onResponse(JSONObject jsonObject) {
-                    mSiteFollowListener.onSiteFollow(true);
-                }
-            }, new RestRequest.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    mIsFollowing = !mIsFollowing;
-                    if (followButton != null) {
-                        ReaderUtils.showFollowStatus(followButton, mIsFollowing);
-                        mSiteFollowListener.onSiteFollow(false);
-                    }
-                }
-            });
         }
     }
 
@@ -181,15 +122,6 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         return null;
-    }
-
-    // Show or hide action button
-    private boolean hasAction() {
-        if (getNoteData() == null) {
-            return false;
-        }
-
-        return getNoteData().has("actions");
     }
 
     private View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
