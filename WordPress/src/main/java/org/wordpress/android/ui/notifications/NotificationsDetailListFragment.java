@@ -163,11 +163,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
 
-                        if ((mNote.isCommentLikeType() || mNote.isCommentType()) && bodyArray.length() > 2 && i == 1) {
-                            // Hacky way to determine if this is a comment with special formatting
-                            // Should the API also have a comment_reply type to make this easier?
-                            noteBlock = new FormattedCommentNoteBlock(noteObject, mOnNoteBlockTextClickListener);
-                        } else if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
+                        if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
                             noteBlock = new UserNoteBlock(
                                     noteObject,
                                     mOnNoteBlockTextClickListener,

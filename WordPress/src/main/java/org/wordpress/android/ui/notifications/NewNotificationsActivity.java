@@ -277,27 +277,25 @@ public class NewNotificationsActivity extends WPActionBarActivity
      * Tries to pick the correct fragment detail type for a given note
      * Defaults to NotificationDetailListFragment
      */
-    private Fragment getDetailFragmentForNote(Note note, float yPosition) {
+    private Fragment getDetailFragmentForNote(Note note) {
         if (note == null)
             return null;
 
-        // detail fragment, contains header
-        NotificationsDetailFragment fragment = NotificationsDetailFragment.newInstance(note, yPosition);
-
+        Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            fragment.setFragment(CommentDetailFragment.newInstance(note));
+            fragment = CommentDetailFragment.newInstance(note);
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
             boolean isPost = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
             if (isPost) {
-                fragment.setFragment(ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId()));
+                fragment = ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
             } else {
-                fragment.setFragment(NotificationsDetailListFragment.newInstance(note));
+                fragment = NotificationsDetailListFragment.newInstance(note);
             }
         } else {
-            fragment.setFragment(NotificationsDetailListFragment.newInstance(note));
+            fragment = NotificationsDetailListFragment.newInstance(note);
         }
 
         return fragment;
@@ -330,17 +328,11 @@ public class NewNotificationsActivity extends WPActionBarActivity
         }
 
         // create detail fragment for this note type
-        mDetailFragment = getDetailFragmentForNote(note, yOffset);
+        mDetailFragment = getDetailFragmentForNote(note);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if (!DisplayUtils.isLandscapeTablet(this)) {
-            // will show custom animation on phones
-            ft.setTransition(NotificationsDetailFragment.NOTIFICATIONS_TRANSIT_ID);
-        } else {
-            // tablets will use standard fade
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        }
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.layout_fragment_container, mDetailFragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
