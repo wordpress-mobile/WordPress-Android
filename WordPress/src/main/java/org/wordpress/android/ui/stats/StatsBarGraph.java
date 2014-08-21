@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 
 import com.jjoe64.graphview.CustomLabelFormatter;
@@ -11,7 +12,7 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.WordPress;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,10 @@ class StatsBarGraph extends GraphView {
         setLayoutParams(new LayoutParams(width, height));
 
         setProperties();
+
+        // Use Open Sans
+        Typeface typeface = Typeface.createFromAsset(WordPress.getContext().getAssets(), "fonts/OpenSans-Regular.ttf");
+        paint.setTypeface(typeface);
     }
 
     private void setProperties() {
