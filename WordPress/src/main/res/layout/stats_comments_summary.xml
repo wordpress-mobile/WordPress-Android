@@ -33,7 +33,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_extra_large" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_comments_summary_per_month_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
