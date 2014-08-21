@@ -171,7 +171,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 && stats.getDay() != null
                 && StatsUtils.toMs(stats.getDay()) != currentDate
                 ) {
-            mVisitorsTodayLabel.setText(stats.getDay());
+            mVisitorsTodayLabel.setText(StatsUtils.parseDate(stats.getDay(), "yyyy-MM-dd", "MMM d"));
         } else {
             // set the default "Today" label
             mVisitorsTodayLabel.setText(R.string.stats_visitors_and_views_header_today);
