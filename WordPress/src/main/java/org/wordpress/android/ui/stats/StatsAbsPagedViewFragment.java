@@ -16,7 +16,10 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 
@@ -166,7 +169,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             return;
 
         long date = cursor.getLong(colDate);
-        long currentDate = StatsUtils.getCurrentDateMs();
+
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getCurrentBlog());
+        long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
 
         boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
         boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());
