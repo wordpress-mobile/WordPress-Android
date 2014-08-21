@@ -14,16 +14,16 @@
         android:id="@+id/layout_detail_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_large">
+        android:layout_marginTop="@dimen/margin_small">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_avatar"
             style="@style/ReaderImageView.Avatar"
-            android:background="@color/grey_extra_light"
-            android:layout_marginRight="@dimen/margin_large" />
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@color/grey_extra_light" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,12 +36,12 @@
                 style="@style/ReaderTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="2"
-                tools:text="text_blog_name"
-                android:layout_marginBottom="@dimen/margin_small"
                 android:textColor="@color/reader_hyperlink"
-                android:textSize="@dimen/text_sz_medium" />
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_blog_name" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_follow"
@@ -54,9 +54,9 @@
         android:id="@+id/layout_detail_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin">
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
@@ -77,11 +77,11 @@
         android:id="@+id/image_featured"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/reader_featured_image_height"
-        android:adjustViewBounds="true"
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_large"
+        android:adjustViewBounds="true"
+        android:minHeight="@dimen/reader_featured_image_height"
         android:visibility="gone" />
 
     <org.wordpress.android.ui.reader.ReaderWebView
@@ -107,21 +107,19 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_like_count"
-            android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/reader_hyperlink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_large"
             tools:text="text_like_count" />
 
-        <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <LinearLayout
-            android:id="@+id/layout_liking_avatars"
+        <!-- liking avatars are inserted into this view at runtime -->
+        <org.wordpress.android.ui.reader.ReaderLikingUsersView
+            android:id="@+id/layout_liking_users_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_below="@+id/text_like_count"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" />
+            android:layout_marginTop="@dimen/margin_medium" />
 
     </RelativeLayout>
 

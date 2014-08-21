@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -21,7 +22,9 @@ public class ReaderUtils {
      */
     public static interface FullScreenListener {
         boolean onRequestFullScreen(boolean enable);
+
         boolean isFullScreen();
+
         boolean isFullScreenSupported();
     }
 
@@ -79,8 +82,8 @@ public class ReaderUtils {
         }
         RelativeLayout header = new RelativeLayout(listView.getContext());
         header.setLayoutParams(new AbsListView.LayoutParams(
-                               AbsListView.LayoutParams.MATCH_PARENT,
-                               height));
+                AbsListView.LayoutParams.MATCH_PARENT,
+                height));
         listView.addHeaderView(header, null, false);
         return header;
     }
@@ -161,10 +164,10 @@ public class ReaderUtils {
 
         // remove ampersands and number signs, replace spaces & periods with dashes
         String sanitized = tagName.trim()
-                                  .replace("&", "")
-                                  .replace("#", "")
-                                  .replace(" ", "-")
-                                  .replace(".", "-");
+                .replace("&", "")
+                .replace("#", "")
+                .replace(" ", "-")
+                .replace(".", "-");
 
         // replace double dashes with single dash (may have been added above)
         while (sanitized.contains("--")) {
@@ -172,5 +175,24 @@ public class ReaderUtils {
         }
 
         return sanitized.trim();
+    }
+
+    /*
+     * returns the long text to use for a like label ("Liked by 3 people", etc.)
+     */
+    public static String getLongLikeLabelText(Context context, int numLikes, boolean isLikedByCurrentUser) {
+        if (isLikedByCurrentUser) {
+            switch (numLikes) {
+                case 1:
+                    return context.getString(R.string.reader_likes_only_you);
+                case 2:
+                    return context.getString(R.string.reader_likes_you_and_one);
+                default:
+                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+            }
+        } else {
+            return (numLikes == 1 ?
+                    context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+        }
     }
 }

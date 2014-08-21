@@ -31,10 +31,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -61,8 +59,6 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
-
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener,
                    AbsListView.OnScrollListener,
@@ -84,6 +80,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ViewGroup mCommentFooter;
     private ProgressBar mProgressFooter;
     private ReaderWebView mReaderWebView;
+    private ReaderLikingUsersView mLikingUsersView;
 
     private boolean mIsAddCommentBoxShowing;
     private long mReplyToCommentId = 0;
@@ -246,6 +243,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
+        mLikingUsersView = (ReaderLikingUsersView) mLayoutLikes.findViewById(R.id.layout_liking_users_view);
 
         // setup the ReaderWebView
         mReaderWebView = (ReaderWebView) view.findViewById(R.id.reader_webview);
@@ -600,16 +598,12 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        final int numLikesBefore = mPost.numLikes;
-
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (result != ReaderActions.UpdateResult.FAILED) {
+                if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    if (numLikesBefore != mPost.numLikes) {
-                        refreshLikes();
-                    }
+                    refreshLikes();
                     updateComments(false);
                 }
             }
@@ -689,111 +683,39 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        new Thread() {
+        final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
+        txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
+
+        final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
+        imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
+        imgBtnLike.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                if (getView() == null) {
-                    return;
-                }
-
-                final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
-                final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
-
-                final int marginExtraSmall = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-                final int marginLarge = getResources().getDimensionPixelSize(R.dimen.margin_large);
-                final int likeAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-                final int likeAvatarSizeWithMargin = likeAvatarSize + (marginExtraSmall * 2);
-
-                // determine how many avatars will fit the space
-                final int displayWidth = DisplayUtils.getDisplayPixelWidth(getActivity());
-                final int spaceForAvatars = displayWidth - (marginLarge * 2);
-                final int maxAvatars = spaceForAvatars / likeAvatarSizeWithMargin;
-
-                // get avatar URLs of liking users up to the max, sized to fit
-                ReaderUserIdList avatarIds = ReaderLikeTable.getLikesForPost(mPost);
-                final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, likeAvatarSize);
-
-                mHandler.post(new Runnable() {
-                    public void run() {
-                        if (!isAdded()) {
-                            return;
-                        }
-
-                        imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
-                        imgBtnLike.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                togglePostLike(mPost, imgBtnLike);
-                            }
-                        });
-
-                        // nothing more to do if no likes or liking avatars haven't been retrieved yet
-                        if (avatars.size() == 0 || mPost.numLikes == 0) {
-                            if (mLayoutLikes.getVisibility() != View.GONE) {
-                                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
-                            }
-                            return;
-                        }
-
-                        // set the like count text
-                        if (mPost.isLikedByCurrentUser) {
-                            if (mPost.numLikes == 1) {
-                                txtLikeCount.setText(R.string.reader_likes_only_you);
-                            } else {
-                                txtLikeCount.setText(mPost.numLikes == 2 ? getString(R.string.reader_likes_you_and_one) : getString(R.string.reader_likes_you_and_multi, mPost.numLikes - 1));
-                            }
-                        } else {
-                            txtLikeCount.setText(mPost.numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, mPost.numLikes));
-                        }
-
-                        // clicking likes view shows activity displaying all liking users
-                        mLayoutLikes.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
-                            }
-                        });
-
-                        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
-                            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
-                        }
-
-                        showLikingAvatars(avatars);
-                    }
-                });
+            public void onClick(View view) {
+                togglePostLike(mPost, imgBtnLike);
             }
-        }.start();
-    }
+        });
 
-    /*
-     * used by refreshLikes() to display the liking avatars - called only when there are avatars to
-     * display (never called when there are no likes) - note that the passed list of avatar urls
-     * has already been Photon-ized, so there's no need to do that here
-     */
-    private void showLikingAvatars(final ArrayList<String> avatarUrls) {
-        ViewGroup layoutLikingAvatars = (ViewGroup) mLayoutLikes.findViewById(R.id.layout_liking_avatars);
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-
-        // remove excess existing views
-        int numExistingViews = layoutLikingAvatars.getChildCount();
-        if (numExistingViews > avatarUrls.size()) {
-            int numToRemove = numExistingViews - avatarUrls.size();
-            layoutLikingAvatars.removeViews(numExistingViews - numToRemove, numToRemove);
+        // nothing more to do if no likes
+        if (mPost.numLikes == 0) {
+            if (mLayoutLikes.getVisibility() != View.GONE) {
+                ReaderAnim.fadeOut(mLayoutLikes, ReaderAnim.Duration.SHORT);
+            }
+            return;
         }
 
-        int index = 0;
-        for (String url : avatarUrls) {
-            WPNetworkImageView imgAvatar;
-            // reuse existing view when possible, otherwise inflate a new one
-            if (index < numExistingViews) {
-                imgAvatar = (WPNetworkImageView) layoutLikingAvatars.getChildAt(index);
-            } else {
-                imgAvatar = (WPNetworkImageView) inflater.inflate(R.layout.reader_like_avatar, layoutLikingAvatars, false);
-                layoutLikingAvatars.addView(imgAvatar);
+        // clicking likes view shows activity displaying all liking users
+        mLayoutLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ReaderActivityLauncher.showReaderLikingUsers(getActivity(), mPost);
             }
-            imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
-            index++;
+        });
+
+        if (mLayoutLikes.getVisibility() != View.VISIBLE) {
+            ReaderAnim.fadeIn(mLayoutLikes, ReaderAnim.Duration.SHORT);
         }
+
+        mLikingUsersView.showLikingUsers(mPost);
     }
 
     /*
@@ -1564,5 +1486,4 @@ public class ReaderPostDetailFragment extends Fragment
             AppLog.i(T.READER, "reader post detail > attempt to pause webView when null");
         }
     }
-
 }
