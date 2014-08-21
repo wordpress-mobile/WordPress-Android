@@ -4,18 +4,32 @@ import java.util.ArrayList;
 
 public class ReaderTagList extends ArrayList<ReaderTag> {
 
-    public int indexOfTag(ReaderTag tag) {
-        if (tag == null || isEmpty()) {
+    public int indexOfTagName(final String tagName) {
+        if (tagName == null || isEmpty()) {
             return -1;
         }
 
         for (int i = 0; i < size(); i++) {
-            if (ReaderTag.isSameTag(tag, this.get(i))) {
+            if (tagName.equals(this.get(i).getTagName())) {
                 return i;
             }
         }
 
         return -1;
+    }
+
+    private boolean hasSameTag(ReaderTag tag) {
+        if (tag == null || isEmpty()) {
+            return false;
+        }
+
+        for (ReaderTag thisTag : this) {
+            if (ReaderTag.isSameTag(thisTag, tag)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isSameList(ReaderTagList tagList) {
@@ -24,7 +38,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         }
 
         for (ReaderTag thisTag: tagList) {
-            if (indexOfTag(thisTag) == -1) {
+            if (!hasSameTag(thisTag)) {
                 return false;
             }
         }
@@ -42,7 +56,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         }
 
         for (ReaderTag thisTag: this) {
-            if (tagList.indexOfTag(thisTag) == -1) {
+            if (!tagList.hasSameTag(thisTag)) {
                 deletions.add(thisTag);
             }
         }

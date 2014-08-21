@@ -30,9 +30,14 @@ class ReaderWebView extends WebView {
         public ViewGroup onRequestContentView();
     }
 
+    public interface ReaderWebViewPageFinishedListener {
+        public void onPageFinished(WebView view, String url);
+    }
+
     private ReaderWebChromeClient mReaderChromeClient;
     private ReaderCustomViewListener mCustomViewListener;
     private ReaderWebViewUrlClickListener mUrlClickListener;
+    private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
     public ReaderWebView(Context context) {
         super(context);
@@ -53,9 +58,7 @@ class ReaderWebView extends WebView {
         if (!isInEditMode()) {
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
-
             this.setWebViewClient(new ReaderWebViewClient(this));
-            this.setOnTouchListener(mOnTouchListener);
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
         }
     }
@@ -70,6 +73,18 @@ class ReaderWebView extends WebView {
 
     private boolean hasUrlClickListener() {
         return (mUrlClickListener != null);
+    }
+
+    private ReaderWebViewPageFinishedListener getPageFinishedListener() {
+        return mPageFinishedListener;
+    }
+
+    void setPageFinishedListener(ReaderWebViewPageFinishedListener listener) {
+        mPageFinishedListener = listener;
+    }
+
+    private boolean hasPageFinishedListener() {
+        return (mPageFinishedListener != null);
     }
 
     void setCustomViewListener(ReaderCustomViewListener listener) {
@@ -98,30 +113,28 @@ class ReaderWebView extends WebView {
             mReaderChromeClient.onHideCustomView();
         }
     }
+
     /*
      * detect when an image is tapped
      */
-    private final OnTouchListener mOnTouchListener = new OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_UP:
-                    HitTestResult hr = ((WebView) view).getHitTestResult();
-                    if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
-                        String imageUrl = hr.getExtra();
-                        if (isValidClickedUrl(imageUrl) && mUrlClickListener != null) {
-                            return mUrlClickListener.onImageUrlClick(imageUrl, view, (int) event.getX(), (int) event.getY());
-                        } else {
-                            return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                default:
-                    return false;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {
+            HitTestResult hr = getHitTestResult();
+            if (hr != null && (hr.getType() == HitTestResult.IMAGE_TYPE
+                            || hr.getType() == HitTestResult.SRC_IMAGE_ANCHOR_TYPE)) {
+                String imageUrl = hr.getExtra();
+                if (isValidClickedUrl(imageUrl) ) {
+                    return mUrlClickListener.onImageUrlClick(
+                            imageUrl,
+                            this,
+                            (int) event.getX(),
+                            (int) event.getY());
+                }
             }
         }
-    };
+        return super.onTouchEvent(event);
+    }
 
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
@@ -135,9 +148,8 @@ class ReaderWebView extends WebView {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            // show the webView now that it has loaded (ReaderPostDetailFragment may have hidden it)
-            if (view.getVisibility() != View.VISIBLE) {
-                view.setVisibility(View.VISIBLE);
+            if (mReaderWebView.hasPageFinishedListener()) {
+                mReaderWebView.getPageFinishedListener().onPageFinished(view, url);
             }
         }
 

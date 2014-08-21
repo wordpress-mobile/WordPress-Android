@@ -13,11 +13,11 @@
         <org.wordpress.android.widgets.WPListView
             android:id="@android:id/list"
             style="@style/ReaderListView.PostList"
-            android:paddingLeft="@dimen/reader_list_margin"
-            android:paddingRight="@dimen/reader_list_margin"
             android:divider="@color/transparent"
             android:dividerHeight="@dimen/reader_post_divider_height"
             android:headerDividersEnabled="false"
+            android:paddingLeft="@dimen/reader_list_margin"
+            android:paddingRight="@dimen/reader_list_margin"
             tools:listitem="@layout/reader_listitem_post_excerpt" />
 
         <include
@@ -35,10 +35,11 @@
     <ProgressBar
         android:id="@+id/progress_footer"
         style="@style/ReaderProgressBar"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/margin_large" />
+        android:layout_marginLeft="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>

@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/layout_comment_box"
             android:layout_alignWithParentIfMissing="true"
-            android:background="#eeffffff">
+            android:background="@color/white">
 
             <View
                 android:layout_width="match_parent"

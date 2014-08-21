@@ -198,6 +198,20 @@ public class ReaderBlogTable {
         }
     }
 
+    /*
+     * sets the follow state for passed blog without creating a record for it if it doesn't exist
+     */
+    public static void setIsFollowedBlogId(long blogId, boolean isFollowed) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET is_following="
+                        + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
+    }
+
+    /*
+     * sets the followed state for the passed blog, creating a record for it if it doesn't exist
+     */
     public static void setIsFollowedBlog(long blogId, String url, boolean isFollowed) {
         if (TextUtils.isEmpty(url)) {
             return;

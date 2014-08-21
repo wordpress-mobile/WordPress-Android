@@ -13,7 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -24,11 +24,11 @@ import org.wordpress.android.util.DisplayUtils;
 public class ReaderActionBarTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final LayoutInflater mInflater;
-    private final ReaderActions.DataLoadedListener mDataListener;
+    private final ReaderInterfaces.DataLoadedListener mDataListener;
     private final int mPaddingForStaticDrawer;
     private final boolean mIsStaticMenuDrawer;
 
-    public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderActions.DataLoadedListener dataListener) {
+    public ReaderActionBarTagAdapter(Context context, boolean isStaticMenuDrawer, ReaderInterfaces.DataLoadedListener dataListener) {
         mDataListener = dataListener;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

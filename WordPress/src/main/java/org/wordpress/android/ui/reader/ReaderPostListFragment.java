@@ -30,7 +30,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.networking.NetworkUtils;
@@ -66,23 +65,11 @@ public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
                    ActionBar.OnNavigationListener {
 
-    static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
-    }
-
-    public static interface OnTagSelectedListener {
-        public void onTagSelected(String tagName);
-    }
-
-    public static interface OnPostPopupListener {
-        public void onShowPostPopup(View view, ReaderPost post, int position);
-    }
-
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
 
-    private OnPostSelectedListener mPostSelectedListener;
-    private OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private WPListView mListView;
@@ -348,11 +335,11 @@ public class ReaderPostListFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof OnPostSelectedListener) {
-            mPostSelectedListener = (OnPostSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnPostSelectedListener) {
+            mPostSelectedListener = (ReaderInterfaces.OnPostSelectedListener) activity;
         }
-        if (activity instanceof OnTagSelectedListener) {
-            mOnTagSelectedListener = (OnTagSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
+            mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
         }
     }
 
@@ -427,9 +414,9 @@ public class ReaderPostListFragment extends Fragment
      * called when user taps dropdown arrow icon next to a post - shows a popup menu
      * that enables blocking the blog the post is in
      */
-    private final OnPostPopupListener mOnPostPopupListener = new OnPostPopupListener() {
+    private final ReaderInterfaces.OnPostPopupListener mOnPostPopupListener = new ReaderInterfaces.OnPostPopupListener() {
         @Override
-        public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+        public void onShowPostPopup(View view, final ReaderPost post) {
             if (view == null || post == null) {
                 return;
             }
@@ -439,7 +426,7 @@ public class ReaderPostListFragment extends Fragment
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post, position);
+                    blockBlogForPost(post);
                     return true;
                 }
             });
@@ -449,9 +436,13 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter - passed position is the index of the post in the adapter
+     * from the adapter
      */
-    private void blockBlogForPost(final ReaderPost post, final int position) {
+    private void blockBlogForPost(final ReaderPost post) {
+        if (post == null || !hasPostAdapter()) {
+            return;
+        }
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -468,11 +459,12 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderPostList postsToRestore =
+        final ReaderBlogActions.BlockedBlogResult blockResult =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
+        final int position = getPostAdapter().indexOfPost(post);
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -497,7 +489,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
@@ -621,7 +613,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when data has been loaded
      */
-    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (!isAdded())
@@ -677,7 +669,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when user requests to reblog a post
      */
-    private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
+    private final ReaderInterfaces.RequestReblogListener mReblogListener = new ReaderInterfaces.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
             if (isAdded()) {
@@ -1126,7 +1118,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
