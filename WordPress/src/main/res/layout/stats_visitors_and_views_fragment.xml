@@ -78,6 +78,7 @@
 
         <org.wordpress.android.widgets.WPTextView
             style="@style/StatsHeader"
+            android:id="@+id/stats_visitors_and_views_header_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_small"
