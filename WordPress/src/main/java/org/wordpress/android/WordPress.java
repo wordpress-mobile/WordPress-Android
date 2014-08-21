@@ -152,7 +152,7 @@ public class WordPress extends Application {
         if (!PackageUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        versionName = ProfilingUtils.getVersionName(this);
+        versionName = PackageUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
         mContext = this;
