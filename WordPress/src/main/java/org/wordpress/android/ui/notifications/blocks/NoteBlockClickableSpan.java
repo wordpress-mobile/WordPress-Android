@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.util.JSONUtil;
 
+import javax.annotation.Nonnull;
+
 /**
  * A clickable span that includes extra ids/urls
  * Maps to an 'id' in a WordPress.com note object
@@ -22,13 +24,19 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private String mUrl;
     private int[] mIndices;
     private boolean mPressed;
-    private int mBackgroundColor;
+    private final int mBackgroundColor;
+    private final int mTextColor;
+    private final int mLinkColor;
+    private final boolean mShouldLink;
 
-    private JSONObject mBlockData;
+    private final JSONObject mBlockData;
 
-    public NoteBlockClickableSpan(JSONObject idData, int backgroundColor) {
+    public NoteBlockClickableSpan(JSONObject idData, int backgroundColor, int textColor, int linkColor, boolean shouldLink) {
         mBlockData = idData;
         mBackgroundColor = backgroundColor;
+        mTextColor = textColor;
+        mLinkColor = linkColor;
+        mShouldLink = shouldLink;
         processIdData();
     }
 
@@ -49,9 +57,10 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     }
 
     @Override
-    public void updateDrawState(TextPaint textPaint) {
+    public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
         textPaint.bgColor = mPressed ? mBackgroundColor : Color.TRANSPARENT;
+        textPaint.setColor(mShouldLink ? mLinkColor : mTextColor);
         // No underlines
         textPaint.setUnderlineText(false);
     }

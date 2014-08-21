@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 
@@ -41,6 +42,10 @@ public class NotificationUtils {
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
+
+    private static int mBgColor = Color.parseColor("#e8f0f7");      //calypso light blue
+    private static int mTextColor = Color.parseColor("#324155");    //calypso dark blue
+    private static int mLinkColor = Color.parseColor("#2EA2CC");    //new kid on the block blue
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -219,15 +224,19 @@ public class NotificationUtils {
         String text = subject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
+        boolean shouldLink = onNoteBlockTextClickListener != null;
+
         try {
             JSONArray idsArray = subject.getJSONArray("ids");
 
             for (int i=0; i < idsArray.length(); i++) {
                 JSONObject idObject = (JSONObject) idsArray.get(i);
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject, Color.parseColor("#90aec2")) {
+                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject, mBgColor, mTextColor, mLinkColor, shouldLink) {
                     @Override
                     public void onClick(View widget) {
-                        onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                        if (onNoteBlockTextClickListener != null) {
+                            onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                        }
                     }
                 };
                 int[] indices = clickableSpan.getIndices();
@@ -249,15 +258,20 @@ public class NotificationUtils {
         return spannableStringBuilder;
     }
 
-    public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text, final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text,
+                                                     final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         if (idBlock == null || TextUtils.isEmpty(text)) {
             return new SpannableStringBuilder("");
         }
 
-        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, Color.parseColor("#b2c6d3")) {
+        boolean shouldLink = onNoteBlockTextClickListener != null;
+
+        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, mBgColor, mTextColor, mLinkColor, shouldLink) {
             @Override
             public void onClick(View widget) {
-                onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                if (onNoteBlockTextClickListener != null) {
+                    onNoteBlockTextClickListener.onNoteBlockTextClicked(this);
+                }
             }
         };
 
@@ -267,17 +281,17 @@ public class NotificationUtils {
         return spannableStringBuilder;
     }
 
-    public static void handleNoteBlockSpanClick(NewNotificationsActivity activty, NoteBlockClickableSpan clickedSpan) {
+    public static void handleNoteBlockSpanClick(NewNotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
-            activty.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
+            activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
         } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
             // Show post detail
-            activty.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
+            activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
         } else {
             // We don't know what type of id this is, let's see if it has a URL and push a webview if so
             if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                activty.showWebViewActivityForUrl(clickedSpan.getUrl());
+                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
             }
         }
     }
