@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,11 +158,7 @@ public class ReaderReblogAdapter extends BaseAdapter {
                 // don't add if this is the blog we're excluding (prevents reblogging to
                 // the same blog the post is from)
                 if (blogId != mExcludeBlogId) {
-                    String blogName = StringUtils.unescapeHTML(curHash.get("blogName").toString());
-                    if (TextUtils.isEmpty(blogName)) {
-                        blogName = curHash.get("url").toString();
-                    }
-
+                    String blogName =  BlogUtils.getBlogNameFromAccountMap(curHash);
                     SimpleAccountItem item = new SimpleAccountItem(blogId, blogName);
 
                     // if this is the current blog, insert it at the top so it's automatically selected
