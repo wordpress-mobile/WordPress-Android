@@ -103,6 +103,11 @@ public class StatsUtils {
         Date date = new Date();
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
 
+        if (blogTimeZoneOption == null) {
+            AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
+            return gmtDf.format(date);
+        }
+
         if (blogTimeZoneOption.equals("0")) {
             gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
         } else if (blogTimeZoneOption.startsWith("-")) {
