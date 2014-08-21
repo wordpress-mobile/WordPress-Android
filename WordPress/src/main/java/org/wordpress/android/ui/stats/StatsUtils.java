@@ -81,6 +81,10 @@ public class StatsUtils {
     }
 
     public static String getBlogTimezone(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+
         JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
         String timezone = null;
         if (jsonOptions != null && jsonOptions.has("time_zone")) {
