@@ -22,4 +22,15 @@ public class BlogUtils {
             return blogName1.compareToIgnoreCase(blogName2);
         }
     };
+
+    /**
+     * Return a blog name or blog url (host part only) if trimmed name is an empty string
+     */
+    public static String getBlogNameFromAccountMap(Map<String, Object> account) {
+        String blogName = StringUtils.unescapeHTML(MapUtils.getMapStr(account, "blogName"));
+        if (blogName.trim().length() == 0) {
+            blogName = StringUtils.getHost(MapUtils.getMapStr(account, "url"));
+        }
+        return blogName;
+    }
 }
