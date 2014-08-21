@@ -179,20 +179,15 @@ public class StatsService extends Service {
             public void run() {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
 
-                String todayStats = StatsUtils.getCurrentDate();
-                String yesterdayStats = StatsUtils.getYesterdaysDate();
                 // Calculate the correct today and yesterday values by using the blog time_zone offset
                 // fallback to device settings if option is null
-                if (mServiceBlogTimezone != null) {
-                    todayStats = StatsUtils.getCurrentDateTZ(mServiceBlogTimezone);
-                    yesterdayStats = StatsUtils.getYesterdaysDateTZ(mServiceBlogTimezone);
-                }
+                final String today = (mServiceBlogTimezone != null) ?
+                        StatsUtils.getCurrentDateTZ(mServiceBlogTimezone) : StatsUtils.getCurrentDate();
+                final String yesterday = (mServiceBlogTimezone != null) ?
+                        StatsUtils.getYesterdaysDateTZ(mServiceBlogTimezone) : StatsUtils.getYesterdaysDate();
 
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId);
                 broadcastUpdate(true);
-
-                final String today = todayStats;
-                final String yesterday = yesterdayStats;
 
                 // visitors and views
                 final String summaryPath = String.format("/sites/%s/stats", blogId);

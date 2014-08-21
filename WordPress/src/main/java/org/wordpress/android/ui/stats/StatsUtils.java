@@ -99,7 +99,7 @@ public class StatsUtils {
         Date date = new Date();
         SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
 
-        if (blogTimeZoneOption.equalsIgnoreCase("0")) {
+        if (blogTimeZoneOption.equals("0")) {
             gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
         } else if (blogTimeZoneOption.startsWith("-")) {
             gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
