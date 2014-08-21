@@ -175,7 +175,7 @@ public class AppLog {
         ArrayList<String> items = new ArrayList<String>();
 
         // add version & device info - be sure to change HEADER_LINE_COUNT if additional lines are added
-        items.add("<strong>WordPress Android version: " + ProfilingUtils.getVersionName(context) + "</strong>");
+        items.add("<strong>WordPress Android version: " + PackageUtils.getVersionName(context) + "</strong>");
         items.add("<strong>Android device name: " + DeviceUtils.getInstance().getDeviceName(context) + "</strong>");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
@@ -193,7 +193,7 @@ public class AppLog {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
-        sb.append("WordPress Android version: " + ProfilingUtils.getVersionName(context)).append("\n")
+        sb.append("WordPress Android version: " + PackageUtils.getVersionName(context)).append("\n")
           .append("Android device name: " + DeviceUtils.getInstance().getDeviceName(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
