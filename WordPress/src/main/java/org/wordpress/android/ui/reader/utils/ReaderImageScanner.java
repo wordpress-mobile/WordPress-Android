@@ -6,17 +6,46 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
- * used when a post doesn't have a featured image assigned, searches post's content
- * for an image that may be large enough to be suitable as a featured image
- * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
- */
-public class ReaderFeaturedImageFinder {
+public class ReaderImageScanner {
     private final String mContent;
     private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
+
+    public static class Image {
+        private final String imageUrl;
+
+        Image(String imageUrl) {
+            this.imageUrl = StringUtils.notNullStr(imageUrl);
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+    }
+    public static class ImageList extends ArrayList<Image> {
+        public int indexOfImageUrl(String imageUrl) {
+            if (imageUrl == null || this.isEmpty()) {
+                return -1;
+            }
+            for (int i = 0; i < this.size(); i++) {
+                if (imageUrl.equalsIgnoreCase(this.get(i).getImageUrl())) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public boolean hasImageUrl(String imageUrl) {
+            return (indexOfImageUrl(imageUrl) > -1);
+        }
+        public void addImageUrl(String imageUrl) {
+            if (imageUrl != null && imageUrl.startsWith("http")) {
+                this.add(new Image(imageUrl));
+            }
+        }
+    };
 
     // regex for matching img tags in html content
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
@@ -33,13 +62,33 @@ public class ReaderFeaturedImageFinder {
             "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
-    public ReaderFeaturedImageFinder(final String contentOfPost) {
+    public ReaderImageScanner(final String contentOfPost) {
         mContent = contentOfPost;
     }
 
     /*
-     * returns the url of the largest image based on the w= query param and/or the width
-     * attribute, provided that the width is at least MIN_FEATURED_IMAGE_WIDTH
+     * returns a list of all images in the post content
+     */
+    public ImageList getImageList() {
+        ImageList imageList = new ImageList();
+
+        if (mContent == null || !mContent.contains("<img ")) {
+            return imageList;
+        }
+
+        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        while (imgMatcher.find()) {
+            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
+            imageList.addImageUrl(getSrcAttrValue(imgTag));
+        }
+
+        return imageList;
+    }
+
+    /*
+     * used when a post doesn't have a featured image assigned, searches post's content
+     * for an image that may be large enough to be suitable as a featured image
+     * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
      */
     public String getBestFeaturedImage() {
         if (mContent == null || !mContent.contains("<img ")) {
