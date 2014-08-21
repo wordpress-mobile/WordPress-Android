@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_pager_title"
             style="@style/StatsPagerTitle" />
 
@@ -43,7 +43,7 @@
                     android:paddingLeft="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
@@ -59,7 +59,7 @@
                     android:paddingLeft="@dimen/margin_medium"
                     android:paddingRight="@dimen/margin_medium" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
@@ -91,7 +91,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_visitors_and_views_header_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -113,14 +113,14 @@
                             android:layout_weight="1"
                             android:padding="@dimen/margin_medium">
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 android:id="@+id/stats_visitors_and_views_today_visitors_count"
                                 style="@style/StatsHeaderTotals"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0" />
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 style="@style/StatsHeaderTotalsLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -137,14 +137,14 @@
                             android:layout_weight="1"
                             android:padding="@dimen/margin_medium">
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 android:id="@+id/stats_visitors_and_views_today_views_count"
                                 style="@style/StatsHeaderTotals"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0" />
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 style="@style/StatsHeaderTotalsLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -165,14 +165,14 @@
                     android:layout_weight="0.4"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/stats_visitors_and_views_header_best_ever"
                         android:textSize="@dimen/text_sz_large" />
 
-                    <org.wordpress.android.util.AutoResizeTextView
+                    <org.wordpress.android.widgets.WPAutoResizeTextView
                         android:id="@+id/stats_visitors_and_views_best_ever_views_count"
                         style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
                         android:layout_marginTop="@dimen/margin_medium"
                         android:text="0" />
 
-                    <org.wordpress.android.util.AutoResizeTextView
+                    <org.wordpress.android.widgets.WPAutoResizeTextView
                         style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -200,7 +200,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -221,14 +221,14 @@
                             android:layout_weight="1"
                             android:padding="@dimen/margin_medium">
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 android:id="@+id/stats_visitors_and_views_all_time_view_count"
                                 style="@style/StatsHeaderTotals"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0" />
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 style="@style/StatsHeaderTotalsLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -245,14 +245,14 @@
                             android:layout_weight="1"
                             android:padding="@dimen/margin_medium">
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 android:id="@+id/stats_visitors_and_views_all_time_comment_count"
                                 style="@style/StatsHeaderTotals"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0" />
 
-                            <org.wordpress.android.util.AutoResizeTextView
+                            <org.wordpress.android.widgets.WPAutoResizeTextView
                                 style="@style/StatsHeaderTotalsLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
