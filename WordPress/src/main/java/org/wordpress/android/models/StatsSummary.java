@@ -10,7 +10,10 @@ import org.wordpress.android.ui.stats.StatsUtils;
  * A model to represent the summary of a blog's stats.
  */
 public class StatsSummary implements Serializable{
-    private static final long serialVersionUID = 1951520106663020694L;
+    private static final long serialVersionUID = 1951520106663020695L;
+
+    @SerializedName("day")
+    private String day;
 
     @SerializedName("visitors_today")
     private int visitorsToday;
@@ -208,5 +211,9 @@ public class StatsSummary implements Serializable{
 
     public void setShares(int shares) {
         this.shares = shares;
+    }
+
+    public String getDay() {
+        return day;
     }
 }
