@@ -14,7 +14,7 @@
         android:layout_margin="@dimen/margin_small"
         android:src="@drawable/stats_nav_checkmark" />
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_nav_cell_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,6 +25,6 @@
         android:singleLine="true"
         android:textColor="@color/black"
         android:textSize="@dimen/text_sz_large" >
-    </TextView>
+    </org.wordpress.android.widgets.WPTextView>
 
 </RelativeLayout>

@@ -11,7 +11,7 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +33,9 @@ class StatsBarGraph extends GraphView {
         setLayoutParams(new LayoutParams(width, height));
 
         setProperties();
+
+        // Use Open Sans
+        paint.setTypeface(TypefaceCache.getTypeface(getContext()));
     }
 
     private void setProperties() {
