@@ -96,7 +96,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                                                                          RadioGroup.LayoutParams.WRAP_CONTENT);
-            rb.setTypeface((TypefaceCache.getTypeface(getActivity())));
+            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
 
             params.setMargins(0, 0, dp8, 0);
             rb.setMinimumWidth(dp80);
