@@ -83,7 +83,7 @@ dependencies {
 
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
-    compile 'com.mixpanel.android:mixpanel-android:4.2.1@aar'
+    compile 'com.mixpanel.android:mixpanel-android:4.3.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
