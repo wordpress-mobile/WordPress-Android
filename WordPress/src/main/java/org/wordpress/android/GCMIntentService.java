@@ -26,6 +26,8 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -297,7 +299,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
 
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
+            }
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }

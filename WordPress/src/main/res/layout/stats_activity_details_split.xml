@@ -18,7 +18,7 @@
 
             <!-- Views and Visitors summary -->
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_views_visitors_date"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
@@ -40,14 +40,14 @@
                     android:layout_weight="1"
                     android:padding="@dimen/margin_extra_large">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_visitors_and_views_today_visitors_count"
                         style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0" />
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -64,14 +64,14 @@
                     android:layout_weight="1"
                     android:padding="@dimen/margin_extra_large">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_visitors_and_views_today_views_count"
                         style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0" />
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -87,14 +87,14 @@
                     android:layout_weight="1"
                     android:padding="@dimen/margin_extra_large">
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_visitors_and_views_best_ever_views_count"
                         style="@style/StatsHeaderTotals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0" />
 
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeaderTotalsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                     android:orientation="vertical">
 
                     <!-- top posts and pages -->
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsPagerTitle"
                         android:layout_marginTop="@dimen/margin_small"
                         android:text="@string/stats_view_top_posts_and_pages" />
@@ -138,7 +138,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/margin_small">
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                                 android:layout_marginLeft="@dimen/margin_small"
                                 android:text="TITLE" />
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
                             android:visibility="gone" >
                         </LinearLayout>
 
-                        <TextView
+                        <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/stats_top_posts_and_pages_empty_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
                     </LinearLayout>
 
                     <!-- Referrers -->
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsPagerTitle"
                         android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/stats_view_referrers" />
@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/margin_small">
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -202,7 +202,7 @@
                                 android:layout_marginLeft="@dimen/margin_small"
                                 android:text="TITLE" />
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -222,7 +222,7 @@
                             android:visibility="gone" >
                         </LinearLayout>
 
-                        <TextView
+                        <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/stats_referrers_list_empty_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -240,7 +240,7 @@
                     android:orientation="vertical">
 
                     <!-- Clicks -->
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsPagerTitle"
                         android:layout_marginTop="@dimen/margin_small"
                         android:text="@string/stats_view_clicks" />
@@ -259,7 +259,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/margin_small">
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -267,7 +267,7 @@
                                 android:layout_marginLeft="@dimen/margin_small"
                                 android:text="TITLE" />
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -287,7 +287,7 @@
                             android:visibility="gone" >
                         </LinearLayout>
 
-                        <TextView
+                        <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/stats_clicks_list_empty_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -296,7 +296,7 @@
                     </LinearLayout>
 
                     <!-- Search engine terms -->
-                    <TextView
+                    <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsPagerTitle"
                         android:layout_marginTop="@dimen/margin_medium"
                         android:text="@string/stats_view_search_engine_terms" />
@@ -315,7 +315,7 @@
                             android:layout_height="wrap_content"
                             android:paddingTop="@dimen/margin_small">
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -323,7 +323,7 @@
                                 android:layout_marginLeft="@dimen/margin_small"
                                 android:text="TITLE" />
 
-                            <TextView
+                            <org.wordpress.android.widgets.WPTextView
                                 style="@style/StatsHeader"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -343,7 +343,7 @@
                             android:visibility="gone" >
                         </LinearLayout>
 
-                        <TextView
+                        <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/stats_searchengine_list_empty_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
