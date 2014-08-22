@@ -289,7 +289,7 @@ public class NotificationUtils {
             // Show post detail
             activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
         } else {
-            // We don't know what type of id this is, let's see if it has a URL and push a webview if so
+            // We don't know what type of id this is, let's see if it has a URL and push a webview
             if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
                 activity.showWebViewActivityForUrl(clickedSpan.getUrl());
             }

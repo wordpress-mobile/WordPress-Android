@@ -16,7 +16,7 @@
         android:paddingTop="@dimen/margin_medium">
 
         <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/avatar"
+            android:id="@+id/user_avatar"
             android:layout_width="@dimen/avatar_sz_medium"
             android:layout_height="@dimen/avatar_sz_medium"
             android:layout_gravity="center_vertical"
@@ -29,18 +29,32 @@
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/name"
+                android:id="@+id/user_name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textStyle="bold"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="@dimen/text_sz_large"
+                android:textSize="@dimen/text_sz_medium"
                 tools:text="Bob Ross" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/url"
+                android:id="@+id/user_blog_url"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/blue_new_kid"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="Paint with Me" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_blog_tagline"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/calypso_blue"

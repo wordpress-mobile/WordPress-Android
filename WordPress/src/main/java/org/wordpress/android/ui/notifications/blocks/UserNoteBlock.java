@@ -4,10 +4,9 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.NetworkImageView;
-import com.wordpress.rest.RestRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,11 +14,9 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationUtils;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPTextView;
 
 /**
  * A block that displays information about a User (such as a user that liked a post)
@@ -55,23 +52,47 @@ public class UserNoteBlock extends NoteBlock {
     @Override
     public View configureView(View view) {
         final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
-        noteBlockHolder.mNameTextView.setText(getNoteText());
-        noteBlockHolder.mUrlTextView.setText(NotificationUtils.getClickableTextForIdUrl(
-                getUrlIdObject(),
-                getUserUrl(),
-                getOnNoteBlockTextClickListener()
-        ));
+        noteBlockHolder.nameTextView.setText(getNoteText().toString());
+
+
+        String linkedText = null;
+        if (hasUserUrlAndTitle()) {
+            linkedText = getUserBlogTitle();
+        } else if (hasUserUrl()) {
+            linkedText = getUserUrl();
+        }
+
+        if (!TextUtils.isEmpty(linkedText)) {
+            noteBlockHolder.urlTextView.setText(NotificationUtils.getClickableTextForIdUrl(
+                    getUrlIdObject(),
+                    linkedText,
+                    getOnNoteBlockTextClickListener()
+            ));
+            noteBlockHolder.urlTextView.setVisibility(View.VISIBLE);
+        } else {
+            noteBlockHolder.urlTextView.setVisibility(View.GONE);
+        }
+
+        if (hasUserBlogTagline()) {
+            noteBlockHolder.taglineTextView.setText(getUserBlogTagline());
+            noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
+        } else if (hasUserUrlAndTitle()) {
+            noteBlockHolder.taglineTextView.setText(getUserUrl());
+            noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
+        } else {
+            noteBlockHolder.taglineTextView.setVisibility(View.GONE);
+        }
 
         if (hasImageMediaItem()) {
-            noteBlockHolder.mAvatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
+            noteBlockHolder.avatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
             if (!TextUtils.isEmpty(getUserUrl())) {
-                noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+                noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
-                noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+                noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
-            noteBlockHolder.mAvatarImageView.setImageResource(R.drawable.placeholder);
-            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+            noteBlockHolder.avatarImageView.setImageResource(R.drawable.placeholder);
+            noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
         return view;
@@ -83,15 +104,17 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     private class UserActionNoteBlockHolder {
-        private WPTextView mNameTextView;
-        private WPTextView mUrlTextView;
-        private NetworkImageView mAvatarImageView;
+        private TextView nameTextView;
+        private TextView urlTextView;
+        private TextView taglineTextView;
+        private NetworkImageView avatarImageView;
 
         public UserActionNoteBlockHolder(View view) {
-            mNameTextView = (WPTextView) view.findViewById(R.id.name);
-            mUrlTextView = (WPTextView) view.findViewById(R.id.url);
-            mUrlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            mAvatarImageView = (NetworkImageView) view.findViewById(R.id.avatar);
+            nameTextView = (TextView)view.findViewById(R.id.user_name);
+            urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
+            urlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
+            taglineTextView = (TextView)view.findViewById(R.id.user_blog_tagline);
+            avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
         }
     }
 
@@ -115,13 +138,33 @@ public class UserNoteBlock extends NoteBlock {
         return null;
     }
 
-    public String getUserUrl() {
+    private String getUserUrl() {
         if (getUrlIdObject() != null) {
             String url = UrlUtils.normalizeUrl(getUrlIdObject().optString("url", ""));
             return url.replace("http://", "").replace("https://", "");
         }
 
         return null;
+    }
+
+    private String getUserBlogTitle() {
+        return JSONUtil.queryJSON(getNoteData(), "meta.titles.home", "");
+    }
+
+    private String getUserBlogTagline() {
+        return JSONUtil.queryJSON(getNoteData(), "meta.titles.tagline", "");
+    }
+
+    private boolean hasUserUrl() {
+        return !TextUtils.isEmpty(getUserUrl());
+    }
+
+    private boolean hasUserUrlAndTitle() {
+        return hasUserUrl() && !TextUtils.isEmpty(getUserBlogTitle());
+    }
+
+    private boolean hasUserBlogTagline() {
+        return !TextUtils.isEmpty(getUserBlogTagline());
     }
 
     private View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {

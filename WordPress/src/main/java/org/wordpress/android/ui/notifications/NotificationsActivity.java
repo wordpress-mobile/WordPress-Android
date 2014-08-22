@@ -216,6 +216,7 @@ public class NotificationsActivity extends WPActionBarActivity
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     if (backStackEntryCount == 0) {
                         mMenuDrawer.setDrawerIndicatorEnabled(true);
+                        setTitle(R.string.notifications);
                     } else {
                         mMenuDrawer.setDrawerIndicatorEnabled(false);
                     }
@@ -337,6 +338,11 @@ public class NotificationsActivity extends WPActionBarActivity
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
+
+        // Update title to note subject
+        if (note.getFormattedSubject() != null) {
+            setTitle(note.getFormattedSubject().toString());
+        }
     }
 
     public void showBlogPreviewForSiteId(long siteId, String siteUrl) {

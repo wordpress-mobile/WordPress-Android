@@ -3,6 +3,7 @@
  */
 package org.wordpress.android.models;
 
+import android.text.Html;
 import android.text.Spannable;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -114,10 +115,6 @@ public class Note extends Syncable {
                 isType(NOTE_COMMENT_TYPE);
     }
 
-    public Boolean isCommentLikeType() {
-        return isType(NOTE_COMMENT_LIKE_TYPE);
-    }
-
     public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
     }
@@ -173,21 +170,18 @@ public class Note extends Syncable {
         return mCommentPreview;
     }
 
-    public NoteTimeGroup getTimeGroup() {
-        if (mTimeGroup == null) {
-            long timestamp = getTimestamp() * 1000;
-            if (DateUtils.isToday(timestamp)) {
-                mTimeGroup =  NoteTimeGroup.GROUP_TODAY;
-            } else if (DateTimeUtils.isYesterday(timestamp)) {
-                mTimeGroup =  NoteTimeGroup.GROUP_YESTERDAY;
-            }  else if (DateTimeUtils.isWithinSameWeek(timestamp)) {
-                mTimeGroup =  NoteTimeGroup.GROUP_LAST_WEEK;
-            } else {
-                mTimeGroup = NoteTimeGroup.GROUP_OLDER;
-            }
-        }
+    public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
+        timestamp *= 1000;
 
-        return mTimeGroup;
+        if (DateUtils.isToday(timestamp)) {
+            return NoteTimeGroup.GROUP_TODAY;
+        } else if (DateTimeUtils.isYesterday(timestamp)) {
+            return NoteTimeGroup.GROUP_YESTERDAY;
+        }  else if (DateTimeUtils.isWithinSameWeek(timestamp)) {
+            return NoteTimeGroup.GROUP_LAST_WEEK;
+        } else {
+            return NoteTimeGroup.GROUP_OLDER;
+        }
     }
 
     /**
@@ -448,12 +442,17 @@ public class Note extends Syncable {
 
         static public final String NAME = "note20";
         static public final String TIMESTAMP_INDEX = "timestamp";
+        static public final String SUBJECT_INDEX = "subject";
+        static public final String SNIPPET_INDEX = "snippet";
+        static public final String UNREAD_INDEX = "unread";
+        static public final String NOTICON_INDEX = "noticon";
+        static public final String ICON_URL_INDEX = "icon";
 
-        private static final Indexer<Note> sTimestampIndexer = new Indexer<Note>() {
+        private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
 
             @Override
             public List<Index> index(Note note) {
-                List<Index> indexes = new ArrayList<Index>(1);
+                List<Index> indexes = new ArrayList<Index>();
                 try {
                     indexes.add(new Index(TIMESTAMP_INDEX, note.getTimestamp()));
                 } catch (NumberFormatException e) {
@@ -461,6 +460,13 @@ public class Note extends Syncable {
                     // show up at the end of a query sorting by timestamp
                     android.util.Log.e("WordPress", "Failed to index timestamp", e);
                 }
+
+                indexes.add(new Index(SUBJECT_INDEX, Html.toHtml(note.getFormattedSubject())));
+                indexes.add(new Index(SNIPPET_INDEX, note.getCommentPreview()));
+                indexes.add(new Index(UNREAD_INDEX, note.isUnread()));
+                indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
+                indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
+
                 return indexes;
             }
 
@@ -468,7 +474,7 @@ public class Note extends Syncable {
 
         public Schema() {
             // save an index with a timestamp
-            addIndex(sTimestampIndexer);
+            addIndex(sNoteIndexer);
         }
 
         @Override
