@@ -109,8 +109,11 @@
             <intent android:targetClass="org.wordpress.android.ui.AppLogViewerActivity"
                     android:targetPackage="org.wordpress.android.beta"/>
         </Preference>
+<<<<<<< HEAD:WordPress/src/zbetagroup/res/xml/preferences.xml
         <Preference android:key="wp_pref_faq"
                     android:title="@string/faq_button"/>
+=======
+>>>>>>> 65beeb1... Merge pull request #1581 from wordpress-mobile/issue/1538-helpshift-integration-remote-control:res-zbetagroup/xml/preferences.xml
         <Preference android:key="wp_pref_contact_us"
                     android:title="@string/contact_us"
                     android:summary="@string/contact_us_pref_summary"/>
