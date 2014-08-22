@@ -391,12 +391,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_notification_details");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_notification_details");
                 break;
-            case NOTIFICATION_PERFORMED_ACTION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_performed_action_against");
-                instructions.setCurrentDateForPeopleProperty("last_time_performed_action_against_notification");
-                break;
             case NOTIFICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
                         mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(

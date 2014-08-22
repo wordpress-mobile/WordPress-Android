@@ -555,7 +555,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             default :
                 return;
         }
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
         getActivity().showDialog(dlgId);
 
         // disable buttons during request
