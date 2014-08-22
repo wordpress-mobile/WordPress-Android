@@ -1,35 +1,28 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
-import android.graphics.Point;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
+import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
-import org.wordpress.android.ui.reader.utils.ReaderImageScanner.ImageList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
-import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
+import javax.annotation.Nonnull;
 
 /**
  * Full-screen photo viewer
  */
 public class ReaderPhotoViewerActivity extends Activity {
 
-    private String mImageUrl;
+    private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
-    private ImageList mImageList;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +30,15 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         setContentView(R.layout.reader_activity_photo_viewer);
 
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
+
         if (savedInstanceState != null) {
-            mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
+            mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
             mContent = savedInstanceState.getString(ReaderConstants.ARG_CONTENT);
         } else if (getIntent() != null) {
-            mImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
+            mInitialImageUrl = getIntent().getStringExtra(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
@@ -56,9 +52,10 @@ public class ReaderPhotoViewerActivity extends Activity {
             public void run() {
                 // parse list of images from content that was (optionally) passed to
                 // this activity, and make sure the list includes the passed url
-                final ImageList imageList = new ReaderImageScanner(mContent).getImageList();
-                if (!imageList.hasImageUrl(mImageUrl)) {
-                    imageList.addImageUrl(mImageUrl);
+                ReaderImageScanner scanner = new ReaderImageScanner(mContent, mIsPrivate);
+                final ReaderImageList imageList = scanner.getImageList();
+                if (!imageList.hasImageUrl(mInitialImageUrl)) {
+                    imageList.addImageUrl(0, mInitialImageUrl);
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -72,81 +69,65 @@ public class ReaderPhotoViewerActivity extends Activity {
         }.start();
     }
 
-    private void setImageList(ImageList imageList) {
-        if (imageList != null) {
-            mImageList = (ImageList) imageList.clone();
-        } else {
-            mImageList = new ImageList();
+    private void setImageList(ReaderImageList imageList) {
+        PhotoPagerAdapter adapter = new PhotoPagerAdapter(getFragmentManager(), imageList);
+        mViewPager.setAdapter(adapter);
+        int position = adapter.indexOfImageUrl(mInitialImageUrl);
+        if (adapter.isValidPosition(position)) {
+            mViewPager.setCurrentItem(position);
         }
-        showImage(mImageUrl);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
+        if (mViewPager.getAdapter() != null) {
+            PhotoPagerAdapter adapter = (PhotoPagerAdapter) mViewPager.getAdapter();
+            String imageUrl = adapter.getImageUrl(mViewPager.getCurrentItem());
+            outState.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
+        }
+
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         outState.putString(ReaderConstants.ARG_CONTENT, mContent);
         super.onSaveInstanceState(outState);
     }
 
-    private void showImage(String imageUrl) {
-        if (TextUtils.isEmpty(imageUrl)) {
-            handleImageLoadFailure();
-            return;
+    private class PhotoPagerAdapter extends FragmentStatePagerAdapter {
+        private final ReaderImageList mImageList;
+
+        PhotoPagerAdapter(FragmentManager fm, ReaderImageList imageList) {
+            super(fm);
+            if (imageList != null) {
+                mImageList = (ReaderImageList) imageList.clone();
+            } else {
+                mImageList = new ReaderImageList(mIsPrivate);
+            }
         }
 
-        Point pt = DisplayUtils.getDisplayPixelSize(this);
-        int maxWidth = Math.max(pt.x, pt.y);
-        if (mIsPrivate) {
-            imageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, maxWidth, 0);
-        } else {
-            imageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, maxWidth, 0);
+        @Override
+        public Fragment getItem(int position) {
+            return ReaderPhotoViewerFragment.newInstance(
+                    mImageList.get(position), mImageList.isPrivate());
         }
 
-        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
+        @Override
+        public int getCount() {
+            return mImageList.size();
+        }
 
-        final WPNetworkImageView imageView = (WPNetworkImageView) findViewById(R.id.image_photo);
-        imageView.setImageUrl(imageUrl, ImageType.PHOTO_FULL, new ImageListener() {
-            @Override
-            public void onImageLoaded(boolean succeeded) {
-                progress.setVisibility(View.GONE);
-                if (succeeded) {
-                    createAttacher(imageView);
-                } else {
-                    handleImageLoadFailure();
-                }
+        private int indexOfImageUrl(String imageUrl) {
+            return mImageList.indexOfImageUrl(imageUrl);
+        }
+
+        private boolean isValidPosition(int position) {
+            return (position >= 0 && position < getCount());
+        }
+
+        private String getImageUrl(int position) {
+            if (isValidPosition(position)) {
+                return mImageList.get(position);
+            } else {
+                return null;
             }
-        });
-    }
-
-    private void createAttacher(ImageView imageView) {
-        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
-
-        // tapping outside the photo closes the activity
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float v, float v2) {
-                finish();
-            }
-        });
-        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v2) {
-                // do nothing - photo tap listener must be assigned or else tapping the photo
-                // will fire the onViewTapListener() above
-            }
-        });
-    }
-
-    private void handleImageLoadFailure() {
-        ToastUtils.showToast(this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
-        finish();
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
+        }
     }
 }

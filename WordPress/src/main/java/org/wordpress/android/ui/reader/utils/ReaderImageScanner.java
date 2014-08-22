@@ -2,50 +2,19 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
 
+import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReaderImageScanner {
+
     private final String mContent;
+    private final boolean mIsPrivate;
     private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
-
-    public static class Image {
-        private final String imageUrl;
-
-        Image(String imageUrl) {
-            this.imageUrl = StringUtils.notNullStr(imageUrl);
-        }
-
-        public String getImageUrl() {
-            return imageUrl;
-        }
-    }
-    public static class ImageList extends ArrayList<Image> {
-        public int indexOfImageUrl(String imageUrl) {
-            if (imageUrl == null || this.isEmpty()) {
-                return -1;
-            }
-            for (int i = 0; i < this.size(); i++) {
-                if (imageUrl.equalsIgnoreCase(this.get(i).getImageUrl())) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-        public boolean hasImageUrl(String imageUrl) {
-            return (indexOfImageUrl(imageUrl) > -1);
-        }
-        public void addImageUrl(String imageUrl) {
-            if (imageUrl != null && imageUrl.startsWith("http")) {
-                this.add(new Image(imageUrl));
-            }
-        }
-    };
 
     // regex for matching img tags in html content
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
@@ -62,15 +31,16 @@ public class ReaderImageScanner {
             "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
-    public ReaderImageScanner(final String contentOfPost) {
+    public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
+        mIsPrivate = isPrivate;
     }
 
     /*
      * returns a list of all images in the post content
      */
-    public ImageList getImageList() {
-        ImageList imageList = new ImageList();
+    public ReaderImageList getImageList() {
+        ReaderImageList imageList = new ReaderImageList(mIsPrivate);
 
         if (mContent == null || !mContent.contains("<img ")) {
             return imageList;

@@ -137,7 +137,8 @@ public class ReaderPost {
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image
             if (!post.hasFeaturedImage()) {
-                post.featuredImage = new ReaderImageScanner(post.text).getBestFeaturedImage();
+                ReaderImageScanner scanner = new ReaderImageScanner(post.text, post.isPrivate);
+                post.featuredImage = scanner.getBestFeaturedImage();
             }
         }
 
