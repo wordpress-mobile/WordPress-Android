@@ -16,7 +16,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -24,18 +23,27 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ReaderPhotoViewerFragment extends Fragment {
     private String mImageUrl;
     private boolean mIsPrivate;
-    private ReaderPhotoTapListener mPhotoTapListener;
+    private int mPosition;
+    private ReaderPhotoListener mPhotoListener;
 
-    static interface ReaderPhotoTapListener {
-        void onTapPhoto();
-        void onTapOutsidePhoto();
+    static interface ReaderPhotoListener {
+        void onTapPhoto(int position);
+        void onTapOutsidePhoto(int position);
+        void onPhotoLoaded(int position);
+        void onPhotoFailed(int position);
     }
 
-    static ReaderPhotoViewerFragment newInstance(String imageUrl, boolean isPrivate) {
+    /**
+     * @param imageUrl the url of the image to load
+     * @param position the position of the image in ReaderPhotoViewerActivity
+     * @param isPrivate whether image is from a private blog
+     */
+    static ReaderPhotoViewerFragment newInstance(String imageUrl, int position, boolean isPrivate) {
         AppLog.d(AppLog.T.READER, "reader photo fragment > newInstance");
 
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
+        args.putInt(ReaderConstants.ARG_POSITION, position);
         args.putBoolean(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
 
         ReaderPhotoViewerFragment fragment = new ReaderPhotoViewerFragment();
@@ -49,6 +57,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         super.setArguments(args);
         if (args != null) {
             mImageUrl = args.getString(ReaderConstants.ARG_IMAGE_URL);
+            mPosition = args.getInt(ReaderConstants.ARG_POSITION);
             mIsPrivate = args.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
         }
     }
@@ -56,26 +65,31 @@ public class ReaderPhotoViewerFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if (activity instanceof ReaderPhotoTapListener) {
-            mPhotoTapListener = (ReaderPhotoTapListener) activity;
+        if (activity instanceof ReaderPhotoListener) {
+            mPhotoListener = (ReaderPhotoListener) activity;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
-        return view;
+        return inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
+            mPosition = savedInstanceState.getInt(ReaderConstants.ARG_POSITION);
+            mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
+        }
         showImage();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
+        outState.putInt(ReaderConstants.ARG_POSITION, mPosition);
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         super.onSaveInstanceState(outState);
     }
@@ -86,7 +100,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(mImageUrl)) {
-            handleImageLoadFailure();
+            hideProgress();
             return;
         }
 
@@ -99,23 +113,43 @@ public class ReaderPhotoViewerFragment extends Fragment {
             imageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
         }
 
-        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
+
+        showProgress();
 
         final WPNetworkImageView imageView = (WPNetworkImageView) getView().findViewById(R.id.image_photo);
         imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_FULL, new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
-                if (isAdded()) {
-                    progress.setVisibility(View.GONE);
+                if (!isAdded()) {
+                    return;
+                }
+                hideProgress();
+                if (succeeded) {
+                    createAttacher(imageView);
+                }
+                if (mPhotoListener != null) {
                     if (succeeded) {
-                        createAttacher(imageView);
+                        mPhotoListener.onPhotoLoaded(mPosition);
                     } else {
-                        handleImageLoadFailure();
+                        mPhotoListener.onPhotoFailed(mPosition);
                     }
                 }
             }
         });
+    }
+
+    private void showProgress() {
+        if (isAdded()) {
+            final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress);
+            progress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideProgress() {
+        if (isAdded()) {
+            final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress);
+            progress.setVisibility(View.GONE);
+        }
     }
 
     private void createAttacher(ImageView imageView) {
@@ -128,24 +162,18 @@ public class ReaderPhotoViewerFragment extends Fragment {
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float v, float v2) {
-                if (mPhotoTapListener != null) {
-                    mPhotoTapListener.onTapOutsidePhoto();
+                if (mPhotoListener != null) {
+                    mPhotoListener.onTapOutsidePhoto(mPosition);
                 }
             }
         });
         attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float v, float v2) {
-                if (mPhotoTapListener != null) {
-                    mPhotoTapListener.onTapPhoto();
+                if (mPhotoListener != null) {
+                    mPhotoListener.onTapPhoto(mPosition);
                 }
             }
         });
-    }
-
-    private void handleImageLoadFailure() {
-        if (isAdded()) {
-            ToastUtils.showToast(getActivity(), R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
-        }
     }
 }

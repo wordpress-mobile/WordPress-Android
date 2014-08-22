@@ -7,20 +7,22 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderPhotoViewerFragment.ReaderPhotoTapListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
 /**
  * Full-screen photo viewer
  */
-public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTapListener {
+public class ReaderPhotoViewerActivity extends Activity
+                                       implements ReaderPhotoViewerFragment.ReaderPhotoListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
@@ -32,6 +34,7 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_photo_viewer);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -52,7 +55,7 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                showTitle(position);
+                updateTitle(position);
             }
         });
 
@@ -74,7 +77,7 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
                     @Override
                     public void run() {
                         if (!isFinishing()) {
-                            setImageList(imageList);
+                            setImageList(imageList, mInitialImageUrl);
                         }
                     }
                 });
@@ -82,13 +85,13 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
         }.start();
     }
 
-    private void setImageList(ReaderImageList imageList) {
+    private void setImageList(ReaderImageList imageList, String initialImageUrl) {
         PhotoPagerAdapter adapter = new PhotoPagerAdapter(getFragmentManager(), imageList);
         mViewPager.setAdapter(adapter);
-        int position = adapter.indexOfImageUrl(mInitialImageUrl);
+        int position = adapter.indexOfImageUrl(initialImageUrl);
         if (adapter.isValidPosition(position)) {
             mViewPager.setCurrentItem(position);
-            showTitle(position);
+            updateTitle(position);
         }
     }
 
@@ -97,25 +100,6 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
             return null;
         }
         return (PhotoPagerAdapter) mViewPager.getAdapter();
-    }
-
-    private void showTitle(int position) {
-        if (isFinishing()) {
-            return;
-        }
-
-        PhotoPagerAdapter adapter = getPageAdapter();
-        if (adapter == null || adapter.getCount() <= 1) {
-            return;
-        }
-
-        String title = getString(R.string.reader_title_photo_viewer, position + 1, adapter.getCount());
-        mTxtTitle.setText(title);
-
-        if (mTxtTitle.getVisibility() != View.VISIBLE) {
-            mTxtTitle.clearAnimation();
-            ReaderAnim.fadeInFadeOut(mTxtTitle, ReaderAnim.Duration.LONG);
-        }
     }
 
     @Override
@@ -131,15 +115,71 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
         super.onSaveInstanceState(outState);
     }
 
+    private boolean isActivePosition(int position) {
+        return (mViewPager != null && mViewPager.getCurrentItem() == position);
+    }
     @Override
-    public void onTapPhoto() {
-        showTitle(mViewPager.getCurrentItem());
+    public void onTapPhoto(int position) {
+        toggleTitle();
     }
 
     @Override
-    public void onTapOutsidePhoto() {
-        // return from photo viewer when user taps outside photo
-        finish();
+    public void onTapOutsidePhoto(int position) {
+        toggleTitle();
+    }
+
+    @Override
+    public void onPhotoLoaded(int position) {
+        // show title when first photo loads
+        if (position == 1 && isActivePosition(position)) {
+            showTitle();
+        }
+    }
+
+    @Override
+    public void onPhotoFailed(int position) {
+        if (isActivePosition(position)) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+        }
+    }
+
+    private void updateTitle(int position) {
+        if (isFinishing()) {
+            return;
+        }
+
+        // only show count if there's more than one image
+        PhotoPagerAdapter adapter = getPageAdapter();
+        if (adapter == null || adapter.getCount() <= 1) {
+            return;
+        }
+
+        String title = getString(R.string.reader_title_photo_viewer, position + 1, adapter.getCount());
+        mTxtTitle.setText(title);
+    }
+
+    private void toggleTitle() {
+        if (isTitleShowing()) {
+            hideTitle();
+        } else {
+            showTitle();
+        }
+    }
+
+    private boolean isTitleShowing() {
+        return (mTxtTitle.getVisibility() == View.VISIBLE);
+    }
+
+    private void showTitle() {
+        if (!isFinishing() && !isTitleShowing()) {
+            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.SHORT);
+        }
+    }
+
+    private void hideTitle() {
+        if (!isFinishing() && isTitleShowing()) {
+            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.SHORT);
+        }
     }
 
     private class PhotoPagerAdapter extends FragmentStatePagerAdapter {
@@ -157,7 +197,9 @@ public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTa
         @Override
         public Fragment getItem(int position) {
             return ReaderPhotoViewerFragment.newInstance(
-                    mImageList.get(position), mImageList.isPrivate());
+                    mImageList.get(position),
+                    position,
+                    mImageList.isPrivate());
         }
 
         @Override
