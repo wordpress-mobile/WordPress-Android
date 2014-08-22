@@ -539,9 +539,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         editor.commit();
 
         try {
-            JSONObject superProperty = new JSONObject();
-            superProperty.put(property, propertyCount);
-            mMixpanel.registerSuperProperties(superProperty);
+            JSONObject superProperties = mMixpanel.getSuperProperties();
+            superProperties.put(property, propertyCount);
+            mMixpanel.registerSuperProperties(superProperties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
@@ -549,9 +549,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     private void flagSuperProperty(String property) {
         try {
-            JSONObject superProperty = new JSONObject();
-            superProperty.put(property, true);
-            mMixpanel.registerSuperProperties(superProperty);
+            JSONObject superProperties = mMixpanel.getSuperProperties();
+            superProperties.put(property, true);
+            mMixpanel.registerSuperProperties(superProperties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }

@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.0"
-        versionCode 123
+        versionName "3.1-rc-1"
+        versionCode 130
         minSdkVersion 14
         targetSdkVersion 19
 
@@ -83,7 +83,7 @@ dependencies {
 
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
     compile 'net.simonvt.menudrawer:menudrawer:3.0.6'
-    compile 'com.mixpanel.android:mixpanel-android:4.2.1@aar'
+    compile 'com.mixpanel.android:mixpanel-android:4.3.0@aar'
     compile 'com.mcxiaoke.volley:library:1.0.+'
 
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.+'
@@ -102,7 +102,7 @@ dependencies {
     compile('com.simperium.android:simperium:0.5.0')
 
     debugCompile project(path:':libs:utils:WordPressUtils')
-    releaseCompile 'org.wordpress:wordpress-utils:1.1.0'
+    releaseCompile 'org.wordpress:wordpress-utils:1.2.0'
 
     debugCompile project(path:':libs:networking:WordPressNetworking')
     releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
