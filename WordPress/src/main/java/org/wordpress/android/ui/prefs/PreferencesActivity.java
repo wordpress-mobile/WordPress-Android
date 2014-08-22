@@ -46,11 +46,8 @@ import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -171,7 +168,6 @@ public class PreferencesActivity extends PreferenceActivity {
                     }
                     );
         }
-        initContactUsPreference();
         displayPreferences();
     }
 
@@ -188,17 +184,6 @@ public class PreferencesActivity extends PreferenceActivity {
         PreferenceCategory blogs = (PreferenceCategory) findPreference("wp_pref_notification_blogs");
         if (preferenceScreen != null && blogs != null) {
             preferenceScreen.removePreference(blogs);
-        }
-    }
-
-    private void initContactUsPreference() {
-        Preference contactUsPreference = findPreference("wp_pref_contact_us");
-        contactUsPreference.setOnPreferenceClickListener(contactUsPreferenceClickListener);
-        if (!ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("wp_pref_app_about_section");
-            if (contactUsPreference != null && preferenceCategory != null) {
-                preferenceCategory.removePreference(contactUsPreference);
-            }
         }
     }
 
@@ -705,14 +690,6 @@ public class PreferencesActivity extends PreferenceActivity {
             editor.commit();
             ToastUtils.showToast(getBaseContext(), R.string.auto_sharing_preference_reset,
                     ToastUtils.Duration.SHORT);
-            return true;
-        }
-    };
-
-    private OnPreferenceClickListener contactUsPreferenceClickListener = new OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            HelpshiftHelper.getInstance().showConversation(PreferencesActivity.this);
             return true;
         }
     };
