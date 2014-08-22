@@ -132,7 +132,7 @@ public class Note extends Syncable {
     }
 
     public Spannable getFormattedSubject() {
-        if (mFormattedSubject == null && getSubject() != null) {
+        if (mFormattedSubject == null) {
             mFormattedSubject = NotificationUtils.getSpannableTextFromIndices(getSubject(), null);
         }
         return mFormattedSubject;

@@ -220,6 +220,9 @@ public class NotificationUtils {
 
     public static Spannable getSpannableTextFromIndices(JSONObject subject,
                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+        if (subject == null) {
+            return new SpannableStringBuilder();
+        }
 
         String text = subject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
