@@ -17,9 +17,9 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
 import org.wordpress.android.util.MapUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
@@ -148,12 +148,7 @@ public class ManageBlogsActivity extends ListActivity {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(mResource, parent, false);
             CheckedTextView nameView = (CheckedTextView) rowView.findViewById(R.id.blog_name);
-            String name = StringUtils.unescapeHTML(MapUtils.getMapStr(getItem(position), "blogName"));
-            if (name.trim().length() == 0) {
-                name = MapUtils.getMapStr(getItem(position), "url");
-                name = StringUtils.getHost(name);
-            }
-            nameView.setText(name);
+            nameView.setText(BlogUtils.getBlogNameFromAccountMap(getItem(position)));
             nameView.setChecked(!MapUtils.getMapBool(getItem(position), "isHidden"));
             return rowView;
         }

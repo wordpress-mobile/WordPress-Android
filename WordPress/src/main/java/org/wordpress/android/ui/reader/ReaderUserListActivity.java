@@ -12,8 +12,8 @@ import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 /*
@@ -42,7 +42,7 @@ public class ReaderUserListActivity extends Activity {
     /*
      * called by adapter when data has been loaded
      */
-    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             // restore listView state so user returns to the previously scrolled-to item
@@ -142,19 +142,7 @@ public class ReaderUserListActivity extends Activity {
             numLikes = ReaderCommentTable.getNumLikesForComment(blogId, postId, commentId);
             isLikedByCurrentUser = ReaderCommentTable.isCommentLikedByCurrentUser(blogId, postId, commentId);
         }
-
-        if (isLikedByCurrentUser) {
-            switch (numLikes) {
-                case 1 :
-                    return getString(R.string.reader_likes_only_you);
-                case 2 :
-                    return getString(R.string.reader_likes_you_and_one);
-                default :
-                    return getString(R.string.reader_likes_you_and_multi, numLikes-1);
-            }
-        } else {
-            return (numLikes == 1 ? getString(R.string.reader_likes_one) : getString(R.string.reader_likes_multi, numLikes));
-        }
+        return ReaderUtils.getLongLikeLabelText(this, numLikes, isLikedByCurrentUser);
     }
 
 }

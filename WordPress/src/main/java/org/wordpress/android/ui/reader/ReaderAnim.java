@@ -9,6 +9,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -18,12 +19,16 @@ import org.wordpress.android.R;
 
 public class ReaderAnim {
 
+    public static interface AnimationEndListener {
+        public void onAnimationEnd();
+    }
+
     public static enum Duration {
         SHORT,
         MEDIUM,
         LONG;
 
-        private long toMillis(Context context) {
+        public long toMillis(Context context) {
             switch (this) {
                 case LONG:
                     return context.getResources().getInteger(android.R.integer.config_longAnimTime);
@@ -103,15 +108,40 @@ public class ReaderAnim {
         animator.setDuration(duration.toMillis(target.getContext()));
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        if (target.getVisibility() != View.VISIBLE) {
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    target.setVisibility(View.VISIBLE);
-                }
-            });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                target.setVisibility(View.VISIBLE);
+            }
+        });
+
+        animator.start();
+    }
+
+    public static void scaleOut(final View target,
+                                final int endVisibility,
+                                Duration duration,
+                                final AnimationEndListener endListener) {
+        if (target == null || duration == null) {
+            return;
         }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateInterpolator());
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                target.setVisibility(endVisibility);
+                if (endListener != null) {
+                    endListener.onAnimationEnd();
+                }
+            }
+        });
 
         animator.start();
     }
@@ -135,12 +165,10 @@ public class ReaderAnim {
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
                 target.setVisibility(View.VISIBLE);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 target.setVisibility(View.GONE);
             }
         });

@@ -20,13 +20,14 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
+import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderCommentAdapter extends BaseAdapter {
@@ -37,7 +38,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private static final int MAX_INDENT_LEVEL = 2;
     private final int mIndentPerLevel;
     private final int mAvatarSz;
-    private final int mMaxImageSz;
 
     private long mHighlightCommentId = 0;
     private boolean mShowProgressForHighlightedComment = false;
@@ -46,6 +46,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private final int mBgColorHighlight;
     private final int mLinkColor;
     private final int mNoLinkColor;
+    private final int mMaxImageSz;
 
     private final String mLike;
     private final String mLikedBy;
@@ -59,13 +60,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     private ReaderCommentList mComments = new ReaderCommentList();
     private final RequestReplyListener mReplyListener;
-    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     public ReaderCommentAdapter(Context context,
                                 ReaderPost post,
                                 RequestReplyListener replyListener,
-                                ReaderActions.DataLoadedListener dataLoadedListener,
+                                ReaderInterfaces.DataLoadedListener dataLoadedListener,
                                 ReaderActions.DataRequestedListener dataRequestedListener) {
         mPost = post;
         mReplyListener = replyListener;
@@ -233,9 +234,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
             txtLike = (TextView) view.findViewById(R.id.text_comment_like);
             txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
-            // this is necessary in order for anchor tags in the comment text to be clickable
             txtText.setLinksClickable(true);
-            txtText.setMovementMethod(WPLinkMovementMethod.getInstance());
+            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance());
         }
     }
 

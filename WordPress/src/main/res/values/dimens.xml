@@ -76,7 +76,7 @@
     <dimen name="reader_comment_indent_per_level">@dimen/avatar_sz_small</dimen>
 
     <!-- max size for images in Reader comments -->
-    <dimen name="reader_comment_max_image_size">96dp</dimen>
+    <dimen name="reader_comment_max_image_size">160dp</dimen>
 
     <dimen name="empty_list_title_text_size">24sp</dimen>
     <dimen name="empty_list_description_text_size">18sp</dimen>

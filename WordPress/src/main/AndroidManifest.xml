@@ -176,7 +176,7 @@
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:theme="@style/ReaderTheme.TranslucentActivity"
+            android:theme="@style/ReaderTheme"
             android:windowSoftInputMode="adjustResize"
             />
         <activity
