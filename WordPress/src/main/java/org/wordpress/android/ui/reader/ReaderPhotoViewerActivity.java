@@ -6,8 +6,11 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderPhotoViewerFragment.ReaderPhotoTapListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -17,12 +20,13 @@ import javax.annotation.Nonnull;
 /**
  * Full-screen photo viewer
  */
-public class ReaderPhotoViewerActivity extends Activity {
+public class ReaderPhotoViewerActivity extends Activity implements ReaderPhotoTapListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
     private ViewPager mViewPager;
+    private TextView mTxtTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,8 @@ public class ReaderPhotoViewerActivity extends Activity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
 
+        mTxtTitle = (TextView) findViewById(R.id.text_title);
+
         if (savedInstanceState != null) {
             mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
@@ -42,6 +48,13 @@ public class ReaderPhotoViewerActivity extends Activity {
             mIsPrivate = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_PRIVATE, false);
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
+
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                showTitle(position);
+            }
+        });
 
         loadImageList();
     }
@@ -75,6 +88,33 @@ public class ReaderPhotoViewerActivity extends Activity {
         int position = adapter.indexOfImageUrl(mInitialImageUrl);
         if (adapter.isValidPosition(position)) {
             mViewPager.setCurrentItem(position);
+            showTitle(position);
+        }
+    }
+
+    private PhotoPagerAdapter getPageAdapter() {
+        if (mViewPager == null || mViewPager.getAdapter() == null) {
+            return null;
+        }
+        return (PhotoPagerAdapter) mViewPager.getAdapter();
+    }
+
+    private void showTitle(int position) {
+        if (isFinishing()) {
+            return;
+        }
+
+        PhotoPagerAdapter adapter = getPageAdapter();
+        if (adapter == null || adapter.getCount() <= 1) {
+            return;
+        }
+
+        String title = getString(R.string.reader_title_photo_viewer, position + 1, adapter.getCount());
+        mTxtTitle.setText(title);
+
+        if (mTxtTitle.getVisibility() != View.VISIBLE) {
+            mTxtTitle.clearAnimation();
+            ReaderAnim.fadeInFadeOut(mTxtTitle, ReaderAnim.Duration.LONG);
         }
     }
 
@@ -91,6 +131,17 @@ public class ReaderPhotoViewerActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onTapPhoto() {
+        showTitle(mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onTapOutsidePhoto() {
+        // return from photo viewer when user taps outside photo
+        finish();
+    }
+
     private class PhotoPagerAdapter extends FragmentStatePagerAdapter {
         private final ReaderImageList mImageList;
 
@@ -105,15 +156,8 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         @Override
         public Fragment getItem(int position) {
-            final String title;
-            if (getCount() > 1) {
-                title = getString(R.string.reader_title_photo_viewer, position + 1, getCount());
-            } else {
-                title = null;
-            }
-
             return ReaderPhotoViewerFragment.newInstance(
-                    mImageList.get(position), mImageList.isPrivate(), title);
+                    mImageList.get(position), mImageList.isPrivate());
         }
 
         @Override

@@ -26,13 +26,10 @@ public class ReaderAnim {
     public static enum Duration {
         SHORT,
         MEDIUM,
-        LONG,
-        EXTRA_LONG;
+        LONG;
 
         public long toMillis(Context context) {
             switch (this) {
-                case EXTRA_LONG:
-                    return context.getResources().getInteger(android.R.integer.config_longAnimTime) * 2;
                 case LONG:
                     return context.getResources().getInteger(android.R.integer.config_longAnimTime);
                 case MEDIUM:

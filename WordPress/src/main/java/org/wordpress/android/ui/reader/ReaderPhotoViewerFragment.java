@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -24,16 +24,19 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ReaderPhotoViewerFragment extends Fragment {
     private String mImageUrl;
     private boolean mIsPrivate;
-    private TextView mTxtTitle;
-    private String mTitle;
+    private ReaderPhotoTapListener mPhotoTapListener;
 
-    static ReaderPhotoViewerFragment newInstance(String imageUrl, boolean isPrivate, String title) {
+    static interface ReaderPhotoTapListener {
+        void onTapPhoto();
+        void onTapOutsidePhoto();
+    }
+
+    static ReaderPhotoViewerFragment newInstance(String imageUrl, boolean isPrivate) {
         AppLog.d(AppLog.T.READER, "reader photo fragment > newInstance");
 
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
         args.putBoolean(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
-        args.putString(ReaderConstants.ARG_TITLE, title);
 
         ReaderPhotoViewerFragment fragment = new ReaderPhotoViewerFragment();
         fragment.setArguments(args);
@@ -47,17 +50,20 @@ public class ReaderPhotoViewerFragment extends Fragment {
         if (args != null) {
             mImageUrl = args.getString(ReaderConstants.ARG_IMAGE_URL);
             mIsPrivate = args.getBoolean(ReaderConstants.ARG_IS_PRIVATE);
-            mTitle = args.getString(ReaderConstants.ARG_TITLE);
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof ReaderPhotoTapListener) {
+            mPhotoTapListener = (ReaderPhotoTapListener) activity;
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
-
-        mTxtTitle = (TextView) view.findViewById(R.id.text_title);
-        mTxtTitle.setText(mTitle);
-
         return view;
     }
 
@@ -65,12 +71,10 @@ public class ReaderPhotoViewerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         showImage();
-        showTitle();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(ReaderConstants.ARG_TITLE, mTitle);
         outState.putString(ReaderConstants.ARG_IMAGE_URL, mImageUrl);
         outState.putBoolean(ReaderConstants.ARG_IS_PRIVATE, mIsPrivate);
         super.onSaveInstanceState(outState);
@@ -114,15 +118,6 @@ public class ReaderPhotoViewerFragment extends Fragment {
         });
     }
 
-    private void showTitle() {
-        if (!isAdded() || TextUtils.isEmpty(mTitle)) {
-            return;
-        }
-        if (mTxtTitle.getVisibility() != View.VISIBLE) {
-            ReaderAnim.fadeInFadeOut(mTxtTitle, ReaderAnim.Duration.EXTRA_LONG);
-        }
-    }
-
     private void createAttacher(ImageView imageView) {
         if (!isAdded()) {
             return;
@@ -133,13 +128,17 @@ public class ReaderPhotoViewerFragment extends Fragment {
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float v, float v2) {
-                showTitle();
+                if (mPhotoTapListener != null) {
+                    mPhotoTapListener.onTapOutsidePhoto();
+                }
             }
         });
         attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float v, float v2) {
-                showTitle();
+                if (mPhotoTapListener != null) {
+                    mPhotoTapListener.onTapPhoto();
+                }
             }
         });
     }

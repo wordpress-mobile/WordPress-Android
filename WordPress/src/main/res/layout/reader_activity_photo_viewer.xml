@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/translucent">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/translucent"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:text="title"
+        tools:visibility="visible" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
