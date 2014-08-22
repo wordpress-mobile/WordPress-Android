@@ -105,8 +105,15 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         @Override
         public Fragment getItem(int position) {
+            final String title;
+            if (getCount() > 1) {
+                title = getString(R.string.reader_title_photo_viewer, position + 1, getCount());
+            } else {
+                title = null;
+            }
+
             return ReaderPhotoViewerFragment.newInstance(
-                    mImageList.get(position), mImageList.isPrivate());
+                    mImageList.get(position), mImageList.isPrivate(), title);
         }
 
         @Override

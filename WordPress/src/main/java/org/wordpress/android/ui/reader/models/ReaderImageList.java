@@ -4,6 +4,10 @@ import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 
+/*
+ * used by ReaderImageScanner to compile a list of images in a specific post
+ */
+
 public class ReaderImageList extends ArrayList<String> {
     private final boolean mIsPrivate;
 
