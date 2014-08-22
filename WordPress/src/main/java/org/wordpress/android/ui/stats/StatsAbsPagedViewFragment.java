@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
 
@@ -95,8 +96,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                                                                          RadioGroup.LayoutParams.WRAP_CONTENT);
-            Typeface typeface = Typeface.createFromAsset(getActivity().getApplicationContext().getAssets(), "fonts/OpenSans-Regular.ttf");
-            rb.setTypeface(typeface);
+            rb.setTypeface((TypefaceCache.getTypeface(getActivity())));
 
             params.setMargins(0, 0, dp8, 0);
             rb.setMinimumWidth(dp80);
