@@ -60,7 +60,7 @@ import java.util.Stack;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-class ReaderPostListFragment extends Fragment
+public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
                    ActionBar.OnNavigationListener {
 
