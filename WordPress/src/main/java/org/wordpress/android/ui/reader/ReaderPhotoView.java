@@ -16,8 +16,10 @@ import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -58,17 +60,26 @@ public class ReaderPhotoView extends RelativeLayout {
     }
 
     /**
-     * @param loResImageUrl the url of the lo-res image to load
-     * @param hiResImageUrl the url of the hi-res image to load
+     * @param imageUrl the url of the image to load
+     * @param hiResWidth maximum width of the full-size image
+     * @param isPrivate whether this is an image from a private blog
      * @param position the position of the image in ReaderPhotoViewerActivity
      * @param photoListener optional listener
      */
-    public void setImageUrl(String loResImageUrl,
-                            String hiResImageUrl,
+    public void setImageUrl(String imageUrl,
+                            int hiResWidth,
+                            boolean isPrivate,
                             int position,
                             ReaderPhotoListener photoListener) {
-        mLoResImageUrl = loResImageUrl;
-        mHiResImageUrl = hiResImageUrl;
+        int loResWidth = (int) (hiResWidth * 0.15f);
+        if (isPrivate) {
+            mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
+            mHiResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, hiResWidth, 0);
+        } else {
+            mLoResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, loResWidth, 0);
+            mHiResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, hiResWidth, 0);
+        }
+
         mPosition = position;
         mPhotoListener = photoListener;
         loadImageIfNecessary(false);
@@ -103,10 +114,10 @@ public class ReaderPhotoView extends RelativeLayout {
     }
 
     private void getLoResImage(final boolean isInLayoutPass) {
-        showProgress();
-
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.min(pt.x, pt.y);
+
+        showProgress();
 
         mImageContainer = WordPress.imageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
@@ -119,16 +130,17 @@ public class ReaderPhotoView extends RelativeLayout {
 
                     @Override
                     public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
-                        hideProgress();
                         if (isImmediate && isInLayoutPass) {
                             post(new Runnable() {
                                 @Override
                                 public void run() {
                                     handleResponse(response, true);
+                                    hideProgress();
                                 }
                             });
                         } else {
                             handleResponse(response, true);
+                            hideProgress();
                         }
                     }
                 }, maxSize, maxSize);
@@ -160,17 +172,24 @@ public class ReaderPhotoView extends RelativeLayout {
     private void handleResponse(ImageLoader.ImageContainer response, boolean isLoResResponse) {
         if (response.getBitmap() != null) {
             mImageView.setImageBitmap(response.getBitmap());
+            createAttacher(mImageView);
+
             if (isLoResResponse) {
                 ReaderAnim.fadeIn(mImageView, ReaderAnim.Duration.MEDIUM);
-                getHiResImage();
                 if (mPhotoListener != null) {
                     mPhotoListener.onPhotoLoaded(mPosition);
                 }
+                getHiResImage();
             }
-            createAttacher(mImageView);
+
+            AppLog.d(AppLog.T.READER, "ReaderPhotoView > loaded "
+                    + (isLoResResponse ? "lo-res image" : "hi-res image"));
         }
     }
 
+    /*
+     * attach the pinch/zoom handler
+     */
     private void createAttacher(ImageView imageView) {
         PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
@@ -201,6 +220,7 @@ public class ReaderPhotoView extends RelativeLayout {
     private void showProgress() {
         if (mProgress != null) {
             mProgress.setVisibility(View.VISIBLE);
+            mProgress.bringToFront();
         }
     }
 

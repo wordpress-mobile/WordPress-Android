@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 
 public class ReaderPhotoViewerFragment extends Fragment {
     private String mImageUrl;
@@ -94,19 +92,8 @@ public class ReaderPhotoViewerFragment extends Fragment {
         // use max of width/height so image will be cached the same size regardless of orientation
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
         int hiResWidth = Math.max(pt.x, pt.y);
-        int loResWidth = (int) (hiResWidth * 0.10f);
 
-        final String loResImageUrl;
-        final String hiResImageUrl;
-        if (mIsPrivate) {
-            loResImageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, loResWidth, 0);
-            hiResImageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, hiResWidth, 0);
-        } else {
-            loResImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, loResWidth, 0);
-            hiResImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, hiResWidth, 0);
-        }
-
-        mPhotoView.setImageUrl(loResImageUrl, hiResImageUrl, mPosition, mPhotoListener);
+        mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPosition, mPhotoListener);
     }
 
 
