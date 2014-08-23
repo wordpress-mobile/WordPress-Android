@@ -6,23 +6,25 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderPhotoViewerFragment.ReaderPhotoListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
-import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
 /**
- * Full-screen photo viewer
+ * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
+ * post, but also supports viewing a single image
  */
 public class ReaderPhotoViewerActivity extends Activity
-                                       implements ReaderPhotoViewerFragment.ReaderPhotoListener {
+                                       implements ReaderPhotoListener {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
@@ -71,7 +73,7 @@ public class ReaderPhotoViewerActivity extends Activity
                 // this activity, and make sure the list includes the passed url
                 ReaderImageScanner scanner = new ReaderImageScanner(mContent, mIsPrivate);
                 final ReaderImageList imageList = scanner.getImageList();
-                if (!imageList.hasImageUrl(mInitialImageUrl)) {
+                if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
                     imageList.addImageUrl(0, mInitialImageUrl);
                 }
                 runOnUiThread(new Runnable() {
@@ -105,8 +107,8 @@ public class ReaderPhotoViewerActivity extends Activity
 
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
-        if (mViewPager.getAdapter() != null) {
-            PhotoPagerAdapter adapter = (PhotoPagerAdapter) mViewPager.getAdapter();
+        PhotoPagerAdapter adapter = getPageAdapter();
+        if (adapter != null) {
             String imageUrl = adapter.getImageUrl(mViewPager.getCurrentItem());
             outState.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
         }
@@ -150,14 +152,7 @@ public class ReaderPhotoViewerActivity extends Activity
         if (isFinishing()) {
             return;
         }
-
-        // only show count if there's more than one image
-        int numImages = getImageCount();
-        if (numImages <= 1) {
-            return;
-        }
-
-        String title = getString(R.string.reader_title_photo_viewer, position + 1, numImages);
+        String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
         mTxtTitle.setText(title);
     }
 
@@ -166,7 +161,8 @@ public class ReaderPhotoViewerActivity extends Activity
     }
 
     private void showTitle() {
-        if (isFinishing()) {
+        // image count is only shown if there are multiple images
+        if (isFinishing() || getImageCount() <= 1) {
             return;
         }
 

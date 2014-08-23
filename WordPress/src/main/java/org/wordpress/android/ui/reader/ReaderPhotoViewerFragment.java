@@ -112,7 +112,8 @@ public class ReaderPhotoViewerFragment extends Fragment {
             return;
         }
 
-        // use max of width/height so same image will be cached regardless of device orientation
+        // use max of width/height so image will be cached the same size
+        // regardless of device orientation
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
         int maxWidth = Math.max(pt.x, pt.y);
 
@@ -161,7 +162,6 @@ public class ReaderPhotoViewerFragment extends Fragment {
         }
 
         PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
-
         attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float v, float v2) {
