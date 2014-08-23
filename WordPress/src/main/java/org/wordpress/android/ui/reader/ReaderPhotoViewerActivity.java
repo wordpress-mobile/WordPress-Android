@@ -118,20 +118,21 @@ public class ReaderPhotoViewerActivity extends Activity
     private boolean isActivePosition(int position) {
         return (mViewPager != null && mViewPager.getCurrentItem() == position);
     }
+
     @Override
     public void onTapPhoto(int position) {
-        toggleTitle();
+        // nop
     }
 
     @Override
     public void onTapOutsidePhoto(int position) {
-        toggleTitle();
+        // nop
     }
 
     @Override
     public void onPhotoLoaded(int position) {
-        // show title when first photo loads
-        if (position == 1 && isActivePosition(position)) {
+        // show title after first photo loads
+        if (position == 0) {
             showTitle();
         }
     }
@@ -143,27 +144,28 @@ public class ReaderPhotoViewerActivity extends Activity
         }
     }
 
+    private int getImageCount() {
+        PhotoPagerAdapter adapter = getPageAdapter();
+        if (adapter != null) {
+            return adapter.getCount();
+        } else {
+            return 0;
+        }
+    }
+
     private void updateTitle(int position) {
         if (isFinishing()) {
             return;
         }
 
         // only show count if there's more than one image
-        PhotoPagerAdapter adapter = getPageAdapter();
-        if (adapter == null || adapter.getCount() <= 1) {
+        int numImages = getImageCount();
+        if (numImages <= 1) {
             return;
         }
 
-        String title = getString(R.string.reader_title_photo_viewer, position + 1, adapter.getCount());
+        String title = getString(R.string.reader_title_photo_viewer, position + 1, numImages);
         mTxtTitle.setText(title);
-    }
-
-    private void toggleTitle() {
-        if (isTitleShowing()) {
-            hideTitle();
-        } else {
-            showTitle();
-        }
     }
 
     private boolean isTitleShowing() {
@@ -172,13 +174,7 @@ public class ReaderPhotoViewerActivity extends Activity
 
     private void showTitle() {
         if (!isFinishing() && !isTitleShowing()) {
-            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.SHORT);
-        }
-    }
-
-    private void hideTitle() {
-        if (!isFinishing() && isTitleShowing()) {
-            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.SHORT);
+            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.MEDIUM);
         }
     }
 

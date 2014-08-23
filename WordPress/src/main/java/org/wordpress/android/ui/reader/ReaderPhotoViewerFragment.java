@@ -26,6 +26,9 @@ public class ReaderPhotoViewerFragment extends Fragment {
     private int mPosition;
     private ReaderPhotoListener mPhotoListener;
 
+    private WPNetworkImageView mImageView;
+    private ProgressBar mProgress;
+
     static interface ReaderPhotoListener {
         void onTapPhoto(int position);
         void onTapOutsidePhoto(int position);
@@ -72,7 +75,10 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
+        View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
+        mImageView = (WPNetworkImageView) view.findViewById(R.id.image_photo);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        return view;
     }
 
     @Override
@@ -104,20 +110,20 @@ public class ReaderPhotoViewerFragment extends Fragment {
             return;
         }
 
-        final String imageUrl;
+        // use max of width/height so same image will be cached regardless of device orientation
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
         int maxWidth = Math.max(pt.x, pt.y);
+
+        final String imageUrl;
         if (mIsPrivate) {
             imageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, maxWidth, 0);
         } else {
             imageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
         }
 
-
         showProgress();
 
-        final WPNetworkImageView imageView = (WPNetworkImageView) getView().findViewById(R.id.image_photo);
-        imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_FULL, new WPNetworkImageView.ImageListener() {
+        mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_FULL, new WPNetworkImageView.ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
                 if (!isAdded()) {
@@ -125,7 +131,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
                 }
                 hideProgress();
                 if (succeeded) {
-                    createAttacher(imageView);
+                    createAttacher(mImageView);
                 }
                 if (mPhotoListener != null) {
                     if (succeeded) {
@@ -140,15 +146,13 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
     private void showProgress() {
         if (isAdded()) {
-            final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress);
-            progress.setVisibility(View.VISIBLE);
+            mProgress.setVisibility(View.VISIBLE);
         }
     }
 
     private void hideProgress() {
         if (isAdded()) {
-            final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress);
-            progress.setVisibility(View.GONE);
+            mProgress.setVisibility(View.GONE);
         }
     }
 
