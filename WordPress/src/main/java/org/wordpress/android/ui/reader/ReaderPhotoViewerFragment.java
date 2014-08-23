@@ -18,6 +18,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageListener;
+import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -103,57 +105,39 @@ public class ReaderPhotoViewerFragment extends Fragment {
     }
 
     private void showImage() {
-        if (!isAdded()) {
+        if (!isAdded() || TextUtils.isEmpty(mImageUrl)) {
             return;
         }
 
-        if (TextUtils.isEmpty(mImageUrl)) {
-            hideProgress();
-            return;
-        }
-
-        // use max of width/height so image will be cached the same size
-        // regardless of device orientation
+        // use min of width/height so image will be cached the same size regardless
+        // of device orientation
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
-        int maxWidth = Math.max(pt.x, pt.y);
+        int maxWidth = Math.min(pt.x, pt.y);
 
-        final String imageUrl;
+        final String imageUrlToLoad;
         if (mIsPrivate) {
-            imageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, maxWidth, 0);
+            imageUrlToLoad = ReaderUtils.getPrivateImageForDisplay(mImageUrl, maxWidth, 0);
         } else {
-            imageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
+            imageUrlToLoad = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
         }
 
-        showProgress();
+        mProgress.setVisibility(View.VISIBLE);
 
-        mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO_FULL, new WPNetworkImageView.ImageListener() {
+        mImageView.setImageUrl(imageUrlToLoad, ImageType.PHOTO_FULL, new ImageListener() {
             @Override
             public void onImageLoaded(boolean succeeded) {
-                if (!isAdded()) {
-                    return;
-                }
-                hideProgress();
-                mTxtError.setVisibility(succeeded ? View.GONE : View.VISIBLE);
-                if (succeeded) {
-                    createAttacher(mImageView);
-                    if (mPhotoListener != null) {
-                        mPhotoListener.onPhotoLoaded(mPosition);
+                if (isAdded()) {
+                    mProgress.setVisibility(View.GONE);
+                    mTxtError.setVisibility(succeeded ? View.GONE : View.VISIBLE);
+                    if (succeeded) {
+                        createAttacher(mImageView);
+                        if (mPhotoListener != null) {
+                            mPhotoListener.onPhotoLoaded(mPosition);
+                        }
                     }
                 }
             }
         });
-    }
-
-    private void showProgress() {
-        if (isAdded()) {
-            mProgress.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void hideProgress() {
-        if (isAdded()) {
-            mProgress.setVisibility(View.GONE);
-        }
     }
 
     private void createAttacher(ImageView imageView) {
