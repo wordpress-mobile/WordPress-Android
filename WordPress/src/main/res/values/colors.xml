@@ -75,6 +75,7 @@
     <color name="grey_medium_dark">#666666</color>  <!-- "whisper grey" -->
     <color name="grey_dark">#333333</color>         <!-- "little eddie grey" -->
     <color name="grey_extra_dark">#222222</color>   <!-- "big eddie grey" -->
+    <color name="translucent_grey_extra_dark">#80222222</color>
     <color name="semi_transparent_blue_medium">#cc1e8cbe</color>
 
     <!-- native reader colors -->
