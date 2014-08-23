@@ -56,6 +56,7 @@ public class ReaderPhotoViewerActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 updateTitle(position);
+                showTitle();
             }
         });
 
@@ -121,12 +122,12 @@ public class ReaderPhotoViewerActivity extends Activity
 
     @Override
     public void onTapPhoto(int position) {
-        // nop
+        showTitle();
     }
 
     @Override
     public void onTapOutsidePhoto(int position) {
-        // nop
+        showTitle();
     }
 
     @Override
@@ -173,8 +174,15 @@ public class ReaderPhotoViewerActivity extends Activity
     }
 
     private void showTitle() {
-        if (!isFinishing() && !isTitleShowing()) {
-            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.MEDIUM);
+        if (isFinishing()) {
+            return;
+        }
+
+        mTxtTitle.clearAnimation();
+        if (isTitleShowing()) {
+            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.MEDIUM);
+        } else {
+            ReaderAnim.fadeInFadeOut(mTxtTitle, ReaderAnim.Duration.MEDIUM);
         }
     }
 
