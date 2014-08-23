@@ -12,7 +12,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderPhotoViewerFragment.ReaderPhotoListener;
+import org.wordpress.android.ui.reader.ReaderPhotoView.ReaderPhotoListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
