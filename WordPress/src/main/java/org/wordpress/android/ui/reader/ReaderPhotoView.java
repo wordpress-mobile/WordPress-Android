@@ -23,18 +23,21 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * used by ReaderPhotoViewerActivity to show full-width images - based on Volley's ImageView
- * but adds pinch/zoom
+ * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
+
     static interface ReaderPhotoListener {
         void onTapPhoto(int position);
         void onTapOutsidePhoto(int position);
         void onPhotoLoaded(int position);
     }
 
-    private String mImageUrl;
+    private String mLoResImageUrl;
+    private String mHiResImageUrl;
     private int mPosition;
     private ReaderPhotoListener mPhotoListener;
+
     private ImageLoader.ImageContainer mImageContainer;
 
     private final ImageView mImageView;
@@ -54,53 +57,69 @@ public class ReaderPhotoView extends RelativeLayout {
         mTxtError = (TextView) view.findViewById(R.id.text_error);
     }
 
-    public void setImageUrl(String imageUrl, int position, ReaderPhotoListener photoListener) {
-        mImageUrl = imageUrl;
+    /**
+     * @param loResImageUrl the url of the lo-res image to load
+     * @param hiResImageUrl the url of the hi-res image to load
+     * @param position the position of the image in ReaderPhotoViewerActivity
+     * @param photoListener optional listener
+     */
+    public void setImageUrl(String loResImageUrl,
+                            String hiResImageUrl,
+                            int position,
+                            ReaderPhotoListener photoListener) {
+        mLoResImageUrl = loResImageUrl;
+        mHiResImageUrl = hiResImageUrl;
         mPosition = position;
         mPhotoListener = photoListener;
         loadImageIfNecessary(false);
     }
 
-    private void loadImageIfNecessary(final boolean isInLayoutPass) {
+    private void loadImageIfNecessary(boolean isInLayoutPass) {
         int width = getWidth();
         int height = getHeight();
         if (width == 0 && height == 0) {
             return;
         }
 
-        if (TextUtils.isEmpty(mImageUrl)) {
+        if (TextUtils.isEmpty(mLoResImageUrl)) {
             if (mImageContainer != null) {
                 mImageContainer.cancelRequest();
                 mImageContainer = null;
             }
-            showError();
             return;
         }
 
         if (mImageContainer != null && mImageContainer.getRequestUrl() != null) {
-            if (mImageContainer.getRequestUrl().equals(mImageUrl)) {
+            if (mImageContainer.getRequestUrl().equals(mLoResImageUrl)) {
+                return;
+            } else if (mImageContainer.getRequestUrl().equals(mHiResImageUrl)) {
                 return;
             } else {
                 mImageContainer.cancelRequest();
             }
         }
 
-        // enforce a max size to reduce memory usage
-        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
-        int maxSize = Math.max(pt.x, pt.y);
+        getLoResImage(isInLayoutPass);
+    }
 
+    private void getLoResImage(final boolean isInLayoutPass) {
         showProgress();
 
-        mImageContainer = WordPress.imageLoader.get(mImageUrl,
+        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
+        int maxSize = Math.min(pt.x, pt.y);
+
+        mImageContainer = WordPress.imageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.e(AppLog.T.READER, error);
+                        hideProgress();
                         showError();
                     }
 
                     @Override
                     public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+                        hideProgress();
                         if (isImmediate && isInLayoutPass) {
                             post(new Runnable() {
                                 @Override
@@ -109,26 +128,46 @@ public class ReaderPhotoView extends RelativeLayout {
                                 }
                             });
                         } else {
-                            handleResponse(response, isImmediate);
+                            handleResponse(response, true);
                         }
                     }
                 }, maxSize, maxSize);
     }
 
-    private void handleResponse(ImageLoader.ImageContainer response, boolean isCached) {
-        hideProgress();
+    private void getHiResImage() {
+        Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
+        int maxSize = Math.max(pt.x, pt.y);
 
+        mImageContainer = WordPress.imageLoader.get(mHiResImageUrl,
+                new ImageLoader.ImageListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(AppLog.T.READER, error);
+                    }
+
+                    @Override
+                    public void onResponse(final ImageLoader.ImageContainer response, boolean isImmediate) {
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                handleResponse(response, false);
+                            }
+                        });
+                    }
+                }, maxSize, maxSize);
+    }
+
+    private void handleResponse(ImageLoader.ImageContainer response, boolean isLoResResponse) {
         if (response.getBitmap() != null) {
             mImageView.setImageBitmap(response.getBitmap());
-            if (!isCached) {
+            if (isLoResResponse) {
                 ReaderAnim.fadeIn(mImageView, ReaderAnim.Duration.MEDIUM);
+                getHiResImage();
+                if (mPhotoListener != null) {
+                    mPhotoListener.onPhotoLoaded(mPosition);
+                }
             }
             createAttacher(mImageView);
-            if (mPhotoListener != null) {
-                mPhotoListener.onPhotoLoaded(mPosition);
-            }
-        } else {
-            showError();
         }
     }
 

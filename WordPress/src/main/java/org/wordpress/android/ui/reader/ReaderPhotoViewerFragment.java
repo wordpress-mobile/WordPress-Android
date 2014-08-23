@@ -91,19 +91,22 @@ public class ReaderPhotoViewerFragment extends Fragment {
             return;
         }
 
-        // use min of width/height so image will be cached the same size regardless
-        // of device orientation
+        // use max of width/height so image will be cached the same size regardless of orientation
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
-        int maxWidth = Math.min(pt.x, pt.y);
+        int hiResWidth = Math.max(pt.x, pt.y);
+        int loResWidth = (int) (hiResWidth * 0.10f);
 
-        final String imageUrlToLoad;
+        final String loResImageUrl;
+        final String hiResImageUrl;
         if (mIsPrivate) {
-            imageUrlToLoad = ReaderUtils.getPrivateImageForDisplay(mImageUrl, maxWidth, 0);
+            loResImageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, loResWidth, 0);
+            hiResImageUrl = ReaderUtils.getPrivateImageForDisplay(mImageUrl, hiResWidth, 0);
         } else {
-            imageUrlToLoad = PhotonUtils.getPhotonImageUrl(mImageUrl, maxWidth, 0);
+            loResImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, loResWidth, 0);
+            hiResImageUrl = PhotonUtils.getPhotonImageUrl(mImageUrl, hiResWidth, 0);
         }
 
-        mPhotoView.setImageUrl(imageUrlToLoad, mPosition, mPhotoListener);
+        mPhotoView.setImageUrl(loResImageUrl, hiResImageUrl, mPosition, mPhotoListener);
     }
 
 
