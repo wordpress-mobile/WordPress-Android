@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 
@@ -60,9 +59,11 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
-        mPhotoView = (ReaderPhotoView) view.findViewById(R.id.photo_view);
-        return view;
+        mPhotoView = new ReaderPhotoView(container.getContext());
+        mPhotoView.setLayoutParams(
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                           ViewGroup.LayoutParams.MATCH_PARENT));
+        return mPhotoView;
     }
 
     @Override
