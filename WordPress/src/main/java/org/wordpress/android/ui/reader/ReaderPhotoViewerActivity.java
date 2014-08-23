@@ -132,16 +132,8 @@ public class ReaderPhotoViewerActivity extends Activity
 
     @Override
     public void onPhotoLoaded(int position) {
-        // show title after first photo loads
-        if (position == 0) {
-            showTitle();
-        }
-    }
-
-    @Override
-    public void onPhotoFailed(int position) {
         if (isActivePosition(position)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_view_image, ToastUtils.Duration.LONG);
+            showTitle();
         }
     }
 

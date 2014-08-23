@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -28,12 +29,12 @@ public class ReaderPhotoViewerFragment extends Fragment {
 
     private WPNetworkImageView mImageView;
     private ProgressBar mProgress;
+    private TextView mTxtError;
 
     static interface ReaderPhotoListener {
         void onTapPhoto(int position);
         void onTapOutsidePhoto(int position);
         void onPhotoLoaded(int position);
-        void onPhotoFailed(int position);
     }
 
     /**
@@ -78,6 +79,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
         mImageView = (WPNetworkImageView) view.findViewById(R.id.image_photo);
         mProgress = (ProgressBar) view.findViewById(R.id.progress);
+        mTxtError = (TextView) view.findViewById(R.id.text_error);
         return view;
     }
 
@@ -130,14 +132,11 @@ public class ReaderPhotoViewerFragment extends Fragment {
                     return;
                 }
                 hideProgress();
+                mTxtError.setVisibility(succeeded ? View.GONE : View.VISIBLE);
                 if (succeeded) {
                     createAttacher(mImageView);
-                }
-                if (mPhotoListener != null) {
-                    if (succeeded) {
+                    if (mPhotoListener != null) {
                         mPhotoListener.onPhotoLoaded(mPosition);
-                    } else {
-                        mPhotoListener.onPhotoFailed(mPosition);
                     }
                 }
             }

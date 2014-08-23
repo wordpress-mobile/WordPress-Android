@@ -30,7 +30,7 @@ public class ReaderImageList extends ArrayList<String> {
         }
         String fixedUrl = fixImageUrl(imageUrl);
         for (int i = 0; i < this.size(); i++) {
-            if (fixedUrl.equalsIgnoreCase(this.get(i))) {
+            if (fixedUrl.equals(this.get(i))) {
                 return i;
             }
         }
