@@ -15,13 +15,11 @@
         android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/translucent_grey_extra_dark"
         android:padding="@dimen/margin_medium"
-        android:shadowColor="@color/grey_dark"
-        android:textColor="@color/grey_extra_light"
-        android:textSize="@dimen/text_sz_extra_large"
-        android:visibility="gone"
-        tools:text="title"
-        tools:visibility="visible" />
+        android:textColor="@color/grey_medium"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="title" />
 
 </RelativeLayout>

@@ -31,17 +31,9 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
-
-    static interface ReaderPhotoListener {
-        void onTapPhoto(int position);
-        void onTapOutsidePhoto(int position);
-        void onPhotoLoaded(int position);
-    }
-
     private String mLoResImageUrl;
     private String mHiResImageUrl;
     private int mPosition;
-    private ReaderPhotoListener mPhotoListener;
 
     private ImageContainer mLoResContainer;
     private ImageContainer mHiResContainer;
@@ -87,13 +79,11 @@ public class ReaderPhotoView extends RelativeLayout {
      * @param hiResWidth maximum width of the full-size image
      * @param isPrivate whether this is an image from a private blog
      * @param position the position of the image in ReaderPhotoViewerActivity
-     * @param photoListener optional listener
      */
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
                             boolean isPrivate,
-                            int position,
-                            ReaderPhotoListener photoListener) {
+                            int position) {
         int loResWidth = (int) (hiResWidth * 0.15f);
         if (isPrivate) {
             mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
@@ -104,7 +94,6 @@ public class ReaderPhotoView extends RelativeLayout {
         }
 
         mPosition = position;
-        mPhotoListener = photoListener;
         loadLoResImage(false);
     }
 
@@ -139,6 +128,8 @@ public class ReaderPhotoView extends RelativeLayout {
         if (isRequestingUrl(mLoResContainer, mLoResImageUrl)) {
             return;
         }
+
+        AppLog.w(AppLog.T.READER, "reader photo > loadLoResImage " + mPosition);
 
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.min(pt.x, pt.y);
@@ -209,18 +200,17 @@ public class ReaderPhotoView extends RelativeLayout {
             if (isLoResResponse) {
                 hideProgress();
                 ReaderAnim.fadeIn(mImageView, ReaderAnim.Duration.SHORT);
-                if (mPhotoListener != null) {
-                    mPhotoListener.onPhotoLoaded(mPosition);
+                if (!mLoResImageUrl.equals(mHiResImageUrl)) {
+                    loadHiResImage();
                 }
-                loadHiResImage();
             }
 
             AppLog.d(AppLog.T.READER,
-                    "reader photo > loaded " + (isLoResResponse ? "lo-res" : "hi-res"));
+                    "reader photo > loaded " + (isLoResResponse ? "lo-res " : "hi-res ") + mPosition);
 
         } else {
             AppLog.w(AppLog.T.READER,
-                    "reader photo > null bitmap " + (isLoResResponse ? "lo-res" : "hi-res"));
+                    "reader photo > null bitmap " + (isLoResResponse ? "lo-res " : "hi-res ") + mPosition);
         }
     }
 
@@ -229,22 +219,6 @@ public class ReaderPhotoView extends RelativeLayout {
      */
     private void createAttacher(ImageView imageView) {
         PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
-        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float v, float v2) {
-                if (mPhotoListener != null) {
-                    mPhotoListener.onTapOutsidePhoto(mPosition);
-                }
-            }
-        });
-        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float v, float v2) {
-                if (mPhotoListener != null) {
-                    mPhotoListener.onTapPhoto(mPosition);
-                }
-            }
-        });
     }
 
     private void showError() {
@@ -277,6 +251,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
     @Override
     protected void onDetachedFromWindow() {
+        AppLog.d(AppLog.T.READER, "reader photo > onDetachedFromWindow " + mPosition);
         if (mLoResContainer != null || mHiResContainer != null) {
             mImageView.setImageDrawable(null);
         }

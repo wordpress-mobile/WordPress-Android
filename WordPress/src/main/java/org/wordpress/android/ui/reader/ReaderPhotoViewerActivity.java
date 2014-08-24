@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderPhotoView.ReaderPhotoListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -23,8 +22,7 @@ import javax.annotation.Nonnull;
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
  * post, but also supports viewing a single image
  */
-public class ReaderPhotoViewerActivity extends Activity
-                                       implements ReaderPhotoListener {
+public class ReaderPhotoViewerActivity extends Activity {
 
     private String mInitialImageUrl;
     private boolean mIsPrivate;
@@ -40,8 +38,6 @@ public class ReaderPhotoViewerActivity extends Activity
         setContentView(R.layout.reader_activity_photo_viewer);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
-
         mTxtTitle = (TextView) findViewById(R.id.text_title);
 
         if (savedInstanceState != null) {
@@ -54,11 +50,11 @@ public class ReaderPhotoViewerActivity extends Activity
             mContent = getIntent().getStringExtra(ReaderConstants.ARG_CONTENT);
         }
 
+        mViewPager.setPageTransformer(false, new ReaderViewPagerTransformer(TransformType.FLOW));
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 updateTitle(position);
-                showTitle();
             }
         });
 
@@ -118,27 +114,6 @@ public class ReaderPhotoViewerActivity extends Activity
         super.onSaveInstanceState(outState);
     }
 
-    private boolean isActivePosition(int position) {
-        return (mViewPager != null && mViewPager.getCurrentItem() == position);
-    }
-
-    @Override
-    public void onTapPhoto(int position) {
-        showTitle();
-    }
-
-    @Override
-    public void onTapOutsidePhoto(int position) {
-        showTitle();
-    }
-
-    @Override
-    public void onPhotoLoaded(int position) {
-        if (isActivePosition(position)) {
-            showTitle();
-        }
-    }
-
     private int getImageCount() {
         PhotoPagerAdapter adapter = getPageAdapter();
         if (adapter != null) {
@@ -149,28 +124,19 @@ public class ReaderPhotoViewerActivity extends Activity
     }
 
     private void updateTitle(int position) {
-        if (isFinishing()) {
-            return;
-        }
-        String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
-        mTxtTitle.setText(title);
-    }
-
-    private boolean isTitleShowing() {
-        return (mTxtTitle.getVisibility() == View.VISIBLE);
-    }
-
-    private void showTitle() {
         // image count is only shown if there are multiple images
         if (isFinishing() || getImageCount() <= 1) {
             return;
         }
 
-        mTxtTitle.clearAnimation();
-        if (isTitleShowing()) {
-            ReaderAnim.fadeOut(mTxtTitle, ReaderAnim.Duration.MEDIUM);
-        } else {
-            ReaderAnim.fadeInFadeOut(mTxtTitle, ReaderAnim.Duration.MEDIUM);
+        final String title = getString(R.string.reader_title_photo_viewer, position + 1, getImageCount());
+        if (title.equals(mTxtTitle.getText())) {
+            return;
+        }
+
+        mTxtTitle.setText(title);
+        if (mTxtTitle.getVisibility() != View.VISIBLE) {
+            ReaderAnim.fadeIn(mTxtTitle, ReaderAnim.Duration.MEDIUM);
         }
     }
 

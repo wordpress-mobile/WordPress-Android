@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 
@@ -16,7 +16,6 @@ public class ReaderPhotoViewerFragment extends Fragment {
     private String mImageUrl;
     private boolean mIsPrivate;
     private int mPosition;
-    private ReaderPhotoView.ReaderPhotoListener mPhotoListener;
 
     private ReaderPhotoView mPhotoView;
 
@@ -26,7 +25,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
      * @param isPrivate whether image is from a private blog
      */
     static ReaderPhotoViewerFragment newInstance(String imageUrl, int position, boolean isPrivate) {
-        AppLog.d(AppLog.T.READER, "reader photo fragment > newInstance");
+        AppLog.d(AppLog.T.READER, "reader photo fragment > newInstance " + position);
 
         Bundle args = new Bundle();
         args.putString(ReaderConstants.ARG_IMAGE_URL, imageUrl);
@@ -50,20 +49,10 @@ public class ReaderPhotoViewerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof ReaderPhotoView.ReaderPhotoListener) {
-            mPhotoListener = (ReaderPhotoView.ReaderPhotoListener) activity;
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mPhotoView = new ReaderPhotoView(container.getContext());
-        mPhotoView.setLayoutParams(
-                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                           ViewGroup.LayoutParams.MATCH_PARENT));
-        return mPhotoView;
+        View view = inflater.inflate(R.layout.reader_fragment_photo_viewer, container, false);
+        mPhotoView = (ReaderPhotoView) view.findViewById(R.id.photo_view);
+        return view;
     }
 
     @Override
@@ -94,7 +83,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
         Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
         int hiResWidth = Math.max(pt.x, pt.y);
 
-        mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPosition, mPhotoListener);
+        mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPosition);
     }
 
 
