@@ -13,12 +13,15 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/translucent_grey_extra_dark"
         android:padding="@dimen/margin_medium"
-        android:textColor="@color/grey_medium"
+        android:shadowColor="@color/grey_extra_dark"
+        android:shadowDx="0.1"
+        android:shadowDy="0.1"
+        android:shadowRadius="0.3"
+        android:textColor="@color/grey_light"
         android:textSize="@dimen/text_sz_large"
         tools:text="title" />
 
