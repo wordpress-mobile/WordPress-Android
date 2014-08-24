@@ -32,6 +32,12 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
+
+    static interface PhotoViewListener {
+        void onTapPhotoView();
+    }
+
+    private PhotoViewListener mPhotoViewListener;
     private String mLoResImageUrl;
     private String mHiResImageUrl;
 
@@ -78,10 +84,12 @@ public class ReaderPhotoView extends RelativeLayout {
      * @param imageUrl the url of the image to load
      * @param hiResWidth maximum width of the full-size image
      * @param isPrivate whether this is an image from a private blog
+     * @param listener listener for taps on this view
      */
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
-                            boolean isPrivate) {
+                            boolean isPrivate,
+                            PhotoViewListener listener) {
         int loResWidth = (int) (hiResWidth * 0.10f);
         if (isPrivate) {
             mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
@@ -91,6 +99,7 @@ public class ReaderPhotoView extends RelativeLayout {
             mHiResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, hiResWidth, 0);
         }
 
+        mPhotoViewListener = listener;
         loadLoResImage();
     }
 
@@ -188,13 +197,33 @@ public class ReaderPhotoView extends RelativeLayout {
 
             // show the bitmap and attach the pinch/zoom handler
             mImageView.setImageBitmap(bitmap);
-            new PhotoViewAttacher(mImageView);
+            setAttacher();
 
             // load hi-res image if this was the lo-res one
             if (isLoRes && !mLoResImageUrl.equals(mHiResImageUrl)) {
                 loadHiResImage();
             }
         }
+    }
+
+    private void setAttacher() {
+        PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
+        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float v, float v2) {
+                if (mPhotoViewListener != null) {
+                    mPhotoViewListener.onTapPhotoView();
+                }
+            }
+        });
+        attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float v, float v2) {
+                if (mPhotoViewListener != null) {
+                    mPhotoViewListener.onTapPhotoView();
+                }
+            }
+        });
     }
 
     private void showError() {

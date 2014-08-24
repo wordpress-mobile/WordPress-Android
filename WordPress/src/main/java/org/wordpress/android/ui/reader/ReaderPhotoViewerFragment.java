@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 
@@ -17,6 +19,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
     private boolean mIsPrivate;
 
     private ReaderPhotoView mPhotoView;
+    private PhotoViewListener mPhotoViewListener;
 
     /**
      * @param imageUrl the url of the image to load
@@ -58,6 +61,14 @@ public class ReaderPhotoViewerFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof PhotoViewListener) {
+            mPhotoViewListener = (PhotoViewListener) activity;
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         showImage();
@@ -75,7 +86,7 @@ public class ReaderPhotoViewerFragment extends Fragment {
             // use max of width/height so image is cached the same regardless of orientation
             Point pt = DisplayUtils.getDisplayPixelSize(getActivity());
             int hiResWidth = Math.max(pt.x, pt.y);
-            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate);
+            mPhotoView.setImageUrl(mImageUrl, hiResWidth, mIsPrivate, mPhotoViewListener);
         }
     }
 }
