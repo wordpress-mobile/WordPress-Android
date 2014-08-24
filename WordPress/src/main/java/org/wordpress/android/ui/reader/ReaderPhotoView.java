@@ -84,7 +84,7 @@ public class ReaderPhotoView extends RelativeLayout {
                             int hiResWidth,
                             boolean isPrivate,
                             int position) {
-        int loResWidth = (int) (hiResWidth * 0.15f);
+        int loResWidth = (int) (hiResWidth * 0.10f);
         if (isPrivate) {
             mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
             mHiResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, hiResWidth, 0);
@@ -129,12 +129,11 @@ public class ReaderPhotoView extends RelativeLayout {
             return;
         }
 
-        AppLog.w(AppLog.T.READER, "reader photo > loadLoResImage " + mPosition);
+        AppLog.d(AppLog.T.READER, "reader photo > loadLoResImage " + mPosition);
+        showProgress();
 
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.min(pt.x, pt.y);
-
-        showProgress();
 
         mLoResContainer = WordPress.imageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {

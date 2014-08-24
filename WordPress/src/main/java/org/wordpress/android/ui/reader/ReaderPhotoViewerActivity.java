@@ -39,6 +39,7 @@ public class ReaderPhotoViewerActivity extends Activity {
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);
+        mTxtTitle.setVisibility(View.GONE);
 
         if (savedInstanceState != null) {
             mInitialImageUrl = savedInstanceState.getString(ReaderConstants.ARG_IMAGE_URL);
