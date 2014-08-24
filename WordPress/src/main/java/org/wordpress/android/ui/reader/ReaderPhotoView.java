@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -33,7 +34,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ReaderPhotoView extends RelativeLayout {
     private String mLoResImageUrl;
     private String mHiResImageUrl;
-    private int mPosition;
 
     private ImageContainer mLoResContainer;
     private ImageContainer mHiResContainer;
@@ -78,12 +78,10 @@ public class ReaderPhotoView extends RelativeLayout {
      * @param imageUrl the url of the image to load
      * @param hiResWidth maximum width of the full-size image
      * @param isPrivate whether this is an image from a private blog
-     * @param position the position of the image in ReaderPhotoViewerActivity
      */
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
-                            boolean isPrivate,
-                            int position) {
+                            boolean isPrivate) {
         int loResWidth = (int) (hiResWidth * 0.10f);
         if (isPrivate) {
             mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
@@ -93,15 +91,13 @@ public class ReaderPhotoView extends RelativeLayout {
             mHiResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, hiResWidth, 0);
         }
 
-        mPosition = position;
-        loadLoResImage(false);
+        loadLoResImage();
     }
 
     private boolean isRequestingUrl(ImageContainer container, String url) {
-        if (container == null || container.getRequestUrl() == null || url == null) {
-            return false;
-        }
-        return container.getRequestUrl().equals(url);
+        return (container != null
+             && container.getRequestUrl() != null
+             && container.getRequestUrl().equals(url));
     }
 
     private boolean hasLayout() {
@@ -119,7 +115,7 @@ public class ReaderPhotoView extends RelativeLayout {
         return true;
     }
 
-    private void loadLoResImage(final boolean isInLayoutPass) {
+    private void loadLoResImage() {
         if (!hasLayout() || TextUtils.isEmpty(mLoResImageUrl)) {
             return;
         }
@@ -129,7 +125,6 @@ public class ReaderPhotoView extends RelativeLayout {
             return;
         }
 
-        AppLog.d(AppLog.T.READER, "reader photo > loadLoResImage " + mPosition);
         showProgress();
 
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
@@ -146,16 +141,12 @@ public class ReaderPhotoView extends RelativeLayout {
 
                     @Override
                     public void onResponse(final ImageContainer response, boolean isImmediate) {
-                        if (isImmediate && isInLayoutPass) {
-                            post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    handleResponse(response, true);
-                                }
-                            });
-                        } else {
-                            handleResponse(response, true);
-                        }
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                handleResponse(response.getBitmap(), true);
+                            }
+                        });
                     }
                 }, maxSize, maxSize);
     }
@@ -184,40 +175,26 @@ public class ReaderPhotoView extends RelativeLayout {
                         post(new Runnable() {
                             @Override
                             public void run() {
-                                handleResponse(response, false);
+                                handleResponse(response.getBitmap(), false);
                             }
                         });
                     }
                 }, maxSize, maxSize);
     }
 
-    private void handleResponse(ImageContainer response, boolean isLoResResponse) {
-        if (response.getBitmap() != null) {
-            mImageView.setImageBitmap(response.getBitmap());
-            createAttacher(mImageView);
+    private void handleResponse(Bitmap bitmap, boolean isLoRes) {
+        if (bitmap != null) {
+            hideProgress();
 
-            if (isLoResResponse) {
-                hideProgress();
-                ReaderAnim.fadeIn(mImageView, ReaderAnim.Duration.SHORT);
-                if (!mLoResImageUrl.equals(mHiResImageUrl)) {
-                    loadHiResImage();
-                }
+            // show the bitmap and attach the pinch/zoom handler
+            mImageView.setImageBitmap(bitmap);
+            new PhotoViewAttacher(mImageView);
+
+            // load hi-res image if this was the lo-res one
+            if (isLoRes && !mLoResImageUrl.equals(mHiResImageUrl)) {
+                loadHiResImage();
             }
-
-            AppLog.d(AppLog.T.READER,
-                    "reader photo > loaded " + (isLoResResponse ? "lo-res " : "hi-res ") + mPosition);
-
-        } else {
-            AppLog.w(AppLog.T.READER,
-                    "reader photo > null bitmap " + (isLoResResponse ? "lo-res " : "hi-res ") + mPosition);
         }
-    }
-
-    /*
-     * attach the pinch/zoom handler
-     */
-    private void createAttacher(ImageView imageView) {
-        PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
     }
 
     private void showError() {
@@ -244,13 +221,12 @@ public class ReaderPhotoView extends RelativeLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!isInEditMode()) {
-            loadLoResImage(true);
+            loadLoResImage();
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        AppLog.d(AppLog.T.READER, "reader photo > onDetachedFromWindow " + mPosition);
         if (mLoResContainer != null || mHiResContainer != null) {
             mImageView.setImageDrawable(null);
         }

@@ -157,7 +157,6 @@ public class ReaderPhotoViewerActivity extends Activity {
         public Fragment getItem(int position) {
             return ReaderPhotoViewerFragment.newInstance(
                     mImageList.get(position),
-                    position,
                     mImageList.isPrivate());
         }
 
