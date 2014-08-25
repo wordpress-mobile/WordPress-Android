@@ -19,8 +19,8 @@ import java.lang.ref.WeakReference;
  * adapted from existing ImageGetter code in NoteCommentFragment
  */
 public class WPImageGetter implements Html.ImageGetter {
-    private WeakReference<TextView> mWeakView;
-    private int mMaxSize;
+    private final WeakReference<TextView> mWeakView;
+    private final int mMaxSize;
     private ImageLoader mImageLoader;
     private Drawable mLoadingDrawable;
     private Drawable mFailedDrawable;
@@ -40,18 +40,6 @@ public class WPImageGetter implements Html.ImageGetter {
         mMaxSize = maxSize;
         mImageLoader = imageLoader;
         mLoadingDrawable = loadingDrawable;
-        mFailedDrawable = failedDrawable;
-    }
-
-    public void setImageLoader(ImageLoader imageLoader) {
-        mImageLoader = imageLoader;
-    }
-
-    public void setLoadingDrawable(Drawable loadingDrawable) {
-        mLoadingDrawable = loadingDrawable;
-    }
-
-    public void setFailedDrawable(Drawable failedDrawable) {
         mFailedDrawable = failedDrawable;
     }
 
@@ -80,9 +68,6 @@ public class WPImageGetter implements Html.ImageGetter {
             source = PhotonUtils.getPhotonImageUrl(source, mMaxSize, 0);
         }
 
-        TextView view = getView();
-        // Drawable loading = view.getContext().getResources().getDrawable(R.drawable.remote_image); FIXME: here
-        // Drawable failed = view.getContext().getResources().getDrawable(R.drawable.remote_failed);
         final RemoteDrawable remote = new RemoteDrawable(mLoadingDrawable, mFailedDrawable);
 
         mImageLoader.get(source, new ImageLoader.ImageListener() {
@@ -110,20 +95,19 @@ public class WPImageGetter implements Html.ImageGetter {
                     int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
                     if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0)) {
                         maxWidth = mMaxSize;
+                        AppLog.d(T.UTILS, "WPImageGetter maxWidth = mMaxSize");
                     }
                     remote.setRemoteDrawable(drawable, maxWidth);
 
                     // image is from cache? don't need to modify view height
                     if (isImmediate) {
+                        AppLog.d(T.UTILS, "WPImageGetter isImmediate");
                         return;
                     }
 
                     int newHeight = remote.getBounds().height();
-                    view.invalidate();
-                    // For ICS
                     view.setHeight(view.getHeight() + newHeight - oldHeight);
-                    // Pre ICS
-                    view.setEllipsize(null);
+                    view.invalidate();
                 }
             }
         });
@@ -131,9 +115,9 @@ public class WPImageGetter implements Html.ImageGetter {
     }
 
     private static class RemoteDrawable extends BitmapDrawable {
-        protected Drawable mRemoteDrawable;
-        protected Drawable mLoadingDrawable;
-        protected Drawable mFailedDrawable;
+        Drawable mRemoteDrawable;
+        final Drawable mLoadingDrawable;
+        final Drawable mFailedDrawable;
         private boolean mDidFail = false;
 
         public RemoteDrawable(Drawable loadingDrawable, Drawable failedDrawable) {
@@ -156,11 +140,6 @@ public class WPImageGetter implements Html.ImageGetter {
                 mLoadingDrawable.setBounds(x, y, width, height);
                 mFailedDrawable.setBounds(x, y, width, height);
             }
-        }
-
-        public void setRemoteDrawable(Drawable remote) {
-            mRemoteDrawable = remote;
-            setBounds(0, 0, mRemoteDrawable.getIntrinsicWidth(), mRemoteDrawable.getIntrinsicHeight());
         }
 
         public void setRemoteDrawable(Drawable remote, int maxWidth) {
