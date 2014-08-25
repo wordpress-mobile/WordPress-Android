@@ -247,7 +247,8 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        // Handle helpshift PNs
+        // Handle Helpshift PNs (Helpshift has been removed but we can't remove that
+        // for now, in case some devices are still registered)
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
             return;
         }
