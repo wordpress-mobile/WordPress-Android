@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingTop="@dimen/margin_medium">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:background="@color/grey_light"
+            android:layout_marginTop="2dp"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/user_avatar"
+                android:layout_marginLeft="@dimen/margin_medium"
+                android:includeFontPadding="false"
+                android:textColor="@color/calypso_blue_dark"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="Bob Ross" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/user_comment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_name"
+            android:includeFontPadding="false"
+            android:textSize="@dimen/text_sz_medium"
+            android:textColor="@color/calypso_blue_dark"
+            tools:text="Thanks for stopping by my blog! I hope to see you again. " />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@drawable/list_divider_full_width" />
+
+</LinearLayout>

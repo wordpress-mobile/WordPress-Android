@@ -141,6 +141,10 @@ public class Note extends Syncable {
         return mFormattedSubject;
     }
 
+    public String getTitle() {
+        return queryJSON("title", "");
+    }
+
     public String getIconURL() {
         if (mIconUrl==null)
             mIconUrl = queryJSON("icon", "");
@@ -410,6 +414,10 @@ public class Note extends Syncable {
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+    }
+
+    public JSONArray getHeader() {
+        return mNoteJSON.optJSONArray("header");
     }
 
     /**

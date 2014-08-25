@@ -926,6 +926,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mRemoteBlogId = note.getBlogId();
         long commentId = note.getCommentId();
 
+        // Set 'Reply to (Name)' in comment reply EditText
+        if (!TextUtils.isEmpty(mNote.getCommentAuthorName())) {
+            mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
+        }
+
         // note that the local blog id won't be found if the comment is from someone else's blog
         int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 

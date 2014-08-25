@@ -18,11 +18,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
@@ -145,6 +147,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         protected Void doInBackground(Void... params) {
             JSONArray bodyArray = mNote.getBody();
             mNoteBlockArray.clear();
+
+            // Add the note header if one was provided
+            if (mNote.getHeader() != null) {
+                HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(mNote.getHeader(), mOnGravatarClickedListener);
+                mNoteBlockArray.add(headerNoteBlock);
+            }
+
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {
@@ -154,18 +163,33 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
 
                         if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
-                            noteBlock = new UserNoteBlock(
-                                    noteObject,
-                                    mOnNoteBlockTextClickListener,
-                                    mOnGravatarClickedListener
-                            );
+                            if (mNote.isCommentType()) {
+                                // We'll snag the next body array item for comment user blocks
+                                if (i + 1 < bodyArray.length()) {
+                                    JSONObject commentTextBlock = bodyArray.getJSONObject(i + 1);
+                                    noteObject.put("comment-text", commentTextBlock);
+                                    i++;
+                                }
+
+                                noteBlock = new CommentUserNoteBlock(
+                                        noteObject,
+                                        mOnNoteBlockTextClickListener,
+                                        mOnGravatarClickedListener
+                                );
+                            } else {
+                                noteBlock = new UserNoteBlock(
+                                        noteObject,
+                                        mOnNoteBlockTextClickListener,
+                                        mOnGravatarClickedListener
+                                );
+                            }
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
 
                         mNoteBlockArray.add(noteBlock);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
                     }
                 }
             }

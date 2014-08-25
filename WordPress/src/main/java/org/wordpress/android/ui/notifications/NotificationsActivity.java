@@ -339,9 +339,9 @@ public class NotificationsActivity extends WPActionBarActivity
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
 
-        // Update title to note subject
+        // Update title
         if (note.getFormattedSubject() != null) {
-            setTitle(note.getFormattedSubject().toString());
+            setTitle(note.getTitle());
         }
     }
 

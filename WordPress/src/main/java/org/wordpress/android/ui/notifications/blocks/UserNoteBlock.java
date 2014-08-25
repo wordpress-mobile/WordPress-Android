@@ -25,8 +25,6 @@ import org.wordpress.android.util.UrlUtils;
 public class UserNoteBlock extends NoteBlock {
     private OnGravatarClickedListener mGravatarClickedListener;
 
-    private static int GRAVATAR_ANIMATION_DURATION = 150;
-
     public interface OnGravatarClickedListener {
         public void onGravatarClicked(long userId, long siteId);
     }
@@ -138,7 +136,7 @@ public class UserNoteBlock extends NoteBlock {
         return null;
     }
 
-    private String getUserUrl() {
+    protected String getUserUrl() {
         if (getUrlIdObject() != null) {
             String url = UrlUtils.normalizeUrl(getUrlIdObject().optString("url", ""));
             return url.replace("http://", "").replace("https://", "");
@@ -167,22 +165,25 @@ public class UserNoteBlock extends NoteBlock {
         return !TextUtils.isEmpty(getUserBlogTagline());
     }
 
-    private View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
+    protected View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
+            int animationDuration = 150;
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
                         .scaleX(0.9f)
                         .scaleY(0.9f)
                         .alpha(0.5f)
-                        .setDuration(GRAVATAR_ANIMATION_DURATION)
+                        .setDuration(animationDuration)
                         .setInterpolator(new DecelerateInterpolator());
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
                         .scaleX(1.0f)
                         .scaleY(1.0f)
                         .alpha(1.0f)
-                        .setDuration(GRAVATAR_ANIMATION_DURATION)
+                        .setDuration(animationDuration)
                         .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
@@ -199,4 +200,8 @@ public class UserNoteBlock extends NoteBlock {
             return true;
         }
     };
+
+    protected View.OnTouchListener getOnGravatarTouchListener() {
+        return mOnGravatarTouchListener;
+    }
 }
