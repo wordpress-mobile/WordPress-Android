@@ -46,7 +46,6 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
@@ -165,8 +164,6 @@ public class WordPress extends Application {
 
         // Volley networking setup
         setupVolleyQueue();
-
-        ABTestingUtils.init();
 
         String lastActivityStr = UserPrefs.getLastActivityStr();
         if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
