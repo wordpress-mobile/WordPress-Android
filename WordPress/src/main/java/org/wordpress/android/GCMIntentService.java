@@ -26,11 +26,8 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -252,7 +249,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         // Handle helpshift PNs
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -298,9 +294,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
 
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            }
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
