@@ -10,5 +10,6 @@
     android:orientation="horizontal"
     android:showDividers="middle"
     android:divider="?android:attr/dividerVertical"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:background="@color/calypso_blue_light">
 </LinearLayout>

@@ -136,7 +136,7 @@
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
         <item name="mdMenuSize">@dimen/menu_drawer_width</item>
-        <item name="mdContentBackground">@color/calypso_blue_light</item>
+        <item name="mdContentBackground">@color/background_grey</item>
     </style>
 
     <style name="MenuDrawer.Button">
