@@ -7,14 +7,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
+import com.android.volley.VolleyError;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -66,6 +70,31 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
 
         trackMixpanelDataForInstructions(instructions, properties);
+    }
+
+    private void retrieveAndRegisterEmailAddressIfApplicable() {
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                try {
+                    if (jsonObject != null && !TextUtils.isEmpty(jsonObject.getString("email"))) {
+                        String email = jsonObject.getString("email");
+                        setValueForPeopleProperty("$email", email);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.UTILS, "Can't get email field from json response: " + jsonObject);
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.UTILS, volleyError);
+            }
+        };
+
+        String path = "/me";
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
     private void trackMixpanelDataForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions,
@@ -188,6 +217,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.UTILS, e);
             }
+            retrieveAndRegisterEmailAddressIfApplicable();
         }
     }
 
