@@ -82,35 +82,40 @@ public class WPImageGetter implements Html.ImageGetter {
 
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                if (response.getBitmap() != null) {
-                    // make sure view is still valid
-                    TextView view = getView();
-                    if (view == null) {
-                        AppLog.w(T.UTILS, "WPImageGetter view is invalid");
-                        return;
-                    }
-
-                    Drawable drawable = new BitmapDrawable(view.getContext().getResources(), response.getBitmap());
-                    final int oldHeight = remote.getBounds().height();
-                    int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
-                    if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0)) {
-                        maxWidth = mMaxSize;
-                        AppLog.d(T.UTILS, "WPImageGetter maxWidth = mMaxSize");
-                    }
-                    remote.setRemoteDrawable(drawable, maxWidth);
-
-                    // image is from cache? don't need to modify view height
-                    if (isImmediate) {
-                        AppLog.d(T.UTILS, "WPImageGetter isImmediate");
-                        return;
-                    }
-
-                    int newHeight = remote.getBounds().height();
-                    view.setHeight(view.getHeight() + newHeight - oldHeight);
-                    view.invalidate();
+                if (response.getBitmap() == null) {
+                    AppLog.w(T.UTILS, "WPImageGetter null bitmap");
                 }
+
+                TextView view = getView();
+                if (view == null) {
+                    AppLog.w(T.UTILS, "WPImageGetter view is invalid");
+                    return;
+                }
+
+                final int oldHeight = remote.getBounds().height();
+                int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
+                if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0)) {
+                    maxWidth = mMaxSize;
+                    AppLog.d(T.UTILS, "WPImageGetter setting maxWidth = mMaxSize");
+                }
+
+                Drawable drawable = new BitmapDrawable(view.getContext().getResources(), response.getBitmap());
+                remote.setRemoteDrawable(drawable, maxWidth);
+
+                // image is from cache? don't need to modify view height
+                if (isImmediate) {
+                    AppLog.d(T.UTILS, "WPImageGetter isImmediate");
+                    return;
+                }
+
+                // invalidate the textView so the image redraws
+                view.invalidate();
+
+                int newHeight = remote.getBounds().height();
+                view.setHeight(view.getHeight() + newHeight - oldHeight);
             }
         });
+
         return remote;
     }
 
