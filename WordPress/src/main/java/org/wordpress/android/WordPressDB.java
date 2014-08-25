@@ -1196,7 +1196,7 @@ public class WordPressDB {
             broadcastShortcutIntent.putExtra("duplicate", false);
             broadcastShortcutIntent
                     .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            LocalBroadcastManager.getInstance(ctx).sendBroadcast(broadcastShortcutIntent);
+            ctx.sendBroadcast(broadcastShortcutIntent);
 
             // remove from shortcuts table
             String shortcutId = shortcutHash.get("id").toString();

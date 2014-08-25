@@ -156,7 +156,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     }
 
                     addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                    LocalBroadcastManager.getInstance(AddQuickPressShortcutActivity.this).sendBroadcast(addIntent);
+                    AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
                     AddQuickPressShortcutActivity.this.finish();
                 }
             }
