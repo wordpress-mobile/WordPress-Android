@@ -146,6 +146,8 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
+
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
@@ -155,7 +157,6 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
-        mContext = this;
 
         RestClientUtils.setUserAgent(getUserAgent());
 
