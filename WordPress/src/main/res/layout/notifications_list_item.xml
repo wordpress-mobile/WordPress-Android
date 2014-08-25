@@ -64,7 +64,8 @@
         <FrameLayout
             android:id="@+id/avatar_wrapper"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/note_avatar"

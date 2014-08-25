@@ -122,12 +122,15 @@ public class Note extends Syncable {
     public JSONObject getSubject() {
         if (mSubject == null) {
             try {
-                mSubject = mNoteJSON.getJSONObject("subject");
+                JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
+                if (subjectArray.length() > 0) {
+                    mSubject = subjectArray.getJSONObject(0);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
+
         return mSubject;
     }
 
@@ -150,20 +153,14 @@ public class Note extends Syncable {
      */
     public String getCommentPreview() {
         if (mCommentPreview == null) {
-            JSONArray noteBodyItems = getBody();
-            if (noteBodyItems != null) {
-                for (int i=0; i < noteBodyItems.length(); i++) {
-                    JSONObject bodyItem = noteBodyItems.optJSONObject(i);
-                    if (bodyItem != null && bodyItem.optString("type", "").equals(NOTE_COMMENT_TYPE)) {
-                        mCommentPreview = bodyItem.optString("text", "");
-                        break;
-                    }
-                }
-            }
+            JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
+            if (subjectArray != null) {
+                mCommentPreview = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
 
-            // Trim down the comment preview if the comment text is too large.
-            if (mCommentPreview != null && mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
-                mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                // Trim down the comment preview if the comment text is too large.
+                if (mCommentPreview != null && mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                    mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
+                }
             }
         }
 
