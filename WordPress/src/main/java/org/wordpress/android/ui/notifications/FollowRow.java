@@ -221,7 +221,6 @@ public class FollowRow extends LinearLayout {
             if (isFollowing()) {
                 getFollowListener().onUnfollow(FollowRow.this, getSiteId());
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PERFORMED_ACTION);
                 getFollowListener().onFollow(FollowRow.this, getSiteId());
             }
         }
