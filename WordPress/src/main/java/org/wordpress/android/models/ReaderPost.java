@@ -3,7 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
-import org.wordpress.android.ui.reader.utils.ReaderFeaturedImageFinder;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -96,7 +96,7 @@ public class ReaderPost {
         if (jsonEditorial != null) {
             post.blogId = jsonEditorial.optLong("blog_id");
             post.blogName = JSONUtil.getStringDecoded(jsonEditorial, "blog_name");
-            post.featuredImage = ReaderFeaturedImageFinder.getImageUrlFromFPFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
+            post.featuredImage = ReaderImageScanner.getImageUrlFromFPFeaturedImageUrl(JSONUtil.getString(jsonEditorial, "image"));
             post.setPrimaryTag(JSONUtil.getString(jsonEditorial, "highlight_topic_title")); //  highlight_topic?
             // we want freshly-pressed posts to show & store the date they were chosen rather than the day they were published
             post.published = JSONUtil.getString(jsonEditorial, "displayed_on");
@@ -137,7 +137,8 @@ public class ReaderPost {
             // if we still don't have a featured image, parse the content for an image that's
             // suitable as a featured image
             if (!post.hasFeaturedImage()) {
-                post.featuredImage = new ReaderFeaturedImageFinder(post.text).getBestFeaturedImage();
+                ReaderImageScanner scanner = new ReaderImageScanner(post.text, post.isPrivate);
+                post.featuredImage = scanner.getBestFeaturedImage();
             }
         }
 

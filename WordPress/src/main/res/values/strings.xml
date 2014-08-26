@@ -590,6 +590,7 @@
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
+    <string name="reader_title_photo_viewer">%1$d of %2$d</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>

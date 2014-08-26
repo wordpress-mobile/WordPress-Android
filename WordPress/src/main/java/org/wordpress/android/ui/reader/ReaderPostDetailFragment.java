@@ -1028,33 +1028,59 @@ public class ReaderPostDetailFragment extends Fragment
             imageUrl = UrlUtils.makeHttps(imageUrl);
         }
 
-        ReaderActivityLauncher.showReaderPhotoViewer(getActivity(), imageUrl, source, startX, startY);
+        ReaderActivityLauncher.showReaderPhotoViewer(
+                getActivity(),
+                imageUrl,
+                getPostContent(),
+                source,
+                startX,
+                startY);
+
         return true;
     }
 
     /*
-     * build html for post's content
+     * returns the basic content of the post tweaked for use here
      */
-    private String getPostHtml(Context context) {
+    private String getPostContent() {
+        if (mPost == null) {
+            return "";
+        } else if (mPost.hasText()) {
+            // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
+            String content = mPost.getText().replace("src=\"//", "src=\"http://");
+            // insert video div before content if this is a VideoPress post (video otherwise won't appear)
+            if (mPost.isVideoPress) {
+                content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
+            } else if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
+                // if the post has a featured image other than an mshot that's not in the content,
+                // add it to the content
+                Uri uri = Uri.parse(mPost.getFeaturedImage());
+                String path = StringUtils.notNullStr(uri.getLastPathSegment());
+                if (!content.contains(path)) {
+                    AppLog.d(T.READER, "reader post detail > added featured image to content");
+                    content = String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage())
+                            + content;
+                }
+            }
+            return content;
+        } else if (mPost.hasFeaturedImage()) {
+            // some photo blogs have posts with empty content but still have a featured image, so
+            // use the featured image as the content
+            return String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage());
+        } else {
+            return "";
+        }
+    }
+
+    /*
+     * returns the full content, including CSS, that will be shown in the WebView for this post
+     */
+    private String getPostContentForWebView(Context context) {
         if (mPost == null || context == null) {
             return "";
         }
 
-        String content;
-        if (mPost.hasText()) {
-            // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
-            content = mPost.getText().replace("src=\"//", "src=\"http://");
-            // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (mPost.isVideoPress) {
-                content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
-            }
-        } else if (mPost.hasFeaturedImage()) {
-            // some photo blogs have posts with empty content but still have a featured image, so
-            // use the featured image as the content
-            content = String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage());
-        } else {
-            content = "";
-        }
+        String content = getPostContent();
 
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
@@ -1204,15 +1230,10 @@ public class ReaderPostDetailFragment extends Fragment
         ImageView imgBtnLike;
         ImageView imgBtnComment;
         ImageView imgDropDown;
-
         WPNetworkImageView imgAvatar;
-        WPNetworkImageView imgFeatured;
-
         ViewGroup layoutDetailHeader;
 
         String postHtml;
-        String featuredImageUrl;
-        boolean showFeaturedImage;
 
         @Override
         protected void onPreExecute() {
@@ -1242,7 +1263,6 @@ public class ReaderPostDetailFragment extends Fragment
             txtDateAndAuthor = (TextView) container.findViewById(R.id.text_date_and_author);
 
             imgAvatar = (WPNetworkImageView) container.findViewById(R.id.image_avatar);
-            imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
             imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
@@ -1251,20 +1271,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
 
-            postHtml = getPostHtml(container.getContext());
-
-            // detect whether the post has a featured image that's not in the content - if so,
-            // it will be shown between the post's title and its content (but skip mshots)
-            if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
-                Uri uri = Uri.parse(mPost.getFeaturedImage());
-                String path = StringUtils.notNullStr(uri.getLastPathSegment());
-                if (!mPost.getText().contains(path)) {
-                    showFeaturedImage = true;
-                    // note that only the width is used here - the imageView will adjust
-                    // the height to match that of the image once loaded
-                    featuredImageUrl = mPost.getFeaturedImageForDisplay(mResourceVars.fullSizeImageWidth, 0);
-                }
-            }
+            postHtml = getPostContentForWebView(container.getContext());
 
             return true;
         }
@@ -1334,21 +1341,6 @@ public class ReaderPostDetailFragment extends Fragment
             // hide blog name, avatar & follow button if this fragment was shown from blog preview
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
-            }
-
-            if (showFeaturedImage) {
-                imgFeatured.setVisibility(View.VISIBLE);
-                imgFeatured.setImageUrl(featuredImageUrl, WPNetworkImageView.ImageType.PHOTO);
-                imgFeatured.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int startX = mResourceVars.displayWidth / 2;
-                        int startY = mResourceVars.displayWidth / 2;
-                        showPhotoViewer(mPost.getFeaturedImage(), view, startX, startY);
-                    }
-                });
-            } else {
-                imgFeatured.setVisibility(View.GONE);
             }
 
             // enable reblogging wp posts
