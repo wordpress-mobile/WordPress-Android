@@ -139,8 +139,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onPostsLoaded(int postCount) {
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some
-                        requestPosts(false);
                         setRefreshing(true);
+                        requestPosts(false);
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
@@ -271,11 +271,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     public void requestPosts(boolean loadMore) {
-        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
+        }
 
-        if (!NetworkUtils.checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {
