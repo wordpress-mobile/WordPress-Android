@@ -159,7 +159,7 @@ class ReaderBlogInfoView extends LinearLayout {
         txtFollowCnt.setText(count);
     }
 
-    protected boolean isEmpty() {
+    boolean isEmpty() {
         return mBlogInfo == null;
     }
 

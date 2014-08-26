@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
@@ -16,15 +15,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderBlog;
-import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
-import org.wordpress.android.models.ReaderRecommendBlogList;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UrlUtils;
@@ -176,60 +170,6 @@ public class ReaderBlogActions {
     }
 
     /*
-     * request the list of blogs the current user is following
-     */
-    public static void updateFollowedBlogs(final UpdateResultListener resultListener) {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleFollowedBlogsResponse(jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
-            }
-        };
-        // request using ?meta=site,feed to get extra info
-        WordPress.getRestClientUtils().get("/read/following/mine?meta=site%2Cfeed", listener, errorListener);
-    }
-    private static void handleFollowedBlogsResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
-        if (jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
-                ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
-
-                final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
-                if (hasChanges) {
-                    ReaderBlogTable.setFollowedBlogs(serverBlogs);
-                }
-
-                if (resultListener != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
-                            resultListener.onUpdateResult(result);
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
-    /*
      * request info about a specific blog
      */
     public static void updateBlogInfo(long blogId,
@@ -292,65 +232,6 @@ public class ReaderBlogActions {
         if (infoListener != null) {
             infoListener.onResult(blogInfo);
         }
-    }
-
-    /*
-     * request the latest recommended blogs, replaces all local ones
-     */
-    public static void updateRecommendedBlogs(final UpdateResultListener resultListener) {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleRecommendedBlogsResponse(jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(UpdateResult.FAILED);
-                }
-            }
-        };
-
-        String path = "/read/recommendations/mine/"
-                    + "?source=mobile"
-                    + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
-    }
-    private static void handleRecommendedBlogsResponse(final JSONObject jsonObject,
-                                                       final UpdateResultListener resultListener) {
-        if (jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                ReaderRecommendBlogList serverBlogs = ReaderRecommendBlogList.fromJson(jsonObject);
-                ReaderRecommendBlogList localBlogs = ReaderBlogTable.getAllRecommendedBlogs();
-
-                final boolean hasChanges = !localBlogs.isSameList(serverBlogs);
-                if (hasChanges) {
-                    ReaderBlogTable.setRecommendedBlogs(serverBlogs);
-                }
-
-                if (resultListener != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
-                            resultListener.onUpdateResult(result);
-                        }
-                    });
-                }
-            }
-        }.start();
     }
 
     /*

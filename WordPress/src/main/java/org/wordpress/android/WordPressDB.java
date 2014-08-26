@@ -1178,16 +1178,14 @@ public class WordPressDB {
         if (shortcuts.size() == 0)
             return;
 
-        String packageName = EditPostActivity.class.getPackage().getName();
-        String className = EditPostActivity.class.getName();
         for (int i = 0; i < shortcuts.size(); i++) {
             Map<String, Object> shortcutHash = shortcuts.get(i);
 
-            Intent shortcutIntent = new Intent();
-            shortcutIntent.setClassName(packageName, className);
+            Intent shortcutIntent = new Intent(WordPress.getContext(), EditPostActivity.class);
+            shortcutIntent.setAction(Intent.ACTION_MAIN);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.setAction(Intent.ACTION_VIEW);
+
             Intent broadcastShortcutIntent = new Intent();
             broadcastShortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
                     shortcutIntent);
@@ -1196,7 +1194,7 @@ public class WordPressDB {
             broadcastShortcutIntent.putExtra("duplicate", false);
             broadcastShortcutIntent
                     .setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-            LocalBroadcastManager.getInstance(ctx).sendBroadcast(broadcastShortcutIntent);
+            ctx.sendBroadcast(broadcastShortcutIntent);
 
             // remove from shortcuts table
             String shortcutId = shortcutHash.get("id").toString();
