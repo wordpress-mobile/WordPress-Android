@@ -11,6 +11,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.R;
 
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
 public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
@@ -21,6 +22,7 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
     private OnTopScrollChangedListener mOnTopScrollChangedListener;
     private boolean mIsNetworkRefreshMode;
     private Context mContext;
+    private PullToRefreshAttacher mPullToRefreshAttacher;
 
     public interface OnTopScrollChangedListener {
         public void onTopScrollChanged(boolean scrolledOnTop);
@@ -53,10 +55,21 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
         return super.hideHeaderView();
     }
 
+    public void setPullToRefreshAttacher(PullToRefreshAttacher pullToRefreshAttacher) {
+        mPullToRefreshAttacher = pullToRefreshAttacher;
+    }
+
+    private void setRefreshDisabled(boolean disabled) {
+        if (mPullToRefreshAttacher != null) {
+            mPullToRefreshAttacher.setRefreshDisabled(disabled);
+        }
+    }
+
     @Override
     public boolean showHeaderView() {
         // Workaround to avoid this bug https://github.com/chrisbanes/ActionBar-PullToRefresh/issues/265
         // Note, that also remove the alpha animation
+        setRefreshDisabled(false);
         resetContentLayoutAlpha();
 
         boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
@@ -67,6 +80,7 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
             } else {
                 // Network mode enabled and network not available: show a different PTR label
                 setPullText(mContext.getText(R.string.pull_to_refresh_pull_no_network_label));
+                setRefreshDisabled(true);
             }
             mHeaderView.setVisibility(View.VISIBLE);
             AnimatorSet animSet = new AnimatorSet();

@@ -66,6 +66,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
         setupWizard.setup(mPullToRefreshLayout);
         // set network refresh mode as default
         setNetworkRefreshMode(true);
+        mHeaderTransformer.setPullToRefreshAttacher(mPullToRefreshLayout.getAttacher());
     }
 
     /**
