@@ -65,7 +65,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1px"
-            android:background="@drawable/list_divider_full_width" />
+            android:background="@drawable/notifications_list_divider_full_width" />
 
         <View
             android:layout_width="match_parent"
@@ -74,25 +74,20 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1px"
-            android:background="@drawable/list_divider_full_width" />
+            android:background="@drawable/notifications_list_divider_full_width" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/header_footer_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
         android:visibility="gone">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1px"
-                android:background="@drawable/list_divider" />
-        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@drawable/notifications_list_divider" />
     </LinearLayout>
 </LinearLayout>

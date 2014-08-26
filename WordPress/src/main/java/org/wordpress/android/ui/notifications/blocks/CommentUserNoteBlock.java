@@ -3,16 +3,21 @@ package org.wordpress.android.ui.notifications.blocks;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.JSONUtil;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
@@ -30,7 +35,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     @Override
     public int getLayoutResourceId() {
-        return R.layout.note_block_comment_user;
+        return hasCommentNestingLevel() ? R.layout.note_block_comment_user_reply : R.layout.note_block_comment_user;
     }
 
     @Override
@@ -60,11 +65,20 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         CommentUtils.indentTextViewFirstLine(
                 noteBlockHolder.commentTextView,
-                NotificationsUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment-text"), getOnNoteBlockTextClickListener()),
+                NotificationsUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment_text"), getOnNoteBlockTextClickListener()),
                 mTextViewIndent
         );
 
         return view;
+    }
+
+    private boolean hasCommentNestingLevel() {
+        try {
+            JSONObject commentTextObject = getNoteData().getJSONObject("comment_text");
+            return commentTextObject.optInt("nest_level", 0) > 0;
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
     @Override

@@ -187,7 +187,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 // We'll snag the next body array item for comment user blocks
                                 if (i + 1 < bodyArray.length()) {
                                     JSONObject commentTextBlock = bodyArray.getJSONObject(i + 1);
-                                    noteObject.put("comment-text", commentTextBlock);
+                                    noteObject.put("comment_text", commentTextBlock);
                                     i++;
                                 }
 
