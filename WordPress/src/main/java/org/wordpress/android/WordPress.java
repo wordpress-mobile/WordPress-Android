@@ -7,8 +7,6 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
@@ -46,14 +44,11 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.BuildUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
@@ -150,17 +145,17 @@ public class WordPress extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
+
         ProfilingUtils.start("WordPress.onCreate");
         // Enable log recording
         AppLog.enableRecording(true);
-        if (!BuildUtils.isDebugBuild()) {
+        if (!PackageUtils.isDebugBuild()) {
             Crashlytics.start(this);
         }
-        versionName = ProfilingUtils.getVersionName(this);
-        HelpshiftHelper.init(this);
+        versionName = PackageUtils.getVersionName(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
-        mContext = this;
 
         RestClientUtils.setUserAgent(getUserAgent());
 
@@ -168,8 +163,6 @@ public class WordPress extends Application {
 
         // Volley networking setup
         setupVolleyQueue();
-
-        ABTestingUtils.init();
 
         String lastActivityStr = UserPrefs.getLastActivityStr();
         if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
@@ -181,8 +174,6 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
-
-        HelpshiftHelper.init(this);
 
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
@@ -331,10 +322,6 @@ public class WordPress extends Application {
             }
         }
 
-        // Register to Helpshift notifications
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-        }
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
@@ -578,15 +565,7 @@ public class WordPress extends Application {
     private static String mUserAgent;
     public static String getUserAgent() {
         if (mUserAgent == null) {
-            PackageInfo pkgInfo;
-            try {
-                String pkgName = getContext().getApplicationInfo().packageName;
-                pkgInfo = getContext().getPackageManager().getPackageInfo(pkgName, 0);
-            } catch (PackageManager.NameNotFoundException e) {
-                return USER_AGENT_APPNAME;
-            }
-
-            mUserAgent = USER_AGENT_APPNAME + "/" + pkgInfo.versionName
+            mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext())
                        + " (Android " + Build.VERSION.RELEASE + "; "
                        + Locale.getDefault().toString() + "; "
                        + Build.MANUFACTURER + " " + Build.MODEL + "/" + Build.PRODUCT + ")";

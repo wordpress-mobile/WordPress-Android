@@ -26,12 +26,8 @@ import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 
@@ -251,9 +247,9 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        // Handle helpshift PNs
+        // Handle Helpshift PNs (Helpshift has been removed but we can't remove that
+        // for now, in case some devices are still registered)
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -299,9 +295,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             NotificationUtils.registerDeviceForPushNotifications(context, regId);
 
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            }
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }

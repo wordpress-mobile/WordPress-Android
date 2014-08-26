@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.PackageUtils;
 
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -29,6 +30,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
+    private static final String VERSION_CODE = "version_code";
+
+
 
     public AnalyticsTrackerMixpanel() {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
@@ -170,6 +174,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             properties.put(DOTCOM_USER, connected);
             properties.put(JETPACK_USER, jetpackUser);
             properties.put(MIXPANEL_NUMBER_OF_BLOGS, numBlogs);
+            properties.put(VERSION_CODE, PackageUtils.getVersionCode(WordPress.getContext()));
             mMixpanel.registerSuperProperties(properties);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.UTILS, e);
@@ -390,12 +395,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                 instructions.
                         setSuperPropertyAndPeoplePropertyToIncrement("number_of_times_opened_notification_details");
                 instructions.setCurrentDateForPeopleProperty("last_time_opened_notification_details");
-                break;
-            case NOTIFICATION_PERFORMED_ACTION:
-                instructions = AnalyticsTrackerMixpanelInstructionsForStat.
-                        mixpanelInstructionsWithSuperPropertyAndPeoplePropertyIncrementor(
-                                "number_of_times_notifications_performed_action_against");
-                instructions.setCurrentDateForPeopleProperty("last_time_performed_action_against_notification");
                 break;
             case NOTIFICATION_APPROVED:
                 instructions = AnalyticsTrackerMixpanelInstructionsForStat.
