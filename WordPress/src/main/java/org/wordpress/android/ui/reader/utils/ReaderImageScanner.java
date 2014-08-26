@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
 
+import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -9,13 +10,10 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/*
- * used when a post doesn't have a featured image assigned, searches post's content
- * for an image that may be large enough to be suitable as a featured image
- * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
- */
-public class ReaderFeaturedImageFinder {
+public class ReaderImageScanner {
+
     private final String mContent;
+    private final boolean mIsPrivate;
     private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
 
     // regex for matching img tags in html content
@@ -33,13 +31,34 @@ public class ReaderFeaturedImageFinder {
             "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
             Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
 
-    public ReaderFeaturedImageFinder(final String contentOfPost) {
+    public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
+        mIsPrivate = isPrivate;
     }
 
     /*
-     * returns the url of the largest image based on the w= query param and/or the width
-     * attribute, provided that the width is at least MIN_FEATURED_IMAGE_WIDTH
+     * returns a list of all images in the post content
+     */
+    public ReaderImageList getImageList() {
+        ReaderImageList imageList = new ReaderImageList(mIsPrivate);
+
+        if (mContent == null || !mContent.contains("<img ")) {
+            return imageList;
+        }
+
+        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        while (imgMatcher.find()) {
+            String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
+            imageList.addImageUrl(getSrcAttrValue(imgTag));
+        }
+
+        return imageList;
+    }
+
+    /*
+     * used when a post doesn't have a featured image assigned, searches post's content
+     * for an image that may be large enough to be suitable as a featured image
+     * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
      */
     public String getBestFeaturedImage() {
         if (mContent == null || !mContent.contains("<img ")) {

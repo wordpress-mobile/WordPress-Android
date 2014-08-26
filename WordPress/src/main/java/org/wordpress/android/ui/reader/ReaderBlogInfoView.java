@@ -266,6 +266,7 @@ class ReaderBlogInfoView extends LinearLayout {
                                 ReaderActivityLauncher.showReaderPhotoViewer(
                                         getContext(),
                                         mshotUrl,
+                                        null,
                                         mImageMshot,
                                         (int) event.getRawX(),
                                         (int) event.getRawY());
