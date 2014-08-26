@@ -224,7 +224,7 @@ public class NotificationUtils {
             return new SpannableStringBuilder();
         }
 
-        String text = subject.optString("text", "");
+        String text = subject.optString("text", "").trim();
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;

@@ -10,6 +10,7 @@ public enum NoteBlockIdType {
     SITE,
     COMMENT,
     USER,
+    STAT,
     UNKNOWN;
 
     public static NoteBlockIdType fromString(String value) {
@@ -23,6 +24,8 @@ public enum NoteBlockIdType {
             return COMMENT;
         } else if (value.equals("user")) {
             return USER;
+        } else if (value.equals("stat")) {
+            return STAT;
         } else {
             return UNKNOWN;
         }

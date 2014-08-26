@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,8 +138,11 @@ class NotesAdapter extends CursorAdapter {
         }
 
         // Subject is stored in db as html to preserve text formatting
-        String noteSubjectHtml = getStringForColumnName(objectCursor, Note.Schema.SUBJECT_INDEX);
-        noteViewHolder.txtLabel.setText(Html.fromHtml(noteSubjectHtml));
+        String noteSubjectHtml = getStringForColumnName(objectCursor, Note.Schema.SUBJECT_INDEX).trim();
+        CharSequence noteSubjectSpanned = Html.fromHtml(noteSubjectHtml);
+        // Trim the '\n\n' added by Html.fromHtml()
+        noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
+        noteViewHolder.txtLabel.setText(noteSubjectSpanned);
 
         String noteSnippet = getStringForColumnName(objectCursor, Note.Schema.SNIPPET_INDEX);
         if (!TextUtils.isEmpty(noteSnippet)) {
