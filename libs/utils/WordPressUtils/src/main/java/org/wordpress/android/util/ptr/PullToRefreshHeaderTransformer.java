@@ -6,8 +6,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.TextView;
 
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.R;
@@ -18,10 +16,8 @@ import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
     private View mHeaderView;
     private ViewGroup mContentLayout;
-    private TextView mTextView;
     private long mAnimationDuration;
     private boolean mShowProgressBarOnly;
-    private Animation mHeaderOutAnimation;
     private OnTopScrollChangedListener mOnTopScrollChangedListener;
     private boolean mIsNetworkRefreshMode;
     private Context mContext;
@@ -48,7 +44,6 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
         mContext = activity.getBaseContext();
         mHeaderView = headerView;
         mContentLayout = (ViewGroup) headerView.findViewById(R.id.ptr_content);
-        mTextView = (TextView) headerView.findViewById(R.id.ptr_text);
         mAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
     }
 
@@ -68,10 +63,10 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
         mContentLayout.setVisibility(View.VISIBLE);
         if (changeVis) {
             if (isNetworkAvailableOrNotChecked()) {
-                mTextView.setText(mContext.getText(R.string.pull_to_refresh_pull_label));
+                setPullText(mContext.getText(R.string.pull_to_refresh_pull_label));
             } else {
                 // Network mode enabled and network not available: show a different PTR label
-                mTextView.setText(mContext.getText(R.string.pull_to_refresh_pull_no_network_label));
+                setPullText(mContext.getText(R.string.pull_to_refresh_pull_no_network_label));
             }
             mHeaderView.setVisibility(View.VISIBLE);
             AnimatorSet animSet = new AnimatorSet();
@@ -87,11 +82,6 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
             }
         }
         return changeVis;
-    }
-
-    @Override
-    public void onPulled(float percentagePulled) {
-        super.onPulled(percentagePulled);
     }
 
     private void resetContentLayoutAlpha() {
