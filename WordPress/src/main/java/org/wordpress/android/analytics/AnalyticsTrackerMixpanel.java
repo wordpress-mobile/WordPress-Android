@@ -33,6 +33,8 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
+    private static final String EMAIL_ADDRESS_RETRIEVED_KEY = "mixpanel-email-set-key";
+
 
     public AnalyticsTrackerMixpanel() {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
@@ -56,6 +58,13 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         nm.notify(0, notification);
     }
 
+    public static void resetEmailRetrievalCheck() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(EMAIL_ADDRESS_RETRIEVED_KEY);
+        editor.apply();
+    }
+
     @Override
     public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
@@ -73,6 +82,11 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     }
 
     private void retrieveAndRegisterEmailAddressIfApplicable() {
+        // Once the email address is bound to a mixpanel profile, we don't need to set (and get it) a second time.
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        if (preferences.getBoolean(EMAIL_ADDRESS_RETRIEVED_KEY, false)) {
+            return;
+        }
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -80,6 +94,9 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                     if (jsonObject != null && !TextUtils.isEmpty(jsonObject.getString("email"))) {
                         String email = jsonObject.getString("email");
                         setValueForPeopleProperty("$email", email);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(EMAIL_ADDRESS_RETRIEVED_KEY, true);
+                        editor.apply();
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.UTILS, "Can't get email field from json response: " + jsonObject);

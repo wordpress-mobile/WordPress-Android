@@ -491,8 +491,13 @@ public class WordPress extends Application {
         wpDB.deleteAllAccounts();
         wpDB.updateLastBlogId(-1);
         currentBlog = null;
+
+        // General analytics resets
         AnalyticsTracker.endSession(false);
         AnalyticsTracker.clearAllData();
+
+        // Mixpanel specific reset
+        AnalyticsTrackerMixpanel.resetEmailRetrievalCheck();
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
