@@ -66,6 +66,14 @@ public class PullToRefreshHelper implements OnRefreshListener {
         setupWizard.setup(mPullToRefreshLayout);
     }
 
+    /**
+     * Once set, each PTR action will check for network connectivity. If there is thes network is not available
+     * (airplane mode for instance), the message will be changed from "Pull to refresh..." to "Can't refresh..."
+     */
+    public void setNetworkRefreshMode(boolean refreshing) {
+        mHeaderTransformer.setNetworkRefreshMode(refreshing);
+    }
+
     public void setRefreshing(boolean refreshing) {
         mHeaderTransformer.setShowProgressBarOnly(refreshing);
         mPullToRefreshLayout.setRefreshing(refreshing);
@@ -77,7 +85,11 @@ public class PullToRefreshHelper implements OnRefreshListener {
 
     @Override
     public void onRefreshStarted(View view) {
-        mRefreshListener.onRefreshStarted(view);
+        if (mHeaderTransformer.isNetworkAvailableOrNotChecked()) {
+            mRefreshListener.onRefreshStarted(view);
+        } else {
+            setRefreshing(false);
+        }
     }
 
     public interface RefreshListener {
@@ -103,7 +115,7 @@ public class PullToRefreshHelper implements OnRefreshListener {
         }
         Editor editor = preferences.edit();
         editor.putInt(REFRESH_BUTTON_HIT_COUNT, refreshHits);
-        editor.commit();
+        editor.apply();
     }
 
     public void registerReceiver(Context context) {
