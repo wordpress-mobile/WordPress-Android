@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtil;
 
 // Note header, displayed at top of detail view
@@ -21,8 +22,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
 
     private UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
 
-    public HeaderUserNoteBlock(JSONArray headerArray, UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
-        super(new JSONObject(), null);
+    public HeaderUserNoteBlock(JSONArray headerArray, OnNoteBlockTextClickListener onNoteBlockTextClickListener, UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
+        super(new JSONObject(), onNoteBlockTextClickListener);
 
         mHeaderArray = headerArray;
         mGravatarClickedListener = onGravatarClickedListener;
@@ -49,7 +50,10 @@ public class HeaderUserNoteBlock extends NoteBlock {
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
-        noteBlockHolder.snippetTextView.setText(getSnippet());
+        noteBlockHolder.snippetTextView.setText(NotificationsUtils.getSpannableTextFromIndices(
+                        getSnippet(),
+                        getOnNoteBlockTextClickListener())
+        );
 
         return view;
     }
@@ -66,8 +70,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
         return JSONUtil.queryJSON(mHeaderArray, "[0].ids[0].url", "");
     }
 
-    private String getSnippet() {
-        return JSONUtil.queryJSON(mHeaderArray, "[1].text", "");
+    private JSONObject getSnippet() {
+        return JSONUtil.queryJSON(mHeaderArray, "[1]", new JSONObject());
     }
 
     @Override
@@ -83,6 +87,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
         public NoteHeaderBlockHolder(View view) {
             nameTextView = (TextView)view.findViewById(R.id.header_user);
             snippetTextView = (TextView)view.findViewById(R.id.header_snippet);
+            snippetTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             avatarImageView = (NetworkImageView)view.findViewById(R.id.header_avatar);
         }
     }
@@ -100,7 +105,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
                         .alpha(0.5f)
                         .setDuration(animationDuration)
                         .setInterpolator(new DecelerateInterpolator());
-            } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+            } else if (event.getActionMasked() == MotionEvent.ACTION_UP
+                    || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
                         .scaleX(1.0f)
                         .scaleY(1.0f)

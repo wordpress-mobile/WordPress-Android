@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="6dp">
+        android:paddingTop="@dimen/comment_avatar_margin_top">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/header_avatar"
-            android:layout_width="@dimen/comment_avatar_size"
-            android:layout_height="@dimen/comment_avatar_size"
+            android:layout_width="@dimen/avatar_sz_small"
+            android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="@dimen/comment_avatar_margin_top"
             android:background="@color/grey_light" />
 
         <LinearLayout
@@ -32,6 +32,7 @@
                 android:id="@+id/header_user"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/comment_user_spacing_adjustment"
                 android:includeFontPadding="false"
                 android:ellipsize="end"
                 android:singleLine="true"

@@ -23,7 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.UserPrefs;
 import org.wordpress.android.util.AppLog;
@@ -286,15 +286,15 @@ public class GCMIntentService extends GCMBaseIntentService {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (!TextUtils.isEmpty(regId)) {
             // Get or create UUID for WP.com notes api
-            String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
+            String uuid = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
+                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 editor.commit();
             }
 
-            NotificationUtils.registerDeviceForPushNotifications(context, regId);
+            NotificationsUtils.registerDeviceForPushNotifications(context, regId);
 
             HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             AnalyticsTracker.registerPushNotificationToken(regId);

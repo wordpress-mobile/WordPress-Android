@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.UrlUtils;
@@ -61,7 +61,7 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         if (!TextUtils.isEmpty(linkedText)) {
-            noteBlockHolder.urlTextView.setText(NotificationUtils.getClickableTextForIdUrl(
+            noteBlockHolder.urlTextView.setText(NotificationsUtils.getClickableTextForIdUrl(
                     getUrlIdObject(),
                     linkedText,
                     getOnNoteBlockTextClickListener()

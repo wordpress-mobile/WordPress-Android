@@ -11,8 +11,8 @@
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/user_avatar"
-        android:layout_width="@dimen/comment_avatar_size"
-        android:layout_height="@dimen/comment_avatar_size"
+        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_small"
         android:layout_marginTop="6dp"
         android:background="@color/grey_light" />
 
@@ -20,15 +20,16 @@
         android:id="@+id/user_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/comment_user_spacing_adjustment"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toRightOf="@id/user_avatar"
         android:ellipsize="end"
-        android:includeFontPadding="false"
         android:singleLine="true"
         android:textColor="@color/calypso_blue_dark"
         android:textSize="@dimen/text_sz_large"
         android:textStyle="bold"
+        android:includeFontPadding="false"
         tools:text="Bob Ross" />
 
     <org.wordpress.android.widgets.WPTextView

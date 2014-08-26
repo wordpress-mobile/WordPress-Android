@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.comments.CommentUtils;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 // A user block with slightly different formatting for display in a comment detail
@@ -53,14 +53,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (mTextViewIndent == 0) {
             Context context = view.getContext();
             if (context != null) {
-                mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.comment_avatar_size) +
-                        DisplayUtils.dpToPx(context, 6);
+                mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small) +
+                        context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
             }
         }
 
         CommentUtils.indentTextViewFirstLine(
                 noteBlockHolder.commentTextView,
-                NotificationUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment-text"), getOnNoteBlockTextClickListener()),
+                NotificationsUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment-text"), getOnNoteBlockTextClickListener()),
                 mTextViewIndent
         );
 

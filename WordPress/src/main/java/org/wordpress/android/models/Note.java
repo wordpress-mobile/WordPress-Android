@@ -14,7 +14,7 @@ import com.simperium.client.Syncable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 
@@ -136,7 +136,7 @@ public class Note extends Syncable {
 
     public Spannable getFormattedSubject() {
         if (mFormattedSubject == null) {
-            mFormattedSubject = NotificationUtils.getSpannableTextFromIndices(getSubject(), null);
+            mFormattedSubject = NotificationsUtils.getSpannableTextFromIndices(getSubject(), null);
         }
         return mFormattedSubject;
     }

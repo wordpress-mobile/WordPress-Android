@@ -26,7 +26,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 
@@ -138,7 +138,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!hasActivity()) return;
 
-            NotificationUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
+            NotificationsUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
         }
     };
 
@@ -163,7 +163,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
-                HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(mNote.getHeader(), mOnGravatarClickedListener);
+                HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(
+                        mNote.getHeader(),
+                        mOnNoteBlockTextClickListener,
+                        mOnGravatarClickedListener
+                );
                 mNoteBlockArray.add(headerNoteBlock);
             }
 

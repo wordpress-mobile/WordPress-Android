@@ -23,7 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.utils.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.widgets.WPTextView;
@@ -65,7 +65,7 @@ public class NoteBlock {
     }
 
     public Spannable getNoteText() {
-        return NotificationUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
+        return NotificationsUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
     }
 
     public JSONObject getNoteMediaItem() {

@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NotificationUtils {
+public class NotificationsUtils {
 
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
@@ -128,7 +128,7 @@ public class NotificationUtils {
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", gcmToken);
         contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
+        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("settings", gson.toJson(updatedSettings));
         WordPress.getRestClientUtils().post("/device/"+deviceID, contentStruct, null, null, null);
     }
@@ -143,7 +143,7 @@ public class NotificationUtils {
         Map<String, String> contentStruct = new HashMap<String, String>();
         contentStruct.put("device_token", token);
         contentStruct.put("device_family", "android");
-        contentStruct.put("app_secret_key", NotificationUtils.getAppPushNotificationsName());
+        contentStruct.put("app_secret_key", NotificationsUtils.getAppPushNotificationsName());
         contentStruct.put("device_name", deviceName);
         contentStruct.put("device_model",  Build.MANUFACTURER + " " + Build.MODEL);
         contentStruct.put("app_version", WordPress.versionName);
@@ -285,6 +285,9 @@ public class NotificationUtils {
     }
 
     public static void handleNoteBlockSpanClick(NotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
+        // We should handle stats clicks here to open native stats for a site.
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/1787
+
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
             activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
