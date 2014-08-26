@@ -92,27 +92,18 @@ public class WPImageGetter implements Html.ImageGetter {
                     return;
                 }
 
-                final int oldHeight = remote.getBounds().height();
                 int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
                 if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0)) {
                     maxWidth = mMaxSize;
-                    AppLog.d(T.UTILS, "WPImageGetter setting maxWidth = mMaxSize");
                 }
 
                 Drawable drawable = new BitmapDrawable(view.getContext().getResources(), response.getBitmap());
                 remote.setRemoteDrawable(drawable, maxWidth);
 
-                // image is from cache? don't need to modify view height
-                if (isImmediate) {
-                    AppLog.d(T.UTILS, "WPImageGetter isImmediate");
-                    return;
+                // force textView to resize correctly if image isn't cached
+                if (!isImmediate) {
+                    view.setText(view.getText());
                 }
-
-                // invalidate the textView so the image redraws
-                view.invalidate();
-
-                int newHeight = remote.getBounds().height();
-                view.setHeight(view.getHeight() + newHeight - oldHeight);
             }
         });
 
