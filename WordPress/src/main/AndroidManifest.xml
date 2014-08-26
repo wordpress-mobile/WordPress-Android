@@ -293,6 +293,8 @@
 
         <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
 
+        <receiver android:name=".ui.notifications.CommentReplyBroadcastReceiver" />
+
         <provider
             android:name=".providers.StatsContentProvider"
             android:authorities="org.wordpress.android.providers.StatsContentProvider"

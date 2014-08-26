@@ -10,16 +10,21 @@ import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Note;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -200,5 +205,38 @@ public class NotificationUtils {
             return "org.wordpress.android.debug.build";
 
         return "org.wordpress.android.playstore";
+    }
+
+    // Send a comment reply, used for Android Wear voice replies
+    public static void sendCommentReply(final Context context, CharSequence replyText, String noteId) {
+        Bucket<Note> notesBucket = SimperiumUtils.getNotesBucket();
+        if (notesBucket == null) {
+            return;
+        }
+
+        try {
+            Note note = notesBucket.get(noteId);
+            WordPress.getRestClientUtils().replyToComment(
+                    String.valueOf(note.getBlogId()),
+                    String.valueOf(note.getCommentId()),
+                    replyText.toString(),
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (context != null) {
+                                ToastUtils.showToast(context, R.string.note_reply_successful);
+                            }
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (context != null) {
+                                ToastUtils.showToast(context, R.string.reply_failed);
+                            }
+                        }
+                    });
+        } catch (BucketObjectMissingException e) {
+            ToastUtils.showToast(context, R.string.reply_failed);
+        }
     }
 }

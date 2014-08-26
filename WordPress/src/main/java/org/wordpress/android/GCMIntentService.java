@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
@@ -21,6 +22,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
+import org.wordpress.android.ui.notifications.CommentReplyBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -40,8 +42,8 @@ import java.util.concurrent.TimeUnit;
 
 public class GCMIntentService extends GCMBaseIntentService {
     public static final int PUSH_NOTIFICATION_ID = 1337;
-
     private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<String, Bundle>();
+    public static String EXTRA_COMMENT_VOICE_REPLY = "extra_comment_voice_reply";
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
 
@@ -132,7 +134,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         vibrate = prefs.getBoolean("wp_pref_notification_vibrate", false);
         light = prefs.getBoolean("wp_pref_notification_light", false);
 
-        NotificationCompat.Builder mBuilder;
+        NotificationCompat.Builder mBuilder = null;
 
         Intent resultIntent = new Intent(this, PostsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -142,10 +144,6 @@ public class GCMIntentService extends GCMBaseIntentService {
         resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (mActiveNotificationsMap.size() <= 1) {
-            mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
-                                                           .setContentText(message).setTicker(message).setAutoCancel(true)
-                                                           .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-
             if (note_id != null) {
                 resultIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
             }
@@ -153,7 +151,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
-                Intent commentReplyIntent = new Intent(this, PostsActivity.class);
+                Intent commentReplyIntent = new Intent(this, CommentReplyBroadcastReceiver.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
@@ -161,18 +159,39 @@ public class GCMIntentService extends GCMBaseIntentService {
                 commentReplyIntent.addCategory("comment-reply");
                 commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
                 commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
+
+                // Add Android Wear voice reply functionality
+                RemoteInput remoteInput = new RemoteInput.Builder(EXTRA_COMMENT_VOICE_REPLY)
+                        .setLabel(getString(R.string.reply))
+                        .build();
+
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
+
+                PendingIntent commentReplyPendingIntent = PendingIntent.getBroadcast(context, 0,
                         commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ab_icon_reply,
-                        getResources().getText(R.string.reply), commentReplyPendingIntent);
-            }
 
-            if (largeIconBitmap != null) {
-                mBuilder.setLargeIcon(largeIconBitmap);
+                NotificationCompat.Action notificationAction =
+                        new NotificationCompat.Action.Builder(R.drawable.ab_icon_reply,
+                                getResources().getText(R.string.reply), commentReplyPendingIntent)
+                                .addRemoteInput(remoteInput)
+                                .build();
+
+                mBuilder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.notification_icon)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setTicker(message)
+                        .setAutoCancel(true)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .addAction(notificationAction)
+                        .extend(new NotificationCompat.WearableExtender().addAction(notificationAction));
+
+                if (largeIconBitmap != null) {
+                    mBuilder.setLargeIcon(largeIconBitmap);
+                }
             }
         } else {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
@@ -211,6 +230,8 @@ public class GCMIntentService extends GCMBaseIntentService {
                     .setAutoCancel(true)
                     .setStyle(inboxStyle);
         }
+
+        if (mBuilder == null) return;
 
         // Call broadcast receiver when notification is dismissed
         Intent notificationDeletedIntent = new Intent(this, NotificationDismissBroadcastReceiver.class);
