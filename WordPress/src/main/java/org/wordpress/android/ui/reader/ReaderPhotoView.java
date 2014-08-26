@@ -5,13 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -23,7 +23,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.widgets.WPTextView;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -46,7 +45,7 @@ public class ReaderPhotoView extends RelativeLayout {
 
     private final ImageView mImageView;
     private final ProgressBar mProgress;
-    private final WPTextView mTxtError;
+    private final TextView mTxtError;
 
     public ReaderPhotoView(Context context) {
         this(context, null);
@@ -55,29 +54,17 @@ public class ReaderPhotoView extends RelativeLayout {
     public ReaderPhotoView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate(R.layout.reader_photo_view, this);
+
         // ImageView which contains the downloaded image
-        mImageView = new ImageView(context);
-        LayoutParams paramsImg = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        paramsImg.addRule(CENTER_IN_PARENT);
-        this.addView(mImageView, paramsImg);
+        mImageView = (ImageView) view.findViewById(R.id.image_photo);
 
         // error text that appears when download fails
-        mTxtError = new WPTextView(context);
-        LayoutParams paramsTxt = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        paramsTxt.addRule(CENTER_IN_PARENT);
-        mTxtError.setGravity(Gravity.CENTER);
-        mTxtError.setText(context.getString(R.string.reader_toast_err_view_image));
-        mTxtError.setTextColor(context.getResources().getColor(R.color.grey_extra_light));
-        mTxtError.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimensionPixelSize(R.dimen.text_sz_large));
-        mTxtError.setVisibility(View.GONE);
-        this.addView(mTxtError, paramsTxt);
+        mTxtError = (TextView) view.findViewById(R.id.text_error);
 
         // progress bar which appears while downloading
-        mProgress = new ProgressBar(context);
-        LayoutParams paramsProgress = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        paramsProgress.addRule(CENTER_IN_PARENT);
-        mProgress.setVisibility(View.GONE);
-        this.addView(mProgress, paramsProgress);
+        mProgress = (ProgressBar) view.findViewById(R.id.progress_loading);
     }
 
     /**
