@@ -23,6 +23,11 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     @Override
+    public BlockType getBlockType() {
+        return BlockType.USER_COMMENT;
+    }
+
+    @Override
     public int getLayoutResourceId() {
         return R.layout.note_block_comment_user;
     }

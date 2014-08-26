@@ -7,10 +7,12 @@ import android.app.ListFragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -19,6 +21,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
+import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
@@ -33,7 +36,10 @@ import java.util.List;
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
     private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
+    private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
+
+    private int mBackgroundColor;
 
     public NotificationsDetailListFragment() {
     }
@@ -46,12 +52,17 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
+        View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
+        mRootLayout = (LinearLayout)view.findViewById(R.id.notifications_list_root);
+
+        return view;
     }
 
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+
+        mBackgroundColor = getResources().getColor(R.color.white);
 
         ListView listView = getListView();
         listView.setDivider(null);
@@ -112,6 +123,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // Update the block type for this view
             convertView.setTag(R.id.note_block_tag_id, noteBlock.getBlockType());
 
+            noteBlock.setBackgroundColor(mBackgroundColor);
+
             return noteBlock.configureView(convertView);
         }
     }
@@ -141,10 +154,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
 
     // Loop through the body items in this note, and create blocks for each.
-    private class LoadNoteBlocksTask extends AsyncTask<Void, Void, Void> {
+    private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
             JSONArray bodyArray = mNote.getBody();
             mNoteBlockArray.clear();
 
@@ -154,6 +167,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mNoteBlockArray.add(headerNoteBlock);
             }
 
+            boolean isBadgeView = false;
             if (bodyArray != null && bodyArray.length() > 0) {
                 for (int i=0; i < bodyArray.length(); i++) {
                     try {
@@ -187,17 +201,33 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
 
+                        // Badge notifications apply different colors and formatting
+                        if (isAdded() && noteBlock.containsBadgeMediaType()) {
+                            isBadgeView = true;
+                            mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
+                            /*LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            layoutParams.gravity = Gravity.CENTER_VERTICAL;*/
+                        }
+
                         mNoteBlockArray.add(noteBlock);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
                     }
                 }
             }
-            return null;
+
+            return isBadgeView;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(Boolean isBadgeView) {
+            if (isBadgeView) {
+                mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
+            }
+
             setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
         }
     }

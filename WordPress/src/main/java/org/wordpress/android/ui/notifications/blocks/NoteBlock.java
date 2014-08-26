@@ -18,6 +18,8 @@ import android.widget.VideoView;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -38,6 +40,8 @@ public class NoteBlock {
     private JSONObject mNoteData;
     private OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
+
+    private int mBackgroundColor;
 
     public interface OnNoteBlockTextClickListener {
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -72,6 +76,10 @@ public class NoteBlock {
         return mMediaItem;
     }
 
+    public void setBackgroundColor(int backgroundColor) {
+        mBackgroundColor = backgroundColor;
+    }
+
     public int getLayoutResourceId() {
         return R.layout.note_block_basic;
     }
@@ -81,8 +89,9 @@ public class NoteBlock {
     }
 
     public boolean hasImageMediaItem() {
+        String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
         return hasMediaArray() &&
-                getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("image") &&
+                (mediaType.startsWith("image") || mediaType.equals("badge")) &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
@@ -90,6 +99,22 @@ public class NoteBlock {
         return hasMediaArray() &&
                 getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+    }
+
+    public boolean containsBadgeMediaType() {
+        try {
+            JSONArray mediaArray = mNoteData.getJSONArray("media");
+            for (int i=0; i < mediaArray.length(); i++) {
+                JSONObject mediaObject = mediaArray.getJSONObject(i);
+                if (mediaObject.optString(PROPERTY_MEDIA_TYPE, "").equals("badge")) {
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            return false;
+        }
+
+        return false;
     }
 
     public View configureView(final View view) {
@@ -141,6 +166,8 @@ public class NoteBlock {
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
+
+        view.setBackgroundColor(mBackgroundColor);
 
         return view;
     }

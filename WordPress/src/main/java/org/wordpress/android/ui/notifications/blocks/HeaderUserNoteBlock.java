@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.notifications;
+package org.wordpress.android.ui.notifications.blocks;
 
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -12,8 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.blocks.NoteBlock;
-import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.util.JSONUtil;
 
 // Note header, displayed at top of detail view
@@ -28,6 +26,11 @@ public class HeaderUserNoteBlock extends NoteBlock {
 
         mHeaderArray = headerArray;
         mGravatarClickedListener = onGravatarClickedListener;
+    }
+
+    @Override
+    public BlockType getBlockType() {
+        return BlockType.USER_HEADER;
     }
 
     public int getLayoutResourceId() {
