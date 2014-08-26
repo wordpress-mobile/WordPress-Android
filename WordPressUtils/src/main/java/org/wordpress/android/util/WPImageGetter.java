@@ -100,7 +100,9 @@ public class WPImageGetter implements Html.ImageGetter {
                 Drawable drawable = new BitmapDrawable(view.getContext().getResources(), response.getBitmap());
                 remote.setRemoteDrawable(drawable, maxWidth);
 
-                // force textView to resize correctly if image isn't cached
+                // force textView to resize correctly if image isn't cached by resetting the content
+                // to itself - this way the textView will use the cached image, and resizing to
+                // accommodate the image isn't necessary
                 if (!isImmediate) {
                     view.setText(view.getText());
                 }
