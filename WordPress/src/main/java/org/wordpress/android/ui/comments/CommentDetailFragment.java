@@ -768,6 +768,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
+                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case TRASH:
                 // should never get here
@@ -776,6 +777,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
+                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             default:
                 return;

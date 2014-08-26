@@ -56,8 +56,8 @@
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
 
-    <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
+    <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
@@ -97,6 +97,7 @@
 
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
+    <dimen name="comment_avatar_size">33dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="ptr_tip_margin_top">8dp</dimen>

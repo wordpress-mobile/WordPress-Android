@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium">
+        android:paddingTop="6dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/header_avatar"
-            android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
-            android:layout_gravity="center_vertical"
+            android:layout_width="@dimen/comment_avatar_size"
+            android:layout_height="@dimen/comment_avatar_size"
             android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginTop="6dp"
             android:background="@color/grey_light" />
 
         <LinearLayout
@@ -35,7 +35,7 @@
                 android:includeFontPadding="false"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -47,7 +47,7 @@
                 android:singleLine="true"
                 android:textColor="@color/calypso_blue"
                 android:textStyle="italic"
-                android:textSize="@dimen/text_sz_medium"
+                android:textSize="@dimen/text_sz_large"
                 tools:text="www.bobross.com" />
 
         </LinearLayout>
