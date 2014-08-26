@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    post for PostDetailActivity, inserted as ListView header
+    post for ReaderPostDetailFragment, inserted as ListView header
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,7 +27,7 @@
             android:background="@color/grey_extra_light" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -87,17 +87,6 @@
             tools:text="text_date_and_author" />
 
     </LinearLayout>
-
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_featured"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_large"
-        android:adjustViewBounds="true"
-        android:minHeight="@dimen/reader_featured_image_height"
-        android:visibility="gone" />
 
     <org.wordpress.android.ui.reader.ReaderWebView
         android:id="@+id/reader_webview"
