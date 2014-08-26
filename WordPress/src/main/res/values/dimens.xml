@@ -98,6 +98,7 @@
     <!-- notifications -->
     <dimen name="note_icon_sz">21dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>
+    <dimen name="notifications_adjusted_font_margin">14dp</dimen>
     <dimen name="comment_user_spacing_adjustment">-2dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>

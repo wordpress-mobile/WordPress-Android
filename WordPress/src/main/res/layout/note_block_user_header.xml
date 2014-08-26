@@ -3,23 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_large">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:paddingTop="@dimen/comment_avatar_margin_top">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/header_avatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
-            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
             android:layout_marginTop="@dimen/comment_avatar_margin_top"
             android:background="@color/grey_light" />
 
@@ -33,8 +33,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/comment_user_spacing_adjustment"
-                android:includeFontPadding="false"
                 android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross" />
@@ -43,21 +43,50 @@
                 android:id="@+id/header_snippet"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:includeFontPadding="false"
                 android:ellipsize="end"
+                android:includeFontPadding="false"
                 android:singleLine="true"
                 android:textColor="@color/calypso_blue"
-                android:textStyle="italic"
                 android:textSize="@dimen/text_sz_large"
+                android:textStyle="italic"
                 tools:text="www.bobross.com" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@drawable/list_divider_full_width" />
+    <!-- Two footer views, one is used specifically for comments -->
+    <LinearLayout
+        android:id="@+id/header_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@drawable/list_divider_full_width" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_medium" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@drawable/list_divider_full_width" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/header_footer_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@drawable/list_divider" />
+    </LinearLayout>
 </LinearLayout>

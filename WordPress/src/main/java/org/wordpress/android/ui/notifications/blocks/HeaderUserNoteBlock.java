@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 
 // Note header, displayed at top of detail view
@@ -21,6 +23,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     private JSONArray mHeaderArray;
 
     private UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
+    private Boolean mIsComment;
 
     public HeaderUserNoteBlock(JSONArray headerArray, OnNoteBlockTextClickListener onNoteBlockTextClickListener, UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
         super(new JSONObject(), onNoteBlockTextClickListener);
@@ -55,6 +58,13 @@ public class HeaderUserNoteBlock extends NoteBlock {
                         getOnNoteBlockTextClickListener())
         );
 
+        if (mIsComment) {
+            View footerView = view.findViewById(R.id.header_footer);
+            View footerCommentView = view.findViewById(R.id.header_footer_comment);
+            footerView.setVisibility(View.GONE);
+            footerCommentView.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
@@ -77,6 +87,10 @@ public class HeaderUserNoteBlock extends NoteBlock {
     @Override
     public Object getViewHolder(View view) {
         return new NoteHeaderBlockHolder(view);
+    }
+
+    public void setIsComment(Boolean isComment) {
+        mIsComment = isComment;
     }
 
     private class NoteHeaderBlockHolder {

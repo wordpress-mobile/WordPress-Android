@@ -54,7 +54,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             Context context = view.getContext();
             if (context != null) {
                 mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small) +
-                        context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
+                        context.getResources().getDimensionPixelSize(R.dimen.notifications_adjusted_font_margin);
             }
         }
 

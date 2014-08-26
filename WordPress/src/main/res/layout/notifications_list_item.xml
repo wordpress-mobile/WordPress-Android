@@ -71,7 +71,7 @@
                 android:id="@+id/note_avatar"
                 android:layout_width="@dimen/avatar_sz_medium"
                 android:layout_height="@dimen/avatar_sz_medium"
-                android:layout_marginRight="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                 android:layout_marginTop="@dimen/margin_small" />
 
             <org.wordpress.android.widgets.NoticonTextView

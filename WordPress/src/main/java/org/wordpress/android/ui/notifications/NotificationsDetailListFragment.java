@@ -168,6 +168,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener
                 );
+
+                headerNoteBlock.setIsComment(mNote.isCommentType());
                 mNoteBlockArray.add(headerNoteBlock);
             }
 
