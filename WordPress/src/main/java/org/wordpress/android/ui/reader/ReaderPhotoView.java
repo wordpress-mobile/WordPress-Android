@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,6 +45,7 @@ public class ReaderPhotoView extends RelativeLayout {
     private final ImageView mImageView;
     private final ProgressBar mProgress;
     private final TextView mTxtError;
+    private boolean mIsInitialLayout = true;
 
     public ReaderPhotoView(Context context) {
         this(context, null);
@@ -54,17 +54,16 @@ public class ReaderPhotoView extends RelativeLayout {
     public ReaderPhotoView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.reader_photo_view, this);
+        inflate(context, R.layout.reader_photo_view, this);
 
         // ImageView which contains the downloaded image
-        mImageView = (ImageView) view.findViewById(R.id.image_photo);
+        mImageView = (ImageView) findViewById(R.id.image_photo);
 
         // error text that appears when download fails
-        mTxtError = (TextView) view.findViewById(R.id.text_error);
+        mTxtError = (TextView) findViewById(R.id.text_error);
 
         // progress bar which appears while downloading
-        mProgress = (ProgressBar) view.findViewById(R.id.progress_loading);
+        mProgress = (ProgressBar) findViewById(R.id.progress_loading);
     }
 
     /**
@@ -118,13 +117,14 @@ public class ReaderPhotoView extends RelativeLayout {
 
         // skip if this same image url is already being loaded
         if (isRequestingUrl(mLoResContainer, mLoResImageUrl)) {
+            AppLog.d(AppLog.T.READER, "reader photo > already requesting lo-res");
             return;
         }
 
-        showProgress();
-
         Point pt = DisplayUtils.getDisplayPixelSize(this.getContext());
         int maxSize = Math.min(pt.x, pt.y);
+
+        showProgress();
 
         mLoResContainer = WordPress.imageLoader.get(mLoResImageUrl,
                 new ImageLoader.ImageListener() {
@@ -153,6 +153,7 @@ public class ReaderPhotoView extends RelativeLayout {
         }
 
         if (isRequestingUrl(mHiResContainer, mHiResImageUrl)) {
+            AppLog.d(AppLog.T.READER, "reader photo > already requesting hi-res");
             return;
         }
 
@@ -223,7 +224,6 @@ public class ReaderPhotoView extends RelativeLayout {
     private void showProgress() {
         if (mProgress != null) {
             mProgress.setVisibility(View.VISIBLE);
-            mProgress.bringToFront();
         }
     }
 
@@ -237,7 +237,16 @@ public class ReaderPhotoView extends RelativeLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!isInEditMode()) {
-            loadLoResImage();
+            if (mIsInitialLayout) {
+                mIsInitialLayout = false;
+                AppLog.d(AppLog.T.READER, "reader photo > initial layout");
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadLoResImage();
+                    }
+                });
+            }
         }
     }
 
@@ -254,6 +263,7 @@ public class ReaderPhotoView extends RelativeLayout {
             mHiResContainer.cancelRequest();
             mHiResContainer = null;
         }
+        mIsInitialLayout = true;
         super.onDetachedFromWindow();
     }
 

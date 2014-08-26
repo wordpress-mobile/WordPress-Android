@@ -10,14 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_error"
         android:layout_width="wrap_content"
@@ -26,6 +18,14 @@
         android:text="@string/reader_toast_err_view_image"
         android:textColor="@color/grey_extra_light"
         android:textSize="@dimen/text_sz_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible" />
 </merge>
