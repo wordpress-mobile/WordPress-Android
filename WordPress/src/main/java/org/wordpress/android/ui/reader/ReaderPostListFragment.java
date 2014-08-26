@@ -44,7 +44,6 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -697,14 +696,6 @@ public class ReaderPostListFragment extends Fragment
 
     boolean isPostAdapterEmpty() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
-    }
-
-    ReaderBlogIdPostIdList getBlogIdPostIdList() {
-        if (hasPostAdapter()) {
-            return getPostAdapter().getBlogIdPostIdList();
-        } else {
-            return new ReaderBlogIdPostIdList();
-        }
     }
 
     private boolean isCurrentTag(final ReaderTag tag) {
