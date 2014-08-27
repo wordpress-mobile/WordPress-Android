@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteStatement;
 
 import org.wordpress.android.models.ReaderAttachment;
 import org.wordpress.android.models.ReaderAttachmentList;
+import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -52,31 +54,37 @@ public class ReaderAttachmentTable {
         }
     }
 
-    public static void setAttachmentsForPost(long blogId, long postId, ReaderAttachmentList attachments) {
+    public static void saveAttachmentsForPosts(ReaderPostList posts) {
+        if (posts == null || posts.size() == 0) {
+            return;
+        }
+
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_attachments (blog_id, post_id, attachment_id, url, mime_type, width, height) VALUES (?1,?2,?3,?4,?5,?6,?7)");
+        SQLiteStatement stmt = db.compileStatement(
+                "INSERT INTO tbl_attachments"
+              + " (blog_id, post_id, attachment_id, url, mime_type, width, height)"
+              + " VALUES (?1,?2,?3,?4,?5,?6,?7)");
         try {
-            // first delete all attachments for this post
-            String[] args = {Long.toString(blogId), Long.toString(postId)};
-            db.delete("tbl_attachments", "blog_id=? AND post_id=?", args);
+            for (ReaderPost post : posts) {
+                if (post.hasAttachments()) {
+                    // first delete all attachments for this post
+                    String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+                    db.delete("tbl_attachments", "blog_id=? AND post_id=?", args);
 
-            // now insert the passed ones
-            if (attachments != null) {
-                stmt.bindLong(1, blogId);
-                stmt.bindLong(2, postId);
-                for (ReaderAttachment attach: attachments) {
-                    stmt.bindLong  (3, attach.attachmentId);
-                    stmt.bindString(4, attach.getUrl());
-                    stmt.bindString(5, attach.getMimeType());
-                    stmt.bindLong(6, attach.width);
-                    stmt.bindLong  (7, attach.height);
-                    stmt.execute();
+                    // now insert the passed ones
+                    stmt.bindLong(1, post.blogId);
+                    stmt.bindLong(2, post.postId);
+                    for (ReaderAttachment attach : post.getAttachments()) {
+                        stmt.bindLong  (3, attach.attachmentId);
+                        stmt.bindString(4, attach.getUrl());
+                        stmt.bindString(5, attach.getMimeType());
+                        stmt.bindLong  (6, attach.width);
+                        stmt.bindLong  (7, attach.height);
+                        stmt.execute();
+                    }
                 }
             }
-
-            db.setTransactionSuccessful();
-
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);

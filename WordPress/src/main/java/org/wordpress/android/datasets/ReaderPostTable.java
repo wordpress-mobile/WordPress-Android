@@ -427,12 +427,8 @@ public class ReaderPostTable {
                 }
             }
 
-            // save attachments for these posts
-            for (ReaderPost post: posts) {
-                if (post.hasAttachments()) {
-                    ReaderAttachmentTable.setAttachmentsForPost(post.blogId, post.postId, post.getAttachments());
-                }
-            }
+            // save attachments for posts that have any
+            ReaderAttachmentTable.saveAttachmentsForPosts(posts);
 
             db.setTransactionSuccessful();
 
