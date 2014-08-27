@@ -60,7 +60,6 @@ public class ReaderAttachmentTable {
         }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement(
                 "INSERT INTO tbl_attachments"
               + " (blog_id, post_id, attachment_id, url, mime_type, width, height)"
@@ -86,7 +85,6 @@ public class ReaderAttachmentTable {
                 }
             }
         } finally {
-            db.endTransaction();
             SqlUtils.closeStatement(stmt);
         }
     }
