@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -84,7 +84,7 @@ public class ReaderLikeTable {
         if (post == null) {
             return;
         }
-        long currentUserId = UserPrefs.getCurrentUserId();
+        long currentUserId = AppPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);
@@ -171,7 +171,7 @@ public class ReaderLikeTable {
             return;
         }
 
-        long currentUserId = UserPrefs.getCurrentUserId();
+        long currentUserId = AppPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", comment.blogId);

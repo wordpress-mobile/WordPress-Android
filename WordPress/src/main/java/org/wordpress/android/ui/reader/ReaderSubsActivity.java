@@ -33,7 +33,7 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.networking.NetworkUtils;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -135,7 +135,7 @@ public class ReaderSubsActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
-                UserPrefs.setReaderSubsPageTitle(pageTitle);
+                AppPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
     }
@@ -483,7 +483,7 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        String pageTitle = UserPrefs.getReaderSubsPageTitle();
+        String pageTitle = AppPrefs.getReaderSubsPageTitle();
         if (TextUtils.isEmpty(pageTitle)) {
             return;
         }

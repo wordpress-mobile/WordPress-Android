@@ -20,7 +20,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostSelectedListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
@@ -97,7 +97,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 if (intent.hasExtra(ReaderConstants.ARG_TAG)) {
                     tag = (ReaderTag) intent.getSerializableExtra(ReaderConstants.ARG_TAG);
                 } else  {
-                    tag = UserPrefs.getReaderTag();
+                    tag = AppPrefs.getReaderTag();
                 }
                 // if this is a followed tag and it doesn't exist, revert to default tag
                 if (mPostListType == ReaderTypes.ReaderPostListType.TAG_FOLLOWED && !ReaderTagTable.tagExists(tag)) {

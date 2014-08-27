@@ -42,7 +42,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.SimperiumUtils;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -164,7 +164,7 @@ public class WordPress extends Application {
         // Volley networking setup
         setupVolleyQueue();
 
-        String lastActivityStr = UserPrefs.getLastActivityStr();
+        String lastActivityStr = AppPrefs.getLastActivityStr();
         if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
             shouldRestoreSelectedActivity = true;
         }
@@ -483,9 +483,6 @@ public class WordPress extends Application {
         AnalyticsTracker.endSession(false);
         AnalyticsTracker.clearAllData();
 
-        // Mixpanel specific reset
-        AnalyticsTrackerMixpanel.resetEmailRetrievalCheck();
-
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
         sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
@@ -511,7 +508,7 @@ public class WordPress extends Application {
         editor.commit();
 
         // reset all reader-related prefs & data
-        UserPrefs.reset();
+        AppPrefs.reset();
         ReaderDatabase.reset();
 
         // Reset Simperium buckets (removes local data)
@@ -607,7 +604,7 @@ public class WordPress extends Application {
             if (level == ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
                 // We're in the Background
                 isInBackground = true;
-                String lastActivityString = UserPrefs.getLastActivityStr();
+                String lastActivityString = AppPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
                 Map<String, String> properties = new HashMap<String, String>();
                 properties.put("last_visible_screen", lastActivity.toString());

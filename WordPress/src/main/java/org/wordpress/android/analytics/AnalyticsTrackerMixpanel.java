@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PackageUtils;
@@ -34,7 +35,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String DOTCOM_USER = "dotcom_user";
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
-    private static final String EMAIL_ADDRESS_RETRIEVED_KEY = "mixpanel-email-set-key";
     private static final String VERSION_CODE = "version_code";
 
     public AnalyticsTrackerMixpanel() {
@@ -59,13 +59,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         nm.notify(0, notification);
     }
 
-    public static void resetEmailRetrievalCheck() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.remove(EMAIL_ADDRESS_RETRIEVED_KEY);
-        editor.apply();
-    }
-
     @Override
     public void track(AnalyticsTracker.Stat stat) {
         track(stat, null);
@@ -84,8 +77,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
 
     private void retrieveAndRegisterEmailAddressIfApplicable() {
         // Once the email address is bound to a mixpanel profile, we don't need to set (and get it) a second time.
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-        if (preferences.getBoolean(EMAIL_ADDRESS_RETRIEVED_KEY, false)) {
+        if (AppPrefs.getMixpanelEmailRetrievalCheck()) {
             return;
         }
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -95,9 +87,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
                     if (jsonObject != null && !TextUtils.isEmpty(jsonObject.getString("email"))) {
                         String email = jsonObject.getString("email");
                         setValueForPeopleProperty("$email", email);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean(EMAIL_ADDRESS_RETRIEVED_KEY, true);
-                        editor.apply();
+                        AppPrefs.setMixpanelEmailRetrievalCheck(true);
                     }
                 } catch (JSONException e) {
                     AppLog.e(T.UTILS, "Can't get email field from json response: " + jsonObject);

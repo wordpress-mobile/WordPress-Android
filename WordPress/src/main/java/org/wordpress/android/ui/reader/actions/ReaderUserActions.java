@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderUserTable;
 import org.wordpress.android.models.ReaderUser;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -64,6 +64,6 @@ public class ReaderUserActions {
         if (user == null)
             return;
         ReaderUserTable.addOrUpdateUser(user);
-        UserPrefs.setCurrentUserId(user.userId);
+        AppPrefs.setCurrentUserId(user.userId);
     }
 }
