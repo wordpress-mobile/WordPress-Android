@@ -25,7 +25,7 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
