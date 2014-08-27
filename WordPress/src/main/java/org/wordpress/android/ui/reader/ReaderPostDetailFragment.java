@@ -1025,7 +1025,8 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // images in private posts must use https for auth token to be sent with request
-        if (hasPost() && mPost.isPrivate) {
+        boolean isPrivate = (mPost != null && mPost.isPrivate);
+        if (isPrivate) {
             imageUrl = UrlUtils.makeHttps(imageUrl);
         }
 
@@ -1034,7 +1035,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imageUrl,
                 getPostContent(),
                 source,
-                mPost.isPrivate || ReaderBlogTable.getBlogInfo(mBlogId, null).isPrivate,
+                mPost.isPrivate,
                 startX,
                 startY);
 
