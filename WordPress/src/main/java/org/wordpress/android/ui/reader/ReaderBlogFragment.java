@@ -9,7 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.BlogFollowChangeListener;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
@@ -132,7 +132,7 @@ public class ReaderBlogFragment extends Fragment
             return;
         }
 
-        int currentOffset = UserPrefs.getReaderRecommendedBlogOffset();
+        int currentOffset = AppPrefs.getReaderRecommendedBlogOffset();
         int newOffset = currentOffset + ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
 
         // start over if we've reached the max
@@ -140,7 +140,7 @@ public class ReaderBlogFragment extends Fragment
             newOffset = 0;
         }
 
-        UserPrefs.setReaderRecommendedBlogOffset(newOffset);
+        AppPrefs.setReaderRecommendedBlogOffset(newOffset);
         refresh();
     }
 

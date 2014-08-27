@@ -7,14 +7,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
+import com.android.volley.VolleyError;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.PackageUtils;
 
 import java.util.EnumMap;
@@ -31,8 +36,6 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
     private static final String JETPACK_USER = "jetpack_user";
     private static final String MIXPANEL_NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String VERSION_CODE = "version_code";
-
-
 
     public AnalyticsTrackerMixpanel() {
         mAggregatedProperties = new EnumMap<AnalyticsTracker.Stat, JSONObject>(AnalyticsTracker.Stat.class);
@@ -70,6 +73,36 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
         }
 
         trackMixpanelDataForInstructions(instructions, properties);
+    }
+
+    private void retrieveAndRegisterEmailAddressIfApplicable() {
+        // Once the email address is bound to a mixpanel profile, we don't need to set (and get it) a second time.
+        if (AppPrefs.getMixpanelEmailRetrievalCheck()) {
+            return;
+        }
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                try {
+                    if (jsonObject != null && !TextUtils.isEmpty(jsonObject.getString("email"))) {
+                        String email = jsonObject.getString("email");
+                        setValueForPeopleProperty("$email", email);
+                        AppPrefs.setMixpanelEmailRetrievalCheck(true);
+                    }
+                } catch (JSONException e) {
+                    AppLog.e(T.UTILS, "Can't get email field from json response: " + jsonObject);
+                }
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                AppLog.e(T.UTILS, volleyError);
+            }
+        };
+
+        String path = "/me";
+        WordPress.getRestClientUtils().get(path, listener, errorListener);
     }
 
     private void trackMixpanelDataForInstructions(AnalyticsTrackerMixpanelInstructionsForStat instructions,
@@ -193,6 +226,7 @@ public class AnalyticsTrackerMixpanel implements AnalyticsTracker.Tracker {
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.UTILS, e);
             }
+            retrieveAndRegisterEmailAddressIfApplicable();
         }
     }
 

@@ -30,7 +30,7 @@ import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -85,7 +85,7 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
                 !(this instanceof PagesActivity)) {
             WordPress.shouldRestoreSelectedActivity = false;
-            ActivityId lastActivity = ActivityId.getActivityIdFromName(UserPrefs.getLastActivityStr());
+            ActivityId lastActivity = ActivityId.getActivityIdFromName(AppPrefs.getLastActivityStr());
             if (lastActivity.autoRestoreMapper() != ActivityId.UNKNOWN) {
                 for (MenuDrawerItem item : mMenuItems) {
                     // if we have a matching item id, and it's not selected and it's visible, call it
@@ -181,7 +181,7 @@ public class PostsActivity extends WPActionBarActivity
 
     private void startNotificationsActivity(Bundle extras) {
         // Manually set last selection to notifications
-        UserPrefs.setLastActivityStr(ActivityId.NOTIFICATIONS.name());
+        AppPrefs.setLastActivityStr(ActivityId.NOTIFICATIONS.name());
 
         Intent i = new Intent(this, NotificationsActivity.class);
         i.putExtras(extras);
