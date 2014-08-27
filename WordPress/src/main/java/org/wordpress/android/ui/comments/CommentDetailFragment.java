@@ -661,7 +661,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 }
 
                 if (succeeded && mOnCommentChangeListener != null) {
-                    ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
+                    ChangeType changeType;
+                    switch (newStatus) {
+                        case SPAM:
+                            changeType = ChangeType.SPAMMED;
+                            break;
+                        case TRASH:
+                            changeType = ChangeType.SPAMMED;
+                            break;
+                        default:
+                            changeType = ChangeType.STATUS;
+                    }
+
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, changeType);
                 }
             }
