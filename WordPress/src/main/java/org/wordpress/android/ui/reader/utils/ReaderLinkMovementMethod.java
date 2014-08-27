@@ -25,7 +25,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
 
     /*
      * note that separate instances are returned depending on whether we're showing
-     * content from a private post
+     * content from a private blog
      */
     public static ReaderLinkMovementMethod getInstance(boolean isPrivate) {
         if (isPrivate) {
@@ -47,7 +47,6 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
     public static ReaderLinkMovementMethod getInstance() {
         return getInstance(false);
     }
-
 
     private ReaderLinkMovementMethod(boolean isPrivate) {
         super();
