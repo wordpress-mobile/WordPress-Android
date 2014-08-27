@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -1033,6 +1034,7 @@ public class ReaderPostDetailFragment extends Fragment
                 imageUrl,
                 getPostContent(),
                 source,
+                mPost.isPrivate || ReaderBlogTable.getBlogInfo(mBlogId, null).isPrivate,
                 startX,
                 startY);
 

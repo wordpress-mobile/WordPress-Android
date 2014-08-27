@@ -268,6 +268,7 @@ class ReaderBlogInfoView extends LinearLayout {
                                         mshotUrl,
                                         null,
                                         mImageMshot,
+                                        blogInfo.isPrivate,
                                         (int) event.getRawX(),
                                         (int) event.getRawY());
                             }

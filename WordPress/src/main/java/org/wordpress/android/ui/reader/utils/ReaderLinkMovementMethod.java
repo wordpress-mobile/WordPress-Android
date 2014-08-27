@@ -53,6 +53,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
                         imageUrl,
                         null,
                         textView,
+                        false, // FIXME: how to pass the pvt status here?
                         (int) event.getX(),
                         (int) event.getY());
                 return true;
