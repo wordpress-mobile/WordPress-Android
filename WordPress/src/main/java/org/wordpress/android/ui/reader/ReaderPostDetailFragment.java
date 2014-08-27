@@ -1041,16 +1041,14 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
-        // images in private posts must use https for auth token to be sent with request
-        if (hasPost() && mPost.isPrivate) {
-            imageUrl = UrlUtils.makeHttps(imageUrl);
-        }
+        boolean isPrivatePost = (mPost != null && mPost.isPrivate);
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
                 imageUrl,
                 getPostContent(),
                 source,
+                isPrivatePost,
                 startX,
                 startY);
 

@@ -153,6 +153,7 @@ public class ReaderActivityLauncher {
                                              String imageUrl,
                                              String content,
                                              View sourceView,
+                                             boolean isPrivate,
                                              int startX,
                                              int startY) {
         if (context == null || TextUtils.isEmpty(imageUrl)) {
@@ -161,6 +162,7 @@ public class ReaderActivityLauncher {
 
         Intent intent = new Intent(context, ReaderPhotoViewerActivity.class);
         intent.putExtra(ReaderConstants.ARG_IMAGE_URL, imageUrl);
+        intent.putExtra(ReaderConstants.ARG_IS_PRIVATE, isPrivate);
         if (!TextUtils.isEmpty(content)) {
             intent.putExtra(ReaderConstants.ARG_CONTENT, content);
         }

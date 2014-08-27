@@ -19,12 +19,38 @@ import javax.annotation.Nonnull;
  */
 public class ReaderLinkMovementMethod extends LinkMovementMethod {
     private static ReaderLinkMovementMethod mMovementMethod;
+    private static ReaderLinkMovementMethod mMovementMethodPrivate;
 
-    public static ReaderLinkMovementMethod getInstance() {
-        if (mMovementMethod == null) {
-            mMovementMethod = new ReaderLinkMovementMethod();
+    private final boolean mIsPrivate;
+
+    /*
+     * note that separate instances are returned depending on whether we're showing
+     * content from a private blog
+     */
+    public static ReaderLinkMovementMethod getInstance(boolean isPrivate) {
+        if (isPrivate) {
+            if (mMovementMethodPrivate == null) {
+                mMovementMethodPrivate = new ReaderLinkMovementMethod(true);
+            }
+            return mMovementMethodPrivate;
+        } else {
+            if (mMovementMethod == null) {
+                mMovementMethod = new ReaderLinkMovementMethod(false);
+            }
+            return mMovementMethod;
         }
-        return mMovementMethod;
+    }
+
+    /*
+     * override MovementMethod.getInstance() to ensure our getInstance(false) is used
+     */
+    public static ReaderLinkMovementMethod getInstance() {
+        return getInstance(false);
+    }
+
+    private ReaderLinkMovementMethod(boolean isPrivate) {
+        super();
+        mIsPrivate = isPrivate;
     }
 
     @Override
@@ -53,6 +79,7 @@ public class ReaderLinkMovementMethod extends LinkMovementMethod {
                         imageUrl,
                         null,
                         textView,
+                        mIsPrivate,
                         (int) event.getX(),
                         (int) event.getY());
                 return true;
