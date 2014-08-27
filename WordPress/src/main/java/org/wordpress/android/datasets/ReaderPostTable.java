@@ -427,6 +427,13 @@ public class ReaderPostTable {
                 }
             }
 
+            // save attachments for these posts
+            for (ReaderPost post: posts) {
+                if (post.hasAttachments()) {
+                    ReaderAttachmentTable.setAttachmentsForPost(post.blogId, post.postId, post.getAttachments());
+                }
+            }
+
             db.setTransactionSuccessful();
 
         } finally {
@@ -651,6 +658,8 @@ public class ReaderPostTable {
 
         post.isLikesEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_likes_enabled));
         post.isSharingEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_sharing_enabled));
+
+        post.setAttachments(ReaderAttachmentTable.getAttachmentsForPost(post.blogId, post.postId));
 
         return post;
     }

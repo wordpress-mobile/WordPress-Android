@@ -352,8 +352,6 @@ public class ReaderPost {
         this.published = StringUtils.notNullStr(published);
     }
 
-    // --------------------------------------------------------------------------------------------
-
     public String getPrimaryTag() {
         return StringUtils.notNullStr(primaryTag);
     }
@@ -376,8 +374,6 @@ public class ReaderPost {
             this.secondaryTag = StringUtils.notNullStr(tagName);
         }
     }
-
-    // --------------------------------------------------------------------------------------------
 
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
@@ -429,16 +425,20 @@ public class ReaderPost {
         return !isExternal;
     }
 
+    public boolean hasAttachments() {
+        return (attachments != null && attachments.size() > 0);
+    }
     public ReaderAttachmentList getAttachments() {
         return attachments;
     }
     public void setAttachments(ReaderAttachmentList attachments) {
         if (attachments != null) {
-            attachments = (ReaderAttachmentList) attachments.clone();
+            this.attachments = (ReaderAttachmentList) attachments.clone();
         } else {
-            attachments = new ReaderAttachmentList();
+            this.attachments = new ReaderAttachmentList();
         }
     }
+
 
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
