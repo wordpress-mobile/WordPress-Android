@@ -924,9 +924,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          * this user made on someone else's blog
          */
         mEnabledActions = note.getEnabledActions();
-
         mRemoteBlogId = note.getBlogId();
-        long commentId = note.getCommentId();
 
         // Set 'Reply to (Name)' in comment reply EditText
         if (!TextUtils.isEmpty(mNote.getCommentAuthorName())) {
@@ -937,14 +935,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
         // first try to get from local db, if that fails build it from the note data
-        Comment comment = (localBlogId > 0 ? CommentTable.getComment(localBlogId, commentId) : null);
-        if (comment != null) {
-            setComment(localBlogId, comment);
-        } else {
-            comment = note.buildComment();
-            CommentTable.addComment(localBlogId, comment);
-            setComment(localBlogId, note.buildComment());
-        }
+        setComment(localBlogId, note.buildComment());
     }
 
     /*

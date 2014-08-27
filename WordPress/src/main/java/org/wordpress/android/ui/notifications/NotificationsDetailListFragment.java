@@ -214,11 +214,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         if (isAdded() && noteBlock.containsBadgeMediaType()) {
                             isBadgeView = true;
                             mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
-                            /*LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                            );
-                            layoutParams.gravity = Gravity.CENTER_VERTICAL;*/
                         }
 
                         mNoteBlockArray.add(noteBlock);

@@ -291,7 +291,7 @@ public class NotificationsUtils {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
             activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
-        } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
+        } else if (clickedSpan.getType() == NoteBlockIdType.POST || clickedSpan.getType() == NoteBlockIdType.COMMENT) {
             // Show post detail
             activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
         } else {

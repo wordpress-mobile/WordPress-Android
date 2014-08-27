@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 public class NoteBlockClickableSpan extends ClickableSpan {
     private long mId;
     private long mSiteId;
+    private long mPostId;
     private NoteBlockIdType mType;
     private String mUrl;
     private int[] mIndices;
@@ -45,6 +46,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         if (mBlockData != null) {
             mId = JSONUtil.queryJSON(mBlockData, "id", 0);
             mSiteId = JSONUtil.queryJSON(mBlockData, "site_id", 0);
+            mPostId = JSONUtil.queryJSON(mBlockData, "post_id", 0);
             mType = NoteBlockIdType.fromString(JSONUtil.queryJSON(mBlockData, "type", ""));
             mUrl = JSONUtil.queryJSON(mBlockData, "url", "");
             mIndices = new int[]{0,0};
@@ -81,6 +83,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     @Override
     public void onClick(View widget) {
+        // noop
     }
 
     public NoteBlockIdType getType() {
@@ -99,16 +102,16 @@ public class NoteBlockClickableSpan extends ClickableSpan {
         return mSiteId;
     }
 
+    public long getPostId() {
+        return mPostId;
+    }
+
     public void setPressed(boolean isPressed) {
         this.mPressed = isPressed;
     }
 
     public String getUrl() {
         return mUrl;
-    }
-
-    private boolean hasUrl() {
-        return !TextUtils.isEmpty(mUrl);
     }
 
     public boolean shouldShowBlogPreview() {
