@@ -308,17 +308,6 @@ public abstract class WPActionBarActivity extends Activity {
                 // if we have an intent, start the new activity
             }
         });
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                    int totalItemCount) {
-                mMenuDrawer.invalidate();
-            }
-        });
 
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
