@@ -3,9 +3,6 @@ package org.wordpress.android.ui.notifications.blocks;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -14,16 +11,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.JSONUtil;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
 
+    private CommentStatus mCommentStatus = CommentStatus.UNKNOWN;
     private int mTextViewIndent;
+    private int mNormalBackgroundColor;
+    private int mNormalTextColor;
+    private int mAgoTextColor;
+    private int mUnapprovedTextColor;
+    private int mIndentedLeftPadding;
+
+
+    public interface OnCommentStatusChangeListener {
+        public void onCommentStatusChanged(CommentStatus newStatus);
+    }
 
     public CommentUserNoteBlock(JSONObject noteObject,
                                 OnNoteBlockTextClickListener onNoteBlockTextClickListener,
@@ -38,7 +46,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     @Override
     public int getLayoutResourceId() {
-        return hasCommentNestingLevel() ? R.layout.note_block_comment_user_reply : R.layout.note_block_comment_user;
+        return R.layout.note_block_comment_user;
     }
 
     @Override
@@ -60,19 +68,50 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
-        if (mTextViewIndent == 0) {
-            Context context = view.getContext();
-            if (context != null) {
-                mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small) +
-                        context.getResources().getDimensionPixelSize(R.dimen.notifications_adjusted_font_margin);
-            }
-        }
-
         CommentUtils.indentTextViewFirstLine(
                 noteBlockHolder.commentTextView,
                 NotificationsUtils.getSpannableTextFromIndices(getNoteData().optJSONObject("comment_text"), getOnNoteBlockTextClickListener()),
                 mTextViewIndent
         );
+
+
+
+        // Change display based on comment status and type:
+        // 1. Comment replies are indented and have a 'pipe' background
+        // 2. Unapproved comments have different background and text color
+        int paddingLeft = view.getPaddingLeft();
+        int paddingTop = view.getPaddingTop();
+        int paddingRight = view.getPaddingRight();
+        int paddingBottom = view.getPaddingBottom();
+        if (mCommentStatus == CommentStatus.UNAPPROVED) {
+            if (hasCommentNestingLevel()) {
+                paddingLeft = mIndentedLeftPadding;
+                view.setBackgroundResource(R.drawable.comment_reply_unapproved_background);
+            } else {
+                view.setBackgroundResource(R.drawable.comment_unapproved_background);
+            }
+
+            noteBlockHolder.dividerView.setVisibility(View.INVISIBLE);
+
+            noteBlockHolder.agoTextView.setTextColor(mUnapprovedTextColor);
+            noteBlockHolder.nameTextView.setTextColor(mUnapprovedTextColor);
+            noteBlockHolder.commentTextView.setTextColor(mUnapprovedTextColor);
+        } else {
+            if (hasCommentNestingLevel()) {
+                paddingLeft = mIndentedLeftPadding;
+                view.setBackgroundResource(R.drawable.comment_reply_background);
+                noteBlockHolder.dividerView.setVisibility(View.INVISIBLE);
+            } else {
+                view.setBackgroundColor(mNormalBackgroundColor);
+                noteBlockHolder.dividerView.setVisibility(View.VISIBLE);
+            }
+
+            noteBlockHolder.agoTextView.setTextColor(mAgoTextColor);
+            noteBlockHolder.nameTextView.setTextColor(mNormalTextColor);
+            noteBlockHolder.commentTextView.setTextColor(mNormalTextColor);
+        }
+
+        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
 
         return view;
     }
@@ -100,6 +139,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         private TextView nameTextView;
         private TextView agoTextView;
         private TextView commentTextView;
+        private View dividerView;
 
         public CommentUserNoteBlockHolder(View view) {
             nameTextView = (TextView)view.findViewById(R.id.user_name);
@@ -108,7 +148,35 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             commentTextView = (TextView)view.findViewById(R.id.user_comment);
             commentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
+            dividerView = view.findViewById(R.id.divider_view);
         }
     }
 
+    public void configureResources(Context context) {
+        if (context == null) return;
+
+        mNormalTextColor = context.getResources().getColor(R.color.calypso_blue_dark);
+        mNormalBackgroundColor = context.getResources().getColor(R.color.white);
+        mAgoTextColor = context.getResources().getColor(R.color.calypso_blue);
+        mUnapprovedTextColor = context.getResources().getColor(R.color.calypso_orange_dark);
+        mTextViewIndent = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small) +
+                context.getResources().getDimensionPixelSize(R.dimen.notifications_adjusted_font_margin);
+        // Double margin_extra_large for increased indent in comment replies
+        mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
+    }
+
+    private OnCommentStatusChangeListener mOnCommentChangedListener = new OnCommentStatusChangeListener() {
+        @Override
+        public void onCommentStatusChanged(CommentStatus newStatus) {
+            mCommentStatus = newStatus;
+        }
+    };
+
+    public void setCommentStatus(CommentStatus status) {
+        mCommentStatus = status;
+    }
+
+    public OnCommentStatusChangeListener getOnCommentChangeListener() {
+        return mOnCommentChangedListener;
+    }
 }

@@ -72,6 +72,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
+    private NotificationsDetailListFragment mDetailListFragment;
+
     private TextView mTxtStatus;
     private TextView mTxtContent;
     private ImageView mImgSubmitReply;
@@ -654,6 +656,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     }
                 }
 
+                if (succeeded && mDetailListFragment != null) {
+                    mDetailListFragment.refreshBlocksForCommentStatus(newStatus);
+                }
+
                 if (succeeded && mOnCommentChangeListener != null) {
                     ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
                     mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, changeType);
@@ -913,9 +919,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        NotificationsDetailListFragment fragment = NotificationsDetailListFragment.newInstance(note);
-        fragment.setFooterView(mLayoutButtons);
-        fragmentTransaction.add(R.id.comment_content_container, fragment);
+        mDetailListFragment = NotificationsDetailListFragment.newInstance(note);
+        mDetailListFragment.setFooterView(mLayoutButtons);
+        fragmentTransaction.add(R.id.comment_content_container, mDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
 
         /*
@@ -926,8 +932,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEnabledActions = note.getEnabledActions();
         mRemoteBlogId = note.getBlogId();
 
-        // Set 'Reply to (Name)' in comment reply EditText
-        if (!TextUtils.isEmpty(mNote.getCommentAuthorName())) {
+        // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
+        if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
             mEditReply.setHint(String.format(getString(R.string.comment_reply_to_user), mNote.getCommentAuthorName()));
         }
 

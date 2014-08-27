@@ -334,7 +334,7 @@ public class Note extends Syncable {
                 getCommentAuthorName(),
                 DateTimeUtils.timestampToIso8601Str(getTimestamp()),
                 getCommentText(),
-                CommentStatus.toString(CommentStatus.fromString(getCommentStatus())),
+                CommentStatus.toString(getCommentStatus()),
                 "", // post title is unavailable in note model
                 getCommentAuthorUrl(),
                 "", // user email is unavailable in note model
@@ -397,18 +397,18 @@ public class Note extends Syncable {
         return 0;
     }
 
-    public String getCommentStatus() {
+    public CommentStatus getCommentStatus() {
         EnumSet<EnabledActions> enabledActions = getEnabledActions();
 
         if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
-            return CommentStatus.toString(CommentStatus.APPROVED);
+            return CommentStatus.APPROVED;
         } else if (enabledActions.contains(EnabledActions.ACTION_APPROVE)) {
-            return CommentStatus.toString(CommentStatus.UNAPPROVED);
+            return CommentStatus.UNAPPROVED;
         } else if (enabledActions.contains(EnabledActions.ACTION_SPAM)) {
-            return CommentStatus.toString(CommentStatus.SPAM);
+            return CommentStatus.SPAM;
         }
 
-        return CommentStatus.toString(CommentStatus.UNKNOWN);
+        return CommentStatus.UNKNOWN;
     }
 
     public boolean hasLikedComment() {

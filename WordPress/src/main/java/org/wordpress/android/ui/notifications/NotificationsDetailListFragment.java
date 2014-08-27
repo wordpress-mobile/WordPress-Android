@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
@@ -40,6 +41,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private ViewGroup mFooterView;
 
     private int mBackgroundColor;
+    private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
 
     public NotificationsDetailListFragment() {
     }
@@ -96,6 +98,14 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public void setFooterView(ViewGroup footerView) {
         mFooterView = footerView;
+    }
+
+    public void refreshBlocksForCommentStatus(CommentStatus newStatus) {
+        if (mOnCommentStatusChangeListener != null) {
+            mOnCommentStatusChangeListener.onCommentStatusChanged(newStatus);
+            NoteBlockAdapter noteBlockAdapter = (NoteBlockAdapter)getListAdapter();
+            noteBlockAdapter.notifyDataSetChanged();
+        }
     }
 
     private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
@@ -199,6 +209,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener
                                 );
+
+                                // Set listener for comment status changes, so we can update bg and text colors
+                                CommentUserNoteBlock commentUserNoteBlock = (CommentUserNoteBlock)noteBlock;
+                                mOnCommentStatusChangeListener = commentUserNoteBlock.getOnCommentChangeListener();
+                                commentUserNoteBlock.setCommentStatus(mNote.getCommentStatus());
+                                commentUserNoteBlock.configureResources(getActivity());
                             } else {
                                 noteBlock = new UserNoteBlock(
                                         noteObject,
