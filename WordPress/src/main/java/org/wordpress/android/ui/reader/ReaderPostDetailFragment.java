@@ -219,12 +219,13 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
+        final Context context = container.getContext();
 
         // locate & init listView
         mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
-            ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(container.getContext()));
+            ReaderUtils.addListViewHeader(mListView, DisplayUtils.getActionBarHeight(context));
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -235,7 +236,7 @@ public class ReaderPostDetailFragment extends Fragment
         // progress bar appears when loading new comments
         mCommentFooter = (ViewGroup) inflater.inflate(R.layout.reader_footer_progress, mListView, false);
         mCommentFooter.setVisibility(View.GONE);
-        mCommentFooter.setBackgroundColor(getResources().getColor(R.color.grey_extra_light));
+        mCommentFooter.setBackgroundColor(context.getResources().getColor(R.color.grey_extra_light));
         mProgressFooter = (ProgressBar) mCommentFooter.findViewById(R.id.progress_footer);
         mProgressFooter.setVisibility(View.INVISIBLE);
         mListView.addFooterView(mCommentFooter);
@@ -1018,10 +1019,10 @@ public class ReaderPostDetailFragment extends Fragment
      */
     private int getFullSizeImageWidth(Context context) {
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        int marginWidth = getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
+        int marginWidth = context.getResources().getDimensionPixelOffset(R.dimen.reader_list_margin);
         int imageWidth = displayWidth - (marginWidth * 2);
         if (hasStaticMenuDrawer()) {
-            int drawerWidth = getResources().getDimensionPixelOffset(R.dimen.menu_drawer_width);
+            int drawerWidth = context.getResources().getDimensionPixelOffset(R.dimen.menu_drawer_width);
             imageWidth -= drawerWidth;
         }
         return imageWidth;
