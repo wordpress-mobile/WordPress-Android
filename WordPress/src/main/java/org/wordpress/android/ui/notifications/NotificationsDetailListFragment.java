@@ -191,6 +191,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                     i++;
                                 }
 
+                                // Add timestamp to block for display
+                                noteObject.put("timestamp", mNote.getTimestamp());
+
                                 noteBlock = new CommentUserNoteBlock(
                                         noteObject,
                                         mOnNoteBlockTextClickListener,

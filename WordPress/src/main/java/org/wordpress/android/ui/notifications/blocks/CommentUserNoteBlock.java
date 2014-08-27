@@ -16,6 +16,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 
@@ -24,7 +25,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     private int mTextViewIndent;
 
-    public CommentUserNoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener, OnGravatarClickedListener onGravatarClickedListener) {
+    public CommentUserNoteBlock(JSONObject noteObject,
+                                OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                OnGravatarClickedListener onGravatarClickedListener) {
         super(noteObject, onNoteBlockTextClickListener, onGravatarClickedListener);
     }
 
@@ -41,7 +44,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     @Override
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
+
         noteBlockHolder.nameTextView.setText(getNoteText().toString());
+        noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
 
         if (hasImageMediaItem()) {
             noteBlockHolder.avatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
@@ -72,6 +77,10 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return view;
     }
 
+    private long getTimestamp() {
+        return getNoteData().optInt("timestamp", 0);
+    }
+
     private boolean hasCommentNestingLevel() {
         try {
             JSONObject commentTextObject = getNoteData().getJSONObject("comment_text");
@@ -87,12 +96,15 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private class CommentUserNoteBlockHolder {
-        private TextView nameTextView;
-        private TextView commentTextView;
         private NetworkImageView avatarImageView;
+        private TextView nameTextView;
+        private TextView agoTextView;
+        private TextView commentTextView;
 
         public CommentUserNoteBlockHolder(View view) {
             nameTextView = (TextView)view.findViewById(R.id.user_name);
+            agoTextView = (TextView)view.findViewById(R.id.user_comment_ago);
+            agoTextView.setVisibility(View.VISIBLE);
             commentTextView = (TextView)view.findViewById(R.id.user_comment);
             commentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
