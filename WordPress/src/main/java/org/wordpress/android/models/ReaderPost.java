@@ -52,6 +52,8 @@ public class ReaderPost {
     public boolean isLikesEnabled;
     public boolean isSharingEnabled;    // currently unused
 
+    private ReaderAttachmentList attachments;
+
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
             throw new IllegalArgumentException("null json post");
@@ -155,6 +157,9 @@ public class ReaderPost {
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
+        // parse the attachments
+        assignAttachmentsFromJson(post, json.optJSONObject("attachments"));
+
         // the single-post sites/$site/posts/$post endpoint returns all site metadata
         // under meta/data/site (assuming ?meta=site was added to the request)
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
@@ -166,6 +171,10 @@ public class ReaderPost {
         }
 
         return post;
+    }
+
+    private static void assignAttachmentsFromJson(ReaderPost post, JSONObject jsonAttachments) {
+        post.setAttachments(ReaderAttachmentList.fromJson(post.blogId, post.postId, jsonAttachments));
     }
 
      /*
@@ -418,6 +427,17 @@ public class ReaderPost {
      */
     public boolean isWP() {
         return !isExternal;
+    }
+
+    public ReaderAttachmentList getAttachments() {
+        return attachments;
+    }
+    public void setAttachments(ReaderAttachmentList attachments) {
+        if (attachments != null) {
+            attachments = (ReaderAttachmentList) attachments.clone();
+        } else {
+            attachments = new ReaderAttachmentList();
+        }
     }
 
     /****

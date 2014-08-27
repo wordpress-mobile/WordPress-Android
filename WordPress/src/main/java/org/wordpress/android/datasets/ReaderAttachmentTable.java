@@ -36,6 +36,22 @@ public class ReaderAttachmentTable {
         return db.delete("tbl_attachments", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
     }
 
+    public static ReaderAttachmentList getAttachmentsForPost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_attachments WHERE blog_id=? AND post_id=?", args);
+        try {
+            ReaderAttachmentList attachments = new ReaderAttachmentList();
+            if (c.moveToFirst()) {
+                do {
+                    attachments.add(getAttachmentFromCursor(c));
+                } while (c.moveToNext());
+            }
+            return attachments;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     public static void setAttachmentsForPost(long blogId, long postId, ReaderAttachmentList attachments) {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
@@ -64,22 +80,6 @@ public class ReaderAttachmentTable {
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);
-        }
-    }
-
-    public static ReaderAttachmentList getAttachmentsForPost(long blogId, long postId) {
-        String[] args = {Long.toString(blogId), Long.toString(postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_attachments WHERE blog_id=? AND post_id=?", args);
-        try {
-            ReaderAttachmentList attachments = new ReaderAttachmentList();
-            if (c.moveToFirst()) {
-                do {
-                    attachments.add(getAttachmentFromCursor(c));
-                } while (c.moveToNext());
-            }
-            return attachments;
-        } finally {
-            SqlUtils.closeCursor(c);
         }
     }
 
