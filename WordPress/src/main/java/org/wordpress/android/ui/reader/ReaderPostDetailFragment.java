@@ -31,7 +31,8 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderBlogTable;
+import org.wordpress.android.datasets.ReaderCommentTable;
+import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -680,13 +681,29 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
+        final int numLikesBefore = ReaderLikeTable.getNumLikesForPost(mPost);
+
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
+                if (!isAdded()) {
+                    return;
+                }
+                // reload the post if it has changed
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshLikes();
-                    updateComments(false);
+                }
+                if (result != ReaderActions.UpdateResult.FAILED) {
+                    // refresh likes if necessary - done regardless of whether the post has changed
+                    // since it's possible likes weren't stored until the post was updated
+                    if (numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
+                        refreshLikes();
+                    }
+                    // request comments if the post says the comment count is different than
+                    // the number of stored comments
+                    if (mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost)) {
+                        updateComments(false);
+                    }
                 }
             }
         };
@@ -1024,14 +1041,16 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
-        boolean isPrivatePost = (mPost != null && mPost.isPrivate);
+        // images in private posts must use https for auth token to be sent with request
+        if (hasPost() && mPost.isPrivate) {
+            imageUrl = UrlUtils.makeHttps(imageUrl);
+        }
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
                 imageUrl,
                 getPostContent(),
                 source,
-                isPrivatePost,
                 startX,
                 startY);
 
