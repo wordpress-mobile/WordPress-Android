@@ -64,7 +64,7 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@drawable/notifications_list_divider_full_width" />
 
         <View
@@ -73,7 +73,7 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@drawable/notifications_list_divider_full_width" />
     </LinearLayout>
 
@@ -87,7 +87,9 @@
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:background="@drawable/notifications_list_divider" />
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:background="@color/calypso_blue_light" />
     </LinearLayout>
 </LinearLayout>
