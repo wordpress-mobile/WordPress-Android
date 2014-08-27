@@ -757,15 +757,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 moderationTextResId = R.string.comment_status_approved;
                 newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = getActivity().getResources().getColor(R.color.calypso_orange);
-                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange));
+                statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
+                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange_dark));
                 break;
             case UNAPPROVED:
                 moderationDrawResId = R.drawable.ic_comment_moderate_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = getActivity().getResources().getColor(R.color.calypso_orange);
+                statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
                 mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case SPAM:

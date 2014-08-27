@@ -3,17 +3,18 @@ package org.wordpress.android.ui.notifications.blocks;
 import android.text.TextUtils;
 
 /**
- * Known NoteBlock Id types
+ * Known NoteBlock Range types
  */
-public enum NoteBlockIdType {
+public enum NoteBlockRangeType {
     POST,
     SITE,
     COMMENT,
     USER,
     STAT,
+    BLOCKQUOTE,
     UNKNOWN;
 
-    public static NoteBlockIdType fromString(String value) {
+    public static NoteBlockRangeType fromString(String value) {
         if (TextUtils.isEmpty(value)) return UNKNOWN;
 
         if (value.equals("post")) {
@@ -26,6 +27,8 @@ public enum NoteBlockIdType {
             return USER;
         } else if (value.equals("stat")) {
             return STAT;
+        } else if (value.equals("blockquote")) {
+            return BLOCKQUOTE;
         } else {
             return UNKNOWN;
         }

@@ -25,7 +25,7 @@ import org.wordpress.android.ui.notifications.blocks.CommentUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.HeaderUserNoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
@@ -192,7 +192,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         NoteBlock noteBlock;
                         String noteBlockTypeString = JSONUtil.queryJSON(noteObject, "type", "");
 
-                        if (NoteBlockIdType.fromString(noteBlockTypeString) == NoteBlockIdType.USER) {
+                        if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
                             if (mNote.isCommentType()) {
                                 // We'll snag the next body array item for comment user blocks
                                 if (i + 1 < bodyArray.length()) {

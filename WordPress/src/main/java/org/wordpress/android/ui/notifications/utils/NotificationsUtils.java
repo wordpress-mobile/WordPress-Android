@@ -27,7 +27,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
-import org.wordpress.android.ui.notifications.blocks.NoteBlockIdType;
+import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
@@ -42,10 +42,6 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS = "wp_pref_notification_settings";
     private static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String WPCOM_PUSH_DEVICE_UUID = "wp_pref_notifications_uuid";
-
-    private static int mBgColor = Color.parseColor("#e8f0f7");      //calypso light blue
-    private static int mTextColor = Color.parseColor("#324155");    //calypso dark blue
-    private static int mLinkColor = Color.parseColor("#2EA2CC");    //new kid on the block blue
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
                                                    RestRequest.ErrorListener errorListener) {
@@ -230,11 +226,11 @@ public class NotificationsUtils {
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
         try {
-            JSONArray idsArray = subject.getJSONArray("ids");
+            JSONArray rangesArray = subject.getJSONArray("ranges");
 
-            for (int i=0; i < idsArray.length(); i++) {
-                JSONObject idObject = (JSONObject) idsArray.get(i);
-                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idObject, mBgColor, mTextColor, mLinkColor, shouldLink) {
+            for (int i=0; i < rangesArray.length(); i++) {
+                JSONObject rangeObject = (JSONObject) rangesArray.get(i);
+                NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(rangeObject, shouldLink) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -269,7 +265,7 @@ public class NotificationsUtils {
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
-        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, mBgColor, mTextColor, mLinkColor, shouldLink) {
+        NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(idBlock, shouldLink) {
             @Override
             public void onClick(View widget) {
                 if (onNoteBlockTextClickListener != null) {
@@ -291,10 +287,10 @@ public class NotificationsUtils {
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
             activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
-        } else if (clickedSpan.getType() == NoteBlockIdType.POST) {
+        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
             // Show post detail
             activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
-        } else if (clickedSpan.getType() == NoteBlockIdType.COMMENT) {
+        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.COMMENT) {
             // For now, show post detail for comments
             activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getPostId());
         } else {

@@ -62,7 +62,7 @@ public class UserNoteBlock extends NoteBlock {
 
         if (!TextUtils.isEmpty(linkedText)) {
             noteBlockHolder.urlTextView.setText(NotificationsUtils.getClickableTextForIdUrl(
-                    getUrlIdObject(),
+                    getUrlRangeObject(),
                     linkedText,
                     getOnNoteBlockTextClickListener()
             ));
@@ -116,16 +116,16 @@ public class UserNoteBlock extends NoteBlock {
         }
     }
 
-    public JSONObject getUrlIdObject() {
+    public JSONObject getUrlRangeObject() {
         if (getNoteData() == null) return null;
 
-        JSONArray idsArray = getNoteData().optJSONArray("ids");
-        if (idsArray != null) {
-            for (int i=0; i < idsArray.length(); i++) {
+        JSONArray rangesArray = getNoteData().optJSONArray("ranges");
+        if (rangesArray != null) {
+            for (int i=0; i < rangesArray.length(); i++) {
                 try {
-                    JSONObject idObject = idsArray.getJSONObject(i);
-                    if (idObject.has("url")) {
-                        return idObject;
+                    JSONObject rangeObject = rangesArray.getJSONObject(i);
+                    if (rangeObject.has("url")) {
+                        return rangeObject;
                     }
                 } catch (JSONException e) {
                     AppLog.i(AppLog.T.NOTIFS, "Unexpected object in notifications ids array.");
@@ -137,8 +137,8 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     protected String getUserUrl() {
-        if (getUrlIdObject() != null) {
-            String url = UrlUtils.normalizeUrl(getUrlIdObject().optString("url", ""));
+        if (getUrlRangeObject() != null) {
+            String url = UrlUtils.normalizeUrl(getUrlRangeObject().optString("url", ""));
             return url.replace("http://", "").replace("https://", "");
         }
 
