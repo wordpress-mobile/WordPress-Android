@@ -46,7 +46,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
     private final int mBgColorHighlight;
     private final int mLinkColor;
     private final int mNoLinkColor;
-    private final int mMaxImageSz;
 
     private final String mLike;
     private final String mLikedBy;
@@ -76,7 +75,6 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMaxImageSz = context.getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
 
         mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
         mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
@@ -121,6 +119,10 @@ public class ReaderCommentAdapter extends BaseAdapter {
         return true;
     }
 
+    private boolean isPrivatePost() {
+        return (mPost != null && mPost.isPrivate);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReaderComment comment = mComments.get(position);
@@ -128,7 +130,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_listitem_comment, parent, false);
-            holder = new CommentHolder(convertView);
+            holder = new CommentHolder(convertView, isPrivatePost());
             convertView.setTag(holder);
         } else {
             holder = (CommentHolder) convertView.getTag();
@@ -136,7 +138,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
         holder.txtAuthor.setText(comment.getAuthorName());
         holder.imgAvatar.setImageUrl(PhotonUtils.fixAvatar(comment.getAuthorAvatar(), mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), mMaxImageSz);
+        CommentUtils.displayHtmlComment(holder.txtText, comment.getText(), parent.getWidth());
 
         java.util.Date dtPublished = DateTimeUtils.iso8601ToJavaDate(comment.getPublished());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished));
@@ -218,7 +220,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtLike;
         private final TextView txtLikeCount;
 
-        CommentHolder(View view) {
+        CommentHolder(View view, boolean isPrivatePost) {
             txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
             txtText = (TextView) view.findViewById(R.id.text_comment_text);
             txtDate = (TextView) view.findViewById(R.id.text_comment_date);
@@ -235,7 +237,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
             txtText.setLinksClickable(true);
-            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance());
+            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(isPrivatePost));
         }
     }
 
