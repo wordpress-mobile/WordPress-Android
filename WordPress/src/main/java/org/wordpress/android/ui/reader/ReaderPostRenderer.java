@@ -16,9 +16,9 @@ import org.wordpress.android.util.UrlUtils;
 import java.lang.ref.WeakReference;
 
 /**
- * generates and displays the HTML for showing post detail content - main purpose is to assign
- * height/width attributes on image tags to match how we want them displayed - this avoids
- * the webView content resizing as images are loaded
+ * generates and displays the HTML for post detail content - main purpose is to assign the
+ * height/width attributes on image tags to (1) avoid the webView resizing as images are
+ * loaded, and (2) avoid requesting images at a size larger than the display
  */
 public class ReaderPostRenderer {
 
@@ -136,13 +136,12 @@ public class ReaderPostRenderer {
 
         String newImageTag =
                 String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
-                               newImageUrl, newWidth, newHeight);
+                                                      newImageUrl, newWidth, newHeight);
 
         int start = mRenderBuilder.indexOf(imageTag);
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder");
             return;
-
         }
         mRenderBuilder.replace(start, start + imageTag.length(), newImageTag);
     }
@@ -164,7 +163,7 @@ public class ReaderPostRenderer {
                 Uri uri = Uri.parse(post.getFeaturedImage());
                 String path = StringUtils.notNullStr(uri.getLastPathSegment());
                 if (!content.contains(path)) {
-                    AppLog.d(AppLog.T.READER, "reader post detail > added featured image to content");
+                    AppLog.d(AppLog.T.READER, "reader renderer > added featured image to content");
                     content = String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage())
                             + content;
                 }
@@ -234,9 +233,11 @@ public class ReaderPostRenderer {
         // don't allow any image to be wider than the viewport
         sbHtml.append("  img { max-width: 100% !important; height: auto; }");
 
-        // light grey background for large images so something appears while they're loading
+        // light grey background for large images so something appears while they're loading, with a
+        // small bottom margin
         sbHtml.append("  img.size-full, img.size-large { display: block;")
-              .append("     background-color ").append(mResourceVars.greyExtraLightStr).append("; }");
+              .append("     background-color ").append(mResourceVars.greyExtraLightStr).append(";")
+              .append("     margin-bottom: ").append(mResourceVars.marginSmall).append("px; }");
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
