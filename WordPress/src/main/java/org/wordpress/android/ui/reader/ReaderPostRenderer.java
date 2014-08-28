@@ -11,6 +11,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -24,10 +25,8 @@ public class ReaderPostRenderer {
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final WeakReference<ReaderWebView> mWeakWebView;
-
+    private final ReaderAttachmentList mAttachments;
     private StringBuilder mRenderBuilder;
-    private int mNumImages;
-    private int mNumMatchedImages;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
@@ -40,46 +39,28 @@ public class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<ReaderWebView>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
+        mAttachments = (mPost.hasAttachments() ? mPost.getAttachments() : new ReaderAttachmentList());
     }
 
     void beginRender() {
         // start with the basic content
         final String content = getPostContent(mPost);
-
-        // if there aren't any attachments, we're done
-        if (!mPost.hasAttachments()) {
-            renderContent(getPostContentForWebView(content));
-            return;
-        }
-
-        mNumImages = 0;
-        mNumMatchedImages = 0;
         mRenderBuilder = new StringBuilder(content);
 
-        // start image scanner to find images, match them with the post's attachments so we can
-        // replace existing images with ones that have h/w set
+        // start image scanner to find images so we can replace them with ones that have h/w set
         final Handler handler = new Handler();
         new Thread() {
             @Override
             public void run() {
-                final ReaderAttachmentList attachments = mPost.getAttachments();
                 ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
                     @Override
                     public void onImageFound(String imageTag, String imageUrl, int start, int end) {
-                        mNumImages++;
-                        ReaderAttachment attach = attachments.get(imageUrl);
-                        // match only images, or else our video thumbnails might be replaced
-                        if (attach != null && attach.isImage()) {
-                            mNumMatchedImages++;
-                            replaceImageTag(imageTag, attach);
-                        }
+                        replaceImageTag(imageTag, imageUrl);
                     }
+
                     @Override
                     public void onScanCompleted() {
-                        AppLog.d(AppLog.T.READER,
-                                String.format("reader renderer > image scan completed, matched %d of %d images",
-                                        mNumMatchedImages, mNumImages));
-                        final String htmlContent = getPostContentForWebView(mRenderBuilder.toString());
+                        final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -113,34 +94,50 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * called when image scanner finds an image and it can be matched with an attachment,
-     * use this to set the height/width of the image
+     * called when image scanner finds an image
      */
-    private void replaceImageTag(final String imageTag, final ReaderAttachment attachment) {
-        float ratio = attachment.getHWRatio();
-        if (ratio == 0) {
-            AppLog.w(AppLog.T.READER, "reader renderer > empty image ratio");
+    private void replaceImageTag(final String imageTag, final String imageUrl) {
+        int origWidth;
+        int origHeight;
+
+        // first try to get original image size from attachments, then try to get it from the url
+        // if it's an obvious WordPress image
+        ReaderAttachment attach = mAttachments.get(imageUrl);
+        if (attach != null && attach.isImage()) {
+            origWidth = attach.width;
+            origHeight = attach.height;
+        } else if (imageUrl.contains("files.wordpress.com")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
+            origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
+        } else {
             return;
         }
 
-        // construct new image tag
-        int width = mResourceVars.fullSizeImageWidth;
-        int height = (int)(width * ratio);
-
-        final String newImageUrl;
-        if (mPost.isPrivate) {
-            newImageUrl = ReaderUtils.getPrivateImageForDisplay(attachment.getUrl(), width, height);
+        int newWidth;
+        int newHeight;
+        if (origWidth > 0 && origHeight > 0) {
+            float ratio = ((float) origHeight / (float) origWidth);
+            newWidth = mResourceVars.fullSizeImageWidth;
+            newHeight = (int) (newWidth * ratio);
+        } else if (origWidth > 0) {
+            newWidth = mResourceVars.fullSizeImageWidth;
+            newHeight = 0;
         } else {
-            newImageUrl = PhotonUtils.getPhotonImageUrl(attachment.getUrl(), width, height);
+            return;
         }
 
-        //AppLog.d(AppLog.T.READER, String.format("reader renderer > ratio %f, width %d, height %d", ratio, width, height));
+        String newImageUrl;
+        if (mPost.isPrivate) {
+            newImageUrl = ReaderUtils.getPrivateImageForDisplay(UrlUtils.removeQuery(imageUrl), newWidth, newHeight);
+        } else {
+            newImageUrl = PhotonUtils.getPhotonImageUrl(UrlUtils.removeQuery(imageUrl), newWidth, newHeight);
+        }
 
-        String newImageTag
-                = String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
-                                newImageUrl, width, height);
+        String newImageTag =
+                String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
+                               newImageUrl, newWidth, newHeight);
 
-        // replace existing tag with new one
         int start = mRenderBuilder.indexOf(imageTag);
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder");
@@ -185,7 +182,7 @@ public class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String getPostContentForWebView(String content) {
+    private String formatPostContentForWebView(String content) {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't strictly necessary, but source is invalid html5 without one

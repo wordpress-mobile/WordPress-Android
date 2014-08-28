@@ -54,14 +54,6 @@ public class ReaderAttachment {
         this.mimeType = StringUtils.notNullStr(mimeType);
     }
 
-    public float getHWRatio() {
-        if (width == 0 || height == 0) {
-            return 0;
-        } else {
-            return ((float) height / (float) width);
-        }
-    }
-
     public boolean isImage() {
         return (mimeType != null && mimeType.startsWith("image"));
     }
