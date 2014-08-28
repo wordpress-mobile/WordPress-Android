@@ -15,8 +15,9 @@ import org.wordpress.android.util.StringUtils;
 import java.lang.ref.WeakReference;
 
 /**
- * generates the HTML for showing post detail content - main purpose is to assign height/width
- * attributes on image tags to match how we want them displayed
+ * generates and displays the HTML for showing post detail content - main purpose is to assign
+ * height/width attributes on image tags to match how we want them displayed - this avoids
+ * the webView content resizing as images are loaded
  */
 public class ReaderPostRenderer {
 
@@ -24,16 +25,16 @@ public class ReaderPostRenderer {
     private final ReaderPost mPost;
     private final WeakReference<ReaderWebView> mWeakWebView;
 
-    private String mRenderContent;
+    private StringBuilder mRenderBuilder;
     private int mNumImages;
     private int mNumMatchedImages;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
-        if (post == null) {
-            throw new IllegalArgumentException("ReaderPostRenderer requires a post");
-        }
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
+        }
+        if (post == null) {
+            throw new IllegalArgumentException("ReaderPostRenderer requires a post");
         }
 
         mPost = post;
@@ -43,19 +44,20 @@ public class ReaderPostRenderer {
 
     void beginRender() {
         // start with the basic content
-        mRenderContent = getPostContent(mPost);
+        final String content = getPostContent(mPost);
 
         // if there aren't any attachments, we're done
         if (!mPost.hasAttachments()) {
-            renderContent(getPostContentForWebView(mRenderContent));
+            renderContent(getPostContentForWebView(content));
             return;
         }
 
         mNumImages = 0;
         mNumMatchedImages = 0;
+        mRenderBuilder = new StringBuilder(content);
 
-        // start image scanner to find images, match them with attachments to get h/w ratio, then
-        // replace h/w attributes with correct ones for display
+        // start image scanner to find images, match them with the post's attachments so we can
+        // replace existing images with ones that have h/w set
         final Handler handler = new Handler();
         new Thread() {
             @Override
@@ -74,10 +76,10 @@ public class ReaderPostRenderer {
                     }
                     @Override
                     public void onScanCompleted() {
-                        AppLog.i(AppLog.T.READER,
+                        AppLog.d(AppLog.T.READER,
                                 String.format("reader renderer > image scan completed, matched %d of %d images",
                                         mNumMatchedImages, mNumImages));
-                        final String htmlContent = getPostContentForWebView(mRenderContent);
+                        final String htmlContent = getPostContentForWebView(mRenderBuilder.toString());
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -86,8 +88,7 @@ public class ReaderPostRenderer {
                         });
                     }
                 };
-                final String contentForScan = mRenderContent;
-                ReaderImageScanner scanner = new ReaderImageScanner(contentForScan, mPost.isPrivate);
+                ReaderImageScanner scanner = new ReaderImageScanner(content, mPost.isPrivate);
                 scanner.beginScan(imageListener);
             }
         }.start();
@@ -115,10 +116,10 @@ public class ReaderPostRenderer {
      * called when image scanner finds an image and it can be matched with an attachment,
      * use this to set the height/width of the image
      */
-    private void replaceImageTag(String imageTag, ReaderAttachment attachment) {
+    private void replaceImageTag(final String imageTag, final ReaderAttachment attachment) {
         float ratio = attachment.getHWRatio();
         if (ratio == 0) {
-            AppLog.d(AppLog.T.READER, "reader renderer > empty image ratio");
+            AppLog.w(AppLog.T.READER, "reader renderer > empty image ratio");
             return;
         }
 
@@ -140,7 +141,13 @@ public class ReaderPostRenderer {
                                 newImageUrl, width, height);
 
         // replace existing tag with new one
-        mRenderContent = mRenderContent.replace(imageTag, newImageTag);
+        int start = mRenderBuilder.indexOf(imageTag);
+        if (start == -1) {
+            AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder");
+            return;
+
+        }
+        mRenderBuilder.replace(start, start + imageTag.length(), newImageTag);
     }
 
     /*

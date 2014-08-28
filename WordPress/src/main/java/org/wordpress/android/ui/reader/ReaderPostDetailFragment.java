@@ -1216,8 +1216,6 @@ public class ReaderPostDetailFragment extends Fragment
             return;
         }
 
-        AppLog.i(T.READER, "onPageFinished");
-
         if (url != null && url.equals("about:blank")) {
             // brief delay before loading comments & likes to give a little time for page to render
             new Handler().postDelayed(new Runnable() {
