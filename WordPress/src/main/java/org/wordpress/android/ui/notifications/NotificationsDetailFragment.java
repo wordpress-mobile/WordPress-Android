@@ -12,8 +12,6 @@ import org.wordpress.android.R;
 // Simple fragment used for notification detail view on landscape tablets
 public class NotificationsDetailFragment extends Fragment {
 
-    private Fragment mCurrentFragment;
-
     public NotificationsDetailFragment() {
         // Required empty public constructor
     }
@@ -24,16 +22,13 @@ public class NotificationsDetailFragment extends Fragment {
         return inflater.inflate(R.layout.notifications_detail_fragment, container, false);
     }
 
-    public void setCurrentFragment(Fragment fragment) {
-        mCurrentFragment = fragment;
-
+    public void setCurrentFragment(Fragment fragment, boolean shouldAddToBackStack) {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.notifications_detail_fragment_container, fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        if (shouldAddToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
         fragmentTransaction.commitAllowingStateLoss();
-    }
-
-    public Fragment getCurrentFragment() {
-        return mCurrentFragment;
     }
 }

@@ -47,8 +47,10 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String TAG_LIST_VIEW = "listView";
     private static final String TAG_DETAIL_VIEW = "detailView";
 
-    private NotificationsListFragment mNotesList;
-    private NotificationsDetailFragment mDetailFragment;
+    private NotificationsListFragment mNotesListFragment;
+    private NotificationsDetailFragment mTabletDetailFragment;
+    private Fragment mCurrentFragment;
+
     private String mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
 
@@ -63,17 +65,17 @@ public class NotificationsActivity extends WPActionBarActivity
 
         FragmentManager fm = getFragmentManager();
         if (fm.findFragmentByTag(TAG_LIST_VIEW) != null) {
-            mNotesList = (NotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
+            mNotesListFragment = (NotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
         } else {
-            mNotesList = new NotificationsListFragment();
+            mNotesListFragment = new NotificationsListFragment();
             FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.add(R.id.layout_fragment_container, mNotesList, TAG_LIST_VIEW);
+            fragmentTransaction.add(R.id.layout_fragment_container, mNotesListFragment, TAG_LIST_VIEW);
             fragmentTransaction.commit();
         }
 
         if (DisplayUtils.isLandscapeTablet(this)) {
             if (fm.findFragmentByTag(TAG_DETAIL_VIEW) != null) {
-                mDetailFragment = (NotificationsDetailFragment)fm.findFragmentByTag(TAG_DETAIL_VIEW);
+                mTabletDetailFragment = (NotificationsDetailFragment)fm.findFragmentByTag(TAG_DETAIL_VIEW);
             } else {
                 addDetailFragment();
             }
@@ -87,7 +89,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
 
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
-        mNotesList.setOnNoteClickListener(new NoteClickListener());
+        mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
 
         GCMIntentService.clearNotificationsMap();
 
@@ -138,21 +140,21 @@ public class NotificationsActivity extends WPActionBarActivity
                 // pop back to list view fragment
                 fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 mMenuDrawer.setDrawerIndicatorEnabled(true);
-                mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+                mNotesListFragment.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
                 // Add the note detail fragment
                 addDetailFragment();
                 if (mSelectedNoteId != null) {
                     openNoteForNoteId(mSelectedNoteId);
                 }
-                mNotesList.setSelectedPositionChecked();
-                mNotesList.refreshNotes();
+                mNotesListFragment.setSelectedPositionChecked();
+                mNotesListFragment.refreshNotes();
             } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                if (mNotesList != null) {
-                    mNotesList.getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-                    mNotesList.resetSelection();
+                if (mNotesListFragment != null) {
+                    mNotesListFragment.getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
+                    mNotesListFragment.resetSelection();
                 }
                 // Remove the detail fragment when rotating back to portrait
-                if (mDetailFragment != null) {
+                if (mTabletDetailFragment != null) {
                     removeDetailFragment();
                 }
             }
@@ -163,17 +165,12 @@ public class NotificationsActivity extends WPActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (DisplayUtils.isLandscapeTablet(this)) {
-                    // let WPActionBarActivity handle it (toggles menu drawer)
-                    return super.onOptionsItemSelected(item);
+                FragmentManager fm = getFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    popNoteDetail();
+                    return true;
                 } else {
-                    FragmentManager fm = getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        popNoteDetail();
-                        return true;
-                    } else {
-                        return super.onOptionsItemSelected(item);
-                    }
+                    return super.onOptionsItemSelected(item);
                 }
             default:
                 return super.onOptionsItemSelected(item);
@@ -191,8 +188,8 @@ public class NotificationsActivity extends WPActionBarActivity
     private void addDetailFragment() {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        mDetailFragment = new NotificationsDetailFragment();
-        ft.add(R.id.layout_fragment_container, mDetailFragment, TAG_DETAIL_VIEW);
+        mTabletDetailFragment = new NotificationsDetailFragment();
+        ft.add(R.id.layout_fragment_container, mTabletDetailFragment, TAG_DETAIL_VIEW);
         ft.commitAllowingStateLoss();
         fm.executePendingTransactions();
     }
@@ -200,7 +197,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private void removeDetailFragment() {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.remove(mDetailFragment);
+        ft.remove(mTabletDetailFragment);
         ft.commitAllowingStateLoss();
         fm.executePendingTransactions();
     }
@@ -227,8 +224,8 @@ public class NotificationsActivity extends WPActionBarActivity
             openNoteForNoteId(intent.getStringExtra(NOTE_ID_EXTRA));
         } else {
             // Dual pane and no note specified then select the first note
-            if (DisplayUtils.isLandscapeTablet(this) && mNotesList != null) {
-                mNotesList.setShouldLoadFirstNote(true);
+            if (DisplayUtils.isLandscapeTablet(this) && mNotesListFragment != null) {
+                mNotesListFragment.setShouldLoadFirstNote(true);
             }
         }
     }
@@ -262,7 +259,7 @@ public class NotificationsActivity extends WPActionBarActivity
             }
         }
 
-        mNotesList.refreshNotes();
+        mNotesListFragment.refreshNotes();
     }
 
     void popNoteDetail() {
@@ -318,14 +315,16 @@ public class NotificationsActivity extends WPActionBarActivity
         Fragment fragment = getDetailFragmentForNote(note);
 
         if (DisplayUtils.isLandscapeTablet(this)) {
-            mDetailFragment.setCurrentFragment(fragment);
+            mTabletDetailFragment.setCurrentFragment(fragment, false);
             return;
         }
+
+        mCurrentFragment = fragment;
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.layout_fragment_container, fragment);
+        ft.replace(R.id.layout_fragment_container, mCurrentFragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -338,11 +337,20 @@ public class NotificationsActivity extends WPActionBarActivity
 
     public void showBlogPreviewForSiteId(long siteId, String siteUrl) {
         ReaderPostListFragment readerPostListFragment = ReaderPostListFragment.newInstance(siteId, siteUrl);
+
+        if (DisplayUtils.isLandscapeTablet(this)) {
+            if (mTabletDetailFragment != null) {
+                mTabletDetailFragment.setCurrentFragment(readerPostListFragment, true);
+            }
+
+            return;
+        }
+
         FragmentManager fm = getFragmentManager();
 
         FragmentTransaction ft = fm.beginTransaction();
-        if (mDetailFragment != null) {
-            ft.hide(mDetailFragment);
+        if (mCurrentFragment != null) {
+            ft.hide(mCurrentFragment);
         }
         ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);
@@ -351,11 +359,20 @@ public class NotificationsActivity extends WPActionBarActivity
 
     public void showPostForSiteAndPostId(long siteId, long postId) {
         ReaderPostDetailFragment readerPostDetailFragment = ReaderPostDetailFragment.newInstance(siteId, postId);
-        FragmentManager fm = getFragmentManager();
 
+        if (DisplayUtils.isLandscapeTablet(this)) {
+            if (mTabletDetailFragment != null) {
+                mTabletDetailFragment.setCurrentFragment(readerPostDetailFragment, true);
+            }
+
+            return;
+        }
+
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if (mDetailFragment != null) {
-            ft.hide(mDetailFragment);
+
+        if (mCurrentFragment != null) {
+            ft.hide(mCurrentFragment);
         }
         ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.addToBackStack(null);

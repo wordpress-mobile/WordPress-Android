@@ -316,6 +316,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     @Override
     public void onPause() {
         super.onPause();
+        // Reset comment if this is from a notification
+        if (mNote != null) {
+            mComment = null;
+        }
         EditTextUtils.hideSoftInput(mEditReply);
     }
 
