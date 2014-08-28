@@ -3,6 +3,7 @@ package org.wordpress.android.ui.notifications.blocks;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
@@ -54,8 +55,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
                 mIndices[1] = indicesArray.optInt(1);
             }
 
-            // Don't link ranges that we don't know the type of
-            mShouldLink = mShouldLink && mRangeType != NoteBlockRangeType.UNKNOWN;
+            // Don't link ranges that we don't know the type of, unless we have a URL
+            mShouldLink = mShouldLink && (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
 
             // Apply different coloring for blockquotes
             if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE) {
