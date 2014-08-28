@@ -38,7 +38,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(Note note, float yPosition);
+        public void onClickNote(Note note);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         Note note = mNotesAdapter.getNote(position);
         if (note != null && mNoteClickListener != null) {
-            mNoteClickListener.onClickNote(note, v.getY());
+            mNoteClickListener.onClickNote(note);
             mNotesAdapter.setSelectedPosition(position);
         }
     }
@@ -193,7 +193,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                     mShouldLoadFirstNote = false;
                     Note note = mNotesAdapter.getNote(0);
                     if (note != null && mNoteClickListener != null) {
-                        mNoteClickListener.onClickNote(note, 0);
+                        mNoteClickListener.onClickNote(note);
                         getListView().setItemChecked(0, true);
                     }
                 }

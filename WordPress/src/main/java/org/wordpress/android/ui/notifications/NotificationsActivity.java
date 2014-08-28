@@ -30,7 +30,6 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
-import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -49,7 +48,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String TAG_DETAIL_VIEW = "detailView";
 
     private NotificationsListFragment mNotesList;
-    private Fragment mDetailFragment;
+    private NotificationsDetailFragment mDetailFragment;
     private String mSelectedNoteId;
     private boolean mHasPerformedInitialUpdate;
 
@@ -74,7 +73,7 @@ public class NotificationsActivity extends WPActionBarActivity
 
         if (DisplayUtils.isLandscapeTablet(this)) {
             if (fm.findFragmentByTag(TAG_DETAIL_VIEW) != null) {
-                mDetailFragment = fm.findFragmentByTag(TAG_DETAIL_VIEW);
+                mDetailFragment = (NotificationsDetailFragment)fm.findFragmentByTag(TAG_DETAIL_VIEW);
             } else {
                 addDetailFragment();
             }
@@ -154,12 +153,7 @@ public class NotificationsActivity extends WPActionBarActivity
                 }
                 // Remove the detail fragment when rotating back to portrait
                 if (mDetailFragment != null) {
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.remove(mDetailFragment);
-                    mDetailFragment = null;
-                    ft.commitAllowingStateLoss();
-                    fm.executePendingTransactions();
+                    removeDetailFragment();
                 }
             }
         }
@@ -197,7 +191,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private void addDetailFragment() {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        mDetailFragment = new NotificationsDetailListFragment();
+        mDetailFragment = new NotificationsDetailFragment();
         ft.add(R.id.layout_fragment_container, mDetailFragment, TAG_DETAIL_VIEW);
         ft.commitAllowingStateLoss();
         fm.executePendingTransactions();
@@ -245,7 +239,7 @@ public class NotificationsActivity extends WPActionBarActivity
             if (notesBucket != null) {
                 Note note = notesBucket.get(noteId);
                 if (note != null) {
-                    openNote(note, 0);
+                    openNote(note);
                 }
             }
         } catch (BucketObjectMissingException e) {
@@ -307,7 +301,7 @@ public class NotificationsActivity extends WPActionBarActivity
     /**
      * Open a note fragment based on the type of note
      */
-    private void openNote(final Note note, float yOffset) {
+    private void openNote(final Note note) {
         if (note == null || isFinishing() || isActivityDestroyed()) {
             return;
         }
@@ -320,23 +314,18 @@ public class NotificationsActivity extends WPActionBarActivity
             note.markAsRead();
         }
 
-        // If we are already showing the NotificationDetailListFragment on a tablet, update note.
-        if (DisplayUtils.isLandscapeTablet(this)) {
-            NotificationsDetailListFragment detailListFragment = (NotificationsDetailListFragment) mDetailFragment;
-            detailListFragment.setNote(note);
-            detailListFragment.reloadNoteBlocks();
-            return;
-        } else if (DisplayUtils.isLandscapeTablet(this)) {
-            removeDetailFragment();
-        }
-
         // create detail fragment for this note type
-        mDetailFragment = getDetailFragmentForNote(note);
+        Fragment fragment = getDetailFragmentForNote(note);
+
+        if (DisplayUtils.isLandscapeTablet(this)) {
+            mDetailFragment.setCurrentFragment(fragment);
+            return;
+        }
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.layout_fragment_container, mDetailFragment);
+        ft.replace(R.id.layout_fragment_container, fragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -381,13 +370,13 @@ public class NotificationsActivity extends WPActionBarActivity
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
-        public void onClickNote(Note note, float yPosition) {
+        public void onClickNote(Note note) {
             if (note == null)
                 return;
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
-            openNote(note, yPosition);
+            openNote(note);
         }
     }
 
