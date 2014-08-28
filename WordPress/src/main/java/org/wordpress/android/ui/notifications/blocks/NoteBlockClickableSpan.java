@@ -37,11 +37,11 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     public NoteBlockClickableSpan(JSONObject idData, boolean shouldLink) {
         mBlockData = idData;
         mShouldLink = shouldLink;
-        processIdData();
+        processRangeData();
     }
 
 
-    private void processIdData() {
+    private void processRangeData() {
         if (mBlockData != null) {
             mId = JSONUtil.queryJSON(mBlockData, "id", 0);
             mSiteId = JSONUtil.queryJSON(mBlockData, "site_id", 0);
