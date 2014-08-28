@@ -138,9 +138,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 @Override
                 public void onPostsLoaded(int postCount) {
                     if (postCount == 0 && mCanLoadMorePosts) {
-                        // No posts, let's request some
-                        setRefreshing(true);
-                        requestPosts(false);
+                        // No posts, let's request some if network available
+                        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                            setRefreshing(true);
+                            requestPosts(false);
+                        }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
