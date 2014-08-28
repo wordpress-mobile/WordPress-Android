@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.net.Uri;
-import android.text.TextUtils;
+import android.os.Handler;
 
 import org.wordpress.android.models.ReaderAttachment;
 import org.wordpress.android.models.ReaderAttachmentList;
@@ -14,7 +14,8 @@ import org.wordpress.android.util.StringUtils;
 import java.lang.ref.WeakReference;
 
 /**
- * generates the HTML for displaying post detail content
+ * generates the HTML for showing post detail content - main purpose is to assign height/width
+ * attributes on image tags to match how we want them displayed
  */
 public class ReaderPostRenderer {
 
@@ -41,12 +42,11 @@ public class ReaderPostRenderer {
 
     void beginRender() {
         // start with the basic content
-        final String contentForScan = getPostContent();
-        mRenderContent = contentForScan;
+        mRenderContent = getPostContent(mPost);
 
         // if there aren't any attachments, we're done
         if (!mPost.hasAttachments()) {
-            endRender();
+            renderContent(mRenderContent);
             return;
         }
 
@@ -55,30 +55,47 @@ public class ReaderPostRenderer {
 
         // start image scanner to find images, match them with attachments to get h/w ratio, then
         // replace h/w attributes with correct ones for display
-        final ReaderAttachmentList attachments = mPost.getAttachments();
-        ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
+        final Handler handler = new Handler();
+        new Thread() {
             @Override
-            public void onImageFound(String imageTag, String imageUrl, int start, int end) {
-                mNumImages++;
-                ReaderAttachment attach = attachments.get(imageUrl);
-                if (attach != null) {
-                    mNumMatchedImages++;
-                    setImageSize(imageTag, attach);
-                }
+            public void run() {
+                final ReaderAttachmentList attachments = mPost.getAttachments();
+                ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
+                    @Override
+                    public void onImageFound(String imageTag, String imageUrl, int start, int end) {
+                        mNumImages++;
+                        ReaderAttachment attach = attachments.get(imageUrl);
+                        // match only images, or else our video thumbnails might be replaced
+                        if (attach != null && attach.isImage()) {
+                            mNumMatchedImages++;
+                            replaceImageTag(imageTag, attach);
+                        }
+                    }
+                    @Override
+                    public void onScanCompleted() {
+                        AppLog.i(AppLog.T.READER,
+                                String.format("reader renderer > image scan completed, matched %d of %d images",
+                                        mNumMatchedImages, mNumImages));
+                        final String htmlContent = getPostContentForWebView(mRenderContent);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                renderContent(htmlContent);
+                            }
+                        });
+                    }
+                };
+                final String contentForScan = mRenderContent;
+                ReaderImageScanner scanner = new ReaderImageScanner(contentForScan, mPost.isPrivate);
+                scanner.beginScan(imageListener);
             }
-            @Override
-            public void onScanCompleted() {
-                AppLog.i(AppLog.T.READER,
-                        String.format("reader renderer > image scan completed, matched %d of %d images",
-                                      mNumMatchedImages, mNumImages));
-                endRender();
-            }
-        };
-        ReaderImageScanner scanner = new ReaderImageScanner(contentForScan, mPost.isPrivate);
-        scanner.beginScan(imageListener);
+        }.start();
     }
 
-    private void endRender() {
+    /*
+     * called once the content is ready to be rendered in the webView
+     */
+    private void renderContent(final String htmlContent) {
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
         if (webView == null) {
@@ -88,7 +105,6 @@ public class ReaderPostRenderer {
 
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
-        String htmlContent = getPostContentForWebView(mRenderContent);
         webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
     }
 
@@ -96,7 +112,7 @@ public class ReaderPostRenderer {
      * called when image scanner finds an image and it can be matched with an attachment,
      * use this to set the height/width of the image
      */
-    private void setImageSize(String imageTag, ReaderAttachment attachment) {
+    private void replaceImageTag(String imageTag, ReaderAttachment attachment) {
         float ratio = attachment.getHWRatio();
         if (ratio == 0) {
             AppLog.d(AppLog.T.READER, "reader renderer > empty image ratio");
@@ -106,7 +122,6 @@ public class ReaderPostRenderer {
         // construct new image tag
         int width = mResourceVars.fullSizeImageWidth;
         int height = (int)(width * ratio);
-        AppLog.d(AppLog.T.READER, String.format("reader renderer > image ratio, w=%d h=%d", width, height));
         String newImageTag
                 = String.format("<img class='size-full' src='%s' width='%d' height='%d'",
                                 attachment.getUrl(), width, height);
@@ -118,29 +133,28 @@ public class ReaderPostRenderer {
     /*
      * returns the basic content of the post tweaked for use here
      */
-    String getPostContent() {
-        if (mPost.hasText()) {
+    static String getPostContent(ReaderPost post) {
+        if (post == null) {
+            return "";
+        } else if (post.hasText()) {
             // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
-            String content = mPost.getText().replace("src=\"//", "src=\"http://");
-            // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (mPost.isVideoPress) {
-                content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
-            } else if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
+            String content = post.getText().replace("src=\"//", "src=\"http://");
+            if (post.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(post.getFeaturedImage())) {
                 // if the post has a featured image other than an mshot that's not in the content,
-                // add it to the content
-                Uri uri = Uri.parse(mPost.getFeaturedImage());
+                // add it to the top of the content
+                Uri uri = Uri.parse(post.getFeaturedImage());
                 String path = StringUtils.notNullStr(uri.getLastPathSegment());
                 if (!content.contains(path)) {
                     AppLog.d(AppLog.T.READER, "reader post detail > added featured image to content");
-                    content = String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage())
+                    content = String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage())
                             + content;
                 }
             }
             return content;
-        } else if (mPost.hasFeaturedImage()) {
+        } else if (post.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content
-            return String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage());
+            return String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage());
         } else {
             return "";
         }
@@ -230,32 +244,6 @@ public class ReaderPostRenderer {
               .append("</body></html>");
 
         return sbHtml.toString();
-    }
-
-    /*
-     * creates formatted div for passed video with passed (optional) thumbnail
-     */
-    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
-
-    private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(videoUrl)) {
-            return "";
-        }
-
-        // sometimes we get src values like "//player.vimeo.com/video/70534716" - prefix these with http:
-        if (videoUrl.startsWith("//")) {
-            videoUrl = "http:" + videoUrl;
-        }
-
-        int overlaySz = mResourceVars.videoOverlaySize / 2;
-        if (TextUtils.isEmpty(thumbnailUrl)) {
-            return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
-        } else {
-            return "<div style='position:relative'>"
-                    + String.format("<a href='%s'><img src='%s' style='width:100%%; height:auto;' /></a>", videoUrl, thumbnailUrl)
-                    + String.format("<a href='%s'><img src='%s' style='width:%dpx; height:%dpx; position:absolute; left:0px; right:0px; top:0px; bottom:0px; margin:auto;'' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz)
-                    + "</div>";
-        }
     }
 
     /*

@@ -69,7 +69,6 @@ public class ReaderPostDetailFragment extends Fragment
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
-    private ReaderPostRenderer mRenderer;
 
     private ReaderPostListType mPostListType;
 
@@ -954,8 +953,10 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
+        // must use getPostContent() so featured image added for display is seen
+        // by the photo viewer
+        String postContent = ReaderPostRenderer.getPostContent(mPost);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
-        String postContent = (mRenderer != null ? mRenderer.getPostContent() : null);
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
@@ -1089,8 +1090,7 @@ public class ReaderPostDetailFragment extends Fragment
             mReaderWebView.getSettings().setJavaScriptEnabled(ReaderPostRenderer.canEnableJavaScript(mPost));
 
             // render the post in the webView
-            mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
-            mRenderer.beginRender();
+            new ReaderPostRenderer(mReaderWebView, mPost).beginRender();
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
