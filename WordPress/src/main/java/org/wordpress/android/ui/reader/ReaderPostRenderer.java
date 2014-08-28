@@ -106,7 +106,8 @@ public class ReaderPostRenderer {
 
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
-        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
+        String baseUrl = (mPost.hasBlogUrl() ? mPost.getBlogUrl() : null);
+        webView.loadDataWithBaseURL(baseUrl, htmlContent, "text/html", "UTF-8", null);
     }
 
     /*
@@ -148,8 +149,7 @@ public class ReaderPostRenderer {
         if (post == null) {
             return "";
         } else if (post.hasText()) {
-            // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
-            String content = post.getText().replace("src=\"//", "src=\"http://");
+            String content = post.getText();
             if (post.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(post.getFeaturedImage())) {
                 // if the post has a featured image other than an mshot that's not in the content,
                 // add it to the top of the content
@@ -224,12 +224,8 @@ public class ReaderPostRenderer {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
-        // don't allow any image to be wider than the screen
-        sbHtml.append("  img { max-width: 100% !important; height: auto;}");
-
-        // show large wp images full-width (unnecessary in most cases since they'll already be at least
-        // as wide as the display, except maybe when viewed on a large landscape tablet)
-        sbHtml.append("  img.size-full, img.size-large { display: block; width: 100% !important; height: auto; }");
+        // light grey background behind full-sized images so something appears while they're loading
+        sbHtml.append("  img.size-full { display: block; background-color: ").append(mResourceVars.greyExtraLightStr).append("; }");
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
