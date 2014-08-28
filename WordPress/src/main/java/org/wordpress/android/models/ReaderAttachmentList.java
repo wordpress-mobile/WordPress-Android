@@ -1,6 +1,7 @@
 package org.wordpress.android.models;
 
 import org.json.JSONObject;
+import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,5 +25,20 @@ public class ReaderAttachmentList extends ArrayList<ReaderAttachment> {
         }
 
         return attachments;
+    }
+
+    public ReaderAttachment get(final String imageUrl) {
+        if (imageUrl == null) {
+            return null;
+        }
+
+        String normUrl = UrlUtils.normalizeUrl(imageUrl);
+        for (ReaderAttachment attachment: this) {
+            if (normUrl.equals(attachment.getNormUrl())) {
+                return attachment;
+            }
+        }
+
+        return null;
     }
 }
