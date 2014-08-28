@@ -46,6 +46,7 @@ public class NoteBlock {
 
     public interface OnNoteBlockTextClickListener {
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
+        public void showReaderPost(long siteId, long postId);
     }
 
     public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {

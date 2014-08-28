@@ -55,7 +55,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/user_comment"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/user_avatar"
         android:layout_marginTop="@dimen/comment_snippet_margin_adjustment"

@@ -4,7 +4,6 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 
 // Note header, displayed at top of detail view
@@ -53,10 +51,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
-        noteBlockHolder.snippetTextView.setText(NotificationsUtils.getSpannableTextFromIndices(
-                        getSnippet(),
-                        getOnNoteBlockTextClickListener())
-        );
+        noteBlockHolder.snippetTextView.setText(getSnippet());
 
         if (mIsComment) {
             View footerView = view.findViewById(R.id.header_footer);
@@ -67,6 +62,17 @@ public class HeaderUserNoteBlock extends NoteBlock {
 
         return view;
     }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (getOnNoteBlockTextClickListener() != null) {
+                long siteId = JSONUtil.queryJSON(mHeaderArray, "[1].ranges[0].site_id", 0);
+                long postId = JSONUtil.queryJSON(mHeaderArray, "[1].ranges[0].post_id", 0);
+                getOnNoteBlockTextClickListener().showReaderPost(siteId, postId);
+            }
+        }
+    };
 
     private String getUserName() {
         return JSONUtil.queryJSON(mHeaderArray, "[0].text", "");
@@ -80,8 +86,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
         return JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].url", "");
     }
 
-    private JSONObject getSnippet() {
-        return JSONUtil.queryJSON(mHeaderArray, "[1]", new JSONObject());
+    private String getSnippet() {
+        return JSONUtil.queryJSON(mHeaderArray, "[1].text", "");
     }
 
     @Override
@@ -99,9 +105,10 @@ public class HeaderUserNoteBlock extends NoteBlock {
         private NetworkImageView avatarImageView;
 
         public NoteHeaderBlockHolder(View view) {
+            View rootView = view.findViewById(R.id.header_root_view);
+            rootView.setOnClickListener(mOnClickListener);
             nameTextView = (TextView)view.findViewById(R.id.header_user);
             snippetTextView = (TextView)view.findViewById(R.id.header_snippet);
-            snippetTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
             avatarImageView = (NetworkImageView)view.findViewById(R.id.header_avatar);
         }
     }
@@ -142,5 +149,4 @@ public class HeaderUserNoteBlock extends NoteBlock {
             return true;
         }
     };
-
 }

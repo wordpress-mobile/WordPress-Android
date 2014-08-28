@@ -6,10 +6,12 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/header_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="horizontal"
+        android:background="@drawable/notifications_header_selector"
+        android:clickable="true"
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
@@ -23,10 +25,9 @@
             android:layout_marginTop="@dimen/comment_avatar_margin_top"
             android:background="@color/grey_light" />
 
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/header_user"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/header_avatar"
             android:layout_marginTop="@dimen/comment_user_margin_adjustment"
@@ -39,7 +40,7 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/header_snippet"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/header_avatar"
             android:layout_marginTop="@dimen/comment_snippet_margin_adjustment"
@@ -47,7 +48,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
-            android:textColor="@color/calypso_blue"
+            android:textColor="@color/blue_new_kid"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="italic"
             tools:text="www.bobross.com" />

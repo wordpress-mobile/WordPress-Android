@@ -34,6 +34,8 @@ import org.wordpress.android.util.JSONUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
     private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
@@ -53,7 +55,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
         mRootLayout = (LinearLayout)view.findViewById(R.id.notifications_list_root);
 
@@ -139,23 +141,27 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
-    private boolean hasActivity() {
-        return getActivity() != null;
-    }
-
     private NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
-            if (!hasActivity()) return;
+            if (!isAdded()) return;
 
             NotificationsUtils.handleNoteBlockSpanClick((NotificationsActivity) getActivity(), clickedSpan);
+        }
+
+        @Override
+        public void showReaderPost(long siteId, long postId) {
+            if (!isAdded()) return;
+
+            NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
+            notificationsActivity.showPostForSiteAndPostId(siteId, postId);
         }
     };
 
     private UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
         public void onGravatarClicked(long siteId, long userId) {
-            if (!hasActivity()) return;
+            if (!isAdded()) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
             notificationsActivity.showBlogPreviewForSiteId(siteId, null);
