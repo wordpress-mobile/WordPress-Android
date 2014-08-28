@@ -23,6 +23,8 @@ public class ReaderPostRenderer {
     private final WeakReference<ReaderWebView> mWeakWebView;
 
     private String mRenderContent;
+    private int mNumImages;
+    private int mNumMatchedImages;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (post == null) {
@@ -39,7 +41,8 @@ public class ReaderPostRenderer {
 
     void beginRender() {
         // start with the basic content
-        mRenderContent = getPostContent();
+        final String contentForScan = getPostContent();
+        mRenderContent = contentForScan;
 
         // if there aren't any attachments, we're done
         if (!mPost.hasAttachments()) {
@@ -47,37 +50,41 @@ public class ReaderPostRenderer {
             return;
         }
 
+        mNumImages = 0;
+        mNumMatchedImages = 0;
+
         // start image scanner to find images, match them with attachments to get h/w ratio, then
         // replace h/w attributes with correct ones for display
         final ReaderAttachmentList attachments = mPost.getAttachments();
         ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
             @Override
             public void onImageFound(String imageTag, String imageUrl, int start, int end) {
-                AppLog.d(AppLog.T.READER, "reader renderer > found " + imageUrl);
+                mNumImages++;
                 ReaderAttachment attach = attachments.get(imageUrl);
                 if (attach != null) {
-                    AppLog.d(AppLog.T.READER, "reader renderer > matched attachment " + imageUrl);
-                    setImageSize(imageTag, imageUrl, attach);
+                    mNumMatchedImages++;
+                    setImageSize(imageTag, attach);
                 }
             }
             @Override
             public void onScanCompleted() {
-                AppLog.d(AppLog.T.READER, "reader renderer > image scan completed");
+                AppLog.i(AppLog.T.READER,
+                        String.format("reader renderer > image scan completed, matched %d of %d images",
+                                      mNumMatchedImages, mNumImages));
                 endRender();
-            };
+            }
         };
-        ReaderImageScanner scanner = new ReaderImageScanner(mRenderContent, mPost.isPrivate);
+        ReaderImageScanner scanner = new ReaderImageScanner(contentForScan, mPost.isPrivate);
         scanner.beginScan(imageListener);
     }
 
-    void endRender() {
+    private void endRender() {
+        // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
         if (webView == null) {
             AppLog.w(AppLog.T.READER, "reader renderer > null webView");
             return;
         }
-
-        AppLog.d(AppLog.T.READER, "reader renderer > rendering content");
 
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
@@ -85,8 +92,27 @@ public class ReaderPostRenderer {
         webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
     }
 
-    private void setImageSize(String imageTag, String imageUrl, ReaderAttachment attachment) {
-        // TODO
+    /*
+     * called when image scanner finds an image and it can be matched with an attachment,
+     * use this to set the height/width of the image
+     */
+    private void setImageSize(String imageTag, ReaderAttachment attachment) {
+        float ratio = attachment.getHWRatio();
+        if (ratio == 0) {
+            AppLog.d(AppLog.T.READER, "reader renderer > empty image ratio");
+            return;
+        }
+
+        // construct new image tag
+        int width = mResourceVars.fullSizeImageWidth;
+        int height = (int)(width * ratio);
+        AppLog.d(AppLog.T.READER, String.format("reader renderer > image ratio, w=%d h=%d", width, height));
+        String newImageTag
+                = String.format("<img class='size-full' src='%s' width='%d' height='%d'",
+                                attachment.getUrl(), width, height);
+
+        // replace existing tag with new one
+        mRenderContent = mRenderContent.replace(imageTag, newImageTag);
     }
 
     /*
@@ -136,30 +162,30 @@ public class ReaderPostRenderer {
         sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
 
         sbHtml.append("<style type='text/css'>")
-                .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-                .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-                .append("  p, div { line-height: 1.6em; font-size: 1em; }")
-                .append("  h1, h2 { line-height: 1.2em; }");
+              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
+              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+              .append("  h1, h2 { line-height: 1.2em; }");
 
         // make sure long strings don't force the user to scroll horizontally
         sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }",
-                mResourceVars.marginSmall, mResourceVars.marginSmall))
-                .append("    p:first-child { margin-top: 0px; }");
+               mResourceVars.marginSmall, mResourceVars.marginSmall))
+               .append("    p:first-child { margin-top: 0px; }");
 
         // add border, background color, and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
-                .append("        border: 1px solid ").append(mResourceVars.greyLightStr).append("; ")
-                .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-                .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
+              .append("        border: 1px solid ").append(mResourceVars.greyLightStr).append("; ")
+              .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
+              .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
 
         // add a left border to blockquotes
         sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmall).append("px; ")
-                .append("               padding-left: ").append(mResourceVars.marginSmall).append("px; ")
-                .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
+              .append("               padding-left: ").append(mResourceVars.marginSmall).append("px; ")
+              .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
 
         // show links in the same color they are elsewhere in the app
         sbHtml.append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
@@ -168,7 +194,7 @@ public class ReaderPostRenderer {
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript(mPost)) {
             sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidth).append("px !important;")
-                    .append("                  height: ").append(mResourceVars.videoHeight).append("px !important; }");
+                  .append("                  height: ").append(mResourceVars.videoHeight).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
@@ -191,17 +217,17 @@ public class ReaderPostRenderer {
             String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidth);
             content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                    .append("  div.tiled-gallery-item img { ")
-                    .append("     width: auto !important; height: auto !important;")
-                    .append("     margin-top: ").append(mResourceVars.marginExtraSmall).append("px; ")
-                    .append("     margin-bottom: ").append(mResourceVars.marginExtraSmall).append("px; ")
-                    .append("  }")
-                    .append("  div.tiled-gallery-caption { clear: both; }");
+                  .append("  div.tiled-gallery-item img { ")
+                  .append("     width: auto !important; height: auto !important;")
+                  .append("     margin-top: ").append(mResourceVars.marginExtraSmall).append("px; ")
+                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmall).append("px; ")
+                  .append("  }")
+                  .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
         sbHtml.append("</style></head><body>")
-                .append(content)
-                .append("</body></html>");
+              .append(content)
+              .append("</body></html>");
 
         return sbHtml.toString();
     }
