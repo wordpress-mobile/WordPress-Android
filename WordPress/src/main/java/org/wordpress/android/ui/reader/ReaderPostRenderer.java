@@ -7,6 +7,7 @@ import org.wordpress.android.models.ReaderAttachment;
 import org.wordpress.android.models.ReaderAttachmentList;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -46,7 +47,7 @@ public class ReaderPostRenderer {
 
         // if there aren't any attachments, we're done
         if (!mPost.hasAttachments()) {
-            renderContent(mRenderContent);
+            renderContent(getPostContentForWebView(mRenderContent));
             return;
         }
 
@@ -123,11 +124,18 @@ public class ReaderPostRenderer {
         int width = mResourceVars.fullSizeImageWidth;
         int height = (int)(width * ratio);
 
+        final String newImageUrl;
+        if (mPost.isPrivate) {
+            newImageUrl = ReaderUtils.getPrivateImageForDisplay(attachment.getUrl(), width, height);
+        } else {
+            newImageUrl = PhotonUtils.getPhotonImageUrl(attachment.getUrl(), width, height);
+        }
+
         //AppLog.d(AppLog.T.READER, String.format("reader renderer > ratio %f, width %d, height %d", ratio, width, height));
 
         String newImageTag
                 = String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
-                                attachment.getUrl(), width, height);
+                                newImageUrl, width, height);
 
         // replace existing tag with new one
         mRenderContent = mRenderContent.replace(imageTag, newImageTag);
