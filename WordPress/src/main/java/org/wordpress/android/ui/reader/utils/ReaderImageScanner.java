@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.utils;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.util.PhotonUtils;
@@ -12,6 +13,10 @@ import java.util.regex.Pattern;
 
 public class ReaderImageScanner {
 
+    public static interface ImageScanListener {
+        public void onImageFound(String imageTag, String imageUrl, int start, int end);
+        public void onScanCompleted();
+    }
     private final String mContent;
     private final boolean mIsPrivate;
     private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
@@ -34,6 +39,28 @@ public class ReaderImageScanner {
     public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
         mIsPrivate = isPrivate;
+    }
+
+    public void beginScan(ImageScanListener listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("ImageScanListener is required");
+        }
+
+        if (mContent == null || !mContent.contains("<img ")) {
+            listener.onScanCompleted();
+            return;
+        }
+
+        Matcher imgMatcher = IMG_TAG_PATTERN.matcher(mContent);
+        while (imgMatcher.find()) {
+            String imageTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
+            String imageUrl = getSrcAttrValue(imageTag);
+            if (!TextUtils.isEmpty(imageUrl)) {
+                listener.onImageFound(imageTag, imageUrl, imgMatcher.start(), imgMatcher.end());
+            }
+        }
+
+        listener.onScanCompleted();
     }
 
     /*

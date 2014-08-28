@@ -39,16 +39,12 @@ public class ReaderAttachment {
         return StringUtils.notNullStr(url);
     }
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
-        normUrl = null;
-    }
-
-    private transient String normUrl;
-    public String getNormUrl() {
-        if (normUrl == null) {
-            normUrl = UrlUtils.normalizeUrl(url);
+        // always store normalized URLs without a query string
+        if (url != null) {
+            this.url = UrlUtils.normalizeUrl(UrlUtils.removeQuery(url));
+        } else {
+            this.url = "";
         }
-        return normUrl;
     }
 
     public String getMimeType() {

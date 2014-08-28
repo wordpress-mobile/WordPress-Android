@@ -1028,8 +1028,6 @@ public class ReaderPostDetailFragment extends Fragment
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
 
-        String postHtml;
-
         @Override
         protected void onPreExecute() {
             mIsPostTaskRunning = true;
@@ -1052,8 +1050,6 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
-            mRenderer = new ReaderPostRenderer(container.getContext(), mPost);
-
             txtTitle = (TextView) container.findViewById(R.id.text_title);
             txtBlogName = (TextView) container.findViewById(R.id.text_blog_name);
             txtFollow = (TextView) container.findViewById(R.id.text_follow);
@@ -1067,8 +1063,6 @@ public class ReaderPostDetailFragment extends Fragment
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
-
-            postHtml = mRenderer.getPostContentForWebView(container.getContext());
 
             return true;
         }
@@ -1094,9 +1088,9 @@ public class ReaderPostDetailFragment extends Fragment
             // enable JavaScript in the webView if it's safe to do so
             mReaderWebView.getSettings().setJavaScriptEnabled(ReaderPostRenderer.canEnableJavaScript(mPost));
 
-            // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
-            // https://code.google.com/p/android/issues/detail?id=4401
-            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            // render the post in the webView
+            mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
+            mRenderer.beginRender();
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
@@ -1211,7 +1205,6 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
     }
-
 
     /*
      * called by the web view when the content finishes loading - likes & comments aren't displayed

@@ -32,9 +32,9 @@ public class ReaderAttachmentList extends ArrayList<ReaderAttachment> {
             return null;
         }
 
-        String normUrl = UrlUtils.normalizeUrl(imageUrl);
+        String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(imageUrl));
         for (ReaderAttachment attachment: this) {
-            if (normUrl.equals(attachment.getNormUrl())) {
+            if (normUrl.equals(attachment.getUrl())) {
                 return attachment;
             }
         }

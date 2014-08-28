@@ -23,6 +23,9 @@ class ReaderResourceVars {
     final int listMarginWidth;
     final int fullSizeImageWidth;
 
+    final int videoWidth;
+    final int videoHeight;
+
     final int colorGreyExtraLight;
     final int mediumAnimTime;
 
@@ -59,5 +62,8 @@ class ReaderResourceVars {
             imageWidth -= drawerWidth;
         }
         fullSizeImageWidth = imageWidth;
+
+        videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
+        videoHeight = (int) (videoWidth * 0.5625f);
     }
 }

@@ -1,14 +1,17 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import org.wordpress.android.models.ReaderAttachment;
+import org.wordpress.android.models.ReaderAttachmentList;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+
+import java.lang.ref.WeakReference;
 
 /**
  * generates the HTML for displaying post detail content
@@ -17,19 +20,80 @@ public class ReaderPostRenderer {
 
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
+    private final WeakReference<ReaderWebView> mWeakWebView;
 
-    ReaderPostRenderer(Context context, ReaderPost post) {
-        mResourceVars = new ReaderResourceVars(context);
+    private String mRenderContent;
+
+    ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
+        if (post == null) {
+            throw new IllegalArgumentException("ReaderPostRenderer requires a post");
+        }
+        if (webView == null) {
+            throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
+        }
+
         mPost = post;
+        mWeakWebView = new WeakReference<ReaderWebView>(webView);
+        mResourceVars = new ReaderResourceVars(webView.getContext());
+    }
+
+    void beginRender() {
+        // start with the basic content
+        mRenderContent = getPostContent();
+
+        // if there aren't any attachments, we're done
+        if (!mPost.hasAttachments()) {
+            endRender();
+            return;
+        }
+
+        // start image scanner to find images, match them with attachments to get h/w ratio, then
+        // replace h/w attributes with correct ones for display
+        final ReaderAttachmentList attachments = mPost.getAttachments();
+        ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
+            @Override
+            public void onImageFound(String imageTag, String imageUrl, int start, int end) {
+                AppLog.d(AppLog.T.READER, "reader renderer > found " + imageUrl);
+                ReaderAttachment attach = attachments.get(imageUrl);
+                if (attach != null) {
+                    AppLog.d(AppLog.T.READER, "reader renderer > matched attachment " + imageUrl);
+                    setImageSize(imageTag, imageUrl, attach);
+                }
+            }
+            @Override
+            public void onScanCompleted() {
+                AppLog.d(AppLog.T.READER, "reader renderer > image scan completed");
+                endRender();
+            };
+        };
+        ReaderImageScanner scanner = new ReaderImageScanner(mRenderContent, mPost.isPrivate);
+        scanner.beginScan(imageListener);
+    }
+
+    void endRender() {
+        ReaderWebView webView = mWeakWebView.get();
+        if (webView == null) {
+            AppLog.w(AppLog.T.READER, "reader renderer > null webView");
+            return;
+        }
+
+        AppLog.d(AppLog.T.READER, "reader renderer > rendering content");
+
+        // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
+        // https://code.google.com/p/android/issues/detail?id=4401
+        String htmlContent = getPostContentForWebView(mRenderContent);
+        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
+    }
+
+    private void setImageSize(String imageTag, String imageUrl, ReaderAttachment attachment) {
+        // TODO
     }
 
     /*
      * returns the basic content of the post tweaked for use here
      */
     String getPostContent() {
-        if (mPost == null) {
-            return "";
-        } else if (mPost.hasText()) {
+        if (mPost.hasText()) {
             // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
             String content = mPost.getText().replace("src=\"//", "src=\"http://");
             // insert video div before content if this is a VideoPress post (video otherwise won't appear)
@@ -59,13 +123,7 @@ public class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    String getPostContentForWebView(Context context) {
-        if (mPost == null || context == null) {
-            return "";
-        }
-
-        String content = getPostContent();
-
+    private String getPostContentForWebView(String content) {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't strictly necessary, but source is invalid html5 without one
@@ -109,11 +167,8 @@ public class ReaderPostRenderer {
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript(mPost)) {
-            int videoWidth = DisplayUtils.pxToDp(context,
-                    mResourceVars.fullSizeImageWidth - (mResourceVars.marginLarge * 2));
-            int videoHeight = (int) (videoWidth * 0.5625f);
-            sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
-                    .append("                  height: ").append(videoHeight).append("px !important; }");
+            sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidth).append("px !important;")
+                    .append("                  height: ").append(mResourceVars.videoHeight).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
