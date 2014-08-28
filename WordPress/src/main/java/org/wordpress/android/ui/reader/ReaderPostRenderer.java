@@ -106,8 +106,9 @@ public class ReaderPostRenderer {
 
         // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
         // https://code.google.com/p/android/issues/detail?id=4401
-        String baseUrl = (mPost.hasBlogUrl() ? mPost.getBlogUrl() : null);
-        webView.loadDataWithBaseURL(baseUrl, htmlContent, "text/html", "UTF-8", null);
+        // also important to use null as the baseUrl since onPageFinished
+        // doesn't appear to fire when it's set to an actual url
+        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
     }
 
     /*
@@ -149,7 +150,10 @@ public class ReaderPostRenderer {
         if (post == null) {
             return "";
         } else if (post.hasText()) {
-            String content = post.getText();
+            // some content (such as Vimeo embeds) don't have "http:" before links, correct this
+            // here - note that we can't fix this by passing a baseUrl in renderContent because
+            // that messages with webView's onPageFinished listener (no idea why)
+            String content = post.getText().replace("src=\"//", "src=\"http://");
             if (post.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(post.getFeaturedImage())) {
                 // if the post has a featured image other than an mshot that's not in the content,
                 // add it to the top of the content
@@ -200,10 +204,9 @@ public class ReaderPostRenderer {
                mResourceVars.marginSmall, mResourceVars.marginSmall))
                .append("    p:first-child { margin-top: 0px; }");
 
-        // add border, background color, and padding to pre blocks, and add overflow scrolling
+        // add background color and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
-              .append("        border: 1px solid ").append(mResourceVars.greyLightStr).append("; ")
               .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
               .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
 
@@ -224,8 +227,12 @@ public class ReaderPostRenderer {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
-        // light grey background behind full-sized images so something appears while they're loading
-        sbHtml.append("  img.size-full { display: block; background-color: ").append(mResourceVars.greyExtraLightStr).append("; }");
+        // don't allow any image to be wider than the viewport
+        sbHtml.append("  img { max-width: 100% !important; height: auto; }");
+
+        // light grey background for large images so something appears while they're loading
+        sbHtml.append("  img.size-full, img.size-large { display: block;")
+              .append("     background-color ").append(mResourceVars.greyExtraLightStr).append("; }");
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
@@ -246,7 +253,9 @@ public class ReaderPostRenderer {
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
-        sbHtml.append("</style></head><body>")
+        sbHtml.append("</style>");
+
+        sbHtml.append("</head><body>")
               .append(content)
               .append("</body></html>");
 
