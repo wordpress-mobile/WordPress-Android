@@ -122,8 +122,11 @@ public class ReaderPostRenderer {
         // construct new image tag
         int width = mResourceVars.fullSizeImageWidth;
         int height = (int)(width * ratio);
+
+        //AppLog.d(AppLog.T.READER, String.format("reader renderer > ratio %f, width %d, height %d", ratio, width, height));
+
         String newImageTag
-                = String.format("<img class='size-full' src='%s' width='%d' height='%d'",
+                = String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
                                 attachment.getUrl(), width, height);
 
         // replace existing tag with new one
