@@ -47,7 +47,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:background="@drawable/notifications_list_divider_full_width" />
 
     </LinearLayout>

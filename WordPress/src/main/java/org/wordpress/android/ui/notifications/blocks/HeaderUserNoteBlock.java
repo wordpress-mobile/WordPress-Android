@@ -77,7 +77,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     }
 
     private String getUserUrl() {
-        return JSONUtil.queryJSON(mHeaderArray, "[0].ids[0].url", "");
+        return JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].url", "");
     }
 
     private JSONObject getSnippet() {
@@ -131,8 +131,8 @@ public class HeaderUserNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ids[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ids[0].id", 0));
+                    long siteId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+                    long userId = Long.valueOf(JSONUtil.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
                     if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
                         mGravatarClickedListener.onGravatarClicked(siteId, userId);
                     }
