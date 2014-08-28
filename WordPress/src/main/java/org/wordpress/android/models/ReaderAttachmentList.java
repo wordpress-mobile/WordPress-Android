@@ -24,4 +24,5 @@ public class ReaderAttachmentList extends ArrayList<ReaderAttachment> {
         }
 
         return attachments;
-    }}
+    }
+}
