@@ -154,7 +154,6 @@ public class ReaderPostRenderer {
                 Uri uri = Uri.parse(post.getFeaturedImage());
                 String path = StringUtils.notNullStr(uri.getLastPathSegment());
                 if (!content.contains(path)) {
-                    AppLog.d(AppLog.T.READER, "reader renderer > added featured image to content");
                     content = getFeaturedImageHtml(post, resourceVars) + content;
                 }
             }
@@ -172,18 +171,20 @@ public class ReaderPostRenderer {
      * returns the HTML to use when inserting a featured image into the rendered content
      */
     private static String getFeaturedImageHtml(ReaderPost post, ReaderResourceVars resourceVars) {
-        String imageUrl;
         if (resourceVars != null) {
-            imageUrl = ReaderUtils.getResizedImageUrl(
-                            post.getFeaturedImage(),
-                            resourceVars.fullSizeImageWidth,
-                            resourceVars.featuredImageHeight,
-                            post.isPrivate);
+            int width = resourceVars.fullSizeImageWidth;
+            int height = resourceVars.featuredImageHeight;
+            String imageUrl = ReaderUtils.getResizedImageUrl(
+                    post.getFeaturedImage(),
+                    width,
+                    height,
+                    post.isPrivate);
+            AppLog.d(AppLog.T.READER, "reader renderer > featured image added to content");
+            return String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
+                    imageUrl, width, height);
         } else {
-            imageUrl = post.getFeaturedImage();
+            return String.format("<img class='size-full' src='%s' />", post.getFeaturedImage());
         }
-
-        return String.format("<p><img class='size-full' src='%s' /></p>", imageUrl);
     }
 
     /*
