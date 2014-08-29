@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
  * height/width attributes on image tags to (1) avoid the webView resizing as images are
  * loaded, and (2) avoid requesting images at a size larger than the display
  */
-public class ReaderPostRenderer {
+class ReaderPostRenderer {
 
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
@@ -116,17 +116,12 @@ public class ReaderPostRenderer {
         if (attach != null && attach.isImage()) {
             origWidth = attach.width;
             origHeight = attach.height;
-            AppLog.d(AppLog.T.READER, "reader renderer > setting size from attachment");
         } else if (imageUrl.contains("files.wordpress.com")) {
             Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
             origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
             origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
-            if (origWidth > 0) {
-                AppLog.d(AppLog.T.READER, "reader renderer > setting size from query params");
-            }
         } else {
-            origWidth = 0;
-            origHeight = 0;
+            return;
         }
 
         int newWidth;
@@ -139,7 +134,6 @@ public class ReaderPostRenderer {
             newWidth = mResourceVars.fullSizeImageWidth;
             newHeight = 0;
         } else {
-            AppLog.d(AppLog.T.READER, "reader renderer > no size for " + imageUrl);
             return;
         }
 
