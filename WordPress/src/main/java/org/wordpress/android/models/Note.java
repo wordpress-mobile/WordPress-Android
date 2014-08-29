@@ -5,7 +5,6 @@ package org.wordpress.android.models;
 
 import android.text.Html;
 import android.text.Spannable;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -442,7 +441,6 @@ public class Note extends Syncable {
         };
 
         public Schema() {
-            // save an index with a timestamp
             addIndex(sNoteIndexer);
         }
 

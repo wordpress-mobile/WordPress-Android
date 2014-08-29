@@ -1,7 +1,6 @@
 package org.wordpress.android.util;
 
 import android.text.format.DateUtils;
-import android.text.format.Time;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
