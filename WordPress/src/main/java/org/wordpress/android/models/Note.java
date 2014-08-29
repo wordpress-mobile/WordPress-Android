@@ -60,8 +60,9 @@ public class Note extends Syncable {
     public static enum NoteTimeGroup {
         GROUP_TODAY,
         GROUP_YESTERDAY,
-        GROUP_LAST_WEEK,
-        GROUP_OLDER
+        GROUP_OLDER_TWO_DAYS,
+        GROUP_OLDER_WEEK,
+        GROUP_OLDER_MONTH
     }
 
     /**
@@ -166,16 +167,16 @@ public class Note extends Syncable {
     }
 
     public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
-        timestamp *= 1000;
-
-        if (DateUtils.isToday(timestamp)) {
-            return NoteTimeGroup.GROUP_TODAY;
-        } else if (DateTimeUtils.isYesterday(timestamp)) {
+        if (DateTimeUtils.isDaysOlderThan(timestamp, 30)) {
+            return NoteTimeGroup.GROUP_OLDER_MONTH;
+        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 7)) {
+            return NoteTimeGroup.GROUP_OLDER_WEEK;
+        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 2)) {
+            return NoteTimeGroup.GROUP_OLDER_TWO_DAYS;
+        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 1)) {
             return NoteTimeGroup.GROUP_YESTERDAY;
-        }  else if (DateTimeUtils.isWithinSameWeek(timestamp)) {
-            return NoteTimeGroup.GROUP_LAST_WEEK;
         } else {
-            return NoteTimeGroup.GROUP_OLDER;
+            return NoteTimeGroup.GROUP_TODAY;
         }
     }
 

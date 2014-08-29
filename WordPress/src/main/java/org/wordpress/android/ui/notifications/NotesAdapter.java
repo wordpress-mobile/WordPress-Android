@@ -110,7 +110,6 @@ class NotesAdapter extends CursorAdapter {
         view.setActivated(mShouldHighlightRows && objectCursor.getPosition() == mSelectedPosition);
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
-        noteViewHolder.setNoteId(objectCursor.getSimperiumKey());
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
@@ -128,10 +127,12 @@ class NotesAdapter extends CursorAdapter {
                 noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_today).toUpperCase());
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_YESTERDAY) {
                 noteViewHolder.headerText.setText(context.getString(R.string.stats_timeframe_yesterday).toUpperCase());
-            } else if (timeGroup == Note.NoteTimeGroup.GROUP_LAST_WEEK) {
-                noteViewHolder.headerText.setText(context.getString(R.string.last_week).toUpperCase());
+            } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
+                noteViewHolder.headerText.setText(context.getString(R.string.older_two_days).toUpperCase());
+            } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_WEEK) {
+                noteViewHolder.headerText.setText(context.getString(R.string.older_last_week).toUpperCase());
             } else {
-                noteViewHolder.headerText.setText(context.getString(R.string.older).toUpperCase());
+                noteViewHolder.headerText.setText(context.getString(R.string.older_month).toUpperCase());
             }
 
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
@@ -215,16 +216,6 @@ class NotesAdapter extends CursorAdapter {
         private final TextView txtDetail;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
-
-        private String mNoteId;
-
-        public String getNoteId() {
-            return mNoteId;
-        }
-
-        public void setNoteId(String noteId) {
-            this.mNoteId = noteId;
-        }
 
         NoteViewHolder(View view) {
             headerView = view.findViewById(R.id.time_header);

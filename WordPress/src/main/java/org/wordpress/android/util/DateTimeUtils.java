@@ -148,29 +148,10 @@ public class DateTimeUtils {
     }
 
     /**
-     * @return true if the supplied when is yesterday else false
-     * Based on isToday from DateUtils class
+     * @return true if the supplied 'whenSeconds' is older than the number of days
      */
-    public static boolean isYesterday(long when) {
-        Time time = new Time();
-        time.set(when);
-
-        int thenYear = time.year;
-        int thenMonth = time.month;
-        int thenMonthDay = time.monthDay;
-
-        time.set(System.currentTimeMillis());
-        return (thenYear == time.year)
-                && (thenMonth == time.month)
-                && (thenMonthDay == time.monthDay - 1);
-    }
-
-    /**
-     * @return true if the supplied when is within 7 days of now
-     */
-    public static boolean isWithinSameWeek(long when) {
-        long oneWeekMillis = 60 * 60 * 24 * 7 * 1000;
-
-        return System.currentTimeMillis() - when <= oneWeekMillis;
+    public static boolean isDaysOlderThan(long whenSeconds, int days) {
+        int daysInSeconds = 60 * 60 * 24 * days;
+        return whenSeconds < (System.currentTimeMillis() / 1000) - daysInSeconds;
     }
 }

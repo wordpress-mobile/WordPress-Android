@@ -471,8 +471,9 @@
     <string name="tooltip_follow">Follow or unfollow this blog</string>
     <string name="reply_failed">Reply failed</string>
     <string name="notifications_empty_list">No notifications</string>
-    <string name="last_week">Last week</string>
-    <string name="older">Older</string>
+    <string name="older_two_days">Older than two days</string>
+    <string name="older_last_week">Older than a week</string>
+    <string name="older_month">Older than a month</string>
     <string name="more">More</string>
 
     <!-- reader -->
