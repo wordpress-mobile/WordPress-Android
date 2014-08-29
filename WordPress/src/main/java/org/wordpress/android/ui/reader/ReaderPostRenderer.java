@@ -93,17 +93,18 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * called when image scanner finds an image
+     * called when image scanner finds an image, replaces the image tag with one that
+     * has height & width set if possible
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
-        int origWidth;
-        int origHeight;
-
         // skip featured images inserted by getFeaturedImageHtml() since they already
         // have their height & width set
-        if (imageUrl.contains("featured image")) {
+        if (imageUrl.contains("featured-image")) {
             return;
         }
+
+        int origWidth;
+        int origHeight;
 
         // first try to get original image size from attachments, then try to get it from the url
         // if it's an obvious WordPress image
@@ -146,30 +147,31 @@ public class ReaderPostRenderer {
     }
 
     /*
+     * returns true if the post has a featured image and there are no images in the
+     * post's content - when this is the case, the featured image is inserted at
+     * the top of the content
+     */
+    private static boolean shouldAddFeaturedImage(ReaderPost post) {
+        return post != null
+            && post.hasFeaturedImage()
+            && !post.getText().contains("<img")
+            && !PhotonUtils.isMshotsUrl(post.getFeaturedImage());
+    }
+
+    /*
      * returns the basic content of the post tweaked for use here
      */
     static String getPostContent(ReaderPost post, ReaderResourceVars resourceVars) {
         if (post == null) {
             return "";
-        } else if (post.hasText()) {
+        } else {
             // some content (such as Vimeo embeds) don't have "http:" before links
             String content = post.getText().replace("src=\"//", "src=\"http://");
-            if (post.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(post.getFeaturedImage())) {
-                // if the post has a featured image other than an mshot that's not in the content,
-                // add it to the top of the content
-                Uri uri = Uri.parse(post.getFeaturedImage());
-                String path = StringUtils.notNullStr(uri.getLastPathSegment());
-                if (!content.contains(path)) {
-                    content = getFeaturedImageHtml(post, resourceVars) + content;
-                }
+            if (shouldAddFeaturedImage(post)) {
+                AppLog.w(AppLog.T.READER, "reader renderer > added featured image");
+                content = getFeaturedImageHtml(post, resourceVars) + content;
             }
             return content;
-        } else if (post.hasFeaturedImage()) {
-            // some photo blogs have posts with empty content but still have a featured image, so
-            // use the featured image as the content
-            return getFeaturedImageHtml(post, resourceVars);
-        } else {
-            return "";
         }
     }
 
@@ -185,8 +187,8 @@ public class ReaderPostRenderer {
                     width,
                     height,
                     post.isPrivate);
-            AppLog.d(AppLog.T.READER, "reader renderer > featured image added to content");
-            return String.format("<img class='size-full' src='%s' width='%d' height='%d' alt='featured image' />",
+            // add unused class 'featured-image' so it can be detected by replaceImageTag()
+            return String.format("<img class='size-full featured-image' src='%s' width='%d' height='%d' />",
                     imageUrl, width, height);
         } else {
             return String.format("<img class='size-full' src='%s' />", post.getFeaturedImage());
