@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 84;
+    private static final int DB_VERSION = 85;
 
     /*
      * version history
@@ -41,6 +41,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   82 - added idx_posts_timestamp to tbl_posts
      *   83 - removed tag_list from tbl_posts
      *   84 - added tbl_attachments
+     *   85 - removed tbl_attachments, added attachments_json to tbl_posts
      */
 
     /*
@@ -116,7 +117,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.createTables(db);
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
-        ReaderAttachmentTable.createTables(db);
     }
 
     private void dropAllTables(SQLiteDatabase db) {
@@ -127,7 +127,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderUserTable.dropTables(db);
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
-        ReaderAttachmentTable.dropTables(db);
     }
 
     /*
@@ -179,12 +178,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 int numTagsPurged = ReaderTagTable.purge(db);
                 if (numTagsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d tags purged", numTagsPurged));
-                }
-
-                // purge unattached post attachments
-                int numAttachPurged = ReaderAttachmentTable.purge(db);
-                if (numAttachPurged > 0) {
-                    AppLog.i(T.READER, String.format("%d attachments purged", numAttachPurged));
                 }
             }
             db.setTransactionSuccessful();

@@ -1,6 +1,10 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
+
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
@@ -8,7 +12,20 @@ import java.util.Iterator;
 
 public class ReaderAttachmentList extends ArrayList<ReaderAttachment> {
 
-    public static ReaderAttachmentList fromJson(long blogId, long postId, JSONObject json) {
+    public static ReaderAttachmentList fromJsonString(String strJson) {
+        if (TextUtils.isEmpty(strJson)) {
+            return new ReaderAttachmentList();
+        }
+
+        try {
+            return fromJson(new JSONObject(strJson));
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.READER, e);
+            return new ReaderAttachmentList();
+        }
+    }
+
+    private static ReaderAttachmentList fromJson(JSONObject json) {
         ReaderAttachmentList attachments = new ReaderAttachmentList();
         if (json == null) {
             return attachments;
@@ -21,7 +38,7 @@ public class ReaderAttachmentList extends ArrayList<ReaderAttachment> {
 
         while (it.hasNext()) {
             JSONObject jsonAttach = json.optJSONObject(it.next());
-            attachments.add(ReaderAttachment.fromJson(blogId, postId, jsonAttach));
+            attachments.add(ReaderAttachment.fromJson(jsonAttach));
         }
 
         return attachments;

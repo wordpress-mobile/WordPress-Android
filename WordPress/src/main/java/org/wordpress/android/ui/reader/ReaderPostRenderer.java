@@ -24,10 +24,10 @@ public class ReaderPostRenderer {
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final WeakReference<ReaderWebView> mWeakWebView;
-    private final ReaderAttachmentList mAttachments;
 
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
+    private ReaderAttachmentList mAttachments;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
@@ -40,7 +40,6 @@ public class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<ReaderWebView>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
-        mAttachments = (mPost.hasAttachments() ? mPost.getAttachments() : new ReaderAttachmentList());
     }
 
     void beginRender() {
@@ -51,6 +50,8 @@ public class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
+                mAttachments = mPost.getAttachments();
+
                 ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
                     @Override
                     public void onImageFound(String imageTag, String imageUrl, int start, int end) {
@@ -111,16 +112,21 @@ public class ReaderPostRenderer {
 
         // first try to get original image size from attachments, then try to get it from the url
         // if it's an obvious WordPress image
-        ReaderAttachment attach = mAttachments.get(imageUrl);
+        ReaderAttachment attach = (mAttachments != null ? mAttachments.get(imageUrl) : null);
         if (attach != null && attach.isImage()) {
             origWidth = attach.width;
             origHeight = attach.height;
+            AppLog.d(AppLog.T.READER, "reader renderer > setting size from attachment");
         } else if (imageUrl.contains("files.wordpress.com")) {
             Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
             origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
             origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
+            if (origWidth > 0) {
+                AppLog.d(AppLog.T.READER, "reader renderer > setting size from query params");
+            }
         } else {
-            return;
+            origWidth = 0;
+            origHeight = 0;
         }
 
         int newWidth;
@@ -133,6 +139,7 @@ public class ReaderPostRenderer {
             newWidth = mResourceVars.fullSizeImageWidth;
             newHeight = 0;
         } else {
+            AppLog.d(AppLog.T.READER, "reader renderer > no size for " + imageUrl);
             return;
         }
 
@@ -167,7 +174,7 @@ public class ReaderPostRenderer {
         // some content (such as Vimeo embeds) don't have "http:" before links
         String content = mPost.getText().replace("src=\"//", "src=\"http://");
         if (shouldAddFeaturedImage()) {
-            AppLog.w(AppLog.T.READER, "reader renderer > added featured image");
+            AppLog.d(AppLog.T.READER, "reader renderer > added featured image");
             content = getFeaturedImageHtml() + content;
         }
         return content;

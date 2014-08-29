@@ -52,7 +52,7 @@ public class ReaderPost {
     public boolean isLikesEnabled;
     public boolean isSharingEnabled;    // currently unused
 
-    private ReaderAttachmentList attachments;
+    private String attachmentsJson;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -158,7 +158,10 @@ public class ReaderPost {
         assignTagsFromJson(post, json.optJSONObject("tags"));
 
         // parse the attachments
-        assignAttachmentsFromJson(post, json.optJSONObject("attachments"));
+        JSONObject jsonAttachments = json.optJSONObject("attachments");
+        if (jsonAttachments != null) {
+            post.attachmentsJson = jsonAttachments.toString();
+        }
 
         // the single-post sites/$site/posts/$post endpoint returns all site metadata
         // under meta/data/site (assuming ?meta=site was added to the request)
@@ -171,10 +174,6 @@ public class ReaderPost {
         }
 
         return post;
-    }
-
-    private static void assignAttachmentsFromJson(ReaderPost post, JSONObject jsonAttachments) {
-        post.setAttachments(ReaderAttachmentList.fromJson(post.blogId, post.postId, jsonAttachments));
     }
 
      /*
@@ -375,6 +374,26 @@ public class ReaderPost {
         }
     }
 
+    /*
+     * attachments are stored as the actual JSON to avoid having a separate table for
+     * them, may need to revisit this if/when attachments become more important
+     */
+    public String getAttachmentsJson() {
+        return StringUtils.notNullStr(attachmentsJson);
+    }
+    public void setAttachmentsJson(String json) {
+        attachmentsJson = StringUtils.notNullStr(json);
+        mAttachments = null;
+    }
+
+    private transient ReaderAttachmentList mAttachments;
+    public ReaderAttachmentList getAttachments() {
+        if (mAttachments == null) {
+            mAttachments = ReaderAttachmentList.fromJsonString(attachmentsJson);
+        }
+        return mAttachments;
+    }
+
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
     }
@@ -424,21 +443,6 @@ public class ReaderPost {
     public boolean isWP() {
         return !isExternal;
     }
-
-    public boolean hasAttachments() {
-        return (attachments != null && attachments.size() > 0);
-    }
-    public ReaderAttachmentList getAttachments() {
-        return attachments;
-    }
-    public void setAttachments(ReaderAttachmentList attachments) {
-        if (attachments != null) {
-            this.attachments = (ReaderAttachmentList) attachments.clone();
-        } else {
-            this.attachments = new ReaderAttachmentList();
-        }
-    }
-
 
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
