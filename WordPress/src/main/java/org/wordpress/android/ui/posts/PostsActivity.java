@@ -116,15 +116,17 @@ public class PostsActivity extends WPActionBarActivity
             showErrorDialogIfNeeded(extras);
         }
 
-        if (mIsPage)
+        if (mIsPage) {
             setTitle(getString(R.string.pages));
-        else
+        } else {
             setTitle(getString(R.string.posts));
+        }
 
         WordPress.currentPost = null;
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             popPostDetail();
+        }
 
         attemptToSelectPost();
     }
