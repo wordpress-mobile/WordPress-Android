@@ -686,6 +686,10 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                         // Read the current wpcom username from blog settings, then read it from
                         // the app wpcom account.
                         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+                        // If currentBlog is null at this point just exit.
+                        if (currentBlog==null) {
+                            return;
+                        }
                         String username = StringUtils.notNullStr(currentBlog.getDotcom_username());
                         if (username.equals("")) {
                             username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
