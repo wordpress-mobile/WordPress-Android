@@ -297,6 +297,9 @@ public class StatsUtils {
      */
     public static StatsCredentials getBlogStatsCredentials(int localTableBlogID) {
         Blog currentBlog = WordPress.getBlog(localTableBlogID);
+        if (currentBlog == null) {
+            return null;
+        }
         String statsAuthenticatedUser = currentBlog.getDotcom_username();
         String statsAuthenticatedPassword = currentBlog.getDotcom_password();
 
