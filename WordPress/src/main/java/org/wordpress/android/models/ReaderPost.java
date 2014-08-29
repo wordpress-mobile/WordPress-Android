@@ -454,12 +454,8 @@ public class ReaderPost {
         if (featuredImageForDisplay == null) {
             if (!hasFeaturedImage()) {
                 featuredImageForDisplay = "";
-            } else if (isPrivate) {
-                // images in private posts can't use photon, so handle separately
-                featuredImageForDisplay = ReaderUtils.getPrivateImageForDisplay(featuredImage, width, height);
             } else {
-                // not private, so set to correctly sized photon url
-                featuredImageForDisplay = PhotonUtils.getPhotonImageUrl(featuredImage, width, height);
+                featuredImageForDisplay = ReaderUtils.getResizedImageUrl(featuredImage, width, height, isPrivate);
             }
         }
         return featuredImageForDisplay;

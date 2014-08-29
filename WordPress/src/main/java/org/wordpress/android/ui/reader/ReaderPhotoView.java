@@ -21,7 +21,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.PhotonUtils;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -77,13 +76,8 @@ public class ReaderPhotoView extends RelativeLayout {
                             boolean isPrivate,
                             PhotoViewListener listener) {
         int loResWidth = (int) (hiResWidth * 0.10f);
-        if (isPrivate) {
-            mLoResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, loResWidth, 0);
-            mHiResImageUrl = ReaderUtils.getPrivateImageForDisplay(imageUrl, hiResWidth, 0);
-        } else {
-            mLoResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, loResWidth, 0);
-            mHiResImageUrl = PhotonUtils.getPhotonImageUrl(imageUrl, hiResWidth, 0);
-        }
+        mLoResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate);
+        mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate);
 
         mPhotoViewListener = listener;
         loadLoResImage();

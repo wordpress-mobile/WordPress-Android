@@ -9,19 +9,20 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 
 /*
- * class which holds all resource-based variables used by this fragment
+ * class which holds all resource-based variables used when rendering post detail
  */
 class ReaderResourceVars {
     final int displayWidth;
     final int actionBarHeight;
     final int likeAvatarSize;
-    final int videoOverlaySize;
 
     final int marginLarge;
     final int marginSmall;
     final int marginExtraSmall;
     final int listMarginWidth;
+
     final int fullSizeImageWidth;
+    final int featuredImageHeight;
 
     final int videoWidth;
     final int videoHeight;
@@ -39,7 +40,7 @@ class ReaderResourceVars {
         displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         actionBarHeight = DisplayUtils.getActionBarHeight(context);
         likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
-        videoOverlaySize = resources.getDimensionPixelSize(R.dimen.reader_video_overlay_size);
+        featuredImageHeight = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         marginLarge = resources.getDimensionPixelSize(R.dimen.margin_large);
         marginSmall = resources.getDimensionPixelSize(R.dimen.margin_small);

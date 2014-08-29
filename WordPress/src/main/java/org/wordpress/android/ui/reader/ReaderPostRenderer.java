@@ -11,7 +11,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -44,7 +43,7 @@ public class ReaderPostRenderer {
 
     void beginRender() {
         // start with the basic content
-        final String content = getPostContent(mPost);
+        final String content = getPostContent(mPost, mResourceVars);
         mRenderBuilder = new StringBuilder(content);
 
         // start image scanner to find images so we can replace them with ones that have h/w set
@@ -127,13 +126,7 @@ public class ReaderPostRenderer {
             return;
         }
 
-        String newImageUrl;
-        if (mPost.isPrivate) {
-            newImageUrl = ReaderUtils.getPrivateImageForDisplay(UrlUtils.removeQuery(imageUrl), newWidth, newHeight);
-        } else {
-            newImageUrl = PhotonUtils.getPhotonImageUrl(UrlUtils.removeQuery(imageUrl), newWidth, newHeight);
-        }
-
+        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, newWidth, newHeight, mPost.isPrivate);
         String newImageTag =
                 String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
                                                       newImageUrl, newWidth, newHeight);
@@ -149,13 +142,11 @@ public class ReaderPostRenderer {
     /*
      * returns the basic content of the post tweaked for use here
      */
-    static String getPostContent(ReaderPost post) {
+    static String getPostContent(ReaderPost post, ReaderResourceVars resourceVars) {
         if (post == null) {
             return "";
         } else if (post.hasText()) {
-            // some content (such as Vimeo embeds) don't have "http:" before links, correct this
-            // here - note that we can't fix this by passing a baseUrl in renderContent because
-            // that messages with webView's onPageFinished listener (no idea why)
+            // some content (such as Vimeo embeds) don't have "http:" before links
             String content = post.getText().replace("src=\"//", "src=\"http://");
             if (post.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(post.getFeaturedImage())) {
                 // if the post has a featured image other than an mshot that's not in the content,
@@ -164,18 +155,35 @@ public class ReaderPostRenderer {
                 String path = StringUtils.notNullStr(uri.getLastPathSegment());
                 if (!content.contains(path)) {
                     AppLog.d(AppLog.T.READER, "reader renderer > added featured image to content");
-                    content = String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage())
-                            + content;
+                    content = getFeaturedImageHtml(post, resourceVars) + content;
                 }
             }
             return content;
         } else if (post.hasFeaturedImage()) {
             // some photo blogs have posts with empty content but still have a featured image, so
             // use the featured image as the content
-            return String.format("<p><img class='img.size-full' src='%s' /></p>", post.getFeaturedImage());
+            return getFeaturedImageHtml(post, resourceVars);
         } else {
             return "";
         }
+    }
+
+    /*
+     * returns the HTML to use when inserting a featured image into the rendered content
+     */
+    private static String getFeaturedImageHtml(ReaderPost post, ReaderResourceVars resourceVars) {
+        String imageUrl;
+        if (resourceVars != null) {
+            imageUrl = ReaderUtils.getResizedImageUrl(
+                            post.getFeaturedImage(),
+                            resourceVars.fullSizeImageWidth,
+                            resourceVars.featuredImageHeight,
+                            post.isPrivate);
+        } else {
+            imageUrl = post.getFeaturedImage();
+        }
+
+        return String.format("<p><img class='size-full' src='%s' /></p>", imageUrl);
     }
 
     /*

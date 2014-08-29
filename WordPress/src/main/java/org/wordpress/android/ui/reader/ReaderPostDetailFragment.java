@@ -955,7 +955,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         // must use getPostContent() so featured image added for display is seen
         // by the photo viewer
-        String postContent = ReaderPostRenderer.getPostContent(mPost);
+        String postContent = ReaderPostRenderer.getPostContent(mPost, null);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
 
         ReaderActivityLauncher.showReaderPhotoViewer(
