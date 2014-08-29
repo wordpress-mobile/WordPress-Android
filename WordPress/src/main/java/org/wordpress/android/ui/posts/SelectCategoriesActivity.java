@@ -145,17 +145,6 @@ public class SelectCategoriesActivity extends ListActivity {
         mListScrollPositionManager.restoreScrollOffset();
     }
 
-
-    private void populateOrFetchCategories() {
-        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
-        if (mCategories.getChildren().size() > 0) {
-            populateCategoryList();
-        } else {
-            mPullToRefreshHelper.setRefreshing(true);
-            refreshCategories();
-        }
-    }
-
     final Runnable mUpdateResults = new Runnable() {
         public void run() {
             mPullToRefreshHelper.setRefreshing(false);
