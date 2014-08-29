@@ -336,6 +336,14 @@ public class StatsUtils {
         }
     }
 
+    /**
+     * Return the remote blogId as stored on the wpcom backend.
+     * <p>
+     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
+     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
+     * </p>
+     * @return String  blogId or null
+     */
     public static String getBlogId(int localTableBlogID) {
         Blog currentBlog = WordPress.getBlog(localTableBlogID);
         if (currentBlog == null) {
@@ -347,5 +355,4 @@ public class StatsUtils {
             return currentBlog.getApi_blogid();
         }
     }
-
 }
