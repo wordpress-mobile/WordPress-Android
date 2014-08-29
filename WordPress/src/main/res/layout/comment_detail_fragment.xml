@@ -7,7 +7,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/calypso_blue_light">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -28,7 +29,8 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/margin_extra_large"
                 android:paddingRight="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_large">
+                android:paddingTop="@dimen/margin_large"
+                android:background="@color/white">
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/image_avatar"
@@ -98,12 +100,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingLeft="@dimen/margin_extra_large"
+                android:paddingRight="@dimen/margin_extra_large"
                 android:textColor="@color/grey_dark"
                 android:textColorLink="@color/reader_hyperlink"
+                android:background="@color/white"
                 android:textIsSelectable="false"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="text_content" />
 
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/notifications_list_divider_full_width" />
         </LinearLayout>
     </ScrollView>
 
