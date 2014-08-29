@@ -99,6 +99,12 @@ public class ReaderPostRenderer {
         int origWidth;
         int origHeight;
 
+        // skip featured images inserted by getFeaturedImageHtml() since they already
+        // have their height & width set
+        if (imageUrl.contains("featured image")) {
+            return;
+        }
+
         // first try to get original image size from attachments, then try to get it from the url
         // if it's an obvious WordPress image
         ReaderAttachment attach = mAttachments.get(imageUrl);
@@ -180,7 +186,7 @@ public class ReaderPostRenderer {
                     height,
                     post.isPrivate);
             AppLog.d(AppLog.T.READER, "reader renderer > featured image added to content");
-            return String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
+            return String.format("<img class='size-full' src='%s' width='%d' height='%d' alt='featured image' />",
                     imageUrl, width, height);
         } else {
             return String.format("<img class='size-full' src='%s' />", post.getFeaturedImage());
