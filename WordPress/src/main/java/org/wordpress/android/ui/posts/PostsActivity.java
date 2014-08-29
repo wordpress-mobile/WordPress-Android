@@ -202,13 +202,15 @@ public class PostsActivity extends WPActionBarActivity
         return mPostList.isRefreshing();
     }
 
-    public void checkForLocalChanges(boolean shouldPrompt) {
+    private boolean hasLocalChanges() {
+        return WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+    }
+
+    public void requestPostsIfNoLocalChanges(boolean shouldPrompt) {
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
-        boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(),
-                mIsPage);
-        if (hasLocalChanges) {
+        if (hasLocalChanges()) {
             if (!shouldPrompt) {
                 return;
             }
@@ -269,7 +271,7 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         if (WordPress.postsShouldRefresh) {
-            checkForLocalChanges(false);
+            requestPostsIfNoLocalChanges(false);
             mPostList.setRefreshing(true);
             WordPress.postsShouldRefresh = false;
         }
@@ -411,7 +413,7 @@ public class PostsActivity extends WPActionBarActivity
                 Toast.makeText(PostsActivity.this, getResources().getText((mIsPage) ?
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
-                checkForLocalChanges(false);
+                requestPostsIfNoLocalChanges(false);
                 mPostList.requestPosts(false);
                 mPostList.setRefreshing(true);
             } else {

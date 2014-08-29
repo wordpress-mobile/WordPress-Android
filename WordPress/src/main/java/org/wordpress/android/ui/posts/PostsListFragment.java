@@ -52,8 +52,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle extras = getActivity().getIntent().getExtras();
         if (extras != null) {
             mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
@@ -210,6 +210,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         initPullToRefreshHelper();
         mPullToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
+
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            ((PostsActivity) getActivity()).requestPostsIfNoLocalChanges(false);
+        }
     }
 
     public void onAttach(Activity activity) {
