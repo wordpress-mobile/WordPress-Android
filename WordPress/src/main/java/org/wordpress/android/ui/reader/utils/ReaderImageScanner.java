@@ -19,6 +19,7 @@ public class ReaderImageScanner {
     }
     private final String mContent;
     private final boolean mIsPrivate;
+    private final boolean mContentContainsImages;
     private static final int MIN_FEATURED_IMAGE_WIDTH = 500;
 
     // regex for matching img tags in html content
@@ -39,14 +40,18 @@ public class ReaderImageScanner {
     public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
         mIsPrivate = isPrivate;
+        mContentContainsImages = mContent != null && mContent.contains("<img");
     }
 
+    /*
+     * start scanning the content for images and notify the passed listener about each one
+     */
     public void beginScan(ImageScanListener listener) {
         if (listener == null) {
             throw new IllegalArgumentException("ImageScanListener is required");
         }
 
-        if (mContent == null || !mContent.contains("<img ")) {
+        if (!mContentContainsImages) {
             listener.onScanCompleted();
             return;
         }
@@ -64,12 +69,12 @@ public class ReaderImageScanner {
     }
 
     /*
-     * returns a list of all images in the post content
+     * returns a list of all images in the content
      */
     public ReaderImageList getImageList() {
         ReaderImageList imageList = new ReaderImageList(mIsPrivate);
 
-        if (mContent == null || !mContent.contains("<img ")) {
+        if (!mContentContainsImages) {
             return imageList;
         }
 
@@ -85,10 +90,9 @@ public class ReaderImageScanner {
     /*
      * used when a post doesn't have a featured image assigned, searches post's content
      * for an image that may be large enough to be suitable as a featured image
-     * USAGE: new ReaderFeaturedImageFinder(content).getBestFeaturedImage()
      */
     public String getBestFeaturedImage() {
-        if (mContent == null || !mContent.contains("<img ")) {
+        if (!mContentContainsImages) {
             return null;
         }
 
