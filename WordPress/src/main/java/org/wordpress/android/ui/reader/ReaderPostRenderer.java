@@ -25,7 +25,9 @@ public class ReaderPostRenderer {
     private final ReaderPost mPost;
     private final WeakReference<ReaderWebView> mWeakWebView;
     private final ReaderAttachmentList mAttachments;
+
     private StringBuilder mRenderBuilder;
+    private String mRenderedHtml;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
@@ -42,9 +44,7 @@ public class ReaderPostRenderer {
     }
 
     void beginRender() {
-        // start with the basic content
-        final String content = getPostContent(mPost, mResourceVars);
-        mRenderBuilder = new StringBuilder(content);
+        mRenderBuilder = new StringBuilder(getPostContent());
 
         // start image scanner to find images so we can replace them with ones that have h/w set
         final Handler handler = new Handler();
@@ -60,15 +60,16 @@ public class ReaderPostRenderer {
                     @Override
                     public void onScanCompleted() {
                         final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
+                        mRenderBuilder = null;
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                renderContent(htmlContent);
+                                renderHtmlContent(htmlContent);
                             }
                         });
                     }
                 };
-                ReaderImageScanner scanner = new ReaderImageScanner(content, mPost.isPrivate);
+                ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
                 scanner.beginScan(imageListener);
             }
         }.start();
@@ -77,7 +78,9 @@ public class ReaderPostRenderer {
     /*
      * called once the content is ready to be rendered in the webView
      */
-    private void renderContent(final String htmlContent) {
+    private void renderHtmlContent(final String htmlContent) {
+        mRenderedHtml = htmlContent;
+
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
         if (webView == null) {
@@ -93,8 +96,8 @@ public class ReaderPostRenderer {
     }
 
     /*
-     * called when image scanner finds an image, replaces the image tag with one that
-     * has height & width set if possible
+     * called when image scanner finds an image, tries to replaces the image tag with one that
+     * has height & width attributes set
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
         // skip featured images inserted by getFeaturedImageHtml() since they already
@@ -151,48 +154,45 @@ public class ReaderPostRenderer {
      * post's content - when this is the case, the featured image is inserted at
      * the top of the content
      */
-    private static boolean shouldAddFeaturedImage(ReaderPost post) {
-        return post != null
-            && post.hasFeaturedImage()
-            && !post.getText().contains("<img")
-            && !PhotonUtils.isMshotsUrl(post.getFeaturedImage());
+    private boolean shouldAddFeaturedImage() {
+        return mPost.hasFeaturedImage()
+            && !mPost.getText().contains("<img")
+            && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
     /*
      * returns the basic content of the post tweaked for use here
      */
-    static String getPostContent(ReaderPost post, ReaderResourceVars resourceVars) {
-        if (post == null) {
-            return "";
-        } else {
-            // some content (such as Vimeo embeds) don't have "http:" before links
-            String content = post.getText().replace("src=\"//", "src=\"http://");
-            if (shouldAddFeaturedImage(post)) {
-                AppLog.w(AppLog.T.READER, "reader renderer > added featured image");
-                content = getFeaturedImageHtml(post, resourceVars) + content;
-            }
-            return content;
+    private String getPostContent() {
+        // some content (such as Vimeo embeds) don't have "http:" before links
+        String content = mPost.getText().replace("src=\"//", "src=\"http://");
+        if (shouldAddFeaturedImage()) {
+            AppLog.w(AppLog.T.READER, "reader renderer > added featured image");
+            content = getFeaturedImageHtml() + content;
         }
+        return content;
+    }
+
+    /*
+     * returns the HTML that was last rendered, will be null prior to rendering
+     */
+    String getRenderedHtml() {
+        return mRenderedHtml;
     }
 
     /*
      * returns the HTML to use when inserting a featured image into the rendered content
      */
-    private static String getFeaturedImageHtml(ReaderPost post, ReaderResourceVars resourceVars) {
-        if (resourceVars != null) {
-            int width = resourceVars.fullSizeImageWidth;
-            int height = resourceVars.featuredImageHeight;
-            String imageUrl = ReaderUtils.getResizedImageUrl(
-                    post.getFeaturedImage(),
-                    width,
-                    height,
-                    post.isPrivate);
-            // add unused class 'featured-image' so it can be detected by replaceImageTag()
-            return String.format("<img class='size-full featured-image' src='%s' width='%d' height='%d' />",
-                    imageUrl, width, height);
-        } else {
-            return String.format("<img class='size-full' src='%s' />", post.getFeaturedImage());
-        }
+    private String getFeaturedImageHtml() {
+        String imageUrl = ReaderUtils.getResizedImageUrl(
+                mPost.getFeaturedImage(),
+                mResourceVars.fullSizeImageWidth,
+                mResourceVars.featuredImageHeight,
+                mPost.isPrivate);
+
+        // add unused class 'featured-image' so it can be detected by replaceImageTag()
+        return String.format("<img class='size-full featured-image' src='%s' width='%d' height='%d' />",
+                imageUrl, mResourceVars.fullSizeImageWidth, mResourceVars.featuredImageHeight);
     }
 
     /*
