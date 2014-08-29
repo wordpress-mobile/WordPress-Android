@@ -39,6 +39,7 @@ import net.simonvt.menudrawer.Position;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
@@ -55,13 +56,12 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -529,16 +529,7 @@ public abstract class WPActionBarActivity extends Activity {
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
-            String name;
-            if (account.get("blogName") != null) {
-                name = StringUtils.unescapeHTML(account.get("blogName").toString());
-                if (name.trim().length() == 0) {
-                    name = StringUtils.getHost(account.get("url").toString());
-                }
-            } else {
-                name = StringUtils.getHost(account.get("url").toString());
-            }
-            blogNames[i] = name;
+            blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
             blogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 

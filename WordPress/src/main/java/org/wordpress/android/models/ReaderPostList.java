@@ -2,6 +2,8 @@ package org.wordpress.android.models;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,4 +82,14 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
         return oldestDate;
     }
 
+    /*
+     * return a list of blogId/postId pairs from this list of posts
+     */
+    public ReaderBlogIdPostIdList getBlogIdPostIdList() {
+        ReaderBlogIdPostIdList ids = new ReaderBlogIdPostIdList();
+        for (ReaderPost post: this) {
+            ids.add(new ReaderBlogIdPostId(post.blogId, post.postId));
+        }
+        return ids;
+    }
 }

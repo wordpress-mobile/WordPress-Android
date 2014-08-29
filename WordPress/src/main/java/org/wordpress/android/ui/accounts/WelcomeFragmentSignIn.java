@@ -32,14 +32,15 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -48,6 +49,7 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -632,7 +634,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             // get the user's reader tags so they're available as soon as the Reader is accessed
             if (!mSelfHosted) {
-                ReaderTagActions.updateTags(null);
+                ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS));
             }
 
             if (userBlogList != null) {

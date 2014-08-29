@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_extra_dark">
 
-    <org.wordpress.android.widgets.WPNetworkImageView
-        android:id="@+id/image_photo"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:layout_height="wrap_content" />
 
-    <ProgressBar
-        android:id="@+id/progress"
-        style="@style/ReaderProgressBar"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:background="@drawable/reader_photo_count_bg"
+        android:paddingBottom="@dimen/margin_medium"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="title" />
 
 </RelativeLayout>

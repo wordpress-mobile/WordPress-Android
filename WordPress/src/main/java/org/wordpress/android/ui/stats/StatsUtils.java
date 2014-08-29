@@ -1,18 +1,15 @@
 package org.wordpress.android.ui.stats;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.view.Display;
 
 import com.google.gson.Gson;
 
@@ -40,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * A utility class to help with date parsing and saving summaries in stats
@@ -82,6 +80,59 @@ public class StatsUtils {
         return toMs(getCurrentDate());
     }
 
+    public static String getBlogTimezone(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+
+        JSONObject jsonOptions = blog.getBlogOptionsJSONObject();
+        String timezone = null;
+        if (jsonOptions != null && jsonOptions.has("time_zone")) {
+            try {
+                timezone = jsonOptions.getJSONObject("time_zone").getString("value");
+            } catch (JSONException e) {
+                AppLog.e(T.UTILS, "Cannot load time_zone from options: " + jsonOptions, e);
+            }
+        } else {
+            AppLog.w(T.UTILS, "Blog options are null, or doesn't contain time_zone");
+        }
+        return timezone;
+    }
+
+    public static String getCurrentDateTZ(String blogTimeZoneOption) {
+        Date date = new Date();
+        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+
+        if (blogTimeZoneOption == null) {
+            AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
+            return gmtDf.format(date);
+        }
+
+        if (blogTimeZoneOption.equals("0")) {
+            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        } else if (blogTimeZoneOption.startsWith("-")) {
+            gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+        } else {
+            if (blogTimeZoneOption.startsWith("+")) {
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT" + blogTimeZoneOption));
+            } else {
+                gmtDf.setTimeZone(TimeZone.getTimeZone("GMT+" + blogTimeZoneOption));
+            }
+        }
+        return gmtDf.format(date);
+    }
+
+    public static String getYesterdaysDateTZ(String blogTimeZoneOption) {
+        String todayDateTZ = getCurrentDateTZ(blogTimeZoneOption);
+        long yesterdayMillis = StatsUtils.toMs(todayDateTZ);
+        SimpleDateFormat gmtDf = new SimpleDateFormat("yyyy-MM-dd");
+        return gmtDf.format(new Date(yesterdayMillis - StatsUtils.ONE_DAY));
+    }
+
+    public static long getCurrentDateMsTZ(String blogTimeZoneOption) {
+        return toMs(getCurrentDateTZ(blogTimeZoneOption));
+    }
+
     public static String parseDate(String timestamp, String fromFormat, String toFormat) {
         SimpleDateFormat from = new SimpleDateFormat(fromFormat);
         SimpleDateFormat to = new SimpleDateFormat(toFormat);
@@ -97,7 +148,8 @@ public class StatsUtils {
     public static void saveSummary(String blogId, JSONObject stat) {
         try {
             JSONObject statsObject = stat.getJSONObject("stats");
-            statsObject.put("date", getCurrentDate());
+            String day = stat.getString("day");
+            statsObject.put("day", day);
             FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_SUMMARY + blogId, Context.MODE_PRIVATE);
             fos.write(statsObject.toString().getBytes());
             fos.close();
@@ -166,6 +218,7 @@ public class StatsUtils {
                 fileContent.append(new String(buffer, 0, bytesRead, "ISO-8859-1"));
                 bytesRead = fis.read(buffer);
             }
+            fis.close();
 
             Gson gson = new Gson();
             stat = gson.fromJson(fileContent.toString(), StatsSummary.class);

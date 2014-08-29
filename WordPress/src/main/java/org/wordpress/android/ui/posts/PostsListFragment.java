@@ -22,7 +22,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -139,8 +139,8 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onPostsLoaded(int postCount) {
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some
-                        requestPosts(false);
                         setRefreshing(true);
+                        requestPosts(false);
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
@@ -271,11 +271,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     public void requestPosts(boolean loadMore) {
-        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
+        }
 
-        if (!NetworkUtils.checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {

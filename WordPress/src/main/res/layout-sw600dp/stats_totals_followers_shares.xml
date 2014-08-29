@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_pager_title"
         style="@style/StatsPagerTitle" />
 
@@ -14,7 +14,7 @@
         android:background="@drawable/stats_white_background"
         android:orientation="vertical">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"
@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium">
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_totals_followers_shares_posts_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium">
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_totals_followers_shares_categories_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium">
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_totals_followers_shares_tags_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_totals_followers_shares_header_followers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,7 +131,7 @@
                 android:layout_weight="2"
                 android:padding="@dimen/margin_medium">
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_totals_followers_shares_followers_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
@@ -139,7 +139,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium">
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_totals_followers_shares_comments_count"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
@@ -166,7 +166,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -178,7 +178,7 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_small"
@@ -191,7 +191,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/margin_medium">
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_totals_followers_shares_shares_count"
                 style="@style/StatsHeaderTotals"
                 android:layout_width="wrap_content"
@@ -199,7 +199,7 @@
                 android:layout_alignParentLeft="true"
                 android:text="0" />
 
-            <TextView
+            <org.wordpress.android.widgets.WPTextView
                 style="@style/StatsHeaderTotalsLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

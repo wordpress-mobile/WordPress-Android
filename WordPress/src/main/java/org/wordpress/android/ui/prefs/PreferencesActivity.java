@@ -187,7 +187,6 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();

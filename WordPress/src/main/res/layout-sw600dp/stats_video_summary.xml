@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="@dimen/margin_extra_large" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_video_summary_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,14 +28,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_video_summary_plays_total"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,14 +51,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_video_summary_impressions_total"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -80,14 +80,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_video_summary_playback_length_total"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_video_summary_playback_length_unit"
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
@@ -104,14 +104,14 @@
                 android:layout_weight="1"
                 android:padding="@dimen/margin_medium" >
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/stats_video_summary_bandwidth_total"
                     style="@style/StatsHeaderTotals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 MB" />
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/StatsHeaderTotalsLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

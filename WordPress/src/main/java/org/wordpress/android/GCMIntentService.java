@@ -25,11 +25,11 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -58,7 +58,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = UserPrefs.getCurrentUserId();
+        long wpcomUserID = AppPrefs.getCurrentUserId();
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
@@ -112,18 +112,17 @@ public class GCMIntentService extends GCMBaseIntentService {
             mActiveNotificationsMap.put(note_id, extras);
         }
 
-        String iconURL = extras.getString("icon");
+        String iconUrl = extras.getString("icon");
         Bitmap largeIconBitmap = null;
-        if (iconURL != null) {
+        if (iconUrl != null) {
             try {
-                iconURL = URLDecoder.decode(iconURL, "UTF-8");
+                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
+                int largeIconSize = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
+                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
             } catch (UnsupportedEncodingException e) {
                 AppLog.e(T.NOTIFS, e);
             }
-            float screenDensity = getResources().getDisplayMetrics().densityDpi;
-            int size = Math.round(64 * (screenDensity / 160));
-            String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
-            largeIconBitmap = ImageUtils.downloadBitmap(resizedURL);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -248,9 +247,9 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        // Handle helpshift PNs
+        // Handle Helpshift PNs (Helpshift has been removed but we can't remove that
+        // for now, in case some devices are still registered)
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
-            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -296,7 +295,6 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             NotificationsUtils.registerDeviceForPushNotifications(context, regId);
 
-            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }

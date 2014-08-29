@@ -77,6 +77,7 @@
     <string name="custom_date" comment="one of the media page filter (others are all, images, unattached, custom date), after selecting Custom Date, you can choose a date range to filter media files">Custom Date</string>
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
+    <string name="posting_post">Posting \"%s\"</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
@@ -258,6 +259,8 @@
     <string name="posted_from">Posted from WordPress for Android</string>
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
+    <string name="sending_content">Uploading %s content</string>
+    <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
     <string name="attempting_configure">Signing in…</string>
@@ -594,6 +597,7 @@
     <string name="reader_title_blog_preview">Preview Blog</string>
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
+    <string name="reader_title_photo_viewer">%1$d of %2$d</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
@@ -766,13 +770,4 @@
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <!-- Helpshift overridden strings -->
-    <string name="hs__conversation_detail_error">Describe the problem you\'re seeing</string>
-    <string name="hs__new_conversation_header">Support chat</string>
-    <string name="hs__conversation_header">Support chat</string>
-    <string name="hs__username_blank_error">Enter a valid name</string>
-    <string name="hs__invalid_email_error">Enter a valid email address</string>
 </resources>

@@ -2,7 +2,7 @@ package org.wordpress.android.ui;
 
 import android.content.Context;
 
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 
 public enum ActivityId {
     UNKNOWN("Unknown"),
@@ -30,7 +30,7 @@ public enum ActivityId {
 
     public static void trackLastActivity(Context context, ActivityId activityId) {
         if (activityId != null) {
-            UserPrefs.setLastActivityStr(activityId.name());
+            AppPrefs.setLastActivityStr(activityId.name());
         }
     }
 

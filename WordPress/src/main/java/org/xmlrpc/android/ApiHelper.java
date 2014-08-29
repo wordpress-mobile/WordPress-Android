@@ -24,7 +24,7 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -65,6 +65,7 @@ public class ApiHelper {
         blogOptionsXMLRPCParameters.put("admin_url", "admin_url");
         blogOptionsXMLRPCParameters.put("login_url", "login_url");
         blogOptionsXMLRPCParameters.put("blog_title", "blog_title");
+        blogOptionsXMLRPCParameters.put("time_zone", "time_zone");
     }
 
     public static abstract class HelperAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {

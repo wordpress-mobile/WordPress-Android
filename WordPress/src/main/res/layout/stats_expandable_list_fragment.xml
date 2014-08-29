@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/margin_extra_large" >
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_entry_label"
             style="@style/StatsHeader"
             android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:text="TITLE" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_list_totals_label"
             style="@style/StatsHeader"
             android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
         android:visibility="gone" >
     </ExpandableListView>
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_list_empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

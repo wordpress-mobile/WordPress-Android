@@ -15,12 +15,13 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.lang.ref.WeakReference;
@@ -35,7 +36,7 @@ public class ReaderTagAdapter extends BaseAdapter {
     private ReaderTagList mTags = new ReaderTagList();
     private final TagActionListener mTagListener;
     private final ReaderTagType mTagType;
-    private ReaderActions.DataLoadedListener mDataLoadedListener;
+    private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final Drawable mDrawableAdd;
     private final Drawable mDrawableRemove;
 
@@ -57,7 +58,7 @@ public class ReaderTagAdapter extends BaseAdapter {
         return mWeakContext.get();
     }
 
-    public void refresh(ReaderActions.DataLoadedListener dataListener) {
+    public void refresh(ReaderInterfaces.DataLoadedListener dataListener) {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "tag task is already running");
         }
@@ -70,8 +71,8 @@ public class ReaderTagAdapter extends BaseAdapter {
         refresh(null);
     }
 
-    public int indexOfTag(ReaderTag tag) {
-        return mTags.indexOfTag(tag);
+    public int indexOfTagName(final String tagName) {
+        return mTags.indexOfTagName(tagName);
     }
 
     @Override

@@ -40,6 +40,7 @@ import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.widgets.WPTextView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -339,10 +340,10 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         private LinearLayout mInternalContainer;
         private LinearLayout mArrow;
         private int mArrawWidthPixel;
-        private TextView mVisitors;
-        private TextView mViews;
-        private TextView mViewsForVisitors;
-        private TextView mDate;
+        private WPTextView mVisitors;
+        private WPTextView mViews;
+        private WPTextView mViewsForVisitors;
+        private WPTextView mDate;
 
         public Tooltip(Context ctx) {
             super(ctx);
@@ -377,13 +378,13 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
             int padding = getResources().getDimensionPixelSize(R.dimen.margin_medium);
             mInternalContainer.setPadding(padding, padding, padding, padding);
 
-            mDate = new TextView(ctx);
+            mDate = new WPTextView(ctx);
             setupLabel(mDate);
-            mViews = new TextView(ctx);
+            mViews = new WPTextView(ctx);
             setupLabel(mViews);
-            mVisitors = new TextView(ctx);
+            mVisitors = new WPTextView(ctx);
             setupLabel(mVisitors);
-            mViewsForVisitors = new TextView(ctx);
+            mViewsForVisitors = new WPTextView(ctx);
             setupLabel(mViewsForVisitors);
             addView(mInternalContainer);
         }

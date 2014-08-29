@@ -159,7 +159,7 @@ class ReaderBlogInfoView extends LinearLayout {
         txtFollowCnt.setText(count);
     }
 
-    protected boolean isEmpty() {
+    boolean isEmpty() {
         return mBlogInfo == null;
     }
 
@@ -266,7 +266,9 @@ class ReaderBlogInfoView extends LinearLayout {
                                 ReaderActivityLauncher.showReaderPhotoViewer(
                                         getContext(),
                                         mshotUrl,
+                                        null,
                                         mImageMshot,
+                                        blogInfo.isPrivate,
                                         (int) event.getRawX(),
                                         (int) event.getRawY());
                             }

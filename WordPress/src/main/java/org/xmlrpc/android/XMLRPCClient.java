@@ -1,7 +1,5 @@
 package org.xmlrpc.android;
 
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -33,8 +31,10 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.SequenceInputStream;
 import java.io.StringWriter;
 import java.net.URI;
@@ -56,6 +56,11 @@ import javax.net.ssl.SSLPeerUnverifiedException;
  */
 
 public class XMLRPCClient implements XMLRPCClientInterface {
+
+    public interface OnBytesUploadedListener {
+        public void onBytesUploaded(long uploadedBytes);
+    }
+
     private static final String TAG_METHOD_CALL = "methodCall";
     private static final String TAG_METHOD_NAME = "methodName";
     private static final String TAG_METHOD_RESPONSE = "methodResponse";
@@ -70,6 +75,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     private Map<Long,Caller> backgroundCalls = new HashMap<Long, Caller>();
 
     private DefaultHttpClient mClient;
+    private OnBytesUploadedListener mOnBytesUploadedListener;
     private HttpPost mPostMethod;
     private XmlSerializer mSerializer;
     private HttpParams mHttpParams;
@@ -77,7 +83,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     /**
      * XMLRPCClient constructor. Creates new instance based on server URI
-     * @param XMLRPC server URI
+     * @param uri xml-rpc server URI
      */
     public XMLRPCClient(URI uri, String httpuser, String httppasswd) {
         mPostMethod = new HttpPost(uri);
@@ -139,7 +145,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
         HttpConnectionParams.setConnectionTimeout(client.getParams(), DEFAULT_CONNECTION_TIMEOUT);
         HttpConnectionParams.setSoTimeout(client.getParams(), DEFAULT_SOCKET_TIMEOUT);
 
-        //Setup HTTP Basic Auth if necessary
+        // Setup HTTP Basic Auth if necessary
         if (usernamePasswordCredentials != null) {
             BasicCredentialsProvider cP = new BasicCredentialsProvider();
             cP.setCredentials(AuthScope.ANY, usernamePasswordCredentials);
@@ -213,7 +219,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     /**
      * Convenience call for callAsync with two paramaters
      *
-     * @param XMLRPCCallback listener, XMLRPC methodName, XMLRPC parameters
+     * @param listener, methodName, parameters
      * @return unique id of this async call
      * @throws XMLRPCException
      */
@@ -224,7 +230,7 @@ public class XMLRPCClient implements XMLRPCClientInterface {
     /**
      * Asynchronous XMLRPC call
      *
-     * @param XMLRPCCallback listener, XMLRPC methodName, XMLRPC parameters, File for large uploads
+     * @param listener, XMLRPC methodName, XMLRPC parameters, File for large uploads
      * @return unique id of this async call
      * @throws XMLRPCException
      */
@@ -337,9 +343,15 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             fileWriter.flush();
             fileWriter.close();
 
-            FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"");
+            FileEntity fEntity = new FileEntity(tempFile, "text/xml; charset=\"UTF-8\"") {
+                // Hook in a CountingOutputStream to keep track of bytes uploaded
+                @Override
+                public void writeTo(final OutputStream outstream) throws IOException {
+                    super.writeTo(new CountingOutputStream(outstream));
+                }
+            };
+
             fEntity.setContentType("text/xml");
-            //fEntity.setChunked(true);
             mPostMethod.setEntity(fEntity);
         } else {
             StringWriter bodyWriter = new StringWriter();
@@ -367,7 +379,6 @@ public class XMLRPCClient implements XMLRPCClientInterface {
             mSerializer.endDocument();
 
             HttpEntity entity = new StringEntity(bodyWriter.toString());
-            //Log.i("WordPress", bodyWriter.toString());
             mPostMethod.setEntity(entity);
         }
 
@@ -599,5 +610,43 @@ public class XMLRPCClient implements XMLRPCClientInterface {
 
     private class CancelException extends RuntimeException {
         private static final long serialVersionUID = 1L;
+    }
+
+    private class CountingOutputStream extends FilterOutputStream {
+
+        private long mTotalBytes;
+
+        CountingOutputStream(final OutputStream out) {
+            super(out);
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            out.write(b);
+        }
+
+        @Override
+        public void write(byte[] b) throws IOException {
+            out.write(b);
+            mTotalBytes += b.length;
+
+            if (mOnBytesUploadedListener != null) {
+                mOnBytesUploadedListener.onBytesUploaded(mTotalBytes);
+            }
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            out.write(b, off, len);
+            mTotalBytes += len;
+
+            if (mOnBytesUploadedListener != null) {
+                mOnBytesUploadedListener.onBytesUploaded(mTotalBytes);
+            }
+        }
+    }
+
+    public void setOnBytesUploadedListener(OnBytesUploadedListener listener) {
+        mOnBytesUploadedListener = listener;
     }
 }

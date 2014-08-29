@@ -177,7 +177,7 @@
             android:label="@string/reader" />
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
-            android:theme="@style/ReaderTheme.TranslucentActivity"
+            android:theme="@style/ReaderTheme"
             android:windowSoftInputMode="adjustResize"
             />
         <activity
@@ -196,8 +196,7 @@
             android:label="@string/reader_title_reblog"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.reader.ReaderPhotoViewerActivity"
-            android:theme="@style/ReaderTheme.PhotoViewer" />
+            android:name=".ui.reader.ReaderPhotoViewerActivity" />
 
         <!-- Other activities -->
 
@@ -284,6 +283,10 @@
         <service android:name=".ui.stats.service.StatsService"
             android:label="Stats Update Service"
             android:exported="false" />
+
+        <service android:name=".ui.reader.services.ReaderUpdateService"
+            android:label="Reader Update Service"
+            android:exported="false"/>
 
         <service android:name="org.wordpress.android.GCMIntentService"/>
 

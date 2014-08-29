@@ -26,15 +26,15 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.OnPostPopupListener;
-import org.wordpress.android.ui.reader.ReaderPostListFragment.OnTagSelectedListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostPopupListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -68,8 +68,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     private OnTagSelectedListener mOnTagSelectedListener;
     private OnPostPopupListener mOnPostPopupListener;
-    private final ReaderActions.RequestReblogListener mReblogListener;
-    private final ReaderActions.DataLoadedListener mDataLoadedListener;
+    private final ReaderInterfaces.RequestReblogListener mReblogListener;
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private final ReaderActions.DataRequestedListener mDataRequestedListener;
 
     private final boolean mEnableImagePreload;
@@ -78,8 +78,8 @@ public class ReaderPostAdapter extends BaseAdapter {
 
     public ReaderPostAdapter(Context context,
                              ReaderPostListType postListType,
-                             ReaderActions.RequestReblogListener reblogListener,
-                             ReaderActions.DataLoadedListener dataLoadedListener,
+                             ReaderInterfaces.RequestReblogListener reblogListener,
+                             ReaderInterfaces.DataLoadedListener dataLoadedListener,
                              ReaderActions.DataRequestedListener dataRequestedListener) {
         super();
 
@@ -173,7 +173,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      * reload a single post
      */
     public void reloadPost(ReaderPost post) {
-        int index = mPosts.indexOfPost(post);
+        int index = indexOfPost(post);
         if (index == -1) {
             return;
         }
@@ -183,6 +183,10 @@ public class ReaderPostAdapter extends BaseAdapter {
             mPosts.set(index, updatedPost);
             notifyDataSetChanged();
         }
+    }
+
+    public int indexOfPost(ReaderPost post) {
+        return mPosts.indexOfPost(post);
     }
 
     /*
@@ -220,11 +224,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     }
 
     public ReaderBlogIdPostIdList getBlogIdPostIdList() {
-        ReaderBlogIdPostIdList ids = new ReaderBlogIdPostIdList();
-        for (ReaderPost post: mPosts) {
-            ids.add(new ReaderBlogIdPostId(post.blogId, post.postId));
-        }
-        return ids;
+        return mPosts.getBlogIdPostIdList();
     }
 
     @Override
@@ -419,7 +419,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     if (mOnPostPopupListener != null) {
-                        mOnPostPopupListener.onShowPostPopup(view, post, position);
+                        mOnPostPopupListener.onShowPostPopup(view, post);
                     }
                 }
             });
