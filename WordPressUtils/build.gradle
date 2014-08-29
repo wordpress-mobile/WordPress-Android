@@ -20,8 +20,8 @@ dependencies {
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
-    compile 'org.wordpress:pulltorefresh-main:+@aar' // org.wordpress version includes some fixes
-    compile 'com.android.support:support-v13:19.0.+'
+    compile 'org.wordpress:pulltorefresh-main:0.9.7@aar' // org.wordpress version includes some fixes
+    compile 'com.android.support:support-v13:19.1.0'
 }
 
 android {
@@ -32,8 +32,7 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android.util"
-        versionName "1.1.0"
-        versionCode 1
+        versionName "1.2.0"
         minSdkVersion 14
         targetSdkVersion 19
     }
