@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
@@ -50,6 +49,7 @@ import java.util.Map;
  */
 public class StatsBarGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
+    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_ID";
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
@@ -61,11 +61,12 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     private int mLastHighlightedBar = -1;
     private Tooltip mTooltip;
 
-    public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit) {
+    public static StatsBarGraphFragment newInstance(StatsBarChartUnit unit, int localTableBlogID) {
         StatsBarGraphFragment fragment = new StatsBarGraphFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARGS_BAR_CHART_UNIT, unit.ordinal());
+        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -160,19 +161,9 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         properties.put("unit", unit.name());
         AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART, properties);
         if (unit == StatsBarChartUnit.DAY) {
-            StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
-            if (credentials == null) {
-                // Credentials empty, do nothing.
-                return;
-            }
-
-            String statsAuthenticatedUser = credentials.getUsername();
-            String statsAuthenticatedPassword =  credentials.getPassword();
             Intent statsWebViewIntent = new Intent(this.getActivity(), StatsDetailsActivity.class);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD,
-                    statsAuthenticatedPassword);
             statsWebViewIntent.putExtra(StatsActivity.STATS_DETAILS_DATE, date);
+            statsWebViewIntent.putExtra(StatsDetailsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
             this.getActivity().startActivity(statsWebViewIntent);
         } else {
             // Week or Month on the screen. Show a toast.
@@ -184,19 +175,22 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         }
     }
 
-
     private StatsBarChartUnit getBarChartUnit() {
         int ordinal = getArguments().getInt(ARGS_BAR_CHART_UNIT);
         return StatsBarChartUnit.values()[ordinal];
     }
 
+    protected int getLocalTableBlogID() {
+        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (WordPress.getCurrentBlog() == null) {
+        if (WordPress.getBlog(getLocalTableBlogID()) == null) {
             return null;
         }
 
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        String blogId = WordPress.getBlog(getLocalTableBlogID()).getDotComBlogId();
         if (TextUtils.isEmpty(blogId)) {
             blogId = "0";
         }

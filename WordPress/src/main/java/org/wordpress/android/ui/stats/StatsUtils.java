@@ -288,16 +288,17 @@ public class StatsUtils {
     }
 
     /**
-     * Return the credentials for the current blog or null if not available.
+     * Return the credentials for the  blog or null if not available.
      *
      * 1. Read the credentials at blog level (Jetpack connected with a wpcom account != main account)
      * 2. If credentials are empty read the global wpcom credentials
      * 3. Check that credentials are not empty before launching the activity
      *
      */
-    public static StatsCredentials getCurrentBlogStatsCredentials() {
-        String statsAuthenticatedUser = WordPress.getCurrentBlog().getDotcom_username();
-        String statsAuthenticatedPassword = WordPress.getCurrentBlog().getDotcom_password();
+    public static StatsCredentials getBlogStatsCredentials(int localTableBlogID) {
+        Blog currentBlog = WordPress.getBlog(localTableBlogID);
+        String statsAuthenticatedUser = currentBlog.getDotcom_username();
+        String statsAuthenticatedPassword = currentBlog.getDotcom_password();
 
         if (org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedPassword)
                 || org.apache.commons.lang.StringUtils.isEmpty(statsAuthenticatedUser)) {
@@ -335,16 +336,8 @@ public class StatsUtils {
         }
     }
 
-    /**
-     * Return the remote blogId as stored on the wpcom backend.
-     * <p>
-     * blogId is always available for dotcom blogs. It could be null on Jetpack blogs
-     * with blogOptions still empty or when the option 'jetpack_client_id' is not available in blogOptions.
-     * </p>
-     * @return String  blogId or null
-     */
-    public static String getBlogId() {
-        Blog currentBlog = WordPress.getCurrentBlog();
+    public static String getBlogId(int localTableBlogID) {
+        Blog currentBlog = WordPress.getBlog(localTableBlogID);
         if (currentBlog == null) {
             return null;
         }
@@ -354,4 +347,5 @@ public class StatsUtils {
             return currentBlog.getApi_blogid();
         }
     }
+
 }

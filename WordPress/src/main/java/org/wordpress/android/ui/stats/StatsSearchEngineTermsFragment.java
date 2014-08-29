@@ -29,7 +29,7 @@ public class StatsSearchEngineTermsFragment extends StatsAbsPagedViewFragment {
 
         StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, R.string.stats_entry_search_engine_terms,
                 R.string.stats_totals_views, R.string.stats_empty_search_engine_terms_title,
-                R.string.stats_empty_search_engine_terms_desc);
+                R.string.stats_empty_search_engine_terms_desc, getLocalTableBlogID());
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         fragment.setCallback(this);
         return fragment;

@@ -9,7 +9,7 @@ import android.os.Bundle;
 public abstract class StatsAbsViewFragment extends Fragment {
     public static final String TAG = StatsAbsViewFragment.class.getSimpleName();
 
-    public static StatsAbsViewFragment newInstance(StatsViewType viewType) {
+    public static StatsAbsViewFragment newInstance(StatsViewType viewType, int localTableBlogID) {
         StatsAbsViewFragment fragment = null;
 
         switch (viewType) {
@@ -51,16 +51,22 @@ public abstract class StatsAbsViewFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
+        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
     }
 
     private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
+    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_ID";
 
     protected StatsViewType getViewType() {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
         return StatsViewType.values()[ordinal];
+    }
+
+    protected int getLocalTableBlogID() {
+        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
     }
 
     protected abstract String getTitle();

@@ -37,7 +37,7 @@ public class StatsVideoFragment extends StatsAbsPagedViewFragment {
 
             Uri uri = Uri.parse(STATS_VIDEOS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
 
-            StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+            StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId, getLocalTableBlogID());
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
             fragment.setCallback(this);
             return fragment;
