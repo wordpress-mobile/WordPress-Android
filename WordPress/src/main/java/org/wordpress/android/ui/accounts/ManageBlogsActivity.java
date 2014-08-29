@@ -62,7 +62,11 @@ public class ManageBlogsActivity extends ListActivity {
 
         // Load accounts and update from server
         loadAccounts();
-        refreshBlogs();
+
+        // Refresh blog list if network is available and activity really starts
+        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
+            refreshBlogs();
+        }
     }
 
     @Override

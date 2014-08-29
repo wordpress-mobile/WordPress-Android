@@ -55,8 +55,8 @@ public class SelectCategoriesActivity extends ListActivity {
     XMLRPCClientInterface mClient;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.select_categories);
         setTitle(getResources().getString(R.string.select_categories));
@@ -117,10 +117,16 @@ public class SelectCategoriesActivity extends ListActivity {
                     }
                 });
 
-        populateOrFetchCategories();
+        populateCategoryList();
+
+        // Refresh blog list if network is available and activity really starts
+        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
+            refreshCategories();
+        }
     }
 
     private void populateCategoryList() {
+        mCategories = CategoryNode.createCategoryTreeFromDB(blog.getLocalTableBlogId());
         mCategoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(mCategories);
         for (int i = 0; i < mCategoryLevels.size(); i++) {
             mCategoryNames.put(StringUtils.unescapeHTML(mCategoryLevels.get(i).getName()), i);
@@ -154,7 +160,7 @@ public class SelectCategoriesActivity extends ListActivity {
         public void run() {
             mPullToRefreshHelper.setRefreshing(false);
             if (finalResult.equals("addCategory_success")) {
-                populateOrFetchCategories();
+                populateCategoryList();
                 if (!isFinishing()) {
                     ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_success, Duration.SHORT);
                 }
@@ -163,7 +169,7 @@ public class SelectCategoriesActivity extends ListActivity {
                     ToastUtils.showToast(SelectCategoriesActivity.this, R.string.adding_cat_failed, Duration.LONG);
                 }
             } else if (finalResult.equals("gotCategories")) {
-                populateOrFetchCategories();
+                populateCategoryList();
             } else if (finalResult.equals("FAIL")) {
                 if (!isFinishing()) {
                     ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
@@ -369,6 +375,7 @@ public class SelectCategoriesActivity extends ListActivity {
     }
 
     private void refreshCategories() {
+        mPullToRefreshHelper.setRefreshing(true);
         mListScrollPositionManager.saveScrollOffset();
         updateSelectedCategoryList();
         Thread th = new Thread() {
