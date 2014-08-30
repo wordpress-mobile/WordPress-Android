@@ -40,14 +40,6 @@ public class Note extends Syncable {
     private JSONObject mActions;
     private JSONObject mNoteJSON;
 
-    private long mTimestamp;
-
-    private transient String mCommentPreview;
-    private JSONObject mSubject;
-    private Spannable mFormattedSubject;
-    private transient String mIconUrl;
-    private transient String mNoteType;
-
     public static enum EnabledActions {
         ACTION_REPLY,
         ACTION_APPROVE,
@@ -96,11 +88,7 @@ public class Note extends Syncable {
     }
 
     private String getType() {
-        if (mNoteType == null) {
-            mNoteType = queryJSON("type", NOTE_UNKNOWN_TYPE);
-        }
-
-        return mNoteType;
+        return queryJSON("type", NOTE_UNKNOWN_TYPE);
     }
 
     private Boolean isType(String type) {
@@ -117,25 +105,20 @@ public class Note extends Syncable {
     }
 
     private JSONObject getSubject() {
-        if (mSubject == null) {
-            try {
-                JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
-                if (subjectArray.length() > 0) {
-                    mSubject = subjectArray.getJSONObject(0);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+        try {
+            JSONArray subjectArray = mNoteJSON.getJSONArray("subject");
+            if (subjectArray.length() > 0) {
+                return subjectArray.getJSONObject(0);
             }
+        } catch (JSONException e) {
+            return null;
         }
 
-        return mSubject;
+        return null;
     }
 
     public Spannable getFormattedSubject() {
-        if (mFormattedSubject == null) {
-            mFormattedSubject = NotificationsUtils.getSpannableTextFromIndices(getSubject(), null);
-        }
-        return mFormattedSubject;
+        return NotificationsUtils.getSpannableTextFromIndices(getSubject(), null);
     }
 
     public String getTitle() {
@@ -143,26 +126,23 @@ public class Note extends Syncable {
     }
 
     private String getIconURL() {
-        if (mIconUrl==null)
-            mIconUrl = queryJSON("icon", "");
-
-        return mIconUrl;
+        return queryJSON("icon", "");
     }
 
     private String getCommentSubject() {
-        if (mCommentPreview == null) {
-            JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
-            if (subjectArray != null) {
-                mCommentPreview = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
+        JSONArray subjectArray = mNoteJSON.optJSONArray("subject");
+        if (subjectArray != null) {
+            String commentSubject = JSONUtil.queryJSON(subjectArray, "subject[1].text", "");
 
-                // Trim down the comment preview if the comment text is too large.
-                if (mCommentPreview != null && mCommentPreview.length() > MAX_COMMENT_PREVIEW_LENGTH) {
-                    mCommentPreview = mCommentPreview.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
-                }
+            // Trim down the comment preview if the comment text is too large.
+            if (commentSubject != null && commentSubject.length() > MAX_COMMENT_PREVIEW_LENGTH) {
+                commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1);
             }
+
+            return commentSubject;
         }
 
-        return mCommentPreview;
+        return "";
     }
 
     public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
@@ -202,14 +182,10 @@ public class Note extends Syncable {
     }
 
     /**
-     * Get the timestamp provided by the API for the note - cached for performance
+     * Get the timestamp provided by the API for the note
      */
     public long getTimestamp() {
-        if (mTimestamp == 0) {
-            mTimestamp = DateTimeUtils.iso8601ToTimestamp(queryJSON("timestamp", ""));
-        }
-
-        return mTimestamp;
+        return DateTimeUtils.iso8601ToTimestamp(queryJSON("timestamp", ""));
     }
 
     public JSONArray getBody() {
@@ -235,15 +211,7 @@ public class Note extends Syncable {
 
 
     private void updateJSON(JSONObject json) {
-
         mNoteJSON = json;
-
-        // clear out the preloaded content
-        mTimestamp = 0;
-        mCommentPreview = null;
-        mSubject = null;
-        mIconUrl = null;
-        mNoteType = null;
     }
 
     /*
