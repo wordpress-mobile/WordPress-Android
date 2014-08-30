@@ -96,6 +96,29 @@ class ReaderPostRenderer {
         webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
     }
 
+    private static class ImageSize {
+        final int width;
+        final int height;
+        ImageSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+    }
+
+    /*
+     * returns the image size by examining the query params on the passed image url
+     */
+    private ImageSize getImageSizeFromImageUrl(final String imageUrl) {
+        if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            return new ImageSize(
+                    StringUtils.stringToInt(uri.getQueryParameter("w")),
+                    StringUtils.stringToInt(uri.getQueryParameter("h")));
+        } else {
+            return null;
+        }
+    }
+
     /*
      * called when image scanner finds an image, tries to replaces the image tag with one that
      * has height & width attributes set
@@ -107,22 +130,17 @@ class ReaderPostRenderer {
             return;
         }
 
+        // first try to get original image size from attachments, then try to get it from the url
         int origWidth;
         int origHeight;
-
-        // first try to get original image size from attachments, then try to get it from the url
-        // if it's an obvious WordPress image
         ReaderAttachment attach = (mAttachments != null ? mAttachments.get(imageUrl) : null);
         if (attach != null && attach.isImage()) {
             origWidth = attach.width;
             origHeight = attach.height;
-        } else if (imageUrl.contains("files.wordpress.com")) {
-            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
-            origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
-            origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
         } else {
-            origWidth = 0;
-            origHeight = 0;
+            ImageSize size = getImageSizeFromImageUrl(imageUrl);
+            origWidth = (size != null ? size.width : 0);
+            origHeight = (size != null ? size.height : 0);
         }
 
         int newWidth;

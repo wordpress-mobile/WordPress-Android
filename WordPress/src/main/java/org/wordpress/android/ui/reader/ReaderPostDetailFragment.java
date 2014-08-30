@@ -1004,6 +1004,7 @@ public class ReaderPostDetailFragment extends Fragment
     private void showPost() {
         if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
+            return;
         }
 
         new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
