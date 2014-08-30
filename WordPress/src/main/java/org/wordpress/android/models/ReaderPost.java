@@ -383,16 +383,8 @@ public class ReaderPost {
     }
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
-        mAttachments = null;
     }
 
-    private transient ReaderAttachmentList mAttachments;
-    public ReaderAttachmentList getAttachments() {
-        if (mAttachments == null) {
-            mAttachments = ReaderAttachmentList.fromJsonString(attachmentsJson);
-        }
-        return mAttachments;
-    }
 
     public boolean hasText() {
         return !TextUtils.isEmpty(text);

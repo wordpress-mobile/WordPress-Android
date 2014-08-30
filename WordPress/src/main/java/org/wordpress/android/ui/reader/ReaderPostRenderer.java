@@ -2,17 +2,22 @@ package org.wordpress.android.ui.reader;
 
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 
-import org.wordpress.android.models.ReaderAttachment;
-import org.wordpress.android.models.ReaderAttachmentList;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.UrlUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * generates and displays the HTML for post detail content - main purpose is to assign the
@@ -27,7 +32,7 @@ class ReaderPostRenderer {
 
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
-    private ReaderAttachmentList mAttachments;
+    private ImageSizeMap mAttachments;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
@@ -50,7 +55,7 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                mAttachments = mPost.getAttachments();
+                mAttachments = new ImageSizeMap(mPost.getAttachmentsJson());
 
                 ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
                     @Override
@@ -97,6 +102,23 @@ class ReaderPostRenderer {
     }
 
     /*
+     * attempts to return the image size from the passed url - first tries to get size from
+     * attachments, then tries to get it from the query params if it's an obvious wp image
+     */
+    private ImageSize getImageSize(final String imageUrl) {
+        ImageSize size = (mAttachments != null ? mAttachments.getAttachmentSize(imageUrl) : null);
+        if (size != null) {
+            return size;
+        } else if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            return new ImageSize(
+                    StringUtils.stringToInt(uri.getQueryParameter("w")),
+                    StringUtils.stringToInt(uri.getQueryParameter("h")));
+        } else {
+            return null;
+        }
+    }
+    /*
      * called when image scanner finds an image, tries to replace the image tag with one that
      * has height & width attributes set
      */
@@ -107,29 +129,18 @@ class ReaderPostRenderer {
             return;
         }
 
-        // first try to get original image size from attachments, then try to get it from the
-        // query params if it's an obvious wp image
-        int origWidth;
-        int origHeight;
-        ReaderAttachment attach = (mAttachments != null ? mAttachments.get(imageUrl) : null);
-        if (attach != null && attach.isImage()) {
-            origWidth = attach.width;
-            origHeight = attach.height;
-        } else if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
-            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
-            origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
-            origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
-        } else {
+        ImageSize origSize = getImageSize(imageUrl);
+        if (origSize == null) {
             return;
         }
 
         int newWidth;
         int newHeight;
-        if (origWidth > 0 && origHeight > 0) {
-            float ratio = ((float) origHeight / (float) origWidth);
+        if (origSize.width > 0 && origSize.height > 0) {
+            float ratio = ((float) origSize.height / (float) origSize.width);
             newWidth = mResourceVars.fullSizeImageWidth;
             newHeight = (int) (newWidth * ratio);
-        } else if (origWidth > 0) {
+        } else if (origSize.width > 0) {
             newWidth = mResourceVars.fullSizeImageWidth;
             newHeight = 0;
         } else {
@@ -289,5 +300,54 @@ class ReaderPostRenderer {
      */
     static boolean canEnableJavaScript(ReaderPost post) {
         return (post != null && post.isWP());
+    }
+
+    /*
+     * hash map of sizes of attachments in the current post for quick lookup
+     */
+    class ImageSizeMap extends HashMap<String, ImageSize> {
+        ImageSizeMap(String jsonString) {
+            if (TextUtils.isEmpty(jsonString)) {
+                return;
+            }
+
+            try {
+                JSONObject json = new JSONObject(jsonString);
+                Iterator<String> it = json.keys();
+                if (!it.hasNext()) {
+                    return;
+                }
+
+                while (it.hasNext()) {
+                    JSONObject jsonAttach = json.optJSONObject(it.next());
+                    String mimeType = JSONUtil.getString(json, "mime_type");
+                    if (mimeType.startsWith("image")) {
+                        String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtil.getString(json, "URL")));
+                        int width = jsonAttach.optInt("width");
+                        int height = jsonAttach.optInt("height");
+                        this.put(normUrl, new ImageSize(width, height));
+                    }
+                }
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.READER, e);
+            }
+        }
+
+        ImageSize getAttachmentSize(final String imageUrl) {
+            if (imageUrl == null) {
+                return null;
+            } else {
+                return super.get(UrlUtils.normalizeUrl(UrlUtils.removeQuery(imageUrl)));
+            }
+        }
+    }
+
+    static class ImageSize {
+        final int width;
+        final int height;
+        ImageSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
     }
 }
