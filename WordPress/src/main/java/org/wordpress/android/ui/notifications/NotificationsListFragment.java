@@ -54,8 +54,8 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         mBucket = SimperiumUtils.getNotesBucket();
 
         ListView listView = getListView();
-        listView.setDivider(getResources().getDrawable(R.drawable.notifications_list_divider));
-        listView.setDividerHeight(DisplayUtils.dpToPx(getActivity(), 1));
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
         listView.setBackgroundColor(getResources().getColor(R.color.white));
         if (DisplayUtils.isLandscapeTablet(getActivity())) {
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);

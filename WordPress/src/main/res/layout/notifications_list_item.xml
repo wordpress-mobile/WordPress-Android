@@ -96,7 +96,7 @@
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/note_label"
+                android:id="@+id/note_subject"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -104,7 +104,6 @@
                 android:textColor="@color/calypso_blue_dark"
                 android:textSize="@dimen/text_sz_large"
                 tools:text="Bob Ross commented on your post Happy Trees" />
-
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/note_detail"
@@ -121,5 +120,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/notifications_list_divider" />
 
 </LinearLayout>

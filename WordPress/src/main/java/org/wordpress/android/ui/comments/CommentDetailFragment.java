@@ -57,6 +57,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -162,9 +163,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setTextDrawable(mBtnTrashComment, R.drawable.ic_comment_moderate_trash);
         setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit);
 
-
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply.setTypeface(TypefaceCache.getTypeface(getActivity()));
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
@@ -767,7 +768,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                moderationDrawResId = R.drawable.ic_comment_moderate_approve_active;
+                moderationDrawResId = R.drawable.ic_action_approve_active;
                 moderationTextResId = R.string.comment_status_approved;
                 newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
@@ -775,7 +776,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange_dark));
                 break;
             case UNAPPROVED:
-                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
+                moderationDrawResId = R.drawable.ic_action_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
@@ -783,7 +784,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case SPAM:
-                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
+                moderationDrawResId = R.drawable.ic_action_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_spam;
@@ -792,7 +793,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
             case TRASH:
                 // should never get here
-                moderationDrawResId = R.drawable.ic_comment_moderate_approve;
+                moderationDrawResId = R.drawable.ic_action_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_trash;
@@ -1035,11 +1036,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (isLiked) {
             mBtnLikeComment.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setTextColor(getResources().getColor(R.color.orange_medium));
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_comment_moderate_like_active);
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like_active);
         } else {
             mBtnLikeComment.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setTextColor(getResources().getColor(R.color.calypso_blue));
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_comment_moderate_like);
+            setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like);
         }
     }
 }

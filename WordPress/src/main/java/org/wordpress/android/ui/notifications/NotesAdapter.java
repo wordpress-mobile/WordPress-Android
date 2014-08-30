@@ -220,7 +220,7 @@ class NotesAdapter extends CursorAdapter {
         NoteViewHolder(View view) {
             headerView = view.findViewById(R.id.time_header);
             headerText = (TextView)view.findViewById(R.id.header_date_text);
-            txtLabel = (TextView) view.findViewById(R.id.note_label);
+            txtLabel = (TextView) view.findViewById(R.id.note_subject);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);

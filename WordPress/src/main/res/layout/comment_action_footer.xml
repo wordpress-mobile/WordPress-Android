@@ -12,59 +12,59 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_btn_like"
             style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_moderate_like"
+            android:drawableTop="@drawable/ic_action_like"
             android:text="@string/reader_label_like" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_btn_moderate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_cab_approve"
+            android:drawableTop="@drawable/ic_action_approve"
             android:text="@string/mnu_comment_approve"
             style="@style/WordPress.ModerateButton" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/image_trash_comment"
             style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_moderate_trash"
+            android:drawableTop="@drawable/ic_action_trash"
             android:text="@string/mnu_comment_trash" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_btn_spam"
             style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_moderate_spam"
+            android:drawableTop="@drawable/ic_action_spam"
             android:text="@string/mnu_comment_spam" />
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/image_edit_comment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ab_icon_edit"
+            android:drawableTop="@drawable/ic_action_edit"
             android:text="@string/mnu_comment_edit"
             style="@style/WordPress.ModerateButton" />
 
 
-        <TextView
+        <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_btn_more"
             style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_comment_moderate_more"
+            android:drawableTop="@drawable/ic_action_more"
             android:text="@string/more" />
     </LinearLayout>
 
