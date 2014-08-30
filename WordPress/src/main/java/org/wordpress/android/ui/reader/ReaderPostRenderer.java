@@ -103,7 +103,7 @@ class ReaderPostRenderer {
     private void replaceImageTag(final String imageTag, final String imageUrl) {
         // skip featured images inserted by getFeaturedImageHtml() since they already
         // have their height & width set
-        if (imageUrl.contains("featured-image")) {
+        if (imageTag.contains("featured-image")) {
             return;
         }
 
@@ -121,7 +121,8 @@ class ReaderPostRenderer {
             origWidth = StringUtils.stringToInt(uri.getQueryParameter("w"));
             origHeight = StringUtils.stringToInt(uri.getQueryParameter("h"));
         } else {
-            return;
+            origWidth = 0;
+            origHeight = 0;
         }
 
         int newWidth;
@@ -134,6 +135,7 @@ class ReaderPostRenderer {
             newWidth = mResourceVars.fullSizeImageWidth;
             newHeight = 0;
         } else {
+            AppLog.d(AppLog.T.READER, "reader renderer > no size for " + imageUrl);
             return;
         }
 
