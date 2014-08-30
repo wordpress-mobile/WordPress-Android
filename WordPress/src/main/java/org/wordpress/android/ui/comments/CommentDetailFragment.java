@@ -159,9 +159,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
         mBtnMore = (TextView)mLayoutButtons.findViewById(R.id.text_btn_more);
 
-        setTextDrawable(mBtnSpamComment, R.drawable.ic_comment_moderate_spam);
-        setTextDrawable(mBtnTrashComment, R.drawable.ic_comment_moderate_trash);
-        setTextDrawable(mBtnEditComment, R.drawable.ab_icon_edit);
+        setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
+        setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
+        setTextDrawable(mBtnEditComment, R.drawable.ic_action_edit);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);

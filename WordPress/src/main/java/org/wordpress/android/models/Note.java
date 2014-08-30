@@ -166,7 +166,6 @@ public class Note extends Syncable {
         return !isRead();
     }
 
-
     Boolean isRead() {
         return queryJSON("read", 0) == 1;
     }
