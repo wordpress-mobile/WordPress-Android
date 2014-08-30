@@ -150,11 +150,11 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         @Override
-        public void showReaderPost(long siteId, long postId) {
-            if (!isAdded()) return;
+        public void showReaderPostForNoteIds() {
+            if (!isAdded() || mNote == null) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showPostForSiteAndPostId(siteId, postId);
+            notificationsActivity.showPostForSiteAndPostId(mNote.getSiteId(), mNote.getPostId());
         }
     };
 

@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtil;
 
 // Note header, displayed at top of detail view
@@ -67,9 +66,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
         @Override
         public void onClick(View v) {
             if (getOnNoteBlockTextClickListener() != null) {
-                long siteId = JSONUtil.queryJSON(mHeaderArray, "[1].ranges[0].site_id", 0);
-                long postId = JSONUtil.queryJSON(mHeaderArray, "[1].ranges[0].post_id", 0);
-                getOnNoteBlockTextClickListener().showReaderPost(siteId, postId);
+                getOnNoteBlockTextClickListener().showReaderPostForNoteIds();
             }
         }
     };

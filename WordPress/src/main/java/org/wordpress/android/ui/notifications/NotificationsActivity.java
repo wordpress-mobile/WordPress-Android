@@ -282,9 +282,9 @@ public class NotificationsActivity extends WPActionBarActivity
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
-            boolean isPost = (note.getBlogId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
+            boolean isPost = (note.getSiteId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
             if (isPost) {
-                fragment = ReaderPostDetailFragment.newInstance(note.getBlogId(), note.getPostId());
+                fragment = ReaderPostDetailFragment.newInstance(note.getSiteId(), note.getPostId());
             } else {
                 fragment = NotificationsDetailListFragment.newInstance(note);
             }

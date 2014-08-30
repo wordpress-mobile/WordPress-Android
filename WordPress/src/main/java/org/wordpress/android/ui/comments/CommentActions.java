@@ -238,7 +238,7 @@ public class CommentActions {
     public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
 
         WordPress.getRestClientUtils().moderateComment(
-                String.valueOf(note.getBlogId()),
+                String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),
                 CommentStatus.toRESTString(newStatus),
                 new RestRequest.Listener() {

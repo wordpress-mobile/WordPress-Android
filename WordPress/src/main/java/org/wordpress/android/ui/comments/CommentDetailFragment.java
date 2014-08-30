@@ -945,7 +945,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          * this user made on someone else's blog
          */
         mEnabledActions = note.getEnabledActions();
-        mRemoteBlogId = note.getBlogId();
+        mRemoteBlogId = note.getSiteId();
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
         if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
@@ -1013,7 +1013,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         toggleLikeButton(!mBtnLikeComment.isSelected());
 
-        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getBlogId()),
+        WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                 String.valueOf(mNote.getCommentId()),
                 mBtnLikeComment.isSelected(),
                 new RestRequest.Listener() {

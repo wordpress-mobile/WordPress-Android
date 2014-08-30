@@ -275,7 +275,7 @@ public class Note extends Syncable {
         return actions;
     }
 
-    public int getBlogId() {
+    public int getSiteId() {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.site", 0);
     }
 
@@ -395,9 +395,9 @@ public class Note extends Syncable {
     public Reply buildReply(String content) {
         String restPath;
         if (this.isCommentType()) {
-            restPath = String.format("sites/%d/comments/%d", getBlogId(), getCommentId());
+            restPath = String.format("sites/%d/comments/%d", getSiteId(), getCommentId());
         } else {
-            restPath = String.format("sites/%d/posts/%d", getBlogId(), getPostId());
+            restPath = String.format("sites/%d/posts/%d", getSiteId(), getPostId());
         }
 
         return new Reply(String.format("%s/replies/new", restPath), content);
