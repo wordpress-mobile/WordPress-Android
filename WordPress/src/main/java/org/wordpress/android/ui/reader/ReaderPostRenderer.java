@@ -32,7 +32,7 @@ class ReaderPostRenderer {
 
     private StringBuilder mRenderBuilder;
     private String mRenderedHtml;
-    private ImageSizeMap mAttachments;
+    private ImageSizeMap mAttachmentSizes;
 
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
@@ -55,8 +55,6 @@ class ReaderPostRenderer {
         new Thread() {
             @Override
             public void run() {
-                mAttachments = new ImageSizeMap(mPost.getAttachmentsJson());
-
                 ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
                     @Override
                     public void onImageFound(String imageTag, String imageUrl, int start, int end) {
@@ -101,23 +99,6 @@ class ReaderPostRenderer {
         webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null);
     }
 
-    /*
-     * attempts to return the image size from the passed url - first tries to get size from
-     * attachments, then tries to get it from the query params if it's an obvious wp image
-     */
-    private ImageSize getImageSize(final String imageUrl) {
-        ImageSize size = (mAttachments != null ? mAttachments.getAttachmentSize(imageUrl) : null);
-        if (size != null) {
-            return size;
-        } else if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
-            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
-            return new ImageSize(
-                    StringUtils.stringToInt(uri.getQueryParameter("w")),
-                    StringUtils.stringToInt(uri.getQueryParameter("h")));
-        } else {
-            return null;
-        }
-    }
     /*
      * called when image scanner finds an image, tries to replace the image tag with one that
      * has height & width attributes set
@@ -296,14 +277,40 @@ class ReaderPostRenderer {
     }
 
     /*
-     * javascript should only be enabled for wp blogs (not external feeds)
+     * attempts to return the image size from the passed url - first tries to get size from
+     * attachments, then tries to get it from the query params if it's an obvious wp image
      */
-    static boolean canEnableJavaScript(ReaderPost post) {
-        return (post != null && post.isWP());
+    private ImageSize getImageSize(final String imageUrl) {
+        ImageSize size = getAttachmentSize(imageUrl);
+        if (size != null) {
+            return size;
+        } else if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            return new ImageSize(
+                    StringUtils.stringToInt(uri.getQueryParameter("w")),
+                    StringUtils.stringToInt(uri.getQueryParameter("h")));
+        } else {
+            return null;
+        }
+    }
+
+    private ImageSize getAttachmentSize(final String imageUrl) {
+        if (mAttachmentSizes == null) {
+            mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
+        }
+        return mAttachmentSizes.getAttachmentSize(imageUrl);
     }
 
     /*
-     * hash map of sizes of attachments in the current post for quick lookup
+     * javascript should only be enabled for wp blogs (not external feeds)
+     */
+    static boolean canEnableJavaScript(ReaderPost post) {
+        return post != null && post.isWP();
+    }
+
+    /*
+     * hash map of sizes of attachments in the current post for quick lookup - created from
+     * the json "attachments" section of the post endpoints
      */
     class ImageSizeMap extends HashMap<String, ImageSize> {
         ImageSizeMap(String jsonString) {
