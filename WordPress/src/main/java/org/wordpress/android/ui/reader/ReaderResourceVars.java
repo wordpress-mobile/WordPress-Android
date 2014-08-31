@@ -12,20 +12,20 @@ import org.wordpress.android.util.HtmlUtils;
  * class which holds all resource-based variables used when rendering post detail
  */
 class ReaderResourceVars {
-    final int displayWidth;
-    final int actionBarHeight;
-    final int likeAvatarSize;
+    final int displayWidthPx;
+    final int actionBarHeightPx;
+    final int likeAvatarSizePx;
 
-    final int marginLarge;
-    final int marginSmall;
-    final int marginExtraSmall;
-    final int listMarginWidth;
+    final int marginLargePx;
+    final int marginSmallPx;
+    final int marginExtraSmallPx;
+    final int listMarginWidthPx;
 
-    final int fullSizeImageWidth;
-    final int featuredImageHeight;
+    final int fullSizeImageWidthPx;
+    final int featuredImageHeightPx;
 
-    final int videoWidth;
-    final int videoHeight;
+    final int videoWidthPx;
+    final int videoHeightPx;
 
     final int colorGreyExtraLight;
     final int mediumAnimTime;
@@ -37,15 +37,15 @@ class ReaderResourceVars {
     ReaderResourceVars(Context context) {
         Resources resources = context.getResources();
 
-        displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-        actionBarHeight = DisplayUtils.getActionBarHeight(context);
-        likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
-        featuredImageHeight = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
+        displayWidthPx = DisplayUtils.getDisplayPixelWidth(context);
+        actionBarHeightPx = DisplayUtils.getActionBarHeight(context);
+        likeAvatarSizePx = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
+        featuredImageHeightPx = resources.getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
-        marginLarge = resources.getDimensionPixelSize(R.dimen.margin_large);
-        marginSmall = resources.getDimensionPixelSize(R.dimen.margin_small);
-        marginExtraSmall = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
-        listMarginWidth = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
+        marginLargePx = resources.getDimensionPixelSize(R.dimen.margin_large);
+        marginSmallPx = resources.getDimensionPixelSize(R.dimen.margin_small);
+        marginExtraSmallPx = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
+        listMarginWidthPx = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
 
         colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
         mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
@@ -54,7 +54,7 @@ class ReaderResourceVars {
         greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
 
-        int imageWidth = displayWidth - (listMarginWidth * 2);
+        int imageWidth = displayWidthPx - (listMarginWidthPx * 2);
         boolean hasStaticMenuDrawer =
                 (context instanceof WPActionBarActivity)
                         && (((WPActionBarActivity) context).isStaticMenuDrawer());
@@ -62,9 +62,9 @@ class ReaderResourceVars {
             int drawerWidth = resources.getDimensionPixelOffset(R.dimen.menu_drawer_width);
             imageWidth -= drawerWidth;
         }
-        fullSizeImageWidth = imageWidth;
+        fullSizeImageWidthPx = imageWidth;
 
-        videoWidth = DisplayUtils.pxToDp(context, fullSizeImageWidth - (marginLarge * 2));
-        videoHeight = (int) (videoWidth * 0.5625f);
+        videoWidthPx = DisplayUtils.pxToDp(context, fullSizeImageWidthPx - (marginLargePx * 2));
+        videoHeightPx = (int) (videoWidthPx * 0.5625f);
     }
 }

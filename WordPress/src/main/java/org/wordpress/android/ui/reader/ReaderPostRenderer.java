@@ -113,10 +113,10 @@ class ReaderPostRenderer {
         int newHeight;
         if (origSize.width > 0 && origSize.height > 0) {
             float ratio = ((float) origSize.height / (float) origSize.width);
-            newWidth = mResourceVars.fullSizeImageWidth;
+            newWidth = mResourceVars.fullSizeImageWidthPx;
             newHeight = (int) (newWidth * ratio);
         } else if (origSize.width > 0) {
-            newWidth = mResourceVars.fullSizeImageWidth;
+            newWidth = mResourceVars.fullSizeImageWidthPx;
             newHeight = 0;
         } else {
             return;
@@ -172,8 +172,8 @@ class ReaderPostRenderer {
     private String getFeaturedImageHtml() {
         String imageUrl = ReaderUtils.getResizedImageUrl(
                 mPost.getFeaturedImage(),
-                mResourceVars.fullSizeImageWidth,
-                mResourceVars.featuredImageHeight,
+                mResourceVars.fullSizeImageWidthPx,
+                mResourceVars.featuredImageHeightPx,
                 mPost.isPrivate);
 
         return String.format("<img class='size-full' src='%s'/>", imageUrl);
@@ -205,18 +205,18 @@ class ReaderPostRenderer {
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }",
-               mResourceVars.marginSmall, mResourceVars.marginSmall))
+               mResourceVars.marginSmallPx, mResourceVars.marginSmallPx))
                .append("    p:first-child { margin-top: 0px; }");
 
         // add background color and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
         sbHtml.append("  pre { overflow-x: scroll;")
               .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-              .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
+              .append("        padding: ").append(mResourceVars.marginSmallPx).append("px; }");
 
         // add a left border to blockquotes
-        sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmall).append("px; ")
-              .append("               padding-left: ").append(mResourceVars.marginSmall).append("px; ")
+        sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmallPx).append("px; ")
+              .append("               padding-left: ").append(mResourceVars.marginSmallPx).append("px; ")
               .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
 
         // show links in the same color they are elsewhere in the app
@@ -225,8 +225,8 @@ class ReaderPostRenderer {
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript(mPost)) {
-            sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidth).append("px !important;")
-                  .append("                  height: ").append(mResourceVars.videoHeight).append("px !important; }");
+            sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidthPx).append("px !important;")
+                  .append("                  height: ").append(mResourceVars.videoHeightPx).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
@@ -238,7 +238,7 @@ class ReaderPostRenderer {
         // small bottom margin
         sbHtml.append("  img.size-full, img.size-large { display: block;")
               .append("     background-color ").append(mResourceVars.greyExtraLightStr).append(";")
-              .append("     margin-bottom: ").append(mResourceVars.marginSmall).append("px; }");
+              .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
         // center medium-sized wp image
         sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
@@ -248,13 +248,13 @@ class ReaderPostRenderer {
         // params with ones that make images fit the width of the listView item, then adjust the
         // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
         if (content.contains("tiled-gallery-item")) {
-            String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidth);
+            String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidthPx);
             content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
                   .append("  div.tiled-gallery-item img { ")
                   .append("     width: auto !important; height: auto !important;")
-                  .append("     margin-top: ").append(mResourceVars.marginExtraSmall).append("px; ")
-                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmall).append("px; ")
+                  .append("     margin-top: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
+                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
                   .append("  }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }

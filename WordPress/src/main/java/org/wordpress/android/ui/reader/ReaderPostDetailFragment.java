@@ -244,7 +244,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
             mListView.setOnScrollListener(this);
-            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeight);
+            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeightPx);
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -1123,7 +1123,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasPostAvatar()) {
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
-                        mResourceVars.likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
+                        mResourceVars.likeAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
