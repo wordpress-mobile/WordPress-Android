@@ -104,12 +104,6 @@ class ReaderPostRenderer {
      * has height & width attributes set
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
-        // skip featured images inserted by getFeaturedImageHtml() since they already
-        // have their height & width set
-        if (imageTag.contains("featured-image")) {
-            return;
-        }
-
         ImageSize origSize = getImageSize(imageUrl);
         if (origSize == null) {
             return;
@@ -182,9 +176,7 @@ class ReaderPostRenderer {
                 mResourceVars.featuredImageHeight,
                 mPost.isPrivate);
 
-        // add unused class 'featured-image' so it can be detected by replaceImageTag()
-        return String.format("<img class='size-full featured-image' src='%s' width='%d' height='%d' />",
-                imageUrl, mResourceVars.fullSizeImageWidth, mResourceVars.featuredImageHeight);
+        return String.format("<img class='size-full' src='%s'/>", imageUrl);
     }
 
     /*
@@ -276,29 +268,44 @@ class ReaderPostRenderer {
         return sbHtml.toString();
     }
 
-    /*
-     * attempts to return the image size from the passed url - first tries to get size from
-     * attachments, then tries to get it from the query params if it's an obvious wp image
-     */
     private ImageSize getImageSize(final String imageUrl) {
-        ImageSize size = getAttachmentSize(imageUrl);
+        ImageSize size = getImageSizeFromAttachments(imageUrl);
         if (size != null) {
             return size;
-        } else if (imageUrl.contains("files.wordpress.com") && imageUrl.contains("w=")) {
-            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
-            return new ImageSize(
-                    StringUtils.stringToInt(uri.getQueryParameter("w")),
-                    StringUtils.stringToInt(uri.getQueryParameter("h")));
+        } else if (imageUrl.contains("?")) {
+            return getImageSizeFromQueryParams(imageUrl);
         } else {
             return null;
         }
     }
 
-    private ImageSize getAttachmentSize(final String imageUrl) {
+    private ImageSize getImageSizeFromAttachments(final String imageUrl) {
         if (mAttachmentSizes == null) {
             mAttachmentSizes = new ImageSizeMap(mPost.getAttachmentsJson());
         }
         return mAttachmentSizes.getAttachmentSize(imageUrl);
+    }
+
+    private ImageSize getImageSizeFromQueryParams(final String imageUrl) {
+        if (imageUrl.contains("w=")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            return new ImageSize(
+                    StringUtils.stringToInt(uri.getQueryParameter("w")),
+                    StringUtils.stringToInt(uri.getQueryParameter("h")));
+        } else if (imageUrl.contains("resize=")) {
+            Uri uri = Uri.parse(imageUrl.replace("&#038;", "&"));
+            String param = uri.getQueryParameter("resize");
+            if (param != null) {
+                String[] sizes = param.split(",");
+                if (sizes.length == 2) {
+                    int width = StringUtils.stringToInt(sizes[0]);
+                    int height = StringUtils.stringToInt(sizes[1]);
+                    return new ImageSize(width, height);
+                }
+            }
+        }
+
+        return null;
     }
 
     /*
