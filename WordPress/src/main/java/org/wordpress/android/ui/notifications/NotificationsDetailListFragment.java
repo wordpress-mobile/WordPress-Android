@@ -77,10 +77,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
            listView.addFooterView(mFooterView);
         }
 
-        if (mNote == null) {
-            return;
-        }
-
         reloadNoteBlocks();
     }
 
@@ -174,6 +170,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            if (mNote == null) return false;
+
             JSONArray bodyArray = mNote.getBody();
             mNoteBlockArray.clear();
 
@@ -250,6 +248,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         @Override
         protected void onPostExecute(Boolean isBadgeView) {
+            if (!isAdded()) return;
+
             if (isBadgeView) {
                 mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
             }

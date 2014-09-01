@@ -798,7 +798,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case TRASH:
-                // should never get here
+            default:
                 moderationDrawResId = R.drawable.ic_action_approve;
                 moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
@@ -806,8 +806,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
-            default:
-                return;
         }
 
         int commentActionCount = 0;
@@ -874,7 +872,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         } else {
             mBtnEditComment.setVisibility(View.GONE);
         }
-
 
         if (commentActionCount > 3) {
             // Hide buttons that will show in the overflow menu
