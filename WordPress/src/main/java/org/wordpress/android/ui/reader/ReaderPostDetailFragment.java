@@ -1085,9 +1085,6 @@ public class ReaderPostDetailFragment extends Fragment
                 return;
             }
 
-            // enable JavaScript in the webView if it's safe to do so
-            mReaderWebView.getSettings().setJavaScriptEnabled(ReaderPostRenderer.canEnableJavaScript(mPost));
-
             // render the post in the webView
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
             mRenderer.beginRender();

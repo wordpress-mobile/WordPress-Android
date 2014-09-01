@@ -45,6 +45,10 @@ class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<ReaderWebView>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
+
+        // enable JavaScript in the webView if it's safe to do so, otherwise videos
+        // and other embedded content won't work
+        webView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
     }
 
     void beginRender() {
@@ -224,7 +228,7 @@ class ReaderPostRenderer {
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
-        if (canEnableJavaScript(mPost)) {
+        if (canEnableJavaScript()) {
             sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidthPx).append("px !important;")
                   .append("                  height: ").append(mResourceVars.videoHeightPx).append("px !important; }");
         } else {
@@ -311,8 +315,8 @@ class ReaderPostRenderer {
     /*
      * javascript should only be enabled for wp blogs (not external feeds)
      */
-    static boolean canEnableJavaScript(ReaderPost post) {
-        return post != null && post.isWP();
+    private boolean canEnableJavaScript() {
+        return mPost != null && mPost.isWP();
     }
 
     /*
