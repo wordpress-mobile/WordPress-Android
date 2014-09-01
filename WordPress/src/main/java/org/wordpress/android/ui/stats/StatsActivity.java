@@ -138,9 +138,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mDetector.setIsLongpressEnabled(false);
 
-        // Refresh stats at startup
-        refreshStats();
-        mPullToRefreshHelper.setRefreshing(true);
+        // Refresh stats at startup if network and not on configuration changed
+        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
+            refreshStats();
+            mPullToRefreshHelper.setRefreshing(true);
+        }
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
