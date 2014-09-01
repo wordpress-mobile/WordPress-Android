@@ -5,7 +5,6 @@ package org.wordpress.android.models;
 
 import android.text.Html;
 import android.text.Spannable;
-import android.text.format.Time;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
@@ -20,7 +19,6 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
