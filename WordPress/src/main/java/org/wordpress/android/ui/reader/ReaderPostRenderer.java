@@ -34,6 +34,7 @@ class ReaderPostRenderer {
 
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
+    private final int mMinFullSizeWidthDp;
     private final WeakReference<ReaderWebView> mWeakWebView;
 
     private StringBuilder mRenderBuilder;
@@ -52,6 +53,7 @@ class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<ReaderWebView>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
+        mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 4);
 
         // enable JavaScript in the webView if it's safe to do so, otherwise videos
         // and other embedded content won't work
@@ -112,46 +114,21 @@ class ReaderPostRenderer {
 
     /*
      * called when image scanner finds an image, tries to replace the image tag with one that
-     * has height & width attributes set correctly for the current display
+     * has height & width attributes set correctly for the current display, if that fails
+     * replaces it with one that has our 'size-none' class
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
         ImageSize origSize = getImageSize(imageTag, imageUrl);
-        if (origSize == null) {
-            return;
-        }
+        boolean hasWidth = (origSize != null && origSize.width > 0);
+        boolean isFullSize = hasWidth && (origSize.width >= mMinFullSizeWidthDp);
 
-        // don't resize small images
-        if (origSize.width > 0 && origSize.width < (mResourceVars.fullSizeImageWidthPx / 4)) {
-            return;
-        }
-
-        int newWidth;
-        int newHeight;
-        if (origSize.width > 0 && origSize.height > 0) {
-            if (origSize.height > origSize.width) {
-                newHeight = mResourceVars.fullSizeImageWidthPx;
-                float ratio = ((float) origSize.width / (float) origSize.height);
-                newWidth = (int) (newHeight * ratio);
-            } else {
-                float ratio = ((float) origSize.height / (float) origSize.width);
-                newWidth = mResourceVars.fullSizeImageWidthPx;
-                newHeight = (int) (newWidth * ratio);
-            }
-        } else if (origSize.width > 0) {
-            newWidth = mResourceVars.fullSizeImageWidthPx;
-            newHeight = 0;
+        final String newImageTag;
+        if (isFullSize) {
+            newImageTag = makeFullSizeImageTag(imageUrl, origSize.width, origSize.height);
+        } else if (hasWidth) {
+            newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-none");
         } else {
-            return;
-        }
-
-        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, newWidth, newHeight, mPost.isPrivate);
-        String newImageTag;
-        if (newHeight > 0) {
-            newImageTag = String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
-                    newImageUrl, pxToDp(newWidth), pxToDp(newHeight));
-        } else {
-            newImageTag = String.format("<img class='size-full' src='%s' width='%d' />",
-                    newImageUrl, pxToDp(newWidth));
+            newImageTag = String.format("<img class='size-none' src='%s' />", imageUrl);
         }
 
         int start = mRenderBuilder.indexOf(imageTag);
@@ -159,7 +136,40 @@ class ReaderPostRenderer {
             AppLog.w(AppLog.T.READER, "reader renderer > image not found in builder");
             return;
         }
+
         mRenderBuilder.replace(start, start + imageTag.length(), newImageTag);
+    }
+
+    private String makeImageTag(final String imageUrl, int width, int height, final String className) {
+        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
+        if (height > 0) {
+            return String.format("<img class='%s' src='%s' width='%d' height='%d' />",
+                    className, newImageUrl, pxToDp(width), pxToDp(height));
+        } else {
+            return String.format("<img class='%s' src='%s' width='%d' />",
+                    className, newImageUrl, pxToDp(width));
+        }
+    }
+
+    private String makeFullSizeImageTag(final String imageUrl, int width, int height) {
+        int newWidth;
+        int newHeight;
+        if (width > 0 && height > 0) {
+            if (height > width) {
+                newHeight = mResourceVars.fullSizeImageWidthPx;
+                float ratio = ((float) width / (float) height);
+                newWidth = (int) (newHeight * ratio);
+            } else {
+                float ratio = ((float) height / (float) width);
+                newWidth = mResourceVars.fullSizeImageWidthPx;
+                newHeight = (int) (newWidth * ratio);
+            }
+        } else {
+            newWidth = mResourceVars.fullSizeImageWidthPx;
+            newHeight = 0;
+        }
+
+        return makeImageTag(imageUrl, newWidth, newHeight, "size-full");
     }
 
     /*
@@ -212,8 +222,8 @@ class ReaderPostRenderer {
     private String formatPostContentForWebView(String content) {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
-        // title isn't strictly necessary, but source is invalid html5 without one
-        sbHtml.append("<title>Reader Post</title>");
+        // title isn't necessary, but it's invalid html5 without one and it helps while debugging
+        sbHtml.append(String.format("<title>%s</title>", mPost.getTitle()));
 
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>");
@@ -258,12 +268,14 @@ class ReaderPostRenderer {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
-        // make sure images aren't wider than the display
-        sbHtml.append("  img { max-width: 100%; }");
+        // make sure images without sizes aren't wider than the display
+        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto; }");
 
-        // center large/medium images, and provide a small bottom margin
+        // center large/medium images, provide a small bottom margin, and add a background color
+        // so the user sees something while image is loading
         sbHtml.append("  img.size-full, img.size-large, img.size-medium {")
               .append("     display: block; margin-left: auto; margin-right: auto;")
+              .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
               .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
         // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
@@ -323,9 +335,9 @@ class ReaderPostRenderer {
             if (param != null) {
                 String[] sizes = param.split(",");
                 if (sizes.length == 2) {
-                    int width = StringUtils.stringToInt(sizes[0]);
-                    int height = StringUtils.stringToInt(sizes[1]);
-                    return new ImageSize(width, height);
+                    return new ImageSize(
+                            StringUtils.stringToInt(sizes[0]),
+                            StringUtils.stringToInt(sizes[1]));
                 }
             }
         }
@@ -334,12 +346,9 @@ class ReaderPostRenderer {
     }
 
     private ImageSize getImageSizeFromAttributes(final String imageTag) {
-        int width = ReaderImageScanner.getWidthAttrValue(imageTag);
-        if (width == 0) {
-            return null;
-        }
-        int height = ReaderImageScanner.getHeightAttrValue(imageTag);
-        return new ImageSize(width, height);
+        return new ImageSize(
+                ReaderImageScanner.getWidthAttrValue(imageTag),
+                ReaderImageScanner.getHeightAttrValue(imageTag));
     }
 
     private int pxToDp(int px) {
