@@ -258,10 +258,8 @@ class ReaderPostRenderer {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
-        // make sure images without a width aren't wider than the max
-        sbHtml.append("  img:not([width]) {")
-              .append("     max-width: ").append(pxToDp(mResourceVars.fullSizeImageWidthPx)).append("px;")
-              .append("     height: auto; }");
+        // make sure images aren't wider than the display
+        sbHtml.append("  img { max-width: 100%; }");
 
         // center large/medium images, and provide a small bottom margin
         sbHtml.append("  img.size-full, img.size-large, img.size-medium {")
