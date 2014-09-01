@@ -261,14 +261,10 @@ class ReaderPostRenderer {
         // don't allow any image to be wider than the viewport
         sbHtml.append("  img { max-width: 100%; height: auto; }");
 
-        // light grey background for large images so something appears while they're loading, with a
-        // small bottom margin
-        sbHtml.append("  img.size-full, img.size-large { display: block;")
-              .append("     background-color ").append(mResourceVars.greyExtraLightStr).append(";")
+        // center large/medium images, and provide a small bottom margin
+        sbHtml.append("  img.size-full, img.size-large, img.size-medium {")
+              .append("     display: block; margin-left: auto; margin-right: auto;")
               .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
-
-        // center medium-sized wp image
-        sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
 
         // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
         // content contains a tiled image gallery, remove the height params and replace the width
