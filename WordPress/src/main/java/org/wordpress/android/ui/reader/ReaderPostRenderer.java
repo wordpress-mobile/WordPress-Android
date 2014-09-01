@@ -249,6 +249,9 @@ class ReaderPostRenderer {
         // make sure long strings don't force the user to scroll horizontally
         .append("  body, p, div, a { word-wrap: break-word; }")
 
+        // counteract pre-defined height/width styles
+        .append("  p, div, dl, table { width: auto !important; height: auto !important; }")
+
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
         .append("      margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")

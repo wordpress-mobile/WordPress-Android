@@ -24,7 +24,7 @@ public class ReaderImageScanner {
 
     // regex for matching img tags in html content
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
-            "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)/>",
+            "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)>",
             Pattern.DOTALL| Pattern.CASE_INSENSITIVE);
 
     // regex for matching width attributes in tags
@@ -151,7 +151,7 @@ public class ReaderImageScanner {
     /*
      * returns the value from the src attribute in the passed html tag
      */
-    public static String getSrcAttrValue(final String tag) {
+    private static String getSrcAttrValue(final String tag) {
         if (tag == null) {
             return null;
         }
