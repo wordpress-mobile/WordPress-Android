@@ -35,6 +35,7 @@ class ReaderPostRenderer {
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
+    private final int mMinMidSizeWidthDp;
     private final WeakReference<ReaderWebView> mWeakWebView;
 
     private StringBuilder mRenderBuilder;
@@ -53,7 +54,9 @@ class ReaderPostRenderer {
         mPost = post;
         mWeakWebView = new WeakReference<ReaderWebView>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
-        mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 4);
+
+        mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 3);
+        mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
 
         // enable JavaScript in the webView if it's safe to do so, otherwise videos
         // and other embedded content won't work
@@ -121,10 +124,15 @@ class ReaderPostRenderer {
         ImageSize origSize = getImageSize(imageTag, imageUrl);
         boolean hasWidth = (origSize != null && origSize.width > 0);
         boolean isFullSize = hasWidth && (origSize.width >= mMinFullSizeWidthDp);
+        boolean isMidSize = hasWidth
+                && (origSize.width >= mMinMidSizeWidthDp)
+                && (origSize.width < mMinFullSizeWidthDp);
 
         final String newImageTag;
         if (isFullSize) {
             newImageTag = makeFullSizeImageTag(imageUrl, origSize.width, origSize.height);
+        } else if (isMidSize) {
+            newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-medium");
         } else if (hasWidth) {
             newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-none");
         } else {
@@ -272,7 +280,7 @@ class ReaderPostRenderer {
         sbHtml.append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
         // center large/medium images, provide a small bottom margin, and add a background color
-        // so the user sees something while images are loading
+        // so the user sees something while they're loading
         .append("  img.size-full, img.size-large, img.size-medium {")
         .append("     display: block; margin-left: auto; margin-right: auto;")
         .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
