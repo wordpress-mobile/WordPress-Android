@@ -372,8 +372,8 @@ public class CommentsActivity extends WPActionBarActivity
             if (commentId != 0) {
                 outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
             }
+            outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
         }
-        outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
         super.onSaveInstanceState(outState);
     }
 

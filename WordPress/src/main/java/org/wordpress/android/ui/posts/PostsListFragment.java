@@ -54,9 +54,11 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getActivity().getIntent().getExtras();
-        if (extras != null) {
-            mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+        if (isAdded()) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (extras != null) {
+                mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+            }
         }
     }
 
@@ -139,7 +141,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                 public void onPostsLoaded(int postCount) {
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some if network available
-                        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+                        if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
                             setRefreshing(true);
                             requestPosts(false);
                         }
@@ -153,7 +155,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (DisplayUtils.isTablet(getActivity())) {
+                    } else if (isAdded() && DisplayUtils.isTablet(getActivity())) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
