@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -353,12 +354,7 @@ class ReaderPostRenderer {
         if (px == 0) {
             return 0;
         }
-        ReaderWebView webView = mWeakWebView.get();
-        if (webView == null || webView.getContext() == null) {
-            AppLog.w(AppLog.T.READER, "reader renderer > no context");
-            return 0;
-        }
-        return DisplayUtils.pxToDp(webView.getContext(), px);
+        return DisplayUtils.pxToDp(WordPress.getContext(), px);
     }
 
     /*
