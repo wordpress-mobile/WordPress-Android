@@ -35,6 +35,8 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
@@ -202,39 +204,13 @@ public class PostsActivity extends WPActionBarActivity
         return mPostList.isRefreshing();
     }
 
-    private boolean hasLocalChanges() {
-        return WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
-    }
-
-    public void requestPostsIfNoLocalChanges(boolean shouldPrompt) {
+    public void requestPosts() {
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
-        if (hasLocalChanges()) {
-            if (!shouldPrompt) {
-                return;
-            }
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(PostsActivity.this);
-            dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
-            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            popPostDetail();
-                            attemptToSelectPost();
-                            mPostList.requestPosts(false);
-                        }
-                    }
-            );
-            dialogBuilder.setNegativeButton(getResources().getText(R.string.no), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    mPostList.setRefreshing(false);
-                }
-            });
-            dialogBuilder.setCancelable(true);
-            if (!isFinishing()) {
-                dialogBuilder.create().show();
-            }
+        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
+            // If user has local changes, abort refresh and show a toast.
+            ToastUtils.showToast(this, R.string.remote_changes, Duration.LONG);
         } else {
             popPostDetail();
             mPostList.requestPosts(false);
@@ -271,7 +247,7 @@ public class PostsActivity extends WPActionBarActivity
         }
 
         if (WordPress.postsShouldRefresh) {
-            requestPostsIfNoLocalChanges(false);
+            requestPosts();
             mPostList.setRefreshing(true);
             WordPress.postsShouldRefresh = false;
         }
@@ -413,7 +389,7 @@ public class PostsActivity extends WPActionBarActivity
                 Toast.makeText(PostsActivity.this, getResources().getText((mIsPage) ?
                         R.string.page_deleted : R.string.post_deleted),
                         Toast.LENGTH_SHORT).show();
-                requestPostsIfNoLocalChanges(false);
+                requestPosts();
                 mPostList.requestPosts(false);
                 mPostList.setRefreshing(true);
             } else {

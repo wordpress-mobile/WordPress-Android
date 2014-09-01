@@ -212,7 +212,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         WordPress.setOnPostUploadedListener(this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            ((PostsActivity) getActivity()).requestPostsIfNoLocalChanges(false);
+            ((PostsActivity) getActivity()).requestPosts();;
         }
     }
 
