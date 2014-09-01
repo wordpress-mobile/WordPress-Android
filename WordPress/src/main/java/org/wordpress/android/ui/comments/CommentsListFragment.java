@@ -45,8 +45,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
-    private boolean mHasAutoRefreshedComments = false;
-    private boolean mHasCheckedDeletedComments = false;
+    boolean mHasAutoRefreshedComments = false;
+    boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -61,8 +61,6 @@ public class CommentsListFragment extends Fragment {
     private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
-    private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
-    private static final String KEY_HAS_CHECKED_DELETED_COMMENTS = "has_checked_deleted_comments";
     private boolean mFirstLoad = true;
 
     private ListView getListView() {
@@ -149,21 +147,16 @@ public class CommentsListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setUpListView();
         getCommentAdapter().loadComments();
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             return;
         }
+        Bundle extras = getActivity().getIntent().getExtras();
+        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
             mPullToRefreshHelper.setRefreshing(true);
@@ -529,8 +522,6 @@ public class CommentsListFragment extends Fragment {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
-        outState.putBoolean(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
-        outState.putBoolean(KEY_HAS_CHECKED_DELETED_COMMENTS, mHasCheckedDeletedComments);
         super.onSaveInstanceState(outState);
     }
 

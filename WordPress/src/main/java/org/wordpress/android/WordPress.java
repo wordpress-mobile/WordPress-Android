@@ -52,6 +52,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
+import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.IOException;
@@ -482,6 +483,12 @@ public class WordPress extends Application {
         // General analytics resets
         AnalyticsTracker.endSession(false);
         AnalyticsTracker.clearAllData();
+
+        // disable passcode lock
+        AbstractAppLock appLock = AppLockManager.getInstance().getCurrentAppLock();
+        if (appLock != null) {
+            appLock.setPassword(null);
+        }
 
         // send broadcast that user is signing out - this is received by WPActionBarActivity
         // descendants
