@@ -29,6 +29,7 @@ public class CommentsActivity extends WPActionBarActivity
     private static final String KEY_HIGHLIGHTED_COMMENT_ID = "highlighted_comment_id";
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
+    static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
     private boolean mDualPane;
     private long mSelectedCommentId;
     private boolean mCommentSelected;
@@ -53,6 +54,8 @@ public class CommentsActivity extends WPActionBarActivity
 
     private void restoreSavedInstance(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
+
             // restore the highlighted comment
             long commentId = savedInstanceState.getLong(KEY_HIGHLIGHTED_COMMENT_ID);
             if (commentId != 0) {
@@ -369,6 +372,7 @@ public class CommentsActivity extends WPActionBarActivity
             if (commentId != 0) {
                 outState.putLong(KEY_HIGHLIGHTED_COMMENT_ID, commentId);
             }
+            outState.putBoolean(KEY_AUTO_REFRESHED, getListFragment().mHasAutoRefreshedComments);
         }
         super.onSaveInstanceState(outState);
     }

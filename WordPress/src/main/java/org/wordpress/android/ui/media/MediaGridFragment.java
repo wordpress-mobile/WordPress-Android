@@ -331,18 +331,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onResume() {
         super.onResume();
-
-        if (!NetworkUtils.isNetworkAvailable(this.getActivity())) {
-            mHasRetrievedAllMedia = true;
-        }
-
         refreshSpinnerAdapter();
         refreshMediaFromDB();
     }
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
-        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia) {
+        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia && isAdded()
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
             refreshMediaFromServer(0, true);
         }
     }
