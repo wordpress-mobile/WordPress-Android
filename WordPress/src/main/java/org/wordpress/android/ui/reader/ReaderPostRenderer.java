@@ -223,41 +223,41 @@ class ReaderPostRenderer {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't necessary, but it's invalid html5 without one and it helps while debugging
-        sbHtml.append(String.format("<title>%s</title>", mPost.getTitle()));
+        sbHtml.append(String.format("<title>%s</title>", mPost.getTitle()))
 
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
-        sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>");
+        .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
 
         // use "Open Sans" Google font
-        sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
+        .append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />")
 
-        sbHtml.append("<style type='text/css'>")
-              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
-              .append("  h1, h2 { line-height: 1.2em; }");
+        .append("<style type='text/css'>")
+        .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
+        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+        .append("  p, div { line-height: 1.6em; font-size: 1em; }")
+        .append("  h1, h2 { line-height: 1.2em; }")
 
         // make sure long strings don't force the user to scroll horizontally
-        sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
+        .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }",
-               mResourceVars.marginSmallPx, mResourceVars.marginSmallPx))
-               .append("    p:first-child { margin-top: 0px; }");
+        .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
+        .append("      margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")
+        .append("  p:first-child { margin-top: 0px; }")
 
         // add background color and padding to pre blocks, and add overflow scrolling
         // so user can scroll the block if it's wider than the display
-        sbHtml.append("  pre { overflow-x: scroll;")
-              .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-              .append("        padding: ").append(mResourceVars.marginSmallPx).append("px; }");
+        .append("  pre { overflow-x: scroll;")
+        .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
+        .append("        padding: ").append(mResourceVars.marginSmallPx).append("px; }")
 
         // add a left border to blockquotes
-        sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmallPx).append("px; ")
-              .append("               padding-left: ").append(mResourceVars.marginSmallPx).append("px; ")
-              .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
+        .append("  blockquote { margin-left: ").append(mResourceVars.marginSmallPx).append("px; ")
+        .append("               padding-left: ").append(mResourceVars.marginSmallPx).append("px; ")
+        .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
+        .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
@@ -269,14 +269,14 @@ class ReaderPostRenderer {
         }
 
         // make sure images without sizes aren't wider than the display
-        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto !important; }");
+        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto !important; }")
 
         // center large/medium images, provide a small bottom margin, and add a background color
-        // so the user sees something while image is loading
-        sbHtml.append("  img.size-full, img.size-large, img.size-medium {")
-              .append("     display: block; margin-left: auto; margin-right: auto;")
-              .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-              .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
+        // so the user sees something while images are loading
+        .append("  img.size-full, img.size-large, img.size-medium {")
+        .append("     display: block; margin-left: auto; margin-right: auto;")
+        .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
+        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
         // set tiled gallery containers to auto height/width
         if (content.contains("tiled-gallery-item")) {
@@ -285,9 +285,8 @@ class ReaderPostRenderer {
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
-        sbHtml.append("</style>");
-
-        sbHtml.append("</head><body>")
+        sbHtml.append("</style>")
+              .append("</head><body>")
               .append(content)
               .append("</body></html>");
 
