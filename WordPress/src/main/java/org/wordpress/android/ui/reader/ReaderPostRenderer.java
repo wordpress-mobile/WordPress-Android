@@ -128,9 +128,15 @@ class ReaderPostRenderer {
         int newWidth;
         int newHeight;
         if (origSize.width > 0 && origSize.height > 0) {
-            float ratio = ((float) origSize.height / (float) origSize.width);
-            newWidth = mResourceVars.fullSizeImageWidthPx;
-            newHeight = (int) (newWidth * ratio);
+            if (origSize.height > origSize.width) {
+                newHeight = mResourceVars.fullSizeImageWidthPx;
+                float ratio = ((float) origSize.width / (float) origSize.height);
+                newWidth = (int) (newHeight * ratio);
+            } else {
+                float ratio = ((float) origSize.height / (float) origSize.width);
+                newWidth = mResourceVars.fullSizeImageWidthPx;
+                newHeight = (int) (newWidth * ratio);
+            }
         } else if (origSize.width > 0) {
             newWidth = mResourceVars.fullSizeImageWidthPx;
             newHeight = 0;
