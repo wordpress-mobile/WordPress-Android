@@ -112,11 +112,16 @@ class ReaderPostRenderer {
 
     /*
      * called when image scanner finds an image, tries to replace the image tag with one that
-     * has height & width attributes set
+     * has height & width attributes set correctly for the current display
      */
     private void replaceImageTag(final String imageTag, final String imageUrl) {
-        ImageSize origSize = getImageSize(imageUrl);
+        ImageSize origSize = getImageSize(imageTag, imageUrl);
         if (origSize == null) {
+            return;
+        }
+
+        // don't resize small images
+        if (origSize.width > 0 && origSize.width < (mResourceVars.fullSizeImageWidthPx / 4)) {
             return;
         }
 
@@ -284,12 +289,14 @@ class ReaderPostRenderer {
         return sbHtml.toString();
     }
 
-    private ImageSize getImageSize(final String imageUrl) {
+    private ImageSize getImageSize(final String imageTag, final String imageUrl) {
         ImageSize size = getImageSizeFromAttachments(imageUrl);
         if (size != null) {
             return size;
         } else if (imageUrl.contains("?")) {
             return getImageSizeFromQueryParams(imageUrl);
+        } else if (imageTag.contains("width=")) {
+            return getImageSizeFromAttributes(imageTag);
         } else {
             return null;
         }
@@ -322,6 +329,15 @@ class ReaderPostRenderer {
         }
 
         return null;
+    }
+
+    private ImageSize getImageSizeFromAttributes(final String imageTag) {
+        int width = ReaderImageScanner.getWidthAttrValue(imageTag);
+        if (width == 0) {
+            return null;
+        }
+        int height = ReaderImageScanner.getHeightAttrValue(imageTag);
+        return new ImageSize(width, height);
     }
 
     private int pxToDp(int px) {
