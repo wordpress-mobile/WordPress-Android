@@ -143,7 +143,14 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
 
-        //TODO check if all variables are set
+        //Make sure the blog_id passed to this activity is valid and the blog is available within the app
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+
+        if (currentBlog == null) {
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         loadStatsFragments();
 
