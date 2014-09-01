@@ -5,11 +5,13 @@ package org.wordpress.android.models;
 
 import android.text.Html;
 import android.text.Spannable;
+import android.text.format.Time;
 import android.util.Log;
 
 import com.simperium.client.BucketSchema;
 import com.simperium.client.Syncable;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,8 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -145,14 +149,20 @@ public class Note extends Syncable {
         return "";
     }
 
+    /**
+     * Compare note timestamp to now and return a time grouping
+     */
     public static NoteTimeGroup getTimeGroupForTimestamp(long timestamp) {
-        if (DateTimeUtils.isDaysOlderThan(timestamp, 30)) {
+        Date today = new Date();
+        Date then = new Date(timestamp * 1000);
+
+        if (then.compareTo(DateUtils.addMonths(today, -1)) < 0) {
             return NoteTimeGroup.GROUP_OLDER_MONTH;
-        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 7)) {
+        } else if (then.compareTo(DateUtils.addWeeks(today, -1)) < 0) {
             return NoteTimeGroup.GROUP_OLDER_WEEK;
-        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 2)) {
+        } else if (then.compareTo(DateUtils.addDays(today, -2)) < 0) {
             return NoteTimeGroup.GROUP_OLDER_TWO_DAYS;
-        } else if (DateTimeUtils.isDaysOlderThan(timestamp, 1)) {
+        } else if (DateUtils.isSameDay(DateUtils.addDays(today, -1), then)) {
             return NoteTimeGroup.GROUP_YESTERDAY;
         } else {
             return NoteTimeGroup.GROUP_TODAY;

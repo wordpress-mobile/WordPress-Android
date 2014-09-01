@@ -145,12 +145,4 @@ public class DateTimeUtils {
         Date dtGmt = timestampToDate(timeStamp);
         return javaDateToTimeSpan(dtGmt);
     }
-
-    /**
-     * @return true if the supplied 'whenSeconds' is older than the number of days
-     */
-    public static boolean isDaysOlderThan(long whenSeconds, int days) {
-        int daysInSeconds = 60 * 60 * 24 * days;
-        return whenSeconds < (System.currentTimeMillis() / 1000) - daysInSeconds;
-    }
 }

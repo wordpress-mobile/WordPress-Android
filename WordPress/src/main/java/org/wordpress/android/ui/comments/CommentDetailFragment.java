@@ -199,11 +199,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mComment.getStatusEnum() == CommentStatus.SPAM) {
-                    moderateComment(CommentStatus.APPROVED);
-                } else {
-                    moderateComment(CommentStatus.SPAM);
-                }
+                onSpamButtonClick();
             }
         });
 
@@ -234,6 +230,16 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
+    private void onSpamButtonClick() {
+        if (mComment == null) return;
+
+        if (mComment.getStatusEnum() == CommentStatus.SPAM) {
+            moderateComment(CommentStatus.APPROVED);
+        } else {
+            moderateComment(CommentStatus.SPAM);
+        }
+    }
+
     private View.OnClickListener mMoreBtnClickListener = new View.OnClickListener() {
 
         @Override
@@ -245,7 +251,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        mBtnSpamComment.performClick();
+                        onSpamButtonClick();
                         return true;
                     }
                 });
