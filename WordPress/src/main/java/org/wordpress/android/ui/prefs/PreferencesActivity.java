@@ -150,23 +150,23 @@ public class PreferencesActivity extends PreferenceActivity {
             }
         }
 
-        //Passcode Lock not supported
-        if( AppLockManager.getInstance().isAppLockFeatureEnabled() == false ) {
-            PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
-            PreferenceGroup passcodeGroup = (PreferenceGroup)findPreference("wp_passcode_lock_category");
-            rootScreen.removePreference(passcodeGroup);
+        // Passcode Lock not supported
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
+                    "wp_pref_passlock_enabled");
+            // disable on-click changes on the property
+            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    passcodeEnabledCheckBoxPreference.setChecked(
+                            AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked());
+                    return false;
+                }
+            });
         } else {
-            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
-            //disable on-click changes on the property
-            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(
-                    new OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() );
-                            return false;
-                        }
-                    }
-                    );
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
+            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference("wp_passcode_lock_category");
+            rootScreen.removePreference(passcodeGroup);
         }
         displayPreferences();
     }
@@ -196,9 +196,10 @@ public class PreferencesActivity extends PreferenceActivity {
         refreshWPComAuthCategory();
 
         //update Passcode lock row if available
-        if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
-            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
-            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) {
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
+                    "wp_pref_passlock_enabled");
+            if (AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked()) {
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
                 passcodeEnabledCheckBoxPreference.setChecked(false);
