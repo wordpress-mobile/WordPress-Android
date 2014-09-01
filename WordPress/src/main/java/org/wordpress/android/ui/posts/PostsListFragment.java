@@ -104,7 +104,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+            dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {

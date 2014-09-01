@@ -210,7 +210,7 @@ public class PostsActivity extends WPActionBarActivity
         }
         if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             // If user has local changes, abort refresh and show a toast.
-            ToastUtils.showToast(this, R.string.remote_changes, Duration.LONG);
+            ToastUtils.showToast(this, R.string.refresh_aborted_local_changes, Duration.LONG);
         } else {
             popPostDetail();
             mPostList.requestPosts(false);
