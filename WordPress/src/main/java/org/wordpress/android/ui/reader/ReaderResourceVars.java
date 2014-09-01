@@ -24,8 +24,8 @@ class ReaderResourceVars {
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
 
-    final int videoWidthPx;
-    final int videoHeightPx;
+    final int videoWidthDp;
+    final int videoHeightDp;
 
     final int colorGreyExtraLight;
     final int mediumAnimTime;
@@ -64,7 +64,8 @@ class ReaderResourceVars {
         }
         fullSizeImageWidthPx = imageWidth;
 
-        videoWidthPx = DisplayUtils.pxToDp(context, fullSizeImageWidthPx - (marginLargePx * 2));
-        videoHeightPx = (int) (videoWidthPx * 0.5625f);
+        // 16:9 ratio (YouTube standard)
+        videoWidthDp = DisplayUtils.pxToDp(context, fullSizeImageWidthPx - (marginLargePx * 2));
+        videoHeightDp = (int) (videoWidthDp * 0.5625f);
     }
 }
