@@ -1014,23 +1014,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void likeComment() {
         if (mNote == null) return;
 
-        toggleLikeButton(!mBtnLikeComment.isSelected());
+        toggleLikeButton(!mBtnLikeComment.isActivated());
 
         WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                 String.valueOf(mNote.getCommentId()),
-                mBtnLikeComment.isSelected(),
+                mBtnLikeComment.isActivated(),
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (response != null && !response.optBoolean("success"))  {
                             // Failed, so switch the button state back
-                            toggleLikeButton(!mBtnLikeComment.isSelected());
+                            toggleLikeButton(!mBtnLikeComment.isActivated());
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        toggleLikeButton(!mBtnLikeComment.isSelected());
+                        toggleLikeButton(!mBtnLikeComment.isActivated());
                     }
                 });
     }
@@ -1040,10 +1040,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnLikeComment.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setTextColor(getResources().getColor(R.color.orange_medium));
             setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like_active);
+            mBtnLikeComment.setActivated(true);
         } else {
             mBtnLikeComment.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setTextColor(getResources().getColor(R.color.calypso_blue));
             setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like);
+            mBtnLikeComment.setActivated(false);
         }
     }
 }
