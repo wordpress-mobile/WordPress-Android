@@ -248,7 +248,7 @@ class ReaderPostRenderer {
         }
 
         // don't allow any image to be wider than the viewport
-        sbHtml.append("  img { max-width: 100% !important; }");
+        sbHtml.append("  img { max-width: 100%; height: auto; }");
 
         // light grey background for large images so something appears while they're loading, with a
         // small bottom margin
