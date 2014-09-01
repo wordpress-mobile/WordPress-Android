@@ -35,6 +35,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DisplayUtils;
 
+import javax.annotation.Nonnull;
+
 public class NotificationsActivity extends WPActionBarActivity
         implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
         NotificationFragment.OnCommentClickListener {
@@ -42,7 +44,7 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
-    public static final int NOTIFICATION_TRANSITION_DURATION = 300;
+
     private static final String KEY_INITIAL_UPDATE = "initial_update";
     private static final String TAG_LIST_VIEW = "listView";
     private static final String TAG_DETAIL_VIEW = "detailView";
@@ -86,7 +88,6 @@ public class NotificationsActivity extends WPActionBarActivity
             actionBar.setDisplayShowTitleEnabled(true);
         }
         setTitle(getResources().getString(R.string.notifications));
-
 
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
@@ -398,7 +399,7 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }

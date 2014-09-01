@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.preference.PreferenceManager;

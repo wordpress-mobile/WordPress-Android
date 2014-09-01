@@ -7,6 +7,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import javax.annotation.Nonnull;
+
 /**
  * Allows links to be highlighted when tapped on note blocks.
  * See: http://stackoverflow.com/a/20905824/309558
@@ -16,7 +18,7 @@ public class NoteBlockLinkMovementMethod extends LinkMovementMethod {
     private NoteBlockClickableSpan mPressedSpan;
 
     @Override
-    public boolean onTouchEvent(TextView textView, Spannable spannable, MotionEvent event) {
+    public boolean onTouchEvent(@Nonnull TextView textView, @Nonnull Spannable spannable, @Nonnull MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             mPressedSpan = getPressedSpan(textView, spannable, event);
             if (mPressedSpan != null) {

@@ -165,7 +165,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     };
 
 
-    // Loop through the body items in this note, and create blocks for each.
+    // Loop through the 'body' items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, Boolean> {
 
         @Override

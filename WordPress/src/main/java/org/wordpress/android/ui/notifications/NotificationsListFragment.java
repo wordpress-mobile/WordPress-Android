@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +22,8 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
+import javax.annotation.Nonnull;
+
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class NotificationsListFragment extends ListFragment implements Bucket.Listener<Note> {
@@ -42,7 +42,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
     }
 
@@ -94,7 +94,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onPause() {
-        // unregister the listener and close the cursor
+        // unregister the listener
         mBucket.removeListener(this);
 
         super.onPause();
@@ -102,6 +102,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onDestroy() {
+        // Close Simperium cursor
         mNotesAdapter.closeCursor();
 
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
@@ -201,6 +202,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         });
     }
 
+    public void setShouldLoadFirstNote(boolean shouldLoad) {
+        mShouldLoadFirstNote = shouldLoad;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         if (outState.isEmpty()) {
@@ -230,21 +235,5 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     @Override
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
-    }
-
-    public void setShouldLoadFirstNote(boolean shouldLoad) {
-        mShouldLoadFirstNote = shouldLoad;
-    }
-
-    @Override
-    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        if (transit == 0 || enter) {
-            return null;
-        }
-
-        ObjectAnimator exitAnimation = ObjectAnimator.ofFloat(null, "alpha", 1.0f, 0.0f)
-                .setDuration(NotificationsActivity.NOTIFICATION_TRANSITION_DURATION);
-
-        return exitAnimation;
     }
 }

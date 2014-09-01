@@ -126,7 +126,7 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             // Request image, and animate it when loaded
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
-            WordPress.imageLoader.get(mMediaItem.optString("url", ""), new ImageLoader.ImageListener() {
+            WordPress.imageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                     if (response.getBitmap() != null && view.getContext() != null) {
@@ -148,7 +148,7 @@ public class NoteBlock {
 
         // Note video
         if (hasVideoMediaItem()) {
-            noteBlockHolder.getVideoView().setVideoURI(Uri.parse(mMediaItem.optString("url", "")));
+            noteBlockHolder.getVideoView().setVideoURI(Uri.parse(getNoteMediaItem().optString("url", "")));
             noteBlockHolder.getVideoView().setVisibility(View.VISIBLE);
         } else {
             noteBlockHolder.hideVideoView();

@@ -200,8 +200,4 @@ public class UserNoteBlock extends NoteBlock {
             return true;
         }
     };
-
-    protected View.OnTouchListener getOnGravatarTouchListener() {
-        return mOnGravatarTouchListener;
-    }
 }
