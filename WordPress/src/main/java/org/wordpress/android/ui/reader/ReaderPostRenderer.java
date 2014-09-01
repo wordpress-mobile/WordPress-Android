@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -23,6 +25,10 @@ import java.util.Iterator;
  * generates and displays the HTML for post detail content - main purpose is to assign the
  * height/width attributes on image tags to (1) avoid the webView resizing as images are
  * loaded, and (2) avoid requesting images at a size larger than the display
+ *
+ * important to note that displayed images rely on dp rather than px sizes due to the
+ * fact that WebView "converts CSS pixel values to density-independent pixel values"
+ * http://developer.android.com/guide/webapps/targeting.html
  */
 class ReaderPostRenderer {
 
@@ -34,6 +40,7 @@ class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
 
+    @SuppressLint("SetJavaScriptEnabled")
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
@@ -127,9 +134,14 @@ class ReaderPostRenderer {
         }
 
         String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, newWidth, newHeight, mPost.isPrivate);
-        String newImageTag =
-                String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
-                                                      newImageUrl, newWidth, newHeight);
+        String newImageTag;
+        if (newHeight > 0) {
+            newImageTag = String.format("<img class='size-full' src='%s' width='%d' height='%d' />",
+                    newImageUrl, pxToDp(newWidth), pxToDp(newHeight));
+        } else {
+            newImageTag = String.format("<img class='size-full' src='%s' width='%d' />",
+                    newImageUrl, pxToDp(newWidth));
+        }
 
         int start = mRenderBuilder.indexOf(imageTag);
         if (start == -1) {
@@ -229,14 +241,14 @@ class ReaderPostRenderer {
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript()) {
-            sbHtml.append("  iframe, embed { width: ").append(mResourceVars.videoWidthDp).append("px !important;")
-                  .append("                  height: ").append(mResourceVars.videoHeightDp).append("px !important; }");
+            sbHtml.append("  iframe, embed { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+                  .append("                  height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
         // don't allow any image to be wider than the viewport
-        sbHtml.append("  img { max-width: 100% !important; height: auto; }");
+        sbHtml.append("  img { max-width: 100% !important; }");
 
         // light grey background for large images so something appears while they're loading, with a
         // small bottom margin
@@ -312,11 +324,23 @@ class ReaderPostRenderer {
         return null;
     }
 
+    private int pxToDp(int px) {
+        if (px == 0) {
+            return 0;
+        }
+        ReaderWebView webView = mWeakWebView.get();
+        if (webView == null || webView.getContext() == null) {
+            AppLog.w(AppLog.T.READER, "reader renderer > no context");
+            return 0;
+        }
+        return DisplayUtils.pxToDp(webView.getContext(), px);
+    }
+
     /*
      * javascript should only be enabled for wp blogs (not external feeds)
      */
     private boolean canEnableJavaScript() {
-        return mPost != null && mPost.isWP();
+        return mPost.isWP();
     }
 
     /*

@@ -24,8 +24,8 @@ class ReaderResourceVars {
     final int fullSizeImageWidthPx;
     final int featuredImageHeightPx;
 
-    final int videoWidthDp;
-    final int videoHeightDp;
+    final int videoWidthPx;
+    final int videoHeightPx;
 
     final int colorGreyExtraLight;
     final int mediumAnimTime;
@@ -54,7 +54,9 @@ class ReaderResourceVars {
         greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
 
-        int imageWidth = displayWidthPx - (listMarginWidthPx * 2);
+        // full-size image width must take list margin and padding into account
+        int listPadding = resources.getDimensionPixelOffset(R.dimen.margin_large);
+        int imageWidth = displayWidthPx - (listMarginWidthPx * 2) - (listPadding * 2);
         boolean hasStaticMenuDrawer =
                 (context instanceof WPActionBarActivity)
                         && (((WPActionBarActivity) context).isStaticMenuDrawer());
@@ -65,7 +67,7 @@ class ReaderResourceVars {
         fullSizeImageWidthPx = imageWidth;
 
         // 16:9 ratio (YouTube standard)
-        videoWidthDp = DisplayUtils.pxToDp(context, fullSizeImageWidthPx - (marginLargePx * 2));
-        videoHeightDp = (int) (videoWidthDp * 0.5625f);
+        videoWidthPx = fullSizeImageWidthPx - (marginLargePx * 2);
+        videoHeightPx = (int) (videoWidthPx * 0.5625f);
     }
 }
