@@ -219,7 +219,7 @@ class ReaderPostRenderer {
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
-    private String formatPostContentForWebView(String content) {
+    private String formatPostContentForWebView(final String content) {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
         // title isn't necessary, but it's invalid html5 without one and it helps while debugging
@@ -269,7 +269,7 @@ class ReaderPostRenderer {
         }
 
         // make sure images without sizes aren't wider than the display
-        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto; }");
+        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto !important; }");
 
         // center large/medium images, provide a small bottom margin, and add a background color
         // so the user sees something while image is loading
@@ -278,19 +278,10 @@ class ReaderPostRenderer {
               .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
               .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
 
-        // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
-        // content contains a tiled image gallery, remove the height params and replace the width
-        // params with ones that make images fit the width of the listView item, then adjust the
-        // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
+        // set tiled gallery containers to auto height/width
         if (content.contains("tiled-gallery-item")) {
-            String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidthPx);
-            content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
+            AppLog.d(AppLog.T.READER, "reader renderer > tiled gallery");
             sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                  .append("  div.tiled-gallery-item img { ")
-                  .append("     width: auto !important; height: auto !important;")
-                  .append("     margin-top: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
-                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
-                  .append("  }")
                   .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
