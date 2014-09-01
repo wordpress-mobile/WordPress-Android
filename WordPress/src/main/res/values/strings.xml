@@ -520,7 +520,6 @@
     <!-- Remote Post Changes -->
     <string name="local_changes">Local changes</string>
     <string name="overwrite_local_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Proceed with the refresh and overwrite local changes?</string>
-    <string name="refresh_aborted_local_changes">You\'ve made changes to a post that haven\'t been uploaded yet. Upload it before refreshing.</string>
 
     <string name="ok">OK</string>
     <string name="image_settings">Image settings</string>

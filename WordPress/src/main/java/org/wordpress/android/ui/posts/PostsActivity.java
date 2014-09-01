@@ -35,8 +35,6 @@ import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ProfilingUtils;
-import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.passcodelock.AppLockManager;
@@ -208,10 +206,8 @@ public class PostsActivity extends WPActionBarActivity
         if (WordPress.getCurrentBlog() == null) {
             return;
         }
-        if (WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
-            // If user has local changes, abort refresh and show a toast.
-            ToastUtils.showToast(this, R.string.refresh_aborted_local_changes, Duration.LONG);
-        } else {
+        // If user has local changes, don't refresh
+        if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             popPostDetail();
             mPostList.requestPosts(false);
             mPostList.setRefreshing(true);
