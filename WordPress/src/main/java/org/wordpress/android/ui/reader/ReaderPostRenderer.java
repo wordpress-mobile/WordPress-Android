@@ -43,17 +43,8 @@ class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
 
-    private static int mDebugCnt = 0;
-
     @SuppressLint("SetJavaScriptEnabled")
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
-        /*mDebugCnt++;
-        if (mDebugCnt == 1) {
-            Debug.startMethodTracing("wordpress");
-        } else if (mDebugCnt == 5) {
-            Debug.stopMethodTracing();
-        }*/
-
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
