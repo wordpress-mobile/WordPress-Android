@@ -43,8 +43,17 @@ class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
 
+    private static int mDebugCnt = 0;
+
     @SuppressLint("SetJavaScriptEnabled")
     ReaderPostRenderer(ReaderWebView webView, ReaderPost post) {
+        /*mDebugCnt++;
+        if (mDebugCnt == 1) {
+            Debug.startMethodTracing("wordpress");
+        } else if (mDebugCnt == 5) {
+            Debug.stopMethodTracing();
+        }*/
+
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -137,7 +146,7 @@ class ReaderPostRenderer {
         } else if (hasWidth) {
             newImageTag = makeImageTag(imageUrl, origSize.width, origSize.height, "size-none");
         } else {
-            newImageTag = String.format("<img class='size-none' src='%s' />", imageUrl);
+            newImageTag = "<img class='size-none' src='" + imageUrl + "' />";
         }
 
         int start = mRenderBuilder.indexOf(imageTag);
@@ -149,14 +158,19 @@ class ReaderPostRenderer {
         mRenderBuilder.replace(start, start + imageTag.length(), newImageTag);
     }
 
-    private String makeImageTag(final String imageUrl, int width, int height, final String className) {
+    private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
         String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
         if (height > 0) {
-            return String.format("<img class='%s' src='%s' width='%d' height='%d' />",
-                    className, newImageUrl, pxToDp(width), pxToDp(height));
+            return new StringBuilder("<img class='").append(imageClass).append("'")
+                    .append(" src='").append(newImageUrl).append("'")
+                    .append(" width='").append(pxToDp(width)).append("'")
+                    .append(" height='").append(pxToDp(height)).append("' />")
+                    .toString();
         } else {
-            return String.format("<img class='%s' src='%s' width='%d' />",
-                    className, newImageUrl, pxToDp(width));
+            return new StringBuilder("<img class='").append(imageClass).append("'")
+                    .append( "src='").append(newImageUrl).append("'")
+                    .append(" width='").append(pxToDp(width)).append("' />")
+                    .toString();
         }
     }
 
@@ -222,7 +236,7 @@ class ReaderPostRenderer {
                 mResourceVars.featuredImageHeightPx,
                 mPost.isPrivate);
 
-        return String.format("<img class='size-full' src='%s'/>", imageUrl);
+        return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
     /*
@@ -231,8 +245,8 @@ class ReaderPostRenderer {
     private String formatPostContentForWebView(final String content) {
         StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
 
-        // title isn't necessary, but it's invalid html5 without one and it helps while debugging
-        sbHtml.append(String.format("<title>%s</title>", mPost.getTitle()))
+        // title isn't necessary, but it's invalid html5 without one
+        sbHtml.append("<title>Reader Post</title>")
 
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
@@ -246,11 +260,11 @@ class ReaderPostRenderer {
         .append("  p, div { line-height: 1.6em; font-size: 1em; }")
         .append("  h1, h2 { line-height: 1.2em; }")
 
-        // make sure long strings don't force the user to scroll horizontally
-        .append("  body, p, div, a { word-wrap: break-word; }")
-
         // counteract pre-defined height/width styles
         .append("  p, div, dl, table { width: auto !important; height: auto !important; }")
+
+        // make sure long strings don't force the user to scroll horizontally
+        .append("  body, p, div, a { word-wrap: break-word; }")
 
         // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
         .append("  p { margin-top: ").append(mResourceVars.marginSmallPx).append("px;")
@@ -307,15 +321,13 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSize(final String imageTag, final String imageUrl) {
         ImageSize size = getImageSizeFromAttachments(imageUrl);
-        if (size != null) {
-            return size;
-        } else if (imageUrl.contains("?")) {
-            return getImageSizeFromQueryParams(imageUrl);
-        } else if (imageTag.contains("width=")) {
-            return getImageSizeFromAttributes(imageTag);
-        } else {
-            return null;
+        if (size == null && imageUrl.contains("?")) {
+            size = getImageSizeFromQueryParams(imageUrl);
         }
+        if (size == null && imageTag.contains("width=")) {
+            size = getImageSizeFromAttributes(imageTag);
+        }
+        return size;
     }
 
     private ImageSize getImageSizeFromAttachments(final String imageUrl) {
