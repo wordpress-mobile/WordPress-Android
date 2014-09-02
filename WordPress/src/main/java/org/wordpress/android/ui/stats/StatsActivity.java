@@ -73,7 +73,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private static final int REQUEST_JETPACK = 7000;
 
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
-    public static final String ARG_LOCAL_TABLE_BLOG_ID = "BLOG_LOCAL_ID";
+    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
 
     public static final String STATS_GESTURE_SHOW_TAP = "STATS_SHOW_TAP";
     public static final String STATS_GESTURE_SINGLE_TAP_CONFIRMED = "STATS_SINGLE_TAP_CONFIRMED";

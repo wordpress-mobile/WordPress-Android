@@ -56,7 +56,6 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * The native stats details activity, accessible when the user taps on a bar in the main chart.
  */
 public class StatsDetailsActivity extends WPActionBarActivity {
-    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_ID";
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -134,7 +133,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                 String date = extras.getString(StatsActivity.STATS_DETAILS_DATE);
                 mStatsDate = date;
             }
-            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+            mLocalBlogID = getIntent().getIntExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
 
         setTitle(getString(R.string.stats));

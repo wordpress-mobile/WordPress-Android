@@ -51,14 +51,13 @@ public abstract class StatsAbsViewFragment extends Fragment {
 
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
-        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
     }
 
     private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
-    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_ID";
 
     protected StatsViewType getViewType() {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
@@ -66,7 +65,7 @@ public abstract class StatsAbsViewFragment extends Fragment {
     }
 
     protected int getLocalTableBlogID() {
-        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
     }
 
     protected abstract String getTitle();

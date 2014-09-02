@@ -46,7 +46,6 @@ public class StatsCursorTreeFragment extends Fragment
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
     private static final String ARGS_EMPTY_LABEL_TITLE = "ARGS_EMPTY_LABEL_TITLE";
     private static final String ARGS_EMPTY_LABEL_DESC = "ARGS_EMPTY_LABEL_DESC";
-    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_LOCAL_ID";
 
     public static final String TAG = StatsCursorTreeFragment.class.getSimpleName();
 
@@ -72,7 +71,7 @@ public class StatsCursorTreeFragment extends Fragment
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
         args.putInt(ARGS_EMPTY_LABEL_TITLE, emptyLabelTitleResId);
         args.putInt(ARGS_EMPTY_LABEL_DESC, emptyLabelDescResId);
-        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -134,7 +133,7 @@ public class StatsCursorTreeFragment extends Fragment
     }
 
     private int getLocalTableBlogID() {
-        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
     }
 
     @Override

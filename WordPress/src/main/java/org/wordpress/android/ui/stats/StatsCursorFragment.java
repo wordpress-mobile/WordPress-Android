@@ -38,7 +38,6 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
     private static final String ARGS_TOTALS_LABEL = "ARGS_TOTALS_LABEL";
     private static final String ARGS_EMPTY_LABEL_TITLE = "ARGS_EMPTY_LABEL_TITLE";
     private static final String ARGS_EMPTY_LABEL_DESC = "ARGS_EMPTY_LABEL_DESC";
-    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_LOCAL_ID";
     private static final int NO_STRING_ID = -1;
 
     public static final String TAG = StatsCursorFragment.class.getSimpleName();
@@ -66,7 +65,7 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
         args.putInt(ARGS_EMPTY_LABEL_TITLE, emptyLabelTitleResId);
         args.putInt(ARGS_EMPTY_LABEL_DESC, emptyLabelDescResId);
-        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -122,7 +121,7 @@ public class StatsCursorFragment extends Fragment implements LoaderManager.Loade
     }
 
     private int getLocalTableBlogID() {
-        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
     }
 
     @Override

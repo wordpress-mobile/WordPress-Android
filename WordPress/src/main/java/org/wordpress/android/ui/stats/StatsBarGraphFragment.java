@@ -49,7 +49,6 @@ import java.util.Map;
  */
 public class StatsBarGraphFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARGS_BAR_CHART_UNIT = "ARGS_TIMEFRAME";
-    private static final String ARGS_LOCAL_TABLE_BLOG_ID = "ARGS_BLOG_ID";
 
     private LinearLayout mGraphContainer;
     private final ContentObserver mContentObserver = new BarGraphContentObserver(new Handler());
@@ -66,7 +65,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
 
         Bundle args = new Bundle();
         args.putInt(ARGS_BAR_CHART_UNIT, unit.ordinal());
-        args.putInt(ARGS_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -163,7 +162,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
         if (unit == StatsBarChartUnit.DAY) {
             Intent statsWebViewIntent = new Intent(this.getActivity(), StatsDetailsActivity.class);
             statsWebViewIntent.putExtra(StatsActivity.STATS_DETAILS_DATE, date);
-            statsWebViewIntent.putExtra(StatsDetailsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+            statsWebViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
             this.getActivity().startActivity(statsWebViewIntent);
         } else {
             // Week or Month on the screen. Show a toast.
@@ -181,7 +180,7 @@ public class StatsBarGraphFragment extends Fragment implements LoaderManager.Loa
     }
 
     protected int getLocalTableBlogID() {
-        return getArguments().getInt(ARGS_LOCAL_TABLE_BLOG_ID);
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
     }
 
     @Override
