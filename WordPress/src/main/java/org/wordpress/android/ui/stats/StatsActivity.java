@@ -250,7 +250,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             mResultCode = resultCode;
             final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
-            if (resultCode == RESULT_OK && !currentBlog.isDotcomFlag()) {
+            if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
                 if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                     final Handler handler = new Handler();
                     // Attempt to get the Jetpack blog ID
@@ -461,6 +461,10 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private void showJetpackMissingAlert(final Activity currentActivity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null && !isFinishing()) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+        }
         if (currentBlog.isAdmin()) {
             builder.setMessage(getString(R.string.jetpack_message))
                     .setTitle(getString(R.string.jetpack_not_found));
