@@ -147,6 +147,10 @@ public class Note extends Syncable {
         return "";
     }
 
+    public String getHeaderSnippet() {
+        return queryJSON("header[1].text", "");
+    }
+
     /**
      * Compare note timestamp to now and return a time grouping
      */

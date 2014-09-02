@@ -31,6 +31,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private boolean mShouldLoadFirstNote;
+    private int mListPositionSelection;
 
     Bucket<Note> mBucket;
 
@@ -38,7 +39,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(Note note);
+        public void onClickNote(Note note, int position);
     }
 
     @Override
@@ -136,27 +137,12 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         Note note = mNotesAdapter.getNote(position);
         if (note != null && mNoteClickListener != null) {
-            mNoteClickListener.onClickNote(note);
-            mNotesAdapter.setSelectedPosition(position);
+            mNoteClickListener.onClickNote(note, position);
         }
     }
 
-    // Clears list selection
-    public void resetSelection() {
-        if (mNotesAdapter == null) return;
-
-        mNotesAdapter.setSelectedPosition(ListView.INVALID_POSITION);
-        getListView().clearChoices();
-        refreshNotes();
-    }
-
-    // When rotating on a tablet, set last selected item as checked
-    public void setSelectedPositionChecked() {
-        if (mNotesAdapter == null) return;
-
-        if (mNotesAdapter.getSelectedPosition() >= 0 && getListView().getCount() > mNotesAdapter.getSelectedPosition()) {
-            getListView().setItemChecked(mNotesAdapter.getSelectedPosition(), true);
-        }
+    public void setSelectedPosition(int position) {
+        mListPositionSelection = position;
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {
@@ -193,9 +179,29 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
                     mShouldLoadFirstNote = false;
                     Note note = mNotesAdapter.getNote(0);
-                    if (note != null && mNoteClickListener != null) {
-                        mNoteClickListener.onClickNote(note);
+                    if (getListView() != null && note != null && mNoteClickListener != null) {
+                        mNoteClickListener.onClickNote(note, 0);
                         getListView().setItemChecked(0, true);
+                    }
+                }
+
+                // Show requested index or first row if on a landscape tablet
+                if (DisplayUtils.isLandscapeTablet(getActivity()) &&
+                        (mShouldLoadFirstNote || mListPositionSelection != ListView.INVALID_POSITION)) {
+                    if (mShouldLoadFirstNote) {
+                        mListPositionSelection = 0;
+                        Note note = mNotesAdapter.getNote(mListPositionSelection);
+                        if (note != null) {
+                            mNoteClickListener.onClickNote(note, mListPositionSelection);
+                        }
+
+                        mShouldLoadFirstNote = false;
+                    }
+
+                    // Highlight the note row
+                    if (mListPositionSelection < mNotesAdapter.getCount() && getListView() != null) {
+                        getListView().setItemChecked(mListPositionSelection, true);
+                        mListPositionSelection = ListView.INVALID_POSITION;
                     }
                 }
             }
@@ -211,6 +217,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
         super.onSaveInstanceState(outState);
     }
 

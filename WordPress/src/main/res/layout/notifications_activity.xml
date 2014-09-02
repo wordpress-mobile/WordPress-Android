@@ -3,13 +3,18 @@
 <!--
     layout for notifications
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:baselineAligned="false"
     android:orientation="horizontal"
     android:showDividers="middle"
     android:divider="?android:attr/dividerVertical"
-    android:weightSum="10"
     android:background="@color/calypso_blue_light">
-</LinearLayout>
+        <fragment
+            android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="notificationsList" />
+</FrameLayout>

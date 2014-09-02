@@ -285,13 +285,13 @@ public class NotificationsUtils {
 
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
-            activity.showBlogPreviewForSiteId(clickedSpan.getSiteId(), clickedSpan.getUrl());
+            activity.showBlogPreviewActivity(clickedSpan.getSiteId(), clickedSpan.getUrl());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
             // Show post detail
-            activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getId());
+            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId(), "");
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.COMMENT) {
             // For now, show post detail for comments
-            activity.showPostForSiteAndPostId(clickedSpan.getSiteId(), clickedSpan.getPostId());
+            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId(), "");
         } else {
             // We don't know what type of id this is, let's see if it has a URL and push a webview
             if (!TextUtils.isEmpty(clickedSpan.getUrl())) {

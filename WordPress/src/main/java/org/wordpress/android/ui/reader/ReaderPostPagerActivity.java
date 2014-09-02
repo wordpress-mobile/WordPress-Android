@@ -64,7 +64,7 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    protected static final String ARG_IS_SINGLE_POST = "is_single_post";
+    public static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -150,7 +150,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (!isAdded() || mNote == null) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showPostForSiteAndPostId(mNote.getSiteId(), mNote.getPostId());
+            notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId(), mNote.getHeaderSnippet());
         }
     };
 
@@ -160,7 +160,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (!isAdded()) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showBlogPreviewForSiteId(siteId, null);
+            notificationsActivity.showBlogPreviewActivity(siteId, null);
         }
     };
 

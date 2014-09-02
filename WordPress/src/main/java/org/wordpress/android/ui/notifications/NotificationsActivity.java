@@ -7,12 +7,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -27,8 +25,11 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ui.reader.ReaderPostListActivity;
+import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -45,15 +46,14 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
-    private static final String KEY_INITIAL_UPDATE = "initial_update";
-    private static final String TAG_LIST_VIEW = "listView";
-    private static final String TAG_DETAIL_VIEW = "detailView";
+    private static final String KEY_INITIAL_UPDATE = "initialUpdate";
+    private static final String KEY_LIST_POSITION = "listPosition";
+    private static final String TAG_LIST_VIEW = "notificationsList";
 
     private NotificationsListFragment mNotesListFragment;
-    private NotificationsDetailFragment mTabletDetailFragment;
-    private Fragment mCurrentFragment;
 
     private String mSelectedNoteId;
+    private int mSelectedListPosition;
     private boolean mHasPerformedInitialUpdate;
 
     @Override
@@ -65,22 +65,10 @@ public class NotificationsActivity extends WPActionBarActivity
             AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
         }
 
-        FragmentManager fm = getFragmentManager();
-        if (fm.findFragmentByTag(TAG_LIST_VIEW) != null) {
-            mNotesListFragment = (NotificationsListFragment)fm.findFragmentByTag(TAG_LIST_VIEW);
-        } else {
-            mNotesListFragment = new NotificationsListFragment();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.add(R.id.layout_fragment_container, mNotesListFragment, TAG_LIST_VIEW);
-            fragmentTransaction.commit();
-        }
+        FragmentManager fragmentManager = getFragmentManager();
 
-        if (DisplayUtils.isLandscapeTablet(this)) {
-            if (fm.findFragmentByTag(TAG_DETAIL_VIEW) != null) {
-                mTabletDetailFragment = (NotificationsDetailFragment)fm.findFragmentByTag(TAG_DETAIL_VIEW);
-            } else {
-                addDetailFragment();
-            }
+        if (mNotesListFragment == null) {
+            mNotesListFragment = (NotificationsListFragment)fragmentManager.findFragmentByTag(TAG_LIST_VIEW);
         }
 
         ActionBar actionBar = getActionBar();
@@ -89,13 +77,21 @@ public class NotificationsActivity extends WPActionBarActivity
         }
         setTitle(getResources().getString(R.string.notifications));
 
-        fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
+        fragmentManager.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mNotesListFragment.setOnNoteClickListener(new NoteClickListener());
 
         GCMIntentService.clearNotificationsMap();
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+
+            if (savedInstanceState.containsKey(NOTE_ID_EXTRA)) {
+                // Restore last selected note
+                openNoteForNoteId(savedInstanceState.getString(NOTE_ID_EXTRA));
+                if (DisplayUtils.isLandscapeTablet(this) && savedInstanceState.containsKey(KEY_LIST_POSITION)) {
+                    mNotesListFragment.setSelectedPosition(savedInstanceState.getInt(KEY_LIST_POSITION));
+                }
+            }
         } else {
             launchWithNoteId();
         }
@@ -131,38 +127,6 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        // When rotating on a tablet, we'll add or remove the detail view
-        if (DisplayUtils.isTablet(this)) {
-            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                FragmentManager fm = getFragmentManager();
-                // pop back to list view fragment
-                fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
-                mNotesListFragment.getListView().setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-                // Add the note detail fragment
-                addDetailFragment();
-                if (mSelectedNoteId != null) {
-                    openNoteForNoteId(mSelectedNoteId);
-                }
-                mNotesListFragment.setSelectedPositionChecked();
-                mNotesListFragment.refreshNotes();
-            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                if (mNotesListFragment != null) {
-                    mNotesListFragment.getListView().setChoiceMode(AbsListView.CHOICE_MODE_NONE);
-                    mNotesListFragment.resetSelection();
-                }
-                // Remove the detail fragment when rotating back to portrait
-                if (mTabletDetailFragment != null) {
-                    removeDetailFragment();
-                }
-            }
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -184,23 +148,6 @@ public class NotificationsActivity extends WPActionBarActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.notifications, menu);
         return true;
-    }
-
-    private void addDetailFragment() {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        mTabletDetailFragment = new NotificationsDetailFragment();
-        ft.add(R.id.layout_fragment_container, mTabletDetailFragment, TAG_DETAIL_VIEW);
-        ft.commitAllowingStateLoss();
-        fm.executePendingTransactions();
-    }
-
-    private void removeDetailFragment() {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.remove(mTabletDetailFragment);
-        ft.commitAllowingStateLoss();
-        fm.executePendingTransactions();
     }
 
     private final FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener =
@@ -316,16 +263,18 @@ public class NotificationsActivity extends WPActionBarActivity
         Fragment fragment = getDetailFragmentForNote(note);
 
         if (DisplayUtils.isLandscapeTablet(this)) {
-            mTabletDetailFragment.setCurrentFragment(fragment, false);
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.replace(R.id.notifications_detail_fragment_container, fragment);
+            ft.commitAllowingStateLoss();
             return;
         }
-
-        mCurrentFragment = fragment;
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.layout_fragment_container, mCurrentFragment);
+        ft.replace(R.id.layout_fragment_container, fragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -336,51 +285,30 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
-    public void showBlogPreviewForSiteId(long siteId, String siteUrl) {
-        ReaderPostListFragment readerPostListFragment = ReaderPostListFragment.newInstance(siteId, siteUrl);
+    public void showBlogPreviewActivity(long siteId, String siteUrl) {
+        if (isFinishing()) return;
 
-        if (DisplayUtils.isLandscapeTablet(this)) {
-            if (mTabletDetailFragment != null) {
-                mTabletDetailFragment.setCurrentFragment(readerPostListFragment, true);
-            }
-
-            return;
-        }
-
-        FragmentManager fm = getFragmentManager();
-
-        FragmentTransaction ft = fm.beginTransaction();
-        if (mCurrentFragment != null) {
-            ft.hide(mCurrentFragment);
-        }
-        ft.add(R.id.layout_fragment_container, readerPostListFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
+        Intent readerPostListIntent = new Intent(this, ReaderPostListActivity.class);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_URL, siteUrl);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
+        startActivity(readerPostListIntent);
     }
 
-    public void showPostForSiteAndPostId(long siteId, long postId) {
-        ReaderPostDetailFragment readerPostDetailFragment = ReaderPostDetailFragment.newInstance(siteId, postId);
+    public void showPostActivity(long siteId, long postId, String title) {
+        if (isFinishing()) return;
 
-        if (DisplayUtils.isLandscapeTablet(this)) {
-            if (mTabletDetailFragment != null) {
-                mTabletDetailFragment.setCurrentFragment(readerPostDetailFragment, true);
-            }
-
-            return;
-        }
-
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        if (mCurrentFragment != null) {
-            ft.hide(mCurrentFragment);
-        }
-        ft.add(R.id.layout_fragment_container, readerPostDetailFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
+        Intent readerPostListIntent = new Intent(this, ReaderPostPagerActivity.class);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_POST_ID, postId);
+        readerPostListIntent.putExtra(ReaderPostPagerActivity.ARG_IS_SINGLE_POST, true);
+        readerPostListIntent.putExtra(ReaderConstants.ARG_TITLE, title);
+        startActivity(readerPostListIntent);
     }
 
     public void showWebViewActivityForUrl(String url) {
+        if (isFinishing()) return;
+
         Intent intent = new Intent(this, AuthenticatedWebViewActivity.class);
         intent.putExtra("url", url);
         startActivity(intent);
@@ -388,9 +316,11 @@ public class NotificationsActivity extends WPActionBarActivity
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
-        public void onClickNote(Note note) {
+        public void onClickNote(Note note, int position) {
             if (note == null)
                 return;
+
+            mSelectedListPosition = position;
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
@@ -405,6 +335,10 @@ public class NotificationsActivity extends WPActionBarActivity
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putString(NOTE_ID_EXTRA, mSelectedNoteId);
+        if (mNotesListFragment != null) {
+            outState.putInt(KEY_LIST_POSITION, mSelectedListPosition);
+        }
+
         super.onSaveInstanceState(outState);
     }
 

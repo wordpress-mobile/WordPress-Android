@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    landscape tablet layout for notifications
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/calypso_blue_light"
+    android:divider="?android:attr/dividerVertical"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:showDividers="middle"
+    android:weightSum="10">
+
+    <fragment
+        android:name="org.wordpress.android.ui.notifications.NotificationsListFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="6.5"
+        android:tag="notificationsList" />
+
+    <FrameLayout
+        android:id="@+id/notifications_detail_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3.5" />
+</LinearLayout>

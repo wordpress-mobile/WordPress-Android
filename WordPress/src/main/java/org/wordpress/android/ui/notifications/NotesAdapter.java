@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -28,7 +27,6 @@ class NotesAdapter extends CursorAdapter {
     final private int mAvatarSz;
     private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
-    private int mSelectedPosition = ListView.INVALID_POSITION;
     private boolean mShouldHighlightRows;
     private int mReadBackgroundResId;
     private int mUnreadBackgroundResId;
@@ -83,13 +81,6 @@ class NotesAdapter extends CursorAdapter {
         changeCursor(mQuery.execute());
     }
 
-    public void setSelectedPosition(int selectedPosition) {
-        mSelectedPosition = selectedPosition;
-    }
-
-    public int getSelectedPosition() {
-        return mSelectedPosition;
-    }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -106,8 +97,6 @@ class NotesAdapter extends CursorAdapter {
             return;
 
         Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
-
-        view.setActivated(mShouldHighlightRows && objectCursor.getPosition() == mSelectedPosition);
 
         NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
