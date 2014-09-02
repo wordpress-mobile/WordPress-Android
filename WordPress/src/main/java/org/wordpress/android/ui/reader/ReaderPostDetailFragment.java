@@ -1026,9 +1026,7 @@ public class ReaderPostDetailFragment extends Fragment
         ImageView imgBtnComment;
         ImageView imgDropDown;
         WPNetworkImageView imgAvatar;
-
         ViewGroup layoutDetailHeader;
-        View dividerHeader;
 
         @Override
         protected void onPreExecute() {
@@ -1065,7 +1063,6 @@ public class ReaderPostDetailFragment extends Fragment
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
-            dividerHeader = container.findViewById(R.id.divider_header);
 
             return true;
         }
@@ -1132,7 +1129,6 @@ public class ReaderPostDetailFragment extends Fragment
             // hide header if this fragment was shown from blog preview
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
-                dividerHeader.setVisibility(View.GONE);
             }
 
             // enable reblogging wp posts

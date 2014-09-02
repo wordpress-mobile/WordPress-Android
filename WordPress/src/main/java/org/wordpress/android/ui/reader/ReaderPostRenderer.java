@@ -289,7 +289,10 @@ class ReaderPostRenderer {
 
         // set tiled gallery containers to auto height/width
         .append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-        .append("  div.tiled-gallery-caption { clear: both; }");
+        .append("  div.tiled-gallery-caption { clear: both; }")
+
+        // see http://codex.wordpress.org/CSS
+        .append("  .wp-caption { font-size: smaller; color: ").append(mResourceVars.greyMediumStr).append("; }");
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds

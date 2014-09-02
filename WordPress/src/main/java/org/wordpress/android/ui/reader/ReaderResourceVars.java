@@ -31,6 +31,7 @@ class ReaderResourceVars {
     final int mediumAnimTime;
 
     final String linkColorStr;
+    final String greyMediumStr;
     final String greyLightStr;
     final String greyExtraLightStr;
 
@@ -51,6 +52,7 @@ class ReaderResourceVars {
         mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
 
         linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
+        greyMediumStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_medium);
         greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
         greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
 

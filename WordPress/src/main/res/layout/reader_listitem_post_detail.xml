@@ -65,16 +65,6 @@
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/divider_header"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginLeft="@dimen/reader_list_margin"
-        android:layout_marginRight="@dimen/reader_list_margin"
-        android:layout_marginTop="@dimen/margin_small"
-        android:background="@color/reader_divider_grey" />
-
     <LinearLayout
         android:id="@+id/layout_detail_title"
         android:layout_width="match_parent"
