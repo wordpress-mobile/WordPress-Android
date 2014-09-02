@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,8 @@ import org.wordpress.android.util.UrlUtils;
  */
 public class UserNoteBlock extends NoteBlock {
     private OnGravatarClickedListener mGravatarClickedListener;
+
+    private int mWhiteBgColor = Color.parseColor("#FFFFFF");
 
     public interface OnGravatarClickedListener {
         public void onGravatarClicked(long userId, long siteId);
@@ -85,8 +88,12 @@ public class UserNoteBlock extends NoteBlock {
             noteBlockHolder.avatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+                noteBlockHolder.rootView.setBackgroundResource(R.drawable.notifications_header_selector);
+                noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
             } else {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
+                noteBlockHolder.rootView.setBackgroundColor(mWhiteBgColor);
+                noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
             noteBlockHolder.avatarImageView.setImageResource(R.drawable.placeholder);
@@ -96,18 +103,27 @@ public class UserNoteBlock extends NoteBlock {
         return view;
     }
 
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showBlogPreview();
+        }
+    };
+
     @Override
     public Object getViewHolder(View view) {
         return new UserActionNoteBlockHolder(view);
     }
 
     private class UserActionNoteBlockHolder {
+        private View rootView;
         private TextView nameTextView;
         private TextView urlTextView;
         private TextView taglineTextView;
         private NetworkImageView avatarImageView;
 
         public UserActionNoteBlockHolder(View view) {
+            rootView = view.findViewById(R.id.user_block_root_view);
             nameTextView = (TextView)view.findViewById(R.id.user_name);
             urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
             urlTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
@@ -189,15 +205,19 @@ public class UserNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0));
-                    long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", 0));
-                    if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId);
-                    }
+                    showBlogPreview();
                 }
             }
 
             return true;
         }
     };
+
+    private void showBlogPreview() {
+        long siteId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.site", 0));
+        long userId = Long.valueOf(JSONUtil.queryJSON(getNoteData(), "meta.ids.user", 0));
+        if (mGravatarClickedListener != null && siteId > 0 && userId > 0) {
+            mGravatarClickedListener.onGravatarClicked(siteId, userId);
+        }
+    }
 }
