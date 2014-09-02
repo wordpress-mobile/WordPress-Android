@@ -291,8 +291,13 @@ class ReaderPostRenderer {
         .append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
         .append("  div.tiled-gallery-caption { clear: both; }")
 
-        // see http://codex.wordpress.org/CSS
-        .append("  .wp-caption { font-size: smaller; color: ").append(mResourceVars.greyMediumStr).append("; }");
+        // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
+        .append("  .wp-caption { background-color: ").append(mResourceVars.greyExtraLightStr).append("; }")
+        .append("  .wp-caption img { margin: 0px; }")
+        .append("  .wp-caption .wp-caption-text {")
+        .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
+        .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
+        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }");
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
