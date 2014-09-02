@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">无法执行此操作</string>
+	<string name="reader_toast_err_block_blog">无法阻止此博客</string>
+	<string name="reader_toast_blog_blocked">此博客中的文章不会再显示</string>
+	<string name="reader_menu_block_blog">阻止此博客</string>
+	<string name="contact_us">联系我们</string>
+	<string name="contact_us_pref_summary">寻求 Automattic 支持部门的帮助</string>
+	<string name="hs__conversation_detail_error">描述您所遇到的问题</string>
+	<string name="hs__new_conversation_header">支持聊天</string>
+	<string name="hs__conversation_header">支持聊天</string>
+	<string name="hs__username_blank_error">请输入有效名称</string>
+	<string name="hs__invalid_email_error">请输入有效电子邮件地址</string>
 	<string name="add_location">添加位置</string>
 	<string name="current_location">当前位置</string>
 	<string name="your_signature">您的签名：</string>
