@@ -32,7 +32,7 @@ public class StatsGeoviewsFragment extends StatsAbsPagedViewFragment {
 
         Uri uri = Uri.parse(STATS_GEOVIEWS_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
 
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, entryLabelResId, totalsLabelResId, emptyLabelResId, getLocalTableBlogID());
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         fragment.setCallback(this);
         return fragment;

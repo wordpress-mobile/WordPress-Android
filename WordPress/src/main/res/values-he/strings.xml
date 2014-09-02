@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
+	<string name="reader_toast_err_block_blog">לא ניתן לחסום בלוג זה</string>
+	<string name="reader_toast_blog_blocked">הפוסטים מהבלוג הזה לא יוצגו עוד</string>
+	<string name="reader_menu_block_blog">לחסום את הבלוג הזה</string>
+	<string name="contact_us">ליצור קשר</string>
+	<string name="contact_us_pref_summary">סיוע מצוות התמיכה של אוטומטיק</string>
+	<string name="hs__conversation_detail_error">תאר/י את הבעיה בה נתקלת</string>
+	<string name="hs__new_conversation_header">צ׳אט תמיכה</string>
+	<string name="hs__conversation_header">צ׳אט תמיכה</string>
+	<string name="hs__username_blank_error">נא להזין שם</string>
+	<string name="hs__invalid_email_error">נא להזין כתובת אימייל</string>
 	<string name="add_location">הוספת מיקום</string>
 	<string name="current_location">מיקום נוכחי</string>
 	<string name="your_signature">החתימה שלך:</string>
@@ -11,8 +22,8 @@
 	<string name="preference_send_usage_stats_summary">שליחת נתוני שימוש סטטיסטיים שיאפשרו לנו לשפר את WordPress לאנדרויד</string>
 	<string name="reader_label_reached_last_post">הגעת לקצה</string>
 	<string name="reader_label_tap_to_dismiss">הקש כדי להתעלם</string>
-	<string name="reader_title_reblog">פרסום מחדש של הבלוג</string>
 	<string name="reader_hint_reblog_comment">הוסף את מחשבותיך (אופציונלי)</string>
+	<string name="reader_title_reblog">לפרסם מחדש</string>
 	<string name="reader_label_reblog_to">פרסום מחדש אל</string>
 	<string name="update_verb">עדכן</string>
 	<string name="schedule_verb">תזמן</string>

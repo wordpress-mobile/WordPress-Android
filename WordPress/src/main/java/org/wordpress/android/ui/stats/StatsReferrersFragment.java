@@ -34,7 +34,7 @@ public class StatsReferrersFragment extends StatsAbsPagedViewFragment {
 
         StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri,
                 R.string.stats_entry_referrers, R.string.stats_totals_views, R.string.stats_empty_referrers_title,
-                R.string.stats_empty_referrers_desc);
+                R.string.stats_empty_referrers_desc, getLocalTableBlogID());
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
         fragment.setListAdapter(adapter);

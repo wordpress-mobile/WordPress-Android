@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
+	<string name="reader_toast_err_block_blog">Impossibile bloccare questo blog</string>
+	<string name="reader_toast_blog_blocked">Gli articoli di questo blog non appariranno più</string>
+	<string name="reader_menu_block_blog">Blocca questo blog</string>
+	<string name="contact_us">Contattaci</string>
+	<string name="contact_us_pref_summary">Ricevi aiuto dal supporto di Automattic</string>
+	<string name="hs__conversation_detail_error">Descrivi il problema che si è presentato</string>
+	<string name="hs__new_conversation_header">Chat di supporto</string>
+	<string name="hs__conversation_header">Chat di supporto</string>
+	<string name="hs__username_blank_error">Inserisce un nome valido</string>
+	<string name="hs__invalid_email_error">Inserisci un email valida</string>
+	<string name="add_location">Aggiungi una località</string>
+	<string name="current_location">Località corrente</string>
 	<string name="your_signature">La tua firma</string>
 	<string name="search_location">Cerca</string>
 	<string name="edit_location">Modifica</string>

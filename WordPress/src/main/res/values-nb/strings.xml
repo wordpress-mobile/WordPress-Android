@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="contact_us">Kontakt oss</string>
+	<string name="contact_us_pref_summary">Få hjelp fra Automattic-forum</string>
+	<string name="hs__conversation_detail_error">Beskriv problemet du opplever</string>
+	<string name="hs__new_conversation_header">Support-chat</string>
+	<string name="hs__conversation_header">Support-chat</string>
+	<string name="hs__username_blank_error">Skriv inn et gyldig brukernavn</string>
+	<string name="hs__invalid_email_error">Skriv inn en gyldig epost-adresse</string>
+	<string name="add_location">Legg til bosted</string>
+	<string name="current_location">Nåværende bosted</string>
+	<string name="your_signature">Din signatur:</string>
+	<string name="search_location">Søk</string>
+	<string name="edit_location">Rediger</string>
+	<string name="search_current_location">Finn</string>
+	<string name="preference_privacy">Synlighet</string>
+	<string name="preference_send_usage_stats">Send statistikk</string>
+	<string name="preference_send_usage_stats_summary">Send automatisk brukerdata til å forbedre WordPress for Android</string>
+	<string name="reader_label_reached_last_post">Siste innlegg</string>
+	<string name="reader_hint_reblog_comment">Skriv en kommentar (valgfritt)</string>
+	<string name="update_verb">Oppdater</string>
+	<string name="schedule_verb">Publiser</string>
+	<string name="sign_in_again">Logg inn igjen</string>
+	<string name="reader_title_blog_preview">Forhåndsvis blogg</string>
+	<string name="reader_title_tag_preview">Forhåndsvis stikkord</string>
+	<string name="reader_title_subs">Stikkord &amp; blogger</string>
 	<string name="menu_search">Søk</string>
 	<string name="stats_video_summary_label_bandwidth">Båndbredde</string>
 	<string name="stats_totals_followers_shares_label_categories">Kategorier</string>
@@ -160,6 +184,7 @@
 	<string name="immediately">Umiddelbart</string>
 	<string name="quickpress_add_alert_title">Lag et navn for snarvei</string>
 	<string name="settings">Alternativer</string>
+	<string name="share_url">Del URL</string>
 	<string name="quickpress_window_title">Velg snarvei for Hurtigpublisering</string>
 	<string name="quickpress_add_error">Snarveien kan ikke være tom</string>
 	<string name="publish_post">Publiser</string>

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Blockiere diesen Blog</string>
+	<string name="reader_toast_blog_blocked">Beiträge von diesem Blog werden nicht länger angezeigt</string>
+	<string name="reader_toast_err_block_blog">Konnte diesen Blog nicht blockieren</string>
+	<string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
+	<string name="hs__invalid_email_error">Gib eine gültige E-Mail-Adresse ein</string>
+	<string name="hs__username_blank_error">Gib einen gültigen Namen ein</string>
+	<string name="contact_us">Kontaktiere uns</string>
+	<string name="hs__conversation_detail_error">Beschreibe das Problem, das du siehst</string>
+	<string name="hs__new_conversation_header">Support-Chat</string>
+	<string name="hs__conversation_header">Support-Chat</string>
+	<string name="contact_us_pref_summary">Erhalte Hilfe vom Automattic-Support</string>
 	<string name="add_location">Standort hinzufügen</string>
 	<string name="current_location">Aktueller Standort</string>
-	<string name="your_signature">Ihre Unterschrift:</string>
+	<string name="your_signature">Deine Signatur:</string>
 	<string name="search_location">Suchen</string>
 	<string name="edit_location">Bearbeiten</string>
 	<string name="search_current_location">Lokalisieren</string>

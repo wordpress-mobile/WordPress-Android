@@ -306,17 +306,6 @@ public abstract class WPActionBarActivity extends Activity {
                 // if we have an intent, start the new activity
             }
         });
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                    int totalItemCount) {
-                mMenuDrawer.invalidate();
-            }
-        });
 
         mMenuDrawer.setMenuView(mListView);
         mListView.setAdapter(mAdapter);
@@ -963,8 +952,7 @@ public abstract class WPActionBarActivity extends Activity {
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.putExtra("isNew", true);
+            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }

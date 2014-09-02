@@ -238,6 +238,7 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
+        final Context context = container.getContext();
 
         // locate & init listView
         mListView = (WPListView) view.findViewById(android.R.id.list);

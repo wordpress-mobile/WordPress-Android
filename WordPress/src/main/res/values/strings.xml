@@ -330,6 +330,7 @@
 
     <!-- stats -->
     <string name="stats">Stats</string>
+    <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="view_stats_full_site">View full site</string>
     <string name="view_stats_activity">View stats</string>
     <string name="stats_totals_views_per_visitor">Views per Visitor</string>
