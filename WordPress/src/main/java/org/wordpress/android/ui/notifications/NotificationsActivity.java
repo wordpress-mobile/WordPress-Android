@@ -25,6 +25,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
@@ -39,8 +40,7 @@ import org.wordpress.android.util.DisplayUtils;
 import javax.annotation.Nonnull;
 
 public class NotificationsActivity extends WPActionBarActivity
-        implements CommentActions.OnCommentChangeListener, NotificationFragment.OnPostClickListener,
-        NotificationFragment.OnCommentClickListener {
+        implements CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
@@ -288,22 +288,13 @@ public class NotificationsActivity extends WPActionBarActivity
     public void showBlogPreviewActivity(long siteId, String siteUrl) {
         if (isFinishing()) return;
 
-        Intent readerPostListIntent = new Intent(this, ReaderPostListActivity.class);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_URL, siteUrl);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderTypes.ReaderPostListType.BLOG_PREVIEW);
-        startActivity(readerPostListIntent);
+        ReaderActivityLauncher.showReaderBlogPreview(this, siteId, siteUrl);
     }
 
     public void showPostActivity(long siteId, long postId, String title) {
         if (isFinishing()) return;
 
-        Intent readerPostListIntent = new Intent(this, ReaderPostPagerActivity.class);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        readerPostListIntent.putExtra(ReaderPostPagerActivity.ARG_IS_SINGLE_POST, true);
-        readerPostListIntent.putExtra(ReaderConstants.ARG_TITLE, title);
-        startActivity(readerPostListIntent);
+        ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
     public void showWebViewActivityForUrl(String url) {
@@ -357,35 +348,5 @@ public class NotificationsActivity extends WPActionBarActivity
         if (dialog != null)
             return dialog;
         return super.onCreateDialog(id);
-    }
-
-    /**
-     * called from fragment when a link to a post is tapped - shows the post in a reader
-     * detail fragment
-     */
-    @Override
-    public void onPostClicked(Note note, int remoteBlogId, int postId) {
-        ReaderPostDetailFragment readerFragment = ReaderPostDetailFragment.newInstance(remoteBlogId, postId);
-        String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.layout_fragment_container, readerFragment, tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(tagForFragment)
-                .commit();
-    }
-
-    /**
-     * called from fragment when a link to a comment is tapped - shows the comment in the comment
-     * detail fragment
-     */
-    @Override
-    public void onCommentClicked(Note note, int remoteBlogId, long commentId) {
-        CommentDetailFragment commentFragment = CommentDetailFragment.newInstance(note);
-        String tagForFragment = getString(R.string.fragment_tag_comment_detail);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.layout_fragment_container, commentFragment, tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(tagForFragment)
-                .commit();
     }
 }
