@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Заблокировать этот блог</string>
+	<string name="reader_toast_blog_blocked">Записи из этого блога больше не будут отображаться</string>
+	<string name="reader_toast_err_block_blog">Не удалось заблокировать этот блог</string>
+	<string name="reader_toast_err_generic">Не удалось совершить это действие</string>
+	<string name="hs__new_conversation_header">Чат поддержки</string>
+	<string name="hs__conversation_header">Чат поддержки</string>
+	<string name="contact_us">Обратная связь</string>
+	<string name="contact_us_pref_summary">Получите помощь от техподдержки Automattic</string>
+	<string name="hs__conversation_detail_error">Опишите проблему, с которой вы столкнулись</string>
+	<string name="hs__username_blank_error">Введите корректное имя</string>
+	<string name="hs__invalid_email_error">Введите корректный адрес e-mail</string>
 	<string name="add_location">Добавить местоположение</string>
 	<string name="current_location">Текущее местоположение</string>
+	<string name="your_signature">Ваша подпись:</string>
 	<string name="search_location">Поиск</string>
 	<string name="edit_location">Изменить</string>
 	<string name="search_current_location">Найти</string>

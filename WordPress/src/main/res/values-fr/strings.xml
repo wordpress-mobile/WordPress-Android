@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Bloquer ce blog</string>
+	<string name="reader_toast_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
+	<string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
+	<string name="reader_toast_err_block_blog">Impossible de bloquer ce blog</string>
 	<string name="contact_us">Contactez nous</string>
 	<string name="contact_us_pref_summary">Obtenez l\'aide du support Automattic</string>
 	<string name="hs__conversation_detail_error">Décrivez le problème rencontré</string>

@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_blog_blocked">このブログからの投稿は今後表示されません</string>
+	<string name="reader_menu_block_blog">このブログをブロック</string>
+	<string name="reader_toast_err_block_blog">ブログをブロックできませんでした</string>
+	<string name="reader_toast_err_generic">操作を実行できませんでした</string>
+	<string name="contact_us">お問い合わせ</string>
+	<string name="contact_us_pref_summary">Automattic サポートのヘルプ</string>
+	<string name="hs__conversation_detail_error">発生している問題を説明してください</string>
+	<string name="hs__new_conversation_header">サポートチャット</string>
+	<string name="hs__conversation_header">サポートチャット</string>
+	<string name="hs__username_blank_error">正しいお名前を入力してください</string>
+	<string name="hs__invalid_email_error">正しいメールアドレスを入力してください</string>
 	<string name="add_location">位置情報を追加</string>
 	<string name="current_location">現在の位置</string>
 	<string name="your_signature">署名:</string>

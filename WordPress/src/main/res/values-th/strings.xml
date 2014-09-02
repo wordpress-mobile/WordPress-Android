@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
+	<string name="reader_toast_err_block_blog">ไม่สามารถปิดกั้นบล็อกนี้</string>
+	<string name="reader_toast_blog_blocked">เรื่องจากบล็อกนี้จะไม่แสดงอีกต่อไป</string>
+	<string name="reader_menu_block_blog">ปิดกั้นบล็อกนี้</string>
+	<string name="contact_us">ติดต่อเรา</string>
+	<string name="contact_us_pref_summary">ขอความช่วยเหลือจาก ฝ่ายช่วยเหลือของ Automattic</string>
+	<string name="hs__conversation_detail_error">อธิบายปัญหาที่คุณเห็น</string>
+	<string name="hs__new_conversation_header">การคุยช่วยเหลือ</string>
+	<string name="hs__conversation_header">การคุยช่วยเหลือ</string>
+	<string name="hs__username_blank_error">ใส่ชื่อที่ใช้งานได้</string>
+	<string name="hs__invalid_email_error">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
 	<string name="add_location">เพิ่มสถานที่</string>
 	<string name="current_location">สถานที่ปัจจุบัน</string>
 	<string name="your_signature">ลายเซ็นของคุณ:</string>
@@ -70,9 +81,7 @@
 	<string name="reader_label_reblog_empty">คุณไม่มีบล็อก WordPress.com ที่มองเห็นได้  เรื่องนี้สามารถรีบล็อกไปได้ที่</string>
 	<string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
 	<string name="nux_cannot_log_in">เราไม่สามารถนำคุณเข้าสู่ระบบ</string>
-	<string name="email_not_allowed">ที่อยู่อีเมล์นั้นไม่อนุญาต</string>
 	<string name="username_exists">ผู้ใช้ชื่อนั้นมีอยู่แล้ว</string>
-	<string name="email_exists">ที่อยู่อีเมล์นั้นถูกใช้งานแล้ว</string>
 	<string name="out_of_memory">อุปกรณ์ใช้ความจำหมดแล้ว</string>
 	<string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ตามบล็อกใด ๆ</string>
 	<string name="mnu_comment_unspam">ไม่ใช่สแปม</string>
@@ -95,7 +104,6 @@
 	<string name="username_must_be_at_least_four_characters">ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร</string>
 	<string name="username_contains_invalid_characters">ชื่อผู้ใช้ต้องไม่มีตัวอักษร “_”</string>
 	<string name="username_must_include_letters">ชื่อผู้ใช้ต้องมีอย่างน้อย 1 ตัวอักษร (a-z)</string>
-	<string name="email_invalid">ใส่ที่อยู่อีเมล์ที่ใช้งานได้</string>
 	<string name="username_reserved_but_may_be_available">ชื่อผู้ใช้นั้นถูกสงวนไว้ในเวลานี้  แต่อาจจะว่างภายในสองสามวันข้างหน้า</string>
 	<string name="blog_name_required">ใส่ที่อยู่เว็บ</string>
 	<string name="blog_name_not_allowed">ไม่อนุญาตที่อยู่เว็บนั้น</string>
@@ -106,14 +114,12 @@
 	<string name="reader_empty_posts_in_tag">ไม่มีเรื่องที่ใช้ป้ายกำกับนี้</string>
 	<string name="reader_empty_followed_tags">คุณยังไม่ได้ติดตามป้ายกำกับใด ๆ</string>
 	<string name="reader_empty_posts_liked">คุณไม่เคยกดชอบเรื่องใด ๆ เลย</string>
-	<string name="invalid_email_message">ที่อยู่อีเมล์ของคุณไม่ถูกต้อง</string>
 	<string name="invalid_password_message">รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร</string>
 	<string name="invalid_username_too_short">ชื่อผู้ใช้ต้องยาวกว่า 4 ตัวอักษร</string>
 	<string name="invalid_username_too_long">ชื่อผู้ใช้ต้องสั้นกว่า 61 ตัวอักษร</string>
 	<string name="agree_terms_of_service">โดยการสร้างบัญชี คุณได้ยินยอมตาม %1$sเงื่อนไขบริการ%2$s ที่น่าตื่นเต้นของเรา</string>
 	<string name="error_delete_post">มีความผิดพลาดเกิดขึ้นขณะกำลังลบ %s</string>
 	<string name="theme_auth_error_message">โปรดแน่ใจว่าคุณมีสิทธิการตั้งค่า themes</string>
-	<string name="theme_no_search_result_found">ไม่พบผลลัพท์</string>
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
 	<string name="stats_empty_geoviews">ไม่มีการดูเรื่อง</string>
 	<string name="stats_empty_top_authors">ไม่มีการดูเรื่อง</string>
@@ -147,6 +153,11 @@
 	<string name="error_refresh_pages">ไม่สามารถโหลดใหม่หน้าในตอนนี้</string>
 	<string name="error_refresh_notifications">ไม่สามารถโหลดใหม่คำเตือนในตอนนี้</string>
 	<string name="error_refresh_comments">ไม่สามารถโหลดใหม่ความเห็นในตอนนี้</string>
+	<string name="invalid_email_message">ที่อยู่อีเมลของคุณไม่ถูกต้อง</string>
+	<string name="email_invalid">ใส่ที่อยู่อีเมลที่ใช้งานได้</string>
+	<string name="email_not_allowed">ที่อยู่อีเมลนั้นไม่อนุญาต</string>
+	<string name="email_exists">ที่อยู่อีเมลนั้นถูกใช้งานแล้ว</string>
+	<string name="theme_no_search_result_found">ไม่พบผลลัพธ์</string>
 	<string name="blog_name_must_include_letters">ที่อยู่เว็บต้องมีตัวอักษรอย่างน้อย 1 ตัว (a-z)</string>
 	<string name="blog_name_invalid">ที่อยู่เว็บไม่ถูกต้อง</string>
 	<string name="blog_title_invalid">หัวข้อเว็บไม่ถูกต้อง</string>
@@ -156,8 +167,6 @@
 	<string name="reader_toast_err_remove_tag">ไม่สามารถลบป้ายกำกับนี้</string>
 	<string name="create_new_blog_wpcom">สร้างบล็อก WordPress.com</string>
 	<string name="required_field">ช่องที่ต้องการ</string>
-	<string name="email_hint">ที่อยู่อีเมล์</string>
-	<string name="username_email">ชื่อผู้ใช้หรืออีเมล์</string>
 	<string name="new_page">หน้าใหม่</string>
 	<string name="new_media">ไฟล์สื่อใหม่</string>
 	<string name="quick_photo">รูปภาพด่วน</string>
@@ -205,7 +214,6 @@
 	<string name="trash_no">เอาออกจากถังขยะ</string>
 	<string name="trash">ถังขยะ</string>
 	<string name="author_name">ชื่อผู้เขียน</string>
-	<string name="author_email">อีเมล์ผู้เขียน</string>
 	<string name="author_url">URL ผู้เขียน</string>
 	<string name="hint_comment_content">ความเห็น</string>
 	<string name="saving_changes">บันทึกการเปลี่ยนแปลง</string>
@@ -234,8 +242,6 @@
 	<string name="connection_error">การเชื่อมต่อผิดพลาด</string>
 	<string name="cancel_edit">ยกเลิกการแก้ไข</string>
 	<string name="site_address">ที่อยู่เว็บแบบติดตั้งบนโฮสท์เองของคุณ (URL)</string>
-	<string name="email_cant_be_used_to_signup">คุณไม่สามารถใช้อีเมล์นั้นในการลงทะเบียนได้  เรากำลังมีปัญหาเรื่องการที่ผู้ให้บริการปิดกั้นอีเมล์บางส่วนของเรา  กรุณาใช้ผู้ให้บริการอีเมล์รายอื่น</string>
-	<string name="email_reserved">มีการใช้อีเมล์นั้นแล้ว  โปรดตรวจสอบกล่องเมล์เข้าของคุณสำหรับเมล์เปิดการใช้งาน  ถ้าคุณไม่เปิดใช้งาน คุณสามารถลองอีกครั้งในอีกสองสามวันภายหลัง</string>
 	<string name="file_not_found">ไม่สามารถหาไฟล์สื่อสำหรับการอัปโหลด  มันถูกลบหรือย้ายไปแล้วหรือไม่?</string>
 	<string name="post_settings">การตั้งค่าเรื่อง</string>
 	<string name="themes_live_preview">ดูก่อนแบบสด</string>
@@ -278,6 +284,11 @@
 	<string name="http_credentials">HTTP credentials (ตัวเลือก)</string>
 	<string name="http_authorization_required">ต้องการการอนุญาติ</string>
 	<string name="reader_title_applog">log แอพพลิเคชั่น</string>
+	<string name="author_email">อีเมลผู้เขียน</string>
+	<string name="email_hint">ที่อยู่อีเมล</string>
+	<string name="username_email">ชื่อผู้ใช้หรืออีเมล</string>
+	<string name="email_cant_be_used_to_signup">คุณไม่สามารถใช้อีเมลนั้นในการลงทะเบียนได้  เรากำลังมีปัญหาเรื่องการที่ผู้ให้บริการปิดกั้นอีเมลบางส่วนของเรา  กรุณาใช้ผู้ให้บริการอีเมลรายอื่น</string>
+	<string name="email_reserved">มีการใช้อีเมลนั้นแล้ว  โปรดตรวจสอบกล่องเมลเข้าของคุณสำหรับเมลเปิดการใช้งาน  ถ้าคุณไม่เปิดใช้งาน คุณสามารถลองอีกครั้งในอีกสองสามวันภายหลัง</string>
 	<string name="deleting_page">กำลังลบหน้า</string>
 	<string name="deleting_post">กำลังลบเรื่อง</string>
 	<string name="share_url_post">แบ่งปันเรื่อง</string>
