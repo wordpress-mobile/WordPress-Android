@@ -40,7 +40,7 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/reader_hyperlink"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_name" />
 
@@ -64,6 +64,16 @@
             android:src="@drawable/reader_arrow_dropdown" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@color/reader_divider_grey" />
 
     <LinearLayout
         android:id="@+id/layout_detail_title"
