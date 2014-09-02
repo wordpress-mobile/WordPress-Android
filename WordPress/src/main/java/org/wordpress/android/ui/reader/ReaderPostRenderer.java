@@ -274,7 +274,22 @@ class ReaderPostRenderer {
         .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }")
 
         // show links in the same color they are elsewhere in the app
-        .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
+        .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
+
+        // make sure images aren't wider than the display, strictly enforced for images without size
+        .append("  img { max-width: 100%; }")
+        .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
+
+        // center large/medium images, provide a small bottom margin, and add a background color
+        // so the user sees something while they're loading
+        .append("  img.size-full, img.size-large, img.size-medium {")
+        .append("     display: block; margin-left: auto; margin-right: auto;")
+        .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
+        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }")
+
+        // set tiled gallery containers to auto height/width
+        .append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
+        .append("  div.tiled-gallery-caption { clear: both; }");
 
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
@@ -283,23 +298,6 @@ class ReaderPostRenderer {
                   .append("                  height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
-        }
-
-        // make sure images without sizes aren't wider than the display
-        sbHtml.append("  img.size-none { max-width: 100% !important; height: auto !important; }")
-
-        // center large/medium images, provide a small bottom margin, and add a background color
-        // so the user sees something while they're loading
-        .append("  img.size-full, img.size-large, img.size-medium {")
-        .append("     display: block; margin-left: auto; margin-right: auto;")
-        .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("     margin-bottom: ").append(mResourceVars.marginSmallPx).append("px; }");
-
-        // set tiled gallery containers to auto height/width
-        if (content.contains("tiled-gallery-item")) {
-            AppLog.d(AppLog.T.READER, "reader renderer > tiled gallery");
-            sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                  .append("  div.tiled-gallery-caption { clear: both; }");
         }
 
         sbHtml.append("</style>")
