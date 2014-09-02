@@ -174,7 +174,7 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
 
         long date = cursor.getLong(colDate);
 
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getCurrentBlog());
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(getLocalTableBlogID()));
         long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
 
         boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());

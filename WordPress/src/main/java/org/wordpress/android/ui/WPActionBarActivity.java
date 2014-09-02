@@ -952,8 +952,7 @@ public abstract class WPActionBarActivity extends Activity {
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.putExtra("isNew", true);
+            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
