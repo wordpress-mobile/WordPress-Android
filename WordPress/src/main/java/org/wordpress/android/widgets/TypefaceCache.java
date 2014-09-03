@@ -40,14 +40,6 @@ public class TypefaceCache {
                 break;
         }
 
-        if (!mTypefaceCache.containsKey(typefaceName)) {
-            Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
-                    + typefaceName);
-            if (typeface != null) {
-                mTypefaceCache.put(typefaceName, typeface);
-            }
-        }
-
         return getTypefaceForTypefaceName(context, typefaceName);
     }
 

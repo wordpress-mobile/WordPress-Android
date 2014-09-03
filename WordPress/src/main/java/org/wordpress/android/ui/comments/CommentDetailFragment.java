@@ -167,7 +167,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
-        mEditReply.setTypeface(TypefaceCache.getTypeface(getActivity()));
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
