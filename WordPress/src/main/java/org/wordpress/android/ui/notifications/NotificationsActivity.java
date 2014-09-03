@@ -45,6 +45,7 @@ public class NotificationsActivity extends WPActionBarActivity
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_REPLY_TEXT = "replyText";
     private static final String TAG_LIST_VIEW = "notificationsList";
+    private static final String TAG_TABLET_DETAIL_VIEW = "notificationsTabletDetail";
 
     private NotificationsListFragment mNotesListFragment;
     private Fragment mDetailFragment;
@@ -270,7 +271,7 @@ public class NotificationsActivity extends WPActionBarActivity
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(R.id.notifications_detail_fragment_container, mDetailFragment);
+            ft.replace(R.id.notifications_detail_fragment_container, mDetailFragment, TAG_TABLET_DETAIL_VIEW);
             ft.commitAllowingStateLoss();
             return;
         }
@@ -339,7 +340,8 @@ public class NotificationsActivity extends WPActionBarActivity
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        if (DisplayUtils.isLandscapeTablet(this) || getFragmentManager().getBackStackEntryCount() > 0) {
+        if (getFragmentManager().getBackStackEntryCount() > 0
+                || getFragmentManager().findFragmentByTag(TAG_TABLET_DETAIL_VIEW) != null) {
             outState.putString(NOTE_ID_EXTRA, mSelectedNoteId);
         }
 
