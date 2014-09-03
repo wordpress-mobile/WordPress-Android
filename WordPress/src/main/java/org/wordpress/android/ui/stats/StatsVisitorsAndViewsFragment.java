@@ -129,7 +129,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 unit = StatsBarChartUnit.DAY;
         }
 
-        StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
+        StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit, getLocalTableBlogID());
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
         ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, childTag);
@@ -137,7 +137,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     private void refreshSummary() {
-        if (WordPress.getCurrentBlog() == null) {
+        if (WordPress.getBlog(getLocalTableBlogID()) == null) {
             return;
         }
 
@@ -145,7 +145,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         new Thread() {
             @Override
             public void run() {
-                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                String blogId = WordPress.getBlog(getLocalTableBlogID()).getDotComBlogId();
                 if (TextUtils.isEmpty(blogId)) {
                     blogId = "0";
                 }
@@ -164,7 +164,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
             return;
         }
 
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getCurrentBlog());
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(getLocalTableBlogID()));
         long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
 
         if (stats != null

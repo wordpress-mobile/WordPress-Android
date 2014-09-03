@@ -71,7 +71,9 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final int REQUEST_JETPACK = 7000;
+
     public static final String ARG_NO_MENU_DRAWER = "no_menu_drawer";
+    public static final String ARG_LOCAL_TABLE_BLOG_ID = "ARG_LOCAL_TABLE_BLOG_ID";
 
     public static final String STATS_GESTURE_SHOW_TAP = "STATS_SHOW_TAP";
     public static final String STATS_GESTURE_SINGLE_TAP_CONFIRMED = "STATS_SINGLE_TAP_CONFIRMED";
@@ -83,9 +85,9 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private int mNavPosition = 0;
 
     private int mResultCode = -1;
-    private boolean mIsRestoredFromState = false;
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
+    private int mLocalBlogID = -1;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
 
@@ -131,10 +133,28 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     }
                 });
 
-        loadStatsFragments();
         setTitle(R.string.stats);
 
-        restoreState(savedInstanceState);
+        if (savedInstanceState != null) {
+            mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
+            mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
+            mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+        } else if (getIntent() != null) {
+            mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+        }
+
+        //Make sure the blog_id passed to this activity is valid and the blog is available within the app
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+
+        if (currentBlog == null) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        loadStatsFragments();
+
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
         mDetector.setIsLongpressEnabled(false);
 
@@ -177,20 +197,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         mPullToRefreshHelper.unregisterReceiver(this);
     }
 
-    private void restoreState(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            return;
-        }
-
-        mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
-        mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
-        mIsRestoredFromState = true;
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
+        outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         super.onSaveInstanceState(outState);
     }
 
@@ -240,10 +251,10 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == WPComLoginActivity.REQUEST_CODE) {
             mResultCode = resultCode;
-            if (resultCode == RESULT_OK && !WordPress.getCurrentBlog().isDotcomFlag()) {
-                if (StatsUtils.getBlogId() == null) {
+            final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+            if (resultCode == RESULT_OK && currentBlog != null && !currentBlog.isDotcomFlag()) {
+                if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                     final Handler handler = new Handler();
-                    final Blog currentBlog = WordPress.getCurrentBlog();
                     // Attempt to get the Jetpack blog ID
                     XMLRPCClientInterface xmlrpcClient = XMLRPCFactory.instantiate(currentBlog.getUri(), "", "");
                     Map<String, String> args = ApiHelper.blogOptionsXMLRPCParameters;
@@ -298,38 +309,38 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         StatsAbsViewFragment fragment;
 
         if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS, mLocalBlogID);
             ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null) {
-            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+            fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
             ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsClicksFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
             ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsGeoviewsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY, mLocalBlogID);
             ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsSearchEngineTermsFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS, mLocalBlogID);
             ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsTotalsFollowersAndSharesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, mLocalBlogID);
             ft.replace(R.id.stats_totals_followers_shares_container,
                     fragment, StatsTotalsFollowersAndSharesFragment.TAG);
         }
 
         if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
-            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+            fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
@@ -426,7 +437,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                 return;
             }
 
-            if (StatsUtils.getBlogId() == null) {
+            if (StatsUtils.getBlogId(mLocalBlogID) == null) {
                 // Blog has not returned a jetpack_client_id
                 stopStatsService();
                 mPullToRefreshHelper.setRefreshing(false);
@@ -451,7 +462,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
     private void showJetpackMissingAlert(final Activity currentActivity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(currentActivity);
-        if (WordPress.getCurrentBlog().isAdmin()) {
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+        if (currentBlog == null && !isFinishing()) {
+            AppLog.e(T.STATS, "The blog with local_blog_id " + mLocalBlogID + " cannot be loaded from the DB.");
+            Toast.makeText(this, R.string.stats_no_blog, Toast.LENGTH_LONG).show();
+        }
+        if (currentBlog.isAdmin()) {
             builder.setMessage(getString(R.string.jetpack_message))
                     .setTitle(getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -460,7 +476,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             currentActivity,
                             AuthenticatedWebViewActivity.class);
                     jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL,
-                            WordPress.getCurrentBlog().getAdminUrl()
+                            currentBlog.getAdminUrl()
                                     + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
                                     + "&plugin-search-input=Search+Plugins");
                     startActivityForResult(jetpackIntent, REQUEST_JETPACK);
@@ -492,13 +508,13 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_view_stats_full_site) {
-            final String blogId = StatsUtils.getBlogId();
+            final String blogId = StatsUtils.getBlogId(mLocalBlogID);
             if (blogId == null) {
                 showJetpackMissingAlert(this);
                 return true;
             }
 
-            StatsUtils.StatsCredentials credentials = StatsUtils.getCurrentBlogStatsCredentials();
+            StatsUtils.StatsCredentials credentials = StatsUtils.getBlogStatsCredentials(mLocalBlogID);
             if (credentials == null) {
                 Toast.makeText(this, R.string.jetpack_message_not_admin, Toast.LENGTH_LONG).show();
                 return true;
@@ -533,6 +549,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     public void onBlogChanged() {
         super.onBlogChanged();
 
+        mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
+
         stopStatsService();
         scrollToTop();
 
@@ -541,25 +559,25 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         StatsAbsViewFragment fragment;
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VISITORS_AND_VIEWS, mLocalBlogID);
         ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
         ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.VIEWS_BY_COUNTRY, mLocalBlogID);
         ft.replace(R.id.stats_geoviews_container, fragment, StatsGeoviewsFragment.TAG);
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.CLICKS, mLocalBlogID);
         ft.replace(R.id.stats_clicks_container, fragment, StatsClicksFragment.TAG);
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.SEARCH_ENGINE_TERMS, mLocalBlogID);
         ft.replace(R.id.stats_searchengine_container, fragment, StatsSearchEngineTermsFragment.TAG);
 
-        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES);
+        fragment = StatsAbsViewFragment.newInstance(StatsViewType.TOTALS_FOLLOWERS_AND_SHARES, mLocalBlogID);
         ft.replace(R.id.stats_totals_followers_shares_container, fragment, StatsTotalsFollowersAndSharesFragment.TAG);
 
-        fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS);
+        fragment = StatsReferrersFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID);
         ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
 
         ft.commit();
@@ -577,17 +595,15 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         return false;
     }
 
-    boolean dotComCredentialsMatch() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
-        return username.equals(WordPress.getCurrentBlog().getUsername());
-    }
-
     private void refreshStats() {
-        if (WordPress.getCurrentBlog() == null) {
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+
+        if (currentBlog == null) {
+            AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
             mPullToRefreshHelper.setRefreshing(false);
             return;
         }
+
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mPullToRefreshHelper.setRefreshing(false);
             return;
@@ -599,20 +615,13 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return;
         }
 
-        final Blog currentBlog = WordPress.getCurrentBlog();
-        if (currentBlog == null) {
-            mPullToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "Current blog is null. This should never happen here.");
-            return;
-        }
-
-        final String blogId = StatsUtils.getBlogId();
+        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
 
         // Make sure the blogId is available.
         if (blogId != null) {
             // for self-hosted sites; launch the user into an activity where they can provide their credentials
-            if (!WordPress.getCurrentBlog().isDotcomFlag()
-                    && !WordPress.getCurrentBlog().hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
+            if (!currentBlog.isDotcomFlag()
+                    && !currentBlog.hasValidJetpackCredentials() && mResultCode != RESULT_CANCELED) {
                 if (WordPress.hasValidWPComCredentials(this)) {
                     // Let's try the global wpcom credentials them first
                     SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -620,9 +629,9 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     String password = WordPressDB.decryptPassword(
                             settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
                             );
-                    WordPress.getCurrentBlog().setDotcom_username(username);
-                    WordPress.getCurrentBlog().setDotcom_password(password);
-                    WordPress.wpDB.saveBlog(WordPress.getCurrentBlog());
+                    currentBlog.setDotcom_username(username);
+                    currentBlog.setDotcom_password(password);
+                    WordPress.wpDB.saveBlog(currentBlog);
                     mPullToRefreshHelper.setRefreshing(true);
                 } else {
                     startWPComLoginActivity();
@@ -690,7 +699,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                 StatsActivity.this);
                         // Read the current wpcom username from blog settings, then read it from
                         // the app wpcom account.
-                        String username = StringUtils.notNullStr(WordPress.getCurrentBlog().getDotcom_username());
+                        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
+                        // If currentBlog is null at this point just exit.
+                        if (currentBlog==null) {
+                            return;
+                        }
+                        String username = StringUtils.notNullStr(currentBlog.getDotcom_username());
                         if (username.equals("")) {
                             username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
                         }

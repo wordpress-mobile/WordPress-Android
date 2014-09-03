@@ -108,15 +108,10 @@ public class BigBadgeFragment extends Fragment implements NotificationFragment {
             return;
         }
 
-        // stats activity is designed to work with the current blog, so switch blogs if necessary
-        if (WordPress.getCurrentRemoteBlogId() != remoteBlogId) {
-            // TODO: should we show a toast to let user know blog was switched?
-            int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
-            WordPress.setCurrentBlog(localBlogId);
-        }
-
+        int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(remoteBlogId);
         Intent intent = new Intent(getActivity(), StatsActivity.class);
         intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localBlogId);
         getActivity().startActivity(intent);
     }
 }
