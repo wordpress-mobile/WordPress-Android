@@ -2,7 +2,8 @@ language: java
 jdk: oraclejdk7
 env:
   matrix:
-    - ANDROID_SDKS=android-8 ANDROID_TARGET=android-8
+    - ANDROID_SDKS=android-14 ANDROID_TARGET=android-14
+
 before_install:
   # Install base Android SDK
   - sudo apt-get update -qq
@@ -29,19 +30,17 @@ before_install:
   - echo yes | android update sdk --filter extra-android-support --no-ui > /dev/null
   - echo yes | android update sdk --filter extra-android-m2repository --no-ui > /dev/null
 
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET
-  - emulator -avd test -no-skin -no-audio -no-window &
-
   # Create a valid local.properties file
-  - cat local.properties-example | grep -v sdk.dir > local.properties
-  - echo "sdk.dir=$ANDROID_HOME" >> local.properties; cat local.properties;
+  - echo "sdk.dir=$ANDROID_HOME" > local.properties; cat local.properties;
+
+  # Setup gradle.properties
+  - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
 install:
-  - ./gradlew --stacktrace assembleDebug
+  - ./gradlew build
 
 before_script:
   - adb wait-for-device
 
 script:
-  - TERM=dumb ./gradlew --stacktrace connectedAndroidTest
+  - TERM=dumb ./gradlew
