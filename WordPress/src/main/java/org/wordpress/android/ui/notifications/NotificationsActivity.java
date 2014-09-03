@@ -26,11 +26,7 @@ import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
-import org.wordpress.android.ui.reader.ReaderPostListActivity;
-import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
-import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -47,13 +43,11 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
-    private static final String KEY_LIST_POSITION = "listPosition";
     private static final String TAG_LIST_VIEW = "notificationsList";
 
     private NotificationsListFragment mNotesListFragment;
 
     private String mSelectedNoteId;
-    private int mSelectedListPosition;
     private boolean mHasPerformedInitialUpdate;
 
     @Override
@@ -85,12 +79,11 @@ public class NotificationsActivity extends WPActionBarActivity
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
 
-            if (savedInstanceState.containsKey(NOTE_ID_EXTRA)) {
+            if (getIntent().hasExtra(NOTE_ID_EXTRA)) {
+                launchWithNoteId();
+            } else if (savedInstanceState.getString(NOTE_ID_EXTRA) != null) {
                 // Restore last selected note
                 openNoteForNoteId(savedInstanceState.getString(NOTE_ID_EXTRA));
-                if (DisplayUtils.isLandscapeTablet(this) && savedInstanceState.containsKey(KEY_LIST_POSITION)) {
-                    mNotesListFragment.setSelectedPosition(savedInstanceState.getInt(KEY_LIST_POSITION));
-                }
             }
         } else {
             launchWithNoteId();
@@ -170,11 +163,8 @@ public class NotificationsActivity extends WPActionBarActivity
         Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             openNoteForNoteId(intent.getStringExtra(NOTE_ID_EXTRA));
-        } else {
-            // Dual pane and no note specified then select the first note
-            if (DisplayUtils.isLandscapeTablet(this) && mNotesListFragment != null) {
-                mNotesListFragment.setShouldLoadFirstNote(true);
-            }
+        } else if (DisplayUtils.isLandscapeTablet(this) && mNotesListFragment != null) {
+            mNotesListFragment.setShouldLoadFirstNote(true);
         }
     }
 
@@ -185,6 +175,9 @@ public class NotificationsActivity extends WPActionBarActivity
                 Note note = notesBucket.get(noteId);
                 if (note != null) {
                     openNote(note);
+                    if (mNotesListFragment != null) {
+                        mNotesListFragment.setSelectedNoteId(noteId);
+                    }
                 }
             }
         } catch (BucketObjectMissingException e) {
@@ -308,10 +301,8 @@ public class NotificationsActivity extends WPActionBarActivity
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
         public void onClickNote(Note note, int position) {
-            if (note == null)
-                return;
+            if (note == null) return;
 
-            mSelectedListPosition = position;
             // open the latest version of this note just in case it has changed - this can
             // happen if the note was tapped from the list fragment after it was updated
             // by another fragment (such as NotificationCommentLikeFragment)
@@ -326,9 +317,6 @@ public class NotificationsActivity extends WPActionBarActivity
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
         outState.putString(NOTE_ID_EXTRA, mSelectedNoteId);
-        if (mNotesListFragment != null) {
-            outState.putInt(KEY_LIST_POSITION, mSelectedListPosition);
-        }
 
         super.onSaveInstanceState(outState);
     }

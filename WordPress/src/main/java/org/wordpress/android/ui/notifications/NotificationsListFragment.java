@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
@@ -31,7 +34,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
     private boolean mShouldLoadFirstNote;
-    private int mListPositionSelection;
+    private String mSelectedNoteId;
 
     Bucket<Note> mBucket;
 
@@ -141,8 +144,8 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
     }
 
-    public void setSelectedPosition(int position) {
-        mListPositionSelection = position;
+    public void setSelectedNoteId(String selectedNoteId) {
+        mSelectedNoteId = selectedNoteId;
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {
@@ -155,8 +158,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
                 Note newestNote = mNotesAdapter.getNote(0);
                 BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
-                meta.setProperty("last_seen", newestNote.getTimestamp());
-                meta.save();
+                if (meta != null && newestNote != null) {
+                    meta.setProperty("last_seen", newestNote.getTimestamp());
+                    meta.save();
+                }
             }
         } catch (BucketObjectMissingException e) {
             // try again later, meta is created by wordpress.com
@@ -175,41 +180,23 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 
-                // Show first note if we're on a landscape tablet
-                if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
-                    mShouldLoadFirstNote = false;
-                    Note note = mNotesAdapter.getNote(0);
-                    if (getListView() != null && note != null && mNoteClickListener != null) {
-                        mNoteClickListener.onClickNote(note, 0);
-                        getListView().setItemChecked(0, true);
-                    }
-                }
-
-                // Show requested index or first row if on a landscape tablet
-                if (DisplayUtils.isLandscapeTablet(getActivity()) &&
-                        (mShouldLoadFirstNote || mListPositionSelection != ListView.INVALID_POSITION)) {
+                if (DisplayUtils.isLandscapeTablet(getActivity()) && getListView() != null) {
+                    // Select first row on a landscape tablet
                     if (mShouldLoadFirstNote) {
-                        mListPositionSelection = 0;
-                        Note note = mNotesAdapter.getNote(mListPositionSelection);
-                        if (note != null) {
-                            mNoteClickListener.onClickNote(note, mListPositionSelection);
-                        }
-
                         mShouldLoadFirstNote = false;
+                        Note note = mNotesAdapter.getNote(0);
+                        if (note != null) {
+                            mNoteClickListener.onClickNote(note, 0);
+                            mSelectedNoteId = note.getId();
+                        }
                     }
 
-                    // Highlight the note row
-                    if (mListPositionSelection < mNotesAdapter.getCount() && getListView() != null) {
-                        getListView().setItemChecked(mListPositionSelection, true);
-                        mListPositionSelection = ListView.INVALID_POSITION;
+                    if (mSelectedNoteId != null) {
+                        new HighlightSelectedNoteTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
             }
         });
-    }
-
-    public void setShouldLoadFirstNote(boolean shouldLoad) {
-        mShouldLoadFirstNote = shouldLoad;
     }
 
     @Override
@@ -220,6 +207,11 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         super.onSaveInstanceState(outState);
     }
+
+    public void setShouldLoadFirstNote(boolean shouldLoad) {
+        mShouldLoadFirstNote = shouldLoad;
+    }
+
 
     /**
      * Simperium bucket listener methods
@@ -243,4 +235,38 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
     }
+
+    // Retrieve the index for the selected note and set it to be highlighted (for landscape tablets only)
+    private class HighlightSelectedNoteTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            if (TextUtils.isEmpty(mSelectedNoteId) || mNotesAdapter == null) {
+                return ListView.INVALID_POSITION;
+            }
+
+            Bucket.ObjectCursor<Note> cursor = (Bucket.ObjectCursor<Note>) mNotesAdapter.getCursor();
+            if (cursor != null) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
+                    String noteSimperiumId = cursor.getSimperiumKey();
+                    if (noteSimperiumId != null && noteSimperiumId.equals(mSelectedNoteId)) {
+                        return i;
+                    }
+                }
+            }
+
+            return ListView.INVALID_POSITION;
+        }
+
+        @Override
+        protected void onPostExecute(Integer noteListPosition) {
+            if (isAdded() && noteListPosition != ListView.INVALID_POSITION && getListView() != null) {
+                getListView().setItemChecked(noteListPosition, true);
+            }
+
+            mSelectedNoteId = null;
+        }
+    }
+
 }
