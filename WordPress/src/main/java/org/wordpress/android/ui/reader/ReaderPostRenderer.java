@@ -395,8 +395,7 @@ class ReaderPostRenderer {
 
                 while (it.hasNext()) {
                     JSONObject jsonAttach = json.optJSONObject(it.next());
-                    String mimeType = JSONUtil.getString(json, "mime_type");
-                    if (mimeType.startsWith("image")) {
+                    if (jsonAttach != null && JSONUtil.getString(jsonAttach, "mime_type").startsWith("image")) {
                         String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtil.getString(json, "URL")));
                         int width = jsonAttach.optInt("width");
                         int height = jsonAttach.optInt("height");
