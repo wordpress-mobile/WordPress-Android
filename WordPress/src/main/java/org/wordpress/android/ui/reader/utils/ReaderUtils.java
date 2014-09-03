@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.List;
@@ -131,30 +130,22 @@ public class ReaderUtils {
         }
     }
 
-    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
-        if (isPrivate) {
-            return getPrivateImageForDisplay(imageUrl, width, height);
-        } else {
-            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height);
-        }
-    }
-
     /*
      * use this to request a reduced size image from a private post - images in private posts can't
      * use photon but these are usually wp images so they support the h= and w= query params
      */
-    private static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
+    public static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
 
         final String query;
         if (width > 0 && height > 0) {
-            query = "?w=" + width + "&h=" + height;
+            query = String.format("?w=%d&h=%d", width, height);
         } else if (width > 0) {
-            query = "?w=" + width;
+            query = String.format("?w=%d", width);
         } else if (height > 0) {
-            query = "?h=" + height;
+            query = String.format("?h=%d", height);
         } else {
             query = "";
         }

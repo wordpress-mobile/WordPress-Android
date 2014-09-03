@@ -47,8 +47,7 @@ public class ReaderPostTable {
           + "primary_tag,"          // 26
           + "secondary_tag,"        // 27
           + "is_likes_enabled,"     // 28
-          + "is_sharing_enabled,"   // 29
-          + "attachments_json";     // 30
+          + "is_sharing_enabled";   // 29
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -82,7 +81,6 @@ public class ReaderPostTable {
                 + " secondary_tag       TEXT,"
                 + " is_likes_enabled    INTEGER DEFAULT 0,"
                 + " is_sharing_enabled  INTEGER DEFAULT 0,"
-                + " attachments_json    TEXT,"
                 + " PRIMARY KEY (post_id, blog_id)"
                 + ")");
         db.execSQL("CREATE INDEX idx_posts_timestamp ON tbl_posts(timestamp)");
@@ -375,7 +373,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
@@ -412,7 +410,6 @@ public class ReaderPostTable {
                 stmtPosts.bindString(27, post.getSecondaryTag());
                 stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isLikesEnabled));
                 stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isSharingEnabled));
-                stmtPosts.bindString(30, post.getAttachmentsJson());
                 stmtPosts.execute();
             }
 
@@ -563,8 +560,6 @@ public class ReaderPostTable {
         private final int idx_is_likes_enabled;
         private final int idx_is_sharing_enabled;
 
-        private final int idx_attachments_json;
-
         private PostColumnIndexes(Cursor c) {
             if (c == null)
                 throw new IllegalArgumentException("PostColumnIndexes > null cursor");
@@ -605,8 +600,6 @@ public class ReaderPostTable {
 
             idx_is_likes_enabled = c.getColumnIndex("is_likes_enabled");
             idx_is_sharing_enabled = c.getColumnIndex("is_sharing_enabled");
-
-            idx_attachments_json = c.getColumnIndex("attachments_json");
         }
     }
 
@@ -658,8 +651,6 @@ public class ReaderPostTable {
 
         post.isLikesEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_likes_enabled));
         post.isSharingEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_sharing_enabled));
-
-        post.setAttachmentsJson(c.getString(cols.idx_attachments_json));
 
         return post;
     }

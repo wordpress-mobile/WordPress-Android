@@ -24,7 +24,7 @@ public class PhotonUtils {
             return getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
 
         // remove all other params, then add query string for size and "mystery man" default
-        return UrlUtils.removeQuery(imageUrl) + "?s=" + avatarSz + "&d=mm";
+        return UrlUtils.removeQuery(imageUrl) + String.format("?s=%d&d=mm", avatarSz);
     }
 
     /*
@@ -64,18 +64,18 @@ public class PhotonUtils {
         // see http://wp.tutsplus.com/tutorials/how-to-generate-website-screenshots-for-your-wordpress-site/
         // ex: http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
         if (isMshotsUrl(imageUrl)) {
-            return imageUrl + "?w=" + width + "&h=" + height;
+            return imageUrl + String.format("?w=%d&h=%d", width, height);
         }
 
         // if both width & height are passed use the "resize" param, use only "w" or "h" if just
         // one of them is set, otherwise no query string
         final String query;
         if (width > 0 && height > 0) {
-            query = "?resize=" + width + "," + height;
+            query = String.format("?resize=%d,%d", width, height);
         } else if (width > 0) {
-            query = "?w=" + width;
+            query = String.format("?w=%d", width);
         } else if (height > 0) {
-            query = "?h=" + height;
+            query = String.format("?h=%d", height);
         } else {
             query = "";
         }
