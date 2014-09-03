@@ -16,26 +16,21 @@ apply plugin: 'maven'
 android {
     defaultPublishConfig 'debug'
 
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         applicationId "org.wordpress.android.networking"
         minSdkVersion 14
-        targetSdkVersion 20
-        versionCode 1
+        targetSdkVersion 19
         versionName "1.0.0"
     }
 }
 
 dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
-
-    debugCompile project(path:':libs:utils:WordPressUtils')
-    releaseCompile 'org.wordpress:wordpress-utils:1.0.2'
-
-    debugCompile project(path:':libs:wpcomrest:WordPressComRest')
-    releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
+    compile project(path:':libs:utils:WordPressUtils')
+    compile project(path:':libs:wpcomrest:WordPressComRest')
 }
 
 uploadArchives {
