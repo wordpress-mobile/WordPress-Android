@@ -250,7 +250,7 @@ public class NotificationsUtils {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            AppLog.e(T.NOTIFS, "No ranges found for note block.");
         }
 
         return spannableStringBuilder;

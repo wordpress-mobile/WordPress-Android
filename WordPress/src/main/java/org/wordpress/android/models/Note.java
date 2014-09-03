@@ -302,7 +302,7 @@ public class Note extends Syncable {
                     return bodyItem.optString("text");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                return "";
             }
         }
 
@@ -323,7 +323,7 @@ public class Note extends Syncable {
                     return JSONUtil.queryJSON(bodyItem, "meta.links.home", "");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                return "";
             }
         }
 
