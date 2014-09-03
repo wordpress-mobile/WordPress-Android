@@ -243,7 +243,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (mComment.getStatusEnum() == CommentStatus.SPAM) {
             moderateComment(CommentStatus.APPROVED);
         } else {
-            moderateComment(CommentStatus.SPAM);
+            confirmSpamComment();
         }
     }
 
@@ -595,6 +595,27 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
         builder.setNegativeButton(R.string.trash_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void confirmSpamComment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.dlg_confirm_spam_comment);
+        builder.setTitle(R.string.comment_status_spam);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.comment_mark_spam, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                moderateComment(CommentStatus.SPAM);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();

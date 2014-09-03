@@ -194,6 +194,8 @@
     <string name="edit_comment">Edit comment</string>
     <string name="comments_empty_list">No comments</string>
     <string name="comment_reply_to_user">Reply to %s</string>
+    <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
+    <string name="comment_mark_spam">Mark spam</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
