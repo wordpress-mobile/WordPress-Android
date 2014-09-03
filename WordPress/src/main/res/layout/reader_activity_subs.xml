@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_above="@+id/divider_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/pager_tabs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:textAppearance="@style/ReaderPagerTabStripText"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingBottom="@dimen/margin_large" />
+
+    </android.support.v4.view.ViewPager>
+
+    <include
+        android:id="@+id/text_message_bar"
+        layout="@layout/message_bar_include"
+        android:layout_above="@+id/divider_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/divider_list"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_height="1dp"
+        android:background="@color/grey_light" />
+
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/margin_small">
+
+        <EditText
+            android:id="@+id/edit_add"
+            style="@style/ReaderEditText.Topic"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/reader_hint_add_tag_or_url" />
+
+        <ImageButton
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/reader_transparent_selector"
+            android:src="@drawable/ic_content_new" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_follow"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

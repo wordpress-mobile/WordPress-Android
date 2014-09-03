@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    message bar at bottom of comment list and reader tag activity
+    see MessageBarUtils.java
+-->
+
+<org.wordpress.android.widgets.WPTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReaderTextView.MessageBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:text="text set at runtime"
+    android:visibility="gone" />

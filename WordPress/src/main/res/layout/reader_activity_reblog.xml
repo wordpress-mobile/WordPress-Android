@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/grey_extra_light"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- content is wrapped in a scrollView so it will scroll up when the soft keyboard is shown -->
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_post_excerpt"
+                layout="@layout/reader_reblog_post_excerpt" />
+
+            <org.wordpress.android.widgets.OpenSansEditText
+                android:id="@+id/edit_comment"
+                style="@style/ReaderEditText"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="top"
+                android:hint="@string/reader_hint_reblog_comment"
+                android:inputType="textCapSentences|textMultiLine"
+                android:padding="@dimen/margin_large" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/ReaderProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/grey_medium_dark"
+        android:padding="@dimen/margin_extra_large"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/reader_label_reblog_empty" />
+
+</RelativeLayout>

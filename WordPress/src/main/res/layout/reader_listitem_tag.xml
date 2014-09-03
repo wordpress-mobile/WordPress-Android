@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    listItem which shows either a followed or popular/recommended tag - see ReaderTagAdapter
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_topic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/ic_action_tag_dark"
+        android:drawablePadding="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="text_topic" />
+
+    <ImageButton
+        android:id="@+id/btn_add_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/reader_transparent_selector"
+        android:gravity="center_vertical"
+        android:src="@drawable/ic_content_remove" />
+</LinearLayout>

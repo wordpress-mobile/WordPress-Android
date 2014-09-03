@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF" >
+
+    <LinearLayout
+        android:id="@+id/postBar"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/view_post_toolbar_bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp" >
+
+        <TextView
+            android:id="@+id/postTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginRight="4dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:singleLine="true"
+            android:textSize="@dimen/text_sz_extra_large"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="48dp" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent" >
+
+            <WebView
+                android:id="@+id/viewPostWebView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:id="@+id/viewPostTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#FFFFFF"
+                android:padding="@dimen/margin_extra_large"
+                android:textSize="@dimen/text_sz_extra_large" />
+        </FrameLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/layout_comment_box"
+        layout="@layout/reader_include_comment_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <RelativeLayout
+        android:id="@+id/footerBar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/post_detail_button_size"
+        android:layout_above="@+id/layout_comment_box"
+        android:layout_alignWithParentIfMissing="true"
+        android:background="@drawable/view_post_toolbar"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/deletePost"
+            android:layout_width="@dimen/post_detail_button_size"
+            android:layout_height="@dimen/post_detail_button_size"
+            android:background="@drawable/selectable_background_wordpress"
+            android:scaleType="fitCenter"
+            android:padding="9dp"
+            android:tint="@color/post_detail_icon_tint"
+            android:src="@drawable/ic_cab_trash"
+            android:contentDescription="@string/delete_post" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/viewPost"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
+                android:background="@drawable/selectable_background_wordpress"
+                android:scaleType="fitCenter"
+                android:padding="6dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ic_post_preview"
+                android:contentDescription="@string/preview_post" />
+
+            <ImageButton
+                android:id="@+id/sharePostLink"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
+                android:background="@drawable/selectable_background_wordpress"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ab_icon_share"
+                android:contentDescription="@string/share_url" />
+
+            <ImageButton
+                android:id="@+id/addComment"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
+                android:background="@drawable/selectable_background_wordpress"
+                android:scaleType="fitCenter"
+                android:padding="9dp"
+                android:src="@drawable/dashboard_icon_comments"
+                android:contentDescription="@string/add_comment" />
+            
+            <ImageButton
+                android:id="@+id/editPost"
+                android:layout_width="@dimen/post_detail_button_size"
+                android:layout_height="@dimen/post_detail_button_size"
+                android:background="@drawable/selectable_background_wordpress"
+                android:scaleType="fitCenter"
+                android:padding="10dp"
+                android:tint="@color/post_detail_icon_tint"
+                android:src="@drawable/ab_icon_edit"
+                android:contentDescription="@string/edit_post" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
