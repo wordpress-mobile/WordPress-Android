@@ -150,11 +150,11 @@ public class ReaderUtils {
 
         final String query;
         if (width > 0 && height > 0) {
-            query = String.format("?w=%d&h=%d", width, height);
+            query = "?w=" + width + "&h=" + height;
         } else if (width > 0) {
-            query = String.format("?w=%d", width);
+            query = "?w=" + width;
         } else if (height > 0) {
-            query = String.format("?h=%d", height);
+            query = "?h=" + height;
         } else {
             query = "";
         }
