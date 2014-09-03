@@ -12,7 +12,7 @@
         android:id="@+id/user_avatar"
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/comment_avatar_margin_top"
         android:background="@color/grey_light" />
 
     <LinearLayout
