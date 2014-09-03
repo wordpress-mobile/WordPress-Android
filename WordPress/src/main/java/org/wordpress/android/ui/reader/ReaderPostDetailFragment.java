@@ -1080,6 +1080,7 @@ public class ReaderPostDetailFragment extends Fragment
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
                     mHasAlreadyRequestedPost = true;
+                    AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 }
                 return;
