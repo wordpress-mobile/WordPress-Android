@@ -12,7 +12,7 @@ public class NoticonTextView extends TextView {
     private String FONT_NAME = "Noticons-Regular.otf";
 
     public NoticonTextView(Context context) {
-        super(context);
+        super(context, null);
         this.setTypeface(TypefaceCache.getTypefaceForTypefaceName(context, FONT_NAME));
     }
 
