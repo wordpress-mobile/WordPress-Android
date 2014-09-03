@@ -17,7 +17,7 @@
 
     <LinearLayout
         android:id="@+id/user_name_wrapper"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/user_avatar"
         android:layout_marginTop="@dimen/comment_user_margin_adjustment"
@@ -55,7 +55,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/user_comment"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/user_avatar"
         android:layout_marginTop="@dimen/comment_snippet_margin_adjustment"
@@ -67,7 +67,7 @@
 
     <View
         android:id="@+id/divider_view"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/user_comment"
         android:background="@drawable/notifications_list_divider_full_width" />
