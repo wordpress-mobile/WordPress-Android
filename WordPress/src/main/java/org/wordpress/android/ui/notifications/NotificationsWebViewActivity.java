@@ -8,13 +8,16 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
-    private static final String URL_TO_LOAD = "external_url";
+    public static final String URL_TO_LOAD = "external_url";
 
     public static void openUrl(Context context, String url) {
         if (context == null || TextUtils.isEmpty(url))
@@ -29,6 +32,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDisplayZoomControls(false);
+
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

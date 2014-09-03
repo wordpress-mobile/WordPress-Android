@@ -89,6 +89,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private TextView mBtnEditComment;
     private TextView mBtnMore;
 
+    private String mRestoredReplyText;
+
     private boolean mIsSubmittingReply = false;
     private boolean mIsModeratingComment = false;
     private boolean mIsRequestingComment = false;
@@ -188,6 +190,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 return false;
             }
         });
+
+        if (!TextUtils.isEmpty(mRestoredReplyText)) {
+            mEditReply.setText(mRestoredReplyText);
+            mRestoredReplyText = null;
+        }
 
         mImgSubmitReply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -355,6 +362,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private int getRemoteBlogId() {
         return mRemoteBlogId;
+    }
+
+    public void setRestoredReplyText(String restoredReplyText) {
+        mRestoredReplyText = restoredReplyText;
     }
 
     /*
@@ -1047,5 +1058,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like);
             mBtnLikeComment.setActivated(false);
         }
+    }
+
+    public String getReplyText() {
+        if (mEditReply == null) return null;
+
+        return mEditReply.getText().toString();
     }
 }

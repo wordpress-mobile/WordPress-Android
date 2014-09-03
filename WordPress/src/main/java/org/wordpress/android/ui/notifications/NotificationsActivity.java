@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,7 +20,6 @@ import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
@@ -43,11 +43,14 @@ public class NotificationsActivity extends WPActionBarActivity
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
+    private static final String KEY_REPLY_TEXT = "replyText";
     private static final String TAG_LIST_VIEW = "notificationsList";
 
     private NotificationsListFragment mNotesListFragment;
+    private Fragment mDetailFragment;
 
     private String mSelectedNoteId;
+    private String mRestoredReplyText;
     private boolean mHasPerformedInitialUpdate;
 
     @Override
@@ -78,6 +81,10 @@ public class NotificationsActivity extends WPActionBarActivity
 
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
+
+            if (savedInstanceState.getString(KEY_REPLY_TEXT) != null){
+                mRestoredReplyText = savedInstanceState.getString(KEY_REPLY_TEXT);
+            }
 
             if (savedInstanceState.getString(NOTE_ID_EXTRA) != null) {
                 // Restore last selected note
@@ -123,6 +130,7 @@ public class NotificationsActivity extends WPActionBarActivity
             case android.R.id.home:
                 FragmentManager fm = getFragmentManager();
                 if (fm.getBackStackEntryCount() > 0) {
+                    mRestoredReplyText = getCommentReplyText();
                     popNoteDetail();
                     return true;
                 } else {
@@ -217,7 +225,12 @@ public class NotificationsActivity extends WPActionBarActivity
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
-            fragment = CommentDetailFragment.newInstance(note);
+            CommentDetailFragment commentDetailFragment = CommentDetailFragment.newInstance(note);
+            if (!TextUtils.isEmpty(mRestoredReplyText)) {
+                commentDetailFragment.setRestoredReplyText(mRestoredReplyText);
+            }
+
+            fragment = commentDetailFragment;
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment
             // automattchers are handled by note.isCommentType() above
@@ -251,13 +264,13 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         // create detail fragment for this note type
-        Fragment fragment = getDetailFragmentForNote(note);
+        mDetailFragment = getDetailFragmentForNote(note);
 
         if (DisplayUtils.isLandscapeTablet(this)) {
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(R.id.notifications_detail_fragment_container, fragment);
+            ft.replace(R.id.notifications_detail_fragment_container, mDetailFragment);
             ft.commitAllowingStateLoss();
             return;
         }
@@ -265,7 +278,7 @@ public class NotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.layout_fragment_container, fragment);
+        ft.replace(R.id.layout_fragment_container, mDetailFragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -289,10 +302,10 @@ public class NotificationsActivity extends WPActionBarActivity
     }
 
     public void showWebViewActivityForUrl(String url) {
-        if (isFinishing()) return;
+        if (isFinishing() || url == null) return;
 
-        Intent intent = new Intent(this, AuthenticatedWebViewActivity.class);
-        intent.putExtra("url", url);
+        Intent intent = new Intent(this, NotificationsWebViewActivity.class);
+        intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
         startActivity(intent);
     }
 
@@ -308,13 +321,32 @@ public class NotificationsActivity extends WPActionBarActivity
         }
     }
 
+    // Retrieves comment reply text so we can restore it upon returning to CommentDetailFragment
+    private String getCommentReplyText() {
+        if (mDetailFragment != null && mDetailFragment instanceof CommentDetailFragment) {
+            CommentDetailFragment commentDetailFragment = (CommentDetailFragment)mDetailFragment;
+            if (!TextUtils.isEmpty(commentDetailFragment.getReplyText())) {
+                return commentDetailFragment.getReplyText();
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
         outState.putBoolean(KEY_INITIAL_UPDATE, mHasPerformedInitialUpdate);
-        outState.putString(NOTE_ID_EXTRA, mSelectedNoteId);
+        if (DisplayUtils.isLandscapeTablet(this) || getFragmentManager().getBackStackEntryCount() > 0) {
+            outState.putString(NOTE_ID_EXTRA, mSelectedNoteId);
+        }
+
+        // Save text in comment reply EditText
+        if (!TextUtils.isEmpty(getCommentReplyText())) {
+            outState.putString(KEY_REPLY_TEXT, getCommentReplyText());
+        }
 
         super.onSaveInstanceState(outState);
     }
