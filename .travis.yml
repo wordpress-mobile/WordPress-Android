@@ -25,6 +25,7 @@ before_install:
   # Other relevant API's
   - echo yes | android update sdk --filter platform-tools --no-ui --force > /dev/null
   - echo yes | android update sdk --filter android-19 --no-ui --force > /dev/null
+  - echo yes | android update sdk --filter android-20 --no-ui --force > /dev/null
   - echo yes | android update sdk --filter sysimg-19 --no-ui --force > /dev/null
   - echo yes | android update sdk --filter android-14 --no-ui --force > /dev/null
   - echo yes | android update sdk --filter extra-android-support --no-ui > /dev/null
@@ -38,6 +39,9 @@ before_install:
 
 install:
   - ./gradlew build
+cache:
+  directories:
+    - .gradle
 
 before_script:
   - adb wait-for-device
