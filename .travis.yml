@@ -42,9 +42,3 @@ install:
 cache:
   directories:
     - .gradle
-
-before_script:
-  - adb wait-for-device
-
-script:
-  - TERM=dumb ./gradlew
