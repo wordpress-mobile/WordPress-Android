@@ -25,7 +25,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
@@ -40,6 +39,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
@@ -232,15 +232,12 @@ public class ReaderPostPagerActivity extends Activity
         new Thread() {
             @Override
             public void run() {
-                final ReaderPostList postList;
+                final ReaderBlogIdPostIdList idList;
                 if (mIsSinglePostView) {
-                    ReaderPost post = ReaderPostTable.getPost(blogId, postId);
-                    if (post == null) {
-                        return;
-                    }
-                    postList = new ReaderPostList();
-                    postList.add(post);
+                    idList = new ReaderBlogIdPostIdList();
+                    idList.add(new ReaderBlogIdPostId(blogId, postId));
                 } else {
+                    final ReaderPostList postList;
                     int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
@@ -253,22 +250,22 @@ public class ReaderPostPagerActivity extends Activity
                         default:
                             return;
                     }
+                    idList = postList.getBlogIdPostIdList();
                 }
 
-                final ReaderBlogIdPostIdList ids = postList.getBlogIdPostIdList();
                 final int currentPosition = mViewPager.getCurrentItem();
                 final int newPosition;
                 if (gotoNext) {
-                    newPosition = ids.indexOf(blogId, postId) + 1;
+                    newPosition = idList.indexOf(blogId, postId) + 1;
                 } else {
-                    newPosition = ids.indexOf(blogId, postId);
+                    newPosition = idList.indexOf(blogId, postId);
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mPagerAdapter = new PostPagerAdapter(getFragmentManager());
-                        mPagerAdapter.showPosts(ids);
+                        mPagerAdapter.showPosts(idList);
                         mViewPager.setAdapter(mPagerAdapter);
                         if (mPagerAdapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);

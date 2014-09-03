@@ -52,6 +52,8 @@ public class ReaderPost {
     public boolean isLikesEnabled;
     public boolean isSharingEnabled;    // currently unused
 
+    private String attachmentsJson;
+
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
             throw new IllegalArgumentException("null json post");
@@ -154,6 +156,12 @@ public class ReaderPost {
 
         // parse the tags section
         assignTagsFromJson(post, json.optJSONObject("tags"));
+
+        // parse the attachments
+        JSONObject jsonAttachments = json.optJSONObject("attachments");
+        if (jsonAttachments != null) {
+            post.attachmentsJson = jsonAttachments.toString();
+        }
 
         // the single-post sites/$site/posts/$post endpoint returns all site metadata
         // under meta/data/site (assuming ?meta=site was added to the request)
@@ -343,8 +351,6 @@ public class ReaderPost {
         this.published = StringUtils.notNullStr(published);
     }
 
-    // --------------------------------------------------------------------------------------------
-
     public String getPrimaryTag() {
         return StringUtils.notNullStr(primaryTag);
     }
@@ -368,7 +374,17 @@ public class ReaderPost {
         }
     }
 
-    // --------------------------------------------------------------------------------------------
+    /*
+     * attachments are stored as the actual JSON to avoid having a separate table for
+     * them, may need to revisit this if/when attachments become more important
+     */
+    public String getAttachmentsJson() {
+        return StringUtils.notNullStr(attachmentsJson);
+    }
+    public void setAttachmentsJson(String json) {
+        attachmentsJson = StringUtils.notNullStr(json);
+    }
+
 
     public boolean hasText() {
         return !TextUtils.isEmpty(text);
@@ -434,12 +450,8 @@ public class ReaderPost {
         if (featuredImageForDisplay == null) {
             if (!hasFeaturedImage()) {
                 featuredImageForDisplay = "";
-            } else if (isPrivate) {
-                // images in private posts can't use photon, so handle separately
-                featuredImageForDisplay = ReaderUtils.getPrivateImageForDisplay(featuredImage, width, height);
             } else {
-                // not private, so set to correctly sized photon url
-                featuredImageForDisplay = PhotonUtils.getPhotonImageUrl(featuredImage, width, height);
+                featuredImageForDisplay = ReaderUtils.getResizedImageUrl(featuredImage, width, height, isPrivate);
             }
         }
         return featuredImageForDisplay;
