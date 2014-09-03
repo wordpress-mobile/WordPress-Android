@@ -79,9 +79,7 @@ public class NotificationsActivity extends WPActionBarActivity
         if (savedInstanceState != null) {
             mHasPerformedInitialUpdate = savedInstanceState.getBoolean(KEY_INITIAL_UPDATE);
 
-            if (getIntent().hasExtra(NOTE_ID_EXTRA)) {
-                launchWithNoteId();
-            } else if (savedInstanceState.getString(NOTE_ID_EXTRA) != null) {
+            if (savedInstanceState.getString(NOTE_ID_EXTRA) != null) {
                 // Restore last selected note
                 openNoteForNoteId(savedInstanceState.getString(NOTE_ID_EXTRA));
             }
