@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawSelectorOnTop="false"/>
+
+        <LinearLayout
+            android:id="@id/android:empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:gravity="center"
+            android:background="@color/background_grey">
+
+            <ImageView
+                android:id="@+id/empty_tags_box_top"
+                android:layout_width="112dp"
+                android:layout_height="86dp"
+                android:src="@drawable/penandink"
+                android:layout_marginBottom="8dp"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/title_empty"
+                style="@style/WordPress.EmptyList.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+                android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+                android:layout_marginRight="@dimen/empty_list_title_side_margin"
+                android:text="@string/empty_list_default"/>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/description_empty"
+                style="@style/WordPress.EmptyList.Description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/empty_list_description_bottom_margin"
+                android:layout_marginLeft="@dimen/empty_list_description_side_margin"
+                android:layout_marginRight="@dimen/empty_list_description_side_margin"/>
+        </LinearLayout>
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+
+</LinearLayout>
+

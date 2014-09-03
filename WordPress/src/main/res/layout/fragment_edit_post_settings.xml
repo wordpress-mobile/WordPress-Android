@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/statusLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/status" />
+
+        <Spinner
+            android:id="@+id/status"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/pubDateLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/publish_date"
+            android:layout_marginTop="8dp"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12dp">
+
+            <TextView
+                android:id="@+id/pubDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:text="@string/immediately" />
+
+            <Button
+                android:id="@+id/pubDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/postFormatLabel"
+            style="@style/WordPressSubHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/post_format"
+            android:layout_marginTop="0dp"/>
+
+        <Spinner
+            android:id="@+id/postFormat"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:prompt="@string/post_format" />
+
+        <LinearLayout
+            android:id="@+id/sectionTags"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/categoryLabel"
+                style="@style/WordPressSubHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/categories"
+                android:layout_marginBottom="4dp" />
+
+            <org.wordpress.android.widgets.FlowLayout
+                android:id="@+id/sectionCategories"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp" />
+
+            <EditText
+                android:id="@+id/tags"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="@string/tags_separate_with_commas"
+                android:inputType="textAutoCorrect" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/postExcerpt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:hint="@string/post_excerpt"
+            android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+            android:minLines="1" />
+
+        <EditText
+            android:id="@+id/post_password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/post_password"
+            android:inputType="textPassword" />
+
+        <ViewStub
+            android:id="@+id/stub_post_location_settings"
+            android:layout="@layout/post_location_settings"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+    </LinearLayout>
+</ScrollView>

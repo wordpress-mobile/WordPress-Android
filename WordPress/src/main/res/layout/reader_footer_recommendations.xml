@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    ListView footer used when showing recommended blogs to load more recommendations
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_extra_large">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/reader_hyperlink"
+        android:textSize="@dimen/text_sz_medium"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:background="@drawable/reader_transparent_selector"
+        android:text="@string/reader_label_more_recommendations" />
+</RelativeLayout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    post excerpt shown in reader reblog activity
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingLeft="@dimen/reader_list_margin"
+    android:paddingRight="@dimen/reader_list_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        android:background="@drawable/reader_post_background"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_large"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <org.wordpress.android.widgets.WPNetworkImageView
+                android:id="@+id/image_avatar"
+                style="@style/ReaderImageView.Avatar.Small"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_medium" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_blog_name"
+                style="@style/ReaderTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                tools:text="text_blog_name"
+                android:textSize="@dimen/text_sz_medium" />
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_featured"
+            style="@style/ReaderImageView.Featured"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_height="140dp" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.Post.Title"
+            android:maxLines="2"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_excerpt"
+            style="@style/ReaderTextView.Post.Excerpt"
+            android:maxLines="3"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_small"
+            tools:text="text_excerpt" />
+    </LinearLayout>
+</FrameLayout>

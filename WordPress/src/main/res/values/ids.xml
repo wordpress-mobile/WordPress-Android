@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="row_post_id" />
+    <item type="id" name="drag_handle" />
+    <item type="id" name="click_remove" />
+    <item type="id" name="stats_tags" />
+    <item type="id" name="stats_geoviews" />
+    <item type="id" name="stats_comments" />
+    <item type="id" name="stats_referrers" />
+    <item type="id" name="stats_clicks" />
+    <item type="id" name="stats_search" />
+    <item type="id" name="stats_top_authors" />
+    <item type="id" name="stats_top_posts" />
+</resources>

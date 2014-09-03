@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!---
+    listItem which shows a recommended or followed blog - see ReaderBlogAdapter
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/reader_transparent_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_blog"
+        android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_height="@dimen/avatar_sz_medium"
+        android:layout_weight="0" />
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_url" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/grey_medium"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="text_description" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_follow"
+        style="@style/ReaderTextView.Follow"
+        android:layout_weight="0" />
+
+</LinearLayout>

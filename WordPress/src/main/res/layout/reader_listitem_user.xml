@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/reader_transparent_selector"
+    android:padding="@dimen/margin_large">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/image_avatar"
+        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_small" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_weight="1">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="text_name"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_name"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="text_url"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_small" />
+
+    </RelativeLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_follow"
+        style="@style/ReaderTextView.Follow" />
+</LinearLayout>

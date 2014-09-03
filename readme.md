@@ -7,22 +7,40 @@ read on.
 ## Build Instructions ##
 
 The [gradle build system][2] will fetch all dependencies and generate
-files you need to build the project. You first need to copy create the
-local.properties file, the easiest way is to copy our example:
+files you need to build the project. You first need to generate the
+local.properties (replace YOUR_SDK_DIR by your actual android sdk dir)
+file and create the gradle.properties file, the easiest way is to copy
+our example:
 
-    $ cp local.properties-example local.properties
+    $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
+    $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
 
-Then edit the local.properties file to add your Android
-`sdk.dir`. After this step, you can invoke gradle to build, install
-and test the project:
+Previous command create a `libs/` directory and clone all dependencies needed
+by the main WordPress for Android project. You can now build, install and
+test the project:
 
-    $ ./gradlew assembleDebug # assemble the debug .apk
-    $ ./gradlew installDebug  # assemble and install the debug .apk if you
-                              # have an emulator or an Android device connected
-    $ ./gradlew cIT           # assemble, install and run unit tests
+    $ ./gradlew assembleVanillaDebug # assemble the debug .apk
+    $ ./gradlew installVanillaDebug  # install the debug .apk if you have an
+                                     # emulator or an Android device connected
+    $ ./gradlew cAT                  # assemble, install and run unit tests
 
-Note: you can use the [Android Studio IDE][3], import the project as a
-Gradle project.
+You can use [Android Studio][3] by importing the project as a Gradle project.
+
+## Directory structure ##
+
+    |-- libs                    # dependencies used to build debug variants
+    |-- tools                   # script collection
+    `-- WordPress
+        |-- build.gradle        # main build script
+        |-- gradle.properties   # properties imported by the build script
+        `-- src                 # android specific Java code
+            |-- androidTest     # test assets, resources and code
+            |-- main            #
+            |   |-- assets      # main project assets
+            |   |-- java        # main project java code
+            |   `-- res         # main project resources
+            |-- vanilla         # vanilla variant specific manifest
+            `-- zbetagroup      # beta variant specific resources and manifest
 
 ## Need help to build or hack? ##
 

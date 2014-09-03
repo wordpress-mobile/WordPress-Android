@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/stats_pager_title"
+        style="@style/StatsPagerTitle" />
+
+    <LinearLayout
+        android:id="@+id/stats_pager_inner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/stats_white_background"
+        android:orientation="vertical"
+        android:paddingBottom="8dp" >
+
+        <RadioGroup
+            android:id="@+id/stats_pager_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="6dp"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+        </RadioGroup>
+
+        <FrameLayout
+            android:id="@+id/stats_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

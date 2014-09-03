@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_container"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_title"
+        style="@style/ReaderTextView.PopupTitle"
+        tools:text="text_title" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/reader_divider_grey" />
+
+    <ListView
+        android:id="@id/android:list"
+        style="@style/ReaderListView.NoDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/reader_listitem_user" />
+
+</LinearLayout>

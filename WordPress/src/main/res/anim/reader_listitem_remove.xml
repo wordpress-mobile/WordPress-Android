@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    used when deleting a tag from the reader
+ -->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:interpolator="@android:anim/accelerate_interpolator"
+    android:fromXDelta="0"
+    android:toXDelta="-100%p" />

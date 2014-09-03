@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="add_account_width">480dp</dimen>
+    <dimen name="graph_font_size">10sp</dimen>
+    <dimen name="default_dialog_width">480dp</dimen>
+    <dimen name="comments_moderation_bar_height">104dp</dimen>
+
+    <dimen name="reader_list_margin">@dimen/reader_list_margin_tablet</dimen>
+    <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_tablet</dimen>
+</resources>

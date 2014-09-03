@@ -3,13 +3,14 @@ from pprint import pprint
 import os
 import sys
 
+RESDIR="WordPress/src/main/res"
 TO_CHECK = ["-mdpi", "-hdpi", "-xhdpi", "-xxhdpi", ""]
 
 def main():
     if len(sys.argv) == 2:
         check_drawables(sys.argv[1])
     else:
-        check_drawables("res/")
+        check_drawables(RESDIR)
 
 def check_drawables(rootdir):
     filenames = defaultdict(set)
@@ -35,7 +36,6 @@ def check_drawables(rootdir):
     # print results
     for i in results:
         print(i + " missing in: " + " ".join(results[i]))
-
 
 if __name__ == "__main__":
     main()

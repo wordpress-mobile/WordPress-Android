@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.wordpress.android.widgets.WPListView
+            android:id="@android:id/list"
+            style="@style/ReaderListView.PostList"
+            android:divider="@color/transparent"
+            android:dividerHeight="@dimen/reader_post_divider_height"
+            android:headerDividersEnabled="false"
+            android:paddingLeft="@dimen/reader_list_margin"
+            android:paddingRight="@dimen/reader_list_margin"
+            tools:listitem="@layout/reader_listitem_post_excerpt" />
+
+        <include
+            android:id="@+id/empty_view"
+            layout="@layout/reader_empty_view" />
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_new_posts"
+        style="@style/ReaderTextView.MessageBar"
+        android:text="@string/reader_label_new_posts"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/margin_large"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>
