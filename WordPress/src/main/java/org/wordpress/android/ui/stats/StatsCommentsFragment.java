@@ -38,7 +38,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
     protected Fragment getFragment(int position) {
         if (position == 0) {
             StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TOP_COMMENTERS_URI,
-                    R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments);
+                    R.string.stats_entry_top_commenter, R.string.stats_totals_comments, R.string.stats_empty_comments, getLocalTableBlogID());
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, TOP_COMMENTERS));
             fragment.setCallback(this);
             return fragment;
@@ -46,7 +46,7 @@ public class StatsCommentsFragment extends StatsAbsPagedViewFragment {
             int entryLabelResId = R.string.stats_entry_most_commented;
             int totalsLabelResId = R.string.stats_totals_comments;
             StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_MOST_COMMENTED_URI,
-                    R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments);
+                    R.string.stats_entry_most_commented, R.string.stats_totals_comments, R.string.stats_empty_comments, getLocalTableBlogID());
             fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null, MOST_COMMENTED));
             fragment.setCallback(this);
             return fragment;

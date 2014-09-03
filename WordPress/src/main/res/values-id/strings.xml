@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
+	<string name="reader_toast_err_block_blog">Tidak bisa memblokir blog ini</string>
+	<string name="reader_toast_blog_blocked">Pos-pos dari blog ini tak akan ditampilkan lagi</string>
+	<string name="reader_menu_block_blog">Blokir blog ini</string>
+	<string name="contact_us">Hubungi kami</string>
+	<string name="contact_us_pref_summary">Dapatkan bantuan dari dukungan Automattic</string>
+	<string name="hs__conversation_detail_error">Uraikan permasalahan yang Anda hadapi</string>
+	<string name="hs__new_conversation_header">Chat dukungan</string>
+	<string name="hs__conversation_header">Chat dukungan</string>
+	<string name="hs__username_blank_error">Masukkan sebuah nama yang sah</string>
+	<string name="hs__invalid_email_error">Masukkan sebuah alamat email yang sah</string>
+	<string name="current_location">Lokasi saat ini</string>
+	<string name="add_location">Tambahkan lokasi</string>
+	<string name="your_signature">Tanda tangan Anda:</string>
+	<string name="search_location">Cari</string>
+	<string name="edit_location">Sunting</string>
+	<string name="search_current_location">Temukan</string>
+	<string name="preference_privacy">Privasi</string>
+	<string name="preference_send_usage_stats">Kirim statistik</string>
+	<string name="preference_send_usage_stats_summary">Secara otomatis mengirim statistik penggunaan untuk membantu kami meningkatkan WordPress untuk Android</string>
+	<string name="reader_label_reached_last_post">Anda telah mencapai akhir</string>
+	<string name="reader_label_tap_to_dismiss">Ketuk untuk mengabaikan</string>
 	<string name="reader_title_reblog">Reblog Pos</string>
 	<string name="reader_hint_reblog_comment">Tambahkan opini Anda (opsional)</string>
 	<string name="reader_label_reblog_to">Reblog ke</string>
@@ -7,7 +29,7 @@
 	<string name="schedule_verb">Jadwalkan</string>
 	<string name="simperium_connection_error">Tak bisa mendaftar masuk untuk melihat pemberitahuan.</string>
 	<string name="sign_in_again">Mendaftar masuk lagi</string>
-	<string name="invalid_xmlrpc_url">URL XMLRPC dari WordPress Anda tidak sah, Hubungi administrator situs Anda.</string>
+	<string name="invalid_xmlrpc_url">URL XMLRPC dari WordPress Anda tidak sah. Hubungi administrator situs Anda.</string>
 	<string name="reader_title_blog_preview">Pratinjau Blog</string>
 	<string name="reader_title_tag_preview">Pratinjau Tag</string>
 	<string name="reader_title_subs">Tag &amp; Blog</string>
@@ -536,8 +558,8 @@
 	<string name="yes">Ya</string>
 	<string name="no">Tidak</string>
 	<string name="error">Galat</string>
-	<string name="category_refresh_error">Galat memuat ulang Kategori</string>
 	<string name="delete_sure">Apakah Anda yakin ingin menghapus konsep ini</string>
+	<string name="category_refresh_error">Gagal memuat ulang Kategori</string>
 	<string-array name="alignment_array">
 		<item>Tak ada</item>
 		<item>Kiri</item>

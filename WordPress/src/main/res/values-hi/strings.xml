@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">इस ब्लॉग को ब्लॉक करे</string>
+	<string name="reader_toast_err_block_blog">इस ब्लॉग को ब्लॉक करने में असमर्थ</string>
+	<string name="reader_toast_err_generic">इस कार्य को निष्पादित करने में असमर्थ</string>
+	<string name="hs__new_conversation_header">सहायता चैट</string>
+	<string name="hs__conversation_header">सहायता चैट</string>
+	<string name="hs__username_blank_error">एक मान्य नाम दर्ज करें</string>
+	<string name="hs__invalid_email_error">मान्य ईमेल पता दर्ज करें</string>
+	<string name="hs__conversation_detail_error">आप जो समस्या देख रहे है उसका वर्णन करें</string>
+	<string name="contact_us">हमसे संपर्क करें</string>
+	<string name="add_location">स्थान जोड़ें</string>
+	<string name="current_location">वर्तमान स्थान</string>
 	<string name="your_signature">आपका हस्ताक्षर:</string>
 	<string name="search_location">खोज</string>
 	<string name="edit_location">संपादित करें</string>
+	<string name="search_current_location">स्थान निर्धारण करे</string>
 	<string name="preference_privacy">गोपनीयता</string>
 	<string name="preference_send_usage_stats">आंकड़े भेजें</string>
+	<string name="reader_label_reached_last_post">आप अंत तक पहुंच गए हैं</string>
+	<string name="reader_hint_reblog_comment">अपने विचारों को जोड़ें (वैकल्पिक)</string>
 	<string name="update_verb">अपडेट करे</string>
 	<string name="sign_in_again">फिर से साइन इन करें</string>
 	<string name="reader_label_followed_blog">अनुसरण किये गए ब्लॉग</string>
@@ -23,12 +37,16 @@
 	<string name="blogs_visibility">ब्लॉग</string>
 	<string name="stats_empty_clicks_title">क्लिकें दर्ज नही.</string>
 	<string name="stats_empty_search_engine_terms_title">कोई खोज शब्द नहीं.</string>
+	<string name="stats_empty_search_engine_terms_desc">खोज शब्द वे शब्द या वाक्यांश हैं जिसके द्वारा उपयोगकर्ताओं आप को पाते\n हैं जब वे खोज करते है.</string>
 	<string name="ssl_certificate_details">प्रमाणपत्र विवरण</string>
 	<string name="need_help_signin_wpcom">मदद की ज़रूरत है?</string>
 	<string name="media_empty_list">कोई मीडिया नहीं</string>
 	<string name="saving">सहेजा जा रहा…</string>
 	<string name="ssl_certificate_do_not_trust">भरोसा नही करे</string>
 	<string name="ssl_certificate_trust">भरोसा</string>
+	<string name="wpcom_signin_dialog_title">वर्डप्रेस डॉट कॉम साइन इन</string>
+	<string name="load_settings">आप सेटिंग में जाएं और वहां अपना उपयोक्तानाम और कूटशब्द बदल सकते हैं.</string>
+	<string name="nux_help_description">सामान्य प्रश्नों के उत्तर पाने के लिए सहायता केंद्र पर जाएं या नए प्रश्न को पूछने के लिए फोरम पर जाएँ</string>
 	<string name="help_center">सहायता केंद्र</string>
 	<string name="help">सहायता</string>
 	<string name="ssl_certificate_error">अमान्य एसएसएल  प्रमाणपत्र</string>

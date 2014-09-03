@@ -37,10 +37,10 @@ function checkENStrings() {
 	git stash | grep "No local changes to save" > /dev/null
 	needpop=$?
 
-	rm -f $RESDIR/values-??/strings.xml
+	rm -f $RESDIR/values-??/strings.xml $RESDIR/values-??-r??/strings.xml
 	/bin/echo -n "Check for missing strings (slow)..."
 	./gradlew build > /dev/null 2>&1 && pOk || (pFail; ./gradlew build)
-	./gradlew clean
+	./gradlew clean > /dev/null 2>&1
 	git checkout -- $RESDIR/
 
 	# restore local changes

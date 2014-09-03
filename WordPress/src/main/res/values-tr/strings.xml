@@ -1,10 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
+	<string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
+	<string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
+	<string name="reader_menu_block_blog">Bu blogu engelleyin</string>
+	<string name="contact_us">İletişim kurun</string>
+	<string name="contact_us_pref_summary">Automattic destek biriminden yardım alın</string>
+	<string name="hs__conversation_detail_error">Karşılaştığınız problemi açıklayın</string>
+	<string name="hs__new_conversation_header">Destek sohbeti</string>
+	<string name="hs__conversation_header">Destek sohbeti</string>
+	<string name="hs__username_blank_error">Geçerli bir isim girin</string>
+	<string name="hs__invalid_email_error">Geçerli bir e-posta adresi girin</string>
 	<string name="add_location">Konum Ekle</string>
 	<string name="current_location">Şimdiki Konumunuz</string>
+	<string name="your_signature">İmzanız:</string>
 	<string name="search_location">Arama</string>
 	<string name="edit_location">Düzenle</string>
+	<string name="search_current_location">Yerleştir</string>
 	<string name="preference_privacy">Gizlilik</string>
+	<string name="preference_send_usage_stats">Kullanım istatistiklerini gönder</string>
+	<string name="preference_send_usage_stats_summary">Android için WordPress\'i geliştirmemize yardımcı olmak için bize otomatik olarak kullanım istatistiklerini gönderin. </string>
+	<string name="reader_label_tap_to_dismiss">Kapatmak için dokunun</string>
+	<string name="reader_label_reached_last_post">Sona ulaştınız</string>
 	<string name="reader_title_reblog">Yazıyı yeniden blogla</string>
 	<string name="reader_hint_reblog_comment">Düşüncelerinizi ekleyin (seçime bağlı)</string>
 	<string name="reader_label_reblog_to">Yeniden blogla</string>

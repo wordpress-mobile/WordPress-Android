@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
+	<string name="reader_toast_err_block_blog">이 블로그를 차단할 수 없습니다</string>
+	<string name="reader_toast_blog_blocked">이 블로그에서 글 올리기는  더 이상 보이지 않을 것입니다</string>
+	<string name="reader_menu_block_blog">이 블로그 차단</string>
+	<string name="contact_us">문의하기</string>
+	<string name="contact_us_pref_summary">Automattic 지원에서 도움 받기</string>
+	<string name="hs__conversation_detail_error">나타나는 문제점을 설명해주세요</string>
+	<string name="hs__new_conversation_header">지원 채팅</string>
+	<string name="hs__conversation_header">지원 채팅</string>
+	<string name="hs__username_blank_error">유효한 이름을 입력하세요</string>
+	<string name="hs__invalid_email_error">유효한 이메일 주소를 입력하세요</string>
+	<string name="add_location">위치 추가</string>
+	<string name="current_location">현재 위치</string>
+	<string name="your_signature">당신의 서명:</string>
+	<string name="search_location">검색</string>
+	<string name="edit_location">편집</string>
+	<string name="search_current_location">위치 지정</string>
 	<string name="preference_privacy">프라이버시</string>
 	<string name="preference_send_usage_stats">통계 보내기</string>
 	<string name="preference_send_usage_stats_summary">사용 통계를 자동으로 보내면 안드로이드용 워드프레스를 개선하는데 도움이 됩니다.</string>

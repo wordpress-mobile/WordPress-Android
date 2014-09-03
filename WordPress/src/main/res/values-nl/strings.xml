@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Blokkeer deze blog</string>
+	<string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
+	<string name="reader_toast_err_block_blog">Blokkeren van deze blog is mislukt</string>
+	<string name="reader_toast_blog_blocked">Berichten van deze blog zullen niet meer getoond worden</string>
+	<string name="contact_us">Contact</string>
+	<string name="hs__new_conversation_header">Ondersteuning chat</string>
+	<string name="hs__conversation_header">Ondersteuning chat</string>
+	<string name="contact_us_pref_summary">Vraag hulp aan Automattic</string>
+	<string name="hs__conversation_detail_error">Beschrijf het probleem dat je ziet</string>
+	<string name="hs__username_blank_error">Voer een geldige naam in</string>
+	<string name="hs__invalid_email_error">Voer een geldig e-mailadres in</string>
+	<string name="add_location">Locatie toevoegen</string>
+	<string name="current_location">Huidige Locatie</string>
+	<string name="your_signature">Je handtekening</string>
+	<string name="search_location">Zoeken</string>
+	<string name="edit_location">Bewerken</string>
+	<string name="search_current_location">Locatie bepalen</string>
+	<string name="preference_privacy">Privacy</string>
+	<string name="preference_send_usage_stats">Verstuur statistieken</string>
+	<string name="preference_send_usage_stats_summary">Stuur automatisch gebruiksstatistieken om ons te helpen WordPress voor Android te verbeteren</string>
+	<string name="reader_label_reached_last_post">Het is je gelukt, dit is het einde</string>
+	<string name="reader_label_tap_to_dismiss">Tik om te verbergen</string>
 	<string name="reader_title_reblog">Post rebloggen</string>
 	<string name="reader_hint_reblog_comment">Voeg jouw mening toe (optioneel)</string>
 	<string name="reader_label_reblog_to">Rebloggen naar</string>
