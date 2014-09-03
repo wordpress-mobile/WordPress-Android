@@ -1,8 +1,10 @@
 language: java
 jdk: oraclejdk7
 env:
-  matrix:
-    - ANDROID_SDKS=android-14 ANDROID_TARGET=android-14
+  global:
+    - GRADLE_OPTS="-XX:MaxPermSize=512m -Xmx4g"
+    - ANDROID_SDKS=android-14
+    - ANDROID_TARGET=android-14
 
 before_install:
   # Install base Android SDK
