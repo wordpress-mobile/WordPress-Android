@@ -162,7 +162,8 @@ public class Note extends Syncable {
             return NoteTimeGroup.GROUP_OLDER_MONTH;
         } else if (then.compareTo(DateUtils.addWeeks(today, -1)) < 0) {
             return NoteTimeGroup.GROUP_OLDER_WEEK;
-        } else if (then.compareTo(DateUtils.addDays(today, -2)) < 0) {
+        } else if (then.compareTo(DateUtils.addDays(today, -2)) < 0
+                || DateUtils.isSameDay(DateUtils.addDays(today, -2), then)) {
             return NoteTimeGroup.GROUP_OLDER_TWO_DAYS;
         } else if (DateUtils.isSameDay(DateUtils.addDays(today, -1), then)) {
             return NoteTimeGroup.GROUP_YESTERDAY;
