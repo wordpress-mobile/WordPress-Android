@@ -41,7 +41,7 @@ public class NoteBlock {
     private JSONObject mNoteData;
     private OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
-
+    private boolean mIsBadge;
     private int mBackgroundColor;
 
     public interface OnNoteBlockTextClickListener {
@@ -76,6 +76,10 @@ public class NoteBlock {
         }
 
         return mMediaItem;
+    }
+
+    public void setIsBadge(boolean isBadge) {
+        mIsBadge = isBadge;
     }
 
     public void setBackgroundColor(int backgroundColor) {
@@ -156,7 +160,7 @@ public class NoteBlock {
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
-            if (hasImageMediaItem() || hasVideoMediaItem()) {
+            if (mIsBadge) {
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
             } else {

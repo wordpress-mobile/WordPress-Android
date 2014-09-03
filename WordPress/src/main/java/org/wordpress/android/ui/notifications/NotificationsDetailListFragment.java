@@ -236,6 +236,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             mBackgroundColor = getActivity().getResources().getColor(R.color.transparent);
                         }
 
+                        if (isBadgeView) {
+                            noteBlock.setIsBadge(true);
+                        }
+
                         mNoteBlockArray.add(noteBlock);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.NOTIFS, "Invalid note data, could not parse.");
