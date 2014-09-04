@@ -291,12 +291,12 @@ public class NotificationsUtils {
             activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.STAT) {
             // We can open native stats, but only if the site is stored in the app locally.
-            int localTabletSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+            int localTableSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
                     (int)clickedSpan.getSiteId()
             );
 
-            if (localTabletSiteId > 0) {
-                activity.showStatsActivityForSite(localTabletSiteId);
+            if (localTableSiteId > 0) {
+                activity.showStatsActivityForSite(localTableSiteId);
             } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
                 activity.showWebViewActivityForUrl(clickedSpan.getUrl());
             }
