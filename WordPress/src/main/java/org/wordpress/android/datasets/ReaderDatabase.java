@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 81;
+    private static final int DB_VERSION = 90;
 
     /*
      * version history
@@ -38,6 +38,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   79 - added is_likes_enabled and is_sharing_enabled to tbl_posts
      *   80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
      *   81 - added image_url to tbl_blog_info
+     *   90 - added default values for all INTEGER columns that were missing them (hotfix 3.1.1)
      */
 
     /*

@@ -53,8 +53,8 @@ public class ReaderPostTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
-                + "	post_id		        INTEGER,"       // post_id for WP blogs, feed_item_id for non-WP blogs
-                + " blog_id             INTEGER,"       // blog_id for WP blogs, feed_id for non-WP blogs
+                + "	post_id		        INTEGER DEFAULT 0,"   // post_id for WP blogs, feed_item_id for non-WP blogs
+                + " blog_id             INTEGER DEFAULT 0,"   // blog_id for WP blogs, feed_id for non-WP blogs
                 + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
                 + " author_id           INTEGER DEFAULT 0,"
@@ -87,8 +87,8 @@ public class ReaderPostTable {
                 + ")");
 
         db.execSQL("CREATE TABLE tbl_post_tags ("
-                + "   post_id     INTEGER NOT NULL,"
-                + "   blog_id     INTEGER NOT NULL,"
+                + "   post_id     INTEGER DEFAULT 0,"
+                + "   blog_id     INTEGER DEFAULT 0,"
                 + "   pseudo_id   TEXT NOT NULL,"
                 + "   tag_name    TEXT NOT NULL COLLATE NOCASE,"
                 + "   tag_type    INTEGER DEFAULT 0,"
