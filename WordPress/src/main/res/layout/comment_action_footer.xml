@@ -12,23 +12,45 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <!-- like button isn't using a compound drawable so we can animate the star when liked -->
+        <LinearLayout
+            android:id="@+id/btn_like"
+            android:background="@drawable/moderate_button_selector"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_like_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_small"
+                android:src="@drawable/ic_action_like"
+                android:contentDescription="@string/reader_label_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:text="@string/reader_label_like"
+                android:textColor="@color/calypso_blue"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
+
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_btn_like"
+            android:id="@+id/text_btn_moderate"
             style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_like"
-            android:text="@string/reader_label_like" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_btn_moderate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:drawableTop="@drawable/ic_action_approve"
-            android:text="@string/mnu_comment_approve"
-            style="@style/WordPress.ModerateButton" />
+            android:text="@string/mnu_comment_approve" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/image_trash_comment"
@@ -50,12 +72,12 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/image_edit_comment"
+            style="@style/WordPress.ModerateButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_action_edit"
-            android:text="@string/mnu_comment_edit"
-            style="@style/WordPress.ModerateButton" />
+            android:text="@string/mnu_comment_edit" />
 
 
         <org.wordpress.android.widgets.WPTextView
@@ -72,5 +94,4 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="@drawable/notifications_list_divider_full_width" />
-
 </LinearLayout>

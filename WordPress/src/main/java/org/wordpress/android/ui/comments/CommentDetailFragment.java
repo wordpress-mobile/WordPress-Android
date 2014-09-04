@@ -42,6 +42,7 @@ import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.util.AniUtils;
@@ -57,7 +58,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.widgets.TypefaceCache;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -82,7 +82,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
-    private TextView mBtnLikeComment;
+    private View mBtnLikeComment;
+    private ImageView mBtnLikeIcon;
+    private TextView mBtnLikeTextView;
     private TextView mBtnModerateComment;
     private TextView mBtnSpamComment;
     private TextView mBtnTrashComment;
@@ -154,7 +156,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
         mLayoutButtons = (ViewGroup) inflater.inflate(R.layout.comment_action_footer, null, false);
-        mBtnLikeComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_like);
+        mBtnLikeComment = mLayoutButtons.findViewById(R.id.btn_like);
+        mBtnLikeIcon = (ImageView)mLayoutButtons.findViewById(R.id.btn_like_icon);
+        mBtnLikeTextView = (TextView)mLayoutButtons.findViewById(R.id.btn_like_text);
         mBtnModerateComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
@@ -1047,6 +1051,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         toggleLikeButton(!mBtnLikeComment.isActivated());
 
+        ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
+
         WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                 String.valueOf(mNote.getCommentId()),
                 mBtnLikeComment.isActivated(),
@@ -1068,14 +1074,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private void toggleLikeButton(boolean isLiked) {
         if (isLiked) {
-            mBtnLikeComment.setText(getResources().getString(R.string.mnu_comment_liked));
-            mBtnLikeComment.setTextColor(getResources().getColor(R.color.orange_medium));
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like_active);
+            mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
+            mBtnLikeTextView.setTextColor(getResources().getColor(R.color.orange_medium));
+            mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like_active));
             mBtnLikeComment.setActivated(true);
         } else {
-            mBtnLikeComment.setText(getResources().getString(R.string.reader_label_like));
-            mBtnLikeComment.setTextColor(getResources().getColor(R.color.calypso_blue));
-            setTextDrawable(mBtnLikeComment, R.drawable.ic_action_like);
+            mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
+            mBtnLikeTextView.setTextColor(getResources().getColor(R.color.calypso_blue));
+            mBtnLikeIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_like));
             mBtnLikeComment.setActivated(false);
         }
     }

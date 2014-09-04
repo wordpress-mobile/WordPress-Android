@@ -316,7 +316,7 @@
     <style name="WordPress.ModerateButton">
         <item name="android:textColor">@color/calypso_blue</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name ="android:singleLine">true</item>
+        <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:background">@drawable/moderate_button_selector</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
