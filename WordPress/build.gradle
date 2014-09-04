@@ -73,7 +73,7 @@ dependencies {
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:19.1.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
-    compile 'com.helpshift:android-aar:3.4.1'
+    compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.+@aar'
 
