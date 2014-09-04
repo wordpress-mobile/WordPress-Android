@@ -138,14 +138,12 @@ public class HelpshiftHelper {
         mMetadata.put("log", AppLog.toPlainText(context));
 
         // List blogs name and url
-        StringBuilder blogList = new StringBuilder();
+        int counter = 1;
         for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
-            blogList.append(MapUtils.getMapStr(account, "blogName"));
-            blogList.append(": ");
-            blogList.append(MapUtils.getMapStr(account, "url"));
-            blogList.append("\n");
+            mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
+            mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+            counter += 1;
         }
-        mMetadata.put("blogs", blogList.toString());
 
         // wpcom user
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
