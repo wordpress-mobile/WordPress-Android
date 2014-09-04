@@ -150,7 +150,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             if (!isAdded() || mNote == null) return;
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId(), mNote.getHeaderSnippet());
+            notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
         }
     };
 

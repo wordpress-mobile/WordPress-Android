@@ -28,6 +28,7 @@ import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.actions.ReaderAuthActions;
+import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
@@ -296,10 +297,19 @@ public class NotificationsActivity extends WPActionBarActivity
         ReaderActivityLauncher.showReaderBlogPreview(this, siteId, siteUrl);
     }
 
-    public void showPostActivity(long siteId, long postId, String title) {
+    public void showPostActivity(long siteId, long postId) {
         if (isFinishing()) return;
 
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
+    }
+
+    public void showStatsActivityForSite(int localTableSiteId) {
+        if (isFinishing()) return;
+
+        Intent intent = new Intent(this, StatsActivity.class);
+        intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableSiteId);
+        intent.putExtra(StatsActivity.ARG_NO_MENU_DRAWER, true);
+        startActivity(intent);
     }
 
     public void showWebViewActivityForUrl(String url) {

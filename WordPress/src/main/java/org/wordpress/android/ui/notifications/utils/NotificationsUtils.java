@@ -280,18 +280,26 @@ public class NotificationsUtils {
     }
 
     public static void handleNoteBlockSpanClick(NotificationsActivity activity, NoteBlockClickableSpan clickedSpan) {
-        // We should handle stats clicks here to open native stats for a site.
-        // https://github.com/wordpress-mobile/WordPress-Android/issues/1787
-
         if (clickedSpan.shouldShowBlogPreview()) {
             // Show blog preview
             activity.showBlogPreviewActivity(clickedSpan.getSiteId(), clickedSpan.getUrl());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.POST) {
             // Show post detail
-            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId(), "");
+            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
         } else if (clickedSpan.getRangeType() == NoteBlockRangeType.COMMENT) {
             // For now, show post detail for comments
-            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId(), "");
+            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getPostId());
+        } else if (clickedSpan.getRangeType() == NoteBlockRangeType.STAT) {
+            // We can open native stats, but only if the site is stored in the app locally.
+            int localTabletSiteId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    (int)clickedSpan.getSiteId()
+            );
+
+            if (localTabletSiteId > 0) {
+                activity.showStatsActivityForSite(localTabletSiteId);
+            } else if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+            }
         } else {
             // We don't know what type of id this is, let's see if it has a URL and push a webview
             if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
