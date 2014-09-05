@@ -52,8 +52,8 @@ public class ReaderPostTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
-                + "	post_id		        INTEGER DEFAULT 0,"   // post_id for WP blogs, feed_item_id for non-WP blogs
-                + " blog_id             INTEGER DEFAULT 0,"   // blog_id for WP blogs, feed_id for non-WP blogs
+                + "	post_id		        INTEGER DEFAULT 0,"       // post_id for WP blogs, feed_item_id for non-WP blogs
+                + " blog_id             INTEGER DEFAULT 0,"       // blog_id for WP blogs, feed_id for non-WP blogs
                 + " pseudo_id           TEXT NOT NULL,"
                 + "	author_name	        TEXT,"
                 + " author_id           INTEGER DEFAULT 0,"
