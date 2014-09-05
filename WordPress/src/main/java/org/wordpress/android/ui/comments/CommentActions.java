@@ -32,6 +32,10 @@ import java.util.Map;
  */
 
 public class CommentActions {
+
+    private static long mModeratingCommentId;
+    private static String mModeratingNoteId;
+
     private CommentActions() {
         throw new AssertionError();
     }
@@ -58,6 +62,7 @@ public class CommentActions {
     public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
     public static interface OnCommentChangeListener {
         public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
+        public void onModerationCompleted(boolean success);
     }
 
 
@@ -237,6 +242,7 @@ public class CommentActions {
      */
     public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
 
+        mModeratingNoteId = note.getId();
         WordPress.getRestClientUtils().moderateComment(
                 String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),
@@ -244,6 +250,7 @@ public class CommentActions {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        mModeratingNoteId = null;
                         if (actionListener != null) {
                             actionListener.onActionResult(true);
                         }
@@ -251,6 +258,7 @@ public class CommentActions {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        mModeratingNoteId = null;
                         if (actionListener != null) {
                             actionListener.onActionResult(false);
                         }
@@ -301,6 +309,7 @@ public class CommentActions {
                         Long.toString(comment.commentID),
                         postHash};
 
+                mModeratingCommentId = comment.commentID;
                 Object result;
                 try {
                     result = client.call("wp.editComment", params);
@@ -314,6 +323,7 @@ public class CommentActions {
                     AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
                 }
+                mModeratingCommentId = -1;
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
@@ -438,6 +448,8 @@ public class CommentActions {
                         blog.getPassword(),
                         comment.commentID };
 
+                mModeratingCommentId = comment.commentID;
+
                 Object result;
                 try {
                     result = client.call("wp.deleteComment", params);
@@ -451,6 +463,8 @@ public class CommentActions {
                     AppLog.e(T.COMMENTS,"Error while deleting comment", e);
                     result = null;
                 }
+
+                mModeratingCommentId = -1;
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
@@ -466,6 +480,14 @@ public class CommentActions {
                 }
             }
         }.start();
+    }
+
+    static long getModeratingCommentId() {
+        return mModeratingCommentId;
+    }
+
+    public static String getModeratingNoteId() {
+        return mModeratingNoteId;
     }
 
     /**

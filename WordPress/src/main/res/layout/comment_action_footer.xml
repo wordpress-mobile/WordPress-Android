@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- like button isn't using a compound drawable so we can animate the star when liked -->
+        <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
         <LinearLayout
             android:id="@+id/btn_like"
             android:background="@drawable/moderate_button_selector"
@@ -43,14 +43,35 @@
                 android:textSize="@dimen/text_sz_small" />
         </LinearLayout>
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_btn_moderate"
-            style="@style/WordPress.ModerateButton"
+        <LinearLayout
+            android:id="@+id/btn_moderate"
+            android:background="@drawable/moderate_button_selector"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_approve"
-            android:text="@string/mnu_comment_approve" />
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_moderate_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_small"
+                android:src="@drawable/ic_action_like"
+                android:contentDescription="@string/reader_label_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_moderate_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:text="@string/reader_label_like"
+                android:textColor="@color/calypso_blue"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/image_trash_comment"

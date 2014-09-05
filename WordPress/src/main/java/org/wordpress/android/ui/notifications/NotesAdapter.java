@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -16,6 +17,7 @@ import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -27,7 +29,6 @@ class NotesAdapter extends CursorAdapter {
     final private int mAvatarSz;
     private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
-    private boolean mShouldHighlightRows;
     private int mReadBackgroundResId;
     private int mUnreadBackgroundResId;
 
@@ -127,6 +128,13 @@ class NotesAdapter extends CursorAdapter {
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
         }
 
+        if (CommentActions.getModeratingNoteId() != null &&
+                CommentActions.getModeratingNoteId().equals(objectCursor.getSimperiumKey())) {
+            noteViewHolder.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            noteViewHolder.progressBar.setVisibility(View.GONE);
+        }
+
         // Subject is stored in db as html to preserve text formatting
         String noteSubjectHtml = getStringForColumnName(objectCursor, Note.Schema.SUBJECT_INDEX).trim();
         CharSequence noteSubjectSpanned = Html.fromHtml(noteSubjectHtml);
@@ -193,10 +201,6 @@ class NotesAdapter extends CursorAdapter {
         return cursor.getLong(cursor.getColumnIndex(columnName));
     }
 
-    public void setShouldHighlightRows(boolean shouldHighlightRows) {
-        mShouldHighlightRows = shouldHighlightRows;
-    }
-
     public static class NoteViewHolder {
         private final View headerView;
         private final TextView headerText;
@@ -205,6 +209,7 @@ class NotesAdapter extends CursorAdapter {
         private final TextView txtDetail;
         private final WPNetworkImageView imgAvatar;
         private final NoticonTextView noteIcon;
+        private final View progressBar;
 
         NoteViewHolder(View view) {
             headerView = view.findViewById(R.id.time_header);
@@ -213,6 +218,7 @@ class NotesAdapter extends CursorAdapter {
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
             noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
+            progressBar = view.findViewById(R.id.moderate_progress);
         }
     }
 }

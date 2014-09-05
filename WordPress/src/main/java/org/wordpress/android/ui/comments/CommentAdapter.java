@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashSet;
@@ -211,6 +213,12 @@ class CommentAdapter extends BaseAdapter {
             holder = (CommentHolder) convertView.getTag();
         }
 
+        if (CommentActions.getModeratingCommentId() == comment.commentID) {
+            holder.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
+        }
+
         holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
         holder.txtComment.setText(comment.getUnescapedCommentText());
         holder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(comment.getDatePublished()));
@@ -278,6 +286,7 @@ class CommentAdapter extends BaseAdapter {
         private final TextView txtDate;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
+        private final View progressBar;
 
         private CommentHolder(View row) {
             txtTitle = (TextView) row.findViewById(R.id.title);
@@ -286,6 +295,7 @@ class CommentAdapter extends BaseAdapter {
             txtDate = (TextView) row.findViewById(R.id.text_date);
             imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
             imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
+            progressBar = row.findViewById(R.id.moderate_progress);
         }
     }
 

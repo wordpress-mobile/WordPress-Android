@@ -43,6 +43,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private ViewGroup mFooterView;
 
     private int mBackgroundColor;
+    private int mCommentListPosition = ListView.INVALID_POSITION;
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
 
     public NotificationsDetailListFragment() {
@@ -96,14 +97,6 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     public void setFooterView(ViewGroup footerView) {
         mFooterView = footerView;
-    }
-
-    public void refreshBlocksForCommentStatus(CommentStatus newStatus) {
-        if (mOnCommentStatusChangeListener != null) {
-            mOnCommentStatusChangeListener.onCommentStatusChanged(newStatus);
-            NoteBlockAdapter noteBlockAdapter = (NoteBlockAdapter)getListAdapter();
-            noteBlockAdapter.notifyDataSetChanged();
-        }
     }
 
     private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
@@ -198,6 +191,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
                         if (NoteBlockRangeType.fromString(noteBlockTypeString) == NoteBlockRangeType.USER) {
                             if (mNote.isCommentType()) {
+                                // Set comment position so we can target it later
+                                // See refreshBlocksForCommentStatus()
+                                mCommentListPosition = i + mNoteBlockArray.size();
+
                                 // We'll snag the next body array item for comment user blocks
                                 if (i + 1 < bodyArray.length()) {
                                     JSONObject commentTextBlock = bodyArray.getJSONObject(i + 1);
@@ -259,6 +256,28 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             setListAdapter(new NoteBlockAdapter(getActivity(), mNoteBlockArray));
+        }
+    }
+
+    public void refreshBlocksForCommentStatus(CommentStatus newStatus) {
+        if (mOnCommentStatusChangeListener != null) {
+            mOnCommentStatusChangeListener.onCommentStatusChanged(newStatus);
+            ListView listView = getListView();
+            if (listView == null || mCommentListPosition == ListView.INVALID_POSITION) {
+                return;
+            }
+
+            // Redraw the comment row if it is visible so that the background and text colors update
+            // See: http://stackoverflow.com/questions/4075975/redraw-a-single-row-in-a-listview/9987616#9987616
+            int firstPosition = listView.getFirstVisiblePosition();
+            int endPosition = listView.getLastVisiblePosition();
+            for (int i = firstPosition; i < endPosition; i++) {
+                if (mCommentListPosition == i) {
+                    View view = listView.getChildAt(i - firstPosition);
+                    listView.getAdapter().getView(i, view, listView);
+                    break;
+                }
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedL
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ToastUtils;
 
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
@@ -202,9 +203,11 @@ public class CommentsActivity extends WPActionBarActivity
                 break;
             case COMMENT_DETAIL:
                 switch (changeType) {
+                    case SPAMMED:
                     case TRASHED:
-                        updateCommentList();
-                        // remove the detail view since comment was deleted
+                        //updateCommentList();
+
+                        // remove the detail view since comment was trashed/spammed
                         FragmentManager fm = getFragmentManager();
                         if (fm.getBackStackEntryCount() > 0) {
                             fm.popBackStack();
@@ -218,6 +221,18 @@ public class CommentsActivity extends WPActionBarActivity
                         break;
                 }
                 break;
+        }
+    }
+
+    // CommentDetailFragment will call this after moderation completes if it is no longer added
+    @Override
+    public void onModerationCompleted(boolean success) {
+        if (isFinishing()) return;
+
+        if (success) {
+            updateCommentList();
+        } else {
+            ToastUtils.showToast(this, R.string.error_moderate_comment, ToastUtils.Duration.LONG);
         }
     }
 

@@ -21,7 +21,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
@@ -176,7 +175,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mNotesAdapter.setShouldHighlightRows(DisplayUtils.isLandscapeTablet(getActivity()));
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 

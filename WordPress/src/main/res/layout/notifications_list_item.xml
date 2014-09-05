@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <LinearLayout
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="-3dp"
-                android:text="\uf303"
+                tools:text="\uf303"
                 android:textColor="@color/calypso_grey"
                 android:textSize="18sp" />
 
@@ -73,6 +73,23 @@
                 android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
                 android:layout_marginTop="@dimen/margin_small" />
 
+            <LinearLayout
+                android:id="@+id/moderate_progress"
+                android:layout_width="@dimen/avatar_sz_medium"
+                android:layout_height="@dimen/avatar_sz_medium"
+                android:layout_marginTop="@dimen/margin_small"
+                android:padding="@dimen/margin_large"
+                android:background="@color/translucent"
+                android:gravity="center"
+                android:visibility="gone"
+                tools:visibility="visible">
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    style="@android:style/Widget.Holo.ProgressBar" />
+            </LinearLayout>
+
             <org.wordpress.android.widgets.NoticonTextView
                 android:id="@+id/note_icon"
                 android:layout_width="@dimen/note_icon_sz"
@@ -84,7 +101,6 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="\uf814" />
-
         </FrameLayout>
 
 

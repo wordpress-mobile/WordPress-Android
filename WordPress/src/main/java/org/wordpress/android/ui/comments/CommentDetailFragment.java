@@ -85,7 +85,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private View mBtnLikeComment;
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
-    private TextView mBtnModerateComment;
+
+    private View mBtnModerateComment;
+    private ImageView mBtnModerateIcon;
+    private TextView mBtnModerateTextView;
+
     private TextView mBtnSpamComment;
     private TextView mBtnTrashComment;
     private TextView mBtnEditComment;
@@ -159,7 +163,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnLikeComment = mLayoutButtons.findViewById(R.id.btn_like);
         mBtnLikeIcon = (ImageView)mLayoutButtons.findViewById(R.id.btn_like_icon);
         mBtnLikeTextView = (TextView)mLayoutButtons.findViewById(R.id.btn_like_text);
-        mBtnModerateComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_moderate);
+        mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
+        mBtnModerateIcon = (ImageView)mLayoutButtons.findViewById(R.id.btn_moderate_icon);
+        mBtnModerateTextView = (TextView)mLayoutButtons.findViewById(R.id.btn_moderate_text);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
         mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
@@ -628,16 +634,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         alert.show();
     }
 
-    private void dismissDialog(int id) {
-        if (!isAdded())
-            return;
-        try {
-            getActivity().dismissDialog(id);
-        } catch (IllegalArgumentException e) {
-            // raised when dialog wasn't created
-        }
-    }
-
     /*
      * approve, unapprove, spam, or trash the current comment
      */
@@ -646,29 +642,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             return;
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
-
-        // show dialog while moderating
-        final int dlgId;
-        switch (newStatus) {
-            case APPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_APPROVING;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
-                break;
-            case UNAPPROVED:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_UNAPPROVING;
-                break;
-            case SPAM:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_SPAMMING;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
-                break;
-            case TRASH:
-                dlgId = CommentDialogs.ID_COMMENT_DLG_TRASHING;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_TRASHED);
-                break;
-            default :
-                return;
-        }
-        getActivity().showDialog(dlgId);
 
         // disable buttons during request
         mLayoutButtons.setEnabled(false);
@@ -685,10 +658,23 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             public void onActionResult(boolean succeeded) {
                 mIsModeratingComment = false;
                 if (isAdded()) {
-                    dismissDialog(dlgId);
                     mLayoutButtons.setEnabled(true);
                     if (succeeded) {
                         mComment.setStatus(CommentStatus.toString(newStatus));
+                        // If approved or unapproved
+                        switch (newStatus) {
+                            case APPROVED:
+                                if (mOnCommentChangeListener != null) {
+                                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.STATUS);
+                                }
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_APPROVED);
+                                break;
+                            case UNAPPROVED:
+                                if (mOnCommentChangeListener != null) {
+                                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.STATUS);
+                                }
+                                break;
+                        }
                     } else {
                         ToastUtils.showToast(getActivity(), R.string.error_moderate_comment, ToastUtils.Duration.LONG);
                     }
@@ -699,35 +685,40 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                         // reflect the new status - note this MUST come after mComment.setStatus
                         updateStatusViews();
                     }
-                }
-
-                if (succeeded && mDetailListFragment != null) {
-                    mDetailListFragment.refreshBlocksForCommentStatus(newStatus);
-                }
-
-                if (succeeded && mOnCommentChangeListener != null) {
-                    ChangeType changeType;
-                    switch (newStatus) {
-                        case SPAM:
-                            changeType = ChangeType.SPAMMED;
-                            break;
-                        case TRASH:
-                            changeType = ChangeType.SPAMMED;
-                            break;
-                        default:
-                            changeType = ChangeType.STATUS;
+                } else {
+                    if (mOnCommentChangeListener != null) {
+                        mOnCommentChangeListener.onModerationCompleted(succeeded);
                     }
-
-                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, changeType);
                 }
             }
         };
+
         mIsModeratingComment = true;
         // Moderate notifications via REST API, otherwise over XML-RPC
         if (mNote != null) {
             CommentActions.moderateCommentForNote(mNote, newStatus, actionListener);
         } else {
             CommentActions.moderateComment(mLocalBlogId, mComment, newStatus, actionListener);
+        }
+
+        // For destructive actions, we'll fire the listener straight away which will close this fragment
+        switch (newStatus) {
+            case SPAM:
+                if (mOnCommentChangeListener != null) {
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.SPAMMED);
+                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_FLAGGED_AS_SPAM);
+                break;
+            case TRASH:
+                if (mOnCommentChangeListener != null) {
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.TRASHED);
+                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_TRASHED);
+                break;
+        }
+
+        if (mDetailListFragment != null) {
+            mDetailListFragment.refreshBlocksForCommentStatus(newStatus);
         }
     }
 
@@ -801,45 +792,31 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!isAdded() || !hasComment())
             return;
 
-        final int moderationDrawResId;  // drawable resource id for moderation button
-        final int moderationTextResId;  // string resource id for moderation button
         final CommentStatus newStatus;  // status to apply when moderation button is tapped
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                moderationDrawResId = R.drawable.ic_action_approve_active;
-                moderationTextResId = R.string.comment_status_approved;
                 newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
                 statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
-                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange_dark));
                 break;
             case UNAPPROVED:
-                moderationDrawResId = R.drawable.ic_action_approve;
-                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
                 statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
-                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case SPAM:
-                moderationDrawResId = R.drawable.ic_action_approve;
-                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
-                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
             case TRASH:
             default:
-                moderationDrawResId = R.drawable.ic_action_approve;
-                moderationTextResId = R.string.mnu_comment_approve;
                 newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
-                mBtnModerateComment.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
                 break;
         }
 
@@ -869,11 +846,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (canModerate()) {
             commentActionCount++;
-            setTextDrawable(mBtnModerateComment, moderationDrawResId);
-            mBtnModerateComment.setText(moderationTextResId);
+            setModerateButtonForStatus(mComment.getStatusEnum());
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    setModerateButtonForStatus(newStatus);
+                    AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
                     moderateComment(newStatus);
                 }
             });
@@ -924,6 +902,18 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
+    }
+
+    private void setModerateButtonForStatus(CommentStatus status) {
+        if (status == CommentStatus.APPROVED) {
+            mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve_active);
+            mBtnModerateTextView.setText(R.string.comment_status_approved);
+            mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.calypso_orange_dark));
+        } else {
+            mBtnModerateIcon.setImageResource(R.drawable.ic_action_approve);
+            mBtnModerateTextView.setText(R.string.mnu_comment_approve);
+            mBtnModerateTextView.setTextColor(getActivity().getResources().getColor(R.color.calypso_blue));
+        }
     }
 
     /*

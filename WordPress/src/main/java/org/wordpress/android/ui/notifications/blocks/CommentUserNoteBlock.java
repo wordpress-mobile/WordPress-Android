@@ -14,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 
@@ -28,6 +29,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private int mUnapprovedTextColor;
     private int mIndentedLeftPadding;
 
+    private boolean mStatusChanged;
 
     public interface OnCommentStatusChangeListener {
         public void onCommentStatusChanged(CommentStatus newStatus);
@@ -74,8 +76,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 mTextViewIndent
         );
 
-
-
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
         // 2. Unapproved comments have different background and text color
@@ -112,6 +112,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         }
 
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+
+        // If status was changed, fade in the view
+        if (mStatusChanged) {
+            mStatusChanged = false;
+            view.setAlpha(0.4f);
+            view.animate().alpha(1.0f).start();
+        }
 
         return view;
     }
@@ -169,6 +176,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         @Override
         public void onCommentStatusChanged(CommentStatus newStatus) {
             mCommentStatus = newStatus;
+            mStatusChanged = true;
         }
     };
 

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ActionBar;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -23,7 +22,6 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.comments.CommentDialogs;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
@@ -33,6 +31,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
@@ -199,7 +198,9 @@ public class NotificationsActivity extends WPActionBarActivity
      */
     @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
-        // remove the comment detail fragment if the comment was trashed
+        if (isFinishing()) return;
+
+        // remove the comment detail fragment if the comment was trashed or spammed
         if ((changeType == CommentActions.ChangeType.TRASHED || changeType == CommentActions.ChangeType.SPAMMED)
                 && changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
             FragmentManager fm = getFragmentManager();
@@ -209,6 +210,17 @@ public class NotificationsActivity extends WPActionBarActivity
         }
 
         mNotesListFragment.refreshNotes();
+    }
+
+    // CommentDetailFragment will call this after moderation completes if it is no longer added
+    @Override
+    public void onModerationCompleted(boolean success) {
+        if (isFinishing()) return;
+
+        mNotesListFragment.refreshNotes();
+        if (!success) {
+            ToastUtils.showToast(this, R.string.error_moderate_comment, ToastUtils.Duration.LONG);
+        }
     }
 
     void popNoteDetail() {
@@ -370,13 +382,5 @@ public class NotificationsActivity extends WPActionBarActivity
             mHasPerformedInitialUpdate = true;
             ReaderAuthActions.updateCookies(this);
         }
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = CommentDialogs.createCommentDialog(this, id);
-        if (dialog != null)
-            return dialog;
-        return super.onCreateDialog(id);
     }
 }
