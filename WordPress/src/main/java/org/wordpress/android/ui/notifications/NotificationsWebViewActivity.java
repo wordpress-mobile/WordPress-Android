@@ -32,6 +32,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         super.onCreate(savedInstanceState);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDisplayZoomControls(false);
+        mWebView.getSettings().setDomStorageEnabled(true);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -41,7 +42,7 @@ public class NotificationsWebViewActivity extends AuthenticatedWebViewActivity {
         // load URL if one was provided in the intent
         String url = getIntent().getStringExtra(URL_TO_LOAD);
         if (!TextUtils.isEmpty(url)) {
-            loadUrl(url);
+            loadAuthenticatedUrl(url);
         }
     }
 
