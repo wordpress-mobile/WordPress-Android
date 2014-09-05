@@ -10,13 +10,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -41,12 +39,14 @@ import net.simonvt.menudrawer.Position;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -59,11 +59,9 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -265,6 +263,9 @@ public abstract class WPActionBarActivity extends Activity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
+        if (mMenuDrawer == null) {
+            return;
+        }
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
@@ -587,8 +588,10 @@ public abstract class WPActionBarActivity extends Activity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    initMenuDrawer();
-                    mMenuDrawer.openMenu(false);
+                    if (mMenuDrawer != null) {
+                        initMenuDrawer();
+                        mMenuDrawer.openMenu(false);
+                    }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();
