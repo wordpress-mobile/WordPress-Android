@@ -292,27 +292,24 @@ public class ThemeDetailsFragment extends DialogFragment {
      * @param context
      * @author Karim Varela
      **/
-    private void populateViews(LinearLayout linearLayout, View[] views, Context context)
-    {
-        RelativeLayout.LayoutParams llParams = (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
+    private void populateViews(LinearLayout linearLayout, View[] views, Context context) {
+        RelativeLayout.LayoutParams llParams =
+                (android.widget.RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         linearLayout.removeAllViews();
 
-        int maxWidth = display.getWidth() - llParams.leftMargin - llParams.rightMargin - mParentView.getPaddingLeft() - mParentView.getPaddingRight();
-
+        int maxWidth = display.getWidth() - llParams.leftMargin - llParams.rightMargin - mParentView.getPaddingLeft()
+                - mParentView.getPaddingRight();
 
         if (DisplayUtils.isXLarge(getActivity())) {
             int minDialogWidth = getResources().getDimensionPixelSize(R.dimen.theme_details_dialog_min_width);
             int dialogWidth = Math.max((int) (display.getWidth() * 0.6), minDialogWidth);
             maxWidth = dialogWidth / 2 - llParams.leftMargin - llParams.rightMargin;
-
-        } else if (DisplayUtils.isTablet(getActivity()) && mLeftContainer != null) {
+        } else if (mLeftContainer != null && mLeftContainer.getLayoutParams() instanceof LinearLayout.LayoutParams) {
             int spec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
             mLeftContainer.measure(spec, spec);
-
             LinearLayout.LayoutParams params = (LayoutParams) mLeftContainer.getLayoutParams();
-
             maxWidth -= mLeftContainer.getMeasuredWidth() + params.rightMargin + params.leftMargin;
         }
 
