@@ -52,6 +52,10 @@ public class DisplayUtils {
         return (int) ((px/displayMetrics.density)+0.5);
     }
 
+    /**
+     * Deprecated method, returns true on some phones.
+     */
+    @Deprecated
     public static boolean isTablet(Context context) {
         // http://stackoverflow.com/a/8427523/1673548
         if (context == null)
