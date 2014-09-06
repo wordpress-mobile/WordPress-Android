@@ -32,8 +32,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private PullToRefreshHelper mFauxPullToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
+
     private boolean mShouldLoadFirstNote;
     private String mSelectedNoteId;
+    private int mRestoredListPosition;
 
     Bucket<Note> mBucket;
 
@@ -50,11 +52,18 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        initPullToRefreshHelper();
+        mFauxPullToRefreshHelper.registerReceiver(getActivity());
 
         // setup the initial notes adapter, starts listening to the bucket
         mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket == null) {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+            return;
+        }
 
         ListView listView = getListView();
         listView.setDivider(null);
@@ -64,26 +73,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         }
 
-        if (mBucket != null && mNotesAdapter == null) {
+        if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-            setListAdapter(mNotesAdapter);
-        } else if (mBucket == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
         }
+
+        setListAdapter(mNotesAdapter);
 
         // Set empty text if no notifications
         TextView textview = (TextView) listView.getEmptyView();
         if (textview != null) {
             textview.setText(getText(R.string.notifications_empty_list));
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.registerReceiver(getActivity());
     }
 
     @Override
@@ -178,7 +178,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 
-                if (DisplayUtils.isLandscapeTablet(getActivity()) && getListView() != null) {
+                if (getListView() == null) return;
+
+                if (DisplayUtils.isLandscapeTablet(getActivity())) {
                     // Select first row on a landscape tablet
                     if (mShouldLoadFirstNote) {
                         mShouldLoadFirstNote = false;
@@ -191,10 +193,23 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
                     if (mSelectedNoteId != null) {
                         new HighlightSelectedNoteTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } else {
+                        restoreListScrollPosition();
                     }
+                } else {
+                    restoreListScrollPosition();
                 }
             }
         });
+    }
+
+    private void restoreListScrollPosition() {
+        if (mRestoredListPosition != ListView.INVALID_POSITION
+                && mRestoredListPosition < mNotesAdapter.getCount()) {
+            // Restore scroll position in list
+            getListView().setSelectionFromTop(mRestoredListPosition, 0);
+            mRestoredListPosition = ListView.INVALID_POSITION;
+        }
     }
 
     @Override
@@ -210,6 +225,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         mShouldLoadFirstNote = shouldLoad;
     }
 
+    public int getScrollPosition() {
+        if (!isAdded() || getListView() == null) {
+            return ListView.INVALID_POSITION;
+        }
+
+        return getListView().getFirstVisiblePosition();
+    }
+
+    public void setRestoredListPosition(int listPosition) {
+        mRestoredListPosition = listPosition;
+    }
 
     /**
      * Simperium bucket listener methods
@@ -261,6 +287,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         protected void onPostExecute(Integer noteListPosition) {
             if (isAdded() && noteListPosition != ListView.INVALID_POSITION && getListView() != null) {
                 getListView().setItemChecked(noteListPosition, true);
+                getListView().setSelectionFromTop(noteListPosition, 0);
             }
 
             mSelectedNoteId = null;

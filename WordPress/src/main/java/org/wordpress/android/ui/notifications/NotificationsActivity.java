@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -44,6 +45,8 @@ public class NotificationsActivity extends WPActionBarActivity
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
     private static final String KEY_REPLY_TEXT = "replyText";
+    private static final String KEY_LIST_POSITION = "listPosition";
+
     private static final String TAG_LIST_VIEW = "notificationsList";
     private static final String TAG_TABLET_DETAIL_VIEW = "notificationsTabletDetail";
 
@@ -90,6 +93,12 @@ public class NotificationsActivity extends WPActionBarActivity
             if (savedInstanceState.getString(NOTE_ID_EXTRA) != null) {
                 // Restore last selected note
                 openNoteForNoteId(savedInstanceState.getString(NOTE_ID_EXTRA));
+            }
+
+            if (savedInstanceState.containsKey(KEY_LIST_POSITION)) {
+                mNotesListFragment.setRestoredListPosition(
+                        savedInstanceState.getInt(KEY_LIST_POSITION, ListView.INVALID_POSITION)
+                );
             }
         } else {
             launchWithNoteId();
@@ -292,7 +301,8 @@ public class NotificationsActivity extends WPActionBarActivity
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        ft.replace(R.id.layout_fragment_container, mDetailFragment);
+        ft.hide(mNotesListFragment);
+        ft.add(R.id.layout_fragment_container, mDetailFragment);
         mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
@@ -370,6 +380,11 @@ public class NotificationsActivity extends WPActionBarActivity
         // Save text in comment reply EditText
         if (!TextUtils.isEmpty(getCommentReplyText())) {
             outState.putString(KEY_REPLY_TEXT, getCommentReplyText());
+        }
+
+        // Save list view scroll position
+        if (mNotesListFragment != null) {
+            outState.putInt(KEY_LIST_POSITION, mNotesListFragment.getScrollPosition());
         }
 
         super.onSaveInstanceState(outState);
