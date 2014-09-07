@@ -140,9 +140,6 @@ public class ReaderPostListFragment extends Fragment
             }
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
-            if (TextUtils.isEmpty(mCurrentBlogUrl)) {
-                mCurrentBlogUrl = ReaderBlogTable.getBlogUrl(mCurrentBlogId);
-            }
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
@@ -268,6 +265,13 @@ public class ReaderPostListFragment extends Fragment
                 rootView.addView(mBlogInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 break;
+        }
+
+        // add blank listView header if this is tag/blog preview to provide some initial space
+        // between the tag/blog header and the posts
+        if (getPostListType().isPreviewType()) {
+            int height = container.getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+            ReaderUtils.addListViewHeader(mListView, height);
         }
 
         // textView that appears when current tag has no posts
