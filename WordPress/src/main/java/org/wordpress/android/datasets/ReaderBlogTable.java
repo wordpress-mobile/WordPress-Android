@@ -90,6 +90,12 @@ public class ReaderBlogTable {
         }
     }
 
+    public static String getBlogUrl(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(
+                ReaderDatabase.getReadableDb(), "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?", args);
+    }
+
     private static ReaderBlog getBlogInfoFromCursor(Cursor c) {
         if (c == null) {
             return null;

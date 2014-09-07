@@ -1358,6 +1358,13 @@ public class ReaderPostDetailFragment extends Fragment
             // hide blog name, avatar & follow button if this fragment was shown from blog preview
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
+            } else {
+                layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                    }
+                });
             }
 
             // enable reblogging wp posts

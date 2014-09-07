@@ -27,6 +27,7 @@ import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
@@ -139,6 +140,9 @@ public class ReaderPostListFragment extends Fragment
             }
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentBlogUrl = args.getString(ReaderConstants.ARG_BLOG_URL);
+            if (TextUtils.isEmpty(mCurrentBlogUrl)) {
+                mCurrentBlogUrl = ReaderBlogTable.getBlogUrl(mCurrentBlogId);
+            }
 
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW && hasCurrentTag()) {
                 mTagPreviewHistory.push(getCurrentTagName());
