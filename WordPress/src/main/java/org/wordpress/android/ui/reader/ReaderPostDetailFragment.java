@@ -1359,12 +1359,18 @@ public class ReaderPostDetailFragment extends Fragment
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
             } else {
-                layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
-                    }
-                });
+                // tapping header shows blog preview unless this post is from an external feed
+                if (!mPost.isExternal) {
+                    layoutDetailHeader.setEnabled(true);
+                    layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        }
+                    });
+                } else {
+                    layoutDetailHeader.setEnabled(false);
+                }
             }
 
             // enable reblogging wp posts
