@@ -268,10 +268,9 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // add blank listView header if this is tag/blog preview to provide some initial space
-        // between the tag/blog header and the posts
+        // between the tag/blog header and the posts (height is zero so only divider appears)
         if (getPostListType().isPreviewType()) {
-            int height = container.getContext().getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
-            ReaderUtils.addListViewHeader(mListView, height);
+            ReaderUtils.addListViewHeader(mListView, 0);
         }
 
         // textView that appears when current tag has no posts
