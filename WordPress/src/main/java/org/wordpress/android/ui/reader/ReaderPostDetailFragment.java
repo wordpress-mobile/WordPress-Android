@@ -490,6 +490,7 @@ public class ReaderPostDetailFragment extends Fragment
         txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
 
         final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+        countLikes.setCount(mPost.numLikes);
         countLikes.setSelected(mPost.isLikedByCurrentUser);
         countLikes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -736,7 +737,7 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             } else {
-                imgBtnReblog.setVisibility(View.GONE);
+                imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
             // enable viewing comments if they're open on this post, or any exist
@@ -750,19 +751,20 @@ public class ReaderPostDetailFragment extends Fragment
                     }
                 });
             } else {
-                countComments.setVisibility(View.GONE);
+                countComments.setVisibility(View.INVISIBLE);
             }
 
             if (mPost.isLikesEnabled) {
                 countLikes.setCount(mPost.numLikes);
                 countLikes.setVisibility(View.VISIBLE);
+                countLikes.setSelected(mPost.isLikedByCurrentUser);
                 // if we know refreshLikes() is going to show the liking layout, force it to take up
                 // space right now
                 if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
                     mLayoutLikes.setVisibility(View.INVISIBLE);
                 }
             } else {
-                countLikes.setVisibility(View.GONE);
+                countLikes.setVisibility(View.INVISIBLE);
             }
 
             // external blogs (feeds) don't support action icons
