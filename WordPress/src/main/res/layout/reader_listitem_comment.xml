@@ -20,12 +20,12 @@
         android:id="@+id/image_comment_avatar"
         style="@style/ReaderImageView.Avatar.Small"
         android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_toRightOf="@+id/spacer_comment_indent" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_author"
         style="@style/ReaderTextView.Comment.Author"
-        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toLeftOf="@+id/text_comment_date"
@@ -39,7 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
         tools:text="date" />

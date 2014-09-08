@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -28,6 +29,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -102,7 +104,10 @@ public class ReaderCommentsActivity extends Activity {
         final TextView txtDateAndAuthor = (TextView) postHeader.findViewById(R.id.text_date_and_author);
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
 
-        txtTitle.setText(mPost.getTitle());
+        String color = HtmlUtils.colorResToHtmlColor(this, R.color.grey_medium);
+        String title = "<font color=" + color + ">" + getString(R.string.reader_label_comments_on) + "</font>"
+                     + " " + mPost.getTitle();
+        txtTitle.setText(Html.fromHtml(title));
 
         if (mPost.hasAuthorName()) {
             txtDateAndAuthor.setText(

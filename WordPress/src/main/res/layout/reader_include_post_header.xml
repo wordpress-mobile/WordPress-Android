@@ -21,7 +21,8 @@
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_post_avatar"
             style="@style/ReaderImageView.Avatar.Small"
-            android:layout_marginRight="@dimen/margin_medium" />
+            android:layout_marginRight="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_small" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_post_title"
@@ -29,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/image_post_avatar"
             android:ellipsize="end"
-            android:includeFontPadding="false"
             android:maxLines="2"
             android:textColor="@color/grey_extra_dark"
             android:textSize="@dimen/text_sz_large"
