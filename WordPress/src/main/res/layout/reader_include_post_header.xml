@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    post header on reader comment activity
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_post_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_post_avatar"
+            style="@style/ReaderImageView.Avatar"
+            android:layout_marginRight="@dimen/margin_medium" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_post_title"
+            style="@style/ReaderTextView.Post.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/text_post_date"
+            android:layout_toRightOf="@+id/image_post_avatar"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="text_post_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_post_date"
+            style="@style/ReaderTextView.Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/margin_medium"
+            tools:text="date" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/reader_divider_grey" />
+</LinearLayout>

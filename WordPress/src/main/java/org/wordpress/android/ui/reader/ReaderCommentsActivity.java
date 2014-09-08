@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,15 +25,16 @@ import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPListView;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.annotation.Nonnull;
 
 public class ReaderCommentsActivity extends Activity {
 
-    private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
 
     private long mPostId;
@@ -52,13 +52,8 @@ public class ReaderCommentsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_comments);
-
-        mListView = (WPListView) findViewById(android.R.id.list);
-
-        mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mLayoutCommentBox.setVisibility(View.VISIBLE);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -69,18 +64,43 @@ public class ReaderCommentsActivity extends Activity {
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
-                long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
-                showAddCommentBox(replyToCommentId);
-            }
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         }
 
+        loadPost();
+
+        mListView = (WPListView) findViewById(android.R.id.list);
         mListView.setAdapter(getCommentAdapter());
 
+        mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        mLayoutCommentBox.setVisibility(View.VISIBLE);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REPLY_TO_COMMENT_ID)) {
+            showAddCommentBox(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
+        }
+
         refreshComments();
+    }
+
+    private void loadPost() {
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        if (mPost == null) {
+            ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
+            finish();
+        }
+
+        final View header = findViewById(R.id.layout_post_header);
+        final TextView txtTitle = (TextView) header.findViewById(R.id.text_post_title);
+        final TextView txtDate = (TextView) header.findViewById(R.id.text_post_date);
+        final WPNetworkImageView imgAvatar = (WPNetworkImageView) header.findViewById(R.id.image_post_avatar);
+
+        txtTitle.setText(mPost.getTitle());
+        txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
+
+        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
+        imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
     }
 
     @Override
@@ -116,11 +136,7 @@ public class ReaderCommentsActivity extends Activity {
             ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
                 @Override
                 public void onRequestReply(long commentId) {
-                    if (!isAddCommentBoxShowing()) {
-                        showAddCommentBox(commentId);
-                    } else {
-                        hideAddCommentBox();
-                    }
+                    showAddCommentBox(commentId);
                 }
             };
 
@@ -140,11 +156,7 @@ public class ReaderCommentsActivity extends Activity {
         return mCommentAdapter;
     }
 
-
     private ReaderPost getPost() {
-        if (mPost == null) {
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-        }
         return mPost;
     }
 
@@ -152,9 +164,7 @@ public class ReaderCommentsActivity extends Activity {
     public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        outState.putBoolean(KEY_SHOW_COMMENT_BOX, isAddCommentBoxShowing());
-
-        if (isAddCommentBoxShowing()) {
+        if (mReplyToCommentId != 0) {
             outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
         }
 
@@ -211,9 +221,6 @@ public class ReaderCommentsActivity extends Activity {
         getCommentAdapter().refreshComments();
     }
 
-    private boolean isAddCommentBoxShowing() {
-        return mLayoutCommentBox.getVisibility() == View.VISIBLE;
-    }
     /*
      * show the view enabling adding a comment - triggered when user hits comment icon/count in header
      * note that this view is hidden at design time, so it will be shown the first time user taps icon.
@@ -221,22 +228,17 @@ public class ReaderCommentsActivity extends Activity {
      * comment id to reply to a specific comment
      */
     private void showAddCommentBox(final long replyToCommentId) {
-        if (isFinishing())
-            return;
-
-        // skip if it's already showing or if a comment is currently being submitted
-        if (isAddCommentBoxShowing() || mIsSubmittingComment) {
+        if (isFinishing() || mIsSubmittingComment) {
             return;
         }
 
-        final EditText editComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
-
         // different hint depending on whether user is replying to a comment or commenting on the post
+        final EditText editComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
         editComment.setHint(replyToCommentId == 0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
 
-        imgBtnComment.setSelected(true);
-        AniUtils.flyIn(mLayoutCommentBox);
+        if (mLayoutCommentBox.getVisibility() != View.VISIBLE) {
+            AniUtils.flyIn(mLayoutCommentBox);
+        }
 
         editComment.requestFocus();
         editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -278,14 +280,11 @@ public class ReaderCommentsActivity extends Activity {
     }
 
     void hideAddCommentBox() {
-        if (isFinishing() || !isAddCommentBoxShowing()) {
+        if (isFinishing() || mLayoutCommentBox.getVisibility() != View.VISIBLE) {
             return;
         }
 
         final EditText editComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) findViewById(R.id.image_comment_btn);
-
-        imgBtnComment.setSelected(false);
         AniUtils.flyOut(mLayoutCommentBox);
         EditTextUtils.hideSoftInput(editComment);
 
@@ -293,6 +292,7 @@ public class ReaderCommentsActivity extends Activity {
 
         mReplyToCommentId = 0;
     }
+
 
     /*
      * scrolls the passed comment to the top of the listView
@@ -340,6 +340,7 @@ public class ReaderCommentsActivity extends Activity {
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
                     mListView.invalidateViews();
+                    showAddCommentBox(0);
                 } else {
                     // comment failed to post - show the comment box again with the comment text intact,
                     // and remove the "fake" comment from the adapter
