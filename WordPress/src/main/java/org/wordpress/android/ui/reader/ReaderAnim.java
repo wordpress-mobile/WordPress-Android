@@ -211,6 +211,8 @@ public class ReaderAnim {
                 // rotate like button +/- 72 degrees (72 = 360/5, 5 is the number of points in the star)
                 float endRotate = (button == ReaderButton.LIKE_ON ? 72f : -72f);
                 ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, endRotate);
+                animRotate.setRepeatMode(ValueAnimator.REVERSE);
+                animRotate.setRepeatCount(1);
                 set.play(animX).with(animY).with(animRotate);
                 // on Android 4.4.3 the rotation animation may cause the drawable to fade out unless
                 // we set the layer type - https://code.google.com/p/android/issues/detail?id=70914
