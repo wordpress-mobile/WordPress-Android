@@ -879,6 +879,10 @@ public class ReaderPostListFragment extends Fragment
         ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
     }
 
+    void updateCurrentTag() {
+        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+    }
+
     /*
      * get latest posts for this tag from the server
      */
