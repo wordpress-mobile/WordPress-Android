@@ -8,8 +8,11 @@
     android:id="@+id/layout_post_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:padding="@dimen/margin_large">
+    android:paddingLeft="@dimen/margin_large"
+    android:paddingRight="@dimen/margin_large"
+    android:paddingTop="@dimen/margin_large">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,18 +20,21 @@
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_post_avatar"
-            style="@style/ReaderImageView.Avatar"
+            style="@style/ReaderImageView.Avatar.Small"
+            android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_medium" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_post_title"
-            style="@style/ReaderTextView.Post.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/text_post_date"
             android:layout_toRightOf="@+id/image_post_avatar"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
+            android:textColor="@color/grey_extra_dark"
+            android:textSize="@dimen/text_sz_large"
             tools:text="text_post_title" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -37,6 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_medium"
             tools:text="date" />
     </RelativeLayout>
@@ -45,5 +52,6 @@
         android:id="@+id/divider_header"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_large"
         android:background="@color/reader_divider_grey" />
 </LinearLayout>

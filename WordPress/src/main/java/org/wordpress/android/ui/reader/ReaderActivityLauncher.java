@@ -120,7 +120,7 @@ public class ReaderActivityLauncher {
             Activity activity = (Activity) context;
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                     activity,
-                    R.anim.reader_activity_slide_in,
+                    R.anim.reader_flyin,
                     R.anim.reader_activity_scale_out);
             ActivityCompat.startActivity(activity, intent, options.toBundle());
         } else {

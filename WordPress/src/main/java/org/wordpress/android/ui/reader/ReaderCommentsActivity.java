@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -22,11 +23,13 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -72,6 +75,11 @@ public class ReaderCommentsActivity extends Activity {
         loadPost();
 
         mListView = (WPListView) findViewById(android.R.id.list);
+
+        // add listView header to provide initial space between the post header and list content
+        int height = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        ReaderUtils.addListViewHeader(mListView, height);
+
         mListView.setAdapter(getCommentAdapter());
 
         mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
@@ -91,16 +99,26 @@ public class ReaderCommentsActivity extends Activity {
             finish();
         }
 
-        final View header = findViewById(R.id.layout_post_header);
-        final TextView txtTitle = (TextView) header.findViewById(R.id.text_post_title);
-        final TextView txtDate = (TextView) header.findViewById(R.id.text_post_date);
-        final WPNetworkImageView imgAvatar = (WPNetworkImageView) header.findViewById(R.id.image_post_avatar);
+        final View postHeader = findViewById(R.id.layout_post_header);
+        final TextView txtTitle = (TextView) postHeader.findViewById(R.id.text_post_title);
+        final TextView txtDate = (TextView) postHeader.findViewById(R.id.text_post_date);
+        final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
 
-        txtTitle.setText(mPost.getTitle());
+        String color = HtmlUtils.colorResToHtmlColor(this, R.color.grey_medium);
+        String htmlTitle =
+                "<font color=" + color + ">" + getString(R.string.reader_label_comments_on) + "</font>"
+                + " " + mPost.getTitle();
+        txtTitle.setText(Html.fromHtml(htmlTitle));
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
 
-        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium));
+        String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.reader_activity_scale_in, R.anim.reader_flyout);
     }
 
     @Override
