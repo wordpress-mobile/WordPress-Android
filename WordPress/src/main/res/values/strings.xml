@@ -682,6 +682,7 @@
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs&#160;yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start&#160;exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any&#160;posts</string>
+    <string name="reader_empty_comments">No comments</string>
 
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>

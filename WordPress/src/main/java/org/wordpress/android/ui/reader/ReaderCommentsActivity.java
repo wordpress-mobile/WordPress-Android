@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -51,7 +52,10 @@ public class ReaderCommentsActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.reader_activity_comments);
+
         mListView = (WPListView) findViewById(android.R.id.list);
+        mListView.setEmptyView(findViewById(R.id.text_empty));
+
         mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mLayoutCommentBox.setVisibility(View.VISIBLE);
 
@@ -76,13 +80,6 @@ public class ReaderCommentsActivity extends Activity {
         mListView.setAdapter(getCommentAdapter());
 
         refreshComments();
-        updateComments(true);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -96,13 +93,19 @@ public class ReaderCommentsActivity extends Activity {
         }
     }
 
+    private boolean isCommentAdapterEmpty() {
+        return (mCommentAdapter == null || mCommentAdapter.isEmpty());
+    }
+
     private ReaderCommentAdapter getCommentAdapter() {
         if (mCommentAdapter == null) {
             ReaderInterfaces.DataLoadedListener dataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
-                        // TODO
+                        if (isEmpty) {
+                            updateComments();
+                        }
                     }
                 }
             };
@@ -126,7 +129,7 @@ public class ReaderCommentsActivity extends Activity {
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader comments > requesting newer comments");
-                        updateComments(true);
+                        updateComments();
                     }
                 }
             };
@@ -156,10 +159,20 @@ public class ReaderCommentsActivity extends Activity {
         super.onSaveInstanceState(outState);
     }
 
+    private void showProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        progress.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progress_loading);
+        progress.setVisibility(View.GONE);
+    }
+
     /*
      * request comments for this post
      */
-    private void updateComments(boolean requestNewer) {
+    private void updateComments() {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
@@ -168,20 +181,23 @@ public class ReaderCommentsActivity extends Activity {
         AppLog.d(T.READER, "reader comments > updateComments");
         mIsUpdatingComments = true;
 
+        if (isCommentAdapterEmpty()) {
+            showProgress();
+        }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 mIsUpdatingComments = false;
-                if (isFinishing()) {
-                    return;
-                }
-                if (result == ReaderActions.UpdateResult.CHANGED) {
-                    refreshComments();
+                if (!isFinishing()) {
+                    hideProgress();
+                    if (result == ReaderActions.UpdateResult.CHANGED) {
+                        refreshComments();
+                    }
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(getPost(), requestNewer, resultListener);
+        ReaderCommentActions.updateCommentsForPost(getPost(), true, resultListener);
     }
 
 
