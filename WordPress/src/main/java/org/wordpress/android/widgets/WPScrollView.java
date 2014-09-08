@@ -82,8 +82,7 @@ public class WPScrollView extends ScrollView {
     private final Runnable mScrollTask = new Runnable() {
         @Override
         public void run() {
-            int currentY = getScrollY();
-            if (mInitialScrollCheckY - currentY == 0) {
+            if (mInitialScrollCheckY == getScrollY()) {
                 if (mOnScrollDirectionListener != null) {
                     mOnScrollDirectionListener.onScrollCompleted();
                 }

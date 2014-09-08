@@ -37,7 +37,6 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -50,7 +49,7 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends Activity
-        implements ReaderUtils.FullScreenListener,
+        implements ReaderInterfaces.FullScreenListener,
                    ReaderInterfaces.OnPostPopupListener {
 
     private ViewPager mViewPager;

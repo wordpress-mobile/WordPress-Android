@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,10 +52,10 @@ public class ReaderCommentsActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_comments);
 
         mListView = (WPListView) findViewById(android.R.id.list);
-        mListView.setEmptyView(findViewById(R.id.text_empty));
 
         mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mLayoutCommentBox.setVisibility(View.VISIBLE);
@@ -104,6 +105,7 @@ public class ReaderCommentsActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty) {
+                            mListView.setEmptyView(findViewById(R.id.text_empty));
                             updateComments();
                         }
                     }

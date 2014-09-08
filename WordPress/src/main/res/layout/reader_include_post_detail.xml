@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    post for ReaderPostDetailFragment
+    included by ReaderPostDetailFragment
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -131,5 +131,11 @@
             android:layout_marginTop="@dimen/margin_medium" />
 
     </RelativeLayout>
+
+    <!-- extra space so action icons on fragment don't overlap content -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_button_icon"
+        android:id="@+id/spacer_actions"/>
 
 </LinearLayout>

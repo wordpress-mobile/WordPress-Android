@@ -14,11 +14,10 @@
             android:id="@+id/scroll_view_reader"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/layout_actions"
             android:fillViewport="true">
 
             <include
-                layout="@layout/reader_listitem_post_detail"
+                layout="@layout/reader_include_post_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </org.wordpress.android.widgets.WPScrollView>
@@ -28,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignWithParentIfMissing="true"
             android:background="@color/white">
 
             <View

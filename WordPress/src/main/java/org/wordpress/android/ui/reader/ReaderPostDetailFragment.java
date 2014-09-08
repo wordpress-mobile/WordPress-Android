@@ -69,7 +69,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
-    private ReaderUtils.FullScreenListener mFullScreenListener;
+    private ReaderInterfaces.FullScreenListener mFullScreenListener;
 
     private ReaderResourceVars mResourceVars;
 
@@ -116,8 +116,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         mResourceVars = new ReaderResourceVars(activity);
 
-        if (activity instanceof ReaderUtils.FullScreenListener) {
-            mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
+        if (activity instanceof ReaderInterfaces.FullScreenListener) {
+            mFullScreenListener = (ReaderInterfaces.FullScreenListener) activity;
         }
 
         if (activity instanceof ReaderInterfaces.OnPostPopupListener) {
