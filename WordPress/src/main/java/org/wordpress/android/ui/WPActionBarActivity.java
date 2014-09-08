@@ -60,6 +60,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -263,6 +264,9 @@ public abstract class WPActionBarActivity extends Activity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
+        if (mMenuDrawer == null) {
+            return;
+        }
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
@@ -576,8 +580,10 @@ public abstract class WPActionBarActivity extends Activity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    initMenuDrawer();
-                    mMenuDrawer.openMenu(false);
+                    if (mMenuDrawer != null) {
+                        initMenuDrawer();
+                        mMenuDrawer.openMenu(false);
+                    }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();
