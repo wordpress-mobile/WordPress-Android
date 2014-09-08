@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
 
@@ -68,26 +69,35 @@ public class ReaderPhotoViewerActivity extends Activity
     }
 
     private void loadImageList() {
-        new Thread() {
-            @Override
-            public void run() {
-                // parse list of images from content that was (optionally) passed to
-                // this activity, and make sure the list includes the passed url
-                ReaderImageScanner scanner = new ReaderImageScanner(mContent, mIsPrivate);
-                final ReaderImageList imageList = scanner.getImageList();
-                if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
-                    imageList.addImageUrl(0, mInitialImageUrl);
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isFinishing()) {
-                            setImageList(imageList, mInitialImageUrl);
-                        }
-                    }
-                });
+        // content will be empty unless this was called by ReaderPostDetailFragment to show
+        // a list of images in a post (in which case, it's the content of the post)
+        if (TextUtils.isEmpty(mContent)) {
+            final ReaderImageList imageList = new ReaderImageList(mIsPrivate);
+            if (!TextUtils.isEmpty(mInitialImageUrl)) {
+                imageList.add(mInitialImageUrl);
             }
-        }.start();
+            setImageList(imageList, mInitialImageUrl);
+        } else {
+            // parse images from content and make sure the list includes the passed url
+            new Thread() {
+                @Override
+                public void run() {
+                    final ReaderImageList imageList = new ReaderImageScanner(mContent, mIsPrivate).getImageList();
+                    if (!TextUtils.isEmpty(mInitialImageUrl) && !imageList.hasImageUrl(mInitialImageUrl)) {
+                        AppLog.w(AppLog.T.READER, "reader photo viewer > initial image not in list");
+                        imageList.addImageUrl(0, mInitialImageUrl);
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!isFinishing()) {
+                                setImageList(imageList, mInitialImageUrl);
+                            }
+                        }
+                    });
+                }
+            }.start();
+        }
     }
 
     private void setImageList(ReaderImageList imageList, String initialImageUrl) {
