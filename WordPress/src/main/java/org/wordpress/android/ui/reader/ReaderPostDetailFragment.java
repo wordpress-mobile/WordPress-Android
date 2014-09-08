@@ -1247,7 +1247,7 @@ public class ReaderPostDetailFragment extends Fragment
             imgFeatured = (WPNetworkImageView) container.findViewById(R.id.image_featured);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-            imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
+            imgBtnLike = (ImageView) container.findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
