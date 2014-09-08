@@ -343,15 +343,15 @@ public class ReaderPostDetailFragment extends Fragment
     /*
      * changes the like on the passed post
      */
-    private void togglePostLike(ReaderPost post, View likeButton) {
-        boolean isSelected = likeButton.isSelected();
-        likeButton.setSelected(!isSelected);
+    private void togglePostLike(ReaderPost post, ReaderIconCountView likeCount) {
+        boolean isSelected = likeCount.isSelected();
+        likeCount.setSelected(!isSelected);
 
         boolean isAskingToLike = !post.isLikedByCurrentUser;
-        ReaderAnim.animateLikeButton(likeButton, isAskingToLike);
+        ReaderAnim.animateLikeButton(likeCount.getImageView(), isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
-            likeButton.setSelected(isSelected);
+            likeCount.setSelected(isSelected);
             return;
         }
 
@@ -489,12 +489,12 @@ public class ReaderPostDetailFragment extends Fragment
         final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
         txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
 
-        final ImageView imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
-        imgBtnLike.setSelected(mPost.isLikedByCurrentUser);
-        imgBtnLike.setOnClickListener(new View.OnClickListener() {
+        final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+        countLikes.setSelected(mPost.isLikedByCurrentUser);
+        countLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                togglePostLike(mPost, imgBtnLike);
+                togglePostLike(mPost, countLikes);
             }
         });
 
@@ -614,8 +614,9 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtFollow;
 
         ImageView imgBtnReblog;
-        ImageView imgBtnLike;
-        ImageView imgBtnComment;
+        ReaderIconCountView countLikes;
+        ReaderIconCountView countComments;
+
         ImageView imgDropDown;
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
@@ -651,8 +652,8 @@ public class ReaderPostDetailFragment extends Fragment
             imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-            imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
-            imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
+            countLikes = (ReaderIconCountView) container.findViewById(R.id.count_likes);
+            countComments = (ReaderIconCountView) mLayoutIcons.findViewById(R.id.count_comments);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
 
@@ -740,26 +741,28 @@ public class ReaderPostDetailFragment extends Fragment
 
             // enable viewing comments if they're open on this post, or any exist
             if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
-                imgBtnComment.setVisibility(View.VISIBLE);
-                imgBtnComment.setOnClickListener(new View.OnClickListener() {
+                countComments.setCount(mPost.numReplies);
+                countComments.setVisibility(View.VISIBLE);
+                countComments.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
                     }
                 });
             } else {
-                imgBtnComment.setVisibility(View.GONE);
+                countComments.setVisibility(View.GONE);
             }
 
             if (mPost.isLikesEnabled) {
-                imgBtnLike.setVisibility(View.VISIBLE);
+                countLikes.setCount(mPost.numLikes);
+                countLikes.setVisibility(View.VISIBLE);
                 // if we know refreshLikes() is going to show the liking layout, force it to take up
                 // space right now
                 if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
                     mLayoutLikes.setVisibility(View.INVISIBLE);
                 }
             } else {
-                imgBtnLike.setVisibility(View.GONE);
+                countLikes.setVisibility(View.GONE);
             }
 
             // external blogs (feeds) don't support action icons
