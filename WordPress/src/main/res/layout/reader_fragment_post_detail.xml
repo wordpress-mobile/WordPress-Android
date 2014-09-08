@@ -10,10 +10,18 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
-        <include
-            layout="@layout/reader_listitem_post_detail"
+        <org.wordpress.android.widgets.WPScrollView
+            android:id="@+id/scroll_view_reader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:layout_above="@+id/layout_actions"
+            android:fillViewport="true">
+
+            <include
+                layout="@layout/reader_listitem_post_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </org.wordpress.android.widgets.WPScrollView>
 
         <RelativeLayout
             android:id="@+id/layout_actions"

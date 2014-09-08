@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.webkit.WebView;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,14 +38,14 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+import org.wordpress.android.widgets.WPScrollView;
 
 public class ReaderPostDetailFragment extends Fragment
-        implements WPListView.OnScrollDirectionListener,
-                   AbsListView.OnScrollListener,
+        implements WPScrollView.OnScrollDirectionListener,
                    ReaderCustomViewListener,
                    ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
@@ -59,6 +58,7 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
+    private WPScrollView mScrollView;
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
     private ReaderWebView mReaderWebView;
@@ -71,7 +71,6 @@ public class ReaderPostDetailFragment extends Fragment
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
     private ReaderUtils.FullScreenListener mFullScreenListener;
 
-    private int mPrevScrollState = SCROLL_STATE_IDLE;
     private ReaderResourceVars mResourceVars;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
@@ -130,13 +129,16 @@ public class ReaderPostDetailFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
-        // locate & init listView
-        /*mListView = (WPListView) view.findViewById(android.R.id.list);
+        final View spacer = view.findViewById(R.id.spacer_actionbar);
+        mScrollView = (WPScrollView) view.findViewById(R.id.scroll_view_reader);
+
         if (isFullScreenSupported()) {
-            mListView.setOnScrollDirectionListener(this);
-            mListView.setOnScrollListener(this);
-            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeightPx);
-        }*/
+            spacer.getLayoutParams().height = DisplayUtils.getActionBarHeight(container.getContext());
+            spacer.setVisibility(View.VISIBLE);
+            mScrollView.setOnScrollDirectionListener(this);
+        } else {
+            spacer.setVisibility(View.GONE);
+        }
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -164,7 +166,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollUp() {
-        // return from full screen when scrolling up
+        // disable full screen when scrolling up
         if (isFullScreen()) {
             setIsFullScreen(false);
         }
@@ -172,37 +174,19 @@ public class ReaderPostDetailFragment extends Fragment
 
     @Override
     public void onScrollDown() {
-        /*boolean isFullScreen = isFullScreen();
-        boolean canScrollDown = mListView.canScrollDown();
-        boolean canScrollUp = mListView.canScrollUp();
-
-        if (isFullScreen && !canScrollDown) {
-            // disable full screen once user hits the bottom
-            setIsFullScreen(false);
-        } else if (!isFullScreen && canScrollDown && canScrollUp) {
-            // enable full screen when scrolling down
+        // enable full screen when scrolling down
+        if (!isFullScreen() && mScrollView.canScrollDown() && mScrollView.canScrollUp()) {
             setIsFullScreen(true);
-        }*/
-    }
-
-    /*
-     * detect when listView fling completes so we can return from full screen if necessary
-     */
-    @Override
-    public void onScrollStateChanged(AbsListView absListView, int scrollState) {
-        if (scrollState == SCROLL_STATE_IDLE && mPrevScrollState == SCROLL_STATE_FLING) {
-            /*if (isFullScreen() && !mListView.canScrollDown()) {
-                setIsFullScreen(false);
-            }*/
         }
-        mPrevScrollState = scrollState;
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        // nop
+    public void onScrollCompleted() {
+        // disable full screen if scroll has ended and user hit the bottom
+        if (isFullScreen() && !mScrollView.canScrollDown()) {
+            setIsFullScreen(false);
+        }
     }
-
 
     private boolean hasPost() {
         return (mPost != null);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    post for ReaderPostDetailFragment, inserted as ListView header
+    post for ReaderPostDetailFragment
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +9,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/margin_large">
+
+    <View
+        android:id="@+id/spacer_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
