@@ -5,26 +5,21 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/layout_post_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:id="@+id/layout_post_detail_container">
+        android:background="@color/white">
 
-        <org.wordpress.android.widgets.WPListView
-            android:id="@id/android:list"
-            style="@style/ReaderListView.NoDivider"
-            android:layout_above="@+id/layout_comment_box"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="outsideOverlay"
-            android:smoothScrollbar="true"
-            tools:listheader="@layout/reader_listitem_post_detail"
-            tools:listitem="@layout/reader_listitem_comment" />
+        <include
+            layout="@layout/reader_listitem_post_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <RelativeLayout
             android:id="@+id/layout_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/layout_comment_box"
+            android:layout_alignParentBottom="true"
             android:layout_alignWithParentIfMissing="true"
             android:background="@color/white">
 
@@ -49,25 +44,18 @@
 
                 <ImageView
                     android:id="@+id/image_comment_btn"
-                    android:layout_weight="1"
                     style="@style/ReaderImageView.ButtonIcon"
+                    android:layout_weight="1"
                     android:src="@drawable/reader_button_comment" />
 
                 <ImageView
                     android:id="@+id/image_like_btn"
-                    android:layout_weight="1"
                     style="@style/ReaderImageView.ButtonIcon"
+                    android:layout_weight="1"
                     android:src="@drawable/reader_button_like" />
             </LinearLayout>
 
         </RelativeLayout>
-
-        <include
-            android:id="@+id/layout_comment_box"
-            layout="@layout/reader_include_comment_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
 
         <ProgressBar
             android:id="@+id/progress_loading"

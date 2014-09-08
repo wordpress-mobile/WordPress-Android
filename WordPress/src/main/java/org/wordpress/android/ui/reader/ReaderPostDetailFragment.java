@@ -6,10 +6,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,20 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.widget.AbsListView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -40,16 +33,12 @@ import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewPageFinishedLi
 import org.wordpress.android.ui.reader.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
-import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPListView;
@@ -62,8 +51,6 @@ public class ReaderPostDetailFragment extends Fragment
                    ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
 
-    private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
-    private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
     private long mPostId;
@@ -74,29 +61,18 @@ public class ReaderPostDetailFragment extends Fragment
 
     private ViewGroup mLayoutIcons;
     private ViewGroup mLayoutLikes;
-    private WPListView mListView;
-    private ViewGroup mCommentFooter;
-    private ProgressBar mProgressFooter;
     private ReaderWebView mReaderWebView;
     private ReaderLikingUsersView mLikingUsersView;
 
-    private boolean mIsAddCommentBoxShowing;
-    private long mReplyToCommentId = 0;
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
-    private boolean mIsUpdatingComments;
     private boolean mIsBlockBlogDisabled;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
-
-    private long mTopMostCommentId;
-    private int mTopMostCommentTop;
-    private int mPrevScrollState = SCROLL_STATE_IDLE;
-
-    private Parcelable mListState;
-    private ReaderResourceVars mResourceVars;
-
     private ReaderUtils.FullScreenListener mFullScreenListener;
+
+    private int mPrevScrollState = SCROLL_STATE_IDLE;
+    private ReaderResourceVars mResourceVars;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
         return newInstance(blogId, postId, true, null);
@@ -120,91 +96,6 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    /*
-     * adapter containing comments for this post
-     */
-    private ReaderCommentAdapter mCommentAdapter;
-
-    private ReaderCommentAdapter getCommentAdapter() {
-        if (mCommentAdapter == null) {
-            ReaderInterfaces.DataLoadedListener dataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
-                @Override
-                public void onDataLoaded(boolean isEmpty) {
-                    if (isAdded()) {
-                        // show footer below comments when comments exist
-                        mCommentFooter.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-                        // restore listView state (scroll position) if it was saved during rotation
-                        if (mListState != null) {
-                            if (!isEmpty) {
-                                getListView().onRestoreInstanceState(mListState);
-                            }
-                            mListState = null;
-                        }
-                        if (mTopMostCommentId != 0) {
-                            restoreTopmostComment();
-                        }
-                    }
-                }
-            };
-
-            // adapter calls this when user taps reply icon
-            ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
-                @Override
-                public void onRequestReply(long commentId) {
-                    if (!mIsAddCommentBoxShowing) {
-                        showAddCommentBox(commentId);
-                    } else {
-                        hideAddCommentBox();
-                    }
-                }
-            };
-
-            // adapter uses this to request more comments from server when it reaches the end and
-            // detects that more comments exist on the server than are stored locally
-            ReaderActions.DataRequestedListener dataRequestedListener = new ReaderActions.DataRequestedListener() {
-                @Override
-                public void onRequestData() {
-                    if (!mIsUpdatingComments) {
-                        AppLog.i(T.READER, "reader post detail > requesting newer comments");
-                        updateComments(true);
-                    }
-                }
-            };
-            mCommentAdapter = new ReaderCommentAdapter(getActivity(), mPost, replyListener, dataLoadedListener, dataRequestedListener);
-        }
-        return mCommentAdapter;
-    }
-
-    /*
-     * called before new comments are shown so the current topmost comment is remembered
-     */
-    private void retainTopmostComment() {
-        int position = getListView().getFirstVisiblePosition();
-        int numHeaders = getListView().getHeaderViewsCount();
-        if (position > numHeaders) {
-            mTopMostCommentId = getCommentAdapter().getItemId(position - numHeaders);
-            View v = getListView().getChildAt(0);
-            mTopMostCommentTop = (v != null ? v.getTop() : 0);
-        } else {
-            mTopMostCommentId = 0;
-            mTopMostCommentTop = 0;
-        }
-    }
-
-    /*
-     * called after new comments are shown so the previous topmost comment is scrolled to
-     */
-    private void restoreTopmostComment() {
-        if (mTopMostCommentId != 0) {
-            int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
-            if (position > -1) {
-                getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), mTopMostCommentTop);
-            }
-            mTopMostCommentId = 0;
-            mTopMostCommentTop = 0;
-        }
     }
 
     @Override
@@ -240,25 +131,12 @@ public class ReaderPostDetailFragment extends Fragment
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
 
         // locate & init listView
-        mListView = (WPListView) view.findViewById(android.R.id.list);
+        /*mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
             mListView.setOnScrollListener(this);
             ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeightPx);
-        }
-
-        // add post detail as header to listView - must be done before setting adapter
-        ViewGroup headerDetail = (ViewGroup) inflater.inflate(R.layout.reader_listitem_post_detail, mListView, false);
-        mListView.addHeaderView(headerDetail, null, false);
-
-        // add listView footer containing progress bar - footer appears whenever there are comments,
-        // progress bar appears when loading new comments
-        mCommentFooter = (ViewGroup) inflater.inflate(R.layout.reader_footer_progress, mListView, false);
-        mCommentFooter.setVisibility(View.GONE);
-        mCommentFooter.setBackgroundColor(mResourceVars.colorGreyExtraLight);
-        mProgressFooter = (ProgressBar) mCommentFooter.findViewById(R.id.progress_footer);
-        mProgressFooter.setVisibility(View.INVISIBLE);
-        mListView.addFooterView(mCommentFooter);
+        }*/
 
         mLayoutIcons = (ViewGroup) view.findViewById(R.id.layout_actions);
         mLayoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
@@ -284,26 +162,17 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    private WPListView getListView() {
-        return mListView;
-    }
-
     @Override
     public void onScrollUp() {
-        // return from full screen when scrolling up unless user is typing a comment
-        if (isFullScreen() && !mIsAddCommentBoxShowing) {
+        // return from full screen when scrolling up
+        if (isFullScreen()) {
             setIsFullScreen(false);
         }
     }
 
     @Override
     public void onScrollDown() {
-        // don't change fullscreen if user is typing a comment
-        if (mIsAddCommentBoxShowing) {
-            return;
-        }
-
-        boolean isFullScreen = isFullScreen();
+        /*boolean isFullScreen = isFullScreen();
         boolean canScrollDown = mListView.canScrollDown();
         boolean canScrollUp = mListView.canScrollUp();
 
@@ -313,7 +182,7 @@ public class ReaderPostDetailFragment extends Fragment
         } else if (!isFullScreen && canScrollDown && canScrollUp) {
             // enable full screen when scrolling down
             setIsFullScreen(true);
-        }
+        }*/
     }
 
     /*
@@ -322,9 +191,9 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public void onScrollStateChanged(AbsListView absListView, int scrollState) {
         if (scrollState == SCROLL_STATE_IDLE && mPrevScrollState == SCROLL_STATE_FLING) {
-            if (isFullScreen() && !mListView.canScrollDown()) {
+            /*if (isFullScreen() && !mListView.canScrollDown()) {
                 setIsFullScreen(false);
-            }
+            }*/
         }
         mPrevScrollState = scrollState;
     }
@@ -437,21 +306,7 @@ public class ReaderPostDetailFragment extends Fragment
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
         outState.putBoolean(ARG_DISABLE_BLOCK_BLOG, mIsBlockBlogDisabled);
-        outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
-
-        if (mIsAddCommentBoxShowing) {
-            outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        }
-
-        // retain listView state if a comment has been scrolled to - this enables us to restore
-        // the scroll position after comment data is reloaded
-        if (getListView() != null && getListView().getFirstVisiblePosition() > 0) {
-            mListState = getListView().onSaveInstanceState();
-            outState.putParcelable(ReaderConstants.KEY_LIST_STATE, mListState);
-        } else {
-            mListState = null;
-        }
 
         super.onSaveInstanceState(outState);
     }
@@ -478,14 +333,9 @@ public class ReaderPostDetailFragment extends Fragment
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
             mIsBlockBlogDisabled = savedInstanceState.getBoolean(ARG_DISABLE_BLOCK_BLOG);
-            if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
-                long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
-                showAddCommentBox(replyToCommentId);
-            }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            mListState = savedInstanceState.getParcelable(ReaderConstants.KEY_LIST_STATE);
         }
     }
 
@@ -612,7 +462,7 @@ public class ReaderPostDetailFragment extends Fragment
     }
 
     /*
-     * get the latest version of this post so we can show the latest likes/comments
+     * get the latest version of this post
      */
     private void updatePost() {
         if (!hasPost() || !mPost.isWP()) {
@@ -637,78 +487,10 @@ public class ReaderPostDetailFragment extends Fragment
                     if (numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
                         refreshLikes();
                     }
-                    // request comments if the post says the comment count is different than
-                    // the number of stored comments
-                    if (mPost.numReplies != ReaderCommentTable.getNumCommentsForPost(mPost)) {
-                        updateComments(false);
-                    }
                 }
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
-    }
-
-    /*
-     * request comments for this post
-     */
-    private void updateComments(boolean requestNewer) {
-        if (!hasPost() || !mPost.isWP()) {
-            return;
-        }
-        if (mIsUpdatingComments) {
-            AppLog.w(T.READER, "reader post detail > already updating comments");
-            return;
-        }
-
-        AppLog.d(T.READER, "reader post detail > updateComments");
-        mIsUpdatingComments = true;
-
-        // show progress if we're requesting newer comments
-        if (requestNewer) {
-            showProgressFooter();
-        }
-
-        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                mIsUpdatingComments = false;
-                if (!isAdded()) {
-                    return;
-                }
-                hideProgressFooter();
-                if (result == ReaderActions.UpdateResult.CHANGED) {
-                    retainTopmostComment();
-                    refreshComments();
-                }
-            }
-        };
-        ReaderCommentActions.updateCommentsForPost(mPost, requestNewer, resultListener);
-    }
-
-    /*
-     * show progress bar at the bottom of the screen - used when getting newer comments
-     */
-    private void showProgressFooter() {
-        if (mProgressFooter != null && mProgressFooter.getVisibility() != View.VISIBLE) {
-            mProgressFooter.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /*
-     * hide the footer progress bar if it's showing
-     */
-    private void hideProgressFooter() {
-        if (mProgressFooter != null && mProgressFooter.getVisibility() == View.VISIBLE) {
-            mProgressFooter.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    /*
-     * refresh adapter so latest comments appear
-     */
-    private void refreshComments() {
-        AppLog.d(T.READER, "reader post detail > refreshComments");
-        getCommentAdapter().refreshComments();
     }
 
     /*
@@ -753,180 +535,6 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         mLikingUsersView.showLikingUsers(mPost);
-    }
-
-    /*
-     * show the view enabling adding a comment - triggered when user hits comment icon/count in header
-     * note that this view is hidden at design time, so it will be shown the first time user taps icon.
-     * pass 0 for the replyToCommentId to add a parent-level comment to the post, or pass a real
-     * comment id to reply to a specific comment
-     */
-    private void showAddCommentBox(final long replyToCommentId) {
-        if (!isAdded())
-            return;
-
-        // skip if it's already showing or if a comment is currently being submitted
-        if (mIsAddCommentBoxShowing || mIsSubmittingComment) {
-            return;
-        }
-
-        final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
-        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
-
-        // disable full-screen when comment box is showing
-        if (isFullScreen()) {
-            setIsFullScreen(false);
-        }
-
-        // different hint depending on whether user is replying to a comment or commenting on the post
-        editComment.setHint(replyToCommentId == 0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
-
-        imgBtnComment.setSelected(true);
-        AniUtils.flyIn(layoutCommentBox);
-
-        editComment.requestFocus();
-        editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitComment(replyToCommentId);
-                }
-                return false;
-            }
-        });
-
-        // submit comment when image tapped
-        final ImageView imgPostComment = (ImageView) getView().findViewById(R.id.image_post_comment);
-        imgPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitComment(replyToCommentId);
-            }
-        });
-
-        EditTextUtils.showSoftInput(editComment);
-
-        // if user is replying to another comment, highlight the comment being replied to and scroll
-        // it to the top so the user can see which comment they're replying to - note that scrolling
-        // is delayed to give time for listView to reposition due to soft keyboard appearing
-        if (replyToCommentId != 0) {
-            getCommentAdapter().setHighlightCommentId(replyToCommentId, false);
-            getListView().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollToCommentId(replyToCommentId);
-                }
-            }, 300);
-        }
-
-        // mReplyToCommentId must be saved here so it can be stored by onSaveInstanceState()
-        mReplyToCommentId = replyToCommentId;
-        mIsAddCommentBoxShowing = true;
-    }
-
-    boolean isAddCommentBoxShowing() {
-        return mIsAddCommentBoxShowing;
-    }
-
-    void hideAddCommentBox() {
-        if (!isAdded() || !mIsAddCommentBoxShowing) {
-            return;
-        }
-
-        final ViewGroup layoutCommentBox = (ViewGroup) getView().findViewById(R.id.layout_comment_box);
-        final EditText editComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        final ImageView imgBtnComment = (ImageView) getView().findViewById(R.id.image_comment_btn);
-
-        imgBtnComment.setSelected(false);
-        AniUtils.flyOut(layoutCommentBox);
-        EditTextUtils.hideSoftInput(editComment);
-
-        getCommentAdapter().setHighlightCommentId(0, false);
-
-        mIsAddCommentBoxShowing = false;
-        mReplyToCommentId = 0;
-    }
-
-    private void toggleShowAddCommentBox() {
-        if (mIsAddCommentBoxShowing) {
-            hideAddCommentBox();
-        } else {
-            showAddCommentBox(0);
-        }
-    }
-
-    /*
-     * scrolls the passed comment to the top of the listView
-     */
-    private void scrollToCommentId(long commentId) {
-        int position = getCommentAdapter().indexOfCommentId(commentId);
-        if (position > -1) {
-            getListView().setSelectionFromTop(position + getListView().getHeaderViewsCount(), 0);
-        }
-    }
-
-    /*
-     * submit the text typed into the comment box as a comment on the current post
-     */
-    private boolean mIsSubmittingComment = false;
-
-    private void submitComment(final long replyToCommentId) {
-        final EditText editComment = (EditText) getView().findViewById(R.id.edit_comment);
-        final String commentText = EditTextUtils.getText(editComment);
-        if (TextUtils.isEmpty(commentText)) {
-            return;
-        }
-
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
-
-        // hide the comment box - this provides immediate indication that comment is being posted
-        // and prevents users from submitting the same comment twice
-        hideAddCommentBox();
-
-        // generate a "fake" comment id to assign to the new comment so we can add it to the db
-        // and reflect it in the adapter before the API call returns
-        final long fakeCommentId = ReaderCommentActions.generateFakeCommentId();
-
-        mIsSubmittingComment = true;
-        ReaderActions.CommentActionListener actionListener = new ReaderActions.CommentActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded, ReaderComment newComment) {
-                mIsSubmittingComment = false;
-                if (!isAdded()) {
-                    return;
-                }
-                if (succeeded) {
-                    // comment posted successfully so stop highlighting the fake one and replace
-                    // it with the real one
-                    getCommentAdapter().setHighlightCommentId(0, false);
-                    getCommentAdapter().replaceComment(fakeCommentId, newComment);
-                    getListView().invalidateViews();
-                } else {
-                    // comment failed to post - show the comment box again with the comment text intact,
-                    // and remove the "fake" comment from the adapter
-                    editComment.setText(commentText);
-                    showAddCommentBox(replyToCommentId);
-                    getCommentAdapter().removeComment(fakeCommentId);
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
-                }
-            }
-        };
-
-        final ReaderComment newComment = ReaderCommentActions.submitPostComment(mPost,
-                fakeCommentId,
-                commentText,
-                replyToCommentId,
-                actionListener);
-        if (newComment != null) {
-            editComment.setText(null);
-            // add the "fake" comment to the adapter, highlight it, and show a progress bar
-            // next to it while it's submitted
-            getCommentAdapter().setHighlightCommentId(newComment.commentId, true);
-            getCommentAdapter().addComment(newComment);
-            // make sure it's scrolled into view
-            scrollToCommentId(fakeCommentId);
-        }
     }
 
     /*
@@ -1146,13 +754,12 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnReblog.setVisibility(View.GONE);
             }
 
-            // enable adding a comment if comments are open on this post
-            if (mPost.isWP() && mPost.isCommentsOpen) {
+            // enable viewing comments if they're open on this post, or any exist
+            if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
                 imgBtnComment.setVisibility(View.VISIBLE);
                 imgBtnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //toggleShowAddCommentBox();
                         ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
                     }
                 });
@@ -1197,16 +804,11 @@ public class ReaderPostDetailFragment extends Fragment
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-
-            // make sure the adapter is assigned
-            if (getListView().getAdapter() == null) {
-                getListView().setAdapter(getCommentAdapter());
-            }
         }
     }
 
     /*
-     * called by the web view when the content finishes loading - likes & comments aren't displayed
+     * called by the web view when the content finishes loading - likes aren't displayed
      * until this is triggered, to avoid having them appear before the webView content
      */
     @Override
@@ -1216,24 +818,13 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (url != null && url.equals("about:blank")) {
-            // brief delay before loading comments & likes to give a little time for page to render
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (!isAdded()) {
-                        return;
-                    }
+            refreshLikes();
 
-                    refreshLikes();
-                    refreshComments();
-
-                    // request the latest info for this post if we haven't updated it already
-                    if (!mHasAlreadyUpdatedPost) {
-                        mHasAlreadyUpdatedPost = true;
-                        updatePost();
-                    }
-                }
-            }, 500);
+            // request the latest info for this post if we haven't updated it already
+            if (!mHasAlreadyUpdatedPost) {
+                mHasAlreadyUpdatedPost = true;
+                updatePost();
+            }
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url);
         }
