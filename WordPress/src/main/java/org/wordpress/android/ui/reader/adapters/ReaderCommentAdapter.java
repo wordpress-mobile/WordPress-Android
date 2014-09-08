@@ -76,8 +76,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
-        mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
-        mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mBgColorNormal = context.getResources().getColor(R.color.white);
+        mBgColorHighlight = context.getResources().getColor(R.color.grey_extra_light);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium);

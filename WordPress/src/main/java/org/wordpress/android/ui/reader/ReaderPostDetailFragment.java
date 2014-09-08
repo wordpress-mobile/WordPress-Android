@@ -1152,7 +1152,8 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnComment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggleShowAddCommentBox();
+                        //toggleShowAddCommentBox();
+                        ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
                     }
                 });
             } else {

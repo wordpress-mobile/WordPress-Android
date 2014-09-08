@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_extra_light"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_large"
     android:paddingRight="@dimen/margin_large"
@@ -20,7 +19,6 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_comment_avatar"
         style="@style/ReaderImageView.Avatar.Small"
-        android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/margin_small"
         android:layout_toRightOf="@+id/spacer_comment_indent" />
 
@@ -97,7 +95,7 @@
             android:textColor="@color/reader_like_text"
             android:visibility="gone"
             tools:text="@string/reader_likes_one_short"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </LinearLayout>
 
     <ProgressBar
@@ -108,5 +106,5 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:visibility="gone" />
-    
+
 </RelativeLayout>
