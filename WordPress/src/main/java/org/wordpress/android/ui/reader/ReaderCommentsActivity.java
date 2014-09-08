@@ -143,7 +143,6 @@ public class ReaderCommentsActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty) {
-                            mListView.setEmptyView(findViewById(R.id.text_empty));
                             updateComments();
                         }
                     }
@@ -223,6 +222,8 @@ public class ReaderCommentsActivity extends Activity {
                     hideProgress();
                     if (result == ReaderActions.UpdateResult.CHANGED) {
                         refreshComments();
+                    } else {
+                        mListView.setEmptyView(findViewById(R.id.text_empty));
                     }
                 }
             }
