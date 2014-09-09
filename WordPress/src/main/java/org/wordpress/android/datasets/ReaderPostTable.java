@@ -10,6 +10,7 @@ import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -544,6 +545,7 @@ public class ReaderPostTable {
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {
+            CrashlyticsUtils.logException(e, CrashlyticsUtils.ExceptionType.SPECIFIC);
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;
