@@ -342,6 +342,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
         } else {
             holder.txtTag.setVisibility(View.GONE);
+            holder.txtTag.setOnClickListener(null);
         }
 
         // likes, comments & reblogging - supported by wp posts only
@@ -363,20 +364,20 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
         } else {
             holder.likeCount.setVisibility(View.GONE);
+            holder.likeCount.setOnClickListener(null);
         }
 
         if (showComments) {
             holder.commentCount.setVisibility(View.VISIBLE);
-            if (post.isCommentsOpen) {
-                holder.commentCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderComments(v.getContext(), post);
-                    }
-                });
-            }
+            holder.commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post);
+                }
+            });
         } else {
             holder.commentCount.setVisibility(View.GONE);
+            holder.commentCount.setOnClickListener(null);
         }
 
         if (post.canReblog()) {
@@ -396,6 +397,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         } else {
             // use INVISIBLE rather than GONE to ensure container maintains the same height
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
+            holder.imgBtnReblog.setOnClickListener(null);
         }
 
         // dropdown arrow which displays "block this blog" menu only shows for public
