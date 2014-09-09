@@ -85,6 +85,14 @@ public class ReaderCommentsActivity extends Activity {
         mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
         mLayoutCommentBox.setVisibility(View.VISIBLE);
 
+        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
+        imgPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitComment(mReplyToCommentId);
+            }
+        });
+
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REPLY_TO_COMMENT_ID)) {
             showAddCommentBox(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
         }
@@ -275,15 +283,6 @@ public class ReaderCommentsActivity extends Activity {
             }
         });
 
-        // submit comment when image tapped
-        final ImageView imgPostComment = (ImageView) findViewById(R.id.image_post_comment);
-        imgPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitComment(replyToCommentId);
-            }
-        });
-
         EditTextUtils.showSoftInput(editComment);
 
         // if user is replying to another comment, highlight the comment being replied to and scroll
@@ -299,7 +298,6 @@ public class ReaderCommentsActivity extends Activity {
             }, 300);
         }
 
-        // mReplyToCommentId must be saved here so it can be stored by onSaveInstanceState()
         mReplyToCommentId = replyToCommentId;
     }
 
