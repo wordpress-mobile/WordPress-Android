@@ -181,7 +181,7 @@ public class ReaderPostTable {
             if (!c.moveToFirst()) {
                 return null;
             }
-            return getPostFromCursor(c, null);
+            return getPostFromCursor(c);
         } finally {
             SqlUtils.closeCursor(c);
         }
@@ -470,11 +470,8 @@ public class ReaderPostTable {
         try {
             ReaderPostList posts = new ReaderPostList();
             if (cursor != null && cursor.moveToFirst()) {
-                // create column indexes object that can be used for every post in this cursor so
-                // getPostFromCursor() doesn't need to call "getColumnIndex()" for every row
-                final PostColumnIndexes cols = new PostColumnIndexes(cursor);
                 do {
-                    posts.add(getPostFromCursor(cursor, cols));
+                    posts.add(getPostFromCursor(cursor));
                 } while (cursor.moveToNext());
             }
             return posts;
@@ -497,9 +494,8 @@ public class ReaderPostTable {
                 return posts;
             }
 
-            final PostColumnIndexes cols = new PostColumnIndexes(cursor);
             do {
-                posts.add(getPostFromCursor(cursor, cols));
+                posts.add(getPostFromCursor(cursor));
             } while (cursor.moveToNext());
 
             return posts;
@@ -520,142 +516,50 @@ public class ReaderPostTable {
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
 
-    /*
-     * stores column indexes for a specific cursor - used when loading multiple posts from
-     * a cursor to avoid having to call getColumnIndex() for every row
-     */
-    private static class PostColumnIndexes {
-        private final int idx_post_id;
-        private final int idx_blog_id;
-        private final int idx_pseudo_id;
-
-        private final int idx_author_name;
-        private final int idx_author_id;
-        private final int idx_blog_name;
-        private final int idx_blog_url;
-        private final int idx_excerpt;
-        private final int idx_featured_image;
-        private final int idx_featured_video;
-
-        private final int idx_title;
-        private final int idx_text;
-        private final int idx_url;
-        private final int idx_post_avatar;
-
-        private final int idx_timestamp;
-        private final int idx_published;
-
-        private final int idx_num_replies;
-        private final int idx_num_likes;
-
-        private final int idx_is_liked;
-        private final int idx_is_followed;
-        private final int idx_is_comments_open;
-        private final int idx_is_reblogged;
-        private final int idx_is_external;
-        private final int idx_is_private;
-        private final int idx_is_videopress;
-
-        private final int idx_tag_list;
-        private final int idx_primary_tag;
-        private final int idx_secondary_tag;
-
-        private final int idx_is_likes_enabled;
-        private final int idx_is_sharing_enabled;
-
-        private PostColumnIndexes(Cursor c) {
-            if (c == null)
-                throw new IllegalArgumentException("PostColumnIndexes > null cursor");
-
-            idx_post_id = c.getColumnIndex("post_id");
-            idx_blog_id = c.getColumnIndex("blog_id");
-            idx_pseudo_id = c.getColumnIndex("pseudo_id");
-
-            idx_author_name = c.getColumnIndex("author_name");
-            idx_author_id = c.getColumnIndex("author_id");
-            idx_blog_name = c.getColumnIndex("blog_name");
-            idx_blog_url = c.getColumnIndex("blog_url");
-            idx_excerpt = c.getColumnIndex("excerpt");
-            idx_featured_image = c.getColumnIndex("featured_image");
-            idx_featured_video = c.getColumnIndex("featured_video");
-
-            idx_title = c.getColumnIndex("title");
-            idx_text = c.getColumnIndex("text");
-            idx_url = c.getColumnIndex("url");
-            idx_post_avatar = c.getColumnIndex("post_avatar");
-
-            idx_timestamp = c.getColumnIndex("timestamp");
-            idx_published = c.getColumnIndex("published");
-
-            idx_num_replies = c.getColumnIndex("num_replies");
-            idx_num_likes = c.getColumnIndex("num_likes");
-
-            idx_is_liked = c.getColumnIndex("is_liked");
-            idx_is_followed = c.getColumnIndex("is_followed");
-            idx_is_comments_open = c.getColumnIndex("is_comments_open");
-            idx_is_reblogged = c.getColumnIndex("is_reblogged");
-            idx_is_external = c.getColumnIndex("is_external");
-            idx_is_private = c.getColumnIndex("is_private");
-            idx_is_videopress = c.getColumnIndex("is_videopress");
-
-            idx_tag_list = c.getColumnIndex("tag_list");
-            idx_primary_tag = c.getColumnIndex("primary_tag");
-            idx_secondary_tag = c.getColumnIndex("secondary_tag");
-
-            idx_is_likes_enabled = c.getColumnIndex("is_likes_enabled");
-            idx_is_sharing_enabled = c.getColumnIndex("is_sharing_enabled");
-        }
-    }
-
-    private static ReaderPost getPostFromCursor(Cursor c, PostColumnIndexes cols) {
+    private static ReaderPost getPostFromCursor(Cursor c) {
         if (c == null) {
             throw new IllegalArgumentException("getPostFromCursor > null cursor");
         }
 
         ReaderPost post = new ReaderPost();
 
-        // if column index object wasn't passed, create it now
-        if (cols == null) {
-            cols = new PostColumnIndexes(c);
-        }
+        post.postId = c.getLong(c.getColumnIndex("post_id"));
+        post.blogId = c.getLong(c.getColumnIndex("blog_id"));
+        post.authorId = c.getLong(c.getColumnIndex("author_id"));
+        post.setPseudoId(c.getString(c.getColumnIndex("pseudo_id")));
 
-        post.postId = c.getLong(cols.idx_post_id);
-        post.blogId = c.getLong(cols.idx_blog_id);
-        post.authorId = c.getLong(cols.idx_author_id);
-        post.setPseudoId(c.getString(cols.idx_pseudo_id));
+        post.setAuthorName(c.getString(c.getColumnIndex("author_name")));
+        post.setBlogName(c.getString(c.getColumnIndex("blog_name")));
+        post.setBlogUrl(c.getString(c.getColumnIndex("blog_url")));
+        post.setExcerpt(c.getString(c.getColumnIndex("excerpt")));
+        post.setFeaturedImage(c.getString(c.getColumnIndex("featured_image")));
+        post.setFeaturedVideo(c.getString(c.getColumnIndex("featured_video")));
 
-        post.setAuthorName(c.getString(cols.idx_author_name));
-        post.setBlogName(c.getString(cols.idx_blog_name));
-        post.setBlogUrl(c.getString(cols.idx_blog_url));
-        post.setExcerpt(c.getString(cols.idx_excerpt));
-        post.setFeaturedImage(c.getString(cols.idx_featured_image));
-        post.setFeaturedVideo(c.getString(cols.idx_featured_video));
+        post.setTitle(c.getString(c.getColumnIndex("title")));
+        post.setText(c.getString(c.getColumnIndex("text")));
+        post.setUrl(c.getString(c.getColumnIndex("url")));
+        post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
-        post.setTitle(c.getString(cols.idx_title));
-        post.setText(c.getString(cols.idx_text));
-        post.setUrl(c.getString(cols.idx_url));
-        post.setPostAvatar(c.getString(cols.idx_post_avatar));
+        post.timestamp = c.getLong(c.getColumnIndex("timestamp"));
+        post.setPublished(c.getString(c.getColumnIndex("published")));
 
-        post.timestamp = c.getLong(cols.idx_timestamp);
-        post.setPublished(c.getString(cols.idx_published));
+        post.numReplies = c.getInt(c.getColumnIndex("num_replies"));
+        post.numLikes = c.getInt(c.getColumnIndex("num_likes"));
 
-        post.numReplies = c.getInt(cols.idx_num_replies);
-        post.numLikes = c.getInt(cols.idx_num_likes);
+        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
+        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt( c.getColumnIndex("is_followed")));
+        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
+        post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_reblogged")));
+        post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
+        post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
+        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
 
-        post.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(cols.idx_is_liked));
-        post.isFollowedByCurrentUser = SqlUtils.sqlToBool(c.getInt(cols.idx_is_followed));
-        post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(cols.idx_is_comments_open));
-        post.isRebloggedByCurrentUser = SqlUtils.sqlToBool(c.getInt(cols.idx_is_reblogged));
-        post.isExternal = SqlUtils.sqlToBool(c.getInt(cols.idx_is_external));
-        post.isPrivate = SqlUtils.sqlToBool(c.getInt(cols.idx_is_private));
-        post.isVideoPress = SqlUtils.sqlToBool(c.getInt(cols.idx_is_videopress));
+        post.setTags(c.getString(c.getColumnIndex("tag_list")));
+        post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
+        post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));
 
-        post.setTags(c.getString(cols.idx_tag_list));
-        post.setPrimaryTag(c.getString(cols.idx_primary_tag));
-        post.setSecondaryTag(c.getString(cols.idx_secondary_tag));
-
-        post.isLikesEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_likes_enabled));
-        post.isSharingEnabled = SqlUtils.sqlToBool(c.getInt(cols.idx_is_sharing_enabled));
+        post.isLikesEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_likes_enabled")));
+        post.isSharingEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_sharing_enabled")));
 
         return post;
     }
