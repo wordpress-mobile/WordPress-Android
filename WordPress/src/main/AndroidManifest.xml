@@ -178,7 +178,7 @@
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:theme="@style/ReaderTheme"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.reader.ReaderCommentsActivity"
+        <activity android:name=".ui.reader.ReaderCommentListActivity"
             android:theme="@style/ReaderTheme"
             android:label="@string/reader_title_comments"
             android:windowSoftInputMode="adjustResize|stateHidden" />

@@ -33,7 +33,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.annotation.Nonnull;
 
-public class ReaderCommentsActivity extends Activity {
+public class ReaderCommentListActivity extends Activity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
 
@@ -51,7 +51,7 @@ public class ReaderCommentsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.reader_activity_comments);
+        setContentView(R.layout.reader_activity_comment_list);
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -140,7 +140,8 @@ public class ReaderCommentsActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty) {
-                            updateComments();
+                            boolean showProgress = isCommentAdapterEmpty();
+                            updateComments(showProgress);
                         }
                     }
                 }
@@ -161,7 +162,7 @@ public class ReaderCommentsActivity extends Activity {
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader comments > requesting newer comments");
-                        updateComments();
+                        updateComments(true);
                     }
                 }
             };
@@ -198,7 +199,7 @@ public class ReaderCommentsActivity extends Activity {
     /*
      * request comments for this post
      */
-    private void updateComments() {
+    private void updateComments(boolean showProgress) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
@@ -207,7 +208,7 @@ public class ReaderCommentsActivity extends Activity {
         AppLog.d(T.READER, "reader comments > updateComments");
         mIsUpdatingComments = true;
 
-        if (isCommentAdapterEmpty()) {
+        if (showProgress) {
             showProgress();
         }
 
@@ -354,7 +355,7 @@ public class ReaderCommentsActivity extends Activity {
                     showAddCommentBox(replyToCommentId);
                     getCommentAdapter().removeComment(fakeCommentId);
                     ToastUtils.showToast(
-                            ReaderCommentsActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
+                            ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
                 }
             }
         };

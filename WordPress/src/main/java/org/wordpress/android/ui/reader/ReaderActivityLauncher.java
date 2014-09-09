@@ -112,7 +112,7 @@ public class ReaderActivityLauncher {
         if (post == null) {
             return;
         }
-        Intent intent = new Intent(context, ReaderCommentsActivity.class);
+        Intent intent = new Intent(context, ReaderCommentListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
 
