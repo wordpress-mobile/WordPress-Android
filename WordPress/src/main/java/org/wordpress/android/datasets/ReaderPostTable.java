@@ -50,6 +50,37 @@ public class ReaderPostTable {
           + "is_likes_enabled,"     // 29
           + "is_sharing_enabled";   // 30
 
+    // used when querying multiple rows and skipping tbl_posts.text
+    private static final String COLUMN_NAMES_NO_TEXT =
+            "tbl_posts.post_id,"              // 1
+          + "tbl_posts.blog_id,"              // 2
+          + "tbl_posts.author_id,"            // 3
+          + "tbl_posts.pseudo_id,"            // 4
+          + "tbl_posts.author_name,"          // 5
+          + "tbl_posts.blog_name,"            // 6
+          + "tbl_posts.blog_url,"             // 7
+          + "tbl_posts.excerpt,"              // 8
+          + "tbl_posts.featured_image,"       // 9
+          + "tbl_posts.featured_video,"       // 10
+          + "tbl_posts.title,"                // 11
+          + "tbl_posts.url,"                  // 12
+          + "tbl_posts.post_avatar,"          // 13
+          + "tbl_posts.timestamp,"            // 14
+          + "tbl_posts.published,"            // 15
+          + "tbl_posts.num_replies,"          // 16
+          + "tbl_posts.num_likes,"            // 17
+          + "tbl_posts.is_liked,"             // 18
+          + "tbl_posts.is_followed,"          // 19
+          + "tbl_posts.is_comments_open,"     // 20
+          + "tbl_posts.is_reblogged,"         // 21
+          + "tbl_posts.is_external,"          // 22
+          + "tbl_posts.is_private,"           // 23
+          + "tbl_posts.is_videopress,"        // 24
+          + "tbl_posts.primary_tag,"          // 25
+          + "tbl_posts.secondary_tag,"        // 26
+          + "tbl_posts.is_likes_enabled,"     // 27
+          + "tbl_posts.is_sharing_enabled";   // 28
+
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -444,7 +475,7 @@ public class ReaderPostTable {
             return new ReaderPostList();
         }
 
-        String columns = (excludeTextColumn ? COLS_FOR_MULTI_SELECT : "*");
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
@@ -470,53 +501,14 @@ public class ReaderPostTable {
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
-            ReaderPostList posts = new ReaderPostList();
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    posts.add(getPostFromCursor(cursor));
-                } while (cursor.moveToNext());
-            }
-            return posts;
+            return getPostListFromCursor(cursor);
         } finally {
             SqlUtils.closeCursor(cursor);
         }
     }
 
-    // when querying multiple rows, every column except "text" is included in the result - this
-    // is to avoid the overhead of the large text column which is ignored by routines that
-    // require multiple rows
-    private static final String COLS_FOR_MULTI_SELECT =
-              "tbl_posts.post_id,"              // 1
-            + "tbl_posts.blog_id,"              // 2
-            + "tbl_posts.author_id,"            // 3
-            + "tbl_posts.pseudo_id,"            // 4
-            + "tbl_posts.author_name,"          // 5
-            + "tbl_posts.blog_name,"            // 6
-            + "tbl_posts.blog_url,"             // 7
-            + "tbl_posts.excerpt,"              // 8
-            + "tbl_posts.featured_image,"       // 9
-            + "tbl_posts.featured_video,"       // 10
-            + "tbl_posts.title,"                // 11
-            + "tbl_posts.url,"                  // 12
-            + "tbl_posts.post_avatar,"          // 13
-            + "tbl_posts.timestamp,"            // 14
-            + "tbl_posts.published,"            // 15
-            + "tbl_posts.num_replies,"          // 16
-            + "tbl_posts.num_likes,"            // 17
-            + "tbl_posts.is_liked,"             // 18
-            + "tbl_posts.is_followed,"          // 19
-            + "tbl_posts.is_comments_open,"     // 20
-            + "tbl_posts.is_reblogged,"         // 21
-            + "tbl_posts.is_external,"          // 22
-            + "tbl_posts.is_private,"           // 23
-            + "tbl_posts.is_videopress,"        // 24
-            + "tbl_posts.primary_tag,"          // 25
-            + "tbl_posts.secondary_tag,"        // 26
-            + "tbl_posts.is_likes_enabled,"     // 27
-            + "tbl_posts.is_sharing_enabled";   // 28
-
     public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
-        String columns = (excludeTextColumn ? COLS_FOR_MULTI_SELECT : "*");
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
 
         if (maxPosts > 0) {
@@ -525,16 +517,7 @@ public class ReaderPostTable {
 
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
         try {
-            ReaderPostList posts = new ReaderPostList();
-            if (cursor == null || !cursor.moveToFirst()) {
-                return posts;
-            }
-
-            do {
-                posts.add(getPostFromCursor(cursor));
-            } while (cursor.moveToNext());
-
-            return posts;
+            return getPostListFromCursor(cursor);
         } finally {
             SqlUtils.closeCursor(cursor);
         }
@@ -550,6 +533,16 @@ public class ReaderPostTable {
                   + " WHERE blog_id=? AND post_id=?";
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
         ReaderDatabase.getWritableDb().execSQL(sql, args);
+    }
+
+    private static ReaderPostList getPostListFromCursor(Cursor cursor) {
+        ReaderPostList posts = new ReaderPostList();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                posts.add(getPostFromCursor(cursor));
+            } while (cursor.moveToNext());
+        }
+        return posts;
     }
 
     private static ReaderPost getPostFromCursor(Cursor c) {
