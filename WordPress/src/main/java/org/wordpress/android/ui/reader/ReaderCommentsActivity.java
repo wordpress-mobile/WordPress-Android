@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -53,8 +51,6 @@ public class ReaderCommentsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_comments);
 
         ActionBar actionBar = getActionBar();
@@ -110,10 +106,7 @@ public class ReaderCommentsActivity extends Activity {
         final TextView txtTitle = (TextView) postHeader.findViewById(R.id.text_post_title);
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
 
-        String color = HtmlUtils.colorResToHtmlColor(this, R.color.grey_medium);
-        String title = "<font color=" + color + ">" + getString(R.string.reader_label_comments_on) + "</font>"
-                     + " " + mPost.getTitle();
-        txtTitle.setText(Html.fromHtml(title));
+        txtTitle.setText(mPost.getTitle());
 
         String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
