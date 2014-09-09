@@ -217,6 +217,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     private void loadPosts() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
+            return;
         }
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -393,6 +394,8 @@ public class ReaderPostAdapter extends BaseAdapter {
                         }
                     }
                 });
+            } else {
+                holder.imgBtnReblog.setOnClickListener(null);
             }
         } else {
             // use INVISIBLE rather than GONE to ensure container maintains the same height
@@ -414,6 +417,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
         } else {
             holder.imgDropDown.setVisibility(View.GONE);
+            holder.imgDropDown.setOnClickListener(null);
         }
 
         // if we're nearing the end of the posts, fire request to load more
