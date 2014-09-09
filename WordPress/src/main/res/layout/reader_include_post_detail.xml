@@ -93,7 +93,7 @@
 
     </LinearLayout>
 
-    <org.wordpress.android.ui.reader.ReaderWebView
+    <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
             tools:text="text_like_count" />
 
         <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <org.wordpress.android.ui.reader.ReaderLikingUsersView
+        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
             android:id="@+id/layout_liking_users_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/avatar_sz_small"
