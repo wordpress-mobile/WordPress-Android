@@ -54,6 +54,7 @@ class CommentAdapter extends BaseAdapter {
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
+    private final int mSelectionColor;
 
     private boolean mEnableSelection;
 
@@ -69,6 +70,7 @@ class CommentAdapter extends BaseAdapter {
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
+        mSelectionColor = context.getResources().getColor(R.color.blue_extra_light);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
@@ -249,13 +251,21 @@ class CommentAdapter extends BaseAdapter {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
+        boolean useSelectionBackground = false;
         if (mEnableSelection && isItemSelected(position)) {
+            useSelectionBackground = true;
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+        }
+
+        if (useSelectionBackground) {
+            convertView.setBackgroundColor(mSelectionColor);
+        } else {
+            convertView.setBackgroundDrawable(null);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
