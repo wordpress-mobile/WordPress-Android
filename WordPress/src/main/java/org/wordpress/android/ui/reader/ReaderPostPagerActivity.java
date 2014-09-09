@@ -27,6 +27,7 @@ import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment.PostDetailOption;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -41,6 +42,8 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
@@ -63,8 +66,6 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
-
-    public static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class ReaderPostPagerActivity extends Activity
             title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
             blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
+            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -101,7 +102,7 @@ public class ReaderPostPagerActivity extends Activity
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
+            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -173,7 +174,7 @@ public class ReaderPostPagerActivity extends Activity
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
-        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -511,11 +512,16 @@ public class ReaderPostPagerActivity extends Activity
                         (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
                 return ReaderPostPagerEndFragment.newInstance(fragmentType);
             } else {
-                boolean disableBlockBlog = mIsSinglePostView;
+                EnumSet<PostDetailOption> options;
+                if (mIsSinglePostView) {
+                    options = EnumSet.of(PostDetailOption.IS_SINGLE_POST);
+                } else {
+                    options = EnumSet.noneOf(PostDetailOption.class);
+                }
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
-                        disableBlockBlog,
+                        options,
                         getPostListType());
             }
         }
