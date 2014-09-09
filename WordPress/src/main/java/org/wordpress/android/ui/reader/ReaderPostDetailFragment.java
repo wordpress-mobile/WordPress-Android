@@ -27,17 +27,17 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
-import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
-import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
-import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
+import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
+import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderCustomViewListener;
+import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewPageFinishedListener;
+import org.wordpress.android.ui.reader.views.ReaderWebView.ReaderWebViewUrlClickListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -153,7 +153,8 @@ public class ReaderPostDetailFragment extends Fragment
         mReaderWebView.setUrlClickListener(this);
         mReaderWebView.setPageFinishedListener(this);
 
-        // hide icons until the post is loaded
+        // hide scrollView and icons until the post is loaded
+        mScrollView.setVisibility(View.INVISIBLE);
         mLayoutIcons.setVisibility(View.INVISIBLE);
 
         return view;
@@ -682,6 +683,9 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 return;
             }
+
+            // scrollView was hidden in onCreateView, show it now that we have the post
+            mScrollView.setVisibility(View.VISIBLE);
 
             // render the post in the webView
             mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
