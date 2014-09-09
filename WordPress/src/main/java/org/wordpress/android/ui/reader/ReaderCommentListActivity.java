@@ -48,6 +48,9 @@ public class ReaderCommentListActivity extends Activity {
     private boolean mIsUpdatingComments;
     private long mReplyToCommentId;
 
+    private long mTopMostCommentId;
+    private int mTopMostCommentTop;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +145,10 @@ public class ReaderCommentListActivity extends Activity {
                         if (isEmpty) {
                             boolean showProgress = isCommentAdapterEmpty();
                             updateComments(showProgress);
+                        } else {
+                            if (mTopMostCommentId != 0) {
+                                restoreTopmostComment();
+                            }
                         }
                     }
                 }
@@ -219,6 +226,7 @@ public class ReaderCommentListActivity extends Activity {
                 if (!isFinishing()) {
                     hideProgress();
                     if (result == ReaderActions.UpdateResult.CHANGED) {
+                        retainTopmostComment();
                         refreshComments();
                     } else {
                         mListView.setEmptyView(findViewById(R.id.text_empty));
@@ -374,6 +382,36 @@ public class ReaderCommentListActivity extends Activity {
             getCommentAdapter().addComment(newComment);
             // make sure it's scrolled into view
             scrollToCommentId(fakeCommentId);
+        }
+    }
+
+    /*
+     * called before new comments are shown so the current topmost comment is remembered
+     */
+    private void retainTopmostComment() {
+        int position = mListView.getFirstVisiblePosition();
+        int numHeaders = mListView.getHeaderViewsCount();
+        if (position > numHeaders) {
+            mTopMostCommentId = getCommentAdapter().getItemId(position - numHeaders);
+            View v = mListView.getChildAt(0);
+            mTopMostCommentTop = (v != null ? v.getTop() : 0);
+        } else {
+            mTopMostCommentId = 0;
+            mTopMostCommentTop = 0;
+        }
+    }
+
+    /*
+     * called after new comments are shown so the previous topmost comment is scrolled to
+     */
+    private void restoreTopmostComment() {
+        if (mTopMostCommentId != 0) {
+            int position = getCommentAdapter().indexOfCommentId(mTopMostCommentId);
+            if (position > -1) {
+                mListView.setSelectionFromTop(position + mListView.getHeaderViewsCount(), mTopMostCommentTop);
+            }
+            mTopMostCommentId = 0;
+            mTopMostCommentTop = 0;
         }
     }
 
