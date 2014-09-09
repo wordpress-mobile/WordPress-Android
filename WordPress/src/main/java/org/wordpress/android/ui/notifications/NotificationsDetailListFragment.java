@@ -171,6 +171,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             // Add the note header if one was provided
             if (mNote.getHeader() != null) {
                 HeaderUserNoteBlock headerNoteBlock = new HeaderUserNoteBlock(
+                        getActivity(),
                         mNote.getHeader(),
                         mOnNoteBlockTextClickListener,
                         mOnGravatarClickedListener
@@ -206,6 +207,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 noteObject.put("timestamp", mNote.getTimestamp());
 
                                 noteBlock = new CommentUserNoteBlock(
+                                        getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener
@@ -218,6 +220,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 commentUserNoteBlock.configureResources(getActivity());
                             } else {
                                 noteBlock = new UserNoteBlock(
+                                        getActivity(),
                                         noteObject,
                                         mOnNoteBlockTextClickListener,
                                         mOnGravatarClickedListener

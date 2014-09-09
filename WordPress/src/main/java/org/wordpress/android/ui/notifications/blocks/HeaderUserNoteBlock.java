@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.PhotonUtils;
 
 // Note header, displayed at top of detail view
 public class HeaderUserNoteBlock extends NoteBlock {
@@ -21,12 +23,19 @@ public class HeaderUserNoteBlock extends NoteBlock {
 
     private UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
     private Boolean mIsComment;
+    private int mAvatarSize;
 
-    public HeaderUserNoteBlock(JSONArray headerArray, OnNoteBlockTextClickListener onNoteBlockTextClickListener, UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
+    public HeaderUserNoteBlock(Context context, JSONArray headerArray,
+                               OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                               UserNoteBlock.OnGravatarClickedListener onGravatarClickedListener) {
         super(new JSONObject(), onNoteBlockTextClickListener);
 
         mHeaderArray = headerArray;
         mGravatarClickedListener = onGravatarClickedListener;
+
+        if (context != null) {
+            mAvatarSize = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        }
     }
 
     @Override
@@ -76,7 +85,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
     }
 
     private String getAvatarUrl() {
-        return JSONUtil.queryJSON(mHeaderArray, "[0].media[0].url", "");
+        return PhotonUtils.fixAvatar(JSONUtil.queryJSON(mHeaderArray, "[0].media[0].url", ""), mAvatarSize);
     }
 
     private String getUserUrl() {

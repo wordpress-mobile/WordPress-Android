@@ -31,7 +31,7 @@ import java.util.List;
 
 class NotesAdapter extends CursorAdapter {
 
-    final private int mAvatarSz;
+    private final int mAvatarSz;
     private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
     private int mReadBackgroundResId;

@@ -17,6 +17,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
@@ -35,10 +36,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         public void onCommentStatusChanged(CommentStatus newStatus);
     }
 
-    public CommentUserNoteBlock(JSONObject noteObject,
+    public CommentUserNoteBlock(Context context, JSONObject noteObject,
                                 OnNoteBlockTextClickListener onNoteBlockTextClickListener,
                                 OnGravatarClickedListener onGravatarClickedListener) {
-        super(noteObject, onNoteBlockTextClickListener, onGravatarClickedListener);
+        super(context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener);
+
+        if (context != null) {
+            setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
+        }
     }
 
     @Override
@@ -59,7 +64,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         noteBlockHolder.agoTextView.setText(DateTimeUtils.timestampToTimeSpan(getTimestamp()));
 
         if (hasImageMediaItem()) {
-            noteBlockHolder.avatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
+            String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WordPress.imageLoader);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {

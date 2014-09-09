@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
 /**
@@ -26,18 +28,32 @@ import org.wordpress.android.util.UrlUtils;
 public class UserNoteBlock extends NoteBlock {
     private OnGravatarClickedListener mGravatarClickedListener;
 
-    private int mWhiteBgColor = Color.parseColor("#FFFFFF");
+    private final int mWhiteBgColor = Color.parseColor("#FFFFFF");
+
+    private int mAvatarSz;
 
     public interface OnGravatarClickedListener {
         public void onGravatarClicked(long userId, long siteId);
     }
 
     public UserNoteBlock(
+            Context context,
             JSONObject noteObject,
             OnNoteBlockTextClickListener onNoteBlockTextClickListener,
             OnGravatarClickedListener onGravatarClickedListener) {
         super(noteObject, onNoteBlockTextClickListener);
+        if (context != null) {
+            setAvatarSize(context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
+        }
         mGravatarClickedListener = onGravatarClickedListener;
+    }
+
+    protected void setAvatarSize(int size) {
+        mAvatarSz = size;
+    }
+
+    protected int getAvatarSize() {
+        return mAvatarSz;
     }
 
     @Override
@@ -85,7 +101,8 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         if (hasImageMediaItem()) {
-            noteBlockHolder.avatarImageView.setImageUrl(getNoteMediaItem().optString("url", ""), WordPress.imageLoader);
+            String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
+            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WordPress.imageLoader);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
                 noteBlockHolder.rootView.setBackgroundResource(R.drawable.notifications_header_selector);
