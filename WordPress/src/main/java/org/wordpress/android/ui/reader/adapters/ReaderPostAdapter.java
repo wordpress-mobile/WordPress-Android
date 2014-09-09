@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,7 +25,6 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostPopupListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
@@ -36,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -372,13 +371,7 @@ public class ReaderPostAdapter extends BaseAdapter {
                 holder.commentCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (parent instanceof ListView) {
-                            ListView listView = (ListView) parent;
-                            // the base listView onItemClick includes the header count in the position,
-                            // so do the same here
-                            int index = position + listView.getHeaderViewsCount();
-                            listView.performItemClick(holder.commentCount, index, getItemId(position));
-                        }
+                        ReaderActivityLauncher.showReaderComments(v.getContext(), post);
                     }
                 });
             }

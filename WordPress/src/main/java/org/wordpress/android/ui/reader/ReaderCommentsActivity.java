@@ -27,7 +27,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -109,20 +108,12 @@ public class ReaderCommentsActivity extends Activity {
 
         final View postHeader = findViewById(R.id.layout_post_header);
         final TextView txtTitle = (TextView) postHeader.findViewById(R.id.text_post_title);
-        final TextView txtDateAndAuthor = (TextView) postHeader.findViewById(R.id.text_date_and_author);
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
 
         String color = HtmlUtils.colorResToHtmlColor(this, R.color.grey_medium);
         String title = "<font color=" + color + ">" + getString(R.string.reader_label_comments_on) + "</font>"
                      + " " + mPost.getTitle();
         txtTitle.setText(Html.fromHtml(title));
-
-        if (mPost.hasAuthorName()) {
-            txtDateAndAuthor.setText(
-                    DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()) + " / " + mPost.getAuthorName());
-        } else {
-            txtDateAndAuthor.setText(DateTimeUtils.javaDateToTimeSpan(mPost.getDatePublished()));
-        }
 
         String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);

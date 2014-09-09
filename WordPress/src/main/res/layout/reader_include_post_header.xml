@@ -34,16 +34,6 @@
             android:textColor="@color/grey_extra_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="text_post_title" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_date_and_author"
-            style="@style/ReaderTextView.Date.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_post_title"
-            android:layout_marginTop="@dimen/margin_small"
-            android:layout_toRightOf="@+id/image_post_avatar"
-            tools:text="text_date_and_author" />
     </RelativeLayout>
 
     <View
