@@ -537,10 +537,14 @@ public class ReaderPostTable {
 
     private static ReaderPostList getPostListFromCursor(Cursor cursor) {
         ReaderPostList posts = new ReaderPostList();
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                posts.add(getPostFromCursor(cursor));
-            } while (cursor.moveToNext());
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    posts.add(getPostFromCursor(cursor));
+                } while (cursor.moveToNext());
+            }
+        } catch (IllegalStateException e) {
+            AppLog.e(AppLog.T.READER, e);
         }
         return posts;
     }
