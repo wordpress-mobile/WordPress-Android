@@ -29,7 +29,6 @@ public class ReaderPost {
     private String blogUrl;
     private String postAvatar;
 
-    private String tags;          // comma-separated list of tags
     private String primaryTag;    // most popular tag on this post based on usage in blog
     private String secondaryTag;  // second most popular tag on this post based on usage in blog
 
@@ -206,9 +205,6 @@ public class ReaderPost {
         String nextMostPopularTag = null;
         int popularCount = 0;
 
-        StringBuilder sbAllTags = new StringBuilder();
-        boolean isFirst = true;
-
         while (it.hasNext()) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(it.next());
             String tagName = JSONUtil.getString(jsonThisTag, "name");
@@ -222,14 +218,6 @@ public class ReaderPost {
                 mostPopularTag = tagName;
                 popularCount = postCount;
             }
-
-            // add to list of all tags
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sbAllTags.append(",");
-            }
-            sbAllTags.append(tagName);
         }
 
         // don't set primary tag if one is already set (may have been set from the editorial
@@ -238,8 +226,6 @@ public class ReaderPost {
             post.setPrimaryTag(mostPopularTag);
         }
         post.setSecondaryTag(nextMostPopularTag);
-
-        post.setTags(sbAllTags.toString());
     }
 
     /*
@@ -483,16 +469,6 @@ public class ReaderPost {
     }
 
     // --------------------------------------------------------------------------------------------
-
-    /*
-     * comma-separated tags
-     */
-    public String getTags() {
-        return StringUtils.notNullStr(tags);
-    }
-    public void setTags(String tags) {
-        this.tags = StringUtils.notNullStr(tags);
-    }
 
     public String getPrimaryTag() {
         return StringUtils.notNullStr(primaryTag);

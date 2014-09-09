@@ -390,7 +390,7 @@ public class ReaderBlogActions {
      */
     public static ReaderPostList blockBlogFromReader(final long blogId,
                                                      final ReaderActions.ActionListener actionListener) {
-        final ReaderPostList deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0);
+        final ReaderPostList deletedPosts = ReaderPostTable.getPostsInBlog(blogId, 0, false);
         ReaderPostTable.deletePostsInBlog(blogId);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {

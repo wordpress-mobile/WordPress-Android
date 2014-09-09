@@ -78,7 +78,7 @@ public class ReaderPostTable {
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
-                + " tag_list            TEXT,"
+                + " tag_list            TEXT,"  // no longer used
                 + " primary_tag         TEXT,"
                 + " secondary_tag       TEXT,"
                 + " is_likes_enabled    INTEGER DEFAULT 0,"
@@ -176,7 +176,8 @@ public class ReaderPostTable {
 
     public static ReaderPost getPost(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT * FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -407,7 +408,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindString(26, post.getTags());
+                stmtPosts.bindString(26, "");   // was post.getTags(), no longer used
                 stmtPosts.bindString(27, post.getPrimaryTag());
                 stmtPosts.bindString(28, post.getSecondaryTag());
                 stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
@@ -438,12 +439,13 @@ public class ReaderPostTable {
         }
     }
 
-    public static ReaderPostList getPostsWithTag(ReaderTag tag, int maxPosts) {
+    public static ReaderPostList getPostsWithTag(ReaderTag tag, int maxPosts, boolean excludeTextColumn) {
         if (tag == null) {
             return new ReaderPostList();
         }
 
-        String sql = "SELECT tbl_posts.* FROM tbl_posts, tbl_post_tags"
+        String columns = (excludeTextColumn ? COLS_FOR_MULTI_SELECT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts, tbl_post_tags"
                    + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
                    + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
                    + " AND tbl_post_tags.tag_name=?"
@@ -480,8 +482,42 @@ public class ReaderPostTable {
         }
     }
 
-    public static ReaderPostList getPostsInBlog(long blogId, int maxPosts) {
-        String sql = "SELECT * FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+    // when querying multiple rows, every column except "text" is included in the result - this
+    // is to avoid the overhead of the large text column which is ignored by routines that
+    // require multiple rows
+    private static final String COLS_FOR_MULTI_SELECT =
+              "tbl_posts.post_id,"              // 1
+            + "tbl_posts.blog_id,"              // 2
+            + "tbl_posts.author_id,"            // 3
+            + "tbl_posts.pseudo_id,"            // 4
+            + "tbl_posts.author_name,"          // 5
+            + "tbl_posts.blog_name,"            // 6
+            + "tbl_posts.blog_url,"             // 7
+            + "tbl_posts.excerpt,"              // 8
+            + "tbl_posts.featured_image,"       // 9
+            + "tbl_posts.featured_video,"       // 10
+            + "tbl_posts.title,"                // 11
+            + "tbl_posts.url,"                  // 12
+            + "tbl_posts.post_avatar,"          // 13
+            + "tbl_posts.timestamp,"            // 14
+            + "tbl_posts.published,"            // 15
+            + "tbl_posts.num_replies,"          // 16
+            + "tbl_posts.num_likes,"            // 17
+            + "tbl_posts.is_liked,"             // 18
+            + "tbl_posts.is_followed,"          // 19
+            + "tbl_posts.is_comments_open,"     // 20
+            + "tbl_posts.is_reblogged,"         // 21
+            + "tbl_posts.is_external,"          // 22
+            + "tbl_posts.is_private,"           // 23
+            + "tbl_posts.is_videopress,"        // 24
+            + "tbl_posts.primary_tag,"          // 25
+            + "tbl_posts.secondary_tag,"        // 26
+            + "tbl_posts.is_likes_enabled,"     // 27
+            + "tbl_posts.is_sharing_enabled";   // 28
+
+    public static ReaderPostList getPostsInBlog(long blogId, int maxPosts, boolean excludeTextColumn) {
+        String columns = (excludeTextColumn ? COLS_FOR_MULTI_SELECT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
 
         if (maxPosts > 0) {
             sql += " LIMIT " + Integer.toString(maxPosts);
@@ -523,6 +559,12 @@ public class ReaderPostTable {
 
         ReaderPost post = new ReaderPost();
 
+        // text column is skipped when retrieving multiple rows
+        int idxText = c.getColumnIndex("text");
+        if (idxText > -1) {
+            post.setText(c.getString(idxText));
+        }
+
         post.postId = c.getLong(c.getColumnIndex("post_id"));
         post.blogId = c.getLong(c.getColumnIndex("blog_id"));
         post.authorId = c.getLong(c.getColumnIndex("author_id"));
@@ -536,7 +578,6 @@ public class ReaderPostTable {
         post.setFeaturedVideo(c.getString(c.getColumnIndex("featured_video")));
 
         post.setTitle(c.getString(c.getColumnIndex("title")));
-        post.setText(c.getString(c.getColumnIndex("text")));
         post.setUrl(c.getString(c.getColumnIndex("url")));
         post.setPostAvatar(c.getString(c.getColumnIndex("post_avatar")));
 
@@ -554,7 +595,6 @@ public class ReaderPostTable {
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
 
-        post.setTags(c.getString(c.getColumnIndex("tag_list")));
         post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
         post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));
 
