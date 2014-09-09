@@ -23,7 +23,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
@@ -237,8 +236,7 @@ public class ReaderPostPagerActivity extends Activity
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                         case TAG_PREVIEW:
-                            ReaderPostList postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
-                            idList = postList.getBlogIdPostIdList();
+                            idList = ReaderPostTable.getBlogIdPostIdsWithTag(getCurrentTag(), maxPosts);
                             break;
                         case BLOG_PREVIEW:
                             idList = ReaderPostTable.getBlogIdPostIdsInBlog(blogId, maxPosts);
