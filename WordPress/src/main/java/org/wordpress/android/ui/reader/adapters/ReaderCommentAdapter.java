@@ -108,10 +108,18 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        // this MUST return the comment id in order for ReaderPostDetailActivity to enable replying
+        // this MUST return the comment id in order for comment list activity to enable replying
         // to an individual comment when clicked - note that while the commentId isn't unique in our
         // database, it will be unique here since we're only showing comments on a specific post
-        return mComments.get(position).commentId;
+        if (isValidPosition(position)) {
+            return mComments.get(position).commentId;
+        } else {
+            return 0;
+        }
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position > 0 && position < mComments.size());
     }
 
     @Override

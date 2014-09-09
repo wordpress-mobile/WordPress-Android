@@ -36,6 +36,7 @@ import javax.annotation.Nonnull;
 public class ReaderCommentListActivity extends Activity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
+    private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
 
     private long mPostId;
     private long mBlogId;
@@ -65,6 +66,7 @@ public class ReaderCommentListActivity extends Activity {
         if (savedInstanceState != null) {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mTopMostCommentId = savedInstanceState.getLong(KEY_TOPMOST_COMMENT_ID);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -96,6 +98,18 @@ public class ReaderCommentListActivity extends Activity {
         }
 
         refreshComments();
+    }
+
+    @Override
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
+        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
+        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
+        outState.putLong(KEY_TOPMOST_COMMENT_ID, getTopMostCommentId());
+        if (mReplyToCommentId != 0) {
+            outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
+        }
+
+        super.onSaveInstanceState(outState);
     }
 
     private void loadPost() {
@@ -132,8 +146,8 @@ public class ReaderCommentListActivity extends Activity {
         }
     }
 
-    private boolean isCommentAdapterEmpty() {
-        return (mCommentAdapter == null || mCommentAdapter.isEmpty());
+    private boolean hasCommentAdapter() {
+        return (mCommentAdapter != null);
     }
 
     private ReaderCommentAdapter getCommentAdapter() {
@@ -143,12 +157,9 @@ public class ReaderCommentListActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty) {
-                            boolean showProgress = isCommentAdapterEmpty();
-                            updateComments(showProgress);
-                        } else {
-                            if (mTopMostCommentId != 0) {
-                                restoreTopmostComment();
-                            }
+                            updateComments(true);
+                        } else if (mTopMostCommentId != 0) {
+                            restoreTopmostComment();
                         }
                     }
                 }
@@ -180,17 +191,6 @@ public class ReaderCommentListActivity extends Activity {
 
     private ReaderPost getPost() {
         return mPost;
-    }
-
-    @Override
-    public void onSaveInstanceState(@Nonnull Bundle outState) {
-        outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
-        outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
-        if (mReplyToCommentId != 0) {
-            outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        }
-
-        super.onSaveInstanceState(outState);
     }
 
     private void showProgress() {
@@ -389,16 +389,9 @@ public class ReaderCommentListActivity extends Activity {
      * called before new comments are shown so the current topmost comment is remembered
      */
     private void retainTopmostComment() {
-        int position = mListView.getFirstVisiblePosition();
-        int numHeaders = mListView.getHeaderViewsCount();
-        if (position > numHeaders) {
-            mTopMostCommentId = getCommentAdapter().getItemId(position - numHeaders);
-            View v = mListView.getChildAt(0);
-            mTopMostCommentTop = (v != null ? v.getTop() : 0);
-        } else {
-            mTopMostCommentId = 0;
-            mTopMostCommentTop = 0;
-        }
+        mTopMostCommentId = getTopMostCommentId();
+        View view = mListView.getChildAt(0);
+        mTopMostCommentTop = (view != null ? view.getTop() : 0);
     }
 
     /*
@@ -412,6 +405,19 @@ public class ReaderCommentListActivity extends Activity {
             }
             mTopMostCommentId = 0;
             mTopMostCommentTop = 0;
+        }
+    }
+
+    /*
+     * returns the id of the first visible comment
+     */
+    private long getTopMostCommentId() {
+        int position = mListView.getFirstVisiblePosition();
+        int numHeaders = mListView.getHeaderViewsCount();
+        if (position > numHeaders && hasCommentAdapter()) {
+            return getCommentAdapter().getItemId(position - numHeaders);
+        } else {
+            return 0;
         }
     }
 
