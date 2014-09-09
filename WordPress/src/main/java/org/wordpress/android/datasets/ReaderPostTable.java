@@ -9,6 +9,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -504,6 +506,31 @@ public class ReaderPostTable {
             } while (cursor.moveToNext());
 
             return posts;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    /*
+     * similar to getPostsInBlog() but only returns the blogId/postId pairs
+     */
+    public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    idList.add(new ReaderBlogIdPostId(blogId, cursor.getLong(0)));
+                } while (cursor.moveToNext());
+            }
+
+            return idList;
         } finally {
             SqlUtils.closeCursor(cursor);
         }

@@ -233,20 +233,19 @@ public class ReaderPostPagerActivity extends Activity
                     idList = new ReaderBlogIdPostIdList();
                     idList.add(new ReaderBlogIdPostId(blogId, postId));
                 } else {
-                    final ReaderPostList postList;
                     int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                         case TAG_PREVIEW:
-                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            ReaderPostList postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            idList = postList.getBlogIdPostIdList();
                             break;
                         case BLOG_PREVIEW:
-                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                            idList = ReaderPostTable.getBlogIdPostIdsInBlog(blogId, maxPosts);
                             break;
                         default:
                             return;
                     }
-                    idList = postList.getBlogIdPostIdList();
                 }
 
                 final int currentPosition = mViewPager.getCurrentItem();
