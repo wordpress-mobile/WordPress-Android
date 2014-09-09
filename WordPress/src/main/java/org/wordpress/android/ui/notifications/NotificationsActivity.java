@@ -21,7 +21,6 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -191,9 +190,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 Note note = notesBucket.get(noteId);
                 if (note != null) {
                     openNote(note);
-                    if (mNotesListFragment != null) {
-                        mNotesListFragment.setSelectedNoteId(noteId);
-                    }
                 }
             }
         } catch (BucketObjectMissingException e) {
@@ -303,7 +299,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     }
 
     @Override
-    public void onModerateCommentForNote(final Note note, final CommentStatus oldStatus, final CommentStatus newStatus) {
+    public void onModerateCommentForNote(final Note note, final CommentStatus newStatus) {
         FragmentManager fm = getFragmentManager();
         if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();

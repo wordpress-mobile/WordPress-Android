@@ -17,7 +17,6 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
@@ -30,7 +29,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
 
-    private String mSelectedNoteId;
     private int mRestoredListPosition;
 
     Bucket<Note> mBucket;
@@ -135,13 +133,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
             return;
         }
 
-        if (note != null && mNoteClickListener != null) {
+        if (mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note, position);
         }
-    }
-
-    public void setSelectedNoteId(String selectedNoteId) {
-        mSelectedNoteId = selectedNoteId;
     }
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {

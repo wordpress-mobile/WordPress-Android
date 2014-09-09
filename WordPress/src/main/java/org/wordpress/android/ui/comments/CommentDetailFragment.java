@@ -95,6 +95,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean mIsUsersBlog = false;
 
+    private NotificationsDetailListFragment mNotificationsDetailListFragment;
+
     private OnCommentChangeListener mOnCommentChangeListener;
     private OnPostClickListener mOnPostClickListener;
     private OnCommentActionListener mOnCommentActionListener;
@@ -592,7 +594,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // Fire the appropriate listener
         if (mNote != null && mOnNoteCommentActionListener != null) {
-            mOnNoteCommentActionListener.onModerateCommentForNote(mNote, mNote.getCommentStatus(), newStatus);
+            mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mLocalBlogId, mComment, newStatus);
         }
@@ -816,9 +818,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // Now we'll add a detail fragment list
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        NotificationsDetailListFragment detailListFragment = NotificationsDetailListFragment.newInstance(note);
-        detailListFragment.setFooterView(mLayoutButtons);
-        fragmentTransaction.add(R.id.comment_content_container, detailListFragment);
+        mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note);
+        mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
+        fragmentTransaction.add(R.id.comment_content_container, mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
 
         /*
@@ -848,6 +850,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         ReaderAnim.animateLikeButton(mBtnLikeIcon, mBtnLikeComment.isActivated());
 
+        boolean commentWasUnapproved = false;
+        if (mNotificationsDetailListFragment != null && mComment != null) {
+            // Optimistically set comment to approved when liking an unapproved comment
+            // WP.com will set a comment to approved if it is liked while unapproved
+            if (mBtnLikeComment.isActivated() && mComment.getStatusEnum() == CommentStatus.UNAPPROVED) {
+                mComment.setStatus(CommentStatus.toString(CommentStatus.APPROVED));
+                mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.APPROVED);
+                setModerateButtonForStatus(CommentStatus.APPROVED);
+                commentWasUnapproved = true;
+            }
+        }
+
+        final boolean commentStatusShouldRevert = commentWasUnapproved;
         WordPress.getRestClientUtils().likeComment(String.valueOf(mNote.getSiteId()),
                 String.valueOf(mNote.getCommentId()),
                 mBtnLikeComment.isActivated(),
@@ -855,16 +870,34 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     @Override
                     public void onResponse(JSONObject response) {
                         if (response != null && !response.optBoolean("success"))  {
+                            if (!isAdded()) return;
+
                             // Failed, so switch the button state back
                             toggleLikeButton(!mBtnLikeComment.isActivated());
+
+                            if (commentStatusShouldRevert) {
+                                setCommentStatusUnapproved();
+                            }
                         }
                     }
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        if (!isAdded()) return;
+
                         toggleLikeButton(!mBtnLikeComment.isActivated());
+
+                        if (commentStatusShouldRevert) {
+                            setCommentStatusUnapproved();
+                        }
                     }
                 });
+    }
+
+    private void setCommentStatusUnapproved() {
+        mComment.setStatus(CommentStatus.toString(CommentStatus.UNAPPROVED));
+        mNotificationsDetailListFragment.refreshBlocksForCommentStatus(CommentStatus.UNAPPROVED);
+        setModerateButtonForStatus(CommentStatus.UNAPPROVED);
     }
 
     private void toggleLikeButton(boolean isLiked) {

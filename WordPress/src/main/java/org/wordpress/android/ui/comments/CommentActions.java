@@ -33,8 +33,6 @@ import java.util.Map;
 
 public class CommentActions {
 
-    private static String mModeratingNoteId;
-
     private CommentActions() {
         throw new AssertionError();
     }
@@ -61,7 +59,6 @@ public class CommentActions {
     public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
     public static interface OnCommentChangeListener {
         public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
-        public void onCommentActionCompleted(ChangeType changeType, boolean success);
     }
 
     public static interface OnCommentActionListener {
@@ -70,7 +67,7 @@ public class CommentActions {
     }
 
     public static interface OnNoteCommentActionListener {
-        public void onModerateCommentForNote(Note note, CommentStatus oldStatus, CommentStatus newStatus);
+        public void onModerateCommentForNote(Note note, CommentStatus newStatus);
         public void onReplyToNote(Note note, String replyText);
     }
 
@@ -251,7 +248,6 @@ public class CommentActions {
      */
     public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
 
-        mModeratingNoteId = note.getId();
         WordPress.getRestClientUtils().moderateComment(
                 String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),
@@ -259,7 +255,6 @@ public class CommentActions {
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        mModeratingNoteId = null;
                         if (actionListener != null) {
                             actionListener.onActionResult(true);
                         }
@@ -267,7 +262,6 @@ public class CommentActions {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mModeratingNoteId = null;
                         if (actionListener != null) {
                             actionListener.onActionResult(false);
                         }

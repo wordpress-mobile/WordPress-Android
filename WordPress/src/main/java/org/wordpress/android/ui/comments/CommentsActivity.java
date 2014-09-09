@@ -11,7 +11,6 @@ import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.cocosw.undobar.UndoBarController;
 
