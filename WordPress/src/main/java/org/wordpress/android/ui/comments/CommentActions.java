@@ -33,7 +33,6 @@ import java.util.Map;
 
 public class CommentActions {
 
-    private static long mModeratingCommentId;
     private static String mModeratingNoteId;
 
     private CommentActions() {
@@ -62,7 +61,17 @@ public class CommentActions {
     public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
     public static interface OnCommentChangeListener {
         public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
-        public void onModerationCompleted(boolean success);
+        public void onCommentActionCompleted(ChangeType changeType, boolean success);
+    }
+
+    public static interface OnCommentActionListener {
+        public void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
+        public void onReplyToComment(int accountId, Comment comment, String replyText);
+    }
+
+    public static interface OnNoteCommentActionListener {
+        public void onModerateCommentForNote(Note note, CommentStatus oldStatus, CommentStatus newStatus);
+        public void onReplyToNote(Note note, String replyText);
     }
 
 
@@ -207,7 +216,7 @@ public class CommentActions {
      * submitReplyToComment() in that it enables responding to a reply to a comment this
      * user made on someone else's blog
      */
-    static void submitReplyToCommentNote(final Note note,
+    public static void submitReplyToCommentNote(final Note note,
                                          final String replyText,
                                          final CommentActionListener actionListener) {
         if (note == null || TextUtils.isEmpty(replyText)) {
@@ -309,7 +318,6 @@ public class CommentActions {
                         Long.toString(comment.commentID),
                         postHash};
 
-                mModeratingCommentId = comment.commentID;
                 Object result;
                 try {
                     result = client.call("wp.editComment", params);
@@ -323,7 +331,6 @@ public class CommentActions {
                     AppLog.e(T.COMMENTS, "Error while editing comment", e);
                     result = null;
                 }
-                mModeratingCommentId = -1;
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
@@ -448,8 +455,6 @@ public class CommentActions {
                         blog.getPassword(),
                         comment.commentID };
 
-                mModeratingCommentId = comment.commentID;
-
                 Object result;
                 try {
                     result = client.call("wp.deleteComment", params);
@@ -463,8 +468,6 @@ public class CommentActions {
                     AppLog.e(T.COMMENTS,"Error while deleting comment", e);
                     result = null;
                 }
-
-                mModeratingCommentId = -1;
 
                 final boolean success = (result != null && Boolean.parseBoolean(result.toString()));
                 if (success)
@@ -480,14 +483,6 @@ public class CommentActions {
                 }
             }
         }.start();
-    }
-
-    static long getModeratingCommentId() {
-        return mModeratingCommentId;
-    }
-
-    public static String getModeratingNoteId() {
-        return mModeratingNoteId;
     }
 
     /**

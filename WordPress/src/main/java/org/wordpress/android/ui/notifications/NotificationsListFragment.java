@@ -1,14 +1,11 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +30,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
 
-    private boolean mShouldLoadFirstNote;
     private String mSelectedNoteId;
     private int mRestoredListPosition;
 
@@ -68,10 +64,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         ListView listView = getListView();
         listView.setDivider(null);
         listView.setDividerHeight(0);
-        listView.setBackgroundColor(getResources().getColor(R.color.white));
-        if (DisplayUtils.isLandscapeTablet(getActivity())) {
-            listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        }
 
         if (mNotesAdapter == null) {
             mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
@@ -138,6 +130,11 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         if (!isAdded()) return;
 
         Note note = mNotesAdapter.getNote(position);
+
+        if (mNotesAdapter.isModeratingNote(note.getId())) {
+            return;
+        }
+
         if (note != null && mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note, position);
         }
@@ -149,6 +146,26 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     public void setOnNoteClickListener(OnNoteClickListener listener) {
         mNoteClickListener = listener;
+    }
+
+    public void setNoteIsHidden(String noteId, boolean isHidden) {
+        if (mNotesAdapter == null) return;
+
+        if (isHidden) {
+            mNotesAdapter.addHiddenNoteId(noteId);
+        } else {
+            mNotesAdapter.removeHiddenNoteId(noteId);
+        }
+    }
+
+    public void setNoteIsModerating(String noteId, boolean isModerating) {
+        if (mNotesAdapter == null) return;
+
+        if (isModerating) {
+            mNotesAdapter.addModeratingNoteId(noteId);
+        } else {
+            mNotesAdapter.removeModeratingNoteId(noteId);
+        }
     }
 
     protected void updateLastSeenTime() {
@@ -178,33 +195,13 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 
-                if (getListView() == null) return;
-
-                if (DisplayUtils.isLandscapeTablet(getActivity())) {
-                    // Select first row on a landscape tablet
-                    if (mShouldLoadFirstNote) {
-                        mShouldLoadFirstNote = false;
-                        Note note = mNotesAdapter.getNote(0);
-                        if (note != null) {
-                            mNoteClickListener.onClickNote(note, 0);
-                            mSelectedNoteId = note.getId();
-                        }
-                    }
-
-                    if (mSelectedNoteId != null) {
-                        new HighlightSelectedNoteTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    } else {
-                        restoreListScrollPosition();
-                    }
-                } else {
-                    restoreListScrollPosition();
-                }
+                restoreListScrollPosition();
             }
         });
     }
 
     private void restoreListScrollPosition() {
-        if (mRestoredListPosition != ListView.INVALID_POSITION
+        if (getListView() != null && mRestoredListPosition != ListView.INVALID_POSITION
                 && mRestoredListPosition < mNotesAdapter.getCount()) {
             // Restore scroll position in list
             getListView().setSelectionFromTop(mRestoredListPosition, 0);
@@ -219,10 +216,6 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
 
         super.onSaveInstanceState(outState);
-    }
-
-    public void setShouldLoadFirstNote(boolean shouldLoad) {
-        mShouldLoadFirstNote = shouldLoad;
     }
 
     public int getScrollPosition() {
@@ -259,39 +252,4 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
     }
-
-    // Retrieve the index for the selected note and set it to be highlighted (for landscape tablets only)
-    private class HighlightSelectedNoteTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            if (TextUtils.isEmpty(mSelectedNoteId) || mNotesAdapter == null) {
-                return ListView.INVALID_POSITION;
-            }
-
-            Bucket.ObjectCursor<Note> cursor = (Bucket.ObjectCursor<Note>) mNotesAdapter.getCursor();
-            if (cursor != null) {
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    cursor.moveToPosition(i);
-                    String noteSimperiumId = cursor.getSimperiumKey();
-                    if (noteSimperiumId != null && noteSimperiumId.equals(mSelectedNoteId)) {
-                        return i;
-                    }
-                }
-            }
-
-            return ListView.INVALID_POSITION;
-        }
-
-        @Override
-        protected void onPostExecute(Integer noteListPosition) {
-            if (isAdded() && noteListPosition != ListView.INVALID_POSITION && getListView() != null) {
-                getListView().setItemChecked(noteListPosition, true);
-                getListView().setSelectionFromTop(noteListPosition, 0);
-            }
-
-            mSelectedNoteId = null;
-        }
-    }
-
 }

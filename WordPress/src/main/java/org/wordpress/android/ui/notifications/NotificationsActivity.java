@@ -7,18 +7,22 @@ import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.cocosw.undobar.UndoBarController;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Comment;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
@@ -31,13 +35,11 @@ import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsActivity extends WPActionBarActivity
-        implements CommentActions.OnCommentChangeListener {
+public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnNoteCommentActionListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
@@ -179,8 +181,6 @@ public class NotificationsActivity extends WPActionBarActivity
         Intent intent = getIntent();
         if (intent.hasExtra(NOTE_ID_EXTRA)) {
             openNoteForNoteId(intent.getStringExtra(NOTE_ID_EXTRA));
-        } else if (DisplayUtils.isLandscapeTablet(this) && mNotesListFragment != null) {
-            mNotesListFragment.setShouldLoadFirstNote(true);
         }
     }
 
@@ -198,37 +198,6 @@ public class NotificationsActivity extends WPActionBarActivity
             }
         } catch (BucketObjectMissingException e) {
             AppLog.e(T.NOTIFS, "Could not load notification from bucket.");
-        }
-    }
-
-    /*
-     * triggered from the comment details fragment whenever a comment is changed (moderated, added,
-     * deleted, etc.) - refresh notifications so changes are reflected here
-     */
-    @Override
-    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
-        if (isFinishing()) return;
-
-        // remove the comment detail fragment if the comment was trashed or spammed
-        if ((changeType == CommentActions.ChangeType.TRASHED || changeType == CommentActions.ChangeType.SPAMMED)
-                && changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL) {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-            }
-        }
-
-        mNotesListFragment.refreshNotes();
-    }
-
-    // CommentDetailFragment will call this after moderation completes if it is no longer added
-    @Override
-    public void onModerationCompleted(boolean success) {
-        if (isFinishing()) return;
-
-        mNotesListFragment.refreshNotes();
-        if (!success) {
-            ToastUtils.showToast(this, R.string.error_moderate_comment, ToastUtils.Duration.LONG);
         }
     }
 
@@ -289,15 +258,6 @@ public class NotificationsActivity extends WPActionBarActivity
         // create detail fragment for this note type
         mDetailFragment = getDetailFragmentForNote(note);
 
-        if (DisplayUtils.isLandscapeTablet(this)) {
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(R.id.notifications_detail_fragment_container, mDetailFragment, TAG_TABLET_DETAIL_VIEW);
-            ft.commitAllowingStateLoss();
-            return;
-        }
-
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -340,6 +300,98 @@ public class NotificationsActivity extends WPActionBarActivity
         Intent intent = new Intent(this, NotificationsWebViewActivity.class);
         intent.putExtra(NotificationsWebViewActivity.URL_TO_LOAD, url);
         startActivity(intent);
+    }
+
+    @Override
+    public void onModerateCommentForNote(final Note note, final CommentStatus oldStatus, final CommentStatus newStatus) {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+
+        if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            mNotesListFragment.setNoteIsModerating(note.getId(), true);
+            CommentActions.moderateCommentForNote(note, newStatus,
+                    new CommentActions.CommentActionListener() {
+                        @Override
+                        public void onActionResult(boolean succeeded) {
+                            if (isFinishing()) return;
+
+                            mNotesListFragment.setNoteIsModerating(note.getId(), false);
+
+                            if (!succeeded) {
+                                ToastUtils.showToast(NotificationsActivity.this,
+                                        R.string.error_moderate_comment,
+                                        ToastUtils.Duration.LONG
+                                );
+                            }
+                        }
+                    });
+        } else if (newStatus == CommentStatus.TRASH || newStatus == CommentStatus.SPAM) {
+            mNotesListFragment.setNoteIsHidden(note.getId(), true);
+            // Show undo bar for trash or spam actions
+            new UndoBarController.UndoBar(this)
+                    .message(newStatus == CommentStatus.TRASH ? R.string.comment_trashed : R.string.comment_spammed)
+                    .listener(new UndoBarController.AdvancedUndoListener() {
+                        @Override
+                        public void onHide(Parcelable parcelable) {
+                            if (isFinishing()) return;
+                            // Deleted notifications in Simperium never come back, so we won't
+                            // make the request until the undo bar fades away
+                            CommentActions.moderateCommentForNote(note, newStatus,
+                                    new CommentActions.CommentActionListener() {
+                                        @Override
+                                        public void onActionResult(boolean succeeded) {
+                                            if (isFinishing()) return;
+
+                                            if (!succeeded) {
+                                                mNotesListFragment.setNoteIsHidden(note.getId(), false);
+                                                ToastUtils.showToast(NotificationsActivity.this,
+                                                        R.string.error_moderate_comment,
+                                                        ToastUtils.Duration.LONG
+                                                );
+                                            }
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onClear() {
+                            //noop
+                        }
+
+                        @Override
+                        public void onUndo(Parcelable parcelable) {
+                            mNotesListFragment.setNoteIsHidden(note.getId(), false);
+                        }
+                    }).show();
+        }
+    }
+
+    @Override
+    public void onReplyToNote(final Note note, String replyText) {
+        if (note == null || TextUtils.isEmpty(replyText)) return;
+
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        }
+
+        mNotesListFragment.setNoteIsModerating(note.getId(), true);
+        CommentActions.submitReplyToCommentNote(note, replyText, new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) return;
+
+                mNotesListFragment.setNoteIsModerating(note.getId(), false);
+
+                if (succeeded) {
+                    ToastUtils.showToast(NotificationsActivity.this, R.string.note_reply_successful);
+                } else {
+                    ToastUtils.showToast(NotificationsActivity.this, R.string.reply_failed);
+                }
+            }
+        });
     }
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {

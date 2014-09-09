@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
@@ -327,6 +326,10 @@
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="WordPress.BorderedBackground">
+        <item name="android:background">@color/white</item>
     </style>
 
     <!-- Pull to refresh -->

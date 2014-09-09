@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.CursorAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +26,9 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class NotesAdapter extends CursorAdapter {
 
     final private int mAvatarSz;
@@ -31,6 +36,8 @@ class NotesAdapter extends CursorAdapter {
     private final Bucket<Note> mNotesBucket;
     private int mReadBackgroundResId;
     private int mUnreadBackgroundResId;
+    private List<String> mHiddenNoteIds = new ArrayList<String>();
+    private List<String> mModeratingNoteIds = new ArrayList<String>();
 
     NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);
@@ -46,6 +53,7 @@ class NotesAdapter extends CursorAdapter {
                         Note.Schema.ICON_URL_INDEX,
                         Note.Schema.NOTICON_INDEX)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
+
 
         mAvatarSz = (int) context.getResources().getDimension(R.dimen.avatar_sz_large);
         mReadBackgroundResId = R.drawable.list_bg_selector;
@@ -82,6 +90,25 @@ class NotesAdapter extends CursorAdapter {
         changeCursor(mQuery.execute());
     }
 
+    public void addHiddenNoteId(String noteId) {
+        mHiddenNoteIds.add(noteId);
+        notifyDataSetChanged();
+    }
+
+    public void removeHiddenNoteId(String noteId) {
+        mHiddenNoteIds.remove(noteId);
+        notifyDataSetChanged();
+    }
+
+    public void addModeratingNoteId(String noteId) {
+        mModeratingNoteIds.add(noteId);
+        notifyDataSetChanged();
+    }
+
+    public void removeModeratingNoteId(String noteId) {
+        mModeratingNoteIds.remove(noteId);
+        notifyDataSetChanged();
+    }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -99,7 +126,7 @@ class NotesAdapter extends CursorAdapter {
 
         Bucket.ObjectCursor<Note> objectCursor = (Bucket.ObjectCursor<Note>) cursor;
 
-        NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
+        final NoteViewHolder noteViewHolder = (NoteViewHolder) view.getTag();
 
         // Display group header
         Note.NoteTimeGroup timeGroup = Note.getTimeGroupForTimestamp(getLongForColumnName(objectCursor, Note.Schema.TIMESTAMP_INDEX));
@@ -128,8 +155,13 @@ class NotesAdapter extends CursorAdapter {
             noteViewHolder.headerView.setVisibility(View.VISIBLE);
         }
 
-        if (CommentActions.getModeratingNoteId() != null &&
-                CommentActions.getModeratingNoteId().equals(objectCursor.getSimperiumKey())) {
+        if (mHiddenNoteIds.size() > 0 && mHiddenNoteIds.contains(objectCursor.getSimperiumKey())) {
+            noteViewHolder.contentView.setVisibility(View.GONE);
+        } else {
+            noteViewHolder.contentView.setVisibility(View.VISIBLE);
+        }
+
+        if (mModeratingNoteIds.size() > 0 && mModeratingNoteIds.contains(objectCursor.getSimperiumKey())) {
             noteViewHolder.progressBar.setVisibility(View.VISIBLE);
         } else {
             noteViewHolder.progressBar.setVisibility(View.GONE);
@@ -201,8 +233,13 @@ class NotesAdapter extends CursorAdapter {
         return cursor.getLong(cursor.getColumnIndex(columnName));
     }
 
+    public boolean isModeratingNote(String noteId) {
+        return mModeratingNoteIds.contains(noteId);
+    }
+
     public static class NoteViewHolder {
         private final View headerView;
+        private final View contentView;
         private final TextView headerText;
 
         private final TextView txtLabel;
@@ -213,6 +250,7 @@ class NotesAdapter extends CursorAdapter {
 
         NoteViewHolder(View view) {
             headerView = view.findViewById(R.id.time_header);
+            contentView = view.findViewById(R.id.note_content_container);
             headerText = (TextView)view.findViewById(R.id.header_date_text);
             txtLabel = (TextView) view.findViewById(R.id.note_subject);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);

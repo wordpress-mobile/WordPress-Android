@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,10 +19,11 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 class CommentAdapter extends BaseAdapter {
     static interface DataLoadedListener {
@@ -45,13 +45,12 @@ class CommentAdapter extends BaseAdapter {
 
     private CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
+    private final List<Long> mModeratingCommentsIds = new ArrayList<Long>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
-    private final int mSelectionColor;
 
     private final int mAvatarSz;
-    private long mHighlightedCommentId = -1;
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
@@ -70,7 +69,6 @@ class CommentAdapter extends BaseAdapter {
 
         mStatusColorSpam = context.getResources().getColor(R.color.comment_status_spam);
         mStatusColorUnapproved = context.getResources().getColor(R.color.comment_status_unapproved);
-        mSelectionColor = context.getResources().getColor(R.color.blue_extra_light);
 
         mStatusTextSpam = context.getResources().getString(R.string.comment_status_spam);
         mStatusTextUnapproved = context.getResources().getString(R.string.comment_status_unapproved);
@@ -170,17 +168,18 @@ class CommentAdapter extends BaseAdapter {
         setItemSelected(position, !isItemSelected(position), view);
     }
 
-    /*
-     * this is used for tablet UI to highlight the comment displayed in the detail view
-     */
-    long getHighlightedCommentId() {
-        return mHighlightedCommentId;
-    }
-    void setHighlightedCommentId(long commentId) {
-        if (mHighlightedCommentId == commentId)
-            return;
-        mHighlightedCommentId = commentId;
+    public void addModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.add(commentId);
         notifyDataSetChanged();
+    }
+
+    public void removeModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.remove(commentId);
+        notifyDataSetChanged();
+    }
+
+    public boolean isModeratingCommentId(long commentId) {
+        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
     }
 
     public int indexOfCommentId(long commentId) {
@@ -201,6 +200,14 @@ class CommentAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeComment(Comment comment) {
+        int commentIndex = indexOfCommentId(comment.commentID);
+        if (commentIndex >= 0) {
+            mComments.remove(commentIndex);
+            notifyDataSetChanged();
+        }
+    }
+
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Comment comment = mComments.get(position);
         final CommentHolder holder;
@@ -213,7 +220,7 @@ class CommentAdapter extends BaseAdapter {
             holder = (CommentHolder) convertView.getTag();
         }
 
-        if (CommentActions.getModeratingCommentId() == comment.commentID) {
+        if (isModeratingCommentId(comment.commentID)) {
             holder.progressBar.setVisibility(View.VISIBLE);
         } else {
             holder.progressBar.setVisibility(View.GONE);
@@ -242,22 +249,13 @@ class CommentAdapter extends BaseAdapter {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
-        final boolean useSelectionBackground;
         if (mEnableSelection && isItemSelected(position)) {
-            useSelectionBackground = true;
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            useSelectionBackground = (mHighlightedCommentId == comment.commentID);
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-        }
-
-        if (useSelectionBackground) {
-            convertView.setBackgroundColor(mSelectionColor);
-        } else {
-            convertView.setBackgroundDrawable(null);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
