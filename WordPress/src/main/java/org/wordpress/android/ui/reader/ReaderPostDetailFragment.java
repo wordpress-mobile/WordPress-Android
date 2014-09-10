@@ -468,6 +468,7 @@ public class ReaderPostDetailFragment extends Fragment
                 // reload the post if it has changed
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+                    refreshCommentCount();
                 }
                 if (result != ReaderActions.UpdateResult.FAILED) {
                     // refresh likes if necessary - done regardless of whether the post has changed
@@ -524,6 +525,33 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         mLikingUsersView.showLikingUsers(mPost);
+    }
+
+    /*
+     * refresh the comment count below the post content
+     */
+    private void refreshCommentCount() {
+        if (!isAdded()) {
+            return;
+        }
+
+        TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
+        if (mPost == null || mPost.numReplies == 0) {
+            txtCommentCount.setVisibility(View.GONE);
+        } else {
+            txtCommentCount.setVisibility(View.VISIBLE);
+            if (mPost.numReplies == 1) {
+                txtCommentCount.setText(getString(R.string.reader_label_comment_count_single));
+            } else {
+                txtCommentCount.setText(getString(R.string.reader_label_comment_count_multi, mPost.numReplies));
+            }
+            txtCommentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
+                }
+            });
+        }
     }
 
     /*
@@ -749,6 +777,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             // enable viewing comments if they're open on this post, or any exist
             if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
+                // comment count icon
                 countComments.setCount(mPost.numReplies);
                 countComments.setVisibility(View.VISIBLE);
                 countComments.setOnClickListener(new View.OnClickListener() {
@@ -759,6 +788,7 @@ public class ReaderPostDetailFragment extends Fragment
                 });
             } else {
                 countComments.setVisibility(View.INVISIBLE);
+                countComments.setOnClickListener(null);
             }
 
             if (mPost.isLikesEnabled) {
@@ -815,6 +845,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (url != null && url.equals("about:blank")) {
             refreshLikes();
+            refreshCommentCount();
 
             // request the latest info for this post if we haven't updated it already
             if (!mHasAlreadyUpdatedPost) {

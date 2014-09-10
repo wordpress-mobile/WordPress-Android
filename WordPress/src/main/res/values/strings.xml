@@ -638,6 +638,8 @@
     <string name="reader_label_reached_last_post">You\'ve reached the end</string>
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
     <string name="reader_label_comments_on">Comments on</string>
+    <string name="reader_label_comment_count_single">One comment</string>
+    <string name="reader_label_comment_count_multi">%,d comments</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_label_like">Like</string>

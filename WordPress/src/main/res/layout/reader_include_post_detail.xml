@@ -132,10 +132,24 @@
 
     </RelativeLayout>
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/reader_count_selector"
+        android:gravity="center"
+        android:textSize="@dimen/text_sz_medium"
+        android:padding="@dimen/margin_medium"
+        android:textColor="@color/blue_dark"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:visibility="gone"
+        tools:text="3 comments"
+        tools:visibility="visible" />
+
     <!-- extra space so action icons on fragment don't overlap content -->
     <View
+        android:id="@+id/spacer_actions"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_button_icon"
-        android:id="@+id/spacer_actions"/>
+        android:layout_height="@dimen/reader_button_icon" />
 
 </LinearLayout>
