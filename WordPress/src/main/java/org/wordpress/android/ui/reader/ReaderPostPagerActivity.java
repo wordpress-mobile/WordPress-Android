@@ -227,6 +227,7 @@ public class ReaderPostPagerActivity extends Activity
      * active after loading unless gotoNext=true, in which case the post after the passed one
      * will be made active
      */
+    private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private void loadPosts(final long blogId,
                            final long postId,
                            final boolean gotoNext) {
@@ -243,14 +244,15 @@ public class ReaderPostPagerActivity extends Activity
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                         case TAG_PREVIEW:
-                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts, EXCLUDE_TEXT_COLUMN);
                             break;
                         case BLOG_PREVIEW:
-                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts, EXCLUDE_TEXT_COLUMN);
                             break;
                         default:
                             return;
                     }
+                    // TODO: above query should just return blogId/postId pairs
                     idList = postList.getBlogIdPostIdList();
                 }
 
