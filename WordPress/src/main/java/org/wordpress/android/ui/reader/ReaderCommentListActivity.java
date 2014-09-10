@@ -46,6 +46,7 @@ public class ReaderCommentListActivity extends Activity {
     private WPListView mListView;
     private EditText mEditComment;
     private ImageView mImgSubmitComment;
+    private ViewGroup mCommentBox;
 
     private boolean mIsUpdatingComments;
     private long mReplyToCommentId;
@@ -73,37 +74,18 @@ public class ReaderCommentListActivity extends Activity {
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
         }
 
-        loadPost();
-
         mListView = (WPListView) findViewById(android.R.id.list);
+        mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        mEditComment = (EditText) mCommentBox.findViewById(R.id.edit_comment);
+        mImgSubmitComment = (ImageView) mCommentBox.findViewById(R.id.image_post_comment);
+
+        loadPost();
 
         // add listView header to provide initial space between the post header and list content
         int height = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
         ReaderUtils.addListViewHeader(mListView, height);
 
         mListView.setAdapter(getCommentAdapter());
-
-        ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        layoutCommentBox.setVisibility(View.VISIBLE);
-
-        mEditComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitComment();
-                }
-                return false;
-            }
-        });
-
-        mImgSubmitComment = (ImageView) layoutCommentBox.findViewById(R.id.image_post_comment);
-        mImgSubmitComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitComment();
-            }
-        });
 
         if (savedInstanceState != null) {
             setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
@@ -153,11 +135,37 @@ public class ReaderCommentListActivity extends Activity {
         final View postHeader = findViewById(R.id.layout_post_header);
         final TextView txtTitle = (TextView) postHeader.findViewById(R.id.text_post_title);
         final WPNetworkImageView imgAvatar = (WPNetworkImageView) postHeader.findViewById(R.id.image_post_avatar);
+        final TextView txtCommentsClosed = (TextView) findViewById(R.id.text_comments_closed);
 
         txtTitle.setText(mPost.getTitle());
 
         String url = mPost.getPostAvatarForDisplay(getResources().getDimensionPixelSize(R.dimen.avatar_sz_small));
         imgAvatar.setImageUrl(url, WPNetworkImageView.ImageType.AVATAR);
+
+        if (mPost.isCommentsOpen) {
+            mCommentBox.setVisibility(View.VISIBLE);
+            txtCommentsClosed.setVisibility(View.GONE);
+
+            mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
+                        submitComment();
+                    }
+                    return false;
+                }
+            });
+
+            mImgSubmitComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitComment();
+                }
+            });
+        } else {
+            mCommentBox.setVisibility(View.GONE);
+            txtCommentsClosed.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

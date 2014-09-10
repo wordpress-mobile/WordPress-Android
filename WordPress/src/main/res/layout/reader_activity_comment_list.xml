@@ -37,6 +37,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comments_closed"
+        style="@style/ReaderTextView.Label.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:text="@string/reader_label_comments_closed"
+        android:visibility="gone"
+        tools:visibility="visibility" />
+
     <ProgressBar
         android:id="@+id/progress_loading"
         style="@style/ReaderProgressBar"
