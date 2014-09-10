@@ -527,14 +527,16 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersView.showLikingUsers(mPost);
     }
 
-    /*
-     * refresh the comment count below the post content
-     */
     private void refreshCommentCount() {
         if (!isAdded()) {
             return;
         }
 
+        // comment icon with count
+        final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
+        countComments.setCount(mPost.numReplies);
+
+        // comment count below the post content
         TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
         if (mPost == null || mPost.numReplies == 0) {
             txtCommentCount.setVisibility(View.GONE);

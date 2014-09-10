@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_medium"
             tools:text="text_like_count" />
 
         <!-- liking avatars are inserted into this LinearLayout at runtime -->
@@ -136,12 +136,14 @@
         android:id="@+id/text_comment_count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_medium"
         android:background="@drawable/reader_count_selector"
         android:gravity="center"
-        android:textSize="@dimen/text_sz_medium"
         android:padding="@dimen/margin_medium"
         android:textColor="@color/blue_dark"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:textSize="@dimen/text_sz_medium"
         android:visibility="gone"
         tools:text="3 comments"
         tools:visibility="visible" />

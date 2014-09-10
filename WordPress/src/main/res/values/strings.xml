@@ -642,7 +642,7 @@
     <string name="reader_label_comment_count_single">One comment</string>
     <string name="reader_label_comment_count_multi">%,d comments</string>
 
-    <!-- like counts liking users activity-->
+    <!-- like counts -->
     <string name="reader_label_like">Like</string>
     <string name="reader_label_liked_by">Liked by</string>
     <string name="reader_label_liked_by_you">Liked by you</string>
