@@ -42,6 +42,7 @@ public class NoteBlock {
     private OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
     private boolean mIsBadge;
+    private boolean mHasAnimatedBadge;
     private int mBackgroundColor;
 
     public interface OnNoteBlockTextClickListener {
@@ -133,7 +134,8 @@ public class NoteBlock {
             WordPress.imageLoader.get(getNoteMediaItem().optString("url", ""), new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (response.getBitmap() != null && view.getContext() != null) {
+                    if (!mHasAnimatedBadge && response.getBitmap() != null && view.getContext() != null) {
+                        mHasAnimatedBadge = true;
                         noteBlockHolder.getImageView().setImageBitmap(response.getBitmap());
                         Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
                         noteBlockHolder.getImageView().startAnimation(pop);
@@ -203,9 +205,11 @@ public class NoteBlock {
             if (mImageView == null) {
                 mImageView = new ImageView(mRootLayout.getContext());
                 int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 180);
+                int imagePadding = mRootLayout.getContext().getResources().getDimensionPixelSize(R.dimen.margin_large);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
                 layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
                 mImageView.setLayoutParams(layoutParams);
+                mImageView.setPadding(0, imagePadding, 0, 0);
                 mRootLayout.addView(mImageView, 0);
             }
 

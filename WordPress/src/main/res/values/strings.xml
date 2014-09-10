@@ -197,7 +197,7 @@
     <string name="dlg_confirm_spam_comment">Mark this comment as spam?</string>
     <string name="comment_mark_spam">Mark spam</string>
     <string name="comment_trashed">Comment trashed</string>
-    <string name="comment_spammed">Comment spammed</string>
+    <string name="comment_spammed">Comment marked as spam</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
