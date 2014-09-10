@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -119,8 +120,14 @@ public class GCMIntentService extends GCMBaseIntentService {
             } catch (UnsupportedEncodingException e) {
                 AppLog.e(T.NOTIFS, e);
             }
-            float screenDensity = getResources().getDisplayMetrics().densityDpi;
-            int size = Math.round(64 * (screenDensity / 160));
+            // default icon size
+            int size = 128;
+            // calculate best icon size (depends on device screen density)
+            Resources resources = getResources();
+            if (resources != null && resources.getDisplayMetrics() != null) {
+                float screenDensity = resources.getDisplayMetrics().densityDpi;
+                size = Math.round(64 * (screenDensity / 160));
+            }
             String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
             largeIconBitmap = ImageUtils.downloadBitmap(resizedURL);
         }
