@@ -123,7 +123,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             // default icon size
             int size = 128;
             // calculate best icon size (depends on device screen density)
-            Resources resources = getResources();
+            Resources resources = context.getResources();
             if (resources != null && resources.getDisplayMetrics() != null) {
                 float screenDensity = resources.getDisplayMetrics().densityDpi;
                 size = Math.round(64 * (screenDensity / 160));
@@ -171,11 +171,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
-                        commentReplyIntent,
+                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ab_icon_reply,
-                        getResources().getText(R.string.reply), commentReplyPendingIntent);
+                mBuilder.addAction(R.drawable.ab_icon_reply, context.getText(R.string.reply),
+                        commentReplyPendingIntent);
             }
 
             if (largeIconBitmap != null) {
@@ -210,7 +209,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_multi))
                     .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle("WordPress")
                     .setContentText(subject)
