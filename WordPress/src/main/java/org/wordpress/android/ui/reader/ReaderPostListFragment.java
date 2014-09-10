@@ -56,6 +56,7 @@ import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPListView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -104,8 +105,30 @@ public class ReaderPostListFragment extends Fragment
 
     private Parcelable mListState = null;
 
-    private final Stack<String> mTagPreviewHistory = new Stack<String>();
-    private static final String KEY_TAG_PREVIEW_HISTORY = "tag_preview_history";
+    private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+
+    private static class HistoryStack extends Stack<String> {
+        private final String keyName;
+        HistoryStack(String keyName) {
+            this.keyName = keyName;
+        }
+        void restoreInstance(Bundle bundle) {
+            clear();
+            if (bundle.containsKey(keyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(keyName);
+                if (history != null) {
+                    this.addAll(history);
+                }
+            }
+        }
+        void saveInstance(Bundle bundle) {
+            if (!isEmpty()) {
+                ArrayList<String> history = new ArrayList<String>();
+                history.addAll(this);
+                bundle.putStringArrayList(keyName, history);
+            }
+        }
+    }
 
     /*
      * show posts with a specific tag
@@ -181,10 +204,8 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
-                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
-                mTagPreviewHistory.clear();
-                mTagPreviewHistory.addAll(backStack);
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
@@ -226,8 +247,8 @@ public class ReaderPostListFragment extends Fragment
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
         }
-        if (!mTagPreviewHistory.empty()) {
-            outState.putSerializable(KEY_TAG_PREVIEW_HISTORY, mTagPreviewHistory);
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            mTagPreviewHistory.saveInstance(outState);
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
