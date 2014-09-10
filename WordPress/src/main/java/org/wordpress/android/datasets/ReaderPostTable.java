@@ -9,6 +9,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -524,6 +526,73 @@ public class ReaderPostTable {
         }
     }
 
+    /*
+     * same as getPostsWithTag() but only returns the blogId/postId pairs
+     */
+    public static ReaderBlogIdPostIdList getBlogIdPostIdsWithTag(ReaderTag tag, int maxPosts) {
+        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+        if (tag == null) {
+            return idList;
+        }
+
+        String sql = "SELECT tbl_posts.blog_id, tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
+                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
+                + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                + " AND tbl_post_tags.tag_name=?"
+                + " AND tbl_post_tags.tag_type=?";
+
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED)) {
+                sql += " AND tbl_posts.is_liked != 0";
+            } else if (tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING)) {
+                sql += " AND tbl_posts.is_followed != 0";
+            }
+        }
+
+        sql += " ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    idList.add(new ReaderBlogIdPostId(cursor.getLong(0), cursor.getLong(1)));
+                } while (cursor.moveToNext());
+            }
+            return idList;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    /*
+     * same as getPostsInBlog() but only returns the blogId/postId pairs
+     */
+    public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    idList.add(new ReaderBlogIdPostId(blogId, cursor.getLong(0)));
+                } while (cursor.moveToNext());
+            }
+
+            return idList;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
 
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post == null) {

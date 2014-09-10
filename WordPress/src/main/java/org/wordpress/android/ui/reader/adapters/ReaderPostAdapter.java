@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,13 +33,12 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -223,12 +221,9 @@ public class ReaderPostAdapter extends BaseAdapter {
     private void loadPosts() {
         if (mIsTaskRunning) {
             AppLog.w(T.READER, "reader posts task already running");
+            return;
         }
         new LoadPostsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public ReaderBlogIdPostIdList getBlogIdPostIdList() {
-        return mPosts.getBlogIdPostIdList();
     }
 
     @Override
@@ -239,6 +234,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     boolean isValidPosition(int position) {
         return (position >= 0 && position < getCount());
     }
+
     @Override
     public Object getItem(int position) {
         if (isValidPosition(position)) {
@@ -351,6 +347,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
         } else {
             holder.txtTag.setVisibility(View.GONE);
+            holder.txtTag.setOnClickListener(null);
         }
 
         // likes, comments & reblogging - supported by wp posts only
@@ -362,38 +359,30 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         if (showLikes) {
-            showLikeStatus(holder.imgBtnLike, post.isLikedByCurrentUser);
-            holder.imgBtnLike.setVisibility(View.VISIBLE);
-            holder.imgBtnLike.setOnClickListener(new View.OnClickListener() {
+            holder.likeCount.setSelected(post.isLikedByCurrentUser);
+            holder.likeCount.setVisibility(View.VISIBLE);
+            holder.likeCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, position, post);
                 }
             });
         } else {
-            holder.imgBtnLike.setVisibility(View.GONE);
-            holder.txtLikeCount.setVisibility(View.GONE);
+            holder.likeCount.setVisibility(View.GONE);
+            holder.likeCount.setOnClickListener(null);
         }
 
         if (showComments) {
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
-            if (post.isCommentsOpen) {
-                holder.imgBtnComment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (parent instanceof ListView) {
-                            ListView listView = (ListView) parent;
-                            // the base listView onItemClick includes the header count in the position,
-                            // so do the same here
-                            int index = position + listView.getHeaderViewsCount();
-                            listView.performItemClick(holder.imgBtnComment, index, getItemId(position));
-                        }
-                    }
-                });
-            }
+            holder.commentCount.setVisibility(View.VISIBLE);
+            holder.commentCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(v.getContext(), post);
+                }
+            });
         } else {
-            holder.imgBtnComment.setVisibility(View.GONE);
-            holder.txtCommentCount.setVisibility(View.GONE);
+            holder.commentCount.setVisibility(View.GONE);
+            holder.commentCount.setOnClickListener(null);
         }
 
         if (post.canReblog()) {
@@ -409,10 +398,13 @@ public class ReaderPostAdapter extends BaseAdapter {
                         }
                     }
                 });
+            } else {
+                holder.imgBtnReblog.setOnClickListener(null);
             }
         } else {
             // use INVISIBLE rather than GONE to ensure container maintains the same height
             holder.imgBtnReblog.setVisibility(View.INVISIBLE);
+            holder.imgBtnReblog.setOnClickListener(null);
         }
 
         // dropdown arrow which displays "block this blog" menu only shows for public
@@ -429,6 +421,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             });
         } else {
             holder.imgDropDown.setVisibility(View.GONE);
+            holder.imgDropDown.setOnClickListener(null);
         }
 
         // if we're nearing the end of the posts, fire request to load more
@@ -454,22 +447,13 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.layoutBottom.setLayoutTransition(new LayoutTransition());
         }
 
-        if (post.numLikes > 0) {
-            holder.txtLikeCount.setText(FormatUtils.formatInt(post.numLikes));
-            holder.txtLikeCount.setVisibility(View.VISIBLE);
-        } else {
-            holder.txtLikeCount.setVisibility(View.GONE);
-        }
+        holder.likeCount.setCount(post.numLikes);
 
-        if (post.numReplies > 0) {
-            holder.txtCommentCount.setText(FormatUtils.formatInt(post.numReplies));
-            holder.txtCommentCount.setVisibility(View.VISIBLE);
-            // note that the comment icon is shown here even if comments are now closed since
-            // the post has existing comments
-            holder.imgBtnComment.setVisibility(View.VISIBLE);
+        if (post.numReplies > 0 || post.isCommentsOpen) {
+            holder.commentCount.setCount(post.numReplies);
+            holder.commentCount.setVisibility(View.VISIBLE);
         } else {
-            holder.txtCommentCount.setVisibility(View.GONE);
-            holder.imgBtnComment.setVisibility(post.isCommentsOpen ? View.VISIBLE : View.GONE);
+            holder.commentCount.setVisibility(View.GONE);
         }
 
         if (animateChanges) {
@@ -485,11 +469,9 @@ public class ReaderPostAdapter extends BaseAdapter {
         private final TextView txtFollow;
         private final TextView txtTag;
 
-        private final TextView txtLikeCount;
-        private final TextView txtCommentCount;
+        private final ReaderIconCountView commentCount;
+        private final ReaderIconCountView likeCount;
 
-        private final ImageView imgBtnLike;
-        private final ImageView imgBtnComment;
         private final ImageView imgBtnReblog;
         private final ImageView imgDropDown;
 
@@ -507,14 +489,12 @@ public class ReaderPostAdapter extends BaseAdapter {
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
             txtTag = (TextView) view.findViewById(R.id.text_tag);
 
-            txtCommentCount = (TextView) view.findViewById(R.id.text_comment_count);
-            txtLikeCount = (TextView) view.findViewById(R.id.text_like_count);
+            commentCount = (ReaderIconCountView) view.findViewById(R.id.count_comments);
+            likeCount = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
             imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
 
-            imgBtnLike = (ImageView) view.findViewById(R.id.image_like_btn);
-            imgBtnComment = (ImageView) view.findViewById(R.id.image_comment_btn);
             imgBtnReblog = (ImageView) view.findViewById(R.id.image_reblog_btn);
             imgDropDown = (ImageView) view.findViewById(R.id.image_dropdown);
 
@@ -534,7 +514,7 @@ public class ReaderPostAdapter extends BaseAdapter {
      */
     private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
         boolean isAskingToLike = !post.isLikedByCurrentUser;
-        ReaderAnim.animateLikeButton(holder.imgBtnLike, isAskingToLike);
+        ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
             return;
@@ -547,13 +527,8 @@ public class ReaderPostAdapter extends BaseAdapter {
         // update post in array and on screen
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
-        showLikeStatus(holder.imgBtnLike, updatedPost.isLikedByCurrentUser);
+        holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
         showCounts(holder, post, true);
-    }
-
-    private void showLikeStatus(ImageView imgBtnLike, boolean isLikedByCurrentUser) {
-        if (isLikedByCurrentUser != imgBtnLike.isSelected())
-            imgBtnLike.setSelected(isLikedByCurrentUser);
     }
 
     /*
@@ -614,7 +589,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         protected Boolean doInBackground(Void... params) {
             final int numExisting;
             switch (getPostListType()) {
-                 case TAG_PREVIEW: case TAG_FOLLOWED:
+                case TAG_PREVIEW: case TAG_FOLLOWED:
                     tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
