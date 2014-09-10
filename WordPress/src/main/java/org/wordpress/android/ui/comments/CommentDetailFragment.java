@@ -341,7 +341,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
-            reloadComment();
+            if (mNote == null) {
+                reloadComment();
+            }
             // tell the host to reload the comment list
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
@@ -398,6 +400,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         Intent intent = new Intent(getActivity(), EditCommentActivity.class);
         intent.putExtra(EditCommentActivity.ARG_LOCAL_BLOG_ID, getLocalBlogId());
         intent.putExtra(EditCommentActivity.ARG_COMMENT_ID, getCommentId());
+        if (mNote != null) {
+            intent.putExtra(EditCommentActivity.ARG_NOTE_ID, mNote.getId());
+        }
         startActivityForResult(intent, Constants.INTENT_COMMENT_EDITOR);
     }
 

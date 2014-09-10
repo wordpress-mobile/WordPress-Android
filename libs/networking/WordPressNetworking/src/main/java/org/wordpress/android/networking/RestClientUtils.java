@@ -150,6 +150,17 @@ public class RestClientUtils {
     }
 
     /**
+     * Edit the content of a comment
+     */
+    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("content", content);
+        String path = String.format("sites/%d/comments/%d/", siteId, commentId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Like or unlike a comment.
      */
     public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,

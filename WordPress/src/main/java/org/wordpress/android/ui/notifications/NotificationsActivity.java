@@ -38,7 +38,8 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnNoteCommentActionListener {
+public class NotificationsActivity extends WPActionBarActivity implements CommentActions.OnNoteCommentActionListener,
+        CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
@@ -388,6 +389,18 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 }
             }
         });
+    }
+
+    @Override
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        // pop back stack if we edited a comment notification, so simperium will show the change
+        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
+                && changeType == CommentActions.ChangeType.EDITED) {
+            FragmentManager fm = getFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                fm.popBackStack();
+            }
+        }
     }
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {

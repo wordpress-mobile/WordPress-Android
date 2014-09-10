@@ -32,7 +32,8 @@ import javax.annotation.Nonnull;
 public class CommentsActivity extends WPActionBarActivity
         implements OnCommentSelectedListener,
                    NotificationFragment.OnPostClickListener,
-                   CommentActions.OnCommentActionListener {
+                   CommentActions.OnCommentActionListener,
+                   CommentActions.OnCommentChangeListener {
     private static final String KEY_SELECTED_COMMENT_ID = "selected_comment_id";
     private static final String KEY_SELECTED_POST_ID = "selected_post_id";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
@@ -209,8 +210,6 @@ public class CommentsActivity extends WPActionBarActivity
         showReaderFragment(remoteBlogId, postId);
     }
 
-
-
     /*
      * reload the comment list from existing data
      */
@@ -276,6 +275,7 @@ public class CommentsActivity extends WPActionBarActivity
                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                     if (succeeded) {
+                        updateMenuDrawer();
                         getListFragment().updateComments(false);
                     } else {
                         ToastUtils.showToast(CommentsActivity.this,
@@ -295,11 +295,12 @@ public class CommentsActivity extends WPActionBarActivity
                     .listener(new UndoBarController.AdvancedUndoListener() {
                         @Override
                         public void onHide(Parcelable parcelable) {
-                            if (isFinishing()) return;
                             CommentActions.moderateComment(accountId, comment, newStatus,
                                     new CommentActions.CommentActionListener() {
                                 @Override
                                 public void onActionResult(boolean succeeded) {
+                                    if (isFinishing()) return;
+
                                     getListFragment().setCommentIsModerating(comment.commentID, false);
 
                                     if (!succeeded) {
@@ -309,6 +310,8 @@ public class CommentsActivity extends WPActionBarActivity
                                                 R.string.error_moderate_comment,
                                                 ToastUtils.Duration.LONG
                                         );
+                                    } else {
+                                        updateMenuDrawer();
                                     }
                                 }
                             });
@@ -354,5 +357,13 @@ public class CommentsActivity extends WPActionBarActivity
                 }
             }
         });
+    }
+
+    @Override
+    public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
+        if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
+                && changeType == CommentActions.ChangeType.EDITED) {
+            reloadCommentList();
+        }
     }
 }
