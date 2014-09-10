@@ -30,7 +30,8 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(activity, ReaderPostPagerActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, blogId);
         intent.putExtra(ReaderConstants.ARG_POST_ID, postId);
-        intent.putExtra(ReaderPostPagerActivity.ARG_IS_SINGLE_POST, true);
+        intent.putExtra(ReaderConstants.ARG_TITLE, activity.getTitle());
+        intent.putExtra(ReaderConstants.ARG_IS_SINGLE_POST, true);
         showReaderPostPager(activity, intent);
     }
 

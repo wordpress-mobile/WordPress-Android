@@ -80,12 +80,14 @@ public class AuthenticationDialogUtils {
         }
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert;
-        if (WordPress.getCurrentBlog() == null) {
-            // No blogs found, so the user is logged in wpcom and doesn't own any blog
-            authAlert = AuthErrorDialogFragment.newInstance(true, titleResId, messageResId);
-        } else {
-            authAlert = AuthErrorDialogFragment.newInstance(WordPress.getCurrentBlog().isDotcomFlag(), titleResId, messageResId);
+        // Default to isDotCom (If WordPress.getCurrentBlog() == null: no blogs found,
+        // so the user is logged in wpcom and doesn't own any blog
+        boolean isDotCom = true;
+        if (WordPress.getCurrentBlog() != null) {
+            isDotCom = WordPress.getCurrentBlog().isDotcomFlag();
         }
+        authAlert = new AuthErrorDialogFragment();
+        authAlert.setWPComTitleMessage(isDotCom, titleResId, messageResId);
         ft.add(authAlert, ALERT_TAG);
         ft.commitAllowingStateLoss();
     }
