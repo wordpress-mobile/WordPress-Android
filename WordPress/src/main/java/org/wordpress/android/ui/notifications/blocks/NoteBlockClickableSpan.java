@@ -28,7 +28,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private boolean mShouldLink;
 
     // Normal colors
-    private int mBackgroundColor = Color.parseColor("#d2dee6");     // calypso blue border
+    private final int mBackgroundColor = Color.parseColor("#d2dee6");     // calypso blue border
     private int mTextColor = Color.parseColor("#324155");           // calypso dark blue
     private final int mLinkColor = Color.parseColor("#2EA2CC");     // new kid on the block blue
 

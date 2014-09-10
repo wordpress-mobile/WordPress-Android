@@ -23,7 +23,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -35,11 +34,11 @@ import org.wordpress.android.widgets.WPTextView;
  */
 public class NoteBlock {
 
-    private static String PROPERTY_MEDIA_TYPE = "type";
-    private static String PROPERTY_MEDIA_URL = "url";
+    private static final String PROPERTY_MEDIA_TYPE = "type";
+    private static final String PROPERTY_MEDIA_URL = "url";
 
-    private JSONObject mNoteData;
-    private OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
+    private final JSONObject mNoteData;
+    private final OnNoteBlockTextClickListener mOnNoteBlockTextClickListener;
     private JSONObject mMediaItem;
     private boolean mIsBadge;
     private boolean mHasAnimatedBadge;
@@ -55,7 +54,7 @@ public class NoteBlock {
         mOnNoteBlockTextClickListener = onNoteBlockTextClickListener;
     }
 
-    public OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
+    OnNoteBlockTextClickListener getOnNoteBlockTextClickListener() {
         return mOnNoteBlockTextClickListener;
     }
 
@@ -63,15 +62,15 @@ public class NoteBlock {
         return BlockType.BASIC;
     }
 
-    public JSONObject getNoteData() {
+    JSONObject getNoteData() {
         return mNoteData;
     }
 
-    public Spannable getNoteText() {
+    Spannable getNoteText() {
         return NotificationsUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
     }
 
-    public JSONObject getNoteMediaItem() {
+    JSONObject getNoteMediaItem() {
         if (mMediaItem == null) {
             mMediaItem = JSONUtil.queryJSON(mNoteData, "media[0]", new JSONObject());
         }
@@ -79,8 +78,8 @@ public class NoteBlock {
         return mMediaItem;
     }
 
-    public void setIsBadge(boolean isBadge) {
-        mIsBadge = isBadge;
+    public void setIsBadge() {
+        mIsBadge = true;
     }
 
     public void setBackgroundColor(int backgroundColor) {
@@ -95,14 +94,14 @@ public class NoteBlock {
         return mNoteData.has("media");
     }
 
-    public boolean hasImageMediaItem() {
+    boolean hasImageMediaItem() {
         String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
         return hasMediaArray() &&
                 (mediaType.startsWith("image") || mediaType.equals("badge")) &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
-    public boolean hasVideoMediaItem() {
+    boolean hasVideoMediaItem() {
         return hasMediaArray() &&
                 getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
                 getNoteMediaItem().has(PROPERTY_MEDIA_URL);
@@ -184,7 +183,7 @@ public class NoteBlock {
         return new BasicNoteBlockHolder(view);
     }
 
-    protected static class BasicNoteBlockHolder {
+    static class BasicNoteBlockHolder {
         private final LinearLayout mRootLayout;
         private final WPTextView mTextView;
 

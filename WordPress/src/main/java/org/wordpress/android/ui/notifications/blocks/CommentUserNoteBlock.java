@@ -14,9 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
 
 // A user block with slightly different formatting for display in a comment detail
@@ -148,11 +146,11 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private class CommentUserNoteBlockHolder {
-        private NetworkImageView avatarImageView;
-        private TextView nameTextView;
-        private TextView agoTextView;
-        private TextView commentTextView;
-        private View dividerView;
+        private final NetworkImageView avatarImageView;
+        private final TextView nameTextView;
+        private final TextView agoTextView;
+        private final TextView commentTextView;
+        private final View dividerView;
 
         public CommentUserNoteBlockHolder(View view) {
             nameTextView = (TextView)view.findViewById(R.id.user_name);
@@ -178,7 +176,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }
 
-    private OnCommentStatusChangeListener mOnCommentChangedListener = new OnCommentStatusChangeListener() {
+    private final OnCommentStatusChangeListener mOnCommentChangedListener = new OnCommentStatusChangeListener() {
         @Override
         public void onCommentStatusChanged(CommentStatus newStatus) {
             mCommentStatus = newStatus;

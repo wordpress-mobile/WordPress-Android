@@ -26,14 +26,15 @@ import org.wordpress.android.util.UrlUtils;
  * Will display an action button if available (e.g. follow button)
  */
 public class UserNoteBlock extends NoteBlock {
-    private OnGravatarClickedListener mGravatarClickedListener;
+    private final OnGravatarClickedListener mGravatarClickedListener;
 
     private final int mWhiteBgColor = Color.parseColor("#FFFFFF");
 
     private int mAvatarSz;
 
     public interface OnGravatarClickedListener {
-        public void onGravatarClicked(long userId, long siteId);
+        // userId is currently unused, but will be handy once a profile view is added to the app
+        public void onGravatarClicked(long siteId, long userId);
     }
 
     public UserNoteBlock(
@@ -48,11 +49,11 @@ public class UserNoteBlock extends NoteBlock {
         mGravatarClickedListener = onGravatarClickedListener;
     }
 
-    protected void setAvatarSize(int size) {
+    void setAvatarSize(int size) {
         mAvatarSz = size;
     }
 
-    protected int getAvatarSize() {
+    int getAvatarSize() {
         return mAvatarSz;
     }
 
@@ -120,7 +121,7 @@ public class UserNoteBlock extends NoteBlock {
         return view;
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showBlogPreview();
@@ -133,11 +134,11 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     private class UserActionNoteBlockHolder {
-        private View rootView;
-        private TextView nameTextView;
-        private TextView urlTextView;
-        private TextView taglineTextView;
-        private NetworkImageView avatarImageView;
+        private final View rootView;
+        private final TextView nameTextView;
+        private final TextView urlTextView;
+        private final TextView taglineTextView;
+        private final NetworkImageView avatarImageView;
 
         public UserActionNoteBlockHolder(View view) {
             rootView = view.findViewById(R.id.user_block_root_view);
@@ -149,7 +150,7 @@ public class UserNoteBlock extends NoteBlock {
         }
     }
 
-    public JSONObject getUrlRangeObject() {
+    JSONObject getUrlRangeObject() {
         if (getNoteData() == null) return null;
 
         JSONArray rangesArray = getNoteData().optJSONArray("ranges");
@@ -169,7 +170,7 @@ public class UserNoteBlock extends NoteBlock {
         return null;
     }
 
-    protected String getUserUrl() {
+    String getUserUrl() {
         if (getUrlRangeObject() != null) {
             String url = UrlUtils.normalizeUrl(getUrlRangeObject().optString("url", ""));
             return url.replace("http://", "").replace("https://", "");
@@ -198,7 +199,7 @@ public class UserNoteBlock extends NoteBlock {
         return !TextUtils.isEmpty(getUserBlogTagline());
     }
 
-    protected View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
+    final View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 

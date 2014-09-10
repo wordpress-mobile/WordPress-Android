@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.Html;
@@ -8,9 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.CursorAdapter;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.simperium.client.Bucket;
@@ -19,7 +16,6 @@ import com.simperium.client.Query;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
@@ -34,10 +30,10 @@ class NotesAdapter extends CursorAdapter {
     private final int mAvatarSz;
     private final Query mQuery;
     private final Bucket<Note> mNotesBucket;
-    private int mReadBackgroundResId;
-    private int mUnreadBackgroundResId;
-    private List<String> mHiddenNoteIds = new ArrayList<String>();
-    private List<String> mModeratingNoteIds = new ArrayList<String>();
+    private final int mReadBackgroundResId;
+    private final int mUnreadBackgroundResId;
+    private final List<String> mHiddenNoteIds = new ArrayList<String>();
+    private final List<String> mModeratingNoteIds = new ArrayList<String>();
 
     NotesAdapter(Context context, Bucket<Note> bucket) {
         super(context, null, 0x0);

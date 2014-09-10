@@ -159,7 +159,7 @@ public class NotificationsUtils {
                     editor.putString(WPCOM_PUSH_DEVICE_SERVER_ID, deviceID);
                     JSONObject settingsJSON = jsonObject.getJSONObject("settings");
                     editor.putString(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
-                    editor.commit();
+                    editor.apply();
                     AppLog.d(T.NOTIFS, "Server response OK. The device_id : " + deviceID);
                 } catch (JSONException e1) {
                     AppLog.e(T.NOTIFS, "Server response is NOT ok. Registration skipped!!", e1);
@@ -185,7 +185,7 @@ public class NotificationsUtils {
                 editor.remove(WPCOM_PUSH_DEVICE_SERVER_ID);
                 editor.remove(WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS);
                 editor.remove(WPCOM_PUSH_DEVICE_UUID);
-                editor.commit();
+                editor.apply();
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -203,7 +203,7 @@ public class NotificationsUtils {
         WordPress.getRestClientUtils().post("/devices/" + deviceID + "/delete", listener, errorListener);
     }
 
-    public static String getAppPushNotificationsName(){
+    private static String getAppPushNotificationsName() {
         //white listing only few keys.
         if (BuildConfig.APP_PN_KEY.equals("org.wordpress.android.beta.build"))
                 return "org.wordpress.android.beta.build";

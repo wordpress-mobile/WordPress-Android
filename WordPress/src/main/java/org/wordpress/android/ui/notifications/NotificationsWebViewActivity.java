@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;

@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * Allows links to be highlighted when tapped on note blocks.
  * See: http://stackoverflow.com/a/20905824/309558
  */
-public class NoteBlockLinkMovementMethod extends LinkMovementMethod {
+class NoteBlockLinkMovementMethod extends LinkMovementMethod {
 
     private NoteBlockClickableSpan mPressedSpan;
 

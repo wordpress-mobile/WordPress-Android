@@ -19,9 +19,9 @@ import org.wordpress.android.util.PhotonUtils;
 // Note header, displayed at top of detail view
 public class HeaderUserNoteBlock extends NoteBlock {
 
-    private JSONArray mHeaderArray;
+    private final JSONArray mHeaderArray;
 
-    private UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
+    private final UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
     private Boolean mIsComment;
     private int mAvatarSize;
 
@@ -71,7 +71,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
         return view;
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (getOnNoteBlockTextClickListener() != null) {
@@ -106,9 +106,9 @@ public class HeaderUserNoteBlock extends NoteBlock {
     }
 
     private class NoteHeaderBlockHolder {
-        private TextView nameTextView;
-        private TextView snippetTextView;
-        private NetworkImageView avatarImageView;
+        private final TextView nameTextView;
+        private final TextView snippetTextView;
+        private final NetworkImageView avatarImageView;
 
         public NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
@@ -119,7 +119,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
         }
     }
 
-    private View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 

@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 
 public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
     private Note mNote;
-    private List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
+    private final List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
     private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
 
@@ -91,7 +91,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mNote = note;
     }
 
-    public void reloadNoteBlocks() {
+    private void reloadNoteBlocks() {
         new LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -101,8 +101,8 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     private class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
 
-        private List<NoteBlock> mNoteBlockList;
-        private LayoutInflater mLayoutInflater;
+        private final List<NoteBlock> mNoteBlockList;
+        private final LayoutInflater mLayoutInflater;
 
         NoteBlockAdapter(Context context, List<NoteBlock> noteBlocks) {
             super(context, 0, noteBlocks);
@@ -130,7 +130,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     }
 
-    private NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
+    private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
         @Override
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
             if (!isAdded()) return;
@@ -147,7 +147,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
     };
 
-    private UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
+    private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
         @Override
         public void onGravatarClicked(long siteId, long userId) {
             if (!isAdded()) return;
@@ -237,7 +237,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                         }
 
                         if (isBadgeView) {
-                            noteBlock.setIsBadge(true);
+                            noteBlock.setIsBadge();
                         }
 
                         mNoteBlockArray.add(noteBlock);

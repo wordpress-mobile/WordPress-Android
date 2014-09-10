@@ -405,7 +405,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
     private class NoteClickListener implements NotificationsListFragment.OnNoteClickListener {
         @Override
-        public void onClickNote(Note note, int position) {
+        public void onClickNote(Note note) {
             if (note == null) return;
 
             // open the latest version of this note just in case it has changed - this can

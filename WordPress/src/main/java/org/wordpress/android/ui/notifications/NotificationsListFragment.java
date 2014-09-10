@@ -31,13 +31,13 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     private int mRestoredListPosition;
 
-    Bucket<Note> mBucket;
+    private Bucket<Note> mBucket;
 
     /**
      * For responding to tapping of notes
      */
     public interface OnNoteClickListener {
-        public void onClickNote(Note note, int position);
+        public void onClickNote(Note note);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
 
         if (mNoteClickListener != null) {
-            mNoteClickListener.onClickNote(note, position);
+            mNoteClickListener.onClickNote(note);
         }
     }
 
@@ -162,7 +162,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
     }
 
-    protected void updateLastSeenTime() {
+    void updateLastSeenTime() {
         // set the timestamp to now
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
@@ -178,7 +178,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
     }
 
-    public void refreshNotes() {
+    void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
         }

@@ -26,10 +26,6 @@ public class SimperiumUtils {
     private static Bucket<Note> mNotesBucket;
     private static Bucket<BucketObject> mMetaBucket;
 
-    public static Simperium getSimperium() {
-        return mSimperium;
-    }
-
     public static Bucket<Note> getNotesBucket() {
         return mNotesBucket;
     }
@@ -82,7 +78,7 @@ public class SimperiumUtils {
         return mSimperium;
     }
 
-    public static void authorizeUser(Simperium simperium, String token) {
+    private static void authorizeUser(Simperium simperium, String token) {
         User user = simperium.getUser();
 
         String tokenFormat = "WPCC/%s/%s";
