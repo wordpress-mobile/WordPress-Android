@@ -137,6 +137,9 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded(int postCount) {
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some
                         requestPosts(false);
