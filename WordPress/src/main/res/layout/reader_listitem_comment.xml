@@ -97,13 +97,15 @@
             tools:visibility="visible" />
     </LinearLayout>
 
+    <!-- progress bar that appears while submitting a comment -->
     <ProgressBar
         android:id="@+id/progress_comment"
-        style="@style/ReaderProgressBar"
+        style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </RelativeLayout>

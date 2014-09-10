@@ -23,10 +23,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -44,7 +44,8 @@ public class ReaderCommentListActivity extends Activity {
     private ReaderCommentAdapter mCommentAdapter;
 
     private WPListView mListView;
-    private ViewGroup mLayoutCommentBox;
+    private EditText mEditComment;
+    private ImageView mImgSubmitComment;
 
     private boolean mIsUpdatingComments;
     private long mReplyToCommentId;
@@ -82,22 +83,54 @@ public class ReaderCommentListActivity extends Activity {
 
         mListView.setAdapter(getCommentAdapter());
 
-        mLayoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mLayoutCommentBox.setVisibility(View.VISIBLE);
+        ViewGroup layoutCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
+        layoutCommentBox.setVisibility(View.VISIBLE);
 
-        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
-        imgPostComment.setOnClickListener(new View.OnClickListener() {
+        mEditComment = (EditText) layoutCommentBox.findViewById(R.id.edit_comment);
+        mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                submitComment(mReplyToCommentId);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
+                    submitComment();
+                }
+                return false;
             }
         });
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REPLY_TO_COMMENT_ID)) {
-            showAddCommentBox(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
+        mImgSubmitComment = (ImageView) layoutCommentBox.findViewById(R.id.image_post_comment);
+        mImgSubmitComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitComment();
+            }
+        });
+
+        if (savedInstanceState != null) {
+            setReplyToCommentId(savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID));
         }
 
         refreshComments();
+    }
+
+    private void setReplyToCommentId(long commentId) {
+        mReplyToCommentId = commentId;
+        mEditComment.setHint(mReplyToCommentId == 0 ?
+                R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
+
+        // if a comment is being replied to, highlight it and scroll it to the top so the user can
+        // see which comment they're replying to - note that scrolling is delayed to give time for
+        // listView to reposition due to soft keyboard appearing
+        if (mReplyToCommentId != 0) {
+            mEditComment.requestFocus();
+            EditTextUtils.showSoftInput(mEditComment);
+            getCommentAdapter().setHighlightCommentId(mReplyToCommentId, false);
+            mListView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    scrollToCommentId(mReplyToCommentId);
+                }
+            }, 300);
+        }
     }
 
     @Override
@@ -105,9 +138,7 @@ public class ReaderCommentListActivity extends Activity {
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mBlogId);
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putLong(KEY_TOPMOST_COMMENT_ID, getTopMostCommentId());
-        if (mReplyToCommentId != 0) {
-            outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
-        }
+        outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
 
         super.onSaveInstanceState(outState);
     }
@@ -157,7 +188,7 @@ public class ReaderCommentListActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty) {
-                            updateComments(true);
+                            updateComments();
                         } else if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
                         }
@@ -169,7 +200,7 @@ public class ReaderCommentListActivity extends Activity {
             ReaderCommentAdapter.RequestReplyListener replyListener = new ReaderCommentAdapter.RequestReplyListener() {
                 @Override
                 public void onRequestReply(long commentId) {
-                    showAddCommentBox(commentId);
+                    setReplyToCommentId(commentId);
                 }
             };
 
@@ -180,7 +211,7 @@ public class ReaderCommentListActivity extends Activity {
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader comments > requesting newer comments");
-                        updateComments(true);
+                        updateComments();
                     }
                 }
             };
@@ -206,7 +237,7 @@ public class ReaderCommentListActivity extends Activity {
     /*
      * request comments for this post
      */
-    private void updateComments(boolean showProgress) {
+    private void updateComments() {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
@@ -214,10 +245,7 @@ public class ReaderCommentListActivity extends Activity {
 
         AppLog.d(T.READER, "reader comments > updateComments");
         mIsUpdatingComments = true;
-
-        if (showProgress) {
-            showProgress();
-        }
+        showProgress();
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
@@ -247,69 +275,6 @@ public class ReaderCommentListActivity extends Activity {
     }
 
     /*
-     * show the view enabling adding a comment - triggered when user hits comment icon/count in header
-     * note that this view is hidden at design time, so it will be shown the first time user taps icon.
-     * pass 0 for the replyToCommentId to add a parent-level comment to the post, or pass a real
-     * comment id to reply to a specific comment
-     */
-    private void showAddCommentBox(final long replyToCommentId) {
-        if (isFinishing() || mIsSubmittingComment) {
-            return;
-        }
-
-        // different hint depending on whether user is replying to a comment or commenting on the post
-        final EditText editComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
-        editComment.setHint(replyToCommentId == 0 ? R.string.reader_hint_comment_on_post : R.string.reader_hint_comment_on_comment);
-
-        if (mLayoutCommentBox.getVisibility() != View.VISIBLE) {
-            AniUtils.flyIn(mLayoutCommentBox);
-        }
-
-        editComment.requestFocus();
-        editComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitComment(replyToCommentId);
-                }
-                return false;
-            }
-        });
-
-        EditTextUtils.showSoftInput(editComment);
-
-        // if user is replying to another comment, highlight the comment being replied to and scroll
-        // it to the top so the user can see which comment they're replying to - note that scrolling
-        // is delayed to give time for listView to reposition due to soft keyboard appearing
-        if (replyToCommentId != 0) {
-            getCommentAdapter().setHighlightCommentId(replyToCommentId, false);
-            mListView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scrollToCommentId(replyToCommentId);
-                }
-            }, 300);
-        }
-
-        mReplyToCommentId = replyToCommentId;
-    }
-
-    void hideAddCommentBox() {
-        if (isFinishing() || mLayoutCommentBox.getVisibility() != View.VISIBLE) {
-            return;
-        }
-
-        final EditText editComment = (EditText) mLayoutCommentBox.findViewById(R.id.edit_comment);
-        AniUtils.flyOut(mLayoutCommentBox);
-        EditTextUtils.hideSoftInput(editComment);
-
-        getCommentAdapter().setHighlightCommentId(0, false);
-
-        mReplyToCommentId = 0;
-    }
-
-
-    /*
      * scrolls the passed comment to the top of the listView
      */
     private void scrollToCommentId(long commentId) {
@@ -322,45 +287,41 @@ public class ReaderCommentListActivity extends Activity {
     /*
      * submit the text typed into the comment box as a comment on the current post
      */
-    private boolean mIsSubmittingComment = false;
-
-    private void submitComment(final long replyToCommentId) {
-        final EditText editComment = (EditText) findViewById(R.id.edit_comment);
-        final String commentText = EditTextUtils.getText(editComment);
+    private void submitComment() {
+        final String commentText = EditTextUtils.getText(mEditComment);
         if (TextUtils.isEmpty(commentText)) {
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_COMMENTED_ON_ARTICLE);
 
-        // hide the comment box - this provides immediate indication that comment is being posted
-        // and prevents users from submitting the same comment twice
-        hideAddCommentBox();
+        mImgSubmitComment.setEnabled(false);
+        mEditComment.setEnabled(false);
 
         // generate a "fake" comment id to assign to the new comment so we can add it to the db
         // and reflect it in the adapter before the API call returns
         final long fakeCommentId = ReaderCommentActions.generateFakeCommentId();
 
-        mIsSubmittingComment = true;
         ReaderActions.CommentActionListener actionListener = new ReaderActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded, ReaderComment newComment) {
-                mIsSubmittingComment = false;
                 if (isFinishing()) {
                     return;
                 }
+                mImgSubmitComment.setEnabled(true);
+                mEditComment.setEnabled(true);
                 if (succeeded) {
-                    // comment posted successfully so stop highlighting the fake one and replace
-                    // it with the real one
+                    // stop highlighting the fake comment and replace it with the real one
                     getCommentAdapter().setHighlightCommentId(0, false);
                     getCommentAdapter().replaceComment(fakeCommentId, newComment);
                     mListView.invalidateViews();
-                    showAddCommentBox(0);
+                    setReplyToCommentId(0);
                 } else {
-                    // comment failed to post - show the comment box again with the comment text intact,
-                    // and remove the "fake" comment from the adapter
-                    editComment.setText(commentText);
-                    showAddCommentBox(replyToCommentId);
+                    mEditComment.setText(commentText);
                     getCommentAdapter().removeComment(fakeCommentId);
                     ToastUtils.showToast(
                             ReaderCommentListActivity.this, R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
@@ -368,14 +329,15 @@ public class ReaderCommentListActivity extends Activity {
             }
         };
 
-        final ReaderComment newComment = ReaderCommentActions.submitPostComment(
+        ReaderComment newComment = ReaderCommentActions.submitPostComment(
                 getPost(),
                 fakeCommentId,
                 commentText,
-                replyToCommentId,
+                mReplyToCommentId,
                 actionListener);
+
         if (newComment != null) {
-            editComment.setText(null);
+            mEditComment.setText(null);
             // add the "fake" comment to the adapter, highlight it, and show a progress bar
             // next to it while it's submitted
             getCommentAdapter().setHighlightCommentId(newComment.commentId, true);

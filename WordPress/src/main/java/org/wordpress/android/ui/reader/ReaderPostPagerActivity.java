@@ -217,9 +217,9 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     /*
-     * loads the posts used to populate the pager adapter - passed blogId/postId will be made
-     * active after loading unless gotoNext=true, in which case the post after the passed one
-     * will be made active
+     * loads the blogId/postId pairs used to populate the pager adapter - passed blogId/postId will
+     * be made active after loading unless gotoNext=true, in which case the post after the passed
+     * one will be made active
      */
     private void loadPosts(final long blogId,
                            final long postId,

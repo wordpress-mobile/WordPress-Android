@@ -502,8 +502,6 @@ public class ReaderPostTable {
                    + " AND tbl_post_tags.tag_type=?";
 
         if (tag.tagType == ReaderTagType.DEFAULT) {
-            // skip posts that are no longer liked if this is "Posts I Like", skip posts that are no
-            // longer followed if this is "Blogs I Follow"
             if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED)) {
                 sql += " AND tbl_posts.is_liked != 0";
             } else if (tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING)) {
