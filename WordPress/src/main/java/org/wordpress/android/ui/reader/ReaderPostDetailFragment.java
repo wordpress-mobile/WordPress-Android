@@ -362,6 +362,7 @@ public class ReaderPostDetailFragment extends Fragment
         // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
         refreshLikes();
+        refreshIconBarCounts();
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
@@ -465,44 +466,76 @@ public class ReaderPostDetailFragment extends Fragment
                 if (!isAdded()) {
                     return;
                 }
-                // reload the post if it has changed
+                // if the post has changed, reload it from the db and update the like/comment counts
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshCommentCount();
+                    refreshIconBarCounts();
+                    refreshComments();
                 }
-                if (result != ReaderActions.UpdateResult.FAILED) {
-                    // refresh likes if necessary - done regardless of whether the post has changed
-                    // since it's possible likes weren't stored until the post was updated
-                    if (numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
-                        refreshLikes();
-                    }
+                // refresh likes if necessary - done regardless of whether the post has changed
+                // since it's possible likes weren't stored until the post was updated
+                if (result != ReaderActions.UpdateResult.FAILED
+                        && numLikesBefore != ReaderLikeTable.getNumLikesForPost(mPost)) {
+                    refreshLikes();
                 }
             }
         };
         ReaderPostActions.updatePost(mPost, resultListener);
     }
 
+    private void refreshIconBarCounts() {
+        if (!isAdded() || !hasPost()) {
+            return;
+        }
+
+        final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
+        final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
+
+        if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
+            countComments.setCount(mPost.numReplies);
+            countComments.setVisibility(View.VISIBLE);
+            countComments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
+                }
+            });
+        } else {
+            countComments.setVisibility(View.INVISIBLE);
+            countComments.setOnClickListener(null);
+        }
+
+        if (mPost.isLikesEnabled) {
+            countLikes.setCount(mPost.numLikes);
+            countLikes.setVisibility(View.VISIBLE);
+            countLikes.setSelected(mPost.isLikedByCurrentUser);
+            countLikes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    togglePostLike(mPost, countLikes);
+                }
+            });
+            // if we know refreshLikes() is going to show the liking layout, force it to take up
+            // space right now
+            if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
+                mLayoutLikes.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            countLikes.setVisibility(View.INVISIBLE);
+            countLikes.setOnClickListener(null);
+        }
+    }
+
     /*
      * show latest likes for this post
      */
     private void refreshLikes() {
-        AppLog.d(T.READER, "reader post detail > refreshLikes");
         if (!isAdded() || !hasPost() || !mPost.isWP() || !mPost.isLikesEnabled) {
             return;
         }
 
         final TextView txtLikeCount = (TextView) mLayoutLikes.findViewById(R.id.text_like_count);
         txtLikeCount.setText(ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
-
-        final ReaderIconCountView countLikes = (ReaderIconCountView) getView().findViewById(R.id.count_likes);
-        countLikes.setCount(mPost.numLikes);
-        countLikes.setSelected(mPost.isLikedByCurrentUser);
-        countLikes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                togglePostLike(mPost, countLikes);
-            }
-        });
 
         // nothing more to do if no likes
         if (mPost.numLikes == 0) {
@@ -527,18 +560,16 @@ public class ReaderPostDetailFragment extends Fragment
         mLikingUsersView.showLikingUsers(mPost);
     }
 
-    private void refreshCommentCount() {
-        if (!isAdded()) {
+    /*
+     * update the comment count shown below the post's content
+     */
+    private void refreshComments() {
+        if (!isAdded() || !hasPost()) {
             return;
         }
 
-        // comment icon with count
-        final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
-        countComments.setCount(mPost.numReplies);
-
-        // comment count below the post content
-        TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
-        if (mPost == null || mPost.numReplies == 0) {
+        final TextView txtCommentCount = (TextView) getView().findViewById(R.id.text_comment_count);
+        if (mPost.numReplies == 0) {
             txtCommentCount.setVisibility(View.GONE);
         } else {
             txtCommentCount.setVisibility(View.VISIBLE);
@@ -649,10 +680,8 @@ public class ReaderPostDetailFragment extends Fragment
         TextView txtFollow;
 
         ImageView imgBtnReblog;
-        ReaderIconCountView countLikes;
-        ReaderIconCountView countComments;
-
         ImageView imgDropDown;
+
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
 
@@ -687,8 +716,6 @@ public class ReaderPostDetailFragment extends Fragment
             imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-            countLikes = (ReaderIconCountView) container.findViewById(R.id.count_likes);
-            countComments = (ReaderIconCountView) mLayoutIcons.findViewById(R.id.count_comments);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
 
@@ -790,35 +817,6 @@ public class ReaderPostDetailFragment extends Fragment
                 imgBtnReblog.setVisibility(View.INVISIBLE);
             }
 
-            // enable viewing comments if they're open on this post, or any exist
-            if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
-                // comment count icon
-                countComments.setCount(mPost.numReplies);
-                countComments.setVisibility(View.VISIBLE);
-                countComments.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ReaderActivityLauncher.showReaderComments(getActivity(), mPost);
-                    }
-                });
-            } else {
-                countComments.setVisibility(View.INVISIBLE);
-                countComments.setOnClickListener(null);
-            }
-
-            if (mPost.isLikesEnabled) {
-                countLikes.setCount(mPost.numLikes);
-                countLikes.setVisibility(View.VISIBLE);
-                countLikes.setSelected(mPost.isLikedByCurrentUser);
-                // if we know refreshLikes() is going to show the liking layout, force it to take up
-                // space right now
-                if (mPost.numLikes > 0 && mLayoutLikes.getVisibility() == View.GONE) {
-                    mLayoutLikes.setVisibility(View.INVISIBLE);
-                }
-            } else {
-                countLikes.setVisibility(View.INVISIBLE);
-            }
-
             // external blogs (feeds) don't support action icons
             if (!mPost.isExternal && (mPost.isLikesEnabled
                                    || mPost.canReblog()
@@ -845,6 +843,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
+            refreshIconBarCounts();
         }
     }
 
@@ -867,7 +866,7 @@ public class ReaderPostDetailFragment extends Fragment
                         return;
                     }
                     refreshLikes();
-                    refreshCommentCount();
+                    refreshComments();
                     if (!mHasAlreadyUpdatedPost) {
                         mHasAlreadyUpdatedPost = true;
                         updatePost();
