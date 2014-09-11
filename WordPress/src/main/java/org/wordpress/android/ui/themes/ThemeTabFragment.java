@@ -141,11 +141,10 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        if (WordPress.getCurrentBlog() == null)
-            return;
-
         Cursor cursor = fetchThemes(getThemeSortType());
+        if (cursor == null) {
+            return;
+        }
         mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
@@ -168,10 +167,17 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
         return ThemeSortType.getTheme(sortType);
     }
 
+    /**
+     * Fetch themes for a given ThemeSortType.
+     *
+     * @return a db Cursor or null if current blog is null
+     */
     private Cursor fetchThemes(ThemeSortType themeSortType) {
-        String blogId = getBlogId();
-
-        switch(themeSortType) {
+        if (WordPress.getCurrentBlog() == null) {
+            return null;
+        }
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        switch (themeSortType) {
             case POPULAR:
                 return WordPress.wpDB.getThemesPopularity(blogId);
             case NEWEST:
@@ -179,13 +185,14 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             case TRENDING:
             default:
                 return WordPress.wpDB.getThemesTrending(blogId);
-
         }
-
     }
 
     private void refreshView() {
         Cursor cursor = fetchThemes(getThemeSortType());
+        if (cursor == null) {
+            return;
+        }
         if (mAdapter == null) {
             mAdapter = new ThemeTabAdapter(getActivity(), cursor, false);
         }
@@ -193,10 +200,6 @@ public class ThemeTabFragment extends Fragment implements OnItemClickListener, R
             mNoResultText.setVisibility(View.GONE);
         }
         mAdapter.changeCursor(cursor);
-    }
-
-    protected String getBlogId() {
-        return String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
     }
 
     @Override
