@@ -244,6 +244,68 @@ public class CommentActions {
     }
 
     /**
+     * reply to an individual comment via the WP.com REST API
+     */
+    public static void submitReplyToCommentRestApi(long siteId, long commentId,
+                                                   final String replyText,
+                                                   final CommentActionListener actionListener) {
+        if (TextUtils.isEmpty(replyText)) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (actionListener != null)
+                    actionListener.onActionResult(true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError != null)
+                    AppLog.e(T.COMMENTS, volleyError.getMessage(), volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+            }
+        };
+
+        WordPress.getRestClientUtils().replyToComment(siteId, commentId, replyText, listener, errorListener);
+    }
+
+    /**
+     * Moderate a comment from a WPCOM notification
+     */
+    public static void moderateCommentRestApi(long siteId,
+                                              long commentId,
+                                              CommentStatus newStatus,
+                                              final CommentActionListener actionListener) {
+
+        WordPress.getRestClientUtils().moderateComment(
+                String.valueOf(siteId),
+                String.valueOf(commentId),
+                CommentStatus.toRESTString(newStatus),
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(true);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(false);
+                        }
+                    }
+                }
+        );
+    }
+
+    /**
      * Moderate a comment from a WPCOM notification
      */
     public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {

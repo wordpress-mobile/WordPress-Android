@@ -97,6 +97,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private boolean mIsUsersBlog = false;
     private boolean mIsCommentReply = false;
+    private boolean mIsSubmittingReply = false;
 
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
 
@@ -625,19 +626,41 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!NetworkUtils.checkConnection(getActivity()))
             return;
 
-        // Fire the appropriate listener
+        // Fire the appropriate listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(mNote, newStatus);
+            return;
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(mLocalBlogId, mComment, newStatus);
+            return;
         }
+
+        if (mNote == null) return;
+
+        // Basic moderation support, currently only used when this Fragment is in a CommentDetailActivity
+        // Uses WP.com REST API and requires a note object
+        final CommentStatus oldStatus = mComment.getStatusEnum();
+        mComment.setStatus(CommentStatus.toString(newStatus));
+        updateStatusViews();
+        CommentActions.moderateCommentRestApi(mNote.getSiteId(), mComment.commentID, newStatus, new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!isAdded()) return;
+
+                if (!succeeded) {
+                    mComment.setStatus(CommentStatus.toString(oldStatus));
+                    updateStatusViews();
+                    ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
+                }
+            }
+        });
     }
 
     /*
      * post comment box text as a reply to the current comment
      */
     private void submitReply() {
-        if (!isAdded())
+        if (!isAdded() || mIsSubmittingReply)
             return;
 
         if (!NetworkUtils.checkConnection(getActivity()))
@@ -653,15 +676,46 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
         mImgSubmitReply.setVisibility(View.GONE);
-        ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
-        progress.setVisibility(View.VISIBLE);
+        final ProgressBar progressBar = getView() != null ? (ProgressBar) getView().findViewById(R.id.progress_submit_comment) : null;
+        if (getView() != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
-        // Fire the appropriate action listener
+        // Fire the appropriate action listener if we have one
         if (mNote != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onReplyToNote(mNote, replyText);
+            return;
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onReplyToComment(mLocalBlogId, mComment, replyText);
+            return;
         }
+
+        if (mNote == null) return;
+
+        // Handle the reply here if no OnCommentActionListener was provided. Uses WP.com REST API
+        mIsSubmittingReply = true;
+        CommentActions.submitReplyToCommentRestApi(mNote.getSiteId(), mComment.commentID, replyText, new CommentActions.CommentActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (!isAdded()) return;
+
+                mIsSubmittingReply = false;
+                mEditReply.setEnabled(true);
+                mImgSubmitReply.setVisibility(View.VISIBLE);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+                updateStatusViews();
+                if (succeeded) {
+                    ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
+                    mEditReply.setText(null);
+                } else {
+                    ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                    // refocus editor on failure and show soft keyboard
+                    EditTextUtils.showSoftInput(mEditReply);
+                }
+            }
+        });
     }
 
     /*
@@ -827,7 +881,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mLocalBlogId > 0 && canModerate());
     }
     private boolean canLike() {
-        return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
+        return (!mIsCommentReply && mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
     /*
