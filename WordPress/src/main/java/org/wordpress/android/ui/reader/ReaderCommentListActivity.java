@@ -164,6 +164,7 @@ public class ReaderCommentListActivity extends Activity {
             });
         } else {
             mCommentBox.setVisibility(View.GONE);
+            mEditComment.setEnabled(false);
             txtCommentsClosed.setVisibility(View.VISIBLE);
         }
     }
