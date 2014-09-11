@@ -131,20 +131,19 @@ public class ThemeSearchFragment extends ThemeTabFragment implements OnQueryText
 
     public void search(String searchTerm) {
         mLastSearch = searchTerm;
-
-        String blogId = getBlogId();
-        Cursor cursor =  WordPress.wpDB.getThemes(blogId, searchTerm);
-        if (mAdapter == null) {
+        if (mAdapter == null || WordPress.getCurrentBlog() == null) {
             return;
-        } else {
-            mAdapter.changeCursor(cursor);
-            mGridView.invalidateViews();
+        }
+        String blogId = String.valueOf(WordPress.getCurrentBlog().getRemoteBlogId());
+        Cursor cursor = WordPress.wpDB.getThemes(blogId, searchTerm);
 
-            if (cursor == null || cursor.getCount() == 0) {
-                mNoResultText.setVisibility(View.VISIBLE);
-            } else {
-                mNoResultText.setVisibility(View.GONE);
-            }
+        mAdapter.changeCursor(cursor);
+        mGridView.invalidateViews();
+
+        if (cursor == null || cursor.getCount() == 0) {
+            mNoResultText.setVisibility(View.VISIBLE);
+        } else {
+            mNoResultText.setVisibility(View.GONE);
         }
     }
 }
