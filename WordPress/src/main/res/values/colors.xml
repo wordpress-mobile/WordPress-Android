@@ -107,6 +107,7 @@
     <color name="post_detail_icon_tint">#646464</color>
 
     <!-- calypso colors -->
+    <!-- If you are changing these colors, please update them in NotificationsConstants as well -->
     <color name="calypso_blue_unread">#00aadc</color>
     <color name="calypso_blue_dark">#324155</color>
     <color name="calypso_grey">#aac0cf</color>

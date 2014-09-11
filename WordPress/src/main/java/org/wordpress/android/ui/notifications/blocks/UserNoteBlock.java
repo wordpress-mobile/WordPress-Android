@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.notifications.NotificationsConstants;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
@@ -27,8 +27,6 @@ import org.wordpress.android.util.UrlUtils;
  */
 public class UserNoteBlock extends NoteBlock {
     private final OnGravatarClickedListener mGravatarClickedListener;
-
-    private final int mWhiteBgColor = Color.parseColor("#FFFFFF");
 
     private int mAvatarSz;
 
@@ -110,7 +108,7 @@ public class UserNoteBlock extends NoteBlock {
                 noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
             } else {
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
-                noteBlockHolder.rootView.setBackgroundColor(mWhiteBgColor);
+                noteBlockHolder.rootView.setBackgroundColor(NotificationsConstants.COLOR_CALYPSO_WHITE);
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {

@@ -9,6 +9,7 @@ import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wordpress.android.ui.notifications.NotificationsConstants;
 import org.wordpress.android.util.JSONUtil;
 
 import javax.annotation.Nonnull;
@@ -27,10 +28,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private boolean mPressed;
     private boolean mShouldLink;
 
-    // Normal colors
-    private final int mBackgroundColor = Color.parseColor("#d2dee6");     // calypso blue border
-    private int mTextColor = Color.parseColor("#324155");           // calypso dark blue
-    private final int mLinkColor = Color.parseColor("#2EA2CC");     // new kid on the block blue
+    private int mTextColor = NotificationsConstants.COLOR_CALYPSO_DARK_BLUE;
 
     private final JSONObject mBlockData;
 
@@ -61,7 +59,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             // Apply different coloring for blockquotes
             if (getRangeType() == NoteBlockRangeType.BLOCKQUOTE) {
                 mShouldLink = false;
-                mTextColor = Color.parseColor("#90aec2"); // calypso blue
+                mTextColor = NotificationsConstants.COLOR_CALYPSO_BLUE;
             }
         }
     }
@@ -69,8 +67,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     @Override
     public void updateDrawState(@Nonnull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mPressed && !isBlockquoteType() ? mBackgroundColor : Color.TRANSPARENT;
-        textPaint.setColor(mShouldLink ? mLinkColor : mTextColor);
+        textPaint.bgColor = mPressed && !isBlockquoteType() ? NotificationsConstants.COLOR_CALYPSO_BLUE_BORDER : Color.TRANSPARENT;
+        textPaint.setColor(mShouldLink ? NotificationsConstants.COLOR_NEW_KID_BLUE : mTextColor);
         // No underlines
         textPaint.setUnderlineText(false);
     }
