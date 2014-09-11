@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.adapters;
 
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -355,7 +354,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
 
         if (showLikes || showComments) {
-            showCounts(holder, post, false);
+            showCounts(holder, post);
         }
 
         if (showLikes) {
@@ -440,13 +439,7 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * shows like & comment count
      */
-    private void showCounts(final PostViewHolder holder,
-                            final ReaderPost post,
-                            boolean animateChanges) {
-        if (animateChanges) {
-            holder.layoutBottom.setLayoutTransition(new LayoutTransition());
-        }
-
+    private void showCounts(PostViewHolder holder, ReaderPost post) {
         holder.likeCount.setCount(post.numLikes);
 
         if (post.numReplies > 0 || post.isCommentsOpen) {
@@ -454,10 +447,6 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.commentCount.setVisibility(View.VISIBLE);
         } else {
             holder.commentCount.setVisibility(View.GONE);
-        }
-
-        if (animateChanges) {
-            holder.layoutBottom.setLayoutTransition(null);
         }
     }
 
@@ -528,7 +517,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-        showCounts(holder, post, true);
+        showCounts(holder, post);
     }
 
     /*

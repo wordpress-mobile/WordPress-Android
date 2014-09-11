@@ -859,14 +859,21 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (url != null && url.equals("about:blank")) {
-            refreshLikes();
-            refreshCommentCount();
-
-            // request the latest info for this post if we haven't updated it already
-            if (!mHasAlreadyUpdatedPost) {
-                mHasAlreadyUpdatedPost = true;
-                updatePost();
-            }
+            // brief delay before showing comments/likes to give page time to render
+            view.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    refreshLikes();
+                    refreshCommentCount();
+                    if (!mHasAlreadyUpdatedPost) {
+                        mHasAlreadyUpdatedPost = true;
+                        updatePost();
+                    }
+                }
+            }, 300);
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url);
         }
