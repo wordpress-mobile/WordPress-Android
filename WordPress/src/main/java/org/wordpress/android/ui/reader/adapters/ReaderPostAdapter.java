@@ -354,7 +354,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         boolean showComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
 
         if (showLikes || showComments) {
-            showCounts(holder, post);
+            showCounts(holder, post, false);
         }
 
         if (showLikes) {
@@ -439,11 +439,11 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * shows like & comment count
      */
-    private void showCounts(PostViewHolder holder, ReaderPost post) {
-        holder.likeCount.setCount(post.numLikes);
+    private void showCounts(PostViewHolder holder, ReaderPost post, boolean animateChanges) {
+        holder.likeCount.setCount(post.numLikes, animateChanges);
 
         if (post.numReplies > 0 || post.isCommentsOpen) {
-            holder.commentCount.setCount(post.numReplies);
+            holder.commentCount.setCount(post.numReplies, animateChanges);
             holder.commentCount.setVisibility(View.VISIBLE);
         } else {
             holder.commentCount.setVisibility(View.GONE);
@@ -517,7 +517,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-        showCounts(holder, post);
+        showCounts(holder, post, true);
     }
 
     /*

@@ -3,13 +3,13 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.util.FormatUtils;
 
 /*
@@ -18,7 +18,9 @@ import org.wordpress.android.util.FormatUtils;
 public class ReaderIconCountView extends LinearLayout {
     private ImageView mImageView;
     private TextView mTextCount;
+    private int mCurrentCount;
 
+    // these must match the same values in attrs.xml
     private static final int ICON_LIKE = 0;
     private static final int ICON_COMMENT = 1;
 
@@ -39,6 +41,7 @@ public class ReaderIconCountView extends LinearLayout {
 
     private void initView(Context context, AttributeSet attrs) {
         inflate(context, R.layout.reader_icon_count_view, this);
+
         mImageView = (ImageView) findViewById(R.id.image_count);
         mTextCount = (TextView) findViewById(R.id.text_count);
 
@@ -73,11 +76,23 @@ public class ReaderIconCountView extends LinearLayout {
     }
 
     public void setCount(int count) {
-        if (count > 0) {
-            mTextCount.setText(FormatUtils.formatInt(count));
-            mTextCount.setVisibility(View.VISIBLE);
+        setCount(count, false);
+    }
+    public void setCount(int count, boolean animateChanges) {
+        mTextCount.setText(FormatUtils.formatInt(count));
+
+        if (animateChanges && count != mCurrentCount) {
+            if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
+                ReaderAnim.scaleOut(mTextCount, View.GONE, ReaderAnim.Duration.LONG, null);
+            } else if (mCurrentCount == 0 && mTextCount.getVisibility() != View.VISIBLE) {
+                ReaderAnim.scaleIn(mTextCount, ReaderAnim.Duration.LONG);
+            } else {
+                mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+            }
         } else {
-            mTextCount.setVisibility(View.GONE);
+            mTextCount.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
         }
+
+        mCurrentCount = count;
     }
 }

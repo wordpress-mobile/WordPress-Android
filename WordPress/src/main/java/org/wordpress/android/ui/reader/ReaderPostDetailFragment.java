@@ -362,7 +362,7 @@ public class ReaderPostDetailFragment extends Fragment
         // get the post again since it has changed, then refresh to show changes
         mPost = ReaderPostTable.getPost(mBlogId, mPostId);
         refreshLikes();
-        refreshIconBarCounts();
+        refreshIconBarCounts(true);
 
         if (isAskingToLike) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_LIKED_ARTICLE);
@@ -469,7 +469,7 @@ public class ReaderPostDetailFragment extends Fragment
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result == ReaderActions.UpdateResult.CHANGED) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
-                    refreshIconBarCounts();
+                    refreshIconBarCounts(true);
                     refreshComments();
                 }
                 // refresh likes if necessary - done regardless of whether the post has changed
@@ -483,7 +483,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderPostActions.updatePost(mPost, resultListener);
     }
 
-    private void refreshIconBarCounts() {
+    private void refreshIconBarCounts(boolean animateChanges) {
         if (!isAdded() || !hasPost()) {
             return;
         }
@@ -492,7 +492,7 @@ public class ReaderPostDetailFragment extends Fragment
         final ReaderIconCountView countComments = (ReaderIconCountView) getView().findViewById(R.id.count_comments);
 
         if (mPost.isWP() && (mPost.isCommentsOpen || mPost.numReplies > 0)) {
-            countComments.setCount(mPost.numReplies);
+            countComments.setCount(mPost.numReplies, animateChanges);
             countComments.setVisibility(View.VISIBLE);
             countComments.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -506,7 +506,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         if (mPost.isLikesEnabled) {
-            countLikes.setCount(mPost.numLikes);
+            countLikes.setCount(mPost.numLikes, animateChanges);
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             countLikes.setOnClickListener(new View.OnClickListener() {
@@ -843,7 +843,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             // only show action buttons for WP posts
             mLayoutIcons.setVisibility(mPost.isWP() ? View.VISIBLE : View.GONE);
-            refreshIconBarCounts();
+            refreshIconBarCounts(false);
         }
     }
 
