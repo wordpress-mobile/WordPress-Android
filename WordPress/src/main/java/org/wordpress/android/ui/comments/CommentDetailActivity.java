@@ -19,7 +19,7 @@ public class CommentDetailActivity extends Activity {
     public static final String KEY_COMMENT_DETAIL_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
     public static final String KEY_COMMENT_DETAIL_COMMENT_ID = "comment_detail_comment_id";
     public static final String KEY_COMMENT_DETAIL_NOTE_ID = "comment_detail_note_id";
-    public static final String KEY_COMMENT_DETAIL_IS_REPLY = "comment_detail_is_reply";
+    public static final String KEY_COMMENT_DETAIL_IS_REMOTE = "comment_detail_is_remote";
 
     private static final String TAG_COMMENT_DETAIL_FRAGMENT = "tag_comment_detail_fragment";
 
@@ -45,8 +45,8 @@ public class CommentDetailActivity extends Activity {
                             intent.getStringExtra(KEY_COMMENT_DETAIL_NOTE_ID)
                     );
 
-                    if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REPLY)) {
-                        commentDetailFragment = CommentDetailFragment.newInstanceForNoteCommentReply(note);
+                    if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REMOTE)) {
+                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteCommentWithNote(note);
                     } else {
                         commentDetailFragment = CommentDetailFragment.newInstance(note);
                     }

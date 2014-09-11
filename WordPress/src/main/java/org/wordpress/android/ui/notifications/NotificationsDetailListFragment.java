@@ -145,9 +145,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            if (mNote.getParentCommentId() > 0) {
-                // show comment detail if we have a parent comment id
-                notificationsActivity.showCommentParentDetailForNote(mNote);
+            if (mNote.getParentCommentId() > 0 || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
+                // show comment detail
+                notificationsActivity.showCommentDetailForNote(mNote);
             } else {
                 // otherwise, load the post in the Reader
                 notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());

@@ -271,11 +271,11 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
     }
 
-    public void showCommentParentDetailForNote(Note note) {
+    public void showCommentDetailForNote(Note note) {
         if (isFinishing() || note == null) return;
 
         Intent intent = new Intent(this, CommentDetailActivity.class);
-        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REPLY, true);
+        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REMOTE, true);
         intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
         startActivity(intent);
     }

@@ -96,7 +96,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredReplyText;
 
     private boolean mIsUsersBlog = false;
-    private boolean mIsCommentReply = false;
+    private boolean mIsRemoteCommentWithNote = false;
     private boolean mIsSubmittingReply = false;
 
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -137,9 +137,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     /*
      * used when called from notifications for a comment reply
      */
-    public static CommentDetailFragment newInstanceForNoteCommentReply(final Note note) {
+    public static CommentDetailFragment newInstanceForRemoteCommentWithNote(final Note note) {
         CommentDetailFragment fragment = newInstance(note);
-        fragment.setIsCommentReply();
+        fragment.setIsRemoteCommentWithNote();
         return fragment;
     }
 
@@ -309,8 +309,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    void setIsCommentReply() {
-        mIsCommentReply = true;
+    void setIsRemoteCommentWithNote() {
+        mIsRemoteCommentWithNote = true;
     }
 
     @Override
@@ -439,8 +439,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             scrollView.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
 
-            if (mNote != null && mIsCommentReply) {
-                // If a comment reply was requested, check if we have the comment for display.
+            if (mNote != null && mIsRemoteCommentWithNote) {
+                // If a remote comment was requested, check if we have the comment for display.
                 // Otherwise request the comment via the REST API
                 int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
                 if (localTableBlogId > 0) {
@@ -451,7 +451,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                     }
                 }
 
-                requestComment(localTableBlogId, mNote.getSiteId(), mNote.getParentCommentId());
+                long commentId = mNote.getParentCommentId() > 0 ? mNote.getParentCommentId() : mNote.getCommentId();
+                requestComment(localTableBlogId, mNote.getSiteId(), commentId);
             } else if (mNote != null) {
                 showCommentForNote(mNote);
             }
@@ -463,7 +464,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
-        if ((mNote == null || mIsCommentReply) && mLayoutButtons.getParent() == null) {
+        if ((mNote == null || mIsRemoteCommentWithNote) && mLayoutButtons.getParent() == null) {
             ViewGroup commentContentLayout = (ViewGroup) getView().findViewById(R.id.comment_content_container);
             commentContentLayout.addView(mLayoutButtons);
         }
@@ -881,7 +882,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mLocalBlogId > 0 && canModerate());
     }
     private boolean canLike() {
-        return (!mIsCommentReply && mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
+        return (!mIsRemoteCommentWithNote && mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
     /*
