@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image_count"
+        android:layout_gravity="top|left"
         style="@style/ReaderImageView.ButtonIcon"
         tools:src="@drawable/reader_button_comment" />
 
@@ -17,9 +17,10 @@
         style="@style/ReaderTextView.Count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="-8dp"
+        android:layout_gravity="top|right"
+        android:layout_marginTop="@dimen/margin_medium"
         android:visibility="gone"
         tools:text="2"
         tools:visibility="visible" />
 
-</LinearLayout>
+</FrameLayout>

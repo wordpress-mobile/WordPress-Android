@@ -79,7 +79,9 @@ public class ReaderIconCountView extends LinearLayout {
         setCount(count, false);
     }
     public void setCount(int count, boolean animateChanges) {
-        mTextCount.setText(FormatUtils.formatInt(count));
+        if (count != 0) {
+            mTextCount.setText(FormatUtils.formatInt(count));
+        }
 
         if (animateChanges && count != mCurrentCount) {
             if (count == 0 && mTextCount.getVisibility() == View.VISIBLE) {
