@@ -139,11 +139,19 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         @Override
-        public void showReaderPostForNoteIds() {
-            if (!isAdded() || mNote == null) return;
+        public void showDetailForNoteIds() {
+            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsActivity)) {
+                return;
+            }
 
             NotificationsActivity notificationsActivity = (NotificationsActivity)getActivity();
-            notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
+            if (mNote.getParentCommentId() > 0) {
+                // show comment detail if we have a parent comment id
+                notificationsActivity.showCommentParentDetailForNote(mNote);
+            } else {
+                // otherwise, load the post in the Reader
+                notificationsActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
+            }
         }
     };
 

@@ -25,6 +25,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
+import org.wordpress.android.ui.comments.CommentDetailActivity;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
@@ -268,6 +269,15 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         if (note.getFormattedSubject() != null) {
             setTitle(note.getTitle());
         }
+    }
+
+    public void showCommentParentDetailForNote(Note note) {
+        if (isFinishing() || note == null) return;
+
+        Intent intent = new Intent(this, CommentDetailActivity.class);
+        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_IS_REPLY, true);
+        intent.putExtra(CommentDetailActivity.KEY_COMMENT_DETAIL_NOTE_ID, note.getId());
+        startActivity(intent);
     }
 
     public void showBlogPreviewActivity(long siteId, String siteUrl) {

@@ -267,6 +267,11 @@ public class Note extends Syncable {
         return JSONUtil.queryJSON(mNoteJSON, "meta.ids.comment", 0);
     }
 
+
+    public long getParentCommentId() {
+        return JSONUtil.queryJSON(mNoteJSON, "meta.ids.parent_comment", 0);
+    }
+
     /**
      * Rudimentary system for pulling an item out of a JSON object hierarchy
      */

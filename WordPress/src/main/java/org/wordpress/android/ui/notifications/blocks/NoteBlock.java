@@ -46,7 +46,7 @@ public class NoteBlock {
 
     public interface OnNoteBlockTextClickListener {
         public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
-        public void showReaderPostForNoteIds();
+        public void showDetailForNoteIds();
     }
 
     public NoteBlock(JSONObject noteObject, OnNoteBlockTextClickListener onNoteBlockTextClickListener) {

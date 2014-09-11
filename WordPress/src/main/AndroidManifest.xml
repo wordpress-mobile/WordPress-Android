@@ -86,6 +86,8 @@
             android:name=".ui.comments.CommentsActivity"
             android:theme="@style/CalypsoTheme" />
         <activity
+            android:name=".ui.comments.CommentDetailActivity" />
+        <activity
             android:name=".ui.comments.EditCommentActivity" />
 
         <!-- Posts activities -->
