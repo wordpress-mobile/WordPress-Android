@@ -23,6 +23,7 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/reader_transparent_selector"
         android:orientation="horizontal">
 
         <org.wordpress.android.widgets.WPNetworkImageView

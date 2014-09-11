@@ -761,6 +761,19 @@ public class ReaderPostDetailFragment extends Fragment
             // hide header if this fragment was shown from blog preview
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
+            } else {
+                // tapping header shows blog preview unless this post is from an external feed
+                if (!mPost.isExternal) {
+                    layoutDetailHeader.setEnabled(true);
+                    layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        }
+                    });
+                } else {
+                    layoutDetailHeader.setEnabled(false);
+                }
             }
 
             // enable reblogging wp posts

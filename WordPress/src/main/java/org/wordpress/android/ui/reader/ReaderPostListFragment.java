@@ -27,6 +27,7 @@ import com.cocosw.undobar.UndoBarController;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderPost;
@@ -286,6 +287,12 @@ public class ReaderPostListFragment extends Fragment
                 rootView.addView(mBlogInfoView);
                 ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 break;
+        }
+
+        // add blank listView header if this is tag/blog preview to provide some initial space
+        // between the tag/blog header and the posts (height is zero so only divider appears)
+        if (getPostListType().isPreviewType()) {
+            ReaderUtils.addListViewHeader(mListView, 0);
         }
 
         // textView that appears when current tag has no posts
