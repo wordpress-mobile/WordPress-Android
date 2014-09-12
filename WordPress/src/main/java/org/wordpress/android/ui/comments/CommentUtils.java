@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Layout;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
@@ -21,13 +20,13 @@ public class CommentUtils {
     /*
      * displays comment text as html, including retrieving images
      */
-    public static CharSequence displayHtmlComment(TextView textView, String content, int maxImageSize) {
+    public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
         if (textView == null)
-            return null;
+            return;
 
         if (content == null) {
             textView.setText(null);
-            return null;
+            return;
         }
 
         // skip performance hit of html conversion if content doesn't contain html
@@ -38,8 +37,7 @@ public class CommentUtils {
             if (content.contains("://")) {
                 Linkify.addLinks(textView, Linkify.WEB_URLS);
             }
-
-            return content;
+            return;
         }
 
         // convert emoticons first (otherwise they'll be downloaded)
@@ -68,8 +66,6 @@ public class CommentUtils {
         }
 
         textView.setText(source);
-
-        return source;
     }
 
     // Assumes all lines after first line will not be indented
