@@ -25,6 +25,8 @@
         style="@style/ReaderListView.NoDivider"
         android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_post_header"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         android:smoothScrollbar="true"
@@ -34,7 +36,9 @@
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin">
 
         <include
             android:id="@+id/layout_comment_box"
@@ -52,8 +56,7 @@
             android:paddingBottom="@dimen/margin_large"
             android:paddingTop="@dimen/margin_large"
             android:text="@string/reader_label_comments_closed"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:visibility="gone" />
     </RelativeLayout>
 
     <ProgressBar

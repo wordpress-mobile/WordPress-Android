@@ -10,13 +10,15 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_large"
-    android:paddingRight="@dimen/margin_large"
     android:paddingTop="@dimen/margin_large">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_medium">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_post_avatar"
@@ -38,8 +40,8 @@
             android:id="@+id/text_post_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_label"
             android:layout_alignLeft="@+id/text_label"
+            android:layout_below="@+id/text_label"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey_extra_dark"
