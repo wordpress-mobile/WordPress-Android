@@ -40,8 +40,8 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
-import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -318,7 +318,7 @@ public class WordPress extends Application {
         if (WordPress.hasValidWPComCredentials(context)) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
-                NotificationUtils.registerDeviceForPushNotifications(context, regId);
+                NotificationsUtils.registerDeviceForPushNotifications(context, regId);
                 AppLog.v(T.NOTIFS, "Already registered for GCM");
             }
         }
@@ -500,7 +500,7 @@ public class WordPress extends Application {
         // a Volley request
         VolleyUtils.cancelAllRequests(requestQueue);
 
-        NotificationUtils.unregisterDevicePushNotifications(context);
+        NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
@@ -690,7 +690,7 @@ public class WordPress extends Application {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
                     } else {
                         // Send the token to WP.com
-                        NotificationUtils.registerDeviceForPushNotifications(mContext, token);
+                        NotificationsUtils.registerDeviceForPushNotifications(mContext, token);
                     }
                 } catch (Exception e) {
                     AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());

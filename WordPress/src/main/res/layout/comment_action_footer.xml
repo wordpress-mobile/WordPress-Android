@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_buttons"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
+        <LinearLayout
+            android:id="@+id/btn_like"
+            android:background="@drawable/moderate_button_selector"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_like_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_small"
+                android:src="@drawable/ic_action_like"
+                android:contentDescription="@string/reader_label_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_like_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:text="@string/reader_label_like"
+                android:textColor="@color/calypso_blue"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_moderate"
+            android:background="@drawable/moderate_button_selector"
+            android:paddingRight="@dimen/margin_small"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_medium"
+            android:gravity="center"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/btn_moderate_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_small"
+                android:src="@drawable/ic_action_like"
+                android:contentDescription="@string/reader_label_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/btn_moderate_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-4dp"
+                android:text="@string/reader_label_like"
+                android:textColor="@color/calypso_blue"
+                android:textSize="@dimen/text_sz_small" />
+        </LinearLayout>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/image_trash_comment"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_action_trash"
+            android:text="@string/mnu_comment_trash" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_btn_spam"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_action_spam"
+            android:text="@string/mnu_comment_spam" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/image_edit_comment"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_action_edit"
+            android:text="@string/mnu_comment_edit" />
+
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_btn_more"
+            style="@style/WordPress.ModerateButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_action_more"
+            android:text="@string/more" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/notifications_list_divider_full_width" />
+</LinearLayout>

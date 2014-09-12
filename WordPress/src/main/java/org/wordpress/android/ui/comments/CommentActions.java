@@ -32,6 +32,7 @@ import java.util.Map;
  */
 
 public class CommentActions {
+
     private CommentActions() {
         throw new AssertionError();
     }
@@ -55,9 +56,17 @@ public class CommentActions {
      * comments (moderated, deleted, added, etc.)
      */
     public static enum ChangedFrom {COMMENT_LIST, COMMENT_DETAIL}
-    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED}
+    public static enum ChangeType {EDITED, STATUS, REPLIED, TRASHED, SPAMMED}
     public static interface OnCommentChangeListener {
         public void onCommentChanged(ChangedFrom changedFrom, ChangeType changeType);
+    }
+
+    public static interface OnCommentActionListener {
+        public void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
+    }
+
+    public static interface OnNoteCommentActionListener {
+        public void onModerateCommentForNote(Note note, CommentStatus newStatus);
     }
 
 
@@ -202,7 +211,7 @@ public class CommentActions {
      * submitReplyToComment() in that it enables responding to a reply to a comment this
      * user made on someone else's blog
      */
-    static void submitReplyToCommentNote(final Note note,
+    public static void submitReplyToCommentNote(final Note note,
                                          final String replyText,
                                          final CommentActionListener actionListener) {
         if (note == null || TextUtils.isEmpty(replyText)) {
@@ -233,12 +242,74 @@ public class CommentActions {
     }
 
     /**
+     * reply to an individual comment via the WP.com REST API
+     */
+    public static void submitReplyToCommentRestApi(long siteId, long commentId,
+                                                   final String replyText,
+                                                   final CommentActionListener actionListener) {
+        if (TextUtils.isEmpty(replyText)) {
+            if (actionListener != null)
+                actionListener.onActionResult(false);
+            return;
+        }
+
+        RestRequest.Listener listener = new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                if (actionListener != null)
+                    actionListener.onActionResult(true);
+            }
+        };
+        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                if (volleyError != null)
+                    AppLog.e(T.COMMENTS, volleyError.getMessage(), volleyError);
+                if (actionListener != null)
+                    actionListener.onActionResult(false);
+            }
+        };
+
+        WordPress.getRestClientUtils().replyToComment(siteId, commentId, replyText, listener, errorListener);
+    }
+
+    /**
+     * Moderate a comment from a WPCOM notification
+     */
+    public static void moderateCommentRestApi(long siteId,
+                                              long commentId,
+                                              CommentStatus newStatus,
+                                              final CommentActionListener actionListener) {
+
+        WordPress.getRestClientUtils().moderateComment(
+                String.valueOf(siteId),
+                String.valueOf(commentId),
+                CommentStatus.toRESTString(newStatus),
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(true);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (actionListener != null) {
+                            actionListener.onActionResult(false);
+                        }
+                    }
+                }
+        );
+    }
+
+    /**
      * Moderate a comment from a WPCOM notification
      */
     public static void moderateCommentForNote(Note note, CommentStatus newStatus, final CommentActionListener actionListener) {
 
         WordPress.getRestClientUtils().moderateComment(
-                String.valueOf(note.getBlogId()),
+                String.valueOf(note.getSiteId()),
                 String.valueOf(note.getCommentId()),
                 CommentStatus.toRESTString(newStatus),
                 new RestRequest.Listener() {
