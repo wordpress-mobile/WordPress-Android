@@ -779,7 +779,7 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasPostAvatar()) {
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
-                        mResourceVars.likeAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+                        mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
