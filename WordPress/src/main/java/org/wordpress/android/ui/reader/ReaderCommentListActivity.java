@@ -37,6 +37,7 @@ public class ReaderCommentListActivity extends Activity {
 
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
     private static final String KEY_TOPMOST_COMMENT_ID = "topmost_comment_id";
+    private static final String KEY_HAS_UPDATED_COMMENTS = "has_updated_comments";
 
     private long mPostId;
     private long mBlogId;
@@ -49,6 +50,7 @@ public class ReaderCommentListActivity extends Activity {
     private ViewGroup mCommentBox;
 
     private boolean mIsUpdatingComments;
+    private boolean mHasUpdatedComments;
     private long mReplyToCommentId;
 
     private long mTopMostCommentId;
@@ -69,6 +71,7 @@ public class ReaderCommentListActivity extends Activity {
             mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mTopMostCommentId = savedInstanceState.getLong(KEY_TOPMOST_COMMENT_ID);
+            mHasUpdatedComments = savedInstanceState.getBoolean(KEY_HAS_UPDATED_COMMENTS);
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
@@ -121,6 +124,7 @@ public class ReaderCommentListActivity extends Activity {
         outState.putLong(ReaderConstants.ARG_POST_ID, mPostId);
         outState.putLong(KEY_TOPMOST_COMMENT_ID, getTopMostCommentId());
         outState.putLong(KEY_REPLY_TO_COMMENT_ID, mReplyToCommentId);
+        outState.putBoolean(KEY_HAS_UPDATED_COMMENTS, mHasUpdatedComments);
 
         super.onSaveInstanceState(outState);
     }
@@ -196,8 +200,8 @@ public class ReaderCommentListActivity extends Activity {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
-                        if (isEmpty) {
-                            updateComments();
+                        if (isEmpty || !mHasUpdatedComments) {
+                            updateComments(isEmpty);
                         } else if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
                         }
@@ -220,7 +224,7 @@ public class ReaderCommentListActivity extends Activity {
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
                         AppLog.i(T.READER, "reader comments > requesting newer comments");
-                        updateComments();
+                        updateComments(true);
                     }
                 }
             };
@@ -246,7 +250,7 @@ public class ReaderCommentListActivity extends Activity {
     /*
      * request comments for this post
      */
-    private void updateComments() {
+    private void updateComments(boolean showProgress) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
@@ -254,7 +258,11 @@ public class ReaderCommentListActivity extends Activity {
 
         AppLog.d(T.READER, "reader comments > updateComments");
         mIsUpdatingComments = true;
-        showProgress();
+        mHasUpdatedComments = true;
+
+        if (showProgress) {
+            showProgress();
+        }
 
         ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
