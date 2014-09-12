@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -120,7 +121,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (iconUrl != null) {
             try {
                 iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+                int largeIconSize = context.getResources().getDimensionPixelSize(
+                        android.R.dimen.notification_large_icon_height);
                 String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
                 largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
             } catch (UnsupportedEncodingException e) {
@@ -167,11 +169,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
-                        commentReplyIntent,
+                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ab_icon_reply,
-                        getResources().getText(R.string.reply), commentReplyPendingIntent);
+                mBuilder.addAction(R.drawable.ab_icon_reply, context.getText(R.string.reply),
+                        commentReplyPendingIntent);
             }
 
             if (largeIconBitmap != null) {
@@ -206,7 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_multi))
                     .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle("WordPress")
                     .setContentText(subject)
