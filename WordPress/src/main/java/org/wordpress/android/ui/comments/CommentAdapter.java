@@ -21,7 +21,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 class CommentAdapter extends BaseAdapter {
     static interface DataLoadedListener {
@@ -43,16 +45,16 @@ class CommentAdapter extends BaseAdapter {
 
     private CommentList mComments = new CommentList();
     private final HashSet<Integer> mSelectedPositions = new HashSet<Integer>();
+    private final List<Long> mModeratingCommentsIds = new ArrayList<Long>();
 
     private final int mStatusColorSpam;
     private final int mStatusColorUnapproved;
-    private final int mSelectionColor;
 
     private final int mAvatarSz;
-    private long mHighlightedCommentId = -1;
 
     private final String mStatusTextSpam;
     private final String mStatusTextUnapproved;
+    private final int mSelectionColor;
 
     private boolean mEnableSelection;
 
@@ -168,17 +170,18 @@ class CommentAdapter extends BaseAdapter {
         setItemSelected(position, !isItemSelected(position), view);
     }
 
-    /*
-     * this is used for tablet UI to highlight the comment displayed in the detail view
-     */
-    long getHighlightedCommentId() {
-        return mHighlightedCommentId;
-    }
-    void setHighlightedCommentId(long commentId) {
-        if (mHighlightedCommentId == commentId)
-            return;
-        mHighlightedCommentId = commentId;
+    public void addModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.add(commentId);
         notifyDataSetChanged();
+    }
+
+    public void removeModeratingCommentId(long commentId) {
+        mModeratingCommentsIds.remove(commentId);
+        notifyDataSetChanged();
+    }
+
+    public boolean isModeratingCommentId(long commentId) {
+        return mModeratingCommentsIds.size() > 0 && mModeratingCommentsIds.contains(commentId);
     }
 
     public int indexOfCommentId(long commentId) {
@@ -199,6 +202,14 @@ class CommentAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void removeComment(Comment comment) {
+        int commentIndex = indexOfCommentId(comment.commentID);
+        if (commentIndex >= 0) {
+            mComments.remove(commentIndex);
+            notifyDataSetChanged();
+        }
+    }
+
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Comment comment = mComments.get(position);
         final CommentHolder holder;
@@ -209,6 +220,12 @@ class CommentAdapter extends BaseAdapter {
             convertView.setTag(holder);
         } else {
             holder = (CommentHolder) convertView.getTag();
+        }
+
+        if (isModeratingCommentId(comment.commentID)) {
+            holder.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            holder.progressBar.setVisibility(View.GONE);
         }
 
         holder.txtTitle.setText(Html.fromHtml(comment.getFormattedTitle()));
@@ -234,13 +251,12 @@ class CommentAdapter extends BaseAdapter {
         }
         holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
-        final boolean useSelectionBackground;
+        boolean useSelectionBackground = false;
         if (mEnableSelection && isItemSelected(position)) {
             useSelectionBackground = true;
             if (holder.imgCheckmark.getVisibility() != View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.VISIBLE);
         } else {
-            useSelectionBackground = (mHighlightedCommentId == comment.commentID);
             if (holder.imgCheckmark.getVisibility() == View.VISIBLE)
                 holder.imgCheckmark.setVisibility(View.GONE);
             holder.imgAvatar.setImageUrl(comment.getAvatarForDisplay(mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
@@ -278,6 +294,7 @@ class CommentAdapter extends BaseAdapter {
         private final TextView txtDate;
         private final WPNetworkImageView imgAvatar;
         private final ImageView imgCheckmark;
+        private final View progressBar;
 
         private CommentHolder(View row) {
             txtTitle = (TextView) row.findViewById(R.id.title);
@@ -286,6 +303,7 @@ class CommentAdapter extends BaseAdapter {
             txtDate = (TextView) row.findViewById(R.id.text_date);
             imgCheckmark = (ImageView) row.findViewById(R.id.image_checkmark);
             imgAvatar = (WPNetworkImageView) row.findViewById(R.id.avatar);
+            progressBar = row.findViewById(R.id.moderate_progress);
         }
     }
 

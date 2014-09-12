@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Calypso (WP.com homepage) styles
+-->
+<resources>
+    <style name="CalypsoTheme" parent="@style/WordPress">
+        <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
+    </style>
+
+    <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
+        <item name="android:textAppearance">@style/Calypso.TextAppearance</item>
+    </style>
+
+    <style name="Calypso.TextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/calypso_blue_dark</item>
+    </style>
+
+    <style name="Calypso.Text.Date" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textColor">@color/calypso_grey</item>
+    </style>
+
+    <style name="Calypso.Text.Header" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">@color/calypso_grey</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
