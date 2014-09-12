@@ -96,7 +96,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredReplyText;
 
     private boolean mIsUsersBlog = false;
-    private boolean mIsRemoteCommentWithNote = false;
+
+    /*
+     * Used to request a comment from a note using its site and comment ids, rather than build
+     * the comment with the content in the note. See showComment()
+     */
+    private boolean mShouldRequestCommentFromNote = false;
+
     private boolean mIsSubmittingReply = false;
 
     private NotificationsDetailListFragment mNotificationsDetailListFragment;
@@ -135,11 +141,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     /*
-     * used when called from notifications for a comment reply
+     * used when called from notifications to load a comment that doesn't already exist in the note
      */
-    public static CommentDetailFragment newInstanceForRemoteCommentWithNote(final Note note) {
+    public static CommentDetailFragment newInstanceForRemoteNoteComment(final Note note) {
         CommentDetailFragment fragment = newInstance(note);
-        fragment.setIsRemoteCommentWithNote();
+        fragment.setShouldRequestCommentFromNote(true);
         return fragment;
     }
 
@@ -309,8 +315,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
-    void setIsRemoteCommentWithNote() {
-        mIsRemoteCommentWithNote = true;
+    void setShouldRequestCommentFromNote(boolean shouldRequestComment) {
+        mShouldRequestCommentFromNote = shouldRequestComment;
     }
 
     @Override
@@ -439,7 +445,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             scrollView.setVisibility(View.GONE);
             layoutBottom.setVisibility(View.GONE);
 
-            if (mNote != null && mIsRemoteCommentWithNote) {
+            if (mNote != null && mShouldRequestCommentFromNote) {
                 // If a remote comment was requested, check if we have the comment for display.
                 // Otherwise request the comment via the REST API
                 int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mNote.getSiteId());
@@ -464,7 +470,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         layoutBottom.setVisibility(View.VISIBLE);
 
         // Add action buttons footer
-        if ((mNote == null || mIsRemoteCommentWithNote) && mLayoutButtons.getParent() == null) {
+        if ((mNote == null || mShouldRequestCommentFromNote) && mLayoutButtons.getParent() == null) {
             ViewGroup commentContentLayout = (ViewGroup) getView().findViewById(R.id.comment_content_container);
             commentContentLayout.addView(mLayoutButtons);
         }
@@ -882,7 +888,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return (mLocalBlogId > 0 && canModerate());
     }
     private boolean canLike() {
-        return (!mIsRemoteCommentWithNote && mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
+        return (!mShouldRequestCommentFromNote && mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE));
     }
 
     /*

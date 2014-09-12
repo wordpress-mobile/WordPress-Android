@@ -46,7 +46,7 @@ public class CommentDetailActivity extends Activity {
                     );
 
                     if (intent.hasExtra(KEY_COMMENT_DETAIL_IS_REMOTE)) {
-                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteCommentWithNote(note);
+                        commentDetailFragment = CommentDetailFragment.newInstanceForRemoteNoteComment(note);
                     } else {
                         commentDetailFragment = CommentDetailFragment.newInstance(note);
                     }
