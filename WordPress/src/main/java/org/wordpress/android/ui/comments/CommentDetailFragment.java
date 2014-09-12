@@ -678,7 +678,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         EditTextUtils.hideSoftInput(mEditReply);
         mImgSubmitReply.setVisibility(View.GONE);
         final ProgressBar progressBar = getView() != null ? (ProgressBar) getView().findViewById(R.id.progress_submit_comment) : null;
-        if (getView() != null) {
+        if (progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }
 
