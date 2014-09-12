@@ -77,7 +77,6 @@ public class JSONUtil {
             AppLog.e(T.UTILS, "Unable to cast the object to " + defaultObject.getClass().getName(), e);
             return defaultObject;
         } catch (JSONException e) {
-            AppLog.e(T.UTILS, "Unable to get the Key from the input object. Key:" + query, e);
             return defaultObject;
         }
     }
@@ -133,7 +132,6 @@ public class JSONUtil {
             AppLog.e(T.UTILS, "Unable to cast the object to "+defaultObject.getClass().getName(), e);
             return defaultObject;
         } catch (JSONException e) {
-            AppLog.e(T.UTILS, "Unable to get the Key from the input object. Key:" + query, e);
             return defaultObject;
         }
     }
