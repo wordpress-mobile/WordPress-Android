@@ -83,7 +83,12 @@
 
         <!-- Comments activities -->
         <activity
-            android:name=".ui.comments.CommentsActivity" />
+            android:name=".ui.comments.CommentsActivity"
+            android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.comments.CommentDetailActivity"
+            android:theme="@style/CalypsoTheme"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.comments.EditCommentActivity" />
 
@@ -241,7 +246,8 @@
 
         <!-- Notifications activities -->
         <activity
-            android:name=".ui.notifications.NotificationsActivity"/>
+            android:name=".ui.notifications.NotificationsActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <activity
             android:name=".ui.notifications.NotificationsWebViewActivity"

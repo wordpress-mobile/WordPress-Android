@@ -11,4 +11,5 @@
     <item type="id" name="stats_search" />
     <item type="id" name="stats_top_authors" />
     <item type="id" name="stats_top_posts" />
+    <item type="id" name="note_block_tag_id" />
 </resources>

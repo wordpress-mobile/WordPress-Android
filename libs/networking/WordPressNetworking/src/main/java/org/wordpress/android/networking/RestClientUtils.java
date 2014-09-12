@@ -76,11 +76,11 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
      */
-    public void replyToComment(String siteId, String commentId, String content, Listener listener,
+    public void replyToComment(long siteId, long commentId, String content, Listener listener,
                                ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format("sites/%s/comments/%s/replies/new", siteId, commentId);
+        String path = String.format("sites/%d/comments/%d/replies/new", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -146,6 +146,34 @@ public class RestClientUtils {
         Map<String, String> params = new HashMap<String, String>();
         params.put("status", status);
         String path = String.format("sites/%s/comments/%s/", siteId, commentId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * Edit the content of a comment
+     */
+    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("content", content);
+        String path = String.format("sites/%d/comments/%d/", siteId, commentId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * Like or unlike a comment.
+     */
+    public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        String path = String.format("sites/%s/comments/%s/likes/", siteId, commentId);
+
+        if (!isLiked) {
+            path += "mine/delete";
+        } else {
+            path += "new";
+        }
+
         post(path, params, null, listener, errorListener);
     }
 

@@ -177,7 +177,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void moveBottomButtons() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mBottomButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-            if (getResources().getInteger(R.integer.isTablet) == 0) {
+            if (getResources().getInteger(R.integer.isSW600DP) == 0) {
                 setSecondaryButtonVisible(true);
             } else {
                 setSecondaryButtonVisible(false);

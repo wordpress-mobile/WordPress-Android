@@ -15,10 +15,10 @@
     <View
         android:id="@+id/divider_comment"
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/grey_medium" />
+        android:layout_height="1dp"
+        android:background="@color/calypso_blue_border" />
 
-    <EditText
+    <org.wordpress.android.widgets.OpenSansEditText
         android:id="@+id/edit_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

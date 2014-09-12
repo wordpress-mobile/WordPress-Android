@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@id/android:list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/WordPress.BorderedBackground"
+            android:listSelector="@drawable/reader_list_selector" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@id/android:empty"
+            style="@style/WordPress.EmptyList.Title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
+            android:layout_marginLeft="@dimen/empty_list_title_side_margin"
+            android:layout_marginRight="@dimen/empty_list_title_side_margin"
+            android:text="@string/empty_list_default" />
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+</LinearLayout>

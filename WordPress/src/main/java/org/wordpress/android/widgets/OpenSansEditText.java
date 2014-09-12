@@ -6,7 +6,7 @@ import android.widget.EditText;
 
 public class OpenSansEditText extends EditText {
     public OpenSansEditText(Context context) {
-        super(context);
+        super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
     }
 

@@ -6,7 +6,7 @@ import android.widget.Button;
 
 public class OpenSansButton extends Button {
     public OpenSansButton(Context context) {
-        super(context);
+        super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
     }
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item
+    android:state_pressed="true"
+    android:drawable="@color/reader_list_selector" />
+
+<item
+    android:state_focused="true"
+    android:drawable="@color/reader_list_selector" />
+
+<item
+    android:state_activated="true"
+    android:drawable="@color/reader_list_selector" />
+
+<item
+    android:drawable="@color/calypso_blue_light" />
+</selector>
