@@ -444,7 +444,7 @@ public class ImageUtils {
         optActual.inSampleSize = scale;
 
         // Get the roughly resized bitmap
-        Bitmap bmpResized;
+        final Bitmap bmpResized;
         try {
             bmpResized = BitmapFactory.decodeFile(filePath, optActual);
         } catch (OutOfMemoryError e) {
@@ -452,8 +452,9 @@ public class ImageUtils {
             return null;
         }
 
-        if (bmpResized == null)
+        if (bmpResized == null) {
             return null;
+        }
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -490,7 +491,18 @@ public class ImageUtils {
         } catch (OutOfMemoryError e) {
             AppLog.e(AppLog.T.UTILS, "OutOfMemoryError Error in setting image: " + e);
             return null;
+        } catch (NullPointerException e) {
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1844
+            AppLog.e(AppLog.T.UTILS, "Bitmap.createBitmap has thrown a NPE internally. This should never happen: " + e);
+            return null;
         }
+
+        if (bmpRotated == null) {
+            // Fix an issue where bmpRotated is null even if the documentation doesn't say Bitmap.createBitmap can return null.
+            // See: https://github.com/wordpress-mobile/WordPress-Android/issues/1848
+            return null;
+        }
+
         bmpRotated.compress(fmt, 100, stream);
         bmpResized.recycle();
         bmpRotated.recycle();
