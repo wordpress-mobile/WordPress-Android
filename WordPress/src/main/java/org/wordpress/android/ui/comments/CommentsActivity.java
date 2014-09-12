@@ -335,31 +335,6 @@ public class CommentsActivity extends WPActionBarActivity
     }
 
     @Override
-    public void onReplyToComment(int accountId, final Comment comment, String replyText) {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        }
-
-        getListFragment().setCommentIsModerating(comment.commentID, true);
-        CommentActions.submitReplyToComment(accountId, comment, replyText, new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) return;
-
-                getListFragment().setCommentIsModerating(comment.commentID, false);
-
-                if (succeeded) {
-                    getListFragment().updateComments(false);
-                    ToastUtils.showToast(CommentsActivity.this, R.string.note_reply_successful);
-                } else {
-                    ToastUtils.showToast(CommentsActivity.this, R.string.reply_failed);
-                }
-            }
-        });
-    }
-
-    @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
                 && changeType == CommentActions.ChangeType.EDITED) {

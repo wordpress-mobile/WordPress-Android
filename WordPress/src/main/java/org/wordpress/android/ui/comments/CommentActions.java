@@ -63,12 +63,10 @@ public class CommentActions {
 
     public static interface OnCommentActionListener {
         public void onModerateComment(int accountId, Comment comment, CommentStatus newStatus);
-        public void onReplyToComment(int accountId, Comment comment, String replyText);
     }
 
     public static interface OnNoteCommentActionListener {
         public void onModerateCommentForNote(Note note, CommentStatus newStatus);
-        public void onReplyToNote(Note note, String replyText);
     }
 
 

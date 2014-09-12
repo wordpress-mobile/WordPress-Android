@@ -677,52 +677,48 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (TextUtils.isEmpty(replyText))
             return;
 
-        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
-
         // disable editor, hide soft keyboard, hide submit icon, and show progress spinner while submitting
         mEditReply.setEnabled(false);
         EditTextUtils.hideSoftInput(mEditReply);
         mImgSubmitReply.setVisibility(View.GONE);
-        final ProgressBar progressBar = getView() != null ? (ProgressBar) getView().findViewById(R.id.progress_submit_comment) : null;
-        if (progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+        final ProgressBar progress = (ProgressBar) getView().findViewById(R.id.progress_submit_comment);
+        progress.setVisibility(View.VISIBLE);
 
-        // Fire the appropriate action listener if we have one
-        if (mNote != null && mOnNoteCommentActionListener != null) {
-            mOnNoteCommentActionListener.onReplyToNote(mNote, replyText);
-            return;
-        } else if (mOnCommentActionListener != null) {
-            mOnCommentActionListener.onReplyToComment(mLocalBlogId, mComment, replyText);
-            return;
-        }
-
-        if (mNote == null) return;
-
-        // Handle the reply here if no OnCommentActionListener was provided. Uses WP.com REST API
-        mIsSubmittingReply = true;
-        CommentActions.submitReplyToCommentRestApi(mNote.getSiteId(), mComment.commentID, replyText, new CommentActions.CommentActionListener() {
+        CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!isAdded()) return;
-
                 mIsSubmittingReply = false;
-                mEditReply.setEnabled(true);
-                mImgSubmitReply.setVisibility(View.VISIBLE);
-                if (progressBar != null) {
-                    progressBar.setVisibility(View.GONE);
-                }
-                updateStatusViews();
-                if (succeeded) {
-                    ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
-                    mEditReply.setText(null);
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
-                    // refocus editor on failure and show soft keyboard
-                    EditTextUtils.showSoftInput(mEditReply);
+                if (succeeded && mOnCommentChangeListener != null)
+                    mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.REPLIED);
+                if (isAdded()) {
+                    mEditReply.setEnabled(true);
+                    mImgSubmitReply.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.GONE);
+                    updateStatusViews();
+                    if (succeeded) {
+                        ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
+                        mEditReply.setText(null);
+                    } else {
+                        ToastUtils.showToast(getActivity(), R.string.reply_failed, ToastUtils.Duration.LONG);
+                        // refocus editor on failure and show soft keyboard
+                        EditTextUtils.showSoftInput(mEditReply);
+                    }
                 }
             }
-        });
+        };
+
+        mIsSubmittingReply = true;
+
+        AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_REPLIED_TO);
+        if (mNote != null) {
+            if (mShouldRequestCommentFromNote) {
+                CommentActions.submitReplyToCommentRestApi(mNote.getSiteId(), mComment.commentID, replyText, actionListener);
+            } else {
+                CommentActions.submitReplyToCommentNote(mNote, replyText, actionListener);
+            }
+        } else {
+            CommentActions.submitReplyToComment(mLocalBlogId, mComment, replyText, actionListener);
+        }
     }
 
     /*

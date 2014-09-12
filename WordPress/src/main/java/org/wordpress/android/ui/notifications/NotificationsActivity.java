@@ -376,32 +376,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     }
 
     @Override
-    public void onReplyToNote(final Note note, String replyText) {
-        if (note == null || TextUtils.isEmpty(replyText)) return;
-
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        }
-
-        mNotesListFragment.setNoteIsModerating(note.getId(), true);
-        CommentActions.submitReplyToCommentNote(note, replyText, new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (isFinishing()) return;
-
-                mNotesListFragment.setNoteIsModerating(note.getId(), false);
-
-                if (succeeded) {
-                    ToastUtils.showToast(NotificationsActivity.this, R.string.note_reply_successful);
-                } else {
-                    ToastUtils.showToast(NotificationsActivity.this, R.string.reply_failed);
-                }
-            }
-        });
-    }
-
-    @Override
     public void onCommentChanged(CommentActions.ChangedFrom changedFrom, CommentActions.ChangeType changeType) {
         // pop back stack if we edited a comment notification, so simperium will show the change
         if (changedFrom == CommentActions.ChangedFrom.COMMENT_DETAIL
