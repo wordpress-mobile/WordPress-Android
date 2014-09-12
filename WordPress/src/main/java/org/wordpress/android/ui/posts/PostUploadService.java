@@ -819,8 +819,7 @@ public class PostUploadService extends Service {
 
             mNotificationBuilder =
                     new NotificationCompat.Builder(getApplicationContext())
-                            .setSmallIcon(android.R.drawable.stat_sys_upload)
-                            .setOngoing(true);
+                            .setSmallIcon(android.R.drawable.stat_sys_upload);
 
             Intent notificationIntent = new Intent(mContext, post.isPage() ? PagesActivity.class : PostsActivity.class);
             notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
