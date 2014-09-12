@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/comment_avatar_margin_top">
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="@dimen/avatar_sz_small"
+        android:layout_height="@dimen/avatar_sz_small"
+        android:layout_marginTop="@dimen/comment_avatar_margin_top"
+        android:background="@color/grey_light" />
+
+    <LinearLayout
+        android:id="@+id/user_name_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/user_avatar"
+        android:layout_marginTop="@dimen/comment_user_margin_adjustment"
+        android:layout_marginLeft="@dimen/notifications_adjusted_font_margin"
+        android:layout_toRightOf="@id/user_avatar"
+        android:orientation="horizontal">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="@color/calypso_blue_dark"
+            android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
+            android:includeFontPadding="false"
+            tools:text="Bob Ross" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/user_comment_ago"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:singleLine="true"
+            android:textColor="@color/calypso_blue"
+            android:textSize="@dimen/text_sz_large"
+            android:includeFontPadding="false"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="5h" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/user_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/user_avatar"
+        android:layout_marginTop="@dimen/comment_snippet_margin_adjustment"
+        android:includeFontPadding="false"
+        android:textColor="@color/calypso_blue_dark"
+        android:textSize="@dimen/text_sz_large"
+        android:paddingBottom="@dimen/margin_medium"
+        tools:text="Thanks for stopping by my blog! I hope to see you again. " />
+
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/user_comment"
+        android:background="@drawable/notifications_list_divider_full_width" />
+
+</RelativeLayout>
+
+

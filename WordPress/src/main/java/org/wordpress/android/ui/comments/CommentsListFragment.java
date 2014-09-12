@@ -58,10 +58,8 @@ public class CommentsListFragment extends Fragment {
     private UpdateCommentsTask mUpdateCommentsTask;
 
     private OnCommentSelectedListener mOnCommentSelectedListener;
-    private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
-    private boolean mFirstLoad = true;
 
     private ListView getListView() {
         return mListView;
@@ -81,12 +79,6 @@ public class CommentsListFragment extends Fragment {
                         showEmptyView();
                     } else {
                         hideEmptyView();
-                    }
-                    if (mFirstLoad) {
-                        mFirstLoad = false;
-                        if (getActivity() != null && getActivity() instanceof CommentsActivity) {
-                            ((CommentsActivity) getActivity()).commentAdapterFirstLoad();
-                        }
                     }
                 }
             };
@@ -139,11 +131,10 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    public long getFirstCommentId() {
-        if (getCommentAdapter() != null && getCommentAdapter().getCount() > 0) {
-            return ((Comment) getCommentAdapter().getItem(0)).commentID;
+    public void removeComment(Comment comment) {
+        if (hasCommentAdapter() && comment != null) {
+            getCommentAdapter().removeComment(comment);
         }
-        return 0;
     }
 
     @Override
@@ -169,7 +160,6 @@ public class CommentsListFragment extends Fragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentSelectedListener = (OnCommentSelectedListener) activity;
-            mOnCommentChangeListener = (OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString() + " must implement Callback");
@@ -269,10 +259,6 @@ public class CommentsListFragment extends Fragment {
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
-                    if (mOnCommentChangeListener != null) {
-                        ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, changeType);
-                    }
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -319,8 +305,6 @@ public class CommentsListFragment extends Fragment {
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, ChangeType.TRASHED);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -331,17 +315,6 @@ public class CommentsListFragment extends Fragment {
                 listener);
     }
 
-    long getHighlightedCommentId() {
-        return (hasCommentAdapter() ? getCommentAdapter().getHighlightedCommentId() : 0);
-    }
-    void setHighlightedCommentId(long commentId) {
-        getCommentAdapter().setHighlightedCommentId(commentId);
-        int position = getCommentAdapter().indexOfCommentId(commentId);
-        if (position != -1) {
-            getListView().setSelection(position);
-        }
-    }
-
     private void setUpListView() {
         ListView listView = this.getListView();
         listView.setAdapter(getCommentAdapter());
@@ -350,8 +323,10 @@ public class CommentsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mActionMode == null) {
                     Comment comment = (Comment) getCommentAdapter().getItem(position);
-                    mOnCommentSelectedListener.onCommentSelected(comment.commentID);
-                    getListView().invalidateViews();
+                    if (!getCommentAdapter().isModeratingCommentId(comment.commentID)) {
+                        mOnCommentSelectedListener.onCommentSelected(comment.commentID);
+                        getListView().invalidateViews();
+                    }
                 } else {
                     getCommentAdapter().toggleItemSelected(position, view);
                 }
@@ -395,6 +370,16 @@ public class CommentsListFragment extends Fragment {
 
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void setCommentIsModerating(long commentId, boolean isModerating) {
+        if (!hasCommentAdapter()) return;
+
+        if (isModerating) {
+            getCommentAdapter().addModeratingCommentId(commentId);
+        } else {
+            getCommentAdapter().removeModeratingCommentId(commentId);
+        }
     }
 
     /*

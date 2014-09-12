@@ -136,7 +136,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * show posts in a specific blog
      */
-    static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
+    public static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();

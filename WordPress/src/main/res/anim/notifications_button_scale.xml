@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- quick scale animation to show for moderation buttons in CommentDetailFragment -->
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:fillAfter="false"
+    android:fromXScale="1.0"
+    android:fromYScale="1.0"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toXScale="1.5"
+    android:toYScale="1.5"
+    android:repeatMode="reverse"
+    android:repeatCount="1" />

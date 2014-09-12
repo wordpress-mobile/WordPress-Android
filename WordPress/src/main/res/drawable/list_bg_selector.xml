@@ -4,15 +4,15 @@
 
 <item
     android:state_pressed="true"
-    android:drawable="@color/blue_extra_light" />
+    android:drawable="@color/reader_list_selector" />
 
 <item
     android:state_focused="true"
-    android:drawable="@color/blue_extra_light" />
+    android:drawable="@color/reader_list_selector" />
 
 <item
     android:state_activated="true"
-    android:drawable="@color/blue_extra_light" />
+    android:drawable="@color/reader_list_selector" />
 
 <item
     android:drawable="@android:color/transparent" />
