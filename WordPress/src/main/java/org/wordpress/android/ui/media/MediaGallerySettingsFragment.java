@@ -18,8 +18,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ExpandableHeightGridView;
-import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 
@@ -120,9 +118,6 @@ public class MediaGallerySettingsFragment extends Fragment implements OnCheckedC
         mHeader = view.findViewById(R.id.media_gallery_settings_header);
         mScrollView = (ScrollView) view.findViewById(R.id.media_gallery_settings_content_container);
         mTitleView = (TextView) view.findViewById(R.id.media_gallery_settings_title);
-
-        if (!DisplayUtils.isTablet(view.getContext())) // show the arrow initially as collapsed when on phone
-            onPanelCollapsed();
 
         mNumColumnsContainer = view.findViewById(R.id.media_gallery_settings_num_columns_container);
         int visible = (mType == GalleryType.DEFAULT) ? View.VISIBLE : View.GONE;

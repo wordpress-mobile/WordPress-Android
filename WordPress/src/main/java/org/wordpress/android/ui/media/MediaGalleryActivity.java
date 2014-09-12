@@ -17,7 +17,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.ui.media.MediaGallerySettingsFragment.MediaGallerySettingsCallback;
-import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
@@ -175,15 +174,11 @@ public class MediaGalleryActivity extends Activity implements MediaGallerySettin
 
     @Override
     public void onBackPressed() {
-        if (DisplayUtils.isTablet(this)) {
-            super.onBackPressed();
+        if (mSlidingPanelLayout != null && !mIsPanelCollapsed) {
+            mSlidingPanelLayout.collapsePane();
         } else {
-            if (mSlidingPanelLayout != null && !mIsPanelCollapsed)
-                mSlidingPanelLayout.collapsePane();
-            else
-                super.onBackPressed();
+            super.onBackPressed();
         }
-
     }
 
     @Override

@@ -2,6 +2,6 @@
 <resources>
     <integer name="media_grid_num_columns">1</integer>
     <integer name="media_editor_save_button_visibility">@integer/visible</integer>
-    <integer name="isTablet">1</integer>
-    <integer name="smallest_width_dp">600</integer>    
+    <integer name="isSW600DP">1</integer>
+    <integer name="smallest_width_dp">600</integer>
 </resources>

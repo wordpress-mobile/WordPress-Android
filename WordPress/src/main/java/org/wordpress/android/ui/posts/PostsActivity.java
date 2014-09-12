@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -599,5 +600,12 @@ public class PostsActivity extends WPActionBarActivity
 
     public void setRefreshing(boolean refreshing) {
         mPostList.setRefreshing(refreshing);
+    }
+
+
+    public boolean isDualPane() {
+        FragmentManager fm = getFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.postDetail);
+        return fragment != null && fragment.isVisible();
     }
 }
