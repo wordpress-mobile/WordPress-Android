@@ -21,8 +21,9 @@ public class CommentUtils {
      * displays comment text as html, including retrieving images
      */
     public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
-        if (textView == null)
+        if (textView == null) {
             return;
+        }
 
         if (content == null) {
             textView.setText(null);
@@ -65,7 +66,7 @@ public class CommentUtils {
             end--;
         }
 
-        textView.setText(source);
+        textView.setText(source.subSequence(start, end));
     }
 
     // Assumes all lines after first line will not be indented
