@@ -35,6 +35,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.DotComAuthenticatedWebViewActivity;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
@@ -524,10 +525,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             String statsAuthenticatedPassword =  credentials.getPassword();
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
+            Intent statsWebViewIntent = new Intent(this, DotComAuthenticatedWebViewActivity.class);
+            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, statsAuthenticatedUser);
+            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, statsAuthenticatedPassword);
+            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, addressToLoad);
+            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, "https://wordpress.com/wp-login.php");
             startActivityWithDelay(statsWebViewIntent);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
             return true;

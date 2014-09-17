@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.ui.AuthenticatedWebViewActivity;
+import org.wordpress.android.ui.DotComAuthenticatedWebViewActivity;
+import org.wordpress.android.ui.WebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -72,17 +75,19 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                         // Still empty. Do not eat the event, but let's open the default Web Browser.
                         return super.onTouchEvent(widget, buffer, event);
                     }
-                    Intent statsWebViewIntent = new Intent(widget.getContext(), StatsWebViewActivity.class);
-                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
-                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD,
+                    Intent statsWebViewIntent = new Intent(widget.getContext(), DotComAuthenticatedWebViewActivity.class);
+                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, statsAuthenticatedUser);
+                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD,
                             statsAuthenticatedPassword);
-                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, url);
+                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, url);
+                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL,
+                            "https://wordpress.com/wp-login.php");
                     widget.getContext().startActivity(statsWebViewIntent);
                     return true;
-                } else  if (url.startsWith("https") || url.startsWith("http")) {
+                } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-                    Intent statsWebViewIntent = new Intent(widget.getContext(), StatsWebViewActivity.class);
-                    statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_URL, url);
+                    Intent statsWebViewIntent = new Intent(widget.getContext(), AuthenticatedWebViewActivity.class);
+                    statsWebViewIntent.putExtra(AuthenticatedWebViewActivity.URL, url);
                     widget.getContext().startActivity(statsWebViewIntent);
                     return true;
                 }

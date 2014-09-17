@@ -1,9 +1,13 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,7 +17,7 @@ import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.WebViewActivity;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
@@ -24,11 +28,28 @@ import java.net.URLEncoder;
 /**
  * Activity for opening stats external links in a webview.
  */
-public class StatsWebViewActivity extends WebViewActivity {
-    public static final String STATS_AUTHENTICATED_URL = "stats_authenticated_url";
-    public static final String STATS_AUTHENTICATED_USER = "stats_authenticated_user";
-    public static final String STATS_AUTHENTICATED_PASSWD = "stats_authenticated_passwd";
-    public static final String STATS_URL = "stats_url";
+public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
+    public static final String AUTHENTICATION_URL = "authenticated_url";
+    public static final String AUTHENTICATION_USER = "authenticated_user";
+    public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
+    public static final String URL_TO_LOAD = "url_to_load";
+
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url) {
+        if (context == null || TextUtils.isEmpty(url))
+            return;
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        String authenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
+        String authenticatedPassword = WordPressDB.decryptPassword(
+                settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
+        );
+        Intent intent = new Intent(context, DotComAuthenticatedWebViewActivity.class);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, authenticatedUser);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, authenticatedPassword);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, "https://wordpress.com/wp-login.php");
+        context.startActivity(intent);
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -44,17 +65,13 @@ public class StatsWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setDomStorageEnabled(true);
 
         if (extras != null) {
-            if (extras.containsKey(STATS_AUTHENTICATED_URL)) {
-                String addressToLoad = extras.getString(STATS_AUTHENTICATED_URL);
-                String username = extras.getString(STATS_AUTHENTICATED_USER, "");
-                String password = extras.getString(STATS_AUTHENTICATED_PASSWD, "");
-                this.loadAuthenticatedStatsUrl(addressToLoad, username, password);
-            } else if (extras.containsKey(STATS_URL)) {
-                String addressToLoad = extras.getString(STATS_URL);
-                this.loadUrl(addressToLoad);
-            }
+            String addressToLoad = extras.getString(URL_TO_LOAD);
+            String username = extras.getString(AUTHENTICATION_USER, "");
+            String password = extras.getString(AUTHENTICATION_PASSWD, "");
+            String authURL = extras.getString(AUTHENTICATION_URL);
+            this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         } else {
-            AppLog.e(AppLog.T.STATS, "No valid URL passed to StatsWebViewActivity!!");
+            AppLog.e(AppLog.T.STATS, "No valid parameters passed to StatsWebViewActivity!!");
         }
     }
 
@@ -63,12 +80,12 @@ public class StatsWebViewActivity extends WebViewActivity {
      *
      * @param url URL to be loaded in the webview.
      */
-    protected void loadAuthenticatedStatsUrl(String url, String username, String passwd) {
+    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String passwd) {
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
                     URLEncoder.encode(username, "UTF-8"), URLEncoder.encode(passwd, "UTF-8"),
-                    URLEncoder.encode(url, "UTF-8"));
-            mWebView.postUrl("https://wordpress.com/wp-login.php", postData.getBytes());
+                    URLEncoder.encode(urlToLoad, "UTF-8"));
+            mWebView.postUrl(authenticationURL, postData.getBytes());
         } catch (UnsupportedEncodingException e) {
             AppLog.e(AppLog.T.STATS, e);
         }
