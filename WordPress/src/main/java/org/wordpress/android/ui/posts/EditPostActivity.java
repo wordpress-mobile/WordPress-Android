@@ -272,7 +272,13 @@ public class EditPostActivity extends Activity {
                     // No-op
             }
 
-            savePost(false);
+            // If the post is new and there are no changes, don't publish
+            updatePostObject(false);
+            if (!mPost.isPublishable()) {
+                return false;
+            }
+
+            savePost(false, false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -303,7 +309,7 @@ public class EditPostActivity extends Activity {
         return mPost;
     }
 
-    private void savePost(boolean isAutosave) {
+    private void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -315,6 +321,16 @@ public class EditPostActivity extends Activity {
         }
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
+        }
+    }
+
+    private void savePost(boolean isAutosave) {
+        savePost(isAutosave, true);
+    }
+
+    private void savePost(boolean isAutosave, boolean updatePost) {
+        if (updatePost) {
+            updatePostObject(isAutosave);
         }
 
         WordPress.wpDB.updatePost(mPost);
