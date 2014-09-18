@@ -85,7 +85,7 @@ public class ReaderCommentListActivity extends Activity {
         loadPost();
 
         // add listView header to provide initial space between the post header and list content
-        int height = getResources().getDimensionPixelSize(R.dimen.margin_extra_small);
+        int height = getResources().getDimensionPixelSize(R.dimen.margin_medium);
         ReaderUtils.addListViewHeader(mListView, height);
 
         mListView.setAdapter(getCommentAdapter());
