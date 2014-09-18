@@ -215,7 +215,7 @@ public class ReaderActivityLauncher {
         }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            DotComAuthenticatedWebViewActivity.openUrlByUsingWPCOMCredentials(context, url);
+            DotComAuthenticatedWebViewActivity.openUrlByUsingMainWPCOMCredentials(context, url);
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

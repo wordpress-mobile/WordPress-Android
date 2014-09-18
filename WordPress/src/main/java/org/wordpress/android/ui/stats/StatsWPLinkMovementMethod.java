@@ -75,14 +75,8 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                         // Still empty. Do not eat the event, but let's open the default Web Browser.
                         return super.onTouchEvent(widget, buffer, event);
                     }
-                    Intent statsWebViewIntent = new Intent(widget.getContext(), DotComAuthenticatedWebViewActivity.class);
-                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, statsAuthenticatedUser);
-                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD,
-                            statsAuthenticatedPassword);
-                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, url);
-                    statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL,
-                            "https://wordpress.com/wp-login.php");
-                    widget.getContext().startActivity(statsWebViewIntent);
+                    DotComAuthenticatedWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
+                            url, statsAuthenticatedUser, statsAuthenticatedPassword);
                     return true;
                 } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);

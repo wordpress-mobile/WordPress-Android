@@ -14,11 +14,13 @@ import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPWebChromeClient;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -26,28 +28,57 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * Activity for opening stats external links in a webview.
+ * Activity for opening external links in a webview being authenticated to WordPress.com.
  */
 public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
     public static final String URL_TO_LOAD = "url_to_load";
+    public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
 
-    public static void openUrlByUsingWPCOMCredentials(Context context, String url) {
-        if (context == null || TextUtils.isEmpty(url))
+    public static void openUrlByUsingMainWPCOMCredentials(Context context, String url) {
+        if (context == null) {
+            AppLog.e(AppLog.T.UTILS, "Context is null in openUrlByUsingMainWPCOMCredentials!");
             return;
+        }
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String authenticatedUser = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, null);
         String authenticatedPassword = WordPressDB.decryptPassword(
                 settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
         );
+
+        openURL(context, url, authenticatedUser, authenticatedPassword);
+    }
+
+    public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user, String password) {
+        openURL(context, url, user, password);
+    }
+
+    private static void openURL(Context context, String url, String user, String password) {
+        if (context == null) {
+            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            return;
+        }
+
+        if (TextUtils.isEmpty(url)) {
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL passed to openUrlByUsingMainWPCOMCredentials!!");
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(user) || TextUtils.isEmpty(password)) {
+            AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
+            return;
+        }
+
         Intent intent = new Intent(context, DotComAuthenticatedWebViewActivity.class);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, authenticatedUser);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, authenticatedPassword);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, user);
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, password);
         intent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, "https://wordpress.com/wp-login.php");
+        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
     }
 
@@ -69,16 +100,38 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
             String username = extras.getString(AUTHENTICATION_USER, "");
             String password = extras.getString(AUTHENTICATION_PASSWD, "");
             String authURL = extras.getString(AUTHENTICATION_URL);
+
+            if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
+                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to DotComAuthenticatedWebViewActivity!!");
+                Toast.makeText(this, getResources().getText(R.string.invalid_url_message),
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
+                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to DotComAuthenticatedWebViewActivity!!");
+                Toast.makeText(this, getResources().getText(R.string.invalid_url_message),
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
+                AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
+                Toast.makeText(this, getResources().getText(R.string.incorrect_credentials),
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
             this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
         } else {
-            AppLog.e(AppLog.T.STATS, "No valid parameters passed to StatsWebViewActivity!!");
+            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to DotComAuthenticatedWebViewActivity!!");
+            finish();
         }
     }
 
     /**
      * Login to the WordPress.com and load the specified URL.
      *
-     * @param url URL to be loaded in the webview.
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String passwd) {
         try {
@@ -87,7 +140,7 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
                     URLEncoder.encode(urlToLoad, "UTF-8"));
             mWebView.postUrl(authenticationURL, postData.getBytes());
         } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.STATS, e);
+            AppLog.e(AppLog.T.UTILS, e);
         }
     }
 

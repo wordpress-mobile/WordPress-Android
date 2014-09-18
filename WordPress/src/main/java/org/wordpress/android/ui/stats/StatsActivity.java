@@ -525,12 +525,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             String statsAuthenticatedPassword =  credentials.getPassword();
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            Intent statsWebViewIntent = new Intent(this, DotComAuthenticatedWebViewActivity.class);
-            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, statsAuthenticatedUser);
-            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, statsAuthenticatedPassword);
-            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, addressToLoad);
-            statsWebViewIntent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, "https://wordpress.com/wp-login.php");
-            startActivityWithDelay(statsWebViewIntent);
+            DotComAuthenticatedWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser,
+                    statsAuthenticatedPassword);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {
