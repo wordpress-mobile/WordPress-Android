@@ -57,6 +57,7 @@ import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
+import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -195,6 +196,9 @@ public class WordPress extends Application {
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
         registerActivityLifecycleCallbacks(pnBackendMonitor);
+
+        new ApiHelper.RefreshBlogContentTask(this, getCurrentBlog(), null).executeOnExecutor(
+                AsyncTask.THREAD_POOL_EXECUTOR, false);
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
