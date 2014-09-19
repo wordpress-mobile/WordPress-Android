@@ -99,10 +99,14 @@ dependencies {
     // Simperium
     compile('com.simperium.android:simperium:0.5.0')
 
-    compile project(path:':libs:utils:WordPressUtils')
-    compile project(path:':libs:networking:WordPressNetworking')
-    compile project(path:':libs:wpcomrest:WordPressComRest')
-    compile project(path:':libs:graphview:WordPressGraphView')
+    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+    releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
+    debugCompile project(path:':libs:networking:WordPressNetworking', configuration: 'debug')
+    releaseCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'release')
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
+    releaseCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'release')
+    debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
 }
 
 
