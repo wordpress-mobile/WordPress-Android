@@ -67,7 +67,7 @@ public class NoteBlock {
     }
 
     Spannable getNoteText() {
-        return NotificationsUtils.getSpannableTextFromIndices(mNoteData, mOnNoteBlockTextClickListener);
+        return NotificationsUtils.getSpannableTextFromIndices(mNoteData, null, mOnNoteBlockTextClickListener);
     }
 
     JSONObject getNoteMediaItem() {

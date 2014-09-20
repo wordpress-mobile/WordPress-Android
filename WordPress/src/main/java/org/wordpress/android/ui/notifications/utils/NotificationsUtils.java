@@ -3,14 +3,17 @@ package org.wordpress.android.ui.notifications.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
@@ -22,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -30,7 +34,11 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.WPImageGetter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,7 +221,7 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
-    public static Spannable getSpannableTextFromIndices(JSONObject subject,
+    public static Spannable getSpannableTextFromIndices(JSONObject subject, TextView textView,
                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         if (subject == null) {
             return new SpannableStringBuilder();
@@ -224,11 +232,68 @@ public class NotificationsUtils {
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
-        try {
-            JSONArray rangesArray = subject.getJSONArray("ranges");
+        // Add images if available from media array
+        JSONArray mediaArray = subject.optJSONArray("media");
+        if (textView != null && mediaArray != null) {
+            int addedCharCount = 0;
+            for (int i = 0; i < mediaArray.length(); i++) {
+                JSONObject mediaObject = mediaArray.optJSONObject(i);
+                if (mediaObject == null) {
+                    continue;
+                }
 
-            for (int i=0; i < rangesArray.length(); i++) {
-                JSONObject rangeObject = (JSONObject) rangesArray.get(i);
+                if (mediaObject.optString("type", "").startsWith("image") && mediaObject.has("url")) {
+                    String imageTag = String.format("<img src=\"%s\" />", mediaObject.optString("url", ""));
+
+                    int index = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
+
+                    // Add a line break if the image is on the first line, so the image displays correctly
+                    // in the comment detail fragment
+                    if (index == 0) {
+                        String breakTag = "<br />";
+                        spannableStringBuilder.insert(0, breakTag);
+                        addedCharCount += breakTag.length();
+                    }
+
+                    int adjustedIndex = index + addedCharCount;
+                    if (adjustedIndex > spannableStringBuilder.length()) {
+                        adjustedIndex = spannableStringBuilder.length();
+                    }
+                    if (index >= 0 && adjustedIndex <= spannableStringBuilder.length()) {
+                        spannableStringBuilder.insert(adjustedIndex, imageTag);
+                        addedCharCount += imageTag.length();
+                    }
+                }
+            }
+
+            Context context = textView.getContext();
+            if (addedCharCount > 0) {
+                Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
+                Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
+                int padding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
+                spannableStringBuilder = new SpannableStringBuilder(
+                        Html.fromHtml(spannableStringBuilder.toString(),
+                                new WPImageGetter(
+                                        textView,
+                                        textView.getWidth() - padding,
+                                        WordPress.imageLoader,
+                                        loading,
+                                        failed
+                                ), null
+                        )
+                );
+            }
+        }
+
+        // Process Ranges to add links and text formatting
+        JSONArray rangesArray = subject.optJSONArray("ranges");
+        if (rangesArray != null) {
+            for (int i = 0; i < rangesArray.length(); i++) {
+                JSONObject rangeObject = rangesArray.optJSONObject(i);
+                if (rangeObject == null) {
+                    continue;
+                }
+
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(rangeObject, shouldLink) {
                     @Override
                     public void onClick(View widget) {
@@ -237,6 +302,7 @@ public class NotificationsUtils {
                         }
                     }
                 };
+
                 int[] indices = clickableSpan.getIndices();
                 if (indices.length == 2 && indices[0] <= spannableStringBuilder.length() &&
                         indices[1] <= spannableStringBuilder.length()) {
@@ -249,8 +315,6 @@ public class NotificationsUtils {
                     }
                 }
             }
-        } catch (JSONException e) {
-            return spannableStringBuilder;
         }
 
         return spannableStringBuilder;
