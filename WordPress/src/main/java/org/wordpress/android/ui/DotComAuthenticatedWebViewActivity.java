@@ -91,7 +91,6 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
         mWebView.setWebViewClient(new WebViewClient());
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
         mWebView.getSettings().setDomStorageEnabled(true);
 
