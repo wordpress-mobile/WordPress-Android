@@ -102,21 +102,21 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
 
             if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to DotComAuthenticatedWebViewActivity!!");
-                Toast.makeText(this, getResources().getText(R.string.invalid_url_message),
+                Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
                 AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to DotComAuthenticatedWebViewActivity!!");
-                Toast.makeText(this, getResources().getText(R.string.invalid_url_message),
+                Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                 AppLog.e(AppLog.T.UTILS, "Username and/or password empty/null!!!");
-                Toast.makeText(this, getResources().getText(R.string.incorrect_credentials),
+                Toast.makeText(this, getText(R.string.incorrect_credentials),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -165,7 +165,7 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("text/plain");
             share.putExtra(Intent.EXTRA_TEXT, mWebView.getUrl());
-            startActivity(Intent.createChooser(share, getResources().getText(R.string.share_link)));
+            startActivity(Intent.createChooser(share, getText(R.string.share_link)));
             return true;
         } else if (itemID == R.id.menu_browser) {
             String url = mWebView.getUrl();
