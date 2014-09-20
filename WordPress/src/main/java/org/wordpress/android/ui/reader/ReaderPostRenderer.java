@@ -302,10 +302,10 @@ class ReaderPostRenderer {
         // if javascript is allowed, make sure embedded videos fit the browser width and
         // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
         if (canEnableJavaScript()) {
-            sbHtml.append("  iframe, embed { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+            sbHtml.append("  iframe, embed, video { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
                   .append("                  height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
         } else {
-            sbHtml.append("  iframe, embed { display: none; }");
+            sbHtml.append("  iframe, embed, video { display: none; }");
         }
 
         sbHtml.append("</style>")
