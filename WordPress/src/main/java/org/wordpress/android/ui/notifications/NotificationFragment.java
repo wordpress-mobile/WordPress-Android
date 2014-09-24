@@ -14,10 +14,6 @@ public interface NotificationFragment {
         public void onPostClicked(Note note, int remoteBlogId, int postId);
     }
 
-    public static interface OnCommentClickListener {
-        public void onCommentClicked(Note note, int remoteBlogId, long commentId);
-    }
-
     public Note getNote();
     public void setNote(Note note);
 }

@@ -31,11 +31,11 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostPopupListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnTagSelectedListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -75,6 +75,10 @@ public class ReaderPostAdapter extends BaseAdapter {
     private final boolean mEnableImagePreload;
     private int mLastPreloadPos = -1;
     private static final int PRELOAD_OFFSET = 2;
+
+    // the large "tbl_posts.text" column is unused here, so skip it when querying
+    private static final boolean EXCLUDE_TEXT_COLUMN = true;
+    private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
     public ReaderPostAdapter(Context context,
                              ReaderPostListType postListType,
@@ -611,11 +615,11 @@ public class ReaderPostAdapter extends BaseAdapter {
             final int numExisting;
             switch (getPostListType()) {
                  case TAG_PREVIEW: case TAG_FOLLOWED:
-                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+                    tmpPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
-                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
+                    tmpPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     break;
                 default:

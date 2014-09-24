@@ -3,10 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -36,7 +33,6 @@ import org.wordpress.android.datasets.ReaderLikeTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.ReaderWebView.ReaderCustomViewListener;
@@ -53,15 +49,13 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.PhotonUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPListView;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.util.EnumSet;
 
 public class ReaderPostDetailFragment extends Fragment
         implements WPListView.OnScrollDirectionListener,
@@ -70,14 +64,17 @@ public class ReaderPostDetailFragment extends Fragment
                    ReaderWebViewPageFinishedListener,
                    ReaderWebViewUrlClickListener {
 
+    public static enum PostDetailOption {
+        IS_SINGLE_POST  // will be set when ReaderPostPagerActivity wants to show only one post
+    }
+
     private static final String KEY_SHOW_COMMENT_BOX = "show_comment_box";
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
-    private static final String ARG_DISABLE_BLOCK_BLOG = "disable_block_blog";
 
     private long mPostId;
     private long mBlogId;
     private ReaderPost mPost;
-
+    private ReaderPostRenderer mRenderer;
     private ReaderPostListType mPostListType;
 
     private ViewGroup mLayoutIcons;
@@ -93,7 +90,7 @@ public class ReaderPostDetailFragment extends Fragment
     private boolean mHasAlreadyUpdatedPost;
     private boolean mHasAlreadyRequestedPost;
     private boolean mIsUpdatingComments;
-    private boolean mIsBlockBlogDisabled;
+    private boolean mIsSinglePostView;
 
     private ReaderInterfaces.OnPostPopupListener mOnPopupListener;
 
@@ -102,24 +99,25 @@ public class ReaderPostDetailFragment extends Fragment
     private int mPrevScrollState = SCROLL_STATE_IDLE;
 
     private Parcelable mListState;
-    private ResourceVars mResourceVars;
+    private ReaderResourceVars mResourceVars;
 
     private ReaderUtils.FullScreenListener mFullScreenListener;
 
     public static ReaderPostDetailFragment newInstance(long blogId, long postId) {
-        return newInstance(blogId, postId, true, null);
+        EnumSet<PostDetailOption> options = EnumSet.of(PostDetailOption.IS_SINGLE_POST);
+        return newInstance(blogId, postId, options, null);
     }
 
     public static ReaderPostDetailFragment newInstance(long blogId,
                                                        long postId,
-                                                       boolean disableBlockBlog,
+                                                       EnumSet<PostDetailOption> options,
                                                        ReaderPostListType postListType) {
         AppLog.d(T.READER, "reader post detail > newInstance");
 
         Bundle args = new Bundle();
         args.putLong(ReaderConstants.ARG_BLOG_ID, blogId);
         args.putLong(ReaderConstants.ARG_POST_ID, postId);
-        args.putBoolean(ARG_DISABLE_BLOCK_BLOG, disableBlockBlog);
+        args.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, options.contains(PostDetailOption.IS_SINGLE_POST));
         if (postListType != null) {
             args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, postListType);
         }
@@ -128,60 +126,6 @@ public class ReaderPostDetailFragment extends Fragment
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    /*
-     * class which holds all resource-based variables used by this fragment
-     */
-    private static class ResourceVars {
-        final int displayWidth;
-        final int actionBarHeight;
-        final int likeAvatarSize;
-        final int videoOverlaySize;
-
-        final int marginLarge;
-        final int marginSmall;
-        final int marginExtraSmall;
-        final int listMarginWidth;
-        final int fullSizeImageWidth;
-
-        final int colorGreyExtraLight;
-        final int mediumAnimTime;
-
-        final String linkColorStr;
-        final String greyLightStr;
-        final String greyExtraLightStr;
-
-        private ResourceVars(Context context) {
-            Resources resources = context.getResources();
-
-            displayWidth = DisplayUtils.getDisplayPixelWidth(context);
-            actionBarHeight = DisplayUtils.getActionBarHeight(context);
-            likeAvatarSize = resources.getDimensionPixelSize(R.dimen.avatar_sz_small);
-            videoOverlaySize = resources.getDimensionPixelSize(R.dimen.reader_video_overlay_size);
-
-            marginLarge = resources.getDimensionPixelSize(R.dimen.margin_large);
-            marginSmall = resources.getDimensionPixelSize(R.dimen.margin_small);
-            marginExtraSmall = resources.getDimensionPixelSize(R.dimen.margin_extra_small);
-            listMarginWidth = resources.getDimensionPixelOffset(R.dimen.reader_list_margin);
-
-            colorGreyExtraLight = resources.getColor(R.color.grey_extra_light);
-            mediumAnimTime = resources.getInteger(android.R.integer.config_mediumAnimTime);
-
-            linkColorStr = HtmlUtils.colorResToHtmlColor(context, R.color.reader_hyperlink);
-            greyLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_light);
-            greyExtraLightStr = HtmlUtils.colorResToHtmlColor(context, R.color.grey_extra_light);
-
-            int imageWidth = displayWidth - (listMarginWidth * 2);
-            boolean hasStaticMenuDrawer =
-                    (context instanceof WPActionBarActivity)
-                            && (((WPActionBarActivity) context).isStaticMenuDrawer());
-            if (hasStaticMenuDrawer) {
-                int drawerWidth = resources.getDimensionPixelOffset(R.dimen.menu_drawer_width);
-                imageWidth -= drawerWidth;
-            }
-            fullSizeImageWidth = imageWidth;
-        }
     }
 
     /*
@@ -275,7 +219,7 @@ public class ReaderPostDetailFragment extends Fragment
         if (args != null) {
             mBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mPostId = args.getLong(ReaderConstants.ARG_POST_ID);
-            mIsBlockBlogDisabled = args.getBoolean(ARG_DISABLE_BLOCK_BLOG);
+            mIsSinglePostView = args.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -286,7 +230,7 @@ public class ReaderPostDetailFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        mResourceVars = new ResourceVars(activity);
+        mResourceVars = new ReaderResourceVars(activity);
 
         if (activity instanceof ReaderUtils.FullScreenListener) {
             mFullScreenListener = (ReaderUtils.FullScreenListener) activity;
@@ -300,14 +244,13 @@ public class ReaderPostDetailFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_fragment_post_detail, container, false);
-        final Context context = container.getContext();
 
         // locate & init listView
         mListView = (WPListView) view.findViewById(android.R.id.list);
         if (isFullScreenSupported()) {
             mListView.setOnScrollDirectionListener(this);
             mListView.setOnScrollListener(this);
-            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeight);
+            ReaderUtils.addListViewHeader(mListView, mResourceVars.actionBarHeightPx);
         }
 
         // add post detail as header to listView - must be done before setting adapter
@@ -404,7 +347,7 @@ public class ReaderPostDetailFragment extends Fragment
 
     private boolean canBlockBlog() {
         return mPost != null
-                && !mIsBlockBlogDisabled
+                && !mIsSinglePostView
                 && !mPost.isPrivate
                 && !mPost.isExternal
                 && (mOnPopupListener != null)
@@ -499,7 +442,7 @@ public class ReaderPostDetailFragment extends Fragment
 
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasAlreadyUpdatedPost);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, mHasAlreadyRequestedPost);
-        outState.putBoolean(ARG_DISABLE_BLOCK_BLOG, mIsBlockBlogDisabled);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
         outState.putBoolean(KEY_SHOW_COMMENT_BOX, mIsAddCommentBoxShowing);
         outState.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, getPostListType());
 
@@ -540,7 +483,7 @@ public class ReaderPostDetailFragment extends Fragment
             mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mHasAlreadyUpdatedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
             mHasAlreadyRequestedPost = savedInstanceState.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED);
-            mIsBlockBlogDisabled = savedInstanceState.getBoolean(ARG_DISABLE_BLOCK_BLOG);
+            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             if (savedInstanceState.getBoolean(KEY_SHOW_COMMENT_BOX)) {
                 long replyToCommentId = savedInstanceState.getLong(KEY_REPLY_TO_COMMENT_ID);
                 showAddCommentBox(replyToCommentId);
@@ -1006,33 +949,7 @@ public class ReaderPostDetailFragment extends Fragment
         ReaderUtils.showFollowStatus(txtFollow, isFollowed);
     }
 
-    /*
-     * creates formatted div for passed video with passed (optional) thumbnail
-     */
-    private static final String OVERLAY_IMG = "file:///android_asset/ic_reader_video_overlay.png";
-
-    private String makeVideoDiv(String videoUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(videoUrl)) {
-            return "";
-        }
-
-        // sometimes we get src values like "//player.vimeo.com/video/70534716" - prefix these with http:
-        if (videoUrl.startsWith("//")) {
-            videoUrl = "http:" + videoUrl;
-        }
-
-        int overlaySz = mResourceVars.videoOverlaySize / 2;
-        if (TextUtils.isEmpty(thumbnailUrl)) {
-            return String.format("<div class='wpreader-video' align='center'><a href='%s'><img style='width:%dpx; height:%dpx; display:block;' src='%s' /></a></div>", videoUrl, overlaySz, overlaySz, OVERLAY_IMG);
-        } else {
-            return "<div style='position:relative'>"
-                    + String.format("<a href='%s'><img src='%s' style='width:100%%; height:auto;' /></a>", videoUrl, thumbnailUrl)
-                    + String.format("<a href='%s'><img src='%s' style='width:%dpx; height:%dpx; position:absolute; left:0px; right:0px; top:0px; bottom:0px; margin:auto;'' /></a>", videoUrl, OVERLAY_IMG, overlaySz, overlaySz)
-                    + "</div>";
-        }
-    }
-
-    private boolean showPhotoViewer(String imageUrl, View source, int startX, int startY) {
+    private boolean showPhotoViewer(String imageUrl, View sourceView, int startX, int startY) {
         if (!isAdded() || TextUtils.isEmpty(imageUrl)) {
             return false;
         }
@@ -1042,146 +959,19 @@ public class ReaderPostDetailFragment extends Fragment
             return false;
         }
 
+        String postContent = (mRenderer != null ? mRenderer.getRenderedHtml() : null);
         boolean isPrivatePost = (mPost != null && mPost.isPrivate);
 
         ReaderActivityLauncher.showReaderPhotoViewer(
                 getActivity(),
                 imageUrl,
-                getPostContent(),
-                source,
+                postContent,
+                sourceView,
                 isPrivatePost,
                 startX,
                 startY);
 
         return true;
-    }
-
-    /*
-     * returns the basic content of the post tweaked for use here
-     */
-    private String getPostContent() {
-        if (mPost == null) {
-            return "";
-        } else if (mPost.hasText()) {
-            // some content (such as Vimeo embeds) don't have "http:" before links, correct this here
-            String content = mPost.getText().replace("src=\"//", "src=\"http://");
-            // insert video div before content if this is a VideoPress post (video otherwise won't appear)
-            if (mPost.isVideoPress) {
-                content = makeVideoDiv(mPost.getFeaturedVideo(), mPost.getFeaturedImage()) + content;
-            } else if (mPost.hasFeaturedImage() && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage())) {
-                // if the post has a featured image other than an mshot that's not in the content,
-                // add it to the content
-                Uri uri = Uri.parse(mPost.getFeaturedImage());
-                String path = StringUtils.notNullStr(uri.getLastPathSegment());
-                if (!content.contains(path)) {
-                    AppLog.d(T.READER, "reader post detail > added featured image to content");
-                    content = String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage())
-                            + content;
-                }
-            }
-            return content;
-        } else if (mPost.hasFeaturedImage()) {
-            // some photo blogs have posts with empty content but still have a featured image, so
-            // use the featured image as the content
-            return String.format("<p><img class='img.size-full' src='%s' /></p>", mPost.getFeaturedImage());
-        } else {
-            return "";
-        }
-    }
-
-    /*
-     * returns the full content, including CSS, that will be shown in the WebView for this post
-     */
-    private String getPostContentForWebView(Context context) {
-        if (mPost == null || context == null) {
-            return "";
-        }
-
-        String content = getPostContent();
-
-        StringBuilder sbHtml = new StringBuilder("<!DOCTYPE html><html><head><meta charset='UTF-8' />");
-
-        // title isn't strictly necessary, but source is invalid html5 without one
-        sbHtml.append("<title>Reader Post</title>");
-
-        // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
-        sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>");
-
-        // use "Open Sans" Google font
-        sbHtml.append("<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans' />");
-
-        sbHtml.append("<style type='text/css'>")
-              .append("  body { font-family: 'Open Sans', sans-serif; margin: 0px; padding: 0px;}")
-              .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-              .append("  p, div { line-height: 1.6em; font-size: 1em; }")
-              .append("  h1, h2 { line-height: 1.2em; }");
-
-        // make sure long strings don't force the user to scroll horizontally
-        sbHtml.append("  body, p, div, a { word-wrap: break-word; }");
-
-        // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        sbHtml.append(String.format("  p { margin-top: %dpx; margin-bottom: %dpx; }",
-                mResourceVars.marginSmall, mResourceVars.marginSmall))
-              .append("    p:first-child { margin-top: 0px; }");
-
-        // add border, background color, and padding to pre blocks, and add overflow scrolling
-        // so user can scroll the block if it's wider than the display
-        sbHtml.append("  pre { overflow-x: scroll;")
-              .append("        border: 1px solid ").append(mResourceVars.greyLightStr).append("; ")
-              .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-              .append("        padding: ").append(mResourceVars.marginSmall).append("px; }");
-
-        // add a left border to blockquotes
-        sbHtml.append("  blockquote { margin-left: ").append(mResourceVars.marginSmall).append("px; ")
-              .append("               padding-left: ").append(mResourceVars.marginSmall).append("px; ")
-              .append("               border-left: 3px solid ").append(mResourceVars.greyLightStr).append("; }");
-
-        // show links in the same color they are elsewhere in the app
-        sbHtml.append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }");
-
-        // if javascript is allowed, make sure embedded videos fit the browser width and
-        // use 16:9 ratio (YouTube standard) - if not allowed, hide iframes/embeds
-        if (canEnableJavaScript()) {
-            int videoWidth = DisplayUtils.pxToDp(context,
-                    mResourceVars.fullSizeImageWidth - (mResourceVars.marginLarge * 2));
-            int videoHeight = (int) (videoWidth * 0.5625f);
-            sbHtml.append("  iframe, embed { width: ").append(videoWidth).append("px !important;")
-                  .append("                  height: ").append(videoHeight).append("px !important; }");
-        } else {
-            sbHtml.append("  iframe, embed { display: none; }");
-        }
-
-        // don't allow any image to be wider than the screen
-        sbHtml.append("  img { max-width: 100% !important; height: auto;}");
-
-        // show large wp images full-width (unnecessary in most cases since they'll already be at least
-        // as wide as the display, except maybe when viewed on a large landscape tablet)
-        sbHtml.append("  img.size-full, img.size-large { display: block; width: 100% !important; height: auto; }");
-
-        // center medium-sized wp image
-        sbHtml.append("  img.size-medium { display: block; margin-left: auto !important; margin-right: auto !important; }");
-
-        // tiled image galleries look bad on mobile due to their hard-coded DIV and IMG sizes, so if
-        // content contains a tiled image gallery, remove the height params and replace the width
-        // params with ones that make images fit the width of the listView item, then adjust the
-        // relevant CSS classes so their height/width are auto, and add top/bottom margin to images
-        if (content.contains("tiled-gallery-item")) {
-            String widthParam = "w=" + Integer.toString(mResourceVars.fullSizeImageWidth);
-            content = content.replaceAll("w=[0-9]+", widthParam).replaceAll("h=[0-9]+", "");
-            sbHtml.append("  div.gallery-row, div.gallery-group { width: auto !important; height: auto !important; }")
-                  .append("  div.tiled-gallery-item img { ")
-                  .append("     width: auto !important; height: auto !important;")
-                  .append("     margin-top: ").append(mResourceVars.marginExtraSmall).append("px; ")
-                  .append("     margin-bottom: ").append(mResourceVars.marginExtraSmall).append("px; ")
-                  .append("  }")
-                  .append("  div.tiled-gallery-caption { clear: both; }");
-        }
-
-        sbHtml.append("</style></head><body>")
-              .append(content)
-              .append("</body></html>");
-
-        return sbHtml.toString();
     }
 
     /*
@@ -1217,16 +1007,10 @@ public class ReaderPostDetailFragment extends Fragment
         }
     }
 
-    /*
-     * javascript should only be enabled for wp blogs (not external feeds)
-     */
-    private boolean canEnableJavaScript() {
-        return (mPost != null && mPost.isWP());
-    }
-
     private void showPost() {
         if (mIsPostTaskRunning) {
             AppLog.w(T.READER, "reader post detail > show post task already running");
+            return;
         }
 
         new ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -1249,8 +1033,6 @@ public class ReaderPostDetailFragment extends Fragment
         ImageView imgDropDown;
         WPNetworkImageView imgAvatar;
         ViewGroup layoutDetailHeader;
-
-        String postHtml;
 
         @Override
         protected void onPreExecute() {
@@ -1283,12 +1065,10 @@ public class ReaderPostDetailFragment extends Fragment
             imgDropDown = (ImageView) container.findViewById(R.id.image_dropdown);
 
             imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
-            imgBtnLike = (ImageView) getView().findViewById(R.id.image_like_btn);
+            imgBtnLike = (ImageView) container.findViewById(R.id.image_like_btn);
             imgBtnComment = (ImageView) mLayoutIcons.findViewById(R.id.image_comment_btn);
 
             layoutDetailHeader = (ViewGroup) container.findViewById(R.id.layout_detail_header);
-
-            postHtml = getPostContentForWebView(container.getContext());
 
             return true;
         }
@@ -1306,17 +1086,15 @@ public class ReaderPostDetailFragment extends Fragment
                 // the server if it hasn't already been requested
                 if (!mHasAlreadyRequestedPost) {
                     mHasAlreadyRequestedPost = true;
+                    AppLog.i(T.READER, "reader post detail > post not found, requesting it");
                     requestPost();
                 }
                 return;
             }
 
-            // enable JavaScript in the webView if it's safe to do so
-            mReaderWebView.getSettings().setJavaScriptEnabled(canEnableJavaScript());
-
-            // IMPORTANT: use loadDataWithBaseURL() since loadData() may fail
-            // https://code.google.com/p/android/issues/detail?id=4401
-            mReaderWebView.loadDataWithBaseURL(null, postHtml, "text/html", "UTF-8", null);
+            // render the post in the webView
+            mRenderer = new ReaderPostRenderer(mReaderWebView, mPost);
+            mRenderer.beginRender();
 
             txtTitle.setText(mPost.hasTitle() ? mPost.getTitle() : getString(R.string.reader_untitled_post));
 
@@ -1349,15 +1127,28 @@ public class ReaderPostDetailFragment extends Fragment
 
             if (mPost.hasPostAvatar()) {
                 imgAvatar.setImageUrl(mPost.getPostAvatarForDisplay(
-                        mResourceVars.likeAvatarSize), WPNetworkImageView.ImageType.AVATAR);
+                        mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
                 imgAvatar.setVisibility(View.VISIBLE);
             } else {
                 imgAvatar.setVisibility(View.GONE);
             }
 
-            // hide blog name, avatar & follow button if this fragment was shown from blog preview
+            // hide header if this fragment was shown from blog preview
             if (isBlogPreview()) {
                 layoutDetailHeader.setVisibility(View.GONE);
+            } else {
+                // tapping header shows blog preview unless this post is from an external feed
+                if (!mPost.isExternal) {
+                    layoutDetailHeader.setEnabled(true);
+                    layoutDetailHeader.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), mPost.blogId, mPost.getBlogUrl());
+                        }
+                    });
+                } else {
+                    layoutDetailHeader.setEnabled(false);
+                }
             }
 
             // enable reblogging wp posts
@@ -1431,7 +1222,6 @@ public class ReaderPostDetailFragment extends Fragment
             }
         }
     }
-
 
     /*
      * called by the web view when the content finishes loading - likes & comments aren't displayed

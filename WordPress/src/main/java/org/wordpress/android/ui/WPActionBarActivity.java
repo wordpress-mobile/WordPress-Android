@@ -46,7 +46,6 @@ import org.wordpress.android.ui.accounts.WelcomeActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
@@ -60,6 +59,7 @@ import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -263,6 +263,9 @@ public abstract class WPActionBarActivity extends Activity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
+        if (mMenuDrawer == null) {
+            return;
+        }
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
@@ -576,8 +579,10 @@ public abstract class WPActionBarActivity extends Activity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    initMenuDrawer();
-                    mMenuDrawer.openMenu(false);
+                    if (mMenuDrawer != null) {
+                        initMenuDrawer();
+                        mMenuDrawer.openMenu(false);
+                    }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();

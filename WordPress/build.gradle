@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "3.1"
-        versionCode 132
+        versionName "3.2-rc-2"
+        versionCode 139
         minSdkVersion 14
         targetSdkVersion 19
 
@@ -73,6 +73,7 @@ dependencies {
     compile 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
     compile 'com.android.support:support-v13:19.1.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    compile 'com.helpshift:android-aar:3.5.0'
     compile 'commons-lang:commons-lang:2.6'
     compile 'com.cocosw:undobar:1.+@aar'
 
@@ -99,17 +100,14 @@ dependencies {
     // Simperium
     compile('com.simperium.android:simperium:0.5.0')
 
-    debugCompile project(path:':libs:utils:WordPressUtils')
-    releaseCompile 'org.wordpress:wordpress-utils:1.2.0'
-
-    debugCompile project(path:':libs:networking:WordPressNetworking')
-    releaseCompile 'org.wordpress:wordpress-networking:1.0.0'
-
-    debugCompile project(path:':libs:wpcomrest:WordPressComRest')
-    releaseCompile 'com.automattic:wordpresscom-rest:1.0.0'
-
-    debugCompile project(path:':libs:graphview:WordPressGraphView')
-    releaseCompile 'org.wordpress:graphview:3.2.2'
+    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+    releaseCompile project(path:':libs:networking:WordPressNetworking', configuration: 'release')
+    debugCompile project(path:':libs:networking:WordPressNetworking', configuration: 'debug')
+    releaseCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'release')
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
+    releaseCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'release')
+    debugCompile project(path:':libs:graphview:WordPressGraphView', configuration: 'debug')
 }
 
 

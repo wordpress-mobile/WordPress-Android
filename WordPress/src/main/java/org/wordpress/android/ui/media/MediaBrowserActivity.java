@@ -3,6 +3,9 @@ package org.wordpress.android.ui.media;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -10,9 +13,6 @@ import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Gravity;
@@ -41,10 +41,9 @@ import org.wordpress.android.ui.media.MediaEditFragment.MediaEditFragmentCallbac
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.MediaItemFragment.MediaItemFragmentCallback;
+import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostContentFragment;
-import org.wordpress.android.ui.media.services.MediaDeleteService;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.GetFeatures.Callback;
@@ -308,12 +307,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onMediaItemSelected(String mediaId) {
-        if (mSearchView != null)
+        if (mSearchView != null) {
             mSearchView.clearFocus();
+        }
 
-        // collapse the search menu on phone
-        if (mSearchMenuItem != null && !DisplayUtils.isTablet(this))
+        if (mSearchMenuItem != null) {
             mSearchMenuItem.collapseActionView();
+        }
 
         FragmentManager fm = getFragmentManager();
 
@@ -443,7 +443,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.menu_delete).setVisible(DisplayUtils.isTablet(this));
         return super.onPrepareOptionsMenu(menu);
     }
 

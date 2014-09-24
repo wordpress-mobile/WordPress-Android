@@ -1,7 +1,12 @@
 package org.wordpress.android.ui.comments;
 
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.text.Layout;
+import android.text.Spannable;
 import android.text.Spanned;
+import android.text.style.LeadingMarginSpan;
 import android.text.util.Linkify;
 import android.widget.TextView;
 
@@ -16,8 +21,9 @@ public class CommentUtils {
      * displays comment text as html, including retrieving images
      */
     public static void displayHtmlComment(TextView textView, String content, int maxImageSize) {
-        if (textView == null)
+        if (textView == null) {
             return;
+        }
 
         if (content == null) {
             textView.setText(null);
@@ -26,10 +32,12 @@ public class CommentUtils {
 
         // skip performance hit of html conversion if content doesn't contain html
         if (!content.contains("<") && !content.contains("&")) {
-            textView.setText(content.trim());
+            content = content.trim();
+            textView.setText(content);
             // make sure unnamed links are clickable
-            if (content.contains("://"))
+            if (content.contains("://")) {
                 Linkify.addLinks(textView, Linkify.WEB_URLS);
+            }
             return;
         }
 
@@ -59,5 +67,40 @@ public class CommentUtils {
         }
 
         textView.setText(source.subSequence(start, end));
+    }
+
+    // Assumes all lines after first line will not be indented
+    public static void indentTextViewFirstLine(TextView textView, Spannable text, int textOffsetX) {
+        if (text != null && textOffsetX > 0) {
+            text.setSpan(new TextWrappingLeadingMarginSpan(1, textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.setText(text);
+        } else {
+            textView.setText(text);
+        }
+    }
+
+    private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {
+        private int margin;
+        private int lines;
+
+        public TextWrappingLeadingMarginSpan(int lines, int margin) {
+            this.margin = margin;
+            this.lines = lines;
+        }
+
+        @Override
+        public int getLeadingMargin(boolean first) {
+            return first ? margin : 0;
+        }
+
+        @Override
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
+
+        }
+
+        @Override
+        public int getLeadingMarginLineCount() {
+            return lines;
+        }
     }
 }

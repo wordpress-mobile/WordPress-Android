@@ -25,6 +25,7 @@ public class ReaderConstants {
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
     static final String ARG_TITLE             = "title";
     static final String ARG_CONTENT           = "content";
+    static final String ARG_IS_SINGLE_POST    = "is_single_post";
 
     static final String KEY_ALREADY_UPDATED   = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";

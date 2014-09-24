@@ -18,6 +18,7 @@
         android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/reader_list_margin"
         android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/reader_transparent_selector"
         android:orientation="horizontal">
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -40,7 +41,7 @@
                 android:layout_marginBottom="@dimen/margin_small"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/reader_hyperlink"
+                android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 tools:text="text_blog_name" />
 

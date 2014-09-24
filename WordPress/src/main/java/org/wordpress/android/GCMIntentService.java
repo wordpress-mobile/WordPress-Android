@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,12 +23,15 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
-import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.PhotonUtils;
 
@@ -117,7 +121,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (iconUrl != null) {
             try {
                 iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
-                int largeIconSize = context.getResources().getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+                int largeIconSize = context.getResources().getDimensionPixelSize(
+                        android.R.dimen.notification_large_icon_height);
                 String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
                 largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
             } catch (UnsupportedEncodingException e) {
@@ -164,11 +169,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
-                        commentReplyIntent,
+                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ab_icon_reply,
-                        getResources().getText(R.string.reply), commentReplyPendingIntent);
+                mBuilder.addAction(R.drawable.ab_icon_reply, context.getText(R.string.reply),
+                        commentReplyPendingIntent);
             }
 
             if (largeIconBitmap != null) {
@@ -203,7 +207,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_multi))
                     .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle("WordPress")
                     .setContentText(subject)
@@ -247,9 +251,9 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        // Handle Helpshift PNs (Helpshift has been removed but we can't remove that
-        // for now, in case some devices are still registered)
+        // Handle helpshift PNs
         if (TextUtils.equals(extras.getString("origin"), "helpshift")) {
+            HelpshiftHelper.getInstance().handlePush(context, intent);
             return;
         }
 
@@ -285,16 +289,19 @@ public class GCMIntentService extends GCMBaseIntentService {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (!TextUtils.isEmpty(regId)) {
             // Get or create UUID for WP.com notes api
-            String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
+            String uuid = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
+                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 editor.commit();
             }
 
-            NotificationUtils.registerDeviceForPushNotifications(context, regId);
+            NotificationsUtils.registerDeviceForPushNotifications(context, regId);
 
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
+            }
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
