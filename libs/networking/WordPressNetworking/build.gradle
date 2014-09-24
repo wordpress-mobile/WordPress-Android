@@ -14,7 +14,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    defaultPublishConfig 'debug'
+    publishNonDefault true
 
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
@@ -29,8 +29,11 @@ android {
 
 dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.+'
-    compile project(path:':libs:utils:WordPressUtils')
-    compile project(path:':libs:wpcomrest:WordPressComRest')
+
+    releaseCompile project(path:':libs:utils:WordPressUtils', configuration: 'release')
+    debugCompile project(path:':libs:utils:WordPressUtils', configuration: 'debug')
+    releaseCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'release')
+    debugCompile project(path:':libs:wpcomrest:WordPressComRest', configuration: 'debug')
 }
 
 uploadArchives {

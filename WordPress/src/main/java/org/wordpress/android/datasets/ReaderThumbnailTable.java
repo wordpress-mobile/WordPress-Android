@@ -15,7 +15,7 @@ public class ReaderThumbnailTable {
         db.execSQL("CREATE TABLE tbl_thumbnails ("
                 + "	full_url	  TEXT COLLATE NOCASE PRIMARY KEY,"
                 + " thumbnail_url TEXT NOT NULL,"
-                + " post_id       INTEGER)");
+                + " post_id       INTEGER DEFAULT 0)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {

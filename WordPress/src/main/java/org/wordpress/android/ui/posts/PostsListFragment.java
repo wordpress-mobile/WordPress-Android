@@ -22,9 +22,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -139,6 +138,9 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded(int postCount) {
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (postCount == 0 && mCanLoadMorePosts) {
                         // No posts, let's request some if network available
                         if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -155,7 +157,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (isAdded() && DisplayUtils.isTablet(getActivity())) {
+                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {

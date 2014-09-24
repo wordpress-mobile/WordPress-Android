@@ -56,8 +56,8 @@
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
 
-    <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
+    <dimen name="avatar_sz_medium">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
 
     <dimen name="reader_button_icon">48dp</dimen>
@@ -68,7 +68,6 @@
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
-    <dimen name="reader_video_overlay_size">48dp</dimen>
     <dimen name="actionbar_refresh_margin">12dp</dimen>
     <dimen name="reader_post_divider_height">@dimen/margin_large</dimen>
 
@@ -96,8 +95,11 @@
     <dimen name="nux_width">600dp</dimen>
 
     <!-- notifications -->
-    <dimen name="note_icon_sz">20dp</dimen>
-    <dimen name="note_avatar_sz">48dp</dimen>
+    <dimen name="note_icon_sz">21dp</dimen>
+    <dimen name="comment_avatar_margin_top">6dp</dimen>
+    <dimen name="notifications_adjusted_font_margin">10dp</dimen>
+    <dimen name="comment_user_margin_adjustment">-6dp</dimen>
+    <dimen name="comment_snippet_margin_adjustment">15dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="ptr_tip_margin_top">8dp</dimen>

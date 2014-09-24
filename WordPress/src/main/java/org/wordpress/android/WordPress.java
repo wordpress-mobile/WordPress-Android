@@ -40,15 +40,18 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
-import org.wordpress.android.ui.notifications.NotificationUtils;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
@@ -155,6 +158,7 @@ public class WordPress extends Application {
             Crashlytics.start(this);
         }
         versionName = PackageUtils.getVersionName(this);
+        HelpshiftHelper.init(this);
         initWpDb();
         wpStatsDB = new WordPressStatsDB(this);
 
@@ -164,6 +168,8 @@ public class WordPress extends Application {
 
         // Volley networking setup
         setupVolleyQueue();
+
+        ABTestingUtils.init();
 
         String lastActivityStr = AppPrefs.getLastActivityStr();
         if (!TextUtils.isEmpty(lastActivityStr) && !lastActivityStr.equals(ActivityId.UNKNOWN)) {
@@ -175,6 +181,8 @@ public class WordPress extends Application {
             AppLockManager.getInstance().getCurrentAppLock().setDisabledActivities(
                     new String[]{"org.wordpress.android.ui.ShareIntentReceiverActivity"});
         }
+
+        HelpshiftHelper.init(this);
 
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
@@ -318,11 +326,15 @@ public class WordPress extends Application {
         if (WordPress.hasValidWPComCredentials(context)) {
             if (!TextUtils.isEmpty(regId)) {
                 // Send the token to WP.com in case it was invalidated
-                NotificationUtils.registerDeviceForPushNotifications(context, regId);
+                NotificationsUtils.registerDeviceForPushNotifications(context, regId);
                 AppLog.v(T.NOTIFS, "Already registered for GCM");
             }
         }
 
+        // Register to Helpshift notifications
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
+        }
         AnalyticsTracker.registerPushNotificationToken(regId);
     }
 
@@ -500,7 +512,7 @@ public class WordPress extends Application {
         // a Volley request
         VolleyUtils.cancelAllRequests(requestQueue);
 
-        NotificationUtils.unregisterDevicePushNotifications(context);
+        NotificationsUtils.unregisterDevicePushNotifications(context);
         try {
             GCMRegistrar.checkDevice(context);
             GCMRegistrar.unregister(context);
@@ -690,7 +702,7 @@ public class WordPress extends Application {
                         AppLog.e(T.NOTIFS, "Could not ping the PNs backend, Token or gmcID not found");
                     } else {
                         // Send the token to WP.com
-                        NotificationUtils.registerDeviceForPushNotifications(mContext, token);
+                        NotificationsUtils.registerDeviceForPushNotifications(mContext, token);
                     }
                 } catch (Exception e) {
                     AppLog.e(T.NOTIFS, "Could not ping the PNs backend: " + e.getMessage());

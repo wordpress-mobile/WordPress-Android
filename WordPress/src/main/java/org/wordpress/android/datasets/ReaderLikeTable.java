@@ -17,15 +17,15 @@ import org.wordpress.android.util.SqlUtils;
 public class ReaderLikeTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_post_likes ("
-                + " post_id        INTEGER,"
-                + " blog_id        INTEGER,"
-                + " user_id        INTEGER,"
+                + " post_id        INTEGER DEFAULT 0,"
+                + " blog_id        INTEGER DEFAULT 0,"
+                + " user_id        INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, post_id, user_id))");
 
         db.execSQL("CREATE TABLE tbl_comment_likes ("
-                + " comment_id     INTEGER,"
-                + " blog_id        INTEGER,"
-                + " user_id        INTEGER,"
+                + " comment_id     INTEGER DEFAULT 0,"
+                + " blog_id        INTEGER DEFAULT 0,"
+                + " user_id        INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, comment_id, user_id))");
     }
 

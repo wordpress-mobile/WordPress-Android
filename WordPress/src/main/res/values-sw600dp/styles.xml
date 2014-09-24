@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="WordPress.BorderedBackground">
+        <item name="android:layout_marginLeft">@dimen/notifications_list_margin</item>
+        <item name="android:layout_marginRight">@dimen/notifications_list_margin</item>
+        <item name="android:background">@drawable/calypso_bordered_bg</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingRight">1dp</item>
+    </style>
+</resources>

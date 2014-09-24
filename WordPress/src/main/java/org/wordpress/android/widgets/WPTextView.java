@@ -10,7 +10,7 @@ import android.widget.TextView;
  */
 public class WPTextView extends TextView {
     public WPTextView(Context context) {
-        super(context);
+        super(context, null);
         TypefaceCache.setCustomTypeface(context, this, null);
     }
 

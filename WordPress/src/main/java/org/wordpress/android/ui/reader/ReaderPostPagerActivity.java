@@ -25,9 +25,9 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
+import org.wordpress.android.ui.reader.ReaderPostDetailFragment.PostDetailOption;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -40,7 +40,10 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
@@ -63,8 +66,6 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
-
-    protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class ReaderPostPagerActivity extends Activity
             title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
             blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
+            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -101,7 +102,7 @@ public class ReaderPostPagerActivity extends Activity
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
+            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -173,7 +174,7 @@ public class ReaderPostPagerActivity extends Activity
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
-        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -226,49 +227,48 @@ public class ReaderPostPagerActivity extends Activity
      * active after loading unless gotoNext=true, in which case the post after the passed one
      * will be made active
      */
+    private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private void loadPosts(final long blogId,
                            final long postId,
                            final boolean gotoNext) {
         new Thread() {
             @Override
             public void run() {
-                final ReaderPostList postList;
+                final ReaderBlogIdPostIdList idList;
                 if (mIsSinglePostView) {
-                    ReaderPost post = ReaderPostTable.getPost(blogId, postId);
-                    if (post == null) {
-                        return;
-                    }
-                    postList = new ReaderPostList();
-                    postList.add(post);
+                    idList = new ReaderBlogIdPostIdList();
+                    idList.add(new ReaderBlogIdPostId(blogId, postId));
                 } else {
+                    final ReaderPostList postList;
                     int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                         case TAG_PREVIEW:
-                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts);
+                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts, EXCLUDE_TEXT_COLUMN);
                             break;
                         case BLOG_PREVIEW:
-                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts);
+                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts, EXCLUDE_TEXT_COLUMN);
                             break;
                         default:
                             return;
                     }
+                    // TODO: above query should just return blogId/postId pairs
+                    idList = postList.getBlogIdPostIdList();
                 }
 
-                final ReaderBlogIdPostIdList ids = postList.getBlogIdPostIdList();
                 final int currentPosition = mViewPager.getCurrentItem();
                 final int newPosition;
                 if (gotoNext) {
-                    newPosition = ids.indexOf(blogId, postId) + 1;
+                    newPosition = idList.indexOf(blogId, postId) + 1;
                 } else {
-                    newPosition = ids.indexOf(blogId, postId);
+                    newPosition = idList.indexOf(blogId, postId);
                 }
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mPagerAdapter = new PostPagerAdapter(getFragmentManager());
-                        mPagerAdapter.showPosts(ids);
+                        mPagerAdapter.showPosts(idList);
                         mViewPager.setAdapter(mPagerAdapter);
                         if (mPagerAdapter.isValidPosition(newPosition)) {
                             mViewPager.setCurrentItem(newPosition);
@@ -514,11 +514,16 @@ public class ReaderPostPagerActivity extends Activity
                         (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
                 return ReaderPostPagerEndFragment.newInstance(fragmentType);
             } else {
-                boolean disableBlockBlog = mIsSinglePostView;
+                EnumSet<PostDetailOption> options;
+                if (mIsSinglePostView) {
+                    options = EnumSet.of(PostDetailOption.IS_SINGLE_POST);
+                } else {
+                    options = EnumSet.noneOf(PostDetailOption.class);
+                }
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
-                        disableBlockBlog,
+                        options,
                         getPostListType());
             }
         }

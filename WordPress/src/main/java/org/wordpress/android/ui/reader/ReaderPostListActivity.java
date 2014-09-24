@@ -17,7 +17,6 @@ import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -30,6 +29,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.EnumSet;
@@ -412,6 +412,11 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 } else if (listFragment.getPostListType() == ReaderTypes.ReaderPostListType.TAG_FOLLOWED) {
                     // list fragment is viewing followed tags, tell it to refresh the list of tags
                     listFragment.refreshTags();
+                    // update the current tag if the list fragment is empty - this will happen if
+                    // the tag table was previously empty (ie: first run)
+                    if (listFragment.isPostAdapterEmpty()) {
+                        listFragment.updateCurrentTag();
+                    }
                 }
             } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
                 // followed blogs have changed, so remove posts in blogs that are

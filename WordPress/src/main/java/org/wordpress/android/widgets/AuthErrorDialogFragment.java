@@ -18,11 +18,11 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 public class AuthErrorDialogFragment extends DialogFragment {
     public static int DEFAULT_RESOURCE_ID = -1;
 
-    private static boolean mIsWPCom;
-    private static int mMessageId;
-    private static int mTitleId;
+    private boolean mIsWPCom;
+    private int mMessageId = R.string.incorrect_credentials;
+    private int mTitleId = R.string.connection_error;
 
-    public static AuthErrorDialogFragment newInstance(boolean isWPCom, int titleResourceId, int messageResourceId) {
+    public void setWPComTitleMessage(boolean isWPCom, int titleResourceId, int messageResourceId) {
         mIsWPCom = isWPCom;
 
         if (titleResourceId != DEFAULT_RESOURCE_ID) {
@@ -38,7 +38,6 @@ public class AuthErrorDialogFragment extends DialogFragment {
         } else {
             mMessageId = R.string.incorrect_credentials;
         }
-        return new AuthErrorDialogFragment();
     }
 
     @Override

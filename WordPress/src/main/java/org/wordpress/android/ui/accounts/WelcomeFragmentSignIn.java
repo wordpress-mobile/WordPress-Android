@@ -63,6 +63,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
+    public static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -158,6 +159,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 // Used to pass data to an eventual support service
                 newAccountIntent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 newAccountIntent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                newAccountIntent.putExtra(FROM_LOGIN_SCREEN_KEY, true);
                 startActivity(newAccountIntent);
             }
         };
@@ -175,7 +177,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void moveBottomButtons() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mBottomButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-            if (getResources().getInteger(R.integer.isTablet) == 0) {
+            if (getResources().getInteger(R.integer.isSW600DP) == 0) {
                 setSecondaryButtonVisible(true);
             } else {
                 setSecondaryButtonVisible(false);

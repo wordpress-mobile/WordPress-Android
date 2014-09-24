@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_longAnimTime"
+    android:fillAfter="true"
+    android:fromXScale="0.0"
+    android:fromYScale="0.0"
+    android:interpolator="@android:anim/overshoot_interpolator"
+    android:pivotX="50%"
+    android:pivotY="50%"
+    android:toXScale="1.0"
+    android:toYScale="1.0" />

@@ -40,6 +40,10 @@ public class TypefaceCache {
                 break;
         }
 
+        return getTypefaceForTypefaceName(context, typefaceName);
+    }
+
+    protected static Typeface getTypefaceForTypefaceName(Context context, String typefaceName) {
         if (!mTypefaceCache.containsKey(typefaceName)) {
             Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
                     + typefaceName);
