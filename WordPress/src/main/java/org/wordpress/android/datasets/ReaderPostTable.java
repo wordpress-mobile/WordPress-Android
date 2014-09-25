@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.text.TextUtils;
 
+import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
@@ -397,7 +399,33 @@ public class ReaderPostTable {
             db.endTransaction();
         }
     }
-    
+
+    /*
+     * Android's CursorWindow has a max size of 2MB per row which can be exceeded
+     * with a very large text column, causing an IllegalStateException when the
+     * row is read - prevent this by limiting the amount of text that's stored in
+     * the text column - note that this situation very rarely occurs
+     * https://github.com/android/platform_frameworks_base/blob/master/core/res/res/values/config.xml#L946
+     * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
+     */
+    private static final int MAX_TEXT_LEN = (1024 * 1024) / 2;
+    private static String maxText(final ReaderPost post) {
+        if (post.getText().length() <= MAX_TEXT_LEN) {
+            return post.getText();
+        }
+        // if the post has an excerpt (which should always be the case), store it as the full text
+        // with a link to the full article
+        if (post.hasExcerpt()) {
+            AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing excerpt");
+            return "<p>" + post.getExcerpt() + "</p>"
+                  + String.format("<p style='text-align:center'><a href='%s'>%s</a></p>",
+                    post.getUrl(), WordPress.getContext().getString(R.string.reader_label_view_original));
+        } else {
+            AppLog.w(AppLog.T.READER, "reader post table > max text exceeded, storing truncated text");
+            return post.getText().substring(0, MAX_TEXT_LEN);
+        }
+    }
+
     public static void addOrUpdatePosts(final ReaderTag tag, ReaderPostList posts) {
         if (posts == null || posts.size() == 0) {
             return;
@@ -421,7 +449,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(4,  post.getAuthorName());
                 stmtPosts.bindLong  (5,  post.authorId);
                 stmtPosts.bindString(6,  post.getTitle());
-                stmtPosts.bindString(7,  post.getText());
+                stmtPosts.bindString(7,  maxText(post));
                 stmtPosts.bindString(8,  post.getExcerpt());
                 stmtPosts.bindString(9,  post.getUrl());
                 stmtPosts.bindString(10, post.getBlogUrl());
