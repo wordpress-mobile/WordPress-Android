@@ -93,10 +93,27 @@ public class WordPress extends Application {
     public static final String BROADCAST_ACTION_BLOG_LIST_CHANGED = "BLOG_LIST_CHANGED";
 
     private static final int SECONDS_BETWEEN_STATS_UPDATE = 30 * 60;
+    private static final int SECONDS_BETWEEN_OPTIONS_UPDATE = 10 * 60;
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 6 * 60 * 60;
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
+
+
+    /**
+     *  Updates Options for the current blog in background.
+     */
+    public static RateLimitedTask sUpdateCurrentBlogOption = new RateLimitedTask(SECONDS_BETWEEN_OPTIONS_UPDATE) {
+        protected boolean run() {
+            Blog currentBlog = WordPress.getCurrentBlog();
+            if (currentBlog != null) {
+                new ApiHelper.RefreshBlogContentTask(mContext, currentBlog, null).executeOnExecutor(
+                        AsyncTask.THREAD_POOL_EXECUTOR, false);
+                return true;
+            }
+            return false;
+        }
+    };
 
     /**
      *  Updates the stats of the current blog in background. There is a timeout of 30 minutes that limits
@@ -196,9 +213,6 @@ public class WordPress extends Application {
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
         registerActivityLifecycleCallbacks(pnBackendMonitor);
-
-        new ApiHelper.RefreshBlogContentTask(this, getCurrentBlog(), null).executeOnExecutor(
-                AsyncTask.THREAD_POOL_EXECUTOR, false);
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
@@ -731,6 +745,9 @@ public class WordPress extends Application {
 
                 // Rate limited WPCom blog list Update
                 sUpdateWordPressComBlogList.runIfNotLimited();
+
+                // Rate limited blog options Update
+                sUpdateCurrentBlogOption.runIfNotLimited();
             }
         }
 
