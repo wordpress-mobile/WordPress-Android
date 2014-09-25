@@ -34,7 +34,36 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * Activity for opening external links in a webview
+ * Activity for opening external WordPress links in a webview.
+ *
+ * Try to use one of the methods below to open the webview:
+ * - openURL
+ * - openUrlByUsingMainWPCOMCredentials
+ * - openUrlByUsingWPCOMCredentials
+ * - openUrlByUsingBlogCredentials (for self hosted sites)
+ *
+ * If you need to start the activity with delay, or none of the methods above are enough for your needs,
+ * you can start the activity by passing the required parameters, depending on what you need to do.
+ *
+ * 1. Load a simple URL (without any kind of authentication)
+ * - Start the activity with the parameter URL_TO_LOAD set to the URL to load.
+ *
+ * 2. Load a WordPress.com URL
+ * Start the activity with the following parameters:
+ * - URL_TO_LOAD: target URL to load in the webview.
+ * - AUTHENTICATION_URL: The address of the WordPress.com authentication endpoint. Please use WPCOM_LOGIN_URL.
+ * - AUTHENTICATION_USER: username.
+ * - AUTHENTICATION_PASSWD: password.
+ *
+ * 3. Load a WordPress.org URL with authentication
+ * - URL_TO_LOAD: target URL to load in the webview.
+ * - AUTHENTICATION_URL: The address of the authentication endpoint. Please use the value of getBlogLoginUrl()
+ * to retrieve the correct address of the authentication endpoint.
+ * - AUTHENTICATION_USER: username.
+ * - AUTHENTICATION_PASSWD: password.
+ * - LOCAL_BLOG_ID: local id of the blog in the app database. This is required since some blogs could have HTTP Auth,
+ * or self-signed certs in place.
+ *
  */
 public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
