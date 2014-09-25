@@ -24,6 +24,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -140,10 +142,32 @@ public class ViewPostFragment extends Fragment {
 
     }
 
+    /**
+     * Load the post preview. If the post is in a non-public state (e.g. draft status, part of a
+     * non-public blog, etc), load the preview as an authenticated URL. Otherwise, just load the
+     * preview normally.
+     */
     protected void loadPostPreview() {
         if (WordPress.currentPost != null && !TextUtils.isEmpty(WordPress.currentPost.getPermaLink())) {
-            Intent i = new Intent(getActivity(), PreviewPostActivity.class);
-            startActivity(i);
+            Post post = WordPress.currentPost;
+            String url = post.getPermaLink();
+            if ( WordPress.getCurrentBlog().isPrivate() //blog private
+                    || post.isLocalDraft()
+                    || post.isLocalChange()
+                    || post.getStatusEnum() != PostStatus.PUBLISHED) {
+                if (-1 == url.indexOf('?')) {
+                    url = url.concat("?preview=true");
+                } else {
+                    url = url.concat("&preview=true");
+                }
+                WPWebViewActivity.openUrlByUsingBlogCredentials(
+                        getActivity(),
+                        WordPress.currentBlog,
+                        url
+                );
+            } else {
+                WPWebViewActivity.openURL(getActivity(), url);
+            }
         }
     }
 
