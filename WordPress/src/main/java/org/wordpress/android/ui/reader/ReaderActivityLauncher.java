@@ -12,11 +12,10 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
 
@@ -238,9 +237,8 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        // TODO: NotificationsWebViewActivity will fail without a current blog
-        if (openUrlType == OpenUrlType.INTERNAL && WordPress.getCurrentBlog() != null) {
-            NotificationsWebViewActivity.openUrl(context, url);
+        if (openUrlType == OpenUrlType.INTERNAL) {
+            WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(context, url);
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

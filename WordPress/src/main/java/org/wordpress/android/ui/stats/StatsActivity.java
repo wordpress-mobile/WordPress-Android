@@ -35,8 +35,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.ui.AuthenticatedWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -472,13 +472,15 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     .setTitle(getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    Intent jetpackIntent = new Intent(
-                            currentActivity,
-                            AuthenticatedWebViewActivity.class);
-                    jetpackIntent.putExtra(AuthenticatedWebViewActivity.LOAD_AUTHENTICATED_URL,
-                            currentBlog.getAdminUrl()
-                                    + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                                    + "&plugin-search-input=Search+Plugins");
+                    String stringToLoad = currentBlog.getAdminUrl()
+                            + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
+                            + "&plugin-search-input=Search+Plugins";
+                    String authURL = WPWebViewActivity.getBlogLoginUrl(currentBlog);
+                    Intent jetpackIntent = new Intent(currentActivity, WPWebViewActivity.class);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, currentBlog.getUsername());
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, currentBlog.getPassword());
+                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
+                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
                     startActivityForResult(jetpackIntent, REQUEST_JETPACK);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 }
@@ -524,11 +526,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             String statsAuthenticatedPassword =  credentials.getPassword();
             String addressToLoad = "https://wordpress.com/my-stats/?no-chrome&blog=" + blogId + "&unit=1";
 
-            Intent statsWebViewIntent = new Intent(this, StatsWebViewActivity.class);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_USER, statsAuthenticatedUser);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_PASSWD, statsAuthenticatedPassword);
-            statsWebViewIntent.putExtra(StatsWebViewActivity.STATS_AUTHENTICATED_URL, addressToLoad);
-            startActivityWithDelay(statsWebViewIntent);
+            WPWebViewActivity.openUrlByUsingWPCOMCredentials(this, addressToLoad, statsAuthenticatedUser,
+                    statsAuthenticatedPassword);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_OPENED_WEB_VERSION);
             return true;
         } else if (mNoMenuDrawer && item.getItemId() == android.R.id.home) {

@@ -126,9 +126,6 @@
             android:name=".ui.posts.PagesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".ui.posts.PreviewPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.posts.ViewPostActivity" />
@@ -137,7 +134,7 @@
         <activity android:name=".ui.stats.StatsActivity" >
         </activity>
 
-        <activity android:name=".ui.stats.StatsWebViewActivity" >
+        <activity android:name=".ui.WPWebViewActivity" >
         </activity>
 
         <activity android:name=".ui.stats.StatsDetailsActivity" >
@@ -220,7 +217,6 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".ui.accounts.WPComLoginActivity"
             android:theme="@style/WordPress.Dialog">
@@ -235,9 +231,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.AuthenticatedWebViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.ViewSiteActivity"
@@ -249,9 +242,6 @@
             android:name=".ui.notifications.NotificationsActivity"
             android:theme="@style/CalypsoTheme" />
 
-        <activity
-            android:name=".ui.notifications.NotificationsWebViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <!--  Passcode lock activities -->
         <activity
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
