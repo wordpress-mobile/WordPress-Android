@@ -15,7 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.DotComAuthenticatedWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
 
@@ -215,7 +215,7 @@ public class ReaderActivityLauncher {
         }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
-            DotComAuthenticatedWebViewActivity.openUrlByUsingMainWPCOMCredentials(context, url);
+            WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(context, url);
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

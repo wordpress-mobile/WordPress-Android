@@ -23,7 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.DotComAuthenticatedWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailActivity;
@@ -305,7 +305,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null)
             return;
-        DotComAuthenticatedWebViewActivity.openUrlByUsingMainWPCOMCredentials(this, url);
+        WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(this, url);
     }
 
     @Override

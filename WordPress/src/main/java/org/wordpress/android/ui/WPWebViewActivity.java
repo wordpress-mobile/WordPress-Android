@@ -11,31 +11,38 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPWebChromeClient;
+import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.Map;
 
 /**
- * Activity for opening external links in a webview being authenticated to WordPress.com.
+ * Activity for opening external links in a webview
  */
-public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
+public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
+    private static final String LOCAL_BLOG_ID = "local_blog_id";
 
     public static void openUrlByUsingMainWPCOMCredentials(Context context, String url) {
         if (context == null) {
@@ -49,14 +56,60 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
                 settings.getString(WordPress.WPCOM_PASSWORD_PREFERENCE, null)
         );
 
-        openURL(context, url, authenticatedUser, authenticatedPassword);
+        openWPCOMURL(context, url, authenticatedUser, authenticatedPassword);
     }
 
     public static void openUrlByUsingWPCOMCredentials(Context context, String url, String user, String password) {
-        openURL(context, url, user, password);
+        openWPCOMURL(context, url, user, password);
     }
 
-    private static void openURL(Context context, String url, String user, String password) {
+    public static void openUrlByUsingBlogCredentials(Context context, Blog blog, String url) {
+        if (context == null) {
+            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            return;
+        }
+
+        if (blog == null) {
+            AppLog.e(AppLog.T.UTILS, "Blog obj is null!!!");
+            return;
+        }
+
+        if (TextUtils.isEmpty(url)) {
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL!!");
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String authURL = WPWebViewActivity.getBlogLoginUrl(blog);
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, blog.getUsername());
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, blog.getPassword());
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+        intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, blog.getLocalTableBlogId());
+        context.startActivity(intent);
+    }
+
+    public static void openURL(Context context, String url) {
+        if (context == null) {
+            AppLog.e(AppLog.T.UTILS, "Context is null!!!");
+            return;
+        }
+
+        if (TextUtils.isEmpty(url)) {
+            AppLog.e(AppLog.T.UTILS, "Empty or null URL!!");
+            Toast.makeText(context, context.getResources().getText(R.string.invalid_url_message),
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        context.startActivity(intent);
+    }
+
+    private static void openWPCOMURL(Context context, String url, String user, String password) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null!!!");
             return;
@@ -74,11 +127,11 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
             return;
         }
 
-        Intent intent = new Intent(context, DotComAuthenticatedWebViewActivity.class);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_USER, user);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_PASSWD, password);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(DotComAuthenticatedWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, user);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, password);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, WPCOM_LOGIN_URL);
         context.startActivity(intent);
     }
 
@@ -88,26 +141,43 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
 
-        mWebView.setWebViewClient(new WebViewClient());
+        if (extras == null) {
+            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
+            finish();
+        }
+
+        if (extras.getInt(LOCAL_BLOG_ID, -1) > -1) {
+            Blog blog = WordPress.getBlog(extras.getInt(LOCAL_BLOG_ID, -1));
+            if (blog == null) {
+                AppLog.e(AppLog.T.UTILS, "No valid parameters passed to WPWebViewActivity!!");
+                finish();
+            }
+            mWebView.setWebViewClient(new WPWebViewClient(blog));
+        } else {
+            mWebView.setWebViewClient(new WebViewClient());
+        }
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        if (extras != null) {
-            String addressToLoad = extras.getString(URL_TO_LOAD);
-            String username = extras.getString(AUTHENTICATION_USER, "");
-            String password = extras.getString(AUTHENTICATION_PASSWD, "");
-            String authURL = extras.getString(AUTHENTICATION_URL);
+        String addressToLoad = extras.getString(URL_TO_LOAD);
+        String username = extras.getString(AUTHENTICATION_USER, "");
+        String password = extras.getString(AUTHENTICATION_PASSWD, "");
+        String authURL = extras.getString(AUTHENTICATION_URL);
 
-            if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
-                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to DotComAuthenticatedWebViewActivity!!");
-                Toast.makeText(this, getText(R.string.invalid_url_message),
-                        Toast.LENGTH_SHORT).show();
-                finish();
-            }
+        if (TextUtils.isEmpty(addressToLoad) || !UrlUtils.isValidUrlAndHostNotNull(addressToLoad)) {
+            AppLog.e(AppLog.T.UTILS, "Empty or null or invalid URL passed to WPWebViewActivity!!");
+            Toast.makeText(this, getText(R.string.invalid_url_message),
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
+        if (TextUtils.isEmpty(authURL) && TextUtils.isEmpty(username) && TextUtils.isEmpty(password)) {
+            // Only the URL to load is passed to this activity. Use a the normal loader not authenticated.
+            loadUrl(addressToLoad);
+        } else {
             if (TextUtils.isEmpty(authURL) || !UrlUtils.isValidUrlAndHostNotNull(authURL)) {
-                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to DotComAuthenticatedWebViewActivity!!");
+                AppLog.e(AppLog.T.UTILS, "Empty or null or invalid auth URL passed to WPWebViewActivity!!");
                 Toast.makeText(this, getText(R.string.invalid_url_message),
                         Toast.LENGTH_SHORT).show();
                 finish();
@@ -119,11 +189,7 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
-
             this.loadAuthenticatedUrl(authURL, addressToLoad, username, password);
-        } else {
-            AppLog.e(AppLog.T.UTILS, "No valid parameters passed to DotComAuthenticatedWebViewActivity!!");
-            finish();
         }
     }
 
@@ -140,6 +206,35 @@ public class DotComAuthenticatedWebViewActivity extends WebViewActivity {
         } catch (UnsupportedEncodingException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
+    }
+
+    /**
+     * Get the URL of the WordPress login page.
+     *
+     * @return URL of the login page.
+     */
+    public static String getBlogLoginUrl(Blog blog) {
+        String loginURL = null;
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<?, ?>>() {}.getType();
+        Map<?, ?> blogOptions = gson.fromJson(blog.getBlogOptions(), type);
+        if (blogOptions != null) {
+            Map<?, ?> homeURLMap = (Map<?, ?>) blogOptions.get("login_url");
+            if (homeURLMap != null) {
+                loginURL = homeURLMap.get("value").toString();
+            }
+        }
+        // Try to guess the login URL if blogOptions is null (blog not added to the app), or WP version is < 3.6
+        if (loginURL == null) {
+            if (blog.getUrl().lastIndexOf("/") != -1) {
+                return blog.getUrl().substring(0, blog.getUrl().lastIndexOf("/"))
+                        + "/wp-login.php";
+            } else {
+                return blog.getUrl().replace("xmlrpc.php", "wp-login.php");
+            }
+        }
+
+        return loginURL;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.Layout;
@@ -11,9 +10,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.ui.AuthenticatedWebViewActivity;
-import org.wordpress.android.ui.DotComAuthenticatedWebViewActivity;
-import org.wordpress.android.ui.WebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -75,14 +72,12 @@ public class StatsWPLinkMovementMethod extends WPLinkMovementMethod {
                         // Still empty. Do not eat the event, but let's open the default Web Browser.
                         return super.onTouchEvent(widget, buffer, event);
                     }
-                    DotComAuthenticatedWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
+                    WPWebViewActivity.openUrlByUsingWPCOMCredentials(widget.getContext(),
                             url, statsAuthenticatedUser, statsAuthenticatedPassword);
                     return true;
                 } else if (url.startsWith("https") || url.startsWith("http")) {
                     AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + url);
-                    Intent statsWebViewIntent = new Intent(widget.getContext(), AuthenticatedWebViewActivity.class);
-                    statsWebViewIntent.putExtra(AuthenticatedWebViewActivity.URL, url);
-                    widget.getContext().startActivity(statsWebViewIntent);
+                    WPWebViewActivity.openURL(widget.getContext(), url);
                     return true;
                 }
             }

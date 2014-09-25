@@ -126,9 +126,6 @@
             android:name=".ui.posts.PagesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
-            android:name=".ui.posts.PreviewPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity
             android:name=".ui.posts.SelectCategoriesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".ui.posts.ViewPostActivity" />
@@ -137,7 +134,7 @@
         <activity android:name=".ui.stats.StatsActivity" >
         </activity>
 
-        <activity android:name=".ui.DotComAuthenticatedWebViewActivity" >
+        <activity android:name=".ui.WPWebViewActivity" >
         </activity>
 
         <activity android:name=".ui.stats.StatsDetailsActivity" >
@@ -230,9 +227,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.AuthenticatedWebViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".ui.DashboardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
