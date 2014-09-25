@@ -33,7 +33,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 public class ReaderBlogInfoView extends LinearLayout {
 
     public interface BlogInfoListener {
-        void onBlogInfoLoaded();
+        void onBlogInfoLoaded(ReaderBlog blogInfo);
         void onBlogInfoFailed();
     }
 
@@ -84,6 +84,7 @@ public class ReaderBlogInfoView extends LinearLayout {
             return;
         }
 
+        boolean wasEmpty = (mBlogInfo == null);
         mBlogInfo = blogInfo;
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
@@ -148,8 +149,9 @@ public class ReaderBlogInfoView extends LinearLayout {
             loadMshotImage(blogInfo);
         }
 
-        if (mBlogInfoListener != null) {
-            mBlogInfoListener.onBlogInfoLoaded();
+        // fire listener the first time info is loaded
+        if (wasEmpty && mBlogInfoListener != null) {
+            mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 

@@ -29,6 +29,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -381,25 +382,14 @@ public class ReaderPostListFragment extends Fragment
         boolean adapterAlreadyExists = hasPostAdapter();
         mListView.setAdapter(getPostAdapter());
 
-        // if adapter didn't already exist, populate it now then update the tag/blog - this
+        // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists) {
+        if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
-            switch (getPostListType()) {
-                case TAG_FOLLOWED:
-                case TAG_PREVIEW:
-                    getPostAdapter().setCurrentTag(mCurrentTag);
-                    if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
-                    }
-                    break;
-                case BLOG_PREVIEW:
-                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                    if (!isRecreated) {
-                        updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
-                    }
-                    break;
+            getPostAdapter().setCurrentTag(mCurrentTag);
+            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
             }
         }
 
@@ -1229,7 +1219,8 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * used by blog preview - tell the blog info view to show the current blog
-     * if it's not already loaded
+     * if it's not already loaded, then shows/updates posts once the blog info
+     * is loaded
      */
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
@@ -1239,8 +1230,15 @@ public class ReaderPostListFragment extends Fragment
                     mCurrentBlogUrl,
                     new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
-                        public void onBlogInfoLoaded() {
-                            // nop
+                        public void onBlogInfoLoaded(ReaderBlog blogInfo) {
+                            if (isAdded()) {
+                                mCurrentBlogId = blogInfo.blogId;
+                                mCurrentBlogUrl = blogInfo.getUrl();
+                                if (isPostAdapterEmpty()) {
+                                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                                }
+                            }
                         }
                         @Override
                         public void onBlogInfoFailed() {
