@@ -6,11 +6,14 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.text.Html;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AlignmentSpan;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -34,8 +37,6 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.WPImageGetter;
@@ -221,13 +222,13 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
-    public static Spannable getSpannableTextFromIndices(JSONObject subject, TextView textView,
-                                                        final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public static Spannable getSpannableContentFromIndices(JSONObject subject, TextView textView,
+                                                           final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         if (subject == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = subject.optString("text", "").trim();
+        String text = subject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
@@ -235,53 +236,58 @@ public class NotificationsUtils {
         // Add images if available from media array
         JSONArray mediaArray = subject.optJSONArray("media");
         if (textView != null && mediaArray != null) {
-            int addedCharCount = 0;
+            Context context = textView.getContext();
+            int indexAdjustment = 0;
+            String imagePlaceholder;
             for (int i = 0; i < mediaArray.length(); i++) {
                 JSONObject mediaObject = mediaArray.optJSONObject(i);
                 if (mediaObject == null) {
                     continue;
                 }
 
-                if (mediaObject.optString("type", "").startsWith("image") && mediaObject.has("url")) {
-                    String imageTag = String.format("<img src=\"%s\" />", mediaObject.optString("url", ""));
+                if (context != null) {
+                    Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
+                    Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
+                    // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle, otherwise
+                    WPImageGetter imageGetter = new WPImageGetter(
+                            textView,
+                            context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
+                            WordPress.imageLoader,
+                            loading,
+                            failed
+                    );
+                    final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
 
+                    ImageSpan noteImageSpan = new ImageSpan(
+                            remoteDrawable,
+                            mediaObject.optString("url", ""),
+                            DynamicDrawableSpan.ALIGN_BOTTOM
+                    );
                     int index = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
+                    if (index >= 0) {
+                        index += indexAdjustment;
+                        // We need an empty space to insert the ImageSpan into
+                        imagePlaceholder = " ";
+                        if (index == 0) {
+                            // Move the image to second line if it is the first item in the content
+                            imagePlaceholder = "\n ";
+                        }
 
-                    // Add a line break if the image is on the first line, so the image displays correctly
-                    // in the comment detail fragment
-                    if (index == 0) {
-                        String breakTag = "<br />";
-                        spannableStringBuilder.insert(0, breakTag);
-                        addedCharCount += breakTag.length();
-                    }
+                        spannableStringBuilder.insert(index, imagePlaceholder);
+                        index += imagePlaceholder.length() - 1;
 
-                    int adjustedIndex = index + addedCharCount;
-                    if (adjustedIndex > spannableStringBuilder.length()) {
-                        adjustedIndex = spannableStringBuilder.length();
-                    }
-                    if (index >= 0 && adjustedIndex <= spannableStringBuilder.length()) {
-                        spannableStringBuilder.insert(adjustedIndex, imageTag);
-                        addedCharCount += imageTag.length();
+                        spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                        // Add an AlignmentSpan to center the image
+                        spannableStringBuilder.setSpan(
+                                new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                                index,
+                                index + 1,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                        );
+
+                        indexAdjustment += imagePlaceholder.length();
                     }
                 }
-            }
-
-            Context context = textView.getContext();
-            if (addedCharCount > 0) {
-                Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
-                Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
-                int padding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
-                spannableStringBuilder = new SpannableStringBuilder(
-                        Html.fromHtml(spannableStringBuilder.toString(),
-                                new WPImageGetter(
-                                        textView,
-                                        textView.getWidth() - padding,
-                                        WordPress.imageLoader,
-                                        loading,
-                                        failed
-                                ), null
-                        )
-                );
             }
         }
 

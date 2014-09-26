@@ -76,7 +76,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         CommentUtils.indentTextViewFirstLine(
                 noteBlockHolder.commentTextView,
-                NotificationsUtils.getSpannableTextFromIndices(
+                NotificationsUtils.getSpannableContentFromIndices(
                         getNoteData().optJSONObject("comment_text"),
                         noteBlockHolder.commentTextView,
                         getOnNoteBlockTextClickListener()
