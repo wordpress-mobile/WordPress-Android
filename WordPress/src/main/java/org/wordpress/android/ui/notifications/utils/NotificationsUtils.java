@@ -237,6 +237,22 @@ public class NotificationsUtils {
         JSONArray mediaArray = subject.optJSONArray("media");
         if (textView != null && mediaArray != null) {
             Context context = textView.getContext();
+            if (context == null) {
+                return spannableStringBuilder;
+            }
+
+            Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
+            Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
+            // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
+            // otherwise it would load blank white
+            WPImageGetter imageGetter = new WPImageGetter(
+                    textView,
+                    context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
+                    WordPress.imageLoader,
+                    loading,
+                    failed
+            );
+
             int indexAdjustment = 0;
             String imagePlaceholder;
             for (int i = 0; i < mediaArray.length(); i++) {
@@ -245,48 +261,31 @@ public class NotificationsUtils {
                     continue;
                 }
 
-                if (context != null) {
-                    Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
-                    Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
-                    // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle, otherwise
-                    WPImageGetter imageGetter = new WPImageGetter(
-                            textView,
-                            context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
-                            WordPress.imageLoader,
-                            loading,
-                            failed
-                    );
-                    final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
-
-                    ImageSpan noteImageSpan = new ImageSpan(
-                            remoteDrawable,
-                            mediaObject.optString("url", ""),
-                            DynamicDrawableSpan.ALIGN_BOTTOM
-                    );
-                    int index = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
-                    if (index >= 0) {
-                        index += indexAdjustment;
-                        // We need an empty space to insert the ImageSpan into
-                        imagePlaceholder = " ";
-                        if (index == 0) {
-                            // Move the image to second line if it is the first item in the content
-                            imagePlaceholder = "\n ";
-                        }
-
-                        spannableStringBuilder.insert(index, imagePlaceholder);
-                        index += imagePlaceholder.length() - 1;
-
-                        spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                        // Add an AlignmentSpan to center the image
-                        spannableStringBuilder.setSpan(
-                                new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                                index,
-                                index + 1,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                        );
-
-                        indexAdjustment += imagePlaceholder.length();
+                final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
+                ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
+                int index = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
+                if (index >= 0) {
+                    index += indexAdjustment;
+                    // We need an empty space to insert the ImageSpan into
+                    imagePlaceholder = " ";
+                    if (index == 0) {
+                        // Move the image to second line if it is the first item in the content
+                        imagePlaceholder = "\n ";
                     }
+
+                    spannableStringBuilder.insert(index, imagePlaceholder);
+                    index += imagePlaceholder.length() - 1;
+
+                    spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    // Add an AlignmentSpan to center the image
+                    spannableStringBuilder.setSpan(
+                            new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                            index,
+                            index + 1,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+
+                    indexAdjustment += imagePlaceholder.length();
                 }
             }
         }
