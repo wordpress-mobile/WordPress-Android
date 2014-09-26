@@ -30,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -355,56 +356,75 @@ public class ReaderSubsActivity extends Activity
     }
 
     /*
-     * start a two-step process to follow a blog by url:
+     * start a three-step process to follow a blog by url:
      *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. perform the actual follow
+     *    2. get the blogInfo for this url (so we can follow by id)
+     *    3. perform the actual follow
      * note that the passed URL is assumed to be normalized and validated
      */
-    private void performAddUrl(final String normUrl) {
+    private void performAddUrl(final String blogUrl) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
         showAddUrlProgress();
 
-        // listener for following the blog
-        final ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!isFinishing()) {
-                    hideAddUrlProgress();
-                    if (succeeded) {
-                        // clear the edit text and hide the soft keyboard
-                        mEditAdd.setText(null);
-                        EditTextUtils.hideSoftInput(mEditAdd);
-                        String msgText = getString(R.string.reader_label_followed_blog);
-                        MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
-                        onFollowBlogChanged();
-                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    } else {
-                        ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
-                    }
-                }
-            }
-        };
-
-        // listener for testing if blog is reachable
         ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!isFinishing()) {
-                    if (succeeded) {
-                        // url is reachable, so follow it
-                        ReaderBlogActions.performFollowAction(0, normUrl, true, followListener);
-                    } else {
-                        // url is unreachable
-                        hideAddUrlProgress();
-                        ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
-                    }
+                if (isFinishing()) {
+                    return;
+                }
+                if (succeeded) {
+                    getBlogInfo(blogUrl);
+                } else {
+                    hideAddUrlProgress();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
                 }
             }
         };
-        ReaderBlogActions.checkBlogUrlReachable(normUrl, urlActionListener);
+        ReaderBlogActions.checkBlogUrlReachable(blogUrl, urlActionListener);
+    }
+
+    private void getBlogInfo(final String blogUrl) {
+        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog blogInfo) {
+                if (isFinishing()) {
+                    return;
+                }
+                if (blogInfo != null) {
+                    followBlog(blogInfo.blogId, blogInfo.getUrl());
+                } else {
+                    followBlog(0, blogUrl);
+                }
+            }
+        };
+        ReaderBlogActions.updateBlogInfo(0, blogUrl, infoListener);
+    }
+
+    private void followBlog(long blogId, String normUrl) {
+        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) {
+                    return;
+                }
+                hideAddUrlProgress();
+                if (succeeded) {
+                    // clear the edit text and hide the soft keyboard
+                    mEditAdd.setText(null);
+                    EditTextUtils.hideSoftInput(mEditAdd);
+                    String msgText = getString(R.string.reader_label_followed_blog);
+                    MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
+                    onFollowBlogChanged();
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                } else {
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                }
+            }
+        };
+        ReaderBlogActions.performFollowAction(blogId, normUrl, true, followListener);
     }
 
     /*

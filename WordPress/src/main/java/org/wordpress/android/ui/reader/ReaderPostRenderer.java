@@ -308,6 +308,10 @@ class ReaderPostRenderer {
             sbHtml.append("  iframe, embed { display: none; }");
         }
 
+        // html5 video doesn't require javascript
+        sbHtml.append(" video { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+              .append("         height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
+
         sbHtml.append("</style>")
               .append("</head><body>")
               .append(content)

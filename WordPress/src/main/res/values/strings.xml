@@ -557,6 +557,7 @@
     <string name="error_parsing_response">An error occurred while fetching data</string>
     <string name="error_moderate_comment">An error occurred while moderating</string>
     <string name="error_edit_comment">An error occurred while editing the comment</string>
+    <string name="error_publish_empty_post">Can\'t publish an empty post</string>
     <string name="error_upload">An error occurred while uploading the %s</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -649,6 +650,7 @@
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_reached_last_post">You\'ve reached the end</string>
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
+    <string name="reader_label_view_original">View original article</string>
 
     <!-- like counts liking users activity-->
     <string name="reader_label_like">Like</string>
