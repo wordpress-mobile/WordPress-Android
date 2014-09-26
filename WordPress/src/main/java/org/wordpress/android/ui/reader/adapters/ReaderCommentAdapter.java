@@ -296,6 +296,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
         } else {
             holder.imgLike.setVisibility(View.GONE);
             holder.txtLike.setVisibility(View.GONE);
+            holder.imgLike.setOnClickListener(null);
+            holder.txtLike.setOnClickListener(null);
         }
     }
 
