@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -281,7 +282,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
             holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(holder, comment, position);
+                    toggleLike(v.getContext(), holder, comment, position);
                 }
             });
 
@@ -298,9 +299,14 @@ public class ReaderCommentAdapter extends BaseAdapter {
         }
     }
 
-    private void toggleLike(final CommentHolder holder,
-                            final ReaderComment comment,
-                            final int position) {
+    private void toggleLike(Context context,
+                            CommentHolder holder,
+                            ReaderComment comment,
+                            int position) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
 
