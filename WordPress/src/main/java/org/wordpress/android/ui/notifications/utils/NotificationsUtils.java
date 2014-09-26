@@ -275,7 +275,7 @@ public class NotificationsUtils {
                     spannableStringBuilder.insert(index, imagePlaceholder);
                     index += imagePlaceholder.length() - 1;
 
-                    spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     // Add an AlignmentSpan to center the image
                     spannableStringBuilder.setSpan(
                             new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
