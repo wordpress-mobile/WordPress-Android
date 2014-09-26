@@ -42,7 +42,7 @@ import java.util.Map;
  * - openUrlByUsingWPCOMCredentials
  * - openUrlByUsingBlogCredentials (for self hosted sites)
  *
- * If you need to start the activity with delay, or none of the methods above are enough for your needs,
+ * If you need to start the activity with delay, start activity with result, or none of the methods above are enough for your needs,
  * you can start the activity by passing the required parameters, depending on what you need to do.
  *
  * 1. Load a simple URL (without any kind of authentication)
@@ -71,7 +71,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
     public static final String URL_TO_LOAD = "url_to_load";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
-    private static final String LOCAL_BLOG_ID = "local_blog_id";
+    public static final String LOCAL_BLOG_ID = "local_blog_id";
 
     public static void openUrlByUsingMainWPCOMCredentials(Context context, String url) {
         if (context == null) {
