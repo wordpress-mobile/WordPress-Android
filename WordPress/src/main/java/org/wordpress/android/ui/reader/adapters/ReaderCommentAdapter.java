@@ -224,6 +224,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtReply;
         private final ImageView imgReply;
 
+        private final ViewGroup layoutLikes;
         private final ImageView imgLike;
         private final TextView txtLike;
         private final TextView txtLikeCount;
@@ -240,8 +241,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
-            imgLike = (ImageView) view.findViewById(R.id.image_comment_like);
-            txtLike = (TextView) view.findViewById(R.id.text_comment_like);
+            layoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
+            imgLike = (ImageView) layoutLikes.findViewById(R.id.image_comment_like);
+            txtLike = (TextView) layoutLikes.findViewById(R.id.text_comment_like);
             txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
             txtText.setLinksClickable(true);
@@ -253,9 +255,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
                                 final ReaderComment comment,
                                 final int position) {
         if (mPost.isLikesEnabled) {
-            holder.imgLike.setVisibility(View.VISIBLE);
+            holder.layoutLikes.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
-            holder.txtLike.setVisibility(View.VISIBLE);
 
             if (comment.numLikes == 0) {
                 // no likes, so show "Like" as the caption with no count
@@ -276,15 +277,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 holder.txtLikeCount.setVisibility(View.VISIBLE);
             }
 
-            // toggle like when like image or caption is tapped
-            View.OnClickListener likeListener = new View.OnClickListener() {
+            // toggle like when layout containing like image and caption is tapped
+            holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     toggleLike(holder, comment, position);
                 }
-            };
-            holder.imgLike.setOnClickListener(likeListener);
-            holder.txtLike.setOnClickListener(likeListener);
+            });
 
             // show liking users when like count is tapped
             holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
@@ -294,10 +293,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holder.imgLike.setVisibility(View.GONE);
-            holder.txtLike.setVisibility(View.GONE);
-            holder.imgLike.setOnClickListener(null);
-            holder.txtLike.setOnClickListener(null);
+            holder.layoutLikes.setVisibility(View.GONE);
+            holder.layoutLikes.setOnClickListener(null);
         }
     }
 
