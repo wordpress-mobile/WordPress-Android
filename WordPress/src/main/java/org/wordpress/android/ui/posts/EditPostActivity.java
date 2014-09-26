@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +23,8 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.Timer;
@@ -276,9 +277,7 @@ public class EditPostActivity extends Activity {
             // If the post is new and there are no changes, don't publish
             updatePostObject(false);
             if (!mPost.isPublishable()) {
-                Toast mToast = Toast.makeText(this, R.string.error_publish_empty_post, Toast.LENGTH_SHORT);
-                mToast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL, 0, 0);
-                mToast.show();
+                ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
                 return false;
             }
 
