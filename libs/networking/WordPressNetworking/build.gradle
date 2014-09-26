@@ -16,14 +16,13 @@ apply plugin: 'maven'
 android {
     publishNonDefault true
 
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         applicationId "org.wordpress.android.networking"
         minSdkVersion 14
-        targetSdkVersion 20
-        versionCode 1
+        targetSdkVersion 19
         versionName "1.0.0"
     }
 }
