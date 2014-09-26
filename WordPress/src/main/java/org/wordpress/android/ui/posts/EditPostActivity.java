@@ -23,6 +23,8 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.Timer;
@@ -272,7 +274,14 @@ public class EditPostActivity extends Activity {
                     // No-op
             }
 
-            savePost(false);
+            // If the post is new and there are no changes, don't publish
+            updatePostObject(false);
+            if (!mPost.isPublishable()) {
+                ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
+                return false;
+            }
+
+            savePost(false, false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -303,7 +312,7 @@ public class EditPostActivity extends Activity {
         return mPost;
     }
 
-    private void savePost(boolean isAutosave) {
+    private void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -315,6 +324,16 @@ public class EditPostActivity extends Activity {
         }
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
+        }
+    }
+
+    private void savePost(boolean isAutosave) {
+        savePost(isAutosave, true);
+    }
+
+    private void savePost(boolean isAutosave, boolean updatePost) {
+        if (updatePost) {
+            updatePostObject(isAutosave);
         }
 
         WordPress.wpDB.updatePost(mPost);
