@@ -171,6 +171,7 @@ public class ReaderPost {
             post.blogName = JSONUtil.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
         }
 
