@@ -164,8 +164,7 @@ public class ReaderPost {
             post.attachmentsJson = jsonAttachments.toString();
         }
 
-        // the single-post sites/$site/posts/$post endpoint returns all site metadata
-        // under meta/data/site (assuming ?meta=site was added to the request)
+        // site metadata - returned when ?meta=site was added to the request
         JSONObject jsonSite = JSONUtil.getJSONChild(json, "meta/data/site");
         if (jsonSite != null) {
             post.blogId = jsonSite.optInt("ID");
