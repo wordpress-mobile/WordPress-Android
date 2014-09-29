@@ -29,6 +29,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderCommentAdapter extends BaseAdapter {
@@ -311,12 +312,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
         ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
 
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
         mComments.set(position, updatedComment);
-        showLikeStatus(holder, comment, position);
+        showLikeStatus(holder, updatedComment, position);
     }
 
     /*
