@@ -1,31 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/layout_post_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:id="@+id/layout_post_detail_container">
+        android:descendantFocusability="blocksDescendants">
 
-        <org.wordpress.android.widgets.WPListView
-            android:id="@id/android:list"
-            style="@style/ReaderListView.NoDivider"
-            android:layout_above="@+id/layout_comment_box"
-            android:scrollbars="vertical"
-            android:scrollbarStyle="outsideOverlay"
-            android:smoothScrollbar="true"
-            tools:listheader="@layout/reader_listitem_post_detail"
-            tools:listitem="@layout/reader_listitem_comment" />
+        <org.wordpress.android.widgets.WPScrollView
+            android:id="@+id/scroll_view_reader"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <include
+                layout="@layout/reader_include_post_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </org.wordpress.android.widgets.WPScrollView>
 
         <RelativeLayout
             android:id="@+id/layout_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/layout_comment_box"
-            android:layout_alignWithParentIfMissing="true"
+            android:layout_alignParentBottom="true"
             android:background="@color/white">
 
             <View
@@ -38,36 +41,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/reader_list_margin"
                 android:layout_marginRight="@dimen/reader_list_margin"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/image_reblog_btn"
                     style="@style/ReaderImageView.ButtonIcon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:src="@drawable/reader_button_reblog" />
 
-                <ImageView
-                    android:id="@+id/image_comment_btn"
+                <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                    android:id="@+id/count_comments"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/ReaderImageView.ButtonIcon"
-                    android:src="@drawable/reader_button_comment" />
+                    android:gravity="center"
+                    wp:icon="comment" />
 
-                <ImageView
-                    android:id="@+id/image_like_btn"
+                <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                    android:id="@+id/count_likes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/ReaderImageView.ButtonIcon"
-                    android:src="@drawable/reader_button_like" />
+                    android:gravity="center"
+                    wp:icon="like" />
             </LinearLayout>
 
         </RelativeLayout>
-
-        <include
-            android:id="@+id/layout_comment_box"
-            layout="@layout/reader_include_comment_box"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
 
         <ProgressBar
             android:id="@+id/progress_loading"

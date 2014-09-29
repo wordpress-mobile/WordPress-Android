@@ -23,11 +23,9 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderAnim.AnimationEndListener;
 import org.wordpress.android.ui.reader.ReaderAnim.Duration;
-import org.wordpress.android.ui.reader.ReaderPostDetailFragment.PostDetailOption;
 import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentType;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -38,12 +36,9 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-
-import java.util.EnumSet;
 
 import javax.annotation.Nonnull;
 
@@ -53,7 +48,7 @@ import javax.annotation.Nonnull;
  * post detail
  */
 public class ReaderPostPagerActivity extends Activity
-        implements ReaderUtils.FullScreenListener,
+        implements ReaderInterfaces.FullScreenListener,
                    ReaderInterfaces.OnPostPopupListener {
 
     private ViewPager mViewPager;
@@ -66,6 +61,8 @@ public class ReaderPostPagerActivity extends Activity
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
+
+    protected static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,7 +88,7 @@ public class ReaderPostPagerActivity extends Activity
             title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
             blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
             postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
-            mIsSinglePostView = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_SINGLE_POST);
+            mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -102,7 +99,7 @@ public class ReaderPostPagerActivity extends Activity
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
             blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            mIsSinglePostView = getIntent().getBooleanExtra(ReaderConstants.ARG_IS_SINGLE_POST, false);
+            mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
             }
@@ -174,7 +171,7 @@ public class ReaderPostPagerActivity extends Activity
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
-        outState.putBoolean(ReaderConstants.ARG_IS_SINGLE_POST, mIsSinglePostView);
+        outState.putBoolean(ARG_IS_SINGLE_POST, mIsSinglePostView);
 
         if (hasCurrentTag()) {
             outState.putSerializable(ReaderConstants.ARG_TAG, getCurrentTag());
@@ -211,9 +208,6 @@ public class ReaderPostPagerActivity extends Activity
         if (fragment != null && fragment.isCustomViewShowing()) {
             // if fullscreen video is showing, hide the custom view rather than navigate back
             fragment.hideCustomView();
-        } else if (fragment != null && fragment.isAddCommentBoxShowing()) {
-            // if comment reply entry is showing, hide it rather than navigate back
-            fragment.hideAddCommentBox();
         } else {
             super.onBackPressed();
             if (isFullScreenSupported()) {
@@ -223,11 +217,10 @@ public class ReaderPostPagerActivity extends Activity
     }
 
     /*
-     * loads the posts used to populate the pager adapter - passed blogId/postId will be made
-     * active after loading unless gotoNext=true, in which case the post after the passed one
-     * will be made active
+     * loads the blogId/postId pairs used to populate the pager adapter - passed blogId/postId will
+     * be made active after loading unless gotoNext=true, in which case the post after the passed
+     * one will be made active
      */
-    private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private void loadPosts(final long blogId,
                            final long postId,
                            final boolean gotoNext) {
@@ -239,21 +232,18 @@ public class ReaderPostPagerActivity extends Activity
                     idList = new ReaderBlogIdPostIdList();
                     idList.add(new ReaderBlogIdPostId(blogId, postId));
                 } else {
-                    final ReaderPostList postList;
                     int maxPosts = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
                     switch (getPostListType()) {
                         case TAG_FOLLOWED:
                         case TAG_PREVIEW:
-                            postList = ReaderPostTable.getPostsWithTag(getCurrentTag(), maxPosts, EXCLUDE_TEXT_COLUMN);
+                            idList = ReaderPostTable.getBlogIdPostIdsWithTag(getCurrentTag(), maxPosts);
                             break;
                         case BLOG_PREVIEW:
-                            postList = ReaderPostTable.getPostsInBlog(blogId, maxPosts, EXCLUDE_TEXT_COLUMN);
+                            idList = ReaderPostTable.getBlogIdPostIdsInBlog(blogId, maxPosts);
                             break;
                         default:
                             return;
                     }
-                    // TODO: above query should just return blogId/postId pairs
-                    idList = postList.getBlogIdPostIdList();
                 }
 
                 final int currentPosition = mViewPager.getCurrentItem();
@@ -514,16 +504,11 @@ public class ReaderPostPagerActivity extends Activity
                         (canRequestMostPosts() ? EndFragmentType.LOADING : EndFragmentType.NO_MORE);
                 return ReaderPostPagerEndFragment.newInstance(fragmentType);
             } else {
-                EnumSet<PostDetailOption> options;
-                if (mIsSinglePostView) {
-                    options = EnumSet.of(PostDetailOption.IS_SINGLE_POST);
-                } else {
-                    options = EnumSet.noneOf(PostDetailOption.class);
-                }
+                boolean disableBlockBlog = mIsSinglePostView;
                 return ReaderPostDetailFragment.newInstance(
                         mIdList.get(position).getBlogId(),
                         mIdList.get(position).getPostId(),
-                        options,
+                        disableBlockBlog,
                         getPostListType());
             }
         }

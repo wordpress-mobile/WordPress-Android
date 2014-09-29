@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -16,7 +16,7 @@ import org.wordpress.android.util.AppLog;
  * WebView descendant used by ReaderPostDetailFragment - handles
  * displaying fullscreen video and detecting url/image clicks
  */
-class ReaderWebView extends WebView {
+public class ReaderWebView extends WebView {
 
     public interface ReaderWebViewUrlClickListener {
         public boolean onUrlClick(String url);
@@ -67,7 +67,7 @@ class ReaderWebView extends WebView {
         return mUrlClickListener;
     }
 
-    void setUrlClickListener(ReaderWebViewUrlClickListener listener) {
+    public void setUrlClickListener(ReaderWebViewUrlClickListener listener) {
         mUrlClickListener = listener;
     }
 
@@ -79,7 +79,7 @@ class ReaderWebView extends WebView {
         return mPageFinishedListener;
     }
 
-    void setPageFinishedListener(ReaderWebViewPageFinishedListener listener) {
+    public void setPageFinishedListener(ReaderWebViewPageFinishedListener listener) {
         mPageFinishedListener = listener;
     }
 
@@ -87,7 +87,7 @@ class ReaderWebView extends WebView {
         return (mPageFinishedListener != null);
     }
 
-    void setCustomViewListener(ReaderCustomViewListener listener) {
+    public void setCustomViewListener(ReaderCustomViewListener listener) {
         mCustomViewListener = listener;
     }
 
@@ -104,11 +104,11 @@ class ReaderWebView extends WebView {
         return (url != null && url.startsWith("http"));
     }
 
-    boolean isCustomViewShowing() {
+    public boolean isCustomViewShowing() {
         return mReaderChromeClient.isCustomViewShowing();
     }
 
-    void hideCustomView() {
+    public void hideCustomView() {
         if (isCustomViewShowing()) {
             mReaderChromeClient.onHideCustomView();
         }

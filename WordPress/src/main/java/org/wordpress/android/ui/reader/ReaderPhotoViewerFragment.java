@@ -10,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.ReaderPhotoView.PhotoViewListener;
+import org.wordpress.android.ui.reader.views.ReaderPhotoView;
+import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 
