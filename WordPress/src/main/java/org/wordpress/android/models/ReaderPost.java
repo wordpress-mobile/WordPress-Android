@@ -48,6 +48,7 @@ public class ReaderPost {
     public boolean isExternal;
     public boolean isPrivate;
     public boolean isVideoPress;
+    public boolean isJetpack;
 
     public boolean isLikesEnabled;
     public boolean isSharingEnabled;    // currently unused
@@ -171,6 +172,7 @@ public class ReaderPost {
             post.blogName = JSONUtil.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtil.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtil.getBool(jsonSite, "is_private");
+            post.isJetpack = JSONUtil.getBool(jsonSite, "jetpack");
         }
 
         return post;
