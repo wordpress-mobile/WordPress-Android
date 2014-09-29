@@ -363,7 +363,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             holder.likeCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(holder, position, post);
+                    toggleLike(v.getContext(), holder, position, post);
                 }
             });
         } else {
@@ -501,11 +501,13 @@ public class ReaderPostAdapter extends BaseAdapter {
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(PostViewHolder holder, int position, ReaderPost post) {
-        boolean isAskingToLike = !post.isLikedByCurrentUser;
+    private void toggleLike(Context context, PostViewHolder holder, int position, ReaderPost post) {
+        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
+        boolean isAskingToLike = !isCurrentlyLiked;
         ReaderAnim.animateLikeButton(holder.likeCount.getImageView(), isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike)) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
 
@@ -517,7 +519,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
         mPosts.set(position, updatedPost);
         holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
-        showCounts(holder, post, true);
+        showCounts(holder, updatedPost, true);
     }
 
     /*

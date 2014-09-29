@@ -1,5 +1,6 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -299,12 +300,40 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static boolean isPostLikedByCurrentUser(ReaderPost post) {
+        if (post == null) {
+            return false;
+        }
+        return isPostLikedByCurrentUser(post.blogId, post.postId);
+    }
     public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
     }
+
+    /*
+     * updates both the like count for a post and whether it's liked by the current user
+     */
+    public static void setLikesForPost(ReaderPost post, int numLikes, boolean isLikedByCurrentUser) {
+        if (post == null) {
+            return;
+        }
+
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+
+        ContentValues values = new ContentValues();
+        values.put("num_likes", numLikes);
+        values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
+
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts",
+                values,
+                "blog_id=? AND post_id=?",
+                args);
+    }
+
 
     public static boolean isPostFollowed(ReaderPost post) {
         if (post == null) {
@@ -446,10 +475,10 @@ public class ReaderPostTable {
             // first insert into tbl_posts
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
-                stmtPosts.bindLong  (2,  post.blogId);
+                stmtPosts.bindLong(2, post.blogId);
                 stmtPosts.bindString(3,  post.getPseudoId());
-                stmtPosts.bindString(4,  post.getAuthorName());
-                stmtPosts.bindLong  (5,  post.authorId);
+                stmtPosts.bindString(4, post.getAuthorName());
+                stmtPosts.bindLong(5, post.authorId);
                 stmtPosts.bindString(6,  post.getTitle());
                 stmtPosts.bindString(7,  maxText(post));
                 stmtPosts.bindString(8,  post.getExcerpt());
@@ -459,7 +488,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(12, post.getFeaturedImage());
                 stmtPosts.bindString(13, post.getFeaturedVideo());
                 stmtPosts.bindString(14, post.getPostAvatar());
-                stmtPosts.bindLong  (15, post.timestamp);
+                stmtPosts.bindLong(15, post.timestamp);
                 stmtPosts.bindString(16, post.getPublished());
                 stmtPosts.bindLong  (17, post.numReplies);
                 stmtPosts.bindLong  (18, post.numLikes);
