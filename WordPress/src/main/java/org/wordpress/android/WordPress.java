@@ -670,24 +670,6 @@ public class WordPress extends Application {
             }
         }
 
-        /**
-         * @return true if a network connection is available and the app come from background to foreground.
-         */
-        private boolean isNetworkAvailableAndComeFromBackground() {
-            // The app wasn't in background. No need to ping the backend again.
-            if (isInBackground == false) {
-                return false;
-            }
-
-            // The app moved from background -> foreground. Set this flag to false for security reason.
-            isInBackground = false;
-            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                return false;
-            }
-
-            return true;
-        }
-
         private boolean isPushNotificationPingNeeded() {
             if (lastPingDate == null) {
                 // first startup
