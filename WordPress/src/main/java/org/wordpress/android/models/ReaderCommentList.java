@@ -1,12 +1,10 @@
 package org.wordpress.android.models;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
-    public static ReaderCommentList fromJson(JSONObject json, long blogId) {
+
+    /*public static ReaderCommentList fromJson(JSONObject json, long blogId) {
         if (json==null)
             throw new IllegalArgumentException("null json comment list");
 
@@ -19,7 +17,7 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
         }
 
         return comments;
-    }
+    }*/
 
     private boolean commentIdExists(long commentId) {
         return (indexOfCommentId(commentId) > -1);

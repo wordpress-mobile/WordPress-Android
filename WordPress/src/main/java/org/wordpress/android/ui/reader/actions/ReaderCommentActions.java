@@ -33,27 +33,19 @@ public class ReaderCommentActions {
      * get the latest comments for this post
      **/
     public static void updateCommentsForPost(final ReaderPost post,
-                                             final boolean requestNewer,
+                                             final int pageNumber,
                                              final ReaderActions.UpdateResultListener resultListener) {
         String path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/"
                     + "?number=" + Integer.toString(ReaderConstants.READER_MAX_COMMENTS_TO_REQUEST)
-                    + "&meta=likes";
-
-        // get older comments first - subsequent calls to this routine will get newer ones if they exist
-        path += "&order=ASC";
-
-        // offset by the number of comments already stored locally (so we only get new comments)
-        if (requestNewer) {
-            int numLocalComments = ReaderCommentTable.getNumCommentsForPost(post);
-            if (numLocalComments > 0) {
-                path += "&offset=" + Integer.toString(numLocalComments);
-            }
-        }
+                    + "&meta=likes"
+                    + "&hierarchical=true"
+                    + "&order=ASC"
+                    + "&page=" + pageNumber;
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentsResponse(jsonObject, post.blogId, requestNewer, resultListener);
+                handleUpdateCommentsResponse(jsonObject, post.blogId, pageNumber, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -70,7 +62,7 @@ public class ReaderCommentActions {
     }
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,
                                                      final long blogId,
-                                                     final boolean requestNewer,
+                                                     final int pageNumber,
                                                      final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
@@ -96,6 +88,7 @@ public class ReaderCommentActions {
 
                             // extract this comment and add it to the list
                             ReaderComment comment = ReaderComment.fromJson(jsonComment, blogId);
+                            comment.pageNumber = pageNumber;
                             serverComments.add(comment);
 
                             // extract and save likes for this comment
@@ -108,11 +101,7 @@ public class ReaderCommentActions {
                         }
                     }
 
-                    if (requestNewer) {
-                        hasNewComments = (serverComments.size() > 0);
-                    } else {
-                        hasNewComments = ReaderCommentTable.hasNewComments(serverComments);
-                    }
+                    hasNewComments = (serverComments.size() > 0);
 
                     // save to db regardless of whether any are new so changes to likes are stored
                     ReaderCommentTable.addOrUpdateComments(serverComments);
@@ -186,7 +175,7 @@ public class ReaderCommentActions {
         if (isChanged) {
             comment.isLikedByCurrentUser = isLikedByCurrentUser;
             comment.numLikes = numLikes;
-            ReaderCommentTable.addOrUpdateComment(comment);
+            ReaderCommentTable.setLikesForComment(comment, numLikes, isLikedByCurrentUser);
             ReaderLikeTable.setCurrentUserLikesComment(comment, isLikedByCurrentUser);
         }
 

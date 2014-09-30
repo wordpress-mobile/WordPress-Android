@@ -29,7 +29,8 @@ public class ReaderCommentTable {
                     + " status,"
                     + " text,"
                     + " num_likes,"
-                    + " is_liked";
+                    + " is_liked,"
+                    + " page_number";
 
 
     protected static void createTables(SQLiteDatabase db) {
@@ -49,7 +50,9 @@ public class ReaderCommentTable {
                 + " text                TEXT,"
                 + " num_likes           INTEGER DEFAULT 0,"
                 + " is_liked            INTEGER DEFAULT 0,"
+                + " page_number         INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, post_id, comment_id))");
+        db.execSQL("CREATE INDEX idx_page_number ON tbl_comments(page_number)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -61,11 +64,14 @@ public class ReaderCommentTable {
         createTables(db);
     }
 
-    /*
-     * purge comments attached to posts that no longer exist
-     */
     protected static int purge(SQLiteDatabase db) {
-        return db.delete("tbl_comments", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+        // purge comments attached to posts that no longer exist
+        int numDeleted = db.delete("tbl_comments", "post_id NOT IN (SELECT DISTINCT post_id FROM tbl_posts)", null);
+
+        // purge all but the first page of comments
+        numDeleted += db.delete("tbl_comments", "page_number != 1", null);
+
+        return numDeleted;
     }
 
     public static boolean isEmpty() {
@@ -75,6 +81,23 @@ public class ReaderCommentTable {
     private static int getNumComments() {
         long count = SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_comments");
         return (int)count;
+    }
+
+    /*
+     * returns the highest page_number for comments on the passed post
+     */
+    public static int getLastPageNumberForPost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+    }
+
+    /*
+     * removes all but the first page of comments for the passed post
+     */
+    public static void purgeExcessCommentsForPost(long blogId, long postId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId)};
+        ReaderDatabase.getWritableDb().delete("tbl_comments", "page_number!=1 AND blog_id=? AND post_id=?", args);
     }
 
     /*
@@ -130,7 +153,7 @@ public class ReaderCommentTable {
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
                                                   + COLUMN_NAMES
-                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15)");
+                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
         try {
             for (ReaderComment comment: comments) {
                 stmt.bindLong  (1,  comment.blogId);
@@ -148,6 +171,7 @@ public class ReaderCommentTable {
                 stmt.bindString(13, comment.getText());
                 stmt.bindLong  (14, comment.numLikes);
                 stmt.bindLong  (15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
+                stmt.bindLong  (16, comment.pageNumber);
 
                 stmt.execute();
             }
@@ -287,6 +311,7 @@ public class ReaderCommentTable {
 
         comment.numLikes = c.getInt(c.getColumnIndex("num_likes"));
         comment.isLikedByCurrentUser = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_liked")));
+        comment.pageNumber = c.getInt(c.getColumnIndex("page_number"));
 
         return comment;
     }
