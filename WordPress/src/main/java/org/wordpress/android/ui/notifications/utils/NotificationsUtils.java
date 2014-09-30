@@ -272,6 +272,13 @@ public class NotificationsUtils {
                         imagePlaceholder = "\n ";
                     }
 
+                    // If an ImageSpan already exists, add a line break for the next image
+                    int tempIndex = index + imagePlaceholder.length() - 1;
+                    if (spannableStringBuilder.getSpans(tempIndex,
+                            tempIndex, ImageSpan.class).length > 0) {
+                        imagePlaceholder = "\n" + imagePlaceholder;
+                    }
+
                     spannableStringBuilder.insert(index, imagePlaceholder);
                     index += imagePlaceholder.length() - 1;
 
