@@ -8,7 +8,7 @@
         android:title="@string/content_description_add_media"/>
     <item
         android:id="@+id/menu_save"
-        android:icon="@drawable/ab_icon_save"
+        android:icon="@drawable/ic_action_save"
         android:showAsAction="always"
         android:title="@string/save"/>
 
