@@ -625,7 +625,7 @@ public class WordPress extends Application {
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
         private Date lastPingDate;
-
+        private Date mApplicationOpenedDate;
         boolean isInBackground = true;
 
         @Override
@@ -643,8 +643,13 @@ public class WordPress extends Application {
                 isInBackground = true;
                 String lastActivityString = AppPrefs.getLastActivityStr();
                 ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
-                Map<String, String> properties = new HashMap<String, String>();
+                Map<String, Object> properties = new HashMap<String, Object>();
                 properties.put("last_visible_screen", lastActivity.toString());
+                if (mApplicationOpenedDate != null) {
+                    Date now = new Date();
+                    properties.put("time_in_app", DateTimeUtils.secondsBetween(now, mApplicationOpenedDate));
+                    mApplicationOpenedDate = null;
+                }
                 AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_CLOSED, properties);
                 AnalyticsTracker.endSession(false);
             } else {
@@ -668,24 +673,6 @@ public class WordPress extends Application {
             if (evictBitmaps && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
-        }
-
-        /**
-         * @return true if a network connection is available and the app come from background to foreground.
-         */
-        private boolean isNetworkAvailableAndComeFromBackground() {
-            // The app wasn't in background. No need to ping the backend again.
-            if (isInBackground == false) {
-                return false;
-            }
-
-            // The app moved from background -> foreground. Set this flag to false for security reason.
-            isInBackground = false;
-            if (!NetworkUtils.isNetworkAvailable(mContext)) {
-                return false;
-            }
-
-            return true;
         }
 
         private boolean isPushNotificationPingNeeded() {
@@ -735,6 +722,7 @@ public class WordPress extends Application {
          */
         public void onFromBackground() {
             AnalyticsTracker.beginSession();
+            mApplicationOpenedDate = new Date();
             AnalyticsTracker.track(AnalyticsTracker.Stat.APPLICATION_OPENED);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Rate limited PN Token Update
