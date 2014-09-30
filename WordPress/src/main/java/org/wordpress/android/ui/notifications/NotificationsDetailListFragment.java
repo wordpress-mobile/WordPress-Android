@@ -350,15 +350,17 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 mNote = noteBucket.get(noteId);
                 // Mark note as read since we are looking at it already
                 mNote.markAsRead();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        reloadNoteBlocks();
-                        if (mOnNoteChangeListener != null) {
-                            mOnNoteChangeListener.onNoteChanged(mNote);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            reloadNoteBlocks();
+                            if (mOnNoteChangeListener != null) {
+                                mOnNoteChangeListener.onNoteChanged(mNote);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             } catch (BucketObjectMissingException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Couldn't load note after receiving change.");
             }
