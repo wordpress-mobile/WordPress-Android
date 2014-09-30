@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+
 from collections import defaultdict
 from pprint import pprint
 import os
 import sys
 
 RESDIR="WordPress/src/main/res"
-TO_CHECK = ["-mdpi", "-hdpi", "-xhdpi", "-xxhdpi", ""]
+TO_CHECK = ["-hdpi", "-xhdpi", "-xxhdpi"]
 
 def main():
     if len(sys.argv) == 2:
@@ -21,10 +23,7 @@ def check_drawables(rootdir):
             for dpi in TO_CHECK:
                 if subdir.endswith("drawable" + dpi) and \
                    filename.endswith("png"):
-                    if dpi == "": # merge drawable-mdpi and drawable dir
-                        filenames[subdir + "-mdpi"].add(filename)
-                    else:
-                        filenames[subdir].add(filename)
+                   filenames[subdir].add(filename)
     # check missing drawables
     for subdir in filenames:
         for filename in filenames[subdir]:
