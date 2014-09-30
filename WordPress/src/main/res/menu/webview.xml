@@ -8,7 +8,7 @@
         android:title="@string/view_in_browser"/>
     <item
         android:id="@+id/menu_share"
-        android:icon="@drawable/ab_icon_share"
+        android:icon="@drawable/ic_action_share"
         android:showAsAction="ifRoom"
         android:title="@string/share_link"/>
     <item

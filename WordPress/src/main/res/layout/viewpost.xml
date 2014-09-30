@@ -108,7 +108,7 @@
                 android:scaleType="fitCenter"
                 android:padding="10dp"
                 android:tint="@color/post_detail_icon_tint"
-                android:src="@drawable/ab_icon_share"
+                android:src="@drawable/ic_action_share"
                 android:contentDescription="@string/share_url" />
 
             <ImageButton
@@ -120,7 +120,7 @@
                 android:padding="9dp"
                 android:src="@drawable/dashboard_icon_comments"
                 android:contentDescription="@string/add_comment" />
-            
+
             <ImageButton
                 android:id="@+id/editPost"
                 android:layout_width="@dimen/post_detail_button_size"
