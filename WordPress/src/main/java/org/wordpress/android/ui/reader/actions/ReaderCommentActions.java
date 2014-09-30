@@ -125,74 +125,6 @@ public class ReaderCommentActions {
     }
 
     /*
-     * request liking users for the passed comment - UNTESTED
-     */
-    private static void updateCommentLikes(final ReaderComment comment,
-                                           final ReaderActions.UpdateResultListener resultListener) {
-        if (comment == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleUpdateCommentLikesResponse(comment, jsonObject, resultListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-                if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-                }
-
-            }
-        };
-
-        AppLog.d(T.READER, "updating comment likes");
-        String path = "sites/" + comment.blogId + "/comments/" + comment.commentId + "/likes/";
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
-    }
-
-    private static void handleUpdateCommentLikesResponse(final ReaderComment comment,
-                                                         final JSONObject jsonObject,
-                                                         final ReaderActions.UpdateResultListener resultListener) {
-        if (comment == null || jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
-            return;
-        }
-
-        int numLikes = jsonObject.optInt("found");
-        boolean isLikedByCurrentUser = JSONUtil.getBool(jsonObject, "i_like");
-        boolean isChanged = (comment.numLikes != numLikes || comment.isLikedByCurrentUser != isLikedByCurrentUser);
-
-        if (isChanged) {
-            comment.isLikedByCurrentUser = isLikedByCurrentUser;
-            comment.numLikes = numLikes;
-            ReaderCommentTable.setLikesForComment(comment, numLikes, isLikedByCurrentUser);
-            ReaderLikeTable.setCurrentUserLikesComment(comment, isLikedByCurrentUser);
-        }
-
-        ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonObject);
-        ReaderUserTable.addOrUpdateUsers(likingUsers);
-        ReaderLikeTable.setLikesForComment(comment, likingUsers.getUserIds());
-
-        if (resultListener != null) {
-            if (isChanged) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED);
-            } else {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED);
-            }
-        }
-    }
-
-    /*
      * used by post detail to generate a temporary "fake" comment id (see below)
      */
     public static long generateFakeCommentId() {
@@ -208,8 +140,17 @@ public class ReaderCommentActions {
                                                   final String commentText,
                                                   final long replyToCommentId,
                                                   final ReaderActions.CommentActionListener actionListener) {
-        if (post==null || TextUtils.isEmpty(commentText))
+        if (post == null || TextUtils.isEmpty(commentText)) {
             return null;
+        }
+
+        // determine which page this new comment should be assigned to
+        final int pageNumber;
+        if (replyToCommentId != 0) {
+            pageNumber = ReaderCommentTable.getPageNumberForComment(post.blogId, post.postId, replyToCommentId);
+        } else {
+            pageNumber = ReaderCommentTable.getLastPageNumberForPost(post.blogId, post.postId);
+        }
 
         // create a "fake" comment that's added to the db so it can be shown right away - will be
         // replaced with actual comment if it succeeds to be posted, or deleted if comment fails
@@ -219,6 +160,7 @@ public class ReaderCommentActions {
         newComment.postId = post.postId;
         newComment.blogId = post.blogId;
         newComment.parentId = replyToCommentId;
+        newComment.pageNumber = pageNumber;
         newComment.setText(commentText);
         String published = DateTimeUtils.nowUTC().toString();
         newComment.setPublished(published);
@@ -247,9 +189,11 @@ public class ReaderCommentActions {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
                 AppLog.i(T.READER, "comment succeeded");
                 ReaderComment newComment = ReaderComment.fromJson(jsonObject, post.blogId);
+                newComment.pageNumber = pageNumber;
                 ReaderCommentTable.addOrUpdateComment(newComment);
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(true, newComment);
+                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -258,8 +202,9 @@ public class ReaderCommentActions {
                 ReaderCommentTable.deleteComment(post, fakeCommentId);
                 AppLog.w(T.READER, "comment failed");
                 AppLog.e(T.READER, volleyError);
-                if (actionListener!=null)
+                if (actionListener != null) {
                     actionListener.onActionResult(false, null);
+                }
             }
         };
 

@@ -204,6 +204,7 @@ public class ReaderCommentListActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
+                            // request the first page of comments
                             updateComments(isEmpty, false);
                         } else if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
@@ -226,7 +227,7 @@ public class ReaderCommentListActivity extends Activity {
                 @Override
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
-                        AppLog.i(T.READER, "reader comments > requesting newer comments");
+                        AppLog.i(T.READER, "reader comments > requesting next page of comments");
                         updateComments(true, true);
                     }
                 }

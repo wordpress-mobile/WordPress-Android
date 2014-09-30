@@ -93,6 +93,15 @@ public class ReaderCommentTable {
     }
 
     /*
+     * returns the page number for a specific comment
+     */
+    public static int getPageNumberForComment(long blogId, long postId, long commentId) {
+        String[] args = {Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT page_number FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
+    }
+
+    /*
      * removes all but the first page of comments for the passed post
      */
     public static void purgeExcessCommentsForPost(long blogId, long postId) {
