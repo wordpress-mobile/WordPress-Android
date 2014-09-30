@@ -262,7 +262,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    private View.OnClickListener mMoreBtnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mMoreBtnClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -910,6 +910,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(note);
         mNotificationsDetailListFragment.setFooterView(mLayoutButtons);
+        // Listen for note changes from the defail list fragment, so we can update the status buttons
+        mNotificationsDetailListFragment.setOnNoteChangeListener(new NotificationsDetailListFragment.OnNoteChangeListener() {
+            @Override
+            public void onNoteChanged(Note note) {
+                mNote = note;
+                mComment = mNote.buildComment();
+                updateStatusViews();
+            }
+        });
         fragmentTransaction.add(R.id.comment_content_container, mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
 

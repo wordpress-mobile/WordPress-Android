@@ -15,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.simperium.client.Bucket;
+import com.simperium.client.BucketObjectMissingException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan;
 import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtil;
 
@@ -36,7 +40,11 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment {
+public class NotificationsDetailListFragment extends ListFragment implements NotificationFragment, Bucket.Listener<Note> {
+    public interface OnNoteChangeListener {
+        public void onNoteChanged(Note note);
+    }
+
     private Note mNote;
     private final List<NoteBlock> mNoteBlockArray = new ArrayList<NoteBlock>();
     private LinearLayout mRootLayout;
@@ -45,6 +53,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private int mBackgroundColor;
     private int mCommentListPosition = ListView.INVALID_POSITION;
     private CommentUserNoteBlock.OnCommentStatusChangeListener mOnCommentStatusChangeListener;
+    private OnNoteChangeListener mOnNoteChangeListener;
 
     public NotificationsDetailListFragment() {
     }
@@ -82,6 +91,26 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // start listening to bucket change events
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().addListener(this);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        // remove the bucket listener
+        if (SimperiumUtils.getNotesBucket() != null) {
+            SimperiumUtils.getNotesBucket().removeListener(this);
+        }
+
+        super.onPause();
+    }
+
+    @Override
     public Note getNote() {
         return mNote;
     }
@@ -89,6 +118,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public void setNote(Note note) {
         mNote = note;
+    }
+
+    public void setOnNoteChangeListener(OnNoteChangeListener listener) {
+        mOnNoteChangeListener = listener;
     }
 
     private void reloadNoteBlocks() {
@@ -290,5 +323,52 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                 }
             }
         }
+    }
+
+    // Simperium bucket listener
+    @Override
+    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
+        // noop
+    }
+
+    @Override
+    public void onChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String noteId) {
+        // Refresh content if we receive a change for the Note
+        if (mNote != null && mNote.getId().equals(noteId)) {
+            // If the note was removed, pop the back stack to return to the notes list
+            if (changeType == Bucket.ChangeType.REMOVE) {
+                getFragmentManager().popBackStack();
+                return;
+            }
+
+            try {
+                mNote = noteBucket.get(noteId);
+                // Mark note as read since we are looking at it already
+                mNote.markAsRead();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            reloadNoteBlocks();
+                            if (mOnNoteChangeListener != null) {
+                                mOnNoteChangeListener.onNoteChanged(mNote);
+                            }
+                        }
+                    });
+                }
+            } catch (BucketObjectMissingException e) {
+                AppLog.e(AppLog.T.NOTIFS, "Couldn't load note after receiving change.");
+            }
+        }
+    }
+
+    @Override
+    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
+        // noop
     }
 }
