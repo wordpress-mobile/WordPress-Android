@@ -795,6 +795,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!hasComment()) return;
+
                     mComment.setStatus(newStatus.toString());
                     setModerateButtonForStatus(newStatus);
                     AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
