@@ -551,7 +551,7 @@ public class WordPress extends Application {
             super.onPreExecute();
             Context context = mWeakContext.get();
             if (context != null) {
-                mProgressDialog = ProgressDialog.show(context, null, getContext().getText(R.string.signing_out));
+                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out));
             }
         }
 
@@ -567,7 +567,9 @@ public class WordPress extends Application {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mProgressDialog.dismiss();
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
             if (mCallback != null) {
                 mCallback.onSignOut();
             }
