@@ -599,12 +599,6 @@ public class WordPress extends Application {
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
-
-        // send broadcast that user is signing out - this is received by WPActionBarActivity
-        // descendants
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     public static boolean sendLocalBroadcast(Context context, String action) {
