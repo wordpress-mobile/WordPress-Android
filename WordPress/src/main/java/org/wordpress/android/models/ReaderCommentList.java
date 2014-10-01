@@ -4,21 +4,6 @@ import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
 
-    /*public static ReaderCommentList fromJson(JSONObject json, long blogId) {
-        if (json==null)
-            throw new IllegalArgumentException("null json comment list");
-
-        ReaderCommentList comments = new ReaderCommentList();
-
-        JSONArray jsonComments = json.optJSONArray("comments");
-        if (jsonComments!=null) {
-            for (int i=0; i < jsonComments.length(); i++)
-                comments.add(ReaderComment.fromJson(jsonComments.optJSONObject(i), blogId));
-        }
-
-        return comments;
-    }*/
-
     private boolean commentIdExists(long commentId) {
         return (indexOfCommentId(commentId) > -1);
     }
