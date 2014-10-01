@@ -100,7 +100,9 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     @Override
     public void onDestroy() {
         // Close Simperium cursor
-        mNotesAdapter.closeCursor();
+        if (mNotesAdapter != null) {
+            mNotesAdapter.closeCursor();
+        }
 
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
         super.onDestroyView();
