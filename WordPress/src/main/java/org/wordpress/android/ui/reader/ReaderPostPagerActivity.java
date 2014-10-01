@@ -343,12 +343,16 @@ public class ReaderPostPagerActivity extends Activity
         return true;
     }
 
-    private ReaderPostDetailFragment getActiveDetailFragment() {
-        if (!hasPagerAdapter()) {
+    private Fragment getActivePagerFragment() {
+        if (hasPagerAdapter()) {
+            return getPagerAdapter().getActiveFragment();
+        } else {
             return null;
         }
+    }
 
-        Fragment fragment = getPagerAdapter().getActiveFragment();
+    private ReaderPostDetailFragment getActiveDetailFragment() {
+        Fragment fragment = getActivePagerFragment();
         if (fragment instanceof ReaderPostDetailFragment) {
             return (ReaderPostDetailFragment) fragment;
         } else {
@@ -385,7 +389,7 @@ public class ReaderPostPagerActivity extends Activity
             return;
         }
 
-        Fragment fragment = getPagerAdapter().getActiveFragment();
+        Fragment fragment = getActivePagerFragment();
         if (fragment == null) {
             return;
         }
@@ -444,7 +448,7 @@ public class ReaderPostPagerActivity extends Activity
 
         // reload the adapter and move to the best post not in the blocked blog
         int position = mViewPager.getCurrentItem();
-        ReaderBlogIdPostId newId = getPagerAdapter().getBestIdNotInBlog(position, blogId);
+        ReaderBlogIdPostId newId = (hasPagerAdapter() ? getPagerAdapter().getBestIdNotInBlog(position, blogId) : null);
         long newBlogId = (newId != null ? newId.getBlogId() : 0);
         long newPostId = (newId != null ? newId.getPostId() : 0);
         loadPosts(newBlogId, newPostId, false);
