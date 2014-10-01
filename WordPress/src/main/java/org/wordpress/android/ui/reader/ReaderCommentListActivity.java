@@ -76,8 +76,11 @@ public class ReaderCommentListActivity extends Activity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-            // remove all but the first page of comments for this post
-            ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            // remove all but the first page of comments for this post if there's an active
+            // connection - infinite scroll will take care of filling in subsequent pages
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            }
         }
 
         mListView = (WPListView) findViewById(android.R.id.list);
@@ -257,6 +260,11 @@ public class ReaderCommentListActivity extends Activity {
     private void updateComments(boolean showProgress, boolean requestNextPage) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
+            return;
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.w(T.READER, "reader comments > no connection, update canceled");
             return;
         }
 
