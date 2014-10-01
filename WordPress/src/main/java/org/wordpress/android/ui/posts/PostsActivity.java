@@ -589,7 +589,6 @@ public class PostsActivity extends WPActionBarActivity
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
         popPostDetail();
         attemptToSelectPost();
         mPostList.clear();

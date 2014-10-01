@@ -53,7 +53,6 @@ public class ViewSiteActivity extends AuthenticatedWebViewActivity {
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
         mBlog = WordPress.currentBlog;
         loadSiteURL();
     }

@@ -73,8 +73,6 @@ public class CommentsActivity extends WPActionBarActivity
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
-
         // clear the backstack
         FragmentManager fm = getFragmentManager();
         fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

@@ -547,15 +547,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
 
         stopStatsService();
-
-        if (WordPress.getCurrentBlog() == null) {
-            //No blogs, or all blogs are hidden. Close this activity, the app takes you back to the Reader.
-            finish();
-            return;
-        }
 
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
         scrollToTop();
