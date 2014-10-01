@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
@@ -707,8 +708,12 @@ public class PreferencesActivity extends PreferenceActivity {
                                             int whichButton) {
                             // set the result code so caller knows the user signed out
                             setResult(RESULT_SIGNED_OUT);
-                            WordPress.signOut(PreferencesActivity.this);
-                            finish();
+                            WordPress.signOutAsyncWithProgressBar(PreferencesActivity.this, new SignOutCallback() {
+                                @Override
+                                public void onSignOut() {
+                                    finish();
+                                }
+                            });
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,
