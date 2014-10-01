@@ -162,19 +162,22 @@ public class ReaderCommentActions {
         newComment.parentId = replyToCommentId;
         newComment.pageNumber = pageNumber;
         newComment.setText(commentText);
+
         String published = DateTimeUtils.nowUTC().toString();
         newComment.setPublished(published);
         newComment.timestamp = DateTimeUtils.iso8601ToTimestamp(published);
+
         ReaderUser currentUser = ReaderUserTable.getCurrentUser();
-        if (currentUser!=null) {
+        if (currentUser != null) {
             newComment.setAuthorAvatar(currentUser.getAvatarUrl());
             newComment.setAuthorName(currentUser.getDisplayName());
         }
+
         ReaderCommentTable.addOrUpdateComment(newComment);
 
         // different endpoint depending on whether the new comment is a reply to another comment
         final String path;
-        if (replyToCommentId==0) {
+        if (replyToCommentId == 0) {
             path = "sites/" + post.blogId + "/posts/" + post.postId + "/replies/new";
         } else {
             path = "sites/" + post.blogId + "/comments/" + Long.toString(replyToCommentId) + "/replies/new";
