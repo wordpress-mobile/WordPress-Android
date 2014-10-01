@@ -82,13 +82,17 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         refreshNotes();
 
         // start listening to bucket change events
-        mBucket.addListener(this);
+        if (mBucket != null) {
+            mBucket.addListener(this);
+        }
     }
 
     @Override
     public void onPause() {
         // unregister the listener
-        mBucket.removeListener(this);
+        if (mBucket != null) {
+            mBucket.removeListener(this);
+        }
 
         super.onPause();
     }
