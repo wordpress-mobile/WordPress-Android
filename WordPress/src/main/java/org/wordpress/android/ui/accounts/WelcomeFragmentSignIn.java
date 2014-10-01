@@ -632,9 +632,10 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
             AnalyticsTracker.refreshMetadata();
 
-            // get the user's reader tags so they're available as soon as the Reader is accessed
-            if (!mSelfHosted) {
-                ReaderUpdateService.startService(getActivity(), EnumSet.of(UpdateTask.TAGS));
+            // get reader tags so they're available as soon as the Reader is accessed - note that
+            // this uses the application context since the activity is finished immediately below
+            if (!mSelfHosted && isAdded()) {
+                ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(UpdateTask.TAGS));
             }
 
             if (userBlogList != null) {
