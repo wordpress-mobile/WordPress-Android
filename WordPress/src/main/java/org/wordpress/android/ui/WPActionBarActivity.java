@@ -599,9 +599,10 @@ public abstract class WPActionBarActivity extends Activity {
                     String[] blogNames = getBlogNames();
                     if (blogNames.length >= 1) {
                         setupCurrentBlog();
-                    }
-                    if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
-                        onBlogChanged();
+                        // Should we trigger the onBlogChanged event even if all blogs are hidden?
+                        if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
+                            onBlogChanged();
+                        }
                     }
                     WordPress.registerForCloudMessaging(this);
                 }
