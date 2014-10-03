@@ -1,5 +1,6 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -11,6 +12,8 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -297,12 +300,40 @@ public class ReaderPostTable {
                 args);
     }
 
+    public static boolean isPostLikedByCurrentUser(ReaderPost post) {
+        if (post == null) {
+            return false;
+        }
+        return isPostLikedByCurrentUser(post.blogId, post.postId);
+    }
     public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                 "SELECT is_liked FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
     }
+
+    /*
+     * updates both the like count for a post and whether it's liked by the current user
+     */
+    public static void setLikesForPost(ReaderPost post, int numLikes, boolean isLikedByCurrentUser) {
+        if (post == null) {
+            return;
+        }
+
+        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
+
+        ContentValues values = new ContentValues();
+        values.put("num_likes", numLikes);
+        values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
+
+        ReaderDatabase.getWritableDb().update(
+                "tbl_posts",
+                values,
+                "blog_id=? AND post_id=?",
+                args);
+    }
+
 
     public static boolean isPostFollowed(ReaderPost post) {
         if (post == null) {
@@ -444,10 +475,10 @@ public class ReaderPostTable {
             // first insert into tbl_posts
             for (ReaderPost post: posts) {
                 stmtPosts.bindLong  (1,  post.postId);
-                stmtPosts.bindLong  (2,  post.blogId);
+                stmtPosts.bindLong(2, post.blogId);
                 stmtPosts.bindString(3,  post.getPseudoId());
-                stmtPosts.bindString(4,  post.getAuthorName());
-                stmtPosts.bindLong  (5,  post.authorId);
+                stmtPosts.bindString(4, post.getAuthorName());
+                stmtPosts.bindLong(5, post.authorId);
                 stmtPosts.bindString(6,  post.getTitle());
                 stmtPosts.bindString(7,  maxText(post));
                 stmtPosts.bindString(8,  post.getExcerpt());
@@ -457,7 +488,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(12, post.getFeaturedImage());
                 stmtPosts.bindString(13, post.getFeaturedVideo());
                 stmtPosts.bindString(14, post.getPostAvatar());
-                stmtPosts.bindLong  (15, post.timestamp);
+                stmtPosts.bindLong(15, post.timestamp);
                 stmtPosts.bindString(16, post.getPublished());
                 stmtPosts.bindLong  (17, post.numReplies);
                 stmtPosts.bindLong  (18, post.numLikes);
@@ -552,6 +583,73 @@ public class ReaderPostTable {
         }
     }
 
+    /*
+     * same as getPostsWithTag() but only returns the blogId/postId pairs
+     */
+    public static ReaderBlogIdPostIdList getBlogIdPostIdsWithTag(ReaderTag tag, int maxPosts) {
+        ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+        if (tag == null) {
+            return idList;
+        }
+
+        String sql = "SELECT tbl_posts.blog_id, tbl_posts.post_id FROM tbl_posts, tbl_post_tags"
+                + " WHERE tbl_posts.post_id = tbl_post_tags.post_id"
+                + " AND tbl_posts.blog_id = tbl_post_tags.blog_id"
+                + " AND tbl_post_tags.tag_name=?"
+                + " AND tbl_post_tags.tag_type=?";
+
+        if (tag.tagType == ReaderTagType.DEFAULT) {
+            if (tag.getTagName().equals(ReaderTag.TAG_NAME_LIKED)) {
+                sql += " AND tbl_posts.is_liked != 0";
+            } else if (tag.getTagName().equals(ReaderTag.TAG_NAME_FOLLOWING)) {
+                sql += " AND tbl_posts.is_followed != 0";
+            }
+        }
+
+        sql += " ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    idList.add(new ReaderBlogIdPostId(cursor.getLong(0), cursor.getLong(1)));
+                } while (cursor.moveToNext());
+            }
+            return idList;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
+
+    /*
+     * same as getPostsInBlog() but only returns the blogId/postId pairs
+     */
+    public static ReaderBlogIdPostIdList getBlogIdPostIdsInBlog(long blogId, int maxPosts) {
+        String sql = "SELECT post_id FROM tbl_posts WHERE blog_id = ? ORDER BY tbl_posts.timestamp DESC";
+
+        if (maxPosts > 0) {
+            sql += " LIMIT " + Integer.toString(maxPosts);
+        }
+
+        Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, new String[]{Long.toString(blogId)});
+        try {
+            ReaderBlogIdPostIdList idList = new ReaderBlogIdPostIdList();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    idList.add(new ReaderBlogIdPostId(blogId, cursor.getLong(0)));
+                } while (cursor.moveToNext());
+            }
+
+            return idList;
+        } finally {
+            SqlUtils.closeCursor(cursor);
+        }
+    }
 
     public static void setPostReblogged(ReaderPost post, boolean isReblogged) {
         if (post == null) {

@@ -71,6 +71,7 @@
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
+    <string name="signing_out">Signing out…</string>
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
@@ -606,6 +607,7 @@
     <string name="reader_title_tag_preview">Preview Tag</string>
     <string name="reader_title_subs">Tags &amp; Blogs</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
+    <string name="reader_title_comments">Comments</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed tags</string>
@@ -650,6 +652,10 @@
     <string name="reader_label_tag_preview">Posts tagged %s</string>
     <string name="reader_label_reached_last_post">You\'ve reached the end</string>
     <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
+    <string name="reader_label_comments_on">Comments on</string>
+    <string name="reader_label_comments_closed">Comments are closed</string>
+    <string name="reader_label_comment_count_single">One comment</string>
+    <string name="reader_label_comment_count_multi">%,d comments</string>
     <string name="reader_label_view_original">View original article</string>
 
     <!-- like counts liking users activity-->
@@ -696,6 +702,7 @@
     <string name="reader_empty_followed_blogs_title">You\'re not following any blogs yet</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the tag icon to start exploring!</string>
     <string name="reader_empty_posts_liked">You haven\'t liked any posts</string>
+    <string name="reader_empty_comments">No comments yet</string>
 
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>

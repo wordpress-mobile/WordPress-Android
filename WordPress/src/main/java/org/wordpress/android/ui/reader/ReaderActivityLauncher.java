@@ -106,6 +106,29 @@ public class ReaderActivityLauncher {
     }
 
     /*
+     * show comments for the passed post
+     */
+    public static void showReaderComments(Context context, ReaderPost post) {
+        if (post == null) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderCommentListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    activity,
+                    R.anim.reader_flyin,
+                    R.anim.reader_activity_scale_out);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        } else {
+            context.startActivity(intent);
+        }
+    }
+
+    /*
      * show users who liked the passed post
      */
     public static void showReaderLikingUsers(Context context, ReaderPost post) {

@@ -179,8 +179,11 @@
         <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:theme="@style/ReaderTheme"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.reader.ReaderCommentListActivity"
+            android:theme="@style/ReaderTheme"
+            android:label="@string/reader_title_comments"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog" />

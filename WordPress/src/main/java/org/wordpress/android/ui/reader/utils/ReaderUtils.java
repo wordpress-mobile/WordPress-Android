@@ -18,16 +18,6 @@ import org.wordpress.android.util.UrlUtils;
 import java.util.List;
 
 public class ReaderUtils {
-    /*
-     * used by ReaderPostDetailFragment to enter/exit full screen mode
-     */
-    public static interface FullScreenListener {
-        boolean onRequestFullScreen(boolean enable);
-
-        boolean isFullScreen();
-
-        boolean isFullScreenSupported();
-    }
 
     /*
      * used with TextViews that have the ReaderTextView.Follow style to show

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_empty"
+        style="@style/ReaderTextView.EmptyList"
+        android:layout_centerInParent="true"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large"
+        android:text="@string/reader_empty_comments"
+        android:textColor="@color/grey_medium"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/layout_post_header"
+        layout="@layout/reader_include_post_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <org.wordpress.android.widgets.WPListView
+        android:id="@id/android:list"
+        style="@style/ReaderListView.NoDivider"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_post_header"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        android:smoothScrollbar="true"
+        tools:listitem="@layout/reader_listitem_comment" />
+
+    <RelativeLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin">
+
+        <include
+            android:id="@+id/layout_comment_box"
+            layout="@layout/reader_include_comment_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_comments_closed"
+            style="@style/ReaderTextView.Label.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:text="@string/reader_label_comments_closed"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        style="@style/ReaderProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

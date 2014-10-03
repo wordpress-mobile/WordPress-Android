@@ -27,7 +27,9 @@ import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class ReaderCommentAdapter extends BaseAdapter {
@@ -76,8 +78,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
         mIndentPerLevel = (context.getResources().getDimensionPixelSize(R.dimen.reader_comment_indent_per_level) / 2);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
 
-        mBgColorNormal = context.getResources().getColor(R.color.grey_extra_light);
-        mBgColorHighlight = context.getResources().getColor(R.color.grey_light);
+        mBgColorNormal = context.getResources().getColor(R.color.white);
+        mBgColorHighlight = context.getResources().getColor(R.color.grey_extra_light);
 
         mLinkColor = context.getResources().getColor(R.color.reader_hyperlink);
         mNoLinkColor = context.getResources().getColor(R.color.grey_medium);
@@ -108,10 +110,18 @@ public class ReaderCommentAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        // this MUST return the comment id in order for ReaderPostDetailActivity to enable replying
+        // this MUST return the comment id in order for comment list activity to enable replying
         // to an individual comment when clicked - note that while the commentId isn't unique in our
         // database, it will be unique here since we're only showing comments on a specific post
-        return mComments.get(position).commentId;
+        if (isValidPosition(position)) {
+            return mComments.get(position).commentId;
+        } else {
+            return 0;
+        }
+    }
+
+    private boolean isValidPosition(int position) {
+        return (position > 0 && position < mComments.size());
     }
 
     @Override
@@ -216,6 +226,7 @@ public class ReaderCommentAdapter extends BaseAdapter {
         private final TextView txtReply;
         private final ImageView imgReply;
 
+        private final ViewGroup layoutLikes;
         private final ImageView imgLike;
         private final TextView txtLike;
         private final TextView txtLikeCount;
@@ -232,8 +243,9 @@ public class ReaderCommentAdapter extends BaseAdapter {
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
-            imgLike = (ImageView) view.findViewById(R.id.image_comment_like);
-            txtLike = (TextView) view.findViewById(R.id.text_comment_like);
+            layoutLikes = (ViewGroup) view.findViewById(R.id.layout_likes);
+            imgLike = (ImageView) layoutLikes.findViewById(R.id.image_comment_like);
+            txtLike = (TextView) layoutLikes.findViewById(R.id.text_comment_like);
             txtLikeCount = (TextView) view.findViewById(R.id.text_comment_like_count);
 
             txtText.setLinksClickable(true);
@@ -245,9 +257,8 @@ public class ReaderCommentAdapter extends BaseAdapter {
                                 final ReaderComment comment,
                                 final int position) {
         if (mPost.isLikesEnabled) {
-            holder.imgLike.setVisibility(View.VISIBLE);
+            holder.layoutLikes.setVisibility(View.VISIBLE);
             holder.imgLike.setSelected(comment.isLikedByCurrentUser);
-            holder.txtLike.setVisibility(View.VISIBLE);
 
             if (comment.numLikes == 0) {
                 // no likes, so show "Like" as the caption with no count
@@ -268,15 +279,13 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 holder.txtLikeCount.setVisibility(View.VISIBLE);
             }
 
-            // toggle like when like image or caption is tapped
-            View.OnClickListener likeListener = new View.OnClickListener() {
+            // toggle like when layout containing like image and caption is tapped
+            holder.layoutLikes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleLike(holder, comment, position);
+                    toggleLike(v.getContext(), holder, comment, position);
                 }
-            };
-            holder.imgLike.setOnClickListener(likeListener);
-            holder.txtLike.setOnClickListener(likeListener);
+            });
 
             // show liking users when like count is tapped
             holder.txtLikeCount.setOnClickListener(new View.OnClickListener() {
@@ -286,24 +295,30 @@ public class ReaderCommentAdapter extends BaseAdapter {
                 }
             });
         } else {
-            holder.imgLike.setVisibility(View.GONE);
-            holder.txtLike.setVisibility(View.GONE);
+            holder.layoutLikes.setVisibility(View.GONE);
+            holder.layoutLikes.setOnClickListener(null);
         }
     }
 
-    private void toggleLike(final CommentHolder holder,
-                            final ReaderComment comment,
-                            final int position) {
+    private void toggleLike(Context context,
+                            CommentHolder holder,
+                            ReaderComment comment,
+                            int position) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
         ReaderAnim.animateLikeButton(holder.imgLike, isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike)) {
+            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
             return;
         }
 
         ReaderComment updatedComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
         mComments.set(position, updatedComment);
-        showLikeStatus(holder, comment, position);
+        showLikeStatus(holder, updatedComment, position);
     }
 
     /*

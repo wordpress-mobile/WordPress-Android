@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_extra_light"
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_large"
     android:paddingRight="@dimen/margin_large"
@@ -20,14 +19,13 @@
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_comment_avatar"
         style="@style/ReaderImageView.Avatar.Small"
-        android:layout_marginLeft="@dimen/reader_list_margin"
         android:layout_marginRight="@dimen/margin_small"
+        android:layout_marginTop="@dimen/margin_small"
         android:layout_toRightOf="@+id/spacer_comment_indent" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_comment_author"
         style="@style/ReaderTextView.Comment.Author"
-        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginBottom="@dimen/margin_extra_small"
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_toLeftOf="@+id/text_comment_date"
@@ -41,7 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/image_comment_avatar"
         android:layout_marginLeft="@dimen/margin_small"
         android:layout_marginRight="@dimen/margin_small"
         tools:text="date" />
@@ -78,18 +75,26 @@
             android:text="@string/reader_label_reply"
             android:textColor="@color/reader_hyperlink" />
 
-        <ImageView
-            android:id="@+id/image_comment_like"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:src="@drawable/reader_button_comment_like" />
+        <LinearLayout
+            android:id="@+id/layout_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_comment_like"
-            style="@style/ReaderTextView.Comment.Action"
-            android:textColor="@color/reader_hyperlink"
-            tools:text="@string/reader_label_like" />
+            <ImageView
+                android:id="@+id/image_comment_like"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:src="@drawable/reader_button_comment_like" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_comment_like"
+                style="@style/ReaderTextView.Comment.Action"
+                android:textColor="@color/reader_hyperlink"
+                tools:text="@string/reader_label_like" />
+        </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_comment_like_count"
@@ -97,16 +102,18 @@
             android:textColor="@color/reader_like_text"
             android:visibility="gone"
             tools:text="@string/reader_likes_one_short"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
     </LinearLayout>
 
+    <!-- progress bar that appears while submitting a comment -->
     <ProgressBar
         android:id="@+id/progress_comment"
-        style="@style/ReaderProgressBar"
+        style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
-    
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </RelativeLayout>

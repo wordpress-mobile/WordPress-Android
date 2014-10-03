@@ -5,6 +5,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -132,33 +133,19 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:src="@drawable/reader_button_reblog" />
 
-        <ImageView
-            android:id="@+id/image_comment_btn"
-            style="@style/ReaderImageView.ButtonIcon"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:src="@drawable/reader_button_comment" />
-
-        <TextView
-            android:id="@+id/text_comment_count"
-            style="@style/ReaderTextView.Count"
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/count_comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-8dp"
-            tools:text="2" />
-
-        <ImageView
-            android:id="@+id/image_like_btn"
-            style="@style/ReaderImageView.ButtonIcon"
             android:layout_marginLeft="@dimen/margin_small"
-            android:src="@drawable/reader_button_like" />
+            wp:icon="comment" />
 
-        <TextView
-            android:id="@+id/text_like_count"
-            style="@style/ReaderTextView.Count"
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/count_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="-8dp"
-            tools:text="12" />
+            android:layout_marginLeft="@dimen/margin_small"
+            wp:icon="like" />
 
     </LinearLayout>
 

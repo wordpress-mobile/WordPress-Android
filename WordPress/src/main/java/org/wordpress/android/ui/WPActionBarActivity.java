@@ -39,6 +39,7 @@ import net.simonvt.menudrawer.Position;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
@@ -657,8 +658,12 @@ public abstract class WPActionBarActivity extends Activity {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
                             AnalyticsTracker.refreshMetadata();
-                            WordPress.signOut(WPActionBarActivity.this);
-                            refreshMenuDrawer();
+                            WordPress.signOutAsyncWithProgressBar(WPActionBarActivity.this, new SignOutCallback() {
+                                @Override
+                                public void onSignOut() {
+                                    refreshMenuDrawer();
+                                }
+                            });
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,
