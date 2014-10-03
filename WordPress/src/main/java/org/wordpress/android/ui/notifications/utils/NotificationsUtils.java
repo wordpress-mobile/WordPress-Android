@@ -262,32 +262,38 @@ public class NotificationsUtils {
 
                 final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
                 ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
-                int index = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
-                if (index >= 0) {
-                    index += indexAdjustment;
+                int startIndex = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
+                int endIndex = JSONUtil.queryJSON(mediaObject, "indices[1]", -1);
+                if (startIndex >= 0) {
+                    // If we have a range, it means there is alt text that should be removed
+                    if (endIndex > startIndex && endIndex < spannableStringBuilder.length()) {
+                        spannableStringBuilder.replace(startIndex, endIndex, "");
+                    }
+
+                    startIndex += indexAdjustment;
                     // We need an empty space to insert the ImageSpan into
                     imagePlaceholder = " ";
-                    if (index == 0) {
+                    if (startIndex == 0) {
                         // Move the image to second line if it is the first item in the content
                         imagePlaceholder = "\n ";
                     }
 
                     // If an ImageSpan already exists, add a line break for the next image
-                    int tempIndex = index + imagePlaceholder.length() - 1;
+                    int tempIndex = startIndex + imagePlaceholder.length() - 1;
                     if (spannableStringBuilder.getSpans(tempIndex,
                             tempIndex, ImageSpan.class).length > 0) {
                         imagePlaceholder = "\n" + imagePlaceholder;
                     }
 
-                    spannableStringBuilder.insert(index, imagePlaceholder);
-                    index += imagePlaceholder.length() - 1;
+                    spannableStringBuilder.insert(startIndex, imagePlaceholder);
+                    startIndex += imagePlaceholder.length() - 1;
 
-                    spannableStringBuilder.setSpan(noteImageSpan, index, index + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spannableStringBuilder.setSpan(noteImageSpan, startIndex, startIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     // Add an AlignmentSpan to center the image
                     spannableStringBuilder.setSpan(
                             new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                            index,
-                            index + 1,
+                            startIndex,
+                            startIndex + 1,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                     );
 
