@@ -737,29 +737,24 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (!isAdded() || !hasComment())
             return;
 
-        final CommentStatus newStatus;  // status to apply when moderation button is tapped
         final int statusTextResId;      // string resource id for status text
         final int statusColor;          // color for status text
 
         switch (mComment.getStatusEnum()) {
             case APPROVED:
-                newStatus = CommentStatus.UNAPPROVED;
                 statusTextResId = R.string.comment_status_approved;
                 statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
                 break;
             case UNAPPROVED:
-                newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_unapproved;
                 statusColor = getActivity().getResources().getColor(R.color.calypso_orange_dark);
                 break;
             case SPAM:
-                newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_spam;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
             case TRASH:
             default:
-                newStatus = CommentStatus.APPROVED;
                 statusTextResId = R.string.comment_status_trash;
                 statusColor = getActivity().getResources().getColor(R.color.comment_status_spam);
                 break;
@@ -795,6 +790,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!hasComment()) return;
+
+                    CommentStatus newStatus = CommentStatus.APPROVED;
+                    if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
+                        newStatus = CommentStatus.UNAPPROVED;
+                    }
+
                     mComment.setStatus(newStatus.toString());
                     setModerateButtonForStatus(newStatus);
                     AniUtils.startAnimation(mBtnModerateIcon, R.anim.notifications_button_scale);
