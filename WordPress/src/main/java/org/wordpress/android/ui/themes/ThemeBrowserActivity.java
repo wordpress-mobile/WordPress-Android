@@ -475,7 +475,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
         if (areThemesAccessible()) {
             fetchThemes(mViewPager.getCurrentItem());
             setRefreshing(true, mViewPager.getCurrentItem());

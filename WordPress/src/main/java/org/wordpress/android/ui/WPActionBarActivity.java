@@ -602,7 +602,7 @@ public abstract class WPActionBarActivity extends Activity {
                         setupCurrentBlog();
                     }
                     if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
-                        onBlogChanged();
+                        blogChanged();
                     }
                     WordPress.registerForCloudMessaging(this);
                 }
@@ -629,7 +629,7 @@ public abstract class WPActionBarActivity extends Activity {
             } else {
                 WordPress.setCurrentBlog(blogIDs[position]);
                 updateMenuDrawer();
-                onBlogChanged();
+                blogChanged();
             }
         }
 
@@ -708,7 +708,7 @@ public abstract class WPActionBarActivity extends Activity {
     /**
      * This method is called when the user changes the active blog or hides all blogs
      */
-    public void onBlogChanged() {
+    private void blogChanged() {
         WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
@@ -734,6 +734,18 @@ public abstract class WPActionBarActivity extends Activity {
         if (shouldUpdateCurrentBlogStatsInBackground()) {
             WordPress.sUpdateCurrentBlogStats.forceRun();
         }
+
+        if (WordPress.getCurrentBlog() != null) {
+            onBlogChanged();
+        }
+
+    }
+
+    /**
+     * This method is called in when the user changes the active blog - descendants should override
+     * this to perform activity-specific updates upon blog change
+     */
+    protected void onBlogChanged() {
     }
 
     /**

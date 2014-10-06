@@ -82,24 +82,29 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         refreshNotes();
 
         // start listening to bucket change events
-        if (mBucket != null) mBucket.addListener(this);
+        if (mBucket != null) {
+            mBucket.addListener(this);
+        }
     }
 
     @Override
     public void onPause() {
         // unregister the listener
-       if (mBucket != null) mBucket.removeListener(this);
-
+        if (mBucket != null) {
+            mBucket.removeListener(this);
+        }
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         // Close Simperium cursor
-        mNotesAdapter.closeCursor();
+        if (mNotesAdapter != null) {
+            mNotesAdapter.closeCursor();
+        }
 
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
-        super.onDestroyView();
+        super.onDestroy();
     }
 
     private void initPullToRefreshHelper() {
