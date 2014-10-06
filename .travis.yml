@@ -5,12 +5,6 @@ android:
   components:
     - build-tools-19.1.0
     - android-19
-    - android-14
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-19
-    - sys-img-armeabi-v7a-android-19
-    - sys-img-x86-android-17
 
 env:
   global:
@@ -24,4 +18,3 @@ before_install:
 
 install:
   - ./gradlew build
-
