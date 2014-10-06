@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-    post for ReaderPostDetailFragment, inserted as ListView header
+    included by ReaderPostDetailFragment
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +9,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/margin_large">
+
+    <View
+        android:id="@+id/spacer_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
 
     <LinearLayout
         android:id="@+id/layout_detail_header"
@@ -89,7 +94,7 @@
 
     </LinearLayout>
 
-    <org.wordpress.android.ui.reader.ReaderWebView
+    <org.wordpress.android.ui.reader.views.ReaderWebView
         android:id="@+id/reader_webview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -115,11 +120,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/reader_hyperlink"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="@dimen/text_sz_medium"
             tools:text="text_like_count" />
 
         <!-- liking avatars are inserted into this LinearLayout at runtime -->
-        <org.wordpress.android.ui.reader.ReaderLikingUsersView
+        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
             android:id="@+id/layout_liking_users_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/avatar_sz_small"
@@ -127,5 +132,27 @@
             android:layout_marginTop="@dimen/margin_medium" />
 
     </RelativeLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/reader_count_selector"
+        android:gravity="center"
+        android:padding="@dimen/margin_medium"
+        android:textColor="@color/blue_dark"
+        android:textSize="@dimen/text_sz_medium"
+        android:visibility="gone"
+        tools:text="3 comments"
+        tools:visibility="visible" />
+
+    <!-- extra space so action icons on fragment don't overlap content -->
+    <View
+        android:id="@+id/spacer_actions"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_button_icon" />
 
 </LinearLayout>

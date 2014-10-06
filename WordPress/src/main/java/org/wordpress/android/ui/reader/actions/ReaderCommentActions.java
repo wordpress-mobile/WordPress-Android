@@ -283,28 +283,21 @@ public class ReaderCommentActions {
     /*
      * like or unlike the passed comment
      */
-    public static boolean performLikeAction(final ReaderComment comment,
-                                            final boolean isAskingToLike) {
+    public static boolean performLikeAction(final ReaderComment comment, boolean isAskingToLike) {
         if (comment == null) {
             return false;
         }
 
-        // get this comment from db so we can revert on failure
-        final ReaderComment originalComment = ReaderCommentTable.getComment(comment.blogId, comment.postId, comment.commentId);
-
-        // nothing more to do if like status isn't changing
-        if (originalComment != null && originalComment.isLikedByCurrentUser == isAskingToLike) {
-            return true;
+        // make sure like status is changing
+        boolean isCurrentlyLiked = ReaderCommentTable.isCommentLikedByCurrentUser(comment);
+        if (isCurrentlyLiked == isAskingToLike) {
+            AppLog.w(T.READER, "comment like unchanged");
+            return false;
         }
 
-        // update local db
-        comment.isLikedByCurrentUser = isAskingToLike;
-        if (isAskingToLike) {
-            comment.numLikes++;
-        } else if (comment.numLikes > 0) {
-            comment.numLikes--;
-        }
-        ReaderCommentTable.addOrUpdateComment(comment);
+        // update like status and like count in local db
+        int newNumLikes = (isAskingToLike ? comment.numLikes + 1 : comment.numLikes - 1);
+        ReaderCommentTable.setLikesForComment(comment, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesComment(comment, isAskingToLike);
 
         // sites/$site/comments/$comment_ID/likes/new
@@ -324,10 +317,8 @@ public class ReaderCommentActions {
                     AppLog.d(T.READER, String.format("comment %s succeeded", actionName));
                 } else {
                     AppLog.w(T.READER, String.format("comment %s failed", actionName));
-                    if (originalComment != null) {
-                        ReaderCommentTable.addOrUpdateComment(originalComment);
-                        ReaderLikeTable.setCurrentUserLikesComment(comment, originalComment.isLikedByCurrentUser);
-                    }
+                    ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser);
+                    ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser);
                 }
             }
         };
@@ -342,16 +333,12 @@ public class ReaderCommentActions {
                     AppLog.w(T.READER, String.format("comment %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
-                // revert to original comment
-                if (originalComment != null) {
-                    ReaderCommentTable.addOrUpdateComment(originalComment);
-                    ReaderLikeTable.setCurrentUserLikesComment(comment, originalComment.isLikedByCurrentUser);
-                }
+                ReaderCommentTable.setLikesForComment(comment, comment.numLikes, comment.isLikedByCurrentUser);
+                ReaderLikeTable.setCurrentUserLikesComment(comment, comment.isLikedByCurrentUser);
             }
         };
 
         WordPress.getRestClientUtils().post(path, listener, errorListener);
-
         return true;
     }
 }

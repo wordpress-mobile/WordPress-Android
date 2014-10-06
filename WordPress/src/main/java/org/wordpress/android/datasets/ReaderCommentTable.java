@@ -1,5 +1,6 @@
 package org.wordpress.android.datasets;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -221,6 +222,36 @@ public class ReaderCommentTable {
                 args);
     }
 
+    /*
+     * updates both the like count for a comment and whether it's liked by the current user
+     */
+    public static void setLikesForComment(ReaderComment comment, int numLikes, boolean isLikedByCurrentUser) {
+        if (comment == null) {
+            return;
+        }
+
+        String[] args =
+               {Long.toString(comment.blogId),
+                Long.toString(comment.postId),
+                Long.toString(comment.commentId)};
+
+        ContentValues values = new ContentValues();
+        values.put("num_likes", numLikes);
+        values.put("is_liked", SqlUtils.boolToSql(isLikedByCurrentUser));
+
+        ReaderDatabase.getWritableDb().update(
+                "tbl_comments",
+                values,
+                "blog_id=? AND post_id=? AND comment_id=?",
+                args);
+    }
+
+    public static boolean isCommentLikedByCurrentUser(ReaderComment comment) {
+        if (comment == null) {
+            return false;
+        }
+        return isCommentLikedByCurrentUser(comment.blogId, comment.postId, comment.commentId);
+    }
     public static boolean isCommentLikedByCurrentUser(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId),
                 Long.toString(postId),

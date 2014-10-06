@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    selector for comment count on reader post detail
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/blue_extra_light" />
+            <stroke android:width="1dp" android:color="@color/reader_hyperlink" />
+            <corners android:radius="@dimen/margin_small" />
+        </shape>
+
+    </item>
+    <item>
+        <shape>
+            <stroke android:width="1dp" android:color="@color/reader_hyperlink" />
+            <corners android:radius="@dimen/margin_small" />
+        </shape>
+    </item>
+</selector>

@@ -11,6 +11,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtil;
@@ -307,6 +308,10 @@ class ReaderPostRenderer {
         } else {
             sbHtml.append("  iframe, embed { display: none; }");
         }
+
+        // html5 video doesn't require javascript
+        sbHtml.append(" video { width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+              .append("         height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
 
         sbHtml.append("</style>")
               .append("</head><body>")

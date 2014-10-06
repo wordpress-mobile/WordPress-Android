@@ -12,11 +12,10 @@ import android.text.TextUtils;
 import android.view.View;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.notifications.NotificationsWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.util.ToastUtils;
 
@@ -104,6 +103,29 @@ public class ReaderActivityLauncher {
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
         context.startActivity(intent);
+    }
+
+    /*
+     * show comments for the passed post
+     */
+    public static void showReaderComments(Context context, ReaderPost post) {
+        if (post == null) {
+            return;
+        }
+        Intent intent = new Intent(context, ReaderCommentListActivity.class);
+        intent.putExtra(ReaderConstants.ARG_BLOG_ID, post.blogId);
+        intent.putExtra(ReaderConstants.ARG_POST_ID, post.postId);
+
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                    activity,
+                    R.anim.reader_flyin,
+                    R.anim.reader_activity_scale_out);
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     /*
@@ -215,9 +237,8 @@ public class ReaderActivityLauncher {
             return;
         }
 
-        // TODO: NotificationsWebViewActivity will fail without a current blog
-        if (openUrlType == OpenUrlType.INTERNAL && WordPress.getCurrentBlog() != null) {
-            NotificationsWebViewActivity.openUrl(context, url);
+        if (openUrlType == OpenUrlType.INTERNAL) {
+            WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(context, url);
         } else {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

@@ -42,22 +42,16 @@ public class ReaderPostActions {
      */
     public static boolean performLikeAction(final ReaderPost post,
                                             final boolean isAskingToLike) {
-        // get post BEFORE we make changes so we can revert on error
-        final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
-
-        // do nothing and return true if post's like state is same as passed
-        if (originalPost != null && originalPost.isLikedByCurrentUser == isAskingToLike) {
-            return true;
+        // do nothing if post's like state is same as passed
+        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
+        if (isCurrentlyLiked == isAskingToLike) {
+            AppLog.w(T.READER, "post like unchanged");
+            return false;
         }
 
-        // update post in local db
-        post.isLikedByCurrentUser = isAskingToLike;
-        if (isAskingToLike) {
-            post.numLikes++;
-        } else if (!isAskingToLike && post.numLikes > 0) {
-            post.numLikes--;
-        }
-        ReaderPostTable.addOrUpdatePost(post);
+        // update like status and like count in local db
+        int newNumLikes = (isAskingToLike ? post.numLikes + 1 : post.numLikes - 1);
+        ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
@@ -85,17 +79,12 @@ public class ReaderPostActions {
                     AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
-
-                // revert to original post
-                if (originalPost != null) {
-                    ReaderPostTable.addOrUpdatePost(originalPost);
-                    ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
-                }
+                ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
+                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser);
             }
         };
 
         WordPress.getRestClientUtils().post(path, listener, errorListener);
-
         return true;
     }
 

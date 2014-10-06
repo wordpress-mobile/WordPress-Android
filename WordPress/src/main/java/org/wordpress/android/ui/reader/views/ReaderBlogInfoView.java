@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderBlog;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -28,10 +30,10 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * blog (blog preview) but can be reused elsewhere - call loadBlogInfo() to show the
  * info for a specific blog
  */
-class ReaderBlogInfoView extends LinearLayout {
+public class ReaderBlogInfoView extends LinearLayout {
 
     public interface BlogInfoListener {
-        void onBlogInfoLoaded();
+        void onBlogInfoLoaded(ReaderBlog blogInfo);
         void onBlogInfoFailed();
     }
 
@@ -82,6 +84,7 @@ class ReaderBlogInfoView extends LinearLayout {
             return;
         }
 
+        boolean wasEmpty = (mBlogInfo == null);
         mBlogInfo = blogInfo;
 
         final TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
@@ -146,8 +149,9 @@ class ReaderBlogInfoView extends LinearLayout {
             loadMshotImage(blogInfo);
         }
 
-        if (mBlogInfoListener != null) {
-            mBlogInfoListener.onBlogInfoLoaded();
+        // fire listener the first time info is loaded
+        if (wasEmpty && mBlogInfoListener != null) {
+            mBlogInfoListener.onBlogInfoLoaded(blogInfo);
         }
     }
 
@@ -159,7 +163,7 @@ class ReaderBlogInfoView extends LinearLayout {
         txtFollowCnt.setText(count);
     }
 
-    boolean isEmpty() {
+    public boolean isEmpty() {
         return mBlogInfo == null;
     }
 

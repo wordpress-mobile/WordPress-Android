@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -30,7 +30,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ReaderPhotoView extends RelativeLayout {
 
-    static interface PhotoViewListener {
+    public static interface PhotoViewListener {
         void onTapPhotoView();
     }
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader;
+package org.wordpress.android.ui.reader.views;
 
 import android.content.Context;
 import android.os.Handler;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /*
  * LinearLayout which shows liking users - used by ReaderPostDetailFragment
  */
-class ReaderLikingUsersView extends LinearLayout {
+public class ReaderLikingUsersView extends LinearLayout {
     private final int mLikeAvatarSz;
 
     public ReaderLikingUsersView(Context context) {
@@ -35,7 +35,7 @@ class ReaderLikingUsersView extends LinearLayout {
         mLikeAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
     }
 
-    void showLikingUsers(final ReaderPost post) {
+    public void showLikingUsers(final ReaderPost post) {
         if (post == null) {
             return;
         }
