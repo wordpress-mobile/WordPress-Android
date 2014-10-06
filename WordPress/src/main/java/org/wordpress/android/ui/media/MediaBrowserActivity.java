@@ -272,7 +272,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
 
         // clear edit fragment
         if (mMediaEditFragment != null) {

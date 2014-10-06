@@ -547,11 +547,10 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
-
-        mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
 
         stopStatsService();
+
+        mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
         scrollToTop();
 
         FragmentManager fm = getFragmentManager();
