@@ -12,9 +12,9 @@ env:
     - ANDROID_SDKS=android-14
     - ANDROID_TARGET=android-14
 
-before_install:
+install:
   # Setup gradle.properties
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
-install:
+script:
   - ./gradlew build
