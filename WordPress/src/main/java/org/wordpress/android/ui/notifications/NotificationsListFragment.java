@@ -105,7 +105,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         }
 
         mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
-        super.onDestroyView();
+        super.onDestroy();
     }
 
     private void initPullToRefreshHelper() {
