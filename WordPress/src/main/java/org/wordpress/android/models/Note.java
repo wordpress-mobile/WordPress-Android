@@ -400,6 +400,7 @@ public class Note extends Syncable {
         static public final String UNREAD_INDEX = "unread";
         static public final String NOTICON_INDEX = "noticon";
         static public final String ICON_URL_INDEX = "icon";
+        static public final String IS_UNAPPROVED_INDEX = "unapproved";
 
         private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
 
@@ -419,6 +420,7 @@ public class Note extends Syncable {
                 indexes.add(new Index(UNREAD_INDEX, note.isUnread()));
                 indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
                 indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
+                indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
 
                 return indexes;
             }

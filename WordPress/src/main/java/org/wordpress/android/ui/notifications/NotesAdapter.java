@@ -15,6 +15,7 @@ import com.simperium.client.BucketObjectMissingException;
 import com.simperium.client.Query;
 
 import org.wordpress.android.R;
+import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SqlUtils;
@@ -47,7 +48,8 @@ class NotesAdapter extends CursorAdapter {
                         Note.Schema.SNIPPET_INDEX,
                         Note.Schema.UNREAD_INDEX,
                         Note.Schema.ICON_URL_INDEX,
-                        Note.Schema.NOTICON_INDEX)
+                        Note.Schema.NOTICON_INDEX,
+                        Note.Schema.IS_UNAPPROVED_INDEX)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
 
@@ -188,7 +190,9 @@ class NotesAdapter extends CursorAdapter {
         String noticonCharacter = getStringForColumnName(objectCursor, Note.Schema.NOTICON_INDEX);
         if (!TextUtils.isEmpty(noticonCharacter)) {
             noteViewHolder.noteIcon.setText(noticonCharacter);
-            if (isUnread) {
+            if (SqlUtils.sqlToBool(getIntForColumnName(cursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
+                noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
+            } else if (isUnread) {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue);
             } else {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
