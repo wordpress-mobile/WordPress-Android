@@ -206,7 +206,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_multi))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.noticon_notification))
                     .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle("WordPress")
                     .setContentText(subject)
