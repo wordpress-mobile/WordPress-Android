@@ -118,7 +118,7 @@
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
                 android:padding="9dp"
-                android:src="@drawable/dashboard_icon_comments"
+                android:src="@drawable/dashicon_admin_comments_black"
                 android:contentDescription="@string/add_comment" />
 
             <ImageButton

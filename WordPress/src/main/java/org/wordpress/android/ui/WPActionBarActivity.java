@@ -892,7 +892,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class CommentsMenuItem extends MenuDrawerItem {
         CommentsMenuItem(){
-            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashboard_icon_comments);
+            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashicon_admin_comments_black);
         }
         @Override
         public Boolean isSelected(){
