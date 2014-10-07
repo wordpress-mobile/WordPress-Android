@@ -863,7 +863,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
-            super(ActivityId.PAGES, R.string.pages, R.drawable.dashboard_icon_pages);
+            super(ActivityId.PAGES, R.string.pages, R.drawable.dashicon_admin_page_black);
         }
         @Override
         public Boolean isSelected(){
