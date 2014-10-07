@@ -811,7 +811,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PostsMenuItem extends MenuDrawerItem {
         PostsMenuItem() {
-            super(ActivityId.POSTS, R.string.posts, R.drawable.dashboard_icon_posts);
+            super(ActivityId.POSTS, R.string.posts, R.drawable.dashicon_admin_post_black);
         }
 
         @Override
