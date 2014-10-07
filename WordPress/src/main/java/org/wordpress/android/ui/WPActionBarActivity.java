@@ -839,7 +839,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class MediaMenuItem extends MenuDrawerItem {
         MediaMenuItem(){
-            super(ActivityId.MEDIA, R.string.media, R.drawable.dashboard_icon_media);
+            super(ActivityId.MEDIA, R.string.media, R.drawable.dashicon_admin_media_black);
         }
         @Override
         public Boolean isSelected(){
