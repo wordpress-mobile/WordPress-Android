@@ -786,7 +786,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ReaderMenuItem extends MenuDrawerItem {
         ReaderMenuItem(){
-            super(ActivityId.READER, R.string.reader, R.drawable.dashboard_icon_subs);
+            super(ActivityId.READER, R.string.reader, R.drawable.noticon_reader_alt_black);
         }
 
         @Override
