@@ -960,7 +960,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
-            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashboard_icon_stats);
+            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashicon_chart_area_black);
         }
         @Override
         public Boolean isSelected(){
