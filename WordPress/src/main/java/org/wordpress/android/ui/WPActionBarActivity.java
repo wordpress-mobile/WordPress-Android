@@ -1006,7 +1006,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickVideoMenuItem extends MenuDrawerItem {
         QuickVideoMenuItem(){
-            super(R.string.quick_video, R.drawable.dashboard_icon_video);
+            super(R.string.quick_video, R.drawable.dashicon_video_alt2);
         }
         @Override
         public void onSelectItem(){
