@@ -986,7 +986,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickPhotoMenuItem extends MenuDrawerItem {
         QuickPhotoMenuItem(){
-            super(R.string.quick_photo, R.drawable.dashboard_icon_photo);
+            super(R.string.quick_photo, R.drawable.dashicon_camera);
         }
         @Override
         public void onSelectItem(){
