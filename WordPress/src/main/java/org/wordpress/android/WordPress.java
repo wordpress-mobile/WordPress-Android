@@ -86,6 +86,7 @@ public class WordPress extends Application {
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
+    public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
@@ -285,11 +286,11 @@ public class WordPress extends Application {
     }
 
     public static RestClientUtils getRestClientUtilsV1_1() {
-        if (mRestClientUtils == null) {
+        if (mRestClientUtilsVersion1_1 == null) {
             OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
-            mRestClientUtils = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
+            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
-        return mRestClientUtils;
+        return mRestClientUtilsVersion1_1;
     }
 
     /**
