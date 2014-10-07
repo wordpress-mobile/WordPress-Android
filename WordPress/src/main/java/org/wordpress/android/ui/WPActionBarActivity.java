@@ -986,7 +986,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickPhotoMenuItem extends MenuDrawerItem {
         QuickPhotoMenuItem(){
-            super(R.string.quick_photo, R.drawable.dashicon_camera);
+            super(R.string.quick_photo, R.drawable.dashicon_camera_black);
         }
         @Override
         public void onSelectItem(){
@@ -1006,7 +1006,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickVideoMenuItem extends MenuDrawerItem {
         QuickVideoMenuItem(){
-            super(R.string.quick_video, R.drawable.dashicon_video_alt2);
+            super(R.string.quick_video, R.drawable.dashicon_video_alt2_black);
         }
         @Override
         public void onSelectItem(){
