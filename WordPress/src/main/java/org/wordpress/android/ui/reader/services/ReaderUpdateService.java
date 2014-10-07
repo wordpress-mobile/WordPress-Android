@@ -52,7 +52,7 @@ public class ReaderUpdateService extends Service {
     private static final String ARG_UPDATE_TASKS = "update_tasks";
 
     public static void startService(Context context, EnumSet<UpdateTask> tasks) {
-        if (tasks == null || tasks.size() == 0) {
+        if (context == null || tasks == null || tasks.size() == 0) {
             return;
         }
         Intent intent = new Intent(context, ReaderUpdateService.class);
