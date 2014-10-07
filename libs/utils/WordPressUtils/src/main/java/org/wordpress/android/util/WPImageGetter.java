@@ -112,7 +112,7 @@ public class WPImageGetter implements Html.ImageGetter {
         return remote;
     }
 
-    private static class RemoteDrawable extends BitmapDrawable {
+    public static class RemoteDrawable extends BitmapDrawable {
         Drawable mRemoteDrawable;
         final Drawable mLoadingDrawable;
         final Drawable mFailedDrawable;

@@ -3,14 +3,19 @@ package org.wordpress.android.ui.notifications.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AlignmentSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.google.android.gcm.GCMRegistrar;
@@ -22,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -30,7 +36,9 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockRangeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.MapUtils;
+import org.wordpress.android.util.WPImageGetter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -213,22 +221,29 @@ public class NotificationsUtils {
         return "org.wordpress.android.playstore";
     }
 
-    public static Spannable getSpannableTextFromIndices(JSONObject subject,
-                                                        final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
+    public static Spannable getSpannableContentFromIndices(JSONObject subject, TextView textView,
+                                                           final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener) {
         if (subject == null) {
             return new SpannableStringBuilder();
         }
 
-        String text = subject.optString("text", "").trim();
+        String text = subject.optString("text", "");
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(text);
 
         boolean shouldLink = onNoteBlockTextClickListener != null;
 
-        try {
-            JSONArray rangesArray = subject.getJSONArray("ranges");
+        // Add ImageSpans for note media
+        addImageSpansForBlockMedia(textView, subject, spannableStringBuilder);
 
-            for (int i=0; i < rangesArray.length(); i++) {
-                JSONObject rangeObject = (JSONObject) rangesArray.get(i);
+        // Process Ranges to add links and text formatting
+        JSONArray rangesArray = subject.optJSONArray("ranges");
+        if (rangesArray != null) {
+            for (int i = 0; i < rangesArray.length(); i++) {
+                JSONObject rangeObject = rangesArray.optJSONObject(i);
+                if (rangeObject == null) {
+                    continue;
+                }
+
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(rangeObject, shouldLink) {
                     @Override
                     public void onClick(View widget) {
@@ -237,6 +252,7 @@ public class NotificationsUtils {
                         }
                     }
                 };
+
                 int[] indices = clickableSpan.getIndices();
                 if (indices.length == 2 && indices[0] <= spannableStringBuilder.length() &&
                         indices[1] <= spannableStringBuilder.length()) {
@@ -249,11 +265,99 @@ public class NotificationsUtils {
                     }
                 }
             }
-        } catch (JSONException e) {
-            return spannableStringBuilder;
         }
 
         return spannableStringBuilder;
+    }
+
+    /**
+     * Adds ImageSpans to the passed SpannableStringBuilder
+     */
+    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject, SpannableStringBuilder spannableStringBuilder) {
+        if (textView == null || subject == null || spannableStringBuilder == null) return;
+
+        Context context = textView.getContext();
+        JSONArray mediaArray = subject.optJSONArray("media");
+        if (context == null || mediaArray == null) {
+            return;
+        }
+
+        Drawable loading = context.getResources().getDrawable(R.drawable.remote_image);
+        Drawable failed = context.getResources().getDrawable(R.drawable.remote_failed);
+        // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
+        // otherwise it would load blank white
+        WPImageGetter imageGetter = new WPImageGetter(
+                textView,
+                context.getResources().getDimensionPixelSize(R.dimen.notifications_max_image_size),
+                WordPress.imageLoader,
+                loading,
+                failed
+        );
+
+        int indexAdjustment = 0;
+        String imagePlaceholder;
+        for (int i = 0; i < mediaArray.length(); i++) {
+            JSONObject mediaObject = mediaArray.optJSONObject(i);
+            if (mediaObject == null) {
+                continue;
+            }
+
+            final Drawable remoteDrawable = imageGetter.getDrawable(mediaObject.optString("url", ""));
+            ImageSpan noteImageSpan = new ImageSpan(remoteDrawable, mediaObject.optString("url", ""));
+            int startIndex = JSONUtil.queryJSON(mediaObject, "indices[0]", -1);
+            int endIndex = JSONUtil.queryJSON(mediaObject, "indices[1]", -1);
+            if (startIndex >= 0) {
+                startIndex += indexAdjustment;
+                endIndex += indexAdjustment;
+
+                if (startIndex > spannableStringBuilder.length()) {
+                    continue;
+                }
+
+                // If we have a range, it means there is alt text that should be removed
+                if (endIndex > startIndex && endIndex <= spannableStringBuilder.length()) {
+                    spannableStringBuilder.replace(startIndex, endIndex, "");
+                }
+
+                // We need an empty space to insert the ImageSpan into
+                imagePlaceholder = " ";
+
+                // Move the image to a new line if needed
+                int previousCharIndex = (startIndex > 0) ? startIndex - 1 : 0;
+                if (!spannableHasCharacterAtIndex(spannableStringBuilder, '\n', previousCharIndex)
+                        || spannableStringBuilder.getSpans(startIndex, startIndex, ImageSpan.class).length > 0) {
+                    imagePlaceholder = "\n ";
+                }
+
+                int spanIndex = startIndex + imagePlaceholder.length() - 1;
+
+                // Add a newline after the image if needed
+                if (!spannableHasCharacterAtIndex(spannableStringBuilder, '\n', startIndex)
+                        && !spannableHasCharacterAtIndex(spannableStringBuilder, '\r', startIndex)) {
+                    imagePlaceholder += "\n";
+                }
+
+                spannableStringBuilder.insert(startIndex, imagePlaceholder);
+
+                // Add the image span
+                spannableStringBuilder.setSpan(
+                        noteImageSpan,
+                        spanIndex,
+                        spanIndex + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+
+                // Add an AlignmentSpan to center the image
+                spannableStringBuilder.setSpan(
+                        new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        spanIndex,
+                        spanIndex + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                );
+
+                indexAdjustment += imagePlaceholder.length();
+            }
+        }
     }
 
     public static Spannable getClickableTextForIdUrl(JSONObject idBlock, String text,
@@ -307,4 +411,9 @@ public class NotificationsUtils {
             }
         }
     }
+
+    public static boolean spannableHasCharacterAtIndex(Spannable spannable, char character, int index) {
+        return spannable != null && index < spannable.length() && spannable.charAt(index) == character;
+    }
+
 }

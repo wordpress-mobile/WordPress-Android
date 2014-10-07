@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.networking.AuthenticatorRequest;
 import org.wordpress.android.networking.OAuthAuthenticator;
 
 public class OAuthAuthenticatorEmptyMock extends OAuthAuthenticator {
