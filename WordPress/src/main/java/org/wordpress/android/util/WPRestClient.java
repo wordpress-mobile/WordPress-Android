@@ -50,13 +50,18 @@ public class WPRestClient {
     /** Default backoff multiplier for rest requests */
     public static final float REST_BACKOFF_MULT = 2f;
     
-    
     public WPRestClient(RequestQueue queue, Authenticator authenticator){
         // load an existing access token from prefs if we have one
+        this(queue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1);
+    }
+
+    public WPRestClient(RequestQueue queue, Authenticator authenticator, RestClient.REST_CLIENT_VERSIONS version){
+        // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = new RestClient(queue);
+        mRestClient = new RestClient(queue, version);
         mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
     }
+
 
     /**
      * Reply to a comment using a Note.Reply object.
@@ -336,7 +341,7 @@ public class WPRestClient {
     public void get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener, ErrorListener errorListener){
         // turn params into querystring
         
-        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, listener, errorListener);
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null, listener, errorListener);
         if(retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
         } 
@@ -354,7 +359,7 @@ public class WPRestClient {
      * Make POST request with params
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener, ErrorListener errorListener){
-        final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params, listener, errorListener);
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params, listener, errorListener);
         if(retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST, REST_BACKOFF_MULT); //Do not retry on failure
         } 

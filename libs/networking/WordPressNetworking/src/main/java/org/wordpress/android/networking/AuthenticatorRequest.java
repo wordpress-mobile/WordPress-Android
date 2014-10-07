@@ -11,7 +11,6 @@ import com.wordpress.rest.RestRequest.ErrorListener;
  * allows the request maker to disregard the authentication state when making requests.
  */
 public class AuthenticatorRequest {
-    static private final String SITE_PREFIX = "https://public-api.wordpress.com/rest/v1/sites/";
     static private final String BATCH_CALL_PREFIX = "https://public-api.wordpress.com/rest/v1/batch/?urls%5B%5D=%2Fsites%2F";
     private RestRequest mRequest;
     private RestRequest.ErrorListener mListener;
@@ -36,12 +35,15 @@ public class AuthenticatorRequest {
      *
      * @return The site ID
      */
-    public static String extractSiteIdFromUrl(String url) {
+    public String extractSiteIdFromUrl(String url) {
         if (url == null) {
             return null;
         }
-        if (url.startsWith(SITE_PREFIX) && !SITE_PREFIX.equals(url)) {
-            int marker = SITE_PREFIX.length();
+
+        String sitePrefix = mRestClient.getEndpointURL() + "sites/";
+
+        if (url.startsWith(sitePrefix) && !sitePrefix.equals(url)) {
+            int marker = sitePrefix.length();
             if (url.indexOf("/", marker) < marker) {
                 return null;
             }

@@ -40,14 +40,14 @@ public class RestClientCustomizableMock extends RestClient {
     }
 
     public RestClientCustomizableMock(com.android.volley.RequestQueue queue, String token) {
-        super(queue, token);
+        super(queue, token, REST_API_ENDPOINT_URL_V1);
     }
 
-    public static String getAbsoluteURL(String url) {
+    public String getAbsoluteURL(String url) {
         return null;
     }
 
-    public static String getAbsoluteURL(String path, java.util.Map<String, String> params) {
+    public String getAbsoluteURL(String path, java.util.Map<String, String> params) {
         return null;
     }
 
