@@ -1026,7 +1026,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ViewSiteMenuItem extends MenuDrawerItem {
         ViewSiteMenuItem(){
-            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.dashboard_icon_view);
+            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.noticon_show_black);
         }
         @Override
         public Boolean isSelected(){
