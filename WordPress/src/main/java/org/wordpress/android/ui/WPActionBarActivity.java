@@ -1050,7 +1050,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
-            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.dashboard_icon_notifications);
+            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.noticon_notification_black);
         }
         @Override
         public Boolean isVisible(){
