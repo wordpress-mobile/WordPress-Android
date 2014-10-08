@@ -17,4 +17,4 @@ install:
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
 script:
-  - ./gradlew build
+  - ./gradlew -PdisablePreDex build
