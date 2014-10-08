@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape>
-            <solid android:color="@color/blue_new_kid" />
-        </shape>
-    </item>
     <item android:bottom="@dimen/margin_small" android:left="@dimen/margin_small" android:top="@dimen/margin_small"
           android:right="@dimen/margin_small">
-        <bitmap android:src="@drawable/dashicon_editor_bold" />
+        <bitmap android:src="@drawable/dashicon_editor_bold_grey" />
     </item>
 </layer-list>
