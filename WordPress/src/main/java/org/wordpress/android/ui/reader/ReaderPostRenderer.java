@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.utils.ReaderHtmlUtils;
+import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
@@ -66,35 +68,56 @@ class ReaderPostRenderer {
     }
 
     void beginRender() {
-        mRenderBuilder = new StringBuilder(getPostContent());
-
-        // start image scanner to find images so we can replace them with ones that have h/w set
         final Handler handler = new Handler();
+        mRenderBuilder = new StringBuilder(getPostContent());
         new Thread() {
             @Override
             public void run() {
-                ReaderImageScanner.ImageScanListener imageListener = new ReaderImageScanner.ImageScanListener() {
-                    @Override
-                    public void onImageFound(String imageTag, String imageUrl, int start, int end) {
-                        replaceImageTag(imageTag, imageUrl);
-                    }
+                resizeImages();
+                resizeIframes();
 
+                final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
+                mRenderBuilder = null;
+                handler.post(new Runnable() {
                     @Override
-                    public void onScanCompleted() {
-                        final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
-                        mRenderBuilder = null;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                renderHtmlContent(htmlContent);
-                            }
-                        });
+                    public void run() {
+                        renderHtmlContent(htmlContent);
                     }
-                };
-                ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
-                scanner.beginScan(imageListener);
+                });
             }
         }.start();
+    }
+
+    void resizeImages() {
+        ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
+            @Override
+            public void onTagFound(String imageTag, String imageUrl, int start, int end) {
+                replaceImageTag(imageTag, imageUrl);
+            }
+
+            @Override
+            public void onScanCompleted() {
+                AppLog.i(AppLog.T.READER, "reader renderer > image scan completed");
+            }
+        };
+        ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
+        scanner.beginScan(imageListener);
+    }
+
+    void resizeIframes() {
+        ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
+            @Override
+            public void onTagFound(String tag, String src, int start, int end) {
+                replaceIframeTag(tag, src);
+            }
+
+            @Override
+            public void onScanCompleted() {
+                AppLog.i(AppLog.T.READER, "reader renderer > iframe scan completed");
+            }
+        };
+        ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
+        scanner.beginScan(iframeListener);
     }
 
     /*
@@ -231,6 +254,35 @@ class ReaderPostRenderer {
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
+    private void replaceIframeTag(final String tag, final String src) {
+        int width = ReaderHtmlUtils.getWidthAttrValue(tag);
+        int height = ReaderHtmlUtils.getHeightAttrValue(tag);
+
+        int newHeight;
+        int newWidth;
+
+        if (width > 0 && height > 0) {
+            float ratio = ((float) height / (float) width);
+            newWidth = mResourceVars.videoWidthPx;
+            newHeight = (int) (newWidth * ratio);
+        } else {
+            newWidth = mResourceVars.videoWidthPx;
+            newHeight = mResourceVars.videoHeightPx;
+        }
+
+        String newTag = new StringBuilder("<iframe src='").append(src).append("'")
+                .append(" width='").append(pxToDp(newWidth)).append("'")
+                .append(" height='").append(pxToDp(newHeight)).append("' />")
+                .toString();
+        int start = mRenderBuilder.indexOf(tag);
+        if (start == -1) {
+            AppLog.w(AppLog.T.READER, "reader renderer > iframe not found in builder");
+            return;
+        }
+
+        mRenderBuilder.replace(start, start + tag.length(), newTag);
+    }
+
     /*
      * returns the full content, including CSS, that will be shown in the WebView for this post
      */
@@ -301,9 +353,9 @@ class ReaderPostRenderer {
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }");
 
         // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
-        sbHtml.append("  iframe, embed, video {")
+        /*sbHtml.append("  iframe, video {")
               .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-              .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
+              .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");*/
 
         sbHtml.append("</style>")
               .append("</head><body>")
@@ -355,8 +407,8 @@ class ReaderPostRenderer {
 
     private ImageSize getImageSizeFromAttributes(final String imageTag) {
         return new ImageSize(
-                ReaderImageScanner.getWidthAttrValue(imageTag),
-                ReaderImageScanner.getHeightAttrValue(imageTag));
+                ReaderHtmlUtils.getWidthAttrValue(imageTag),
+                ReaderHtmlUtils.getHeightAttrValue(imageTag));
     }
 
     private int pxToDp(int px) {
