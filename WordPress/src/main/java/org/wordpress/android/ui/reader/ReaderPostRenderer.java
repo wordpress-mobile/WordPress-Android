@@ -303,7 +303,7 @@ class ReaderPostRenderer {
         // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
         sbHtml.append("  iframe, embed, video {")
               .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-              .append("     min-height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
+              .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
 
         sbHtml.append("</style>")
               .append("</head><body>")
