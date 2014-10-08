@@ -90,7 +90,6 @@ public class ViewSiteActivity extends WebViewActivity {
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
         mBlog = WordPress.currentBlog;
         loadSiteURL();
     }

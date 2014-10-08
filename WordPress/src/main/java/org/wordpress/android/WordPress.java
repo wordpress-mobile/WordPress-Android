@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +26,9 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wordpress.rest.RestClient;
 
+import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -33,7 +36,6 @@ import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
@@ -49,9 +51,10 @@ import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
@@ -60,6 +63,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
@@ -82,6 +86,7 @@ public class WordPress extends Application {
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
+    public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
@@ -278,6 +283,14 @@ public class WordPress extends Application {
             mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
         }
         return mRestClientUtils;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_1() {
+        if (mRestClientUtilsVersion1_1 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
+        }
+        return mRestClientUtilsVersion1_1;
     }
 
     /**
@@ -491,6 +504,10 @@ public class WordPress extends Application {
 
     }
 
+    public static void signOutAsyncWithProgressBar(Context context, SignOutCallback callback) {
+        new SignOutAsync(context, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     /**
      * Sign out from all accounts by clearing out the password, which will require user to sign in
      * again
@@ -525,6 +542,50 @@ public class WordPress extends Application {
         sendLocalBroadcast(context, BROADCAST_ACTION_SIGNOUT);
     }
 
+    public static class SignOutAsync extends AsyncTask<Void, Void, Void> {
+        public interface SignOutCallback {
+            public void onSignOut();
+        }
+
+        ProgressDialog mProgressDialog;
+        WeakReference<Context> mWeakContext;
+        SignOutCallback mCallback;
+
+        public SignOutAsync(Context context, SignOutCallback callback) {
+            mWeakContext = new WeakReference<Context>(context);
+            mCallback = callback;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Context context = mWeakContext.get();
+            if (context != null) {
+                mProgressDialog = ProgressDialog.show(context, null, context.getText(R.string.signing_out));
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            Context context = mWeakContext.get();
+            if (context != null) {
+                signOut(context);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+            }
+            if (mCallback != null) {
+                mCallback.onSignOut();
+            }
+        }
+    }
+
     public static void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses
         // a Volley request
@@ -550,12 +611,6 @@ public class WordPress extends Application {
 
         // Reset Simperium buckets (removes local data)
         SimperiumUtils.resetBucketsAndDeauthorize();
-
-        // send broadcast that user is signing out - this is received by WPActionBarActivity
-        // descendants
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(BROADCAST_ACTION_SIGNOUT);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
     }
 
     public static boolean sendLocalBroadcast(Context context, String action) {

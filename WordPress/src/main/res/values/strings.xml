@@ -71,6 +71,7 @@
     <string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_out">Sign out</string>
+    <string name="signing_out">Signing out…</string>
     <string name="all">All</string>
     <string name="images">Images</string>
     <string name="unattached">Unattached</string>
