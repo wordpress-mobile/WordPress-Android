@@ -69,12 +69,18 @@ class ReaderPostRenderer {
 
     void beginRender() {
         final Handler handler = new Handler();
-        mRenderBuilder = new StringBuilder(getPostContent());
+        final String content = getPostContent();
+        mRenderBuilder = new StringBuilder(content);
+
         new Thread() {
             @Override
             public void run() {
-                resizeImages();
-                resizeIframes();
+                if (content.contains("<img")) {
+                    resizeImages();
+                }
+                if (content.contains("<iframe")) {
+                    resizeIframes();
+                }
 
                 final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
                 mRenderBuilder = null;
@@ -97,7 +103,7 @@ class ReaderPostRenderer {
 
             @Override
             public void onScanCompleted() {
-                AppLog.i(AppLog.T.READER, "reader renderer > image scan completed");
+                // nop
             }
         };
         ReaderImageScanner scanner = new ReaderImageScanner(mRenderBuilder.toString(), mPost.isPrivate);
@@ -113,7 +119,7 @@ class ReaderPostRenderer {
 
             @Override
             public void onScanCompleted() {
-                AppLog.i(AppLog.T.READER, "reader renderer > iframe scan completed");
+                // nop
             }
         };
         ReaderIframeScanner scanner = new ReaderIframeScanner(mRenderBuilder.toString());
@@ -352,10 +358,10 @@ class ReaderPostRenderer {
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }");
 
-        // make sure embedded videos fit the browser width and use 16:9 ratio (YouTube standard)
-        /*sbHtml.append("  iframe, video {")
-              .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-              .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");*/
+        // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
+       sbHtml.append("  video {")
+              .append("    width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+              .append("    height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
 
         sbHtml.append("</style>")
               .append("</head><body>")
