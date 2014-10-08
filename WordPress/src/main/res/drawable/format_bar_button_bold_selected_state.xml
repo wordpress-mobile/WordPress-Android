@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/blue_new_kid" />
+            <solid android:color="@color/blue_new_kid"/>
         </shape>
     </item>
-    <item android:bottom="@dimen/margin_small" android:left="@dimen/margin_small" android:top="@dimen/margin_small"
-          android:right="@dimen/margin_small">
-        <bitmap android:src="@drawable/dashicon_editor_bold" />
+    <item>
+        <bitmap android:src="@drawable/dashicon_editor_bold" android:gravity="center"/>
     </item>
 </layer-list>
