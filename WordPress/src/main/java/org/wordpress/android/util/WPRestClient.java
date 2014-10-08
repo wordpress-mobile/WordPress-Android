@@ -51,17 +51,14 @@ public class WPRestClient {
     public static final float REST_BACKOFF_MULT = 2f;
     
     public WPRestClient(RequestQueue queue, Authenticator authenticator){
-        // load an existing access token from prefs if we have one
         this(queue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1);
     }
 
     public WPRestClient(RequestQueue queue, Authenticator authenticator, RestClient.REST_CLIENT_VERSIONS version){
-        // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
         mRestClient = new RestClient(queue, version);
-        mRestClient.setUserAgent("wp-android/" + WordPress.versionName);
+        mRestClient.setUserAgent(WordPress.getUserAgent());
     }
-
 
     /**
      * Reply to a comment using a Note.Reply object.
