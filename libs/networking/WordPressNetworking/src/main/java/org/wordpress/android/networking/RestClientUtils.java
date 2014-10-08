@@ -54,9 +54,13 @@ public class RestClientUtils {
     }
 
     public RestClientUtils(RequestQueue queue, Authenticator authenticator) {
+        this(queue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1);
+    }
+
+    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = RestClientFactory.instantiate(queue);
+        mRestClient = RestClientFactory.instantiate(queue, version);
         mRestClient.setUserAgent(sUserAgent);
     }
 
@@ -217,7 +221,7 @@ public class RestClientUtils {
                     ErrorListener errorListener) {
         // turn params into querystring
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null,
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null,
                                                       listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -249,7 +253,7 @@ public class RestClientUtils {
     public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy)
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, future, future);
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null, future, future);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -274,7 +278,7 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
                                                             listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,

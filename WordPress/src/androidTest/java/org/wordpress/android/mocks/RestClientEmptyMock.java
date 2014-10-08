@@ -13,14 +13,14 @@ public class RestClientEmptyMock extends RestClient {
     }
 
     public RestClientEmptyMock(com.android.volley.RequestQueue queue, java.lang.String token) {
-        super(queue, token);
+        super(queue, token, REST_API_ENDPOINT_URL_V1);
     }
 
-    public static java.lang.String getAbsoluteURL(java.lang.String url) {
+    public java.lang.String getAbsoluteURL(java.lang.String url) {
         return null;
     }
 
-    public static java.lang.String getAbsoluteURL(java.lang.String path,
+    public java.lang.String getAbsoluteURL(java.lang.String path,
                                                   java.util.Map<java.lang.String, java.lang.String> params) {
         return null;
     }

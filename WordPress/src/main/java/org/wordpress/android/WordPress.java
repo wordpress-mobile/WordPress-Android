@@ -26,6 +26,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.wordpress.rest.RestClient;
 
 import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -85,6 +86,7 @@ public class WordPress extends Application {
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
     public static RestClientUtils mRestClientUtils;
+    public static RestClientUtils mRestClientUtilsVersion1_1;
     public static RequestQueue requestQueue;
     public static ImageLoader imageLoader;
 
@@ -281,6 +283,14 @@ public class WordPress extends Application {
             mRestClientUtils = new RestClientUtils(requestQueue, authenticator);
         }
         return mRestClientUtils;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_1() {
+        if (mRestClientUtilsVersion1_1 == null) {
+            OAuthAuthenticator authenticator = OAuthAuthenticatorFactory.instantiate();
+            mRestClientUtilsVersion1_1 = new RestClientUtils(requestQueue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1_1);
+        }
+        return mRestClientUtilsVersion1_1;
     }
 
     /**
