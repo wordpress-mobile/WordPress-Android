@@ -280,7 +280,8 @@ public class MediaUtils {
         boolean isVideo = mimeType != null && mimeType.contains("video");
 
         Uri uri = Uri.parse(url);
-        WPImageSpan imageSpan = new WPImageSpan(context, isVideo ? R.drawable.media_movieclip : R.drawable.remote_image, uri);
+        WPImageSpan imageSpan = new WPImageSpan(context,
+                isVideo ? R.drawable.media_movieclip : R.drawable.dashicon_format_image_big_grey, uri);
         MediaFile mediaFile = imageSpan.getMediaFile();
         mediaFile.setMediaId(mediaId);
         mediaFile.setBlogId(blogId);
