@@ -59,6 +59,8 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**

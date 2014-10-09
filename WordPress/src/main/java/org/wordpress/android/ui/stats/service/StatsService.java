@@ -1,11 +1,8 @@
 package org.wordpress.android.ui.stats.service;
 
 import android.app.Service;
-import android.content.ContentProviderOperation;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.OperationApplicationException;
-import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
@@ -18,48 +15,33 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.StatsBarChartDataTable;
-import org.wordpress.android.datasets.StatsClickGroupsTable;
-import org.wordpress.android.datasets.StatsClicksTable;
-import org.wordpress.android.datasets.StatsGeoviewsTable;
-import org.wordpress.android.datasets.StatsReferrerGroupsTable;
-import org.wordpress.android.datasets.StatsReferrersTable;
-import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
-import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.StatsBarChartData;
-import org.wordpress.android.models.StatsClick;
-import org.wordpress.android.models.StatsClickGroup;
-import org.wordpress.android.models.StatsGeoview;
-import org.wordpress.android.models.StatsReferrer;
-import org.wordpress.android.models.StatsReferrerGroup;
-import org.wordpress.android.models.StatsSearchEngineTerm;
-import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.models.StatsTopPostsAndPages;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.ui.stats.StatsBarChartUnit;
-import org.wordpress.android.ui.stats.StatsUIHelper;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats2.model.SummaryModel;
+import org.wordpress.android.ui.stats2.model.TopPostsModel;
+import org.wordpress.android.ui.stats2.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 /**
- * Background service to retrieve latest stats - Uses a Thread to enqueue the network batch call in Volley;
- * Parsing of response data is done by using a ThreadPoolExecutor with a single thread.
+ * Background service to retrieve Stats.
+ * Parsing of response(s) is done by using a ThreadPoolExecutor with a single thread.
  */
 
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
+    public static final String ARG_PERIOD = "stats_period";
+    public static enum StatsPeriodEnum {DAY, WEEK, MONTH, YEAR}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -74,11 +56,12 @@ public class StatsService extends Service {
     private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
-    private String mServiceBlogTimezone = null;
-    private Object mServiceBlogIdMonitor = new Object();
+    private StatsPeriodEnum mRequestedPeriod;
     private int mServiceStartId;
-    private Serializable mErrorObject = null;
-    private Request<JSONObject> mCurrentStatsNetworkRequest = null;
+    private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
+    private int numberOfNetworkCalls = 0; // The number of networks calls made by Stats.
+    private int numberOfFinishedNetworkCalls = 0; // The number of networks calls made by Stats.
+    protected ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreate() {
@@ -112,18 +95,22 @@ public class StatsService extends Service {
         }
 
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
-        final String currentServiceBlogId = getServiceBlogId();
 
-        if (currentServiceBlogId == null) {
-            startTasks(blogId, startId);
-        } else if (blogId.equals(currentServiceBlogId)) {
-            // already running on the same blogID
+        StatsPeriodEnum period = StatsPeriodEnum.DAY;
+        if (intent.hasExtra(ARG_PERIOD)) {
+            period = (StatsPeriodEnum) intent.getSerializableExtra(ARG_PERIOD);
+        }
+
+        if (mServiceBlogId == null) {
+            startTasks(blogId, period, startId);
+        } else if (blogId.equals(mServiceBlogId) && mRequestedPeriod == period) {
+            // already running on the same blogID, same period
             // Do nothing
-            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + currentServiceBlogId);
+            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
         } else {
             // stats is running on a different blogID
             stopRefresh();
-            startTasks(blogId, startId);
+            startTasks(blogId, period, startId);
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -131,140 +118,301 @@ public class StatsService extends Service {
         return START_NOT_STICKY;
     }
 
-    /**
-     * Returns a copy of the current mServiceBlogId value, or null.
-     */
-    private String getServiceBlogId() {
-        synchronized (mServiceBlogIdMonitor) {
-            if (mServiceBlogId == null) {
-                return null;
-            }
-            return new String(mServiceBlogId);
-        }
-    }
-
-    private void setServiceBlogIdAndTimeZone(String value) {
-        synchronized (mServiceBlogIdMonitor) {
-            mServiceBlogId = value;
-            String timezone = null;
-            if (mServiceBlogId != null) {
-                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(value);
-                timezone = StatsUtils.getBlogTimezone(blog);
-            }
-            if (timezone != null) {
-                mServiceBlogTimezone = timezone;
-            } else {
-                mServiceBlogTimezone = null;
-            }
-        }
-    }
-
     private void stopRefresh() {
-        if (mCurrentStatsNetworkRequest != null && !mCurrentStatsNetworkRequest.hasHadResponseDelivered()
-                && !mCurrentStatsNetworkRequest.isCanceled()) {
-            mCurrentStatsNetworkRequest.cancel();
-        }
-        setServiceBlogIdAndTimeZone(null);
-        this.mErrorObject = null;
+        this.mServiceBlogId = null;
+        this.mRequestedPeriod = StatsPeriodEnum.DAY;
         this.mServiceStartId = 0;
+        for (Request<JSONObject> req : statsNetworkRequests) {
+            if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
+                req.cancel();
+            }
+        }
+        statsNetworkRequests.clear();
+        numberOfFinishedNetworkCalls = 0;
+        numberOfNetworkCalls = 0;
     }
 
-    private void startTasks(final String blogId, final int startId) {
-        setServiceBlogIdAndTimeZone(blogId);
+    private void startTasks(final String blogId, final StatsPeriodEnum period, final int startId) {
+        this.mServiceBlogId = blogId;
+        this.mRequestedPeriod = period;
         this.mServiceStartId = startId;
-        this.mErrorObject = null;
 
         new Thread() {
             @Override
             public void run() {
-                final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
+                final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
-                // Calculate the correct today and yesterday values by using the blog time_zone offset
-                // fallback to device settings if option is null
-                final String today = (mServiceBlogTimezone != null) ?
-                        StatsUtils.getCurrentDateTZ(mServiceBlogTimezone) : StatsUtils.getCurrentDate();
-                final String yesterday = (mServiceBlogTimezone != null) ?
-                        StatsUtils.getYesterdaysDateTZ(mServiceBlogTimezone) : StatsUtils.getYesterdaysDate();
+                String period;
+                switch (mRequestedPeriod) {
+                    case WEEK:
+                        period = "week";
+                        break;
+                    case MONTH:
+                        period = "month";
+                        break;
+                    case YEAR:
+                        period = "year";
+                        break;
+                    default:
+                        period = "day";
+                        break;
+                }
 
-                AppLog.i(T.STATS, "Update started for blogID - " + blogId);
+                AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period);
                 broadcastUpdate(true);
 
-                // visitors and views
-                final String summaryPath = String.format("/sites/%s/stats", blogId);
-                // bar charts
-                final String barChartWeekPath = getBarChartPath(blogId, StatsBarChartUnit.WEEK, 30);
-                final String barChartMonthPath = getBarChartPath(blogId, StatsBarChartUnit.MONTH, 30);
-                // top posts and pages
-                final String topPostsAndPagesTodayPath = String.format(
-                        "/sites/%s/stats/top-posts?date=%s", blogId, today);
-                final String topPostsAndPagesYesterdayPath = String.format(
-                        "/sites/%s/stats/top-posts?date=%s", blogId, yesterday);
-                // referrers
-                final String referrersTodayPath = String.format(
-                        "/sites/%s/stats/referrers?date=%s", blogId, today);
-                final String referrersYesterdayPath = String.format(
-                        "/sites/%s/stats/referrers?date=%s", blogId, yesterday);
-                // clicks
-                final String clicksTodayPath = String.format(
-                        "/sites/%s/stats/clicks?date=%s", blogId, today);
-                final String clicksYesterdayPath = String.format(
-                        "/sites/%s/stats/clicks?date=%s", blogId, yesterday);
-                // search engine terms
-                final String searchEngineTermsTodayPath = String.format(
-                        "/sites/%s/stats/search-terms?date=%s", blogId, today);
-                final String searchEngineTermsYesterdayPath = String.format(
-                        "/sites/%s/stats/search-terms?date=%s", blogId, yesterday);
-                // Views by country
-                final String viewByCountryTodayPath = String.format(
-                        "/sites/%s/stats/country-views?date=%s", blogId, today);
-                final String viewByCountryYesterdayPath = String.format(
-                        "/sites/%s/stats/country-views?date=%s", blogId, yesterday);
+                //Realm.deleteRealmFile(WordPress.getContext());
 
-                final String parametersSepator = "&urls%5B%5D=";
+                // Summary call
+                SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId);
+                final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", blogId, period, StatsUtils.getCurrentDate());
+                statsNetworkRequests.add(restClientUtils.get(summaryPath, sListener, sListener));
 
-                String path = new StringBuilder("batch/?urls%5B%5D=")
-                        .append(Uri.encode(summaryPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(barChartWeekPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(barChartMonthPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(topPostsAndPagesTodayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(topPostsAndPagesYesterdayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(referrersTodayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(referrersYesterdayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(clicksTodayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(clicksYesterdayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(searchEngineTermsTodayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(searchEngineTermsYesterdayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(viewByCountryTodayPath))
-                        .append(parametersSepator)
-                        .append(Uri.encode(viewByCountryYesterdayPath))
-                        .toString();
+                // Visits call: The Graph and the section just below the graph
+                VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId);
+                final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, StatsUtils.getCurrentDate());
+                statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
 
-                RestBatchCallListener restAPIListener = new RestBatchCallListener(blogId,
-                        summaryPath,
-                        barChartWeekPath, barChartMonthPath,
-                        topPostsAndPagesTodayPath, topPostsAndPagesYesterdayPath,
-                        referrersTodayPath, referrersYesterdayPath,
-                        clicksTodayPath, clicksYesterdayPath,
-                        searchEngineTermsTodayPath, searchEngineTermsYesterdayPath,
-                        viewByCountryTodayPath, viewByCountryYesterdayPath);
+               // Posts & Pages
+                TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId);
+                final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", blogId, period, StatsUtils.getCurrentDate());
+                statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
 
-                AppLog.i(T.STATS, "Enqueuing the following Stats request " + path);
-                restClientUtils.get(path, restAPIListener, restAPIListener);
+                numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
         } .start();
     }
 
+    private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
+        protected String mRequestBlogId;
+
+        public AbsListener(String blogId) {
+            mRequestBlogId = blogId;
+        }
+
+        @Override
+        public void onResponse(final JSONObject response) {
+            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+                return;
+            }
+            parseResponseExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    // Re-check here that the use has not changed the blog
+                    if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+                        return;
+                    }
+                    numberOfFinishedNetworkCalls++;
+                    // do other stuff here
+                    if (response != null) {
+                        try {
+                            parseResponse(response);
+                        } catch (JSONException e) {
+                            AppLog.e(AppLog.T.STATS, e);
+                        } catch (RemoteException e) {
+                            AppLog.e(AppLog.T.STATS, e);
+                        } catch (OperationApplicationException e) {
+                            AppLog.e(AppLog.T.STATS, e);
+                        }
+                    }
+                    notifyResponseReceived();
+                }
+            });
+        }
+
+        @Override
+        public void onErrorResponse(final VolleyError volleyError) {
+            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+                return;
+            }
+            parseResponseExecutor.submit(new Thread() {
+                @Override
+                public void run() {
+                    // Re-check here that the use has not changed the blog
+                    if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+                        return;
+                    }
+                    numberOfFinishedNetworkCalls++;
+                    AppLog.e(T.STATS, this.getClass().getName() + " responded with an Error");
+                    if (volleyError != null) {
+                        AppLog.e(T.STATS, "Error details: \n" + volleyError.getMessage(), volleyError);
+                    }
+                    notifyResponseReceived();
+                }
+            });
+        }
+
+        abstract void parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException;
+    }
+
+    private class SummaryCallListener extends AbsListener {
+
+        public SummaryCallListener(String blogId) {
+            super(blogId);
+        }
+
+        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+            AppLog.d(T.STATS, response.toString());
+            // Obtain a Realm instance
+            Realm realm = Realm.getInstance(WordPress.getContext());
+            realm.beginTransaction();
+            // Remove old value stored
+            RealmQuery<SummaryModel> query = realm.where(SummaryModel.class);
+            query.equalTo("blogID", mRequestBlogId);
+            // Execute the query:
+            RealmResults<SummaryModel> result1 = query.findAll();
+            for (int i = 0; i < result1.size(); i++) {
+                SummaryModel u = result1.get(i);
+                AppLog.d(T.STATS, "Old summary data: " + u.getDate());
+            }
+
+            // Delete all matches
+            result1.clear();
+
+            // Insert new value
+            SummaryModel summaryModel = realm.createObject(SummaryModel.class); // Create a new object
+            summaryModel.setBlogID(mRequestBlogId);
+            summaryModel.setFollowers(response.optInt("followers", 0));
+            summaryModel.setViews(response.optInt("views", 0));
+            summaryModel.setReblog(response.optInt("reblogs", 0));
+            summaryModel.setLike(response.optInt("likes", 0));
+            summaryModel.setVisitors(response.optInt("visitors", 0));
+            summaryModel.setComments(response.optInt("comments", 0));
+            summaryModel.setDate(response.getString("date"));
+            summaryModel.setPeriod(response.getString("period"));
+            realm.commitTransaction();
+            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+    }
+
+    private class VisitsCallListener extends AbsListener {
+
+        public VisitsCallListener(String blogId) {
+            super(blogId);
+        }
+
+        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+            AppLog.d(T.STATS, response.toString());
+            // Obtain a Realm instance
+            Realm realm = Realm.getInstance(WordPress.getContext());
+            realm.beginTransaction();
+
+            // Remove old value stored
+            RealmQuery<VisitsModel> query = realm.where(VisitsModel.class);
+            query.equalTo("blogID", mRequestBlogId);
+            // Execute the query:
+            RealmResults<VisitsModel> result1 = query.findAll();
+            for (int i = 0; i < result1.size(); i++) {
+                VisitsModel u = result1.get(i);
+                AppLog.d(T.STATS, "Old visits date: " + u.getDate());
+                AppLog.d(T.STATS, "Old visits data: " + (u.getDataJSON() != null ? u.getDataJSON().toString() : "null"));
+                JSONArray test =  u.getDataJSON();
+                JSONArray test2 =  u.getFieldsJSON();
+            }
+
+            // Delete all matches
+            result1.clear();
+
+            // Insert new value
+            VisitsModel visitsModel = realm.createObject(VisitsModel.class); // Create a new object
+            visitsModel.setBlogID(mRequestBlogId);
+            visitsModel.setDate(response.getString("date"));
+            visitsModel.setUnit(response.getString("unit"));
+            visitsModel.setData(response.getJSONArray("data").toString());
+            visitsModel.setFields(response.getJSONArray("fields").toString());
+            realm.commitTransaction();
+            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+    }
+
+    private class TopPostsAndPagesCallListener extends AbsListener {
+
+        public TopPostsAndPagesCallListener(String blogId) {
+            super(blogId);
+        }
+
+        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+            AppLog.d(T.STATS, response.toString());
+
+            // Obtain a Realm instance
+            Realm realm = Realm.getInstance(WordPress.getContext());
+            realm.beginTransaction();
+
+            // Remove old value stored
+            RealmQuery<TopPostsModel> query = realm.where(TopPostsModel.class);
+            query.equalTo("blogID", mRequestBlogId);
+            // Execute the query:
+            RealmResults<TopPostsModel> result1 = query.findAll();
+            for (int i = 0; i < result1.size(); i++) {
+                TopPostsModel u = result1.get(i);
+                AppLog.d(T.STATS, "Old postviews: " + ( u.getPostviewsJSON() != null ? u.getPostviewsJSON().toString() : "null" ));
+            }
+
+            // Delete all matches
+            result1.clear();
+
+            // Insert new value
+            TopPostsModel topPostsModel = realm.createObject(TopPostsModel.class); // Create a new object
+            topPostsModel.setBlogID(mRequestBlogId);
+            topPostsModel.setDate(response.getString("date"));
+            topPostsModel.setPeriod(response.getString("period"));
+            topPostsModel.setDays(response.getJSONObject("days").toString());
+            realm.commitTransaction();
+
+            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+    }
+
+    private void stopService() {
+        /* Stop the service if this is the current response, or mServiceBlogId is null
+        String currentServiceBlogId = getServiceBlogId();
+        if (currentServiceBlogId == null || currentServiceBlogId.equals(mRequestBlogId)) {
+            stopService();
+        }*/
+        broadcastUpdate(false);
+        stopSelf(mServiceStartId);
+    }
+
+    /*
+     * called when either (a) the response has been received and parsed, or (b) the request failed
+     *
+     * Only one Thread access this method at the same time
+     *
+     */
+    private void notifyResponseReceived() {
+        if (isDone()) {
+            stopService();
+        }
+    }
+
+    boolean isDone() {
+        return numberOfFinishedNetworkCalls == numberOfNetworkCalls;
+    }
+
+    /*
+     * broadcast that the update has started/ended - used by StatsActivity to animate refresh icon
+     * while update is in progress
+     */
+    private void broadcastUpdate(boolean isUpdating) {
+        Intent intent = new Intent()
+                .setAction(ACTION_STATS_UPDATING)
+                .putExtra(EXTRA_IS_UPDATING, isUpdating);
+       /* if (mErrorObject != null) {
+            intent.putExtra(EXTRA_IS_ERROR, true);
+            intent.putExtra(EXTRA_ERROR_OBJECT, mErrorObject);
+        }
+*/
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+/*
     private String getBarChartPath(String blogID, StatsBarChartUnit mBarChartUnit, int quantity) {
         String path = String.format("/sites/%s/stats/visits", blogID);
         String unit = mBarChartUnit.name().toLowerCase(Locale.ENGLISH);
@@ -774,19 +922,5 @@ public class StatsService extends Service {
         }
     }
 
-    /*
-     * broadcast that the update has started/ended - used by StatsActivity to animate refresh icon
-     * while update is in progress
-     */
-    private void broadcastUpdate(boolean isUpdating) {
-        Intent intent = new Intent()
-                .setAction(ACTION_STATS_UPDATING)
-                .putExtra(EXTRA_IS_UPDATING, isUpdating);
-        if (mErrorObject != null) {
-            intent.putExtra(EXTRA_IS_ERROR, true);
-            intent.putExtra(EXTRA_ERROR_OBJECT, mErrorObject);
-        }
-
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
+*/
 }
