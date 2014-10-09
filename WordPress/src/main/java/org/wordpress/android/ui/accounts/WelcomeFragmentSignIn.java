@@ -564,7 +564,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             NUXDialogFragment nuxAlert;
             if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
                 nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert, true,
+                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.noticon_alert_big, true,
                         getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
                         "https://wordpress.com/settings/security/?ssl=forced");
             } else {
@@ -578,7 +578,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     return;
                 } else {
                     nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.nux_icon_alert);
+                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.noticon_alert_big);
                 }
             }
             ft.add(nuxAlert, "alert");

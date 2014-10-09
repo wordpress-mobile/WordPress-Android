@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Blog tiltása</string>
+	<string name="reader_toast_err_generic">A művelet végrehajtása nem sikerült</string>
+	<string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
+	<string name="reader_toast_blog_blocked">Ennek a blognak a bejegyzései a továbbiakban nem jelennek meg</string>
 	<string name="contact_us">Kapcsolat</string>
 	<string name="contact_us_pref_summary">Segítség kérés az Automattictól</string>
 	<string name="hs__invalid_email_error">Adjunk meg valós e-mail címet</string>
 	<string name="hs__username_blank_error">Adjunk meg valós nevet</string>
+	<string name="hs__conversation_detail_error">Írjuk le a problémát, amivel találkoztunk</string>
+	<string name="hs__new_conversation_header">Támogató chat</string>
+	<string name="hs__conversation_header">Támogató chat</string>
 	<string name="add_location">Hely hozzáadás</string>
 	<string name="current_location">Jelenlegi hely</string>
 	<string name="your_signature">Aláírás:</string>
@@ -31,6 +38,10 @@
 	<string name="reader_hint_add_tag_or_url">Adjunk meg egy címkét vagy webcímet a követéshez</string>
 	<string name="reader_label_more_recommendations">További ajánlások</string>
 	<string name="reader_toast_err_follow_blog">Nem lehetséges ezt a blogot követni</string>
+	<string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
+	<string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
+	<string name="reader_toast_err_unfollow_blog">Nem sikerült ezt a blogot követni</string>
+	<string name="blogs_visibility">Blogok</string>
 	<string name="stats_empty_top_posts_title">Nem találhatóak népszerű bejegyzések vagy oldalak.</string>
 	<string name="stats_empty_referrers_title">Nincsenek hivatkozók</string>
 	<string name="stats_empty_clicks_title">Nem jegyeztünk fel kattintásokat.</string>
@@ -65,6 +76,16 @@
 	<string name="error_refresh_comments">A hozzászólásokat most nem lehet frissíténi</string>
 	<string name="username_must_be_at_least_four_characters">Felhasználó névnek legalább 4 karakter hosszúnak kell lenni</string>
 	<string name="error_refresh_notifications">Értesitéseket most nem lehet frissíteni</string>
+	<string name="could_not_remove_account">Nem lehetséges a blogot eltávolítani</string>
+	<string name="gallery_error">Nem sikerült a média elemet letölteni</string>
+	<string name="theme_fetch_failed">A sablonok lekérdezése nem sikerült</string>
+	<string name="stats_empty_geoviews">Nincsenek bejegyzés megtekintések</string>
+	<string name="notifications_empty_list">Nincsenek értesítések</string>
+	<string name="stats_bar_graph_empty">Nincsenek elérhető statisztikák</string>
+	<string name="stats_empty_video">Nincsenek videó lejátszások</string>
+	<string name="stats_empty_top_authors">Nincsenek bejegyzés megtekintések</string>
+	<string name="blog_name_not_allowed">Ez a weboldal cím nem engedélyezett</string>
+	<string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
 	<string name="mnu_comment_spam">Spam</string>
 	<string name="author_name">Szerző neve</string>
 	<string name="delete_draft">Vázlat törlése</string>

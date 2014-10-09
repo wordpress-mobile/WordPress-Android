@@ -248,7 +248,7 @@ public abstract class WPActionBarActivity extends Activity {
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
         menuDrawer.setDropShadowSize(shadowSizeInPixels);
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
-        menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+        menuDrawer.setSlideDrawable(R.drawable.ic_navigation_drawer);
         return menuDrawer;
     }
 
@@ -786,7 +786,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ReaderMenuItem extends MenuDrawerItem {
         ReaderMenuItem(){
-            super(ActivityId.READER, R.string.reader, R.drawable.dashboard_icon_subs);
+            super(ActivityId.READER, R.string.reader, R.drawable.noticon_reader_alt_black);
         }
 
         @Override
@@ -811,7 +811,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PostsMenuItem extends MenuDrawerItem {
         PostsMenuItem() {
-            super(ActivityId.POSTS, R.string.posts, R.drawable.dashboard_icon_posts);
+            super(ActivityId.POSTS, R.string.posts, R.drawable.dashicon_admin_post_black);
         }
 
         @Override
@@ -839,7 +839,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class MediaMenuItem extends MenuDrawerItem {
         MediaMenuItem(){
-            super(ActivityId.MEDIA, R.string.media, R.drawable.dashboard_icon_media);
+            super(ActivityId.MEDIA, R.string.media, R.drawable.dashicon_admin_media_black);
         }
         @Override
         public Boolean isSelected(){
@@ -863,7 +863,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
-            super(ActivityId.PAGES, R.string.pages, R.drawable.dashboard_icon_pages);
+            super(ActivityId.PAGES, R.string.pages, R.drawable.dashicon_admin_page_black);
         }
         @Override
         public Boolean isSelected(){
@@ -892,7 +892,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class CommentsMenuItem extends MenuDrawerItem {
         CommentsMenuItem(){
-            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashboard_icon_comments);
+            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashicon_admin_comments_black);
         }
         @Override
         public Boolean isSelected(){
@@ -960,7 +960,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
-            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashboard_icon_stats);
+            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashicon_chart_area_black);
         }
         @Override
         public Boolean isSelected(){
@@ -986,7 +986,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickPhotoMenuItem extends MenuDrawerItem {
         QuickPhotoMenuItem(){
-            super(R.string.quick_photo, R.drawable.dashboard_icon_photo);
+            super(R.string.quick_photo, R.drawable.dashicon_camera_black);
         }
         @Override
         public void onSelectItem(){
@@ -1006,7 +1006,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickVideoMenuItem extends MenuDrawerItem {
         QuickVideoMenuItem(){
-            super(R.string.quick_video, R.drawable.dashboard_icon_video);
+            super(R.string.quick_video, R.drawable.dashicon_video_alt2_black);
         }
         @Override
         public void onSelectItem(){
@@ -1026,7 +1026,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ViewSiteMenuItem extends MenuDrawerItem {
         ViewSiteMenuItem(){
-            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.dashboard_icon_view);
+            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.noticon_show_black);
         }
         @Override
         public Boolean isSelected(){
@@ -1050,7 +1050,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
-            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.dashboard_icon_notifications);
+            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.noticon_notification_black);
         }
         @Override
         public Boolean isVisible(){

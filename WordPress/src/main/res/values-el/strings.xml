@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="contact_us">Επικοινωνήστε μαζί μας</string>
+	<string name="contact_us_pref_summary">Βρείτε βοήθεια από την υποστήριξη της Automattic</string>
+	<string name="hs__username_blank_error">Συμπληρώστε ένα έγκυρο όνομα</string>
+	<string name="hs__invalid_email_error">Εισάγετε μία έγκυρη διεύθυνση email</string>
+	<string name="hs__conversation_detail_error">Περιγράψτε το πρόβλημα που βλέπετε</string>
+	<string name="add_location">Προσθέστε περιοχή</string>
+	<string name="current_location">Τωρινή τοποθεσία</string>
+	<string name="search_location">Αναζήτηση</string>
+	<string name="edit_location">Επεξεργασία</string>
+	<string name="preference_privacy">Ιδιωτικότητα </string>
+	<string name="preference_send_usage_stats">Αποστολή στατιστικών</string>
+	<string name="preference_send_usage_stats_summary">Αυτόματη αποστολή στατιστικών στοιχείων χρήσης ώστε να μας βοηθήσετε να βελτιώσουμε το WordPress για το Android</string>
+	<string name="reader_label_reached_last_post">Έχετε φτάσει στο τέλος</string>
+	<string name="sign_in_again">Συνδεθείτε ξανά</string>
+	<string name="reader_title_blog_preview">Προεπισκόπηση Ιστολογίου</string>
 	<string name="loading_pages">Φόρτωση σελίδων...</string>
 	<string name="help_center">Κέντρο βοήθειας</string>
 	<string name="help">Βοήθεια</string>

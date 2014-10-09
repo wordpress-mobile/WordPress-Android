@@ -80,7 +80,7 @@
             android:scaleType="fitCenter"
             android:padding="9dp"
             android:tint="@color/post_detail_icon_tint"
-            android:src="@drawable/ic_cab_trash"
+            android:src="@drawable/ic_action_discard"
             android:contentDescription="@string/delete_post" />
 
         <LinearLayout
@@ -108,7 +108,7 @@
                 android:scaleType="fitCenter"
                 android:padding="10dp"
                 android:tint="@color/post_detail_icon_tint"
-                android:src="@drawable/ab_icon_share"
+                android:src="@drawable/ic_action_share"
                 android:contentDescription="@string/share_url" />
 
             <ImageButton
@@ -118,9 +118,9 @@
                 android:background="@drawable/selectable_background_wordpress"
                 android:scaleType="fitCenter"
                 android:padding="9dp"
-                android:src="@drawable/dashboard_icon_comments"
+                android:src="@drawable/dashicon_admin_comments_black"
                 android:contentDescription="@string/add_comment" />
-            
+
             <ImageButton
                 android:id="@+id/editPost"
                 android:layout_width="@dimen/post_detail_button_size"
