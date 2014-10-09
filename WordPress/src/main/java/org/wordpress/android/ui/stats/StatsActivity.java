@@ -65,10 +65,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 /**
@@ -584,52 +580,38 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                     sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION);
                 }
 
+               Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_DATA);
+                if ( dataObj == null || dataObj instanceof VolleyError ) {
+                    //TODO: show the error on the section ???
+                    return;
+                }
+                //TODO: check period and blogID
                 final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-
-                // Obtain a Realm instance
-                Realm realm = Realm.getInstance(WordPress.getContext());
-                realm.beginTransaction();
                 String textToShow = "None";
 
                 TextView view;
                 switch (sectionToUpdate) {
                     case SUMMARY:
                         view =  (TextView) findViewById(R.id.textView);
-                        RealmQuery<SummaryModel> query = realm.where(SummaryModel.class);
-                        query.equalTo("blogID", blogId);
-                        RealmResults<SummaryModel> result1 = query.findAll();
-                        if (result1.size() > 0) {
-                            SummaryModel r = result1.get(0);
-                            textToShow = "Visitors: " + r.getVisitors();
-                        }
+                        SummaryModel summaryModel = (SummaryModel) dataObj;
+                        textToShow = "Visitors: " + summaryModel.getVisitors();
                         break;
                     case VISITS:
                         view =  (TextView) findViewById(R.id.textView2);
-                        RealmQuery<VisitsModel> query2 = realm.where(VisitsModel.class);
-                        query2.equalTo("blogID", blogId);
-                        RealmResults<VisitsModel> result2 = query2.findAll();
-                        if (result2.size() > 0) {
-                            VisitsModel rModel = result2.get(0);
-                            textToShow = rModel.getFieldsJSON().toString() + " "
-                            + org.apache.commons.lang.StringUtils.abbreviate(rModel.getDataJSON().toString(), 1000);
-                        }
+                        VisitsModel visitsModel = (VisitsModel) dataObj;
+                        textToShow = visitsModel.getFieldsJSON().toString() + " "
+                          + org.apache.commons.lang.StringUtils.abbreviate(visitsModel.getDataJSON().toString(), 1000);
                     break;
                     case TOP_POSTS:
                         view =  (TextView) findViewById(R.id.textView3);
-                        RealmQuery<TopPostsModel> query3 = realm.where(TopPostsModel.class);
-                        query3.equalTo("blogID", blogId);
-                        RealmResults<TopPostsModel> result3 = query3.findAll();
-                        if (result3.size() > 0) {
-                            TopPostsModel rModel = result3.get(0);
-                            textToShow = org.apache.commons.lang.StringUtils.abbreviate(rModel.getPostviewsJSON().toString(), 1000);
-                        }
+                        TopPostsModel topPostsModel = (TopPostsModel) dataObj;
+                        textToShow = org.apache.commons.lang.StringUtils.abbreviate(topPostsModel.getPostviewsJSON().toString(), 1000);
                         break;
                     default:
                         view =  (TextView) findViewById(R.id.textView);
                         textToShow = "Unknow";
                         break;
                 }
-                realm.commitTransaction();
                 view.setText(textToShow);
                 return;
             }

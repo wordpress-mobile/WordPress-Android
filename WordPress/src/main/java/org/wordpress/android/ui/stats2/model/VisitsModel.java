@@ -4,29 +4,17 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
-import io.realm.annotations.Index;
+import java.io.Serializable;
 
-public class VisitsModel extends RealmObject {
+public class VisitsModel implements Serializable {
     private String fields; // Holds a JSON Object
     private String data; // Holds a JSON Object
     private String unit;
-
-    @Index
     private String date;
-
-    @Index
     private String blogID;
-
-    @Ignore
-    private JSONArray dataJSON; // dummy variable
-    @Ignore
-    private JSONArray fieldsJSON;// dummy variable
 
     public String getBlogID() {
         return blogID;

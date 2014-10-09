@@ -11,7 +11,6 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,13 +24,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * Background service to retrieve Stats.
@@ -49,6 +45,7 @@ public class StatsService extends Service {
     public static final String ACTION_ONE_STAT_UPDATED = "wp-stats-updated";
     public static final String EXTRA_IS_UPDATING = "is-updating";
     public static final String EXTRA_UPDATED_SECTION = "updated-section";
+    public static final String EXTRA_UPDATED_DATA = "updated-data";
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
 
@@ -164,8 +161,6 @@ public class StatsService extends Service {
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period);
                 broadcastUpdate(true);
 
-                //Realm.deleteRealmFile(WordPress.getContext());
-
                 // Summary call
                 SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId);
                 final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", blogId, period, StatsUtils.getCurrentDate());
@@ -188,6 +183,7 @@ public class StatsService extends Service {
 
     private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
         protected String mRequestBlogId;
+        protected Serializable responseObjectModel;
         public AbsListener(String blogId) {
             mRequestBlogId = blogId;
         }
@@ -208,7 +204,7 @@ public class StatsService extends Service {
                     // do other stuff here
                     if (response != null) {
                         try {
-                            parseResponse(response);
+                            responseObjectModel = parseResponse(response);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
@@ -240,22 +236,24 @@ public class StatsService extends Service {
                     if (volleyError != null) {
                         AppLog.e(T.STATS, "Error details: \n" + volleyError.getMessage(), volleyError);
                     }
+                    responseObjectModel = volleyError;
                     notifySectionUpdated();
                     checkAllRequestsFinished();
                 }
             });
         }
 
-        abstract StatsSectionEnum getSectionEnum();
-
         private void notifySectionUpdated() {
             Intent intent = new Intent()
                     .setAction(ACTION_ONE_STAT_UPDATED)
-                    .putExtra(EXTRA_UPDATED_SECTION, getSectionEnum());
+                    .putExtra(EXTRA_UPDATED_SECTION, getSectionEnum())
+                    .putExtra(EXTRA_UPDATED_DATA, responseObjectModel);
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
-        abstract void parseResponse(JSONObject response) throws JSONException, RemoteException,
+        abstract StatsSectionEnum getSectionEnum();
+
+        abstract Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException;
     }
 
@@ -265,23 +263,11 @@ public class StatsService extends Service {
             super(blogId);
         }
 
-        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
         //    AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
         //    AppLog.d(T.STATS, response.toString());
-            // Obtain a Realm instance
-            Realm realm = Realm.getInstance(WordPress.getContext());
-            realm.beginTransaction();
-            // Remove old value stored
-            RealmQuery<SummaryModel> query = realm.where(SummaryModel.class);
-            query.equalTo("blogID", mRequestBlogId);
-            // Execute the query:
-            RealmResults<SummaryModel> result1 = query.findAll();
-            // Delete all matches
-            result1.clear();
-
-            // Insert new value
-            SummaryModel summaryModel = realm.createObject(SummaryModel.class); // Create a new object
+            SummaryModel summaryModel = new SummaryModel();
             summaryModel.setBlogID(mRequestBlogId);
             summaryModel.setFollowers(response.optInt("followers", 0));
             summaryModel.setViews(response.optInt("views", 0));
@@ -291,7 +277,7 @@ public class StatsService extends Service {
             summaryModel.setComments(response.optInt("comments", 0));
             summaryModel.setDate(response.getString("date"));
             summaryModel.setPeriod(response.getString("period"));
-            realm.commitTransaction();
+            return summaryModel;
          //   AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
@@ -306,30 +292,17 @@ public class StatsService extends Service {
             super(blogId);
         }
 
-        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
 //            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
   //          AppLog.d(T.STATS, response.toString());
-            // Obtain a Realm instance
-            Realm realm = Realm.getInstance(WordPress.getContext());
-            realm.beginTransaction();
-
-            // Remove old value stored
-            RealmQuery<VisitsModel> query = realm.where(VisitsModel.class);
-            query.equalTo("blogID", mRequestBlogId);
-            // Execute the query:
-            RealmResults<VisitsModel> result1 = query.findAll();
-            // Delete all matches
-            result1.clear();
-
-            // Insert new value
-            VisitsModel visitsModel = realm.createObject(VisitsModel.class); // Create a new object
+            VisitsModel visitsModel = new VisitsModel();
             visitsModel.setBlogID(mRequestBlogId);
             visitsModel.setDate(response.getString("date"));
             visitsModel.setUnit(response.getString("unit"));
             visitsModel.setData(response.getJSONArray("data").toString());
             visitsModel.setFields(response.getJSONArray("fields").toString());
-            realm.commitTransaction();
+            return visitsModel;
     //        AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
@@ -344,32 +317,17 @@ public class StatsService extends Service {
             super(blogId);
         }
 
-        void parseResponse(JSONObject response) throws JSONException, RemoteException,
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-       //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-       //     AppLog.d(T.STATS, response.toString());
-
-            // Obtain a Realm instance
-            Realm realm = Realm.getInstance(WordPress.getContext());
-            realm.beginTransaction();
-
-            // Remove old value stored
-            RealmQuery<TopPostsModel> query = realm.where(TopPostsModel.class);
-            query.equalTo("blogID", mRequestBlogId);
-            // Execute the query:
-            RealmResults<TopPostsModel> result1 = query.findAll();
-            // Delete all matches
-            result1.clear();
-
-            // Insert new value
-            TopPostsModel topPostsModel = realm.createObject(TopPostsModel.class); // Create a new object
+            //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+            //     AppLog.d(T.STATS, response.toString());
+            TopPostsModel topPostsModel = new TopPostsModel();
             topPostsModel.setBlogID(mRequestBlogId);
             topPostsModel.setDate(response.getString("date"));
             topPostsModel.setPeriod(response.getString("period"));
             topPostsModel.setDays(response.getJSONObject("days").toString());
-            realm.commitTransaction();
-
-     //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+            return topPostsModel;
+            //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
         StatsSectionEnum getSectionEnum() {

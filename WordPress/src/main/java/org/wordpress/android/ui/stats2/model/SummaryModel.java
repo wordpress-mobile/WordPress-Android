@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.stats2.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Index;
+import java.io.Serializable;
 
-public class SummaryModel extends RealmObject {
+public class SummaryModel implements Serializable {
 
     private int followers;
     private int views;
@@ -12,11 +11,7 @@ public class SummaryModel extends RealmObject {
     private int visitors;
     private int comments;
     private String period;
-
-    @Index
     private String date;
-
-    @Index
     private String blogID;
 
     public String getBlogID() {

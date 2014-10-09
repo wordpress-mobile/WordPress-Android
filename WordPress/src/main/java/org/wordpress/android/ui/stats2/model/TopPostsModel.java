@@ -4,27 +4,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
-import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
-import io.realm.annotations.Index;
 
-public class TopPostsModel extends RealmObject {
+public class TopPostsModel implements Serializable {
     private String period;
     private String days;
-
-    @Index
     private String date;
-
-    @Index
     private String blogID;
 
-    @Ignore
-    private JSONArray postviewsJSON;// dummy variable
 
     public String getBlogID() {
         return blogID;
