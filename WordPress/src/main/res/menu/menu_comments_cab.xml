@@ -23,7 +23,7 @@
         android:title="@string/mnu_comment_spam" />
     <item
         android:id="@+id/menu_trash"
-        android:icon="@drawable/ic_cab_trash"
+        android:icon="@drawable/ic_action_discard"
         android:showAsAction="ifRoom"
         android:title="@string/mnu_comment_trash" />
 

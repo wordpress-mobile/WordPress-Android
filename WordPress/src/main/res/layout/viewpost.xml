@@ -80,7 +80,7 @@
             android:scaleType="fitCenter"
             android:padding="9dp"
             android:tint="@color/post_detail_icon_tint"
-            android:src="@drawable/ic_cab_trash"
+            android:src="@drawable/ic_action_discard"
             android:contentDescription="@string/delete_post" />
 
         <LinearLayout
