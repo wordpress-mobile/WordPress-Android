@@ -454,6 +454,7 @@
 	<string name="media_no_video_message">Obtenha o VideoPress atualizado para fazer upload de vídeos!</string>
 	<string name="stats_video_summary_header">Estatísticas consolidadas para %s</string>
 	<string name="stats_entry_top_commenter">Comentar</string>
+	<string name="stats_view_visitors_and_views">Visitantes e Visualizações</string>
 	<string name="remote_changes">Você fez alterações em um post que ainda não foi enviado. Prossiga com a atualização e substitua as alterações locais?</string>
 	<string name="upload">Enviar</string>
 	<string name="manage">Gerenciar</string>
