@@ -4,7 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.StringUtils;
+
+import java.util.Iterator;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -61,8 +64,15 @@ public class TopPostsModel extends RealmObject {
         String decodedString = StringUtils.unescapeHTML(this.getDays() != null ? this.getDays() : "{}");
         try {
             JSONObject jDaysObject = new JSONObject(decodedString);
-            JSONObject jDateObject = jDaysObject.getJSONObject(this.getDate());
-            jArray = jDateObject.getJSONArray("postviews");
+            Iterator<String> keys = jDaysObject.keys();
+            if (keys.hasNext()) {
+                String key = keys.next();
+                JSONObject jDateObject = jDaysObject.getJSONObject(key);
+                jArray = jDateObject.getJSONArray("postviews");
+                //jArray = JSONUtil.queryJSON(jDaysObject, key + "/postviews", new JSONArray());
+            } else {
+                jArray = new JSONArray();
+            }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
             return null;

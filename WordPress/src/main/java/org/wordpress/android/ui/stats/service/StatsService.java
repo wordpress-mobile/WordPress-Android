@@ -42,10 +42,13 @@ public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_PERIOD = "stats_period";
     public static enum StatsPeriodEnum {DAY, WEEK, MONTH, YEAR}
+    public static enum StatsSectionEnum {SUMMARY, VISITS, TOP_POSTS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
+    public static final String ACTION_ONE_STAT_UPDATED = "wp-stats-updated";
     public static final String EXTRA_IS_UPDATING = "is-updating";
+    public static final String EXTRA_UPDATED_SECTION = "updated-section";
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
 
@@ -185,7 +188,6 @@ public class StatsService extends Service {
 
     private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
         protected String mRequestBlogId;
-
         public AbsListener(String blogId) {
             mRequestBlogId = blogId;
         }
@@ -215,7 +217,8 @@ public class StatsService extends Service {
                             AppLog.e(AppLog.T.STATS, e);
                         }
                     }
-                    notifyResponseReceived();
+                    notifySectionUpdated();
+                    checkAllRequestsFinished();
                 }
             });
         }
@@ -237,9 +240,19 @@ public class StatsService extends Service {
                     if (volleyError != null) {
                         AppLog.e(T.STATS, "Error details: \n" + volleyError.getMessage(), volleyError);
                     }
-                    notifyResponseReceived();
+                    notifySectionUpdated();
+                    checkAllRequestsFinished();
                 }
             });
+        }
+
+        abstract StatsSectionEnum getSectionEnum();
+
+        private void notifySectionUpdated() {
+            Intent intent = new Intent()
+                    .setAction(ACTION_ONE_STAT_UPDATED)
+                    .putExtra(EXTRA_UPDATED_SECTION, getSectionEnum());
+            LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
         abstract void parseResponse(JSONObject response) throws JSONException, RemoteException,
@@ -254,8 +267,8 @@ public class StatsService extends Service {
 
         void parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-            AppLog.d(T.STATS, response.toString());
+        //    AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+        //    AppLog.d(T.STATS, response.toString());
             // Obtain a Realm instance
             Realm realm = Realm.getInstance(WordPress.getContext());
             realm.beginTransaction();
@@ -264,11 +277,6 @@ public class StatsService extends Service {
             query.equalTo("blogID", mRequestBlogId);
             // Execute the query:
             RealmResults<SummaryModel> result1 = query.findAll();
-            for (int i = 0; i < result1.size(); i++) {
-                SummaryModel u = result1.get(i);
-                AppLog.d(T.STATS, "Old summary data: " + u.getDate());
-            }
-
             // Delete all matches
             result1.clear();
 
@@ -284,7 +292,11 @@ public class StatsService extends Service {
             summaryModel.setDate(response.getString("date"));
             summaryModel.setPeriod(response.getString("period"));
             realm.commitTransaction();
-            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+         //   AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.SUMMARY;
         }
     }
 
@@ -296,8 +308,8 @@ public class StatsService extends Service {
 
         void parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-            AppLog.d(T.STATS, response.toString());
+//            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+  //          AppLog.d(T.STATS, response.toString());
             // Obtain a Realm instance
             Realm realm = Realm.getInstance(WordPress.getContext());
             realm.beginTransaction();
@@ -307,14 +319,6 @@ public class StatsService extends Service {
             query.equalTo("blogID", mRequestBlogId);
             // Execute the query:
             RealmResults<VisitsModel> result1 = query.findAll();
-            for (int i = 0; i < result1.size(); i++) {
-                VisitsModel u = result1.get(i);
-                AppLog.d(T.STATS, "Old visits date: " + u.getDate());
-                AppLog.d(T.STATS, "Old visits data: " + (u.getDataJSON() != null ? u.getDataJSON().toString() : "null"));
-                JSONArray test =  u.getDataJSON();
-                JSONArray test2 =  u.getFieldsJSON();
-            }
-
             // Delete all matches
             result1.clear();
 
@@ -326,7 +330,11 @@ public class StatsService extends Service {
             visitsModel.setData(response.getJSONArray("data").toString());
             visitsModel.setFields(response.getJSONArray("fields").toString());
             realm.commitTransaction();
-            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+    //        AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.VISITS;
         }
     }
 
@@ -338,8 +346,8 @@ public class StatsService extends Service {
 
         void parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-            AppLog.d(T.STATS, response.toString());
+       //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+       //     AppLog.d(T.STATS, response.toString());
 
             // Obtain a Realm instance
             Realm realm = Realm.getInstance(WordPress.getContext());
@@ -350,11 +358,6 @@ public class StatsService extends Service {
             query.equalTo("blogID", mRequestBlogId);
             // Execute the query:
             RealmResults<TopPostsModel> result1 = query.findAll();
-            for (int i = 0; i < result1.size(); i++) {
-                TopPostsModel u = result1.get(i);
-                AppLog.d(T.STATS, "Old postviews: " + ( u.getPostviewsJSON() != null ? u.getPostviewsJSON().toString() : "null" ));
-            }
-
             // Delete all matches
             result1.clear();
 
@@ -366,7 +369,11 @@ public class StatsService extends Service {
             topPostsModel.setDays(response.getJSONObject("days").toString());
             realm.commitTransaction();
 
-            AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+     //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.TOP_POSTS;
         }
     }
 
@@ -386,13 +393,13 @@ public class StatsService extends Service {
      * Only one Thread access this method at the same time
      *
      */
-    private void notifyResponseReceived() {
-        if (isDone()) {
+    private void checkAllRequestsFinished() {
+        if (isNetworkingDone()) {
             stopService();
         }
     }
 
-    boolean isDone() {
+    boolean isNetworkingDone() {
         return numberOfFinishedNetworkCalls == numberOfNetworkCalls;
     }
 
