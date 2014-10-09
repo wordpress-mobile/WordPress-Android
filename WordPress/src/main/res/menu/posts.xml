@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_new_post"
-        android:icon="@drawable/ab_icon_new"
+        android:icon="@drawable/ic_action_new"
         android:showAsAction="ifRoom"
         android:title="@string/new_post"/>
     <item

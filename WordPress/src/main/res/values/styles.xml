@@ -27,7 +27,7 @@
     </style>
 
     <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:icon">@drawable/ab_icon_wp</item>
+        <item name="android:icon">@drawable/dashicon_wordpress_alt</item>
         <item name="android:background">@color/blue_new_kid</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
