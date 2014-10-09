@@ -69,18 +69,13 @@ class ReaderPostRenderer {
 
     void beginRender() {
         final Handler handler = new Handler();
-        final String content = getPostContent();
-        mRenderBuilder = new StringBuilder(content);
+        mRenderBuilder = new StringBuilder(getPostContent());
 
         new Thread() {
             @Override
             public void run() {
-                if (content.contains("<img")) {
-                    resizeImages();
-                }
-                if (content.contains("<iframe")) {
-                    resizeIframes();
-                }
+                resizeImages();
+                resizeIframes();
 
                 final String htmlContent = formatPostContentForWebView(mRenderBuilder.toString());
                 mRenderBuilder = null;
@@ -94,13 +89,15 @@ class ReaderPostRenderer {
         }.start();
     }
 
+    /*
+     * scan the content for images and make sure they're correctly sized for the device
+     */
     void resizeImages() {
         ReaderHtmlUtils.HtmlScannerListener imageListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String imageTag, String imageUrl, int start, int end) {
                 replaceImageTag(imageTag, imageUrl);
             }
-
             @Override
             public void onScanCompleted() {
                 // nop
@@ -110,13 +107,15 @@ class ReaderPostRenderer {
         scanner.beginScan(imageListener);
     }
 
+    /*
+     * scan the content for iframes and make sure they're correctly sized for the device
+     */
     void resizeIframes() {
         ReaderHtmlUtils.HtmlScannerListener iframeListener = new ReaderHtmlUtils.HtmlScannerListener() {
             @Override
             public void onTagFound(String tag, String src, int start, int end) {
                 replaceIframeTag(tag, src);
             }
-
             @Override
             public void onScanCompleted() {
                 // nop
@@ -260,13 +259,15 @@ class ReaderPostRenderer {
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
 
+    /*
+     * replace the passed iframe tag with one that's correctly sized for the device
+     */
     private void replaceIframeTag(final String tag, final String src) {
         int width = ReaderHtmlUtils.getWidthAttrValue(tag);
         int height = ReaderHtmlUtils.getHeightAttrValue(tag);
 
         int newHeight;
         int newWidth;
-
         if (width > 0 && height > 0) {
             float ratio = ((float) height / (float) width);
             newWidth = mResourceVars.videoWidthPx;
@@ -277,9 +278,11 @@ class ReaderPostRenderer {
         }
 
         String newTag = new StringBuilder("<iframe src='").append(src).append("'")
+                .append(" frameborder='0' allowfullscreen='true' allowtransparency='true'")
                 .append(" width='").append(pxToDp(newWidth)).append("'")
                 .append(" height='").append(pxToDp(newHeight)).append("' />")
                 .toString();
+
         int start = mRenderBuilder.indexOf(tag);
         if (start == -1) {
             AppLog.w(AppLog.T.READER, "reader renderer > iframe not found in builder");
@@ -356,17 +359,17 @@ class ReaderPostRenderer {
         .append("  .wp-caption .wp-caption-text {")
         .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
-        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }");
+        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
         // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
-       sbHtml.append("  video {")
-              .append("    width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-              .append("    height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }");
+        .append("  video {")
+        .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+        .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
 
-        sbHtml.append("</style>")
-              .append("</head><body>")
-              .append(content)
-              .append("</body></html>");
+        .append("</style>")
+        .append("</head><body>")
+        .append(content)
+        .append("</body></html>");
 
         return sbHtml.toString();
     }
