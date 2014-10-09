@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="reader_menu_block_blog">Zablokuj ten blog</string>
+	<string name="reader_toast_err_block_blog">Nie można zablokować tego blogu</string>
+	<string name="reader_toast_blog_blocked">Wpisy z tego blogu nie będą już widoczne</string>
+	<string name="reader_toast_err_generic">Nie można wykonać tego działania</string>
+	<string name="contact_us">Kontakt</string>
+	<string name="add_location">Dodaj lokalizację</string>
+	<string name="current_location">Obecna lokalizacja</string>
+	<string name="your_signature">Twój podpis:</string>
+	<string name="search_location">Szukaj</string>
+	<string name="edit_location">Edytuj</string>
+	<string name="preference_send_usage_stats">Wysyłaj statystyki</string>
+	<string name="preference_privacy">Prywatność</string>
+	<string name="reader_label_reached_last_post">Dotarłeś do końca</string>
+	<string name="reader_title_reblog">Rebloguj wpis</string>
+	<string name="reader_hint_reblog_comment">Dodaj swoją opinię (opcjonalne) </string>
+	<string name="update_verb">Zaktualizuj</string>
+	<string name="sign_in_again">Zaloguj się ponownie</string>
+	<string name="reader_label_followers">%s obserwujących</string>
 	<string name="load_settings">Możesz zmienić swoją nazwę użytkownika i hasło na stronie z ustawieniami. </string>
 	<string name="saving">Zapisywanie...</string>
 	<string name="media_empty_list">Brak mediów</string>
@@ -104,6 +122,8 @@
 	<string name="select_a_blog">Wybierz blog</string>
 	<string name="share_action_post">Nowy wpis</string>
 	<string name="share_action_media">Biblioteka mediów</string>
+	<string name="sure_to_cancel_edit_comment">Anulować edytowanie tego komentarza?</string>
+	<string name="author_email">E-mail autora</string>
 	<string name="deleting_page">Kasowanie strony</string>
 	<string name="deleting_post">Kasowanie wpisu</string>
 	<string name="share_url_post">Udostępnij wpis</string>

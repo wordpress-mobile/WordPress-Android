@@ -4,6 +4,7 @@
 	<string name="reader_toast_err_block_blog">無法封鎖此網誌</string>
 	<string name="reader_toast_blog_blocked">將不再顯示此網誌的文章</string>
 	<string name="reader_menu_block_blog">封鎖此網誌</string>
+	<string name="contact_us">聯絡我們</string>
 	<string name="contact_us_pref_summary">向 Automattic 支援團隊尋求協助</string>
 	<string name="hs__conversation_detail_error">描述你遇到的問題</string>
 	<string name="hs__new_conversation_header">支援交談</string>
