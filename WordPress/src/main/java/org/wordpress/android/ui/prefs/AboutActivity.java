@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,13 +7,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
-
-import org.wordpress.passcodelock.AppLockManager;
+import android.view.Window;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.widgets.WPTextView;
+import org.wordpress.passcodelock.AppLockManager;
 
 public class AboutActivity extends Activity implements OnClickListener {
     private static final String URL_TOS = "http://en.wordpress.com/tos";
@@ -24,21 +22,17 @@ public class AboutActivity extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.about);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        TextView version = (TextView) findViewById(R.id.about_version);
+        WPTextView version = (WPTextView) findViewById(R.id.about_version);
         version.setText(getString(R.string.version) + " "
                 + WordPress.versionName);
 
-        Button tos = (Button) findViewById(R.id.about_tos);
+        WPTextView tos = (WPTextView) findViewById(R.id.about_tos);
         tos.setOnClickListener(this);
 
-        Button pp = (Button) findViewById(R.id.about_privacy);
+        WPTextView pp = (WPTextView) findViewById(R.id.about_privacy);
         pp.setOnClickListener(this);
     }
 
