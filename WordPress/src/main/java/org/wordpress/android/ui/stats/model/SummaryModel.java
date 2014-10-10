@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats2.model;
+package org.wordpress.android.ui.stats.model;
 
 import java.io.Serializable;
 

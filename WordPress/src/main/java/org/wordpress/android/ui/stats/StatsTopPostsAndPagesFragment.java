@@ -1,39 +1,83 @@
 package org.wordpress.android.ui.stats;
 
-import android.app.Fragment;
-import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
+import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
-import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.FormatUtils;
 
-/**
- * Fragment for top posts and pages stats. Has two pages, for Today's and Yesterday's stats.
- */
-public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
-    private static final Uri STATS_TOP_POSTS_AND_PAGES_URI = StatsContentProvider.STATS_TOP_POSTS_AND_PAGES_URI;
-    private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[] { StatsTimeframe.TODAY, StatsTimeframe.YESTERDAY };
+import java.util.Locale;
 
+
+public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
     public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
 
-    @Override
-    protected Fragment getFragment(int position) {
-        Uri uri = Uri.parse(STATS_TOP_POSTS_AND_PAGES_URI.toString() + "?timeframe=" + TIMEFRAMES[position].name());
+    private static final int NO_STRING_ID = -1;
+    private TextView mEmptyLabel;
+    private LinearLayout mLinearLayout;
+    private ArrayAdapter mAdapter;
 
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(uri, R.string.stats_entry_posts_and_pages,
-                R.string.stats_totals_views, R.string.stats_empty_top_posts_title, R.string.stats_empty_top_posts_desc, getLocalTableBlogID());
-        fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
-        fragment.setCallback(this);
-        return fragment;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.stats_list_fragment, container, false);
+
+        TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
+        titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
+
+        TextView entryLabel = (TextView) view.findViewById(R.id.stats_list_entry_label);
+        entryLabel.setText(getEntryLabelResId());
+        TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
+        totalsLabel.setText(getTotalsLabelResId());
+        mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
+
+        String label;
+        if (getEmptyLabelDescResId() == NO_STRING_ID) {
+            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b>";
+        } else {
+            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+        }
+        if (label.contains("<")) {
+            mEmptyLabel.setText(Html.fromHtml(label));
+        } else {
+            mEmptyLabel.setText(label);
+        }
+        configureEmptyLabel();
+
+        mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
+        mLinearLayout.setVisibility(View.VISIBLE);
+
+        return view;
     }
 
+    private int getEntryLabelResId() {
+        return R.string.stats_entry_posts_and_pages;
+    }
+
+    private int getTotalsLabelResId() {
+        return R.string.stats_totals_views;
+    }
+
+    private int getEmptyLabelTitleResId() {
+        return R.string.stats_empty_top_posts_title;
+    }
+
+    private int getEmptyLabelDescResId() {
+        return R.string.stats_empty_top_posts_desc;
+    }
+
+    private void configureEmptyLabel() {
+        if (mAdapter == null || mAdapter.getCount() == 0)
+            mEmptyLabel.setVisibility(View.VISIBLE);
+        else
+            mEmptyLabel.setVisibility(View.GONE);
+    }
+
+    /*
     public class CustomCursorAdapter extends CursorAdapter {
         private final LayoutInflater inflater;
 
@@ -67,19 +111,9 @@ public class StatsTopPostsAndPagesFragment extends StatsAbsPagedViewFragment {
             holder.networkImageView.setVisibility(View.GONE);
         }
     }
-
+*/
     @Override
     public String getTitle() {
         return getString(R.string.stats_view_top_posts_and_pages);
-    }
-
-    @Override
-    protected String[] getTabTitles() {
-        return StatsTimeframe.toStringArray(TIMEFRAMES);
-    }
-
-    @Override
-    protected int getInnerFragmentID() {
-        return R.id.stats_top_posts;
     }
 }

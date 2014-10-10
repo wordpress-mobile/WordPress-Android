@@ -359,6 +359,11 @@
     <string name="stats_view_search_engine_terms">Search engine terms</string>
 
     <!-- stats: labels for timeframes -->
+    <string name="stats_timeframe_this_week">This Week</string>
+    <string name="stats_timeframe_this_month">This Month</string>
+    <string name="stats_timeframe_this_year">This Year</string>
+
+    <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
     <string name="stats_timeframe_days">Days</string>

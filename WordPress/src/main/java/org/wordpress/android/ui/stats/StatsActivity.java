@@ -16,32 +16,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GestureDetectorCompat;
-import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.stats2.model.SummaryModel;
-import org.wordpress.android.ui.stats2.model.TopPostsModel;
-import org.wordpress.android.ui.stats2.model.VisitsModel;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.accounts.WPComLoginActivity;
@@ -73,7 +63,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * By pressing a spinner on the action bar, the user can select which stats view they wish to see.
  * </p>
  */
-public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener {
+public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener,
+        StatsDateSelectorFragment.TimeframeChangeListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
 
@@ -95,11 +86,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
-    private StatsService.StatsPeriodEnum mCurrentPeriod;
+    private StatsTimeframe mCurrentPeriod;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
 
-    //private LinearLayout mFragmentContainer;
+    private LinearLayout mFragmentContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +117,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             createMenuDrawer(R.layout.stats_activity);
         }
 
-        //mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
+        mFragmentContainer = (LinearLayout) findViewById(R.id.stats_fragment_container);
 
         // pull to refresh setup
         mPullToRefreshHelper = new PullToRefreshHelper(this, (PullToRefreshLayout) findViewById(R.id.ptr_layout),
@@ -137,7 +128,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             mPullToRefreshHelper.setRefreshing(false);
                             return;
                         }
-                        refreshStats(StatsService.StatsPeriodEnum.DAY);
+                        refreshStats(StatsTimeframe.TODAY);
                     }
                 });
 
@@ -149,7 +140,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
-
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -162,49 +152,15 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return;
         }
 
+        loadStatsFragments();
+
        // mDetector = new GestureDetectorCompat(this, new MyGestureListener());
        // mDetector.setIsLongpressEnabled(false);
-
-        // Refresh stats at startup if network and not on configuration changed
-        if (NetworkUtils.isNetworkAvailable(this) && savedInstanceState == null) {
-            refreshStats(StatsService.StatsPeriodEnum.DAY);
-            mPullToRefreshHelper.setRefreshing(true);
-        }
 
         ScrollViewExt scrollView = (ScrollViewExt) findViewById(R.id.scroll_view_stats);
         if (scrollView != null) {
             scrollView.setScrollViewListener(this);
         }
-
-
-        final Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                refreshStats(StatsService.StatsPeriodEnum.DAY);
-            }
-        });
-
-        final Button button2 = (Button) findViewById(R.id.button2);
-        button2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                refreshStats(StatsService.StatsPeriodEnum.WEEK);
-            }
-        });
-
-        final Button button3 = (Button) findViewById(R.id.button3);
-        button3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                refreshStats(StatsService.StatsPeriodEnum.MONTH);
-            }
-        });
-
-        final Button button4 = (Button) findViewById(R.id.button4);
-        button4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                refreshStats(StatsService.StatsPeriodEnum.YEAR);
-            }
-        });
-
     }
 
     @Override
@@ -221,7 +177,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         // register to receive broadcasts when StatsService starts/stops updating
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_ONE_STAT_UPDATED));
     }
 
     @Override
@@ -242,41 +197,31 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         super.onSaveInstanceState(outState);
     }
+    private void loadStatsFragments() {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
 
-  /*  class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onDown(MotionEvent event) {
-            return true;
-        }
-        @Override
-        public boolean onSingleTapUp(MotionEvent event) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SINGLE_TAP_CONFIRMED);
-            return false;
-        }
-        @Override
-        public void onShowPress(MotionEvent e) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SHOW_TAP);
+        StatsAbstractFragment fragment;
+
+        if (fm.findFragmentByTag(StatsDateSelectorFragment.TAG) == null) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
+            ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
+            ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
         }
 
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
-            return false;
+        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
+            ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
         }
 
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
-            return false;
+        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
+            ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
+
+        ft.commit();
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        this.mDetector.onTouchEvent(event);
-        return super.dispatchTouchEvent(event);
-    }
-*/
     private void startWPComLoginActivity() {
         mResultCode = RESULT_CANCELED;
         Intent loginIntent = new Intent(this, WPComLoginActivity.class);
@@ -311,7 +256,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsService.StatsPeriodEnum.DAY);
+                                    refreshStats(StatsTimeframe.TODAY);
                                 }
                             }
                         }
@@ -333,7 +278,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(StatsService.StatsPeriodEnum.DAY);
+                    refreshStats(StatsTimeframe.TODAY);
                 }
                 mPullToRefreshHelper.setRefreshing(true);
             }
@@ -470,9 +415,23 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         scrollToTop();
 
         //TODO: do something here
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+        StatsAbstractFragment fragment;
+        fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
+        ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
+        ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
+        ft.commit();
+
+        fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
+        ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
+
+        fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
+        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
 
         mPullToRefreshHelper.setRefreshing(true);
-        refreshStats(StatsService.StatsPeriodEnum.DAY);
+        refreshStats(StatsTimeframe.TODAY);
     }
 
     /**
@@ -484,7 +443,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         return false;
     }
 
-    private void refreshStats(StatsService.StatsPeriodEnum period) {
+    private void refreshStats(StatsTimeframe timeframe) {
         final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (currentBlog == null) {
@@ -553,7 +512,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         // start service to get stats
         Intent intent = new Intent(this, StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
-        intent.putExtra(StatsService.ARG_PERIOD, period);
+        intent.putExtra(StatsService.ARG_PERIOD, timeframe);
         startService(intent);
     }
 
@@ -572,49 +531,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
-
-            if (action.equals(StatsService.ACTION_ONE_STAT_UPDATED)) {
-
-                StatsService.StatsSectionEnum sectionToUpdate = StatsService.StatsSectionEnum.SUMMARY;
-                if (intent.hasExtra(StatsService.EXTRA_UPDATED_SECTION)) {
-                    sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION);
-                }
-
-               Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_DATA);
-                if ( dataObj == null || dataObj instanceof VolleyError ) {
-                    //TODO: show the error on the section ???
-                    return;
-                }
-                //TODO: check period and blogID
-                final String blogId = StatsUtils.getBlogId(mLocalBlogID);
-                String textToShow = "None";
-
-                TextView view;
-                switch (sectionToUpdate) {
-                    case SUMMARY:
-                        view =  (TextView) findViewById(R.id.textView);
-                        SummaryModel summaryModel = (SummaryModel) dataObj;
-                        textToShow = "Visitors: " + summaryModel.getVisitors();
-                        break;
-                    case VISITS:
-                        view =  (TextView) findViewById(R.id.textView2);
-                        VisitsModel visitsModel = (VisitsModel) dataObj;
-                        textToShow = visitsModel.getFieldsJSON().toString() + " "
-                          + org.apache.commons.lang.StringUtils.abbreviate(visitsModel.getDataJSON().toString(), 1000);
-                    break;
-                    case TOP_POSTS:
-                        view =  (TextView) findViewById(R.id.textView3);
-                        TopPostsModel topPostsModel = (TopPostsModel) dataObj;
-                        textToShow = org.apache.commons.lang.StringUtils.abbreviate(topPostsModel.getPostviewsJSON().toString(), 1000);
-                        break;
-                    default:
-                        view =  (TextView) findViewById(R.id.textView);
-                        textToShow = "Unknow";
-                        break;
-                }
-                view.setText(textToShow);
-                return;
-            }
 
             if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
                 mIsUpdatingStats = intent.getBooleanExtra(StatsService.EXTRA_IS_UPDATING, false);
@@ -671,6 +587,15 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
     };
 
+    public void onTimeFrameChanged(StatsTimeframe timeframe) {
+        AppLog.e(T.STATS, "NEW TIME FRAME : " + timeframe.getLabel());
+        // Refresh stats at startup if network and not on configuration changed
+        if (NetworkUtils.isNetworkAvailable(this)) {
+            refreshStats(timeframe);
+            mPullToRefreshHelper.setRefreshing(true);
+        }
+    }
+
     @Override
     public void onScrollChanged(ScrollViewExt scrollView, int x, int y, int oldx, int oldy) {
         // We take the last son in the scrollview
@@ -689,4 +614,42 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return true;
         }
     };
+
+
+
+  /*  class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onDown(MotionEvent event) {
+            return true;
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SINGLE_TAP_CONFIRMED);
+            return false;
+        }
+        @Override
+        public void onShowPress(MotionEvent e) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_SHOW_TAP);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
+            return false;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            WordPress.sendLocalBroadcast(StatsActivity.this, STATS_GESTURE_OTHER);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        this.mDetector.onTouchEvent(event);
+        return super.dispatchTouchEvent(event);
+    }
+*/
+
 }

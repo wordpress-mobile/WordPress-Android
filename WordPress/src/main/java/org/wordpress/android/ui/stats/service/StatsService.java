@@ -16,10 +16,11 @@ import org.json.JSONObject;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
-import org.wordpress.android.ui.stats2.model.SummaryModel;
-import org.wordpress.android.ui.stats2.model.TopPostsModel;
-import org.wordpress.android.ui.stats2.model.VisitsModel;
+import org.wordpress.android.ui.stats.model.SummaryModel;
+import org.wordpress.android.ui.stats.model.TopPostsModel;
+import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -37,7 +38,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_PERIOD = "stats_period";
-    public static enum StatsPeriodEnum {DAY, WEEK, MONTH, YEAR}
     public static enum StatsSectionEnum {SUMMARY, VISITS, TOP_POSTS }
 
     // broadcast action to notify clients of update start/end
@@ -56,7 +56,7 @@ public class StatsService extends Service {
     private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
-    private StatsPeriodEnum mRequestedPeriod;
+    private StatsTimeframe mRequestedTimeframe;
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = 0; // The number of networks calls made by Stats.
@@ -96,14 +96,14 @@ public class StatsService extends Service {
 
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
 
-        StatsPeriodEnum period = StatsPeriodEnum.DAY;
+        StatsTimeframe period = StatsTimeframe.TODAY;
         if (intent.hasExtra(ARG_PERIOD)) {
-            period = (StatsPeriodEnum) intent.getSerializableExtra(ARG_PERIOD);
+            period = (StatsTimeframe) intent.getSerializableExtra(ARG_PERIOD);
         }
 
         if (mServiceBlogId == null) {
             startTasks(blogId, period, startId);
-        } else if (blogId.equals(mServiceBlogId) && mRequestedPeriod == period) {
+        } else if (blogId.equals(mServiceBlogId) && mRequestedTimeframe == period) {
             // already running on the same blogID, same period
             // Do nothing
             AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
@@ -120,7 +120,7 @@ public class StatsService extends Service {
 
     private void stopRefresh() {
         this.mServiceBlogId = null;
-        this.mRequestedPeriod = StatsPeriodEnum.DAY;
+        this.mRequestedTimeframe = StatsTimeframe.TODAY;
         this.mServiceStartId = 0;
         for (Request<JSONObject> req : statsNetworkRequests) {
             if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
@@ -132,9 +132,9 @@ public class StatsService extends Service {
         numberOfNetworkCalls = 0;
     }
 
-    private void startTasks(final String blogId, final StatsPeriodEnum period, final int startId) {
+    private void startTasks(final String blogId, final StatsTimeframe timeframe, final int startId) {
         this.mServiceBlogId = blogId;
-        this.mRequestedPeriod = period;
+        this.mRequestedTimeframe = timeframe;
         this.mServiceStartId = startId;
 
         new Thread() {
@@ -142,21 +142,7 @@ public class StatsService extends Service {
             public void run() {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
 
-                String period;
-                switch (mRequestedPeriod) {
-                    case WEEK:
-                        period = "week";
-                        break;
-                    case MONTH:
-                        period = "month";
-                        break;
-                    case YEAR:
-                        period = "year";
-                        break;
-                    default:
-                        period = "day";
-                        break;
-                }
+                String period = timeframe.getLabelForRestCall();
 
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period);
                 broadcastUpdate(true);
@@ -204,6 +190,7 @@ public class StatsService extends Service {
                     // do other stuff here
                     if (response != null) {
                         try {
+                            AppLog.d(T.STATS, response.toString());
                             responseObjectModel = parseResponse(response);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);

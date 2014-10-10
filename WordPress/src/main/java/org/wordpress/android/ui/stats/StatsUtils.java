@@ -20,12 +20,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
-import org.wordpress.android.datasets.StatsBarChartDataTable;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.StatsBarChartData;
-import org.wordpress.android.models.StatsSummary;
-import org.wordpress.android.models.StatsVideoSummary;
-import org.wordpress.android.providers.StatsContentProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -145,90 +140,8 @@ public class StatsUtils {
         return "";
     }
 
-    public static void saveSummary(String blogId, JSONObject stat) {
-        try {
-            JSONObject statsObject = stat.getJSONObject("stats");
-            String day = stat.getString("day");
-            statsObject.put("day", day);
-            FileOutputStream fos = WordPress.getContext().openFileOutput(STAT_SUMMARY + blogId, Context.MODE_PRIVATE);
-            fos.write(statsObject.toString().getBytes());
-            fos.close();
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-
-        saveGraphData(blogId, stat);
-    }
-
-    private static void saveGraphData(String blogId, JSONObject stat) {
-        try {
-            JSONArray data = stat.getJSONObject("visits").getJSONArray("data");
-            Uri uri = StatsContentProvider.STATS_BAR_CHART_DATA_URI;
-            Context context = WordPress.getContext();
-
-            int length = data.length();
-
-            ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
-
-            if (length > 0) {
-                ContentProviderOperation op = ContentProviderOperation.newDelete(uri).withSelection("blogId=? AND unit=?", new String[]{blogId, StatsBarChartUnit.DAY.name()}).build();
-                operations.add(op);
-            }
-
-            for (int i = 0; i < length; i++) {
-                StatsBarChartData item = new StatsBarChartData(blogId, StatsBarChartUnit.DAY, data.getJSONArray(i));
-                ContentValues values = StatsBarChartDataTable.getContentValues(item);
-
-                if (values != null) {
-                    ContentProviderOperation op = ContentProviderOperation.newInsert(uri).withValues(values).build();
-                    operations.add(op);
-                }
-            }
-
-            ContentResolver resolver = context.getContentResolver();
-            resolver.applyBatch(BuildConfig.STATS_PROVIDER_AUTHORITY, operations);
-            resolver.notifyChange(uri, null);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        } catch (RemoteException e) {
-            AppLog.e(T.STATS, e);
-        } catch (OperationApplicationException e) {
-            AppLog.e(T.STATS, e);
-        }
-    }
-
     public static void deleteSummary(String blogId) {
         WordPress.getContext().deleteFile(STAT_SUMMARY + blogId);
-    }
-
-    public static StatsSummary getSummary(String blogId) {
-        StatsSummary stat = null;
-        try {
-            FileInputStream fis = WordPress.getContext().openFileInput(STAT_SUMMARY + blogId);
-            StringBuilder fileContent = new StringBuilder();
-
-            byte[] buffer = new byte[1024];
-
-            int bytesRead = fis.read(buffer);
-            while (bytesRead != -1) {
-                fileContent.append(new String(buffer, 0, bytesRead, "ISO-8859-1"));
-                bytesRead = fis.read(buffer);
-            }
-            fis.close();
-
-            Gson gson = new Gson();
-            stat = gson.fromJson(fileContent.toString(), StatsSummary.class);
-
-        } catch (FileNotFoundException e) {
-            // stats haven't been downloaded yet
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        }
-        return stat;
     }
 
     public static void saveVideoSummary(String blogId, JSONObject stat) {
@@ -250,38 +163,6 @@ public class StatsUtils {
         WordPress.getContext().deleteFile(STAT_VIDEO_SUMMARY + blogId);
     }
 
-    public static StatsVideoSummary getVideoSummary(String blogId) {
-        StatsVideoSummary stat = null;
-        try {
-            FileInputStream fis = WordPress.getContext().openFileInput(STAT_VIDEO_SUMMARY + blogId);
-            StringBuilder fileContent = new StringBuilder();
-
-            byte[] buffer = new byte[1024];
-
-            while (fis.read(buffer) != -1) {
-                fileContent.append(new String(buffer));
-            }
-
-            JSONObject object = new JSONObject(fileContent.toString());
-
-            String timeframe = object.getString("timeframe");
-            int plays = object.getInt("plays");
-            int impressions = object.getInt("impressions");
-            int minutes = object.getInt("minutes");
-            String bandwidth = object.getString("bandwidth");
-            String date = object.getString("date");
-
-            stat = new StatsVideoSummary(timeframe, plays, impressions, minutes, bandwidth, date);
-
-        } catch (FileNotFoundException e) {
-            AppLog.e(T.STATS, e);
-        } catch (IOException e) {
-            AppLog.e(T.STATS, e);
-        } catch (JSONException e) {
-            AppLog.e(T.STATS, e);
-        }
-        return stat;
-    }
 
     public static int getSmallestWidthDP() {
         return WordPress.getContext().getResources().getInteger(R.integer.smallest_width_dp);

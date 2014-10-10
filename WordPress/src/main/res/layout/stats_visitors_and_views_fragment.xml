@@ -18,14 +18,20 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingBottom="@dimen/margin_large">
 
-        <RadioGroup
-            android:id="@+id/stats_pager_tabs"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:orientation="horizontal"
-            android:visibility="gone" />
+            android:text="Graph Data"
+            android:id="@+id/textViewTest"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Under the graph"
+            android:id="@+id/textViewTest2"
+            android:layout_gravity="center_horizontal" />
+
 
         <LinearLayout
             android:id="@+id/stats_bar_graph_legend"

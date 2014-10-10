@@ -4,10 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/stats_pager_title"
-        style="@style/StatsPagerTitle" />
-
     <LinearLayout
         android:id="@+id/stats_pager_inner_container"
         android:layout_width="match_parent"
@@ -26,10 +22,6 @@
             android:visibility="gone" >
         </RadioGroup>
 
-        <FrameLayout
-            android:id="@+id/stats_pager_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

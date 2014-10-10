@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.ui.stats.StatsBarChartUnit;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -254,24 +253,6 @@ public class WPRestClient {
         Map<String, String> params = new HashMap<String, String>();
         params.put("blog", siteId);
         getXL(path, params, listener, errorListener);
-    }
-
-    /**
-     * Get a site's views and visitors stats for days, weeks, and months
-     * Use -1 to get a default value for quantity
-     * Use empty string for unit to get default value
-     */
-    public void getStatsBarChartData(String siteId, StatsBarChartUnit statsBarChartUnit, int quantity, Listener listener, ErrorListener errorListener) {
-        String path = String.format("sites/%s/stats/visits", siteId);
-
-        String unit = statsBarChartUnit.name().toLowerCase(Locale.ENGLISH);
-        path += String.format("?unit=%s", unit);
-        
-        if (quantity > 0) {
-            path += String.format("&quantity=%d", quantity);
-        }
-        
-        get(path, listener, errorListener);
     }
 
     /**

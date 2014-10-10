@@ -81,7 +81,6 @@ public class WordPress extends Application {
     public static Blog currentBlog;
     public static Post currentPost;
     public static WordPressDB wpDB;
-    public static WordPressStatsDB wpStatsDB;
     public static OnPostUploadedListener onPostUploadedListener = null;
     public static boolean postsShouldRefresh;
     public static boolean shouldRestoreSelectedActivity;
@@ -183,7 +182,6 @@ public class WordPress extends Application {
         versionName = PackageUtils.getVersionName(this);
         HelpshiftHelper.init(this);
         initWpDb();
-        wpStatsDB = new WordPressStatsDB(this);
 
         RestClientUtils.setUserAgent(getUserAgent());
 
