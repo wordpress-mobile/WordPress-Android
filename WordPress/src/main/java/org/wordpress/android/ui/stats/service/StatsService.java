@@ -19,7 +19,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.SummaryModel;
-import org.wordpress.android.ui.stats.model.TopPostsModel;
+import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -308,12 +308,12 @@ public class StatsService extends Service {
                 OperationApplicationException {
             //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
             //     AppLog.d(T.STATS, response.toString());
-            TopPostsModel topPostsModel = new TopPostsModel();
-            topPostsModel.setBlogID(mRequestBlogId);
-            topPostsModel.setDate(response.getString("date"));
-            topPostsModel.setPeriod(response.getString("period"));
-            topPostsModel.setDays(response.getJSONObject("days").toString());
-            return topPostsModel;
+            TopPostsAndPagesModel topPostsAndPagesModel = new TopPostsAndPagesModel();
+            topPostsAndPagesModel.setBlogID(mRequestBlogId);
+            topPostsAndPagesModel.setDate(response.getString("date"));
+            topPostsAndPagesModel.setPeriod(response.getString("period"));
+            topPostsAndPagesModel.setDays(response.getJSONObject("days").toString());
+            return topPostsAndPagesModel;
             //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 

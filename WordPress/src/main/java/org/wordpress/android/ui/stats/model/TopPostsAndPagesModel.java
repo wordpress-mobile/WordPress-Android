@@ -7,10 +7,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
-public class TopPostsModel implements Serializable {
+public class TopPostsAndPagesModel implements Serializable {
     private String period;
     private String days;
     private String date;
@@ -50,7 +52,7 @@ public class TopPostsModel implements Serializable {
         this.days = days;
     }
 
-    public JSONArray getPostviewsJSON() {
+    public List<TopPostModel> getTopPostsAndPages() {
         JSONArray jArray;
         String decodedString = StringUtils.unescapeHTML(this.getDays() != null ? this.getDays() : "{}");
         try {
@@ -60,14 +62,25 @@ public class TopPostsModel implements Serializable {
                 String key = keys.next();
                 JSONObject jDateObject = jDaysObject.getJSONObject(key);
                 jArray = jDateObject.getJSONArray("postviews");
-                //jArray = JSONUtil.queryJSON(jDaysObject, key + "/postviews", new JSONArray());
             } else {
                 jArray = new JSONArray();
             }
+
+            ArrayList<TopPostModel> list = new ArrayList<TopPostModel>(jArray.length());
+
+            for (int i=0; i < jArray.length(); i++) {
+                try {
+                    JSONObject postObject = jArray.getJSONObject(i);
+                    TopPostModel currentModel = new TopPostModel(blogID, postObject);
+                    list.add(currentModel);
+                } catch (JSONException e) {
+                    AppLog.i(AppLog.T.NOTIFS, "Unexpected object in top posts and pages array.");
+                }
+            }
+            return  list;
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, e);
-            return null;
+            return new ArrayList<TopPostModel>(0);
         }
-        return jArray;
     }
 }
