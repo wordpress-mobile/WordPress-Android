@@ -30,14 +30,14 @@ public class NUXDialogFragment extends DialogFragment {
     private ImageView mImageView;
     private WPTextView mTitleTextView;
     private WPTextView mDescriptionTextView;
-    private WPTextView mFooterLeftButton;
+    private WPTextView mFooterBottomButton;
     private WPTextView mFooterCenterButton;
-    private WPTextView mFooterRightButton;
+    private WPTextView mFooterTopButton;
 
     public static int ACTION_FINISH = 1;
     public static int ACTION_OPEN_URL = 2;
-    public static int ACTION_OPEN_FAQ = 3;
-    public static int ACTION_OPEN_SUPPORT_CHAT = 4;
+    public static int ACTION_OPEN_SUPPORT_CHAT = 3;
+
 
     public NUXDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -77,9 +77,9 @@ public class NUXDialogFragment extends DialogFragment {
         mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);
         mDescriptionTextView = (WPTextView) v.findViewById(R.id.nux_dialog_description);
-        mFooterLeftButton = (WPTextView) v.findViewById(R.id.nux_dialog_left_button);
+        mFooterBottomButton = (WPTextView) v.findViewById(R.id.nux_dialog_left_button);
         mFooterCenterButton = (WPTextView) v.findViewById(R.id.nux_dialog_center_button);
-        mFooterRightButton = (WPTextView) v.findViewById(R.id.nux_dialog_right_button);
+        mFooterTopButton = (WPTextView) v.findViewById(R.id.nux_dialog_right_button);
         final Bundle arguments = getArguments();
 
         mTitleTextView.setText(arguments.getString(ARG_TITLE));
@@ -112,22 +112,22 @@ public class NUXDialogFragment extends DialogFragment {
                 // One button: we keep only the centered button
                 mFooterCenterButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
                 mFooterCenterButton.setOnClickListener(clickListenerDismiss);
-                mFooterLeftButton.setVisibility(View.GONE);
-                mFooterRightButton.setVisibility(View.GONE);
+                mFooterBottomButton.setVisibility(View.GONE);
+                mFooterTopButton.setVisibility(View.GONE);
                 break;
             case 2:
                 // Two buttons: we keep only the left and right buttons
-                mFooterLeftButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
-                mFooterRightButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
+                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                mFooterTopButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
                 mFooterCenterButton.setVisibility(View.GONE);
-                mFooterRightButton.setOnClickListener(clickListenerSecondButton);
+                mFooterTopButton.setOnClickListener(clickListenerSecondButton);
                 break;
             case 3:
-                mFooterLeftButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
+                mFooterBottomButton.setText(arguments.getString(ARG_FIRST_BUTTON_LABEL));
                 mFooterCenterButton.setText(arguments.getString(ARG_SECOND_BUTTON_LABEL));
                 mFooterCenterButton.setOnClickListener(clickListenerSecondButton);
-                mFooterRightButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
-                mFooterRightButton.setOnClickListener(clickListenerThirdButton);
+                mFooterTopButton.setText(arguments.getString(ARG_THIRD_BUTTON_LABEL));
+                mFooterTopButton.setOnClickListener(clickListenerThirdButton);
                 break;
         }
 
@@ -135,7 +135,7 @@ public class NUXDialogFragment extends DialogFragment {
 
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
-        mFooterLeftButton.setOnClickListener(clickListenerDismiss);
+        mFooterBottomButton.setOnClickListener(clickListenerDismiss);
         return v;
     }
 
@@ -151,15 +151,11 @@ public class NUXDialogFragment extends DialogFragment {
             startActivity(intent);
             dismissAllowingStateLoss();
         }
-        if (action == ACTION_OPEN_FAQ || action == ACTION_OPEN_SUPPORT_CHAT) {
+        if (action == ACTION_OPEN_SUPPORT_CHAT) {
             HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
                     WelcomeFragmentSignIn.ENTERED_URL_KEY));
             HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                     WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
-        }
-        if (action == ACTION_OPEN_FAQ) {
-            HelpshiftHelper.getInstance().showFAQ(getActivity());
-            dismissAllowingStateLoss();
         }
         if (action == ACTION_OPEN_SUPPORT_CHAT) {
             HelpshiftHelper.getInstance().showConversation(getActivity());

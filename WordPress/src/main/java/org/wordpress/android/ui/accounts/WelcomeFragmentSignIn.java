@@ -226,18 +226,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     };
 
+    private String getForgotPasswordURL() {
+        String baseUrl = DOT_COM_BASE_URL;
+        if (!isWPComLogin()) {
+            baseUrl = EditTextUtils.getText(mUrlEditText).trim();
+            String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
+            if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
+                baseUrl = "http://" + baseUrl;
+            }
+        }
+        return baseUrl + FORGOT_PASSWORD_RELATIVE_URL;
+    }
+
     private View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String baseUrl = DOT_COM_BASE_URL;
-            if (!isWPComLogin()) {
-                baseUrl = EditTextUtils.getText(mUrlEditText).trim();
-                String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
-                if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
-                    baseUrl = "http://" + baseUrl;
-                }
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + FORGOT_PASSWORD_RELATIVE_URL));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
             startActivity(intent);
         }
     };
@@ -544,10 +548,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
                         getString(R.string.username_or_password_incorrect_third_time), R.drawable.noticon_alert_big, 3,
-                        getString(R.string.cancel), getString(R.string.faq_button), getString(R.string.contact_us),
-                        NUXDialogFragment.ACTION_OPEN_FAQ, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+                        getString(R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
+                        NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+
                 // Put entered url and entered username args, that could help our support team
                 Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
                 bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
                 nuxAlert.setArguments(bundle);
