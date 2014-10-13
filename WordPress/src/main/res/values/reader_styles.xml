@@ -18,14 +18,6 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="ReaderTheme.PhotoViewer" parent="@android:style/Theme.Holo.Light">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
-
     <!-- window animations -->
     <style name="ReaderAnimation" />
     <style name="ReaderAnimation.ReaderPopup">
@@ -127,13 +119,6 @@
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/blue_medium</item>
-    </style>
-    <style name="ReaderTextView.Count" parent="ReaderTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/reader_count_background</item>
-        <item name="android:textColor">@color/blue_medium</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
     </style>
     <style name="ReaderTextView.EmptyList" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>

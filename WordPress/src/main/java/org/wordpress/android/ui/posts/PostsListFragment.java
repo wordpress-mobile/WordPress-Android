@@ -22,9 +22,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
-import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
@@ -52,11 +51,13 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
     @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        Bundle extras = getActivity().getIntent().getExtras();
-        if (extras != null) {
-            mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (isAdded()) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if (extras != null) {
+                mIsPage = extras.getBoolean(PostsActivity.EXTRA_VIEW_PAGES);
+            }
         }
     }
 
@@ -102,7 +103,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         if (hasLocalChanges) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
-            dialogBuilder.setMessage(getResources().getText(R.string.remote_changes));
+            dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
@@ -137,10 +138,15 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
             PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded(int postCount) {
+                    if (!isAdded()) {
+                        return;
+                    }
                     if (postCount == 0 && mCanLoadMorePosts) {
-                        // No posts, let's request some
-                        requestPosts(false);
-                        setRefreshing(true);
+                        // No posts, let's request some if network available
+                        if (isAdded() && NetworkUtils.isNetworkAvailable(getActivity())) {
+                            setRefreshing(true);
+                            requestPosts(false);
+                        }
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
@@ -151,7 +157,7 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (DisplayUtils.isTablet(getActivity())) {
+                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
@@ -208,6 +214,10 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
         initPullToRefreshHelper();
         mPullToRefreshHelper.registerReceiver(getActivity());
         WordPress.setOnPostUploadedListener(this);
+
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            ((PostsActivity) getActivity()).requestPosts();;
+        }
     }
 
     public void onAttach(Activity activity) {
@@ -271,11 +281,14 @@ public class PostsListFragment extends ListFragment implements WordPress.OnPostU
     }
 
     public void requestPosts(boolean loadMore) {
-        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts)
+        if (!isAdded() || WordPress.getCurrentBlog() == null || mIsFetchingPosts) {
             return;
+        }
 
-        if (!NetworkUtils.checkConnection(getActivity()))
+        if (!NetworkUtils.checkConnection(getActivity())) {
+            mPullToRefreshHelper.setRefreshing(false);
             return;
+        }
 
         int postCount = getPostListAdapter().getRemotePostCount() + POSTS_REQUEST_COUNT;
         if (!loadMore) {

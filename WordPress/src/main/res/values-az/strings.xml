@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="contact_us">Əlaqə yaradın</string>
+	<string name="contact_us_pref_summary">Automattic dəstək heyətindən yardım alın</string>
+	<string name="hs__conversation_detail_error">Qarşılaşdığınız problem haqqında məlumat verin</string>
+	<string name="hs__new_conversation_header">Dəstək söhbəti</string>
+	<string name="hs__conversation_header">Dəstək söhbəti</string>
+	<string name="hs__username_blank_error">Keçərli bir ad daxil edin</string>
+	<string name="hs__invalid_email_error">Keçərli bir e-poçt ünvanı daxil edin</string>
+	<string name="add_location">Mövqe əlavə edin</string>
+	<string name="current_location">Hazırkı mövqe</string>
+	<string name="your_signature">İmzanız:</string>
 	<string name="search_location">Axtarış</string>
 	<string name="edit_location">Redaktə et</string>
+	<string name="search_current_location">Yerləşdir</string>
 	<string name="preference_privacy">Gizlilik</string>
 	<string name="preference_send_usage_stats">Statistikaları göndər</string>
 	<string name="reader_label_tap_to_dismiss">Davam etmək üçün toxunun</string>

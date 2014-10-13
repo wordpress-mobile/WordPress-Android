@@ -61,7 +61,7 @@ public class StatsCursorTreeFragment extends Fragment
 
     public static StatsCursorTreeFragment newInstance(Uri groupUri, Uri childrenUri, int entryLabelResId,
                                                       int totalsLabelResId, int emptyLabelTitleResId,
-                                                      int emptyLabelDescResId) {
+                                                      int emptyLabelDescResId, int localTableBlogID) {
         StatsCursorTreeFragment fragment = new StatsCursorTreeFragment();
 
         Bundle args = new Bundle();
@@ -71,6 +71,7 @@ public class StatsCursorTreeFragment extends Fragment
         args.putInt(ARGS_TOTALS_LABEL, totalsLabelResId);
         args.putInt(ARGS_EMPTY_LABEL_TITLE, emptyLabelTitleResId);
         args.putInt(ARGS_EMPTY_LABEL_DESC, emptyLabelDescResId);
+        args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
         fragment.setArguments(args);
 
         return fragment;
@@ -131,6 +132,10 @@ public class StatsCursorTreeFragment extends Fragment
         return getArguments().getInt(ARGS_EMPTY_LABEL_DESC);
     }
 
+    private int getLocalTableBlogID() {
+        return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -141,10 +146,10 @@ public class StatsCursorTreeFragment extends Fragment
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (WordPress.getCurrentBlog() == null)
+        if (WordPress.getBlog(getLocalTableBlogID()) == null)
             return null;
 
-        String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+        String blogId = WordPress.getBlog(getLocalTableBlogID()).getDotComBlogId();
         if (TextUtils.isEmpty(blogId))
             blogId = "0";
 

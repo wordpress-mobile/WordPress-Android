@@ -1,3 +1,4 @@
 <resources>
     <dimen name="reader_list_margin">@dimen/reader_list_margin_landscape_tablet</dimen>
+    <dimen name="notifications_list_margin">192dp</dimen>
 </resources>

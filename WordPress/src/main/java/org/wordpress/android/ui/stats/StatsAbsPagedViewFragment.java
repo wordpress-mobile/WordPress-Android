@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,9 +17,13 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.widgets.TypefaceCache;
 
 import java.util.Locale;
 
@@ -91,6 +96,8 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                                                                          RadioGroup.LayoutParams.WRAP_CONTENT);
+            rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
+
             params.setMargins(0, 0, dp8, 0);
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
@@ -166,7 +173,9 @@ public abstract class StatsAbsPagedViewFragment extends StatsAbsViewFragment
             return;
 
         long date = cursor.getLong(colDate);
-        long currentDate = StatsUtils.getCurrentDateMs();
+
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(getLocalTableBlogID()));
+        long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
 
         boolean isToday = timeframe.equals(StatsTimeframe.TODAY.name());
         boolean isYesterday = timeframe.equals(StatsTimeframe.YESTERDAY.name());

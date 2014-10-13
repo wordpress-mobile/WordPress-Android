@@ -286,6 +286,7 @@ public class BlogPreferencesActivity extends Activity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 boolean deleteSuccess = WordPress.wpDB.deleteAccount(BlogPreferencesActivity.this, blog.getLocalTableBlogId());
                 if (deleteSuccess) {
+                    AnalyticsTracker.refreshMetadata();
                     Toast.makeText(activity, getResources().getText(R.string.blog_removed_successfully), Toast.LENGTH_SHORT)
                             .show();
                     WordPress.wpDB.deleteLastBlogId();

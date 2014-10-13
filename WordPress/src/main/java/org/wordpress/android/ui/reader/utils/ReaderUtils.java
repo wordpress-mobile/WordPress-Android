@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -11,19 +12,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.List;
 
 public class ReaderUtils {
-    /*
-     * used by ReaderPostDetailFragment to enter/exit full screen mode
-     */
-    public static interface FullScreenListener {
-        boolean onRequestFullScreen(boolean enable);
-        boolean isFullScreen();
-        boolean isFullScreenSupported();
-    }
 
     /*
      * used with TextViews that have the ReaderTextView.Follow style to show
@@ -79,8 +73,8 @@ public class ReaderUtils {
         }
         RelativeLayout header = new RelativeLayout(listView.getContext());
         header.setLayoutParams(new AbsListView.LayoutParams(
-                               AbsListView.LayoutParams.MATCH_PARENT,
-                               height));
+                AbsListView.LayoutParams.MATCH_PARENT,
+                height));
         listView.addHeaderView(header, null, false);
         return header;
     }
@@ -127,26 +121,77 @@ public class ReaderUtils {
         }
     }
 
+    public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
+        if (isPrivate) {
+            return getPrivateImageForDisplay(imageUrl, width, height);
+        } else {
+            return PhotonUtils.getPhotonImageUrl(imageUrl, width, height);
+        }
+    }
+
     /*
      * use this to request a reduced size image from a private post - images in private posts can't
      * use photon but these are usually wp images so they support the h= and w= query params
      */
-    public static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
+    private static String getPrivateImageForDisplay(final String imageUrl, int width, int height) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
 
         final String query;
         if (width > 0 && height > 0) {
-            query = String.format("?w=%d&h=%d", width, height);
+            query = "?w=" + width + "&h=" + height;
         } else if (width > 0) {
-            query = String.format("?w=%d", width);
+            query = "?w=" + width;
         } else if (height > 0) {
-            query = String.format("?h=%d", height);
+            query = "?h=" + height;
         } else {
             query = "";
         }
         // remove the existing query string, add the new one, and make sure the url is https:
         return UrlUtils.removeQuery(UrlUtils.makeHttps(imageUrl)) + query;
+    }
+
+    /*
+     * returns the passed tagName formatted for use with our API
+     * see sanitize_title_with_dashes in http://core.trac.wordpress.org/browser/tags/3.6/wp-includes/formatting.php#L0
+     */
+    public static String sanitizeTagName(final String tagName) {
+        if (tagName == null) {
+            return "";
+        }
+
+        // remove ampersands and number signs, replace spaces & periods with dashes
+        String sanitized = tagName.trim()
+                .replace("&", "")
+                .replace("#", "")
+                .replace(" ", "-")
+                .replace(".", "-");
+
+        // replace double dashes with single dash (may have been added above)
+        while (sanitized.contains("--")) {
+            sanitized = sanitized.replace("--", "-");
+        }
+
+        return sanitized.trim();
+    }
+
+    /*
+     * returns the long text to use for a like label ("Liked by 3 people", etc.)
+     */
+    public static String getLongLikeLabelText(Context context, int numLikes, boolean isLikedByCurrentUser) {
+        if (isLikedByCurrentUser) {
+            switch (numLikes) {
+                case 1:
+                    return context.getString(R.string.reader_likes_only_you);
+                case 2:
+                    return context.getString(R.string.reader_likes_you_and_one);
+                default:
+                    return context.getString(R.string.reader_likes_you_and_multi, numLikes - 1);
+            }
+        } else {
+            return (numLikes == 1 ?
+                    context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
+        }
     }
 }

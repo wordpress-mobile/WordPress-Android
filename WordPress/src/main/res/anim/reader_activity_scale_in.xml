@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@integer/reader_activity_anim_time"
+    android:interpolator="@android:anim/decelerate_interpolator">
+
+    <scale
+        android:fromXScale="80%p"
+        android:fromYScale="80%p"
+        android:pivotX="50%p"
+        android:pivotY="50%p"
+        android:toXScale="100%p"
+        android:toYScale="100%p" />
+
+    <alpha
+        android:fromAlpha="0.5"
+        android:toAlpha="1" />
+
+</set>

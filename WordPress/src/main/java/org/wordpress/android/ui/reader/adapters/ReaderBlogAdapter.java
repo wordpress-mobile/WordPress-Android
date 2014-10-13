@@ -15,7 +15,7 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
@@ -180,6 +180,7 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     holder.txtTitle.setText(domain);
                 }
                 holder.txtUrl.setText(domain);
+                holder.imgBlog.setImageUrl(blogInfo.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
                 break;
 
             default:
@@ -227,14 +228,13 @@ public class ReaderBlogAdapter extends BaseAdapter {
             txtFollow = (TextView) view.findViewById(R.id.text_follow);
             imgBlog = (WPNetworkImageView) view.findViewById(R.id.image_blog);
 
+            // followed blogs don't have a description
             switch (getBlogType()) {
                 case FOLLOWED:
                     txtDescription.setVisibility(View.GONE);
-                    imgBlog.setVisibility(View.GONE);
                     break;
                 case RECOMMENDED:
                     txtDescription.setVisibility(View.VISIBLE);
-                    imgBlog.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -309,10 +309,10 @@ public class ReaderBlogAdapter extends BaseAdapter {
                     // get recommended blogs using this offset, then start over with no offset
                     // if there aren't any with this offset,
                     int limit = ReaderConstants.READER_MAX_RECOMMENDED_TO_DISPLAY;
-                    int offset = UserPrefs.getReaderRecommendedBlogOffset();
+                    int offset = AppPrefs.getReaderRecommendedBlogOffset();
                     tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, offset);
                     if (tmpRecommendedBlogs.size() == 0 && offset > 0) {
-                        UserPrefs.setReaderRecommendedBlogOffset(0);
+                        AppPrefs.setReaderRecommendedBlogOffset(0);
                         tmpRecommendedBlogs = ReaderBlogTable.getRecommendedBlogs(limit, 0);
                     }
                     return !mRecommendedBlogs.isSameList(tmpRecommendedBlogs);

@@ -20,10 +20,6 @@ public class DisplayUtils {
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-    public static boolean isLandscapeTablet(Context context) {
-        return isLandscape(context) && isTablet(context);
-    }
-
     public static Point getDisplayPixelSize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -43,7 +39,8 @@ public class DisplayUtils {
     }
 
     public static int dpToPx(Context context, int dp) {
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
         return (int) px;
     }
 
@@ -52,16 +49,11 @@ public class DisplayUtils {
         return (int) ((px/displayMetrics.density)+0.5);
     }
 
-    public static boolean isTablet(Context context) {
-        // http://stackoverflow.com/a/8427523/1673548
-        if (context == null)
-            return false;
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
-
     public static boolean isXLarge(Context context) {
-        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)
+        if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
+                == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
             return true;
+        }
         return false;
     }
 

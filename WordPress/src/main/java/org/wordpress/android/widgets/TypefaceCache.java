@@ -16,10 +16,10 @@ public class TypefaceCache {
 
     private static final Hashtable<String, Typeface> mTypefaceCache = new Hashtable<String, Typeface>();
 
-    protected static Typeface getTypeface(Context context) {
+    public static Typeface getTypeface(Context context) {
         return getTypeface(context, Typeface.NORMAL, VARIATION_NORMAL);
     }
-    protected static Typeface getTypeface(Context context, int fontStyle, int variation) {
+    public static Typeface getTypeface(Context context, int fontStyle, int variation) {
         if (context == null)
             return null;
 
@@ -40,6 +40,10 @@ public class TypefaceCache {
                 break;
         }
 
+        return getTypefaceForTypefaceName(context, typefaceName);
+    }
+
+    protected static Typeface getTypefaceForTypefaceName(Context context, String typefaceName) {
         if (!mTypefaceCache.containsKey(typefaceName)) {
             Typeface typeface = Typeface.createFromAsset(context.getApplicationContext().getAssets(), "fonts/"
                     + typefaceName);

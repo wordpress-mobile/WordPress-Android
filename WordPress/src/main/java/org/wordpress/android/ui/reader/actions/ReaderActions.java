@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.reader.actions;
 
-import android.view.View;
-
 import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderComment;
-import org.wordpress.android.models.ReaderPost;
 
 /**
  * classes in this package serve as a middleman between local data and server data - used by
@@ -61,25 +58,11 @@ public class ReaderActions {
     }
 
     /*
-     * used by adapters to notify when data has been loaded
-     */
-    public interface DataLoadedListener {
-        public void onDataLoaded(boolean isEmpty);
-    }
-
-    /*
      * used by adapters to notify when more data should be loaded
      */
     public static enum RequestDataAction {LOAD_NEWER, LOAD_OLDER}
     public interface DataRequestedListener {
         public void onRequestData();
-    }
-
-    /*
-     * used by post list & post list adapter when user asks to reblog a post
-     */
-    public interface RequestReblogListener {
-        public void onRequestReblog(ReaderPost post, View sourceView);
     }
 
     /*

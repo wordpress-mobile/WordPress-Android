@@ -24,7 +24,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.CommentStatus;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
@@ -45,8 +45,8 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 public class CommentsListFragment extends Fragment {
     private boolean mIsUpdatingComments = false;
     private boolean mCanLoadMoreComments = true;
-    private boolean mHasAutoRefreshedComments = false;
-    private boolean mHasCheckedDeletedComments = false;
+    boolean mHasAutoRefreshedComments = false;
+    boolean mHasCheckedDeletedComments = false;
 
     private ProgressBar mProgressLoadMore;
     private PullToRefreshHelper mPullToRefreshHelper;
@@ -58,12 +58,8 @@ public class CommentsListFragment extends Fragment {
     private UpdateCommentsTask mUpdateCommentsTask;
 
     private OnCommentSelectedListener mOnCommentSelectedListener;
-    private OnCommentChangeListener mOnCommentChangeListener;
 
     private static final int COMMENTS_PER_PAGE = 30;
-    private static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
-    private static final String KEY_HAS_CHECKED_DELETED_COMMENTS = "has_checked_deleted_comments";
-    private boolean mFirstLoad = true;
 
     private ListView getListView() {
         return mListView;
@@ -83,12 +79,6 @@ public class CommentsListFragment extends Fragment {
                         showEmptyView();
                     } else {
                         hideEmptyView();
-                    }
-                    if (mFirstLoad) {
-                        mFirstLoad = false;
-                        if (getActivity() != null && getActivity() instanceof CommentsActivity) {
-                            ((CommentsActivity) getActivity()).commentAdapterFirstLoad();
-                        }
                     }
                 }
             };
@@ -141,29 +131,23 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    public long getFirstCommentId() {
-        if (getCommentAdapter() != null && getCommentAdapter().getCount() > 0) {
-            return ((Comment) getCommentAdapter().getItem(0)).commentID;
-        }
-        return 0;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED);
+    public void removeComment(Comment comment) {
+        if (hasCommentAdapter() && comment != null) {
+            getCommentAdapter().removeComment(comment);
         }
     }
 
     @Override
-    public void onActivityCreated(Bundle bundle) {
-        super.onActivityCreated(bundle);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         setUpListView();
         getCommentAdapter().loadComments();
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             return;
         }
+        Bundle extras = getActivity().getIntent().getExtras();
+        mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
+
         if (!mHasAutoRefreshedComments) {
             updateComments(false);
             mPullToRefreshHelper.setRefreshing(true);
@@ -176,7 +160,6 @@ public class CommentsListFragment extends Fragment {
         try {
             // check that the containing activity implements our callback
             mOnCommentSelectedListener = (OnCommentSelectedListener) activity;
-            mOnCommentChangeListener = (OnCommentChangeListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString() + " must implement Callback");
@@ -276,10 +259,6 @@ public class CommentsListFragment extends Fragment {
                 if (moderatedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().replaceComments(moderatedComments);
-                    if (mOnCommentChangeListener != null) {
-                        ChangeType changeType = (newStatus == CommentStatus.TRASH ? ChangeType.TRASHED : ChangeType.STATUS);
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, changeType);
-                    }
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -326,8 +305,6 @@ public class CommentsListFragment extends Fragment {
                 if (deletedComments.size() > 0) {
                     getCommentAdapter().clearSelectedComments();
                     getCommentAdapter().deleteComments(deletedComments);
-                    if (mOnCommentChangeListener != null)
-                        mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_LIST, ChangeType.TRASHED);
                 } else {
                     ToastUtils.showToast(getActivity(), R.string.error_moderate_comment);
                 }
@@ -338,17 +315,6 @@ public class CommentsListFragment extends Fragment {
                 listener);
     }
 
-    long getHighlightedCommentId() {
-        return (hasCommentAdapter() ? getCommentAdapter().getHighlightedCommentId() : 0);
-    }
-    void setHighlightedCommentId(long commentId) {
-        getCommentAdapter().setHighlightedCommentId(commentId);
-        int position = getCommentAdapter().indexOfCommentId(commentId);
-        if (position != -1) {
-            getListView().setSelection(position);
-        }
-    }
-
     private void setUpListView() {
         ListView listView = this.getListView();
         listView.setAdapter(getCommentAdapter());
@@ -357,8 +323,10 @@ public class CommentsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mActionMode == null) {
                     Comment comment = (Comment) getCommentAdapter().getItem(position);
-                    mOnCommentSelectedListener.onCommentSelected(comment.commentID);
-                    getListView().invalidateViews();
+                    if (!getCommentAdapter().isModeratingCommentId(comment.commentID)) {
+                        mOnCommentSelectedListener.onCommentSelected(comment.commentID);
+                        getListView().invalidateViews();
+                    }
                 } else {
                     getCommentAdapter().toggleItemSelected(position, view);
                 }
@@ -402,6 +370,16 @@ public class CommentsListFragment extends Fragment {
 
         mUpdateCommentsTask = new UpdateCommentsTask(loadMore);
         mUpdateCommentsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void setCommentIsModerating(long commentId, boolean isModerating) {
+        if (!hasCommentAdapter()) return;
+
+        if (isModerating) {
+            getCommentAdapter().addModeratingCommentId(commentId);
+        } else {
+            getCommentAdapter().removeModeratingCommentId(commentId);
+        }
     }
 
     /*
@@ -529,8 +507,6 @@ public class CommentsListFragment extends Fragment {
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
-        outState.putBoolean(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
-        outState.putBoolean(KEY_HAS_CHECKED_DELETED_COMMENTS, mHasCheckedDeletedComments);
         super.onSaveInstanceState(outState);
     }
 

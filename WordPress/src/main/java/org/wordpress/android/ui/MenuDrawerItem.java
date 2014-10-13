@@ -9,11 +9,6 @@ import android.view.View;
 
 public abstract class MenuDrawerItem {
     /**
-     * Signifies that the item has no unique ID so should not be tracked in the last selected
-     * item preference.
-     */
-    public static int NO_ITEM_ID = -1;
-    /**
      * Called when the menu item is selected.
      */
     abstract public void onSelectItem();
@@ -40,11 +35,11 @@ public abstract class MenuDrawerItem {
     // Resource id for the icon drawable
     protected int mIconRes;
     // ID for the item for remembering which item was selected
-    private int mItemId;
+    private ActivityId mItemId;
     /**
      * Creates a MenuDrawerItem with the specific id, string resource id and drawable resource id
      */
-    MenuDrawerItem(int itemId, int stringRes, int iconRes) {
+    MenuDrawerItem(ActivityId itemId, int stringRes, int iconRes) {
         mTitle = stringRes;
         mIconRes = iconRes;
         mItemId = itemId;
@@ -54,18 +49,18 @@ public abstract class MenuDrawerItem {
      * between application launches.
      */
     MenuDrawerItem(int stringRes, int iconRes){
-        this(NO_ITEM_ID, stringRes, iconRes);
+        this(ActivityId.UNKNOWN, stringRes, iconRes);
     }
     /**
      * Determines if the item has an id for remembering the last selected item
      */
     public boolean hasItemId(){
-        return getItemId() != NO_ITEM_ID;
+        return getItemId() != ActivityId.UNKNOWN;
     }
     /**
      * Get's the item's unique ID
      */
-    public int getItemId(){
+    public ActivityId getItemId(){
         return mItemId;
     }
     /**

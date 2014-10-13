@@ -37,6 +37,7 @@ import org.wordpress.android.ui.themes.ThemeTabFragment.ThemeTabFragmentCallback
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.analytics.AnalyticsTracker;
 
@@ -151,7 +152,8 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
             mIsRunning = true;
 
             // fetch themes if we don't have any
-            if (WordPress.getCurrentBlog() != null && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
+            if (NetworkUtils.isNetworkAvailable(this) && WordPress.getCurrentBlog() != null
+                    && WordPress.wpDB.getThemeCount(getBlogId()) == 0) {
                 fetchThemes(mViewPager.getCurrentItem());
                 setRefreshing(true, mViewPager.getCurrentItem());
             }
@@ -473,7 +475,6 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     @Override
     public void onBlogChanged() {
-        super.onBlogChanged();
         if (areThemesAccessible()) {
             fetchThemes(mViewPager.getCurrentItem());
             setRefreshing(true, mViewPager.getCurrentItem());

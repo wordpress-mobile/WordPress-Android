@@ -5,9 +5,13 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -23,11 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -35,16 +41,22 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils;
 import org.wordpress.android.ui.reader.utils.MessageBarUtils.MessageBarType;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * activity which shows the user's subscriptions and recommended subscriptions - includes
@@ -84,8 +96,11 @@ public class ReaderSubsActivity extends Activity
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         mViewPager.setAdapter(getPageAdapter());
 
-        getActionBar().setDisplayShowTitleEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_tabs);
         tabStrip.setTabIndicatorColorResource(R.color.blue_medium);
@@ -121,9 +136,27 @@ public class ReaderSubsActivity extends Activity
             @Override
             public void onPageSelected(int position) {
                 String pageTitle = (String) getPageAdapter().getPageTitle(position);
-                UserPrefs.setReaderSubsPageTitle(pageTitle);
+                AppPrefs.setReaderSubsPageTitle(pageTitle);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
+        filter.addAction(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
 
         // update list of tags and blogs from the server
         if (!mHasPerformedUpdate) {
@@ -135,9 +168,12 @@ public class ReaderSubsActivity extends Activity
         if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
-        updateTagList();
-        updateFollowedBlogs();
-        updateRecommendedBlogs();
+
+        ReaderUpdateService.startService(this,
+                EnumSet.of(UpdateTask.TAGS,
+                           UpdateTask.FOLLOWED_BLOGS,
+                           UpdateTask.RECOMMENDED_BLOGS));
+
         mHasPerformedUpdate = true;
     }
 
@@ -172,7 +208,7 @@ public class ReaderSubsActivity extends Activity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
         outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
@@ -320,56 +356,75 @@ public class ReaderSubsActivity extends Activity
     }
 
     /*
-     * start a two-step process to follow a blog by url:
+     * start a three-step process to follow a blog by url:
      *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. perform the actual follow
+     *    2. get the blogInfo for this url (so we can follow by id)
+     *    3. perform the actual follow
      * note that the passed URL is assumed to be normalized and validated
      */
-    private void performAddUrl(final String normUrl) {
+    private void performAddUrl(final String blogUrl) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
 
         showAddUrlProgress();
 
-        // listener for following the blog
-        final ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (!isFinishing()) {
-                    hideAddUrlProgress();
-                    if (succeeded) {
-                        // clear the edit text and hide the soft keyboard
-                        mEditAdd.setText(null);
-                        EditTextUtils.hideSoftInput(mEditAdd);
-                        String msgText = getString(R.string.reader_label_followed_blog);
-                        MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
-                        onFollowBlogChanged();
-                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    } else {
-                        ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
-                    }
-                }
-            }
-        };
-
-        // listener for testing if blog is reachable
         ReaderActions.ActionListener urlActionListener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (!isFinishing()) {
-                    if (succeeded) {
-                        // url is reachable, so follow it
-                        ReaderBlogActions.performFollowAction(0, normUrl, true, followListener);
-                    } else {
-                        // url is unreachable
-                        hideAddUrlProgress();
-                        ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
-                    }
+                if (isFinishing()) {
+                    return;
+                }
+                if (succeeded) {
+                    getBlogInfo(blogUrl);
+                } else {
+                    hideAddUrlProgress();
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
                 }
             }
         };
-        ReaderBlogActions.checkBlogUrlReachable(normUrl, urlActionListener);
+        ReaderBlogActions.checkBlogUrlReachable(blogUrl, urlActionListener);
+    }
+
+    private void getBlogInfo(final String blogUrl) {
+        ReaderActions.UpdateBlogInfoListener infoListener = new ReaderActions.UpdateBlogInfoListener() {
+            @Override
+            public void onResult(ReaderBlog blogInfo) {
+                if (isFinishing()) {
+                    return;
+                }
+                if (blogInfo != null) {
+                    followBlog(blogInfo.blogId, blogInfo.getUrl());
+                } else {
+                    followBlog(0, blogUrl);
+                }
+            }
+        };
+        ReaderBlogActions.updateBlogInfo(0, blogUrl, infoListener);
+    }
+
+    private void followBlog(long blogId, String normUrl) {
+        ReaderActions.ActionListener followListener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (isFinishing()) {
+                    return;
+                }
+                hideAddUrlProgress();
+                if (succeeded) {
+                    // clear the edit text and hide the soft keyboard
+                    mEditAdd.setText(null);
+                    EditTextUtils.hideSoftInput(mEditAdd);
+                    String msgText = getString(R.string.reader_label_followed_blog);
+                    MessageBarUtils.showMessageBar(ReaderSubsActivity.this, msgText, MessageBarType.INFO);
+                    onFollowBlogChanged();
+                    getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                } else {
+                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                }
+            }
+        };
+        ReaderBlogActions.performFollowAction(blogId, normUrl, true, followListener);
     }
 
     /*
@@ -441,54 +496,6 @@ public class ReaderSubsActivity extends Activity
     }
 
     /*
-     * request latest list of tags from the server
-     */
-    void updateTagList() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    mTagsChanged = true;
-                    getPageAdapter().refreshTagFragments();
-                }
-            }
-        };
-        ReaderTagActions.updateTags(listener);
-    }
-
-    /*
-     * request latest recommended blogs
-     */
-    void updateRecommendedBlogs() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result == ReaderActions.UpdateResult.CHANGED) {
-                    getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
-                }
-            }
-        };
-        ReaderBlogActions.updateRecommendedBlogs(listener);
-    }
-
-    /*
-     * request latest followed blogs
-     */
-    void updateFollowedBlogs() {
-        ReaderActions.UpdateResultListener listener = new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing()) {
-                    if (result == ReaderActions.UpdateResult.CHANGED) {
-                        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    }
-                }
-            }
-        };
-        ReaderBlogActions.updateFollowedBlogs(listener);
-    }
-
-    /*
      * return to the previously selected page in the viewPager
      */
     private void restorePreviousPage() {
@@ -496,7 +503,7 @@ public class ReaderSubsActivity extends Activity
             return;
         }
 
-        String pageTitle = UserPrefs.getReaderSubsPageTitle();
+        String pageTitle = AppPrefs.getReaderSubsPageTitle();
         if (TextUtils.isEmpty(pageTitle)) {
             return;
         }
@@ -598,4 +605,31 @@ public class ReaderSubsActivity extends Activity
             }
         }
     }
+
+    /*
+    * receiver which is notified when followed tags have changed
+    */
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isFinishing()) {
+                return;
+            }
+
+            String action = StringUtils.notNullStr(intent.getAction());
+            AppLog.d(AppLog.T.READER, "reader subs > received broadcast " + action);
+
+            if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED)) {
+                mTagsChanged = true;
+                getPageAdapter().refreshTagFragments();
+            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_TAGS_CHANGED)) {
+                getPageAdapter().refreshTagFragments();
+            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
+                mBlogsChanged = true;
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+            } else if (action.equals(ReaderUpdateService.ACTION_RECOMMENDED_BLOGS_CHANGED)) {
+                getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
+            }
+        }
+    };
 }

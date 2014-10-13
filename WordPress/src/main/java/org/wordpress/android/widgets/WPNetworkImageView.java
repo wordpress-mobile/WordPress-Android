@@ -33,7 +33,6 @@ import org.wordpress.android.util.VolleyUtils;
 public class WPNetworkImageView extends ImageView {
     public static enum ImageType {NONE,
                                   PHOTO,
-                                  PHOTO_FULL,
                                   MSHOT,
                                   VIDEO,
                                   AVATAR}
@@ -252,12 +251,7 @@ public class WPNetworkImageView extends ImageView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (isInEditMode()) {
-            // draw light blue box during design-time
-            if (getDrawable() == null) {
-                setImageDrawable(new ColorDrawable(getColorRes(R.color.blue_extra_light)));
-            }
-        } else {
+        if (!isInEditMode()) {
             loadImageIfNecessary(true);
         }
     }
@@ -290,10 +284,6 @@ public class WPNetworkImageView extends ImageView {
             case NONE:
                 // do nothing
                 break;
-            case PHOTO_FULL:
-                // null default for full-screen photos
-                setImageDrawable(null);
-                break;
             case MSHOT:
                 // null default for mshots
                 setImageDrawable(null);
@@ -310,13 +300,9 @@ public class WPNetworkImageView extends ImageView {
             case NONE:
                 // do nothing
                 break;
-            case PHOTO_FULL:
-                // null default for full-screen photos
-                setImageDrawable(null);
-                break;
             case AVATAR:
                 // "mystery man" for failed avatars
-                setImageResource(R.drawable.placeholder);
+                setImageResource(R.drawable.gravatar_placeholder);
                 break;
             default :
                 // medium grey box for all others

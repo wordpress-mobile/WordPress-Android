@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.notifications;
 
 import android.app.ListFragment;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,8 +16,11 @@ import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
+
+import javax.annotation.Nonnull;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
@@ -26,9 +28,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     private PullToRefreshHelper mFauxPullToRefreshHelper;
     private NotesAdapter mNotesAdapter;
     private OnNoteClickListener mNoteClickListener;
-    private boolean mShouldLoadFirstNote;
 
-    Bucket<Note> mBucket;
+    private int mRestoredListPosition;
+
+    private Bucket<Note> mBucket;
 
     /**
      * For responding to tapping of notes
@@ -38,34 +41,8 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.empty_listview, container, false);
-        return v;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // setup the initial notes adapter, starts listening to the bucket
-        mBucket = SimperiumUtils.getNotesBucket();
-
-        ListView listView = getListView();
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setDivider(getResources().getDrawable(R.drawable.list_divider));
-        listView.setDividerHeight(1);
-        if (mBucket != null) {
-            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
-            setListAdapter(mNotesAdapter);
-        } else {
-            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
-        }
-
-        // Set empty text if no notifications
-        TextView textview = (TextView) listView.getEmptyView();
-        if (textview != null) {
-            textview.setText(getText(R.string.notifications_empty_list));
-        }
+    public View onCreateView(@Nonnull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.notifications_fragment_notes_list, container, false);
     }
 
     @Override
@@ -74,6 +51,29 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
         initPullToRefreshHelper();
         mFauxPullToRefreshHelper.registerReceiver(getActivity());
+
+        // setup the initial notes adapter, starts listening to the bucket
+        mBucket = SimperiumUtils.getNotesBucket();
+        if (mBucket == null) {
+            ToastUtils.showToast(getActivity(), R.string.error_refresh_notifications);
+            return;
+        }
+
+        ListView listView = getListView();
+        listView.setDivider(null);
+        listView.setDividerHeight(0);
+
+        if (mNotesAdapter == null) {
+            mNotesAdapter = new NotesAdapter(getActivity(), mBucket);
+        }
+
+        setListAdapter(mNotesAdapter);
+
+        // Set empty text if no notifications
+        TextView textview = (TextView) listView.getEmptyView();
+        if (textview != null) {
+            textview.setText(getText(R.string.notifications_empty_list));
+        }
     }
 
     @Override
@@ -89,7 +89,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onPause() {
-        // unregister the listener and close the cursor
+        // unregister the listener
         if (mBucket != null) {
             mBucket.removeListener(this);
         }
@@ -97,25 +97,14 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     @Override
-    public void onDestroyView() {
-        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        boolean isRefreshing = mFauxPullToRefreshHelper.isRefreshing();
-        super.onConfigurationChanged(newConfig);
-        // Pull to refresh layout is destroyed onDetachedFromWindow,
-        // so we have to re-init the layout, via the helper here
-        initPullToRefreshHelper();
-        mFauxPullToRefreshHelper.setRefreshing(isRefreshing);
-    }
-
-    public void closeAdapterCursor() {
+    public void onDestroy() {
+        // Close Simperium cursor
         if (mNotesAdapter != null) {
             mNotesAdapter.closeCursor();
         }
+
+        mFauxPullToRefreshHelper.unregisterReceiver(getActivity());
+        super.onDestroy();
     }
 
     private void initPullToRefreshHelper() {
@@ -141,9 +130,15 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        if (!isAdded()) return;
+
         Note note = mNotesAdapter.getNote(position);
-        l.setItemChecked(position, true);
-        if (note != null && mNoteClickListener != null) {
+
+        if (mNotesAdapter.isModeratingNote(note.getId())) {
+            return;
+        }
+
+        if (mNoteClickListener != null) {
             mNoteClickListener.onClickNote(note);
         }
     }
@@ -152,21 +147,43 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         mNoteClickListener = listener;
     }
 
-    protected void updateLastSeenTime() {
+    public void setNoteIsHidden(String noteId, boolean isHidden) {
+        if (mNotesAdapter == null) return;
+
+        if (isHidden) {
+            mNotesAdapter.addHiddenNoteId(noteId);
+        } else {
+            mNotesAdapter.removeHiddenNoteId(noteId);
+        }
+    }
+
+    public void setNoteIsModerating(String noteId, boolean isModerating) {
+        if (mNotesAdapter == null) return;
+
+        if (isModerating) {
+            mNotesAdapter.addModeratingNoteId(noteId);
+        } else {
+            mNotesAdapter.removeModeratingNoteId(noteId);
+        }
+    }
+
+    void updateLastSeenTime() {
         // set the timestamp to now
         try {
             if (mNotesAdapter != null && mNotesAdapter.getCount() > 0 && SimperiumUtils.getMetaBucket() != null) {
                 Note newestNote = mNotesAdapter.getNote(0);
                 BucketObject meta = SimperiumUtils.getMetaBucket().get("meta");
-                meta.setProperty("last_seen", newestNote.getTimestamp());
-                meta.save();
+                if (meta != null && newestNote != null) {
+                    meta.setProperty("last_seen", newestNote.getTimestamp());
+                    meta.save();
+                }
             }
         } catch (BucketObjectMissingException e) {
             // try again later, meta is created by wordpress.com
         }
     }
 
-    public void refreshNotes() {
+    void refreshNotes() {
         if (!isAdded() || mNotesAdapter == null) {
             return;
         }
@@ -177,17 +194,18 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
                 mNotesAdapter.reloadNotes();
                 updateLastSeenTime();
 
-                // Show first note if we're on a landscape tablet
-                if (mShouldLoadFirstNote && mNotesAdapter.getCount() > 0) {
-                    mShouldLoadFirstNote = false;
-                    Note note = mNotesAdapter.getNote(0);
-                    if (note != null && mNoteClickListener != null) {
-                        mNoteClickListener.onClickNote(note);
-                        getListView().setItemChecked(0, true);
-                    }
-                }
+                restoreListScrollPosition();
             }
         });
+    }
+
+    private void restoreListScrollPosition() {
+        if (getListView() != null && mRestoredListPosition != ListView.INVALID_POSITION
+                && mRestoredListPosition < mNotesAdapter.getCount()) {
+            // Restore scroll position in list
+            getListView().setSelectionFromTop(mRestoredListPosition, 0);
+            mRestoredListPosition = ListView.INVALID_POSITION;
+        }
     }
 
     @Override
@@ -195,7 +213,20 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         if (outState.isEmpty()) {
             outState.putBoolean("bug_19917_fix", true);
         }
+
         super.onSaveInstanceState(outState);
+    }
+
+    public int getScrollPosition() {
+        if (!isAdded() || getListView() == null) {
+            return ListView.INVALID_POSITION;
+        }
+
+        return getListView().getFirstVisiblePosition();
+    }
+
+    public void setRestoredListPosition(int listPosition) {
+        mRestoredListPosition = listPosition;
     }
 
     /**
@@ -219,9 +250,5 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     @Override
     public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
         //noop
-    }
-
-    public void setShouldLoadFirstNote(boolean shouldLoad) {
-        mShouldLoadFirstNote = shouldLoad;
     }
 }

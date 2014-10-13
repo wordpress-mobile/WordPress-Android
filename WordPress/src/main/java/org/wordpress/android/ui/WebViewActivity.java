@@ -13,8 +13,11 @@ import org.wordpress.android.R;
 /**
  * Basic activity for displaying a WebView.
  */
-public class WebViewActivity extends WPActionBarActivity {
+public abstract class WebViewActivity extends WPActionBarActivity {
     /** Primary webview used to display content. */
+
+    public static final String URL = "url";
+
     protected WebView mWebView;
 
     @Override
@@ -40,11 +43,10 @@ public class WebViewActivity extends WPActionBarActivity {
         // here since it causes problems with the browser-sniffing that some sites rely on to
         // format the page for mobile display
         mWebView = (WebView) findViewById(R.id.webView);
-        mWebView.getSettings().setBuiltInZoomControls(true);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 
         // load URL if one was provided in the intent
-        String url = getIntent().getStringExtra("url");
+        String url = getIntent().getStringExtra(URL);
         if (url != null) {
             loadUrl(url);
         }

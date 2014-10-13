@@ -28,7 +28,7 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.ui.CheckableFrameLayout;
 import org.wordpress.android.ui.CustomSpinner;
 import org.wordpress.android.ui.MultiSelectGridView;
@@ -331,18 +331,14 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onResume() {
         super.onResume();
-
-        if (!NetworkUtils.isNetworkAvailable(this.getActivity())) {
-            mHasRetrievedAllMedia = true;
-        }
-
         refreshSpinnerAdapter();
         refreshMediaFromDB();
     }
 
     public void refreshMediaFromDB() {
         setFilter(mFilter);
-        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia) {
+        if (mGridAdapter.getDataCount() == 0 && !mHasRetrievedAllMedia && isAdded()
+                && NetworkUtils.isNetworkAvailable(getActivity())) {
             refreshMediaFromServer(0, true);
         }
     }

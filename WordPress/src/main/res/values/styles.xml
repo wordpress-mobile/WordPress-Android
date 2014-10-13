@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="WordPress" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
@@ -28,7 +27,7 @@
     </style>
 
     <style name="ActionBar.Solid.WordPress" parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:icon">@drawable/ab_icon_wp</item>
+        <item name="android:icon">@drawable/dashicon_wordpress_alt</item>
         <item name="android:background">@color/blue_new_kid</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wordpress</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wordpress</item>
@@ -132,10 +131,6 @@
         <item name="android:textColor">#FFF6F6F6</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPressListRowBackground">
-        <item name="android:background">@null</item>
     </style>
 
     <style name="MenuDrawer" parent="Widget.MenuDrawer">
@@ -318,15 +313,23 @@
         moderation views on comment detail
     -->
     <style name="WordPress.ModerateButton">
-        <item name="android:textColor">@color/moderate_button_text</item>
+        <item name="android:textColor">@color/calypso_blue</item>
         <item name="android:textSize">@dimen/text_sz_small</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:background">@drawable/moderate_button_selector</item>
-        <item name="android:padding">@dimen/margin_small</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+        <item name="android:paddingRight">@dimen/margin_small</item>
+        <item name="android:paddingLeft">@dimen/margin_small</item>
+        <item name="android:paddingBottom">@dimen/margin_medium</item>
+        <item name="android:drawablePadding">-4dp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="WordPress.BorderedBackground">
+        <item name="android:background">@color/white</item>
     </style>
 
     <!-- Pull to refresh -->

@@ -19,18 +19,20 @@ import com.google.android.gcm.GCMBaseIntentService;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
-import org.wordpress.android.ui.notifications.NotificationUtils;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.PostsActivity;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -59,8 +61,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     protected void handleDefaultPush(Context context, Bundle extras) {
-
-        long wpcomUserID = UserPrefs.getCurrentUserId();
+        long wpcomUserID = AppPrefs.getCurrentUserId();
         String userIDFromPN = extras.getString("user");
         if (userIDFromPN != null) { //It is always populated server side, but better to double check it here.
             if (wpcomUserID <= 0) {
@@ -114,18 +115,18 @@ public class GCMIntentService extends GCMBaseIntentService {
             mActiveNotificationsMap.put(note_id, extras);
         }
 
-        String iconURL = extras.getString("icon");
+        String iconUrl = extras.getString("icon");
         Bitmap largeIconBitmap = null;
-        if (iconURL != null) {
+        if (iconUrl != null) {
             try {
-                iconURL = URLDecoder.decode(iconURL, "UTF-8");
+                iconUrl = URLDecoder.decode(iconUrl, "UTF-8");
+                int largeIconSize = context.getResources().getDimensionPixelSize(
+                        android.R.dimen.notification_large_icon_height);
+                String resizedUrl = PhotonUtils.getPhotonImageUrl(iconUrl, largeIconSize, largeIconSize);
+                largeIconBitmap = ImageUtils.downloadBitmap(resizedUrl);
             } catch (UnsupportedEncodingException e) {
                 AppLog.e(T.NOTIFS, e);
             }
-            float screenDensity = getResources().getDisplayMetrics().densityDpi;
-            int size = Math.round(64 * (screenDensity / 160));
-            String resizedURL = iconURL.replaceAll("(?<=[?&;])s=[0-9]*", "s=" + size);
-            largeIconBitmap = ImageUtils.downloadBitmap(resizedURL);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -167,11 +168,10 @@ public class GCMIntentService extends GCMBaseIntentService {
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);
                 }
-                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0,
-                        commentReplyIntent,
+                PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ab_icon_reply,
-                        getResources().getText(R.string.reply), commentReplyPendingIntent);
+                mBuilder.addAction(R.drawable.ic_action_refresh, context.getText(R.string.reply),
+                        commentReplyPendingIntent);
             }
 
             if (largeIconBitmap != null) {
@@ -206,7 +206,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
 
             mBuilder = new NotificationCompat.Builder(this)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_multi))
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.noticon_notification))
                     .setSmallIcon(R.drawable.notification_icon)
                     .setContentTitle("WordPress")
                     .setContentText(subject)
@@ -242,6 +242,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     @Override
     protected void onMessage(Context context, Intent intent) {
         AppLog.v(T.NOTIFS, "Received Message");
+        AnalyticsTracker.track(Stat.PUSH_NOTIFICATION_RECEIVED);
         Bundle extras = intent.getExtras();
 
         if (extras == null) {
@@ -287,15 +288,15 @@ public class GCMIntentService extends GCMBaseIntentService {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         if (!TextUtils.isEmpty(regId)) {
             // Get or create UUID for WP.com notes api
-            String uuid = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, null);
+            String uuid = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, null);
             if (uuid == null) {
                 uuid = UUID.randomUUID().toString();
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
+                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_UUID, uuid);
                 editor.commit();
             }
 
-            NotificationUtils.registerDeviceForPushNotifications(context, regId);
+            NotificationsUtils.registerDeviceForPushNotifications(context, regId);
 
             if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
                 HelpshiftHelper.getInstance().registerDeviceToken(context, regId);

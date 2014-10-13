@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    included by ReaderPostDetailFragment
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large">
+
+    <View
+        android:id="@+id/spacer_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_detail_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/reader_transparent_selector"
+        android:orientation="horizontal">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_avatar"
+            style="@style/ReaderImageView.Avatar"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@color/grey_extra_light" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_blog_name"
+                style="@style/ReaderTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_blog_name" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_follow"
+                style="@style/ReaderTextView.Follow" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/image_dropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:background="@drawable/reader_transparent_selector"
+            android:paddingBottom="@dimen/margin_large"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
+            android:paddingTop="@dimen/margin_large"
+            android:src="@drawable/reader_arrow_dropdown" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_detail_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:orientation="vertical">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.Post.Title.Detail"
+            tools:text="text_title" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_date_and_author"
+            style="@style/ReaderTextView.Date.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            tools:text="text_date_and_author" />
+
+    </LinearLayout>
+
+    <org.wordpress.android.ui.reader.views.ReaderWebView
+        android:id="@+id/reader_webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_large"
+        android:scrollbars="none" />
+
+    <RelativeLayout
+        android:id="@+id/layout_likes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/reader_list_selector"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/reader_hyperlink"
+            android:textSize="@dimen/text_sz_medium"
+            tools:text="text_like_count" />
+
+        <!-- liking avatars are inserted into this LinearLayout at runtime -->
+        <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
+            android:id="@+id/layout_liking_users_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_below="@+id/text_like_count"
+            android:layout_marginTop="@dimen/margin_medium" />
+
+    </RelativeLayout>
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_comment_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:background="@drawable/reader_count_selector"
+        android:gravity="center"
+        android:padding="@dimen/margin_medium"
+        android:textColor="@color/blue_dark"
+        android:textSize="@dimen/text_sz_medium"
+        android:visibility="gone"
+        tools:text="3 comments"
+        tools:visibility="visible" />
+
+    <!-- extra space so action icons on fragment don't overlap content -->
+    <View
+        android:id="@+id/spacer_actions"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/reader_button_icon" />
+
+</LinearLayout>

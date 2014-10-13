@@ -1,0 +1,20 @@
+language: android
+jdk: oraclejdk7
+
+android:
+  components:
+    - build-tools-19.1.0
+    - android-19
+
+env:
+  global:
+    - GRADLE_OPTS="-XX:MaxPermSize=4g -Xmx4g"
+    - ANDROID_SDKS=android-14
+    - ANDROID_TARGET=android-14
+
+install:
+  # Setup gradle.properties
+  - cp WordPress/gradle.properties-example WordPress/gradle.properties
+
+script:
+  - ./gradlew -PdisablePreDex build

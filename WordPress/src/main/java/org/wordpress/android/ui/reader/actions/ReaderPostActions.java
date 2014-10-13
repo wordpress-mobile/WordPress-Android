@@ -16,9 +16,10 @@ import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderUtils;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -41,22 +42,16 @@ public class ReaderPostActions {
      */
     public static boolean performLikeAction(final ReaderPost post,
                                             final boolean isAskingToLike) {
-        // get post BEFORE we make changes so we can revert on error
-        final ReaderPost originalPost = ReaderPostTable.getPost(post.blogId, post.postId);
-
-        // do nothing and return true if post's like state is same as passed
-        if (originalPost != null && originalPost.isLikedByCurrentUser == isAskingToLike) {
-            return true;
+        // do nothing if post's like state is same as passed
+        boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
+        if (isCurrentlyLiked == isAskingToLike) {
+            AppLog.w(T.READER, "post like unchanged");
+            return false;
         }
 
-        // update post in local db
-        post.isLikedByCurrentUser = isAskingToLike;
-        if (isAskingToLike) {
-            post.numLikes++;
-        } else if (!isAskingToLike && post.numLikes > 0) {
-            post.numLikes--;
-        }
-        ReaderPostTable.addOrUpdatePost(post);
+        // update like status and like count in local db
+        int newNumLikes = (isAskingToLike ? post.numLikes + 1 : post.numLikes - 1);
+        ReaderPostTable.setLikesForPost(post, newNumLikes, isAskingToLike);
         ReaderLikeTable.setCurrentUserLikesPost(post, isAskingToLike);
 
         final String actionName = isAskingToLike ? "like" : "unlike";
@@ -84,17 +79,12 @@ public class ReaderPostActions {
                     AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
                 }
                 AppLog.e(T.READER, volleyError);
-
-                // revert to original post
-                if (originalPost != null) {
-                    ReaderPostTable.addOrUpdatePost(originalPost);
-                    ReaderLikeTable.setCurrentUserLikesPost(post, originalPost.isLikedByCurrentUser);
-                }
+                ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
+                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser);
             }
         };
 
         WordPress.getRestClientUtils().post(path, listener, errorListener);
-
         return true;
     }
 
@@ -152,13 +142,14 @@ public class ReaderPostActions {
      * get the latest version of this post - note that the post is only considered changed if the
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
-    public static void updatePost(final ReaderPost post, final ReaderActions.UpdateResultListener resultListener) {
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/?meta=site,likes";
+    public static void updatePost(final ReaderPost originalPost,
+                                  final ReaderActions.UpdateResultListener resultListener) {
+        String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostResponse(post, jsonObject, resultListener);
+                handleUpdatePostResponse(originalPost, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -174,7 +165,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleUpdatePostResponse(final ReaderPost post,
+    private static void handleUpdatePostResponse(final ReaderPost originalPost,
                                                  final JSONObject jsonObject,
                                                  final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
@@ -190,38 +181,49 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                final boolean hasChanges = (updatedPost.numReplies != post.numReplies
-                                         || updatedPost.numLikes != post.numLikes
-                                         || updatedPost.isCommentsOpen != post.isCommentsOpen
-                                         || updatedPost.isLikedByCurrentUser != post.isLikedByCurrentUser
-                                         || updatedPost.isFollowedByCurrentUser != post.isFollowedByCurrentUser);
+                boolean hasChanges =
+                         ( updatedPost.numReplies != originalPost.numReplies
+                        || updatedPost.numLikes != originalPost.numLikes
+                        || updatedPost.isCommentsOpen != originalPost.isCommentsOpen
+                        || updatedPost.isLikedByCurrentUser != originalPost.isLikedByCurrentUser
+                        || updatedPost.isFollowedByCurrentUser != originalPost.isFollowedByCurrentUser);
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
-                    // the endpoint for requesting a single post doesn't support featured images,
-                    // so if the original post had a featured image, set the featured image for
-                    // the updated post to that of the original post - this should be done even
-                    // if the updated post has a featured image since that was most likely
-                    // assigned by ReaderPost.findFeaturedImage()
-                    if (post.hasFeaturedImage()) {
-                        updatedPost.setFeaturedImage(post.getFeaturedImage());
+                    // set the featured image for the updated post to that of the original
+                    // post - this should be done even if the updated post has a featured
+                    // image since that may have been set by ReaderPost.findFeaturedImage()
+                    if (originalPost.hasFeaturedImage()) {
+                        updatedPost.setFeaturedImage(originalPost.getFeaturedImage());
                     }
+
                     // likewise for featured video
-                    if (post.hasFeaturedVideo()) {
-                        updatedPost.setFeaturedVideo(post.getFeaturedVideo());
-                        updatedPost.isVideoPress = post.isVideoPress;
+                    if (originalPost.hasFeaturedVideo()) {
+                        updatedPost.setFeaturedVideo(originalPost.getFeaturedVideo());
+                        updatedPost.isVideoPress = originalPost.isVideoPress;
                     }
+
+                    // retain the pubDate and timestamp of the original post - this is important
+                    // since these control how the post is sorted in the list view, and we don't
+                    // want that sorting to change
+                    updatedPost.timestamp = originalPost.timestamp;
+                    updatedPost.setPublished(originalPost.getPublished());
+
                     ReaderPostTable.addOrUpdatePost(updatedPost);
                 }
 
                 // always update liking users regardless of whether changes were detected - this
                 // ensures that the liking avatars are immediately available to post detail
-                handlePostLikes(updatedPost, jsonObject);
+                if (handlePostLikes(updatedPost, jsonObject)) {
+                    hasChanges = true;
+                }
 
                 if (resultListener != null) {
+                    final ReaderActions.UpdateResult result =
+                            (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
-                            resultListener.onUpdateResult(hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
                         }
                     });
                 }
@@ -231,21 +233,29 @@ public class ReaderPostActions {
 
     /*
      * updates local liking users based on the "likes" meta section of the post's json - requires
-     * using the /sites/ endpoint with ?meta=likes
+     * using the /sites/ endpoint with ?meta=likes - returns true if likes have changed
      */
-    private static void handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
+    private static boolean handlePostLikes(final ReaderPost post, JSONObject jsonPost) {
         if (post == null || jsonPost == null) {
-            return;
+            return false;
         }
 
         JSONObject jsonLikes = JSONUtil.getJSONChild(jsonPost, "meta/data/likes");
         if (jsonLikes == null) {
-            return;
+            return false;
         }
 
         ReaderUserList likingUsers = ReaderUserList.fromJsonLikes(jsonLikes);
+        ReaderUserIdList likingUserIds = likingUsers.getUserIds();
+
+        ReaderUserIdList existingIds = ReaderLikeTable.getLikesForPost(post);
+        if (likingUserIds.isSameList(existingIds)) {
+            return false;
+        }
+
         ReaderUserTable.addOrUpdateUsers(likingUsers);
-        ReaderLikeTable.setLikesForPost(post, likingUsers.getUserIds());
+        ReaderLikeTable.setLikesForPost(post, likingUserIds);
+        return true;
     }
 
     /**

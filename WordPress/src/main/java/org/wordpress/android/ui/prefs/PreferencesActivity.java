@@ -39,13 +39,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.accounts.ManageBlogsActivity;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
-import org.wordpress.android.ui.notifications.NotificationUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MapUtils;
@@ -124,7 +125,7 @@ public class PreferencesActivity extends PreferenceActivity {
 
         // AuthenticatorRequest notification settings if needed
         if (WordPress.hasValidWPComCredentials(PreferencesActivity.this)) {
-            String settingsJson = mSettings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+            String settingsJson = mSettings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
             if (settingsJson == null) {
                 com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
                     @Override
@@ -133,7 +134,7 @@ public class PreferencesActivity extends PreferenceActivity {
                         Editor editor = mSettings.edit();
                         try {
                             JSONObject settingsJSON = jsonObject.getJSONObject("settings");
-                            editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
+                            editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJSON.toString());
                             editor.commit();
                         } catch (JSONException e) {
                             AppLog.e(T.NOTIFS, "Can't parse the JSON object returned from the server that contains PN settings.", e);
@@ -146,27 +147,27 @@ public class PreferencesActivity extends PreferenceActivity {
                     public void onErrorResponse(VolleyError volleyError) {
                         AppLog.e(T.NOTIFS, "Get settings action failed", volleyError);                    }
                 };
-                NotificationUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
+                NotificationsUtils.getPushNotificationSettings(PreferencesActivity.this, listener, errorListener);
             }
         }
 
-        //Passcode Lock not supported
-        if( AppLockManager.getInstance().isAppLockFeatureEnabled() == false ) {
-            PreferenceScreen rootScreen = (PreferenceScreen)findPreference("wp_pref_root");
-            PreferenceGroup passcodeGroup = (PreferenceGroup)findPreference("wp_passcode_lock_category");
-            rootScreen.removePreference(passcodeGroup);
+        // Passcode Lock not supported
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
+                    "wp_pref_passlock_enabled");
+            // disable on-click changes on the property
+            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    passcodeEnabledCheckBoxPreference.setChecked(
+                            AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked());
+                    return false;
+                }
+            });
         } else {
-            final CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
-            //disable on-click changes on the property
-            passcodeEnabledCheckBoxPreference.setOnPreferenceClickListener(
-                    new OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            passcodeEnabledCheckBoxPreference.setChecked( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() );
-                            return false;
-                        }
-                    }
-                    );
+            PreferenceScreen rootScreen = (PreferenceScreen) findPreference("wp_pref_root");
+            PreferenceGroup passcodeGroup = (PreferenceGroup) findPreference("wp_passcode_lock_category");
+            rootScreen.removePreference(passcodeGroup);
         }
         displayPreferences();
     }
@@ -187,7 +188,6 @@ public class PreferencesActivity extends PreferenceActivity {
         }
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -197,9 +197,10 @@ public class PreferencesActivity extends PreferenceActivity {
         refreshWPComAuthCategory();
 
         //update Passcode lock row if available
-        if( AppLockManager.getInstance().isAppLockFeatureEnabled() ) {
-            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference("wp_pref_passlock_enabled");
-            if ( AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked() ) {
+        if (AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+            CheckBoxPreference passcodeEnabledCheckBoxPreference = (CheckBoxPreference) findPreference(
+                    "wp_pref_passlock_enabled");
+            if (AppLockManager.getInstance().getCurrentAppLock().isPasswordLocked()) {
                 passcodeEnabledCheckBoxPreference.setChecked(true);
             } else {
                 passcodeEnabledCheckBoxPreference.setChecked(false);
@@ -492,9 +493,9 @@ public class PreferencesActivity extends PreferenceActivity {
                 SharedPreferences.Editor editor = settings.edit();
                 Gson gson = new Gson();
                 String settingsJson = gson.toJson(mNotificationSettings);
-                editor.putString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
+                editor.putString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, settingsJson);
                 editor.commit();
-                NotificationUtils.setPushNotificationSettings(PreferencesActivity.this);
+                NotificationsUtils.setPushNotificationSettings(PreferencesActivity.this);
             }
             return null;
         }
@@ -611,7 +612,7 @@ public class PreferencesActivity extends PreferenceActivity {
         notificationTypesCategory.removeAll();
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String settingsJson = settings.getString(NotificationUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
+        String settingsJson = settings.getString(NotificationsUtils.WPCOM_PUSH_DEVICE_NOTIFICATION_SETTINGS, null);
         if (settingsJson == null) {
             rootScreen.removePreference(mNotificationsGroup);
             return;
@@ -707,8 +708,12 @@ public class PreferencesActivity extends PreferenceActivity {
                                             int whichButton) {
                             // set the result code so caller knows the user signed out
                             setResult(RESULT_SIGNED_OUT);
-                            WordPress.signOut(PreferencesActivity.this);
-                            finish();
+                            WordPress.signOutAsyncWithProgressBar(PreferencesActivity.this, new SignOutCallback() {
+                                @Override
+                                public void onSignOut() {
+                                    finish();
+                                }
+                            });
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,

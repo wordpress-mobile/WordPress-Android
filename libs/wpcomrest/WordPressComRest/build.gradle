@@ -12,9 +12,9 @@ repositories {
 }
 
 android {
-    defaultPublishConfig 'debug'
+    publishNonDefault true
 
-    compileSdkVersion 20
+    compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
     defaultConfig {

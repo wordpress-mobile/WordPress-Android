@@ -8,7 +8,7 @@ public class ReaderConstants {
     public static final long READER_AUTO_UPDATE_DELAY_MINUTES = 10;     // 10 minute delay between automatic updates
 
     public static final int  READER_MAX_RECOMMENDED_TO_REQUEST = 40;     // max # of recommended blogs to request
-    public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 5;      // max # of recommended blogs to display
+    public static final int  READER_MAX_RECOMMENDED_TO_DISPLAY = 4;      // max # of recommended blogs to display
 
     // intent IDs
     static final int INTENT_READER_SUBS        = 1000;
@@ -23,6 +23,9 @@ public class ReaderConstants {
     static final String ARG_IMAGE_URL         = "image_url";
     static final String ARG_IS_PRIVATE        = "is_private";
     static final String ARG_POST_LIST_TYPE    = "post_list_type";
+    static final String ARG_TITLE             = "title";
+    static final String ARG_CONTENT           = "content";
+    static final String ARG_IS_SINGLE_POST    = "is_single_post";
 
     static final String KEY_ALREADY_UPDATED   = "already_updated";
     static final String KEY_ALREADY_REQUESTED = "already_requested";

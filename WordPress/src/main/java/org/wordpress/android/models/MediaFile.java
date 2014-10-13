@@ -1,5 +1,6 @@
 package org.wordpress.android.models;
 
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import org.wordpress.android.WordPress;
@@ -32,6 +33,8 @@ public class MediaFile {
     private String uploadState = null;
     private String mediaId;
 
+    public static String VIDEOPRESS_SHORTCODE_ID = "videopress_shortcode";
+
     public MediaFile(String blogId, Map<?, ?> resultMap) {
         boolean isDotCom = (WordPress.getCurrentBlog() != null && WordPress.getCurrentBlog().isDotcomFlag());
 
@@ -41,7 +44,7 @@ public class MediaFile {
         setTitle(MapUtils.getMapStr(resultMap, "title"));
         setCaption(MapUtils.getMapStr(resultMap, "caption"));
         setDescription(MapUtils.getMapStr(resultMap, "description"));
-        setVideoPressShortCode(MapUtils.getMapStr(resultMap, "videopress_shortcode"));
+        setVideoPressShortCode(MapUtils.getMapStr(resultMap, VIDEOPRESS_SHORTCODE_ID));
 
         // get the file name from the link
         String link = MapUtils.getMapStr(resultMap, "link");
@@ -287,6 +290,58 @@ public class MediaFile {
 
     public String getUploadState() {
         return uploadState;
+    }
+
+    /**
+     * Outputs the Html for an image
+     * If a fullSizeUrl exists, a link will be created to it from the resizedPictureUrl
+     */
+    public String getImageHtmlForUrls(String fullSizeUrl, String resizedPictureURL, boolean shouldAddImageWidthCSS) {
+        String alignment = "";
+        switch (getHorizontalAlignment()) {
+            case 0:
+                alignment = "alignnone";
+                break;
+            case 1:
+                alignment = "alignleft";
+                break;
+            case 2:
+                alignment = "aligncenter";
+                break;
+            case 3:
+                alignment = "alignright";
+                break;
+        }
+
+        String alignmentCSS = "class=\"" + alignment + " size-full\" ";
+
+        if (shouldAddImageWidthCSS) {
+            alignmentCSS += "style=\"max-width: " + getWidth() + "px\" ";
+        }
+
+        // Check if we uploaded a featured picture that is not added to the Post content (normal case)
+        if ((fullSizeUrl != null && fullSizeUrl.equalsIgnoreCase("")) ||
+                (resizedPictureURL != null && resizedPictureURL.equalsIgnoreCase(""))) {
+            return ""; // Not featured in Post. Do not add to the content.
+        }
+
+        if (fullSizeUrl == null && resizedPictureURL != null) {
+            fullSizeUrl = resizedPictureURL;
+        } else if (fullSizeUrl != null && resizedPictureURL == null) {
+            resizedPictureURL = fullSizeUrl;
+        }
+
+        String mediaTitle = StringUtils.notNullStr(getTitle());
+
+        String content = String.format("<a href=\"%s\"><img title=\"%s\" %s alt=\"image\" src=\"%s\" /></a>",
+                fullSizeUrl, mediaTitle, alignmentCSS, resizedPictureURL);
+
+        if (!TextUtils.isEmpty(getCaption())) {
+            content = String.format("[caption id=\"\" align=\"%s\" width=\"%d\" caption=\"%s\"]%s[/caption]",
+                    alignment, getWidth(), TextUtils.htmlEncode(getCaption()), content);
+        }
+
+        return content;
     }
 }
 

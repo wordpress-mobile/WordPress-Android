@@ -137,7 +137,7 @@ public class Post implements Serializable {
         try {
             jArray = new JSONArray(customFields);
         } catch (JSONException e) {
-            AppLog.e(T.POSTS, e);
+            AppLog.e(T.POSTS, "No custom fields found for post.");
         }
         return jArray;
     }
@@ -475,5 +475,9 @@ public class Post implements Serializable {
 
     public boolean isNew() {
         return getLocalTablePostId() >= 0;
+    }
+
+    public boolean isPublishable() {
+        return !(isNew() && getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
     }
 }

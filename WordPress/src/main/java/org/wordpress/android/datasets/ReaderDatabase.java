@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 80;
+    private static final int DB_VERSION = 93;
 
     /*
      * version history
@@ -37,6 +37,14 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   78 - added tag_type to ReaderPostTable.tbl_post_tags
      *   79 - added is_likes_enabled and is_sharing_enabled to tbl_posts
      *   80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
+     *   81 - added image_url to tbl_blog_info
+     *   82 - added idx_posts_timestamp to tbl_posts
+     *   83 - removed tag_list from tbl_posts
+     *   84 - added tbl_attachments
+     *   85 - removed tbl_attachments, added attachments_json to tbl_posts
+     *   90 - added default values for all INTEGER columns that were missing them (hotfix 3.1.1)
+     *   92 - added default values for all INTEGER columns that were missing them (3.2)
+     *   93 - tbl_posts text is now truncated to a max length (3.3)
      */
 
     /*

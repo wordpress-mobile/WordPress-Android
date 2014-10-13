@@ -20,7 +20,7 @@
             android:dividerHeight="1dp"
             android:listSelector="@drawable/reader_list_selector"
             android:scrollingCache="true"
-            android:textColor="#444444"
+            style="@style/WordPress.BorderedBackground"
             tools:listitem="@layout/comment_listitem"/>
     </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 

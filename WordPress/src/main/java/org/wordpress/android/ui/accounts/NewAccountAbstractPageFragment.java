@@ -130,7 +130,7 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
     protected void showError(String message) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message,
-                R.drawable.nux_icon_alert, getString(R.string.nux_tap_continue));
+                R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();
     }

@@ -16,8 +16,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.StatsTagsAndCategoriesTable;
 import org.wordpress.android.models.StatsTagsandCategories.Type;
 import org.wordpress.android.providers.StatsContentProvider;
-import org.wordpress.android.util.BlogUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.Locale;
@@ -34,17 +32,15 @@ public class StatsTagsAndCategoriesFragment extends StatsAbsViewFragment impleme
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_pager_fragment, container, false);
 
-        if (DisplayUtils.isTablet(view.getContext())) {
-            TextView tv = (TextView) view.findViewById(R.id.stats_pager_title);
-            tv.setText(getTitle().toUpperCase(Locale.getDefault()));
-        }
+        TextView tv = (TextView) view.findViewById(R.id.stats_pager_title);
+        tv.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         FragmentManager fm = getFragmentManager();
 
         int entryLabelResId = R.string.stats_entry_tags_and_categories;
         int totalsLabelResId = R.string.stats_totals_views;
         int emptyLabelResId = R.string.stats_empty_tags_and_categories;
-        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId);
+        StatsCursorFragment fragment = StatsCursorFragment.newInstance(STATS_TAGS_AND_CATEGORIES_URI, entryLabelResId, totalsLabelResId, emptyLabelResId, getLocalTableBlogID());
         fragment.setListAdapter(new CustomCursorAdapter(getActivity(), null));
         fragment.setCallback(this);
 

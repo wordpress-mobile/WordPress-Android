@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderUserIdList;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.SqlUtils;
 
 /**
@@ -17,15 +17,15 @@ import org.wordpress.android.util.SqlUtils;
 public class ReaderLikeTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_post_likes ("
-                + " post_id        INTEGER,"
-                + " blog_id        INTEGER,"
-                + " user_id        INTEGER,"
+                + " post_id        INTEGER DEFAULT 0,"
+                + " blog_id        INTEGER DEFAULT 0,"
+                + " user_id        INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, post_id, user_id))");
 
         db.execSQL("CREATE TABLE tbl_comment_likes ("
-                + " comment_id     INTEGER,"
-                + " blog_id        INTEGER,"
-                + " user_id        INTEGER,"
+                + " comment_id     INTEGER DEFAULT 0,"
+                + " blog_id        INTEGER DEFAULT 0,"
+                + " user_id        INTEGER DEFAULT 0,"
                 + " PRIMARY KEY (blog_id, comment_id, user_id))");
     }
 
@@ -84,7 +84,7 @@ public class ReaderLikeTable {
         if (post == null) {
             return;
         }
-        long currentUserId = UserPrefs.getCurrentUserId();
+        long currentUserId = AppPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", post.blogId);
@@ -171,7 +171,7 @@ public class ReaderLikeTable {
             return;
         }
 
-        long currentUserId = UserPrefs.getCurrentUserId();
+        long currentUserId = AppPrefs.getCurrentUserId();
         if (isLiked) {
             ContentValues values = new ContentValues();
             values.put("blog_id", comment.blogId);

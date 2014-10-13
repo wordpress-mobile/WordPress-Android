@@ -28,6 +28,7 @@ import org.wordpress.android.datasets.StatsReferrerGroupsTable;
 import org.wordpress.android.datasets.StatsReferrersTable;
 import org.wordpress.android.datasets.StatsSearchEngineTermsTable;
 import org.wordpress.android.datasets.StatsTopPostsAndPagesTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.StatsBarChartData;
 import org.wordpress.android.models.StatsClick;
 import org.wordpress.android.models.StatsClickGroup;
@@ -73,6 +74,7 @@ public class StatsService extends Service {
     private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
+    private String mServiceBlogTimezone = null;
     private Object mServiceBlogIdMonitor = new Object();
     private int mServiceStartId;
     private Serializable mErrorObject = null;
@@ -141,9 +143,19 @@ public class StatsService extends Service {
         }
     }
 
-    private void setServiceBlogId(String value) {
+    private void setServiceBlogIdAndTimeZone(String value) {
         synchronized (mServiceBlogIdMonitor) {
             mServiceBlogId = value;
+            String timezone = null;
+            if (mServiceBlogId != null) {
+                Blog blog = WordPress.wpDB.getBlogForDotComBlogId(value);
+                timezone = StatsUtils.getBlogTimezone(blog);
+            }
+            if (timezone != null) {
+                mServiceBlogTimezone = timezone;
+            } else {
+                mServiceBlogTimezone = null;
+            }
         }
     }
 
@@ -152,13 +164,13 @@ public class StatsService extends Service {
                 && !mCurrentStatsNetworkRequest.isCanceled()) {
             mCurrentStatsNetworkRequest.cancel();
         }
-        setServiceBlogId(null);
+        setServiceBlogIdAndTimeZone(null);
         this.mErrorObject = null;
         this.mServiceStartId = 0;
     }
 
     private void startTasks(final String blogId, final int startId) {
-        setServiceBlogId(blogId);
+        setServiceBlogIdAndTimeZone(blogId);
         this.mServiceStartId = startId;
         this.mErrorObject = null;
 
@@ -166,8 +178,13 @@ public class StatsService extends Service {
             @Override
             public void run() {
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtils();
-                final String today = StatsUtils.getCurrentDate();
-                final String yesterday = StatsUtils.getYesterdaysDate();
+
+                // Calculate the correct today and yesterday values by using the blog time_zone offset
+                // fallback to device settings if option is null
+                final String today = (mServiceBlogTimezone != null) ?
+                        StatsUtils.getCurrentDateTZ(mServiceBlogTimezone) : StatsUtils.getCurrentDate();
+                final String yesterday = (mServiceBlogTimezone != null) ?
+                        StatsUtils.getYesterdaysDateTZ(mServiceBlogTimezone) : StatsUtils.getYesterdaysDate();
 
                 AppLog.i(T.STATS, "Update started for blogID - " + blogId);
                 broadcastUpdate(true);

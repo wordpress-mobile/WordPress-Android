@@ -35,7 +35,7 @@ import org.wordpress.android.models.StatsReferrer;
 import org.wordpress.android.models.StatsReferrerGroup;
 import org.wordpress.android.models.StatsSearchEngineTerm;
 import org.wordpress.android.models.StatsTopPostsAndPages;
-import org.wordpress.android.networking.NetworkUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
 import org.wordpress.android.util.AppLog;
@@ -62,6 +62,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
     private String mStatsDate = null;
     private final Handler mHandler = new Handler();
     private int mAltRowColor;
+    private int mLocalBlogID = -1;
 
     // Variables that hold data returned from the REST API
     private int mVisitorsCount = 0;
@@ -126,17 +127,20 @@ public class StatsDetailsActivity extends WPActionBarActivity {
                 }
         );
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.containsKey(StatsActivity.STATS_DETAILS_DATE)) {
-            String date = extras.getString(StatsActivity.STATS_DETAILS_DATE);
-            mStatsDate = date;
+        if (getIntent() != null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null && extras.containsKey(StatsActivity.STATS_DETAILS_DATE)) {
+                String date = extras.getString(StatsActivity.STATS_DETAILS_DATE);
+                mStatsDate = date;
+            }
+            mLocalBlogID = getIntent().getIntExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
         }
 
         setTitle(getString(R.string.stats));
 
         // Setting up the main date label
        ((TextView) findViewById(R.id.stats_views_visitors_date)).setText(
-               StatsUtils.parseDate(mStatsDate, "yyyy-MM-dd", "EEEE, d MMMM, yyyy")
+               StatsUtils.parseDate(mStatsDate, "yyyy-MM-dd", "EEEE, MMMM d, yyyy")
        );
 
         // Setting up top posts and pages
@@ -194,7 +198,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
             return;
         }
 
-        final Blog currentBlog = WordPress.getCurrentBlog();
+        final Blog currentBlog = WordPress.getBlog(mLocalBlogID);
 
         if (mStatsDate == null || currentBlog == null || !NetworkUtils.isNetworkAvailable(this)) {
             mPullToRefreshHelper.setRefreshing(false);
@@ -204,7 +208,7 @@ public class StatsDetailsActivity extends WPActionBarActivity {
             return;
         }
 
-        final String blogId = StatsUtils.getBlogId();
+        final String blogId = StatsUtils.getBlogId(mLocalBlogID);
 
         // View and visitor counts for a site
         final String viewAndVisitorsPath = String.format(

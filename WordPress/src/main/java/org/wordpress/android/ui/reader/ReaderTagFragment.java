@@ -13,7 +13,6 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter.TagActionListener;
@@ -97,8 +96,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
     }
 
     private void scrollToTagName(String tagName) {
-        ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
-        int index = getTagAdapter().indexOfTag(tag);
+        int index = getTagAdapter().indexOfTagName(tagName);
         if (index > -1) {
             mListView.smoothScrollToPosition(index);
         }
@@ -112,7 +110,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
             return;
         }
         if (!TextUtils.isEmpty(scrollToTagName)) {
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     scrollToTagName(scrollToTagName);
@@ -160,7 +158,7 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagA
                 break;
         }
 
-        int index = getTagAdapter().indexOfTag(tag);
+        int index = getTagAdapter().indexOfTagName(tag.getTagName());
         if (animateRemoval && index > -1) {
             Animation.AnimationListener aniListener = new Animation.AnimationListener() {
                 @Override

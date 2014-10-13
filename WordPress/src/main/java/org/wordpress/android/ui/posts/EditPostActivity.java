@@ -16,12 +16,16 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPViewPager;
-import org.wordpress.android.analytics.AnalyticsTracker;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -168,6 +172,7 @@ public class EditPostActivity extends Activity {
                 }
             }
         });
+        ActivityId.trackLastActivity(this, ActivityId.POST_EDITOR);
     }
 
     class AutoSaveTask extends TimerTask {
@@ -192,6 +197,7 @@ public class EditPostActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
     }
 
     @Override
@@ -252,13 +258,30 @@ public class EditPostActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_save_post) {
-            if (mPost.isUploaded()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
-            } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+            PostStatus status = mPost.getStatusEnum();
+            switch (status) {
+                case PUBLISHED:
+                    if (mPost.isUploaded()) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
+                    } else {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST);
+                    }
+                    break;
+                case DRAFT:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
+                    break;
+                default:
+                    // No-op
             }
 
-            savePost(false);
+            // If the post is new and there are no changes, don't publish
+            updatePostObject(false);
+            if (!mPost.isPublishable()) {
+                ToastUtils.showToast(this, R.string.error_publish_empty_post, Duration.SHORT);
+                return false;
+            }
+
+            savePost(false, false);
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
             Intent i = new Intent();
@@ -289,7 +312,7 @@ public class EditPostActivity extends Activity {
         return mPost;
     }
 
-    private void savePost(boolean isAutosave) {
+    private void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -301,6 +324,16 @@ public class EditPostActivity extends Activity {
         }
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updatePostSettings();
+        }
+    }
+
+    private void savePost(boolean isAutosave) {
+        savePost(isAutosave, true);
+    }
+
+    private void savePost(boolean isAutosave, boolean updatePost) {
+        if (updatePost) {
+            updatePostObject(isAutosave);
         }
 
         WordPress.wpDB.updatePost(mPost);

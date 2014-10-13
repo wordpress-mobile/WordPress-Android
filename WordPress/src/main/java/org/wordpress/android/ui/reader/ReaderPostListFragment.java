@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -22,7 +21,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cocosw.undobar.UndoBarController;
@@ -31,13 +29,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
-import org.wordpress.android.networking.NetworkUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.prefs.UserPrefs;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
@@ -47,17 +44,19 @@ import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions.TagAction;
 import org.wordpress.android.ui.reader.adapters.ReaderActionBarTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
-import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.views.ReaderBlogInfoView;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.wordpress.android.util.ptr.PullToRefreshHelper.RefreshListener;
 import org.wordpress.android.widgets.WPListView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -66,26 +65,13 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 public class ReaderPostListFragment extends Fragment
         implements AbsListView.OnScrollListener,
-                   ViewTreeObserver.OnScrollChangedListener,
                    ActionBar.OnNavigationListener {
-
-    static interface OnPostSelectedListener {
-        public void onPostSelected(long blogId, long postId);
-    }
-
-    public static interface OnTagSelectedListener {
-        public void onTagSelected(String tagName);
-    }
-
-    public static interface OnPostPopupListener {
-        public void onShowPostPopup(View view, ReaderPost post, int position);
-    }
 
     private ReaderActionBarTagAdapter mActionBarAdapter;
     private ReaderPostAdapter mPostAdapter;
 
-    private OnPostSelectedListener mPostSelectedListener;
-    private OnTagSelectedListener mOnTagSelectedListener;
+    private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
+    private ReaderInterfaces.OnTagSelectedListener mOnTagSelectedListener;
 
     private PullToRefreshHelper mPullToRefreshHelper;
     private WPListView mListView;
@@ -94,10 +80,7 @@ public class ReaderPostListFragment extends Fragment
     private ProgressBar mProgress;
 
     private ViewGroup mTagInfoView;
-
     private ReaderBlogInfoView mBlogInfoView;
-    private View mMshotSpacerView;
-    private static final String MSHOT_SPACER_TAG = "mshot_spacer";
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -110,8 +93,30 @@ public class ReaderPostListFragment extends Fragment
 
     private Parcelable mListState = null;
 
-    private final Stack<String> mTagPreviewHistory = new Stack<String>();
-    private static final String KEY_TAG_PREVIEW_HISTORY = "tag_preview_history";
+    private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
+
+    private static class HistoryStack extends Stack<String> {
+        private final String keyName;
+        HistoryStack(String keyName) {
+            this.keyName = keyName;
+        }
+        void restoreInstance(Bundle bundle) {
+            clear();
+            if (bundle.containsKey(keyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(keyName);
+                if (history != null) {
+                    this.addAll(history);
+                }
+            }
+        }
+        void saveInstance(Bundle bundle) {
+            if (!isEmpty()) {
+                ArrayList<String> history = new ArrayList<String>();
+                history.addAll(this);
+                bundle.putStringArrayList(keyName, history);
+            }
+        }
+    }
 
     /*
      * show posts with a specific tag
@@ -132,7 +137,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * show posts in a specific blog
      */
-    static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
+    public static ReaderPostListFragment newInstance(long blogId, String blogUrl) {
         AppLog.d(T.READER, "reader post list > newInstance (blog)");
 
         Bundle args = new Bundle();
@@ -187,10 +192,8 @@ public class ReaderPostListFragment extends Fragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
-            if (savedInstanceState.containsKey(KEY_TAG_PREVIEW_HISTORY)) {
-                Stack<String> backStack = (Stack<String>) savedInstanceState.getSerializable(KEY_TAG_PREVIEW_HISTORY);
-                mTagPreviewHistory.clear();
-                mTagPreviewHistory.addAll(backStack);
+            if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+                mTagPreviewHistory.restoreInstance(savedInstanceState);
             }
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
         }
@@ -214,6 +217,14 @@ public class ReaderPostListFragment extends Fragment
             refreshPosts();
             // likewise for tags
             refreshTags();
+
+            // auto-update the current tag if it's time
+            if (!isUpdating()
+                    && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                    && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                AppLog.i(T.READER, "reader post list > auto-updating current tag after resume");
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
+            }
         }
     }
 
@@ -224,8 +235,8 @@ public class ReaderPostListFragment extends Fragment
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
         }
-        if (!mTagPreviewHistory.empty()) {
-            outState.putSerializable(KEY_TAG_PREVIEW_HISTORY, mTagPreviewHistory);
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+            mTagPreviewHistory.saveInstance(outState);
         }
 
         outState.putLong(ReaderConstants.ARG_BLOG_ID, mCurrentBlogId);
@@ -274,40 +285,14 @@ public class ReaderPostListFragment extends Fragment
                 // inflate the blog info and make it full size
                 mBlogInfoView = new ReaderBlogInfoView(container.getContext());
                 rootView.addView(mBlogInfoView);
-                mBlogInfoView.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-
-                // add a blank header to the listView that's the same height as the mshot with a fudge
-                // factor to account for the info container - global layout listener below will
-                // use the actual container height once it's known - note that this "fudge factor"
-                // is based on the height of the info container with a two-line description
-                int spacerHeight = mBlogInfoView.getMshotHeight() + DisplayUtils.dpToPx(container.getContext(), 105);
-                mMshotSpacerView = ReaderUtils.addListViewHeader(mListView, spacerHeight);
-
-                // tag the spacer so we can identify it later
-                mMshotSpacerView.setTag(MSHOT_SPACER_TAG);
-
-                // make sure blog info is in front of the listView
-                mBlogInfoView.bringToFront();
-
-                // assign a global layout listener to detect changes to the size of the blogInfo so
-                // we can resize the mshot spacer accordingly
-                mBlogInfoView.getViewTreeObserver().addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener() {
-                            @Override
-                            public void onGlobalLayout() {
-                                int currentHeight = mMshotSpacerView.getLayoutParams().height;
-                                int newHeight = mBlogInfoView.getInfoContainerHeight()
-                                              + mBlogInfoView.getMshotHeight();
-                                if (currentHeight != newHeight) {
-                                    mMshotSpacerView.getLayoutParams().height = newHeight;
-                                }
-                            }
-                        }
-                );
-
+                ReaderUtils.layoutBelow(rootView, R.id.ptr_layout, mBlogInfoView.getId());
                 break;
+        }
+
+        // add blank listView header if this is tag/blog preview to provide some initial space
+        // between the tag/blog header and the posts (height is zero so only divider appears)
+        if (getPostListType().isPreviewType()) {
+            ReaderUtils.addListViewHeader(mListView, 0);
         }
 
         // textView that appears when current tag has no posts
@@ -325,6 +310,7 @@ public class ReaderPostListFragment extends Fragment
                 if (position >= 0 && mPostSelectedListener != null) {
                     ReaderPost post = (ReaderPost) getPostAdapter().getItem(position);
                     if (post != null) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_OPENED_ARTICLE);
                         mPostSelectedListener.onPostSelected(post.blogId, post.postId);
                     }
                 }
@@ -377,11 +363,11 @@ public class ReaderPostListFragment extends Fragment
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if (activity instanceof OnPostSelectedListener) {
-            mPostSelectedListener = (OnPostSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnPostSelectedListener) {
+            mPostSelectedListener = (ReaderInterfaces.OnPostSelectedListener) activity;
         }
-        if (activity instanceof OnTagSelectedListener) {
-            mOnTagSelectedListener = (OnTagSelectedListener) activity;
+        if (activity instanceof ReaderInterfaces.OnTagSelectedListener) {
+            mOnTagSelectedListener = (ReaderInterfaces.OnTagSelectedListener) activity;
         }
     }
 
@@ -396,34 +382,20 @@ public class ReaderPostListFragment extends Fragment
         boolean adapterAlreadyExists = hasPostAdapter();
         mListView.setAdapter(getPostAdapter());
 
-        // if adapter didn't already exist, populate it now then update the tag/blog - this
+        // if adapter didn't already exist, populate it now then update the tag - this
         // check is important since without it the adapter would be reset and posts would
         // be updated every time the user moves between fragments
-        if (!adapterAlreadyExists) {
+        if (!adapterAlreadyExists && getPostListType().isTagType()) {
             boolean isRecreated = (savedInstanceState != null);
-            switch (getPostListType()) {
-                case TAG_FOLLOWED:
-                case TAG_PREVIEW:
-                    getPostAdapter().setCurrentTag(mCurrentTag);
-                    if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
-                        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
-                    }
-                    break;
-                case BLOG_PREVIEW:
-                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
-                    if (!isRecreated) {
-                        updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
-                    }
-                    break;
+            getPostAdapter().setCurrentTag(mCurrentTag);
+            if (!isRecreated && ReaderTagTable.shouldAutoUpdateTag(mCurrentTag)) {
+                updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
             }
         }
 
         switch (getPostListType()) {
             case BLOG_PREVIEW:
                 loadBlogInfo();
-                // listen for scroll changes so we can scale the mshot and reposition the blogInfo
-                // as the user scrolls
-                mListView.setOnScrollChangedListener(this);
                 break;
             case TAG_PREVIEW:
                 updateTagPreviewHeader();
@@ -459,9 +431,9 @@ public class ReaderPostListFragment extends Fragment
      * called when user taps dropdown arrow icon next to a post - shows a popup menu
      * that enables blocking the blog the post is in
      */
-    private final OnPostPopupListener mOnPostPopupListener = new OnPostPopupListener() {
+    private final ReaderInterfaces.OnPostPopupListener mOnPostPopupListener = new ReaderInterfaces.OnPostPopupListener() {
         @Override
-        public void onShowPostPopup(View view, final ReaderPost post, final int position) {
+        public void onShowPostPopup(View view, final ReaderPost post) {
             if (view == null || post == null) {
                 return;
             }
@@ -471,7 +443,7 @@ public class ReaderPostListFragment extends Fragment
             menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    blockBlogForPost(post, position);
+                    blockBlogForPost(post);
                     return true;
                 }
             });
@@ -481,9 +453,13 @@ public class ReaderPostListFragment extends Fragment
 
     /*
      * blocks the blog associated with the passed post and removes all posts in that blog
-     * from the adapter - passed position is the index of the post in the adapter
+     * from the adapter
      */
-    private void blockBlogForPost(final ReaderPost post, final int position) {
+    private void blockBlogForPost(final ReaderPost post) {
+        if (post == null || !hasPostAdapter()) {
+            return;
+        }
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
@@ -500,10 +476,12 @@ public class ReaderPostListFragment extends Fragment
 
         // perform call to block this blog - returns list of posts deleted by blocking so
         // they can be restored if the user undoes the block
-        final ReaderPostList postsToRestore =
+        final ReaderBlogActions.BlockedBlogResult blockResult =
                 ReaderBlogActions.blockBlogFromReader(post.blogId, actionListener);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOCKED_BLOG);
 
         // animate out the post the user chose to block from, then remove the post from the adapter
+        final int position = getPostAdapter().indexOfPost(post);
         Animation.AnimationListener aniListener = new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) { }
@@ -528,7 +506,7 @@ public class ReaderPostListFragment extends Fragment
         UndoBarController.UndoListener undoListener = new UndoBarController.UndoListener() {
             @Override
             public void onUndo(Parcelable parcelable) {
-                ReaderBlogActions.unblockBlogFromReader(post.blogId, postsToRestore);
+                ReaderBlogActions.undoBlockBlogFromReader(blockResult);
                 refreshPosts();
             }
         };
@@ -652,7 +630,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when data has been loaded
      */
-    private final ReaderActions.DataLoadedListener mDataLoadedListener = new ReaderActions.DataLoadedListener() {
+    private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
             if (!isAdded())
@@ -708,7 +686,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter when user requests to reblog a post
      */
-    private final ReaderActions.RequestReblogListener mReblogListener = new ReaderActions.RequestReblogListener() {
+    private final ReaderInterfaces.RequestReblogListener mReblogListener = new ReaderInterfaces.RequestReblogListener() {
         @Override
         public void onRequestReblog(ReaderPost post, View view) {
             if (isAdded()) {
@@ -736,14 +714,6 @@ public class ReaderPostListFragment extends Fragment
 
     boolean isPostAdapterEmpty() {
         return (mPostAdapter == null || mPostAdapter.isEmpty());
-    }
-
-    ReaderBlogIdPostIdList getBlogIdPostIdList() {
-        if (hasPostAdapter()) {
-            return getPostAdapter().getBlogIdPostIdList();
-        } else {
-            return new ReaderBlogIdPostIdList();
-        }
     }
 
     private boolean isCurrentTag(final ReaderTag tag) {
@@ -796,7 +766,7 @@ public class ReaderPostListFragment extends Fragment
         switch (getPostListType()) {
             case TAG_FOLLOWED:
                 // remember this as the current tag if viewing followed tag
-                UserPrefs.setReaderTag(tag);
+                AppPrefs.setReaderTag(tag);
                 break;
             case TAG_PREVIEW:
                 mTagPreviewHistory.push(tag.getTagName());
@@ -918,6 +888,10 @@ public class ReaderPostListFragment extends Fragment
             }
         };
         ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
+    }
+
+    void updateCurrentTag() {
+        updatePostsWithTag(getCurrentTag(), RequestDataAction.LOAD_NEWER, ReaderTypes.RefreshType.AUTOMATIC);
     }
 
     /*
@@ -1157,7 +1131,7 @@ public class ReaderPostListFragment extends Fragment
     private ReaderActionBarTagAdapter getActionBarAdapter() {
         if (mActionBarAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating ActionBar adapter");
-            ReaderActions.DataLoadedListener dataListener = new ReaderActions.DataLoadedListener() {
+            ReaderInterfaces.DataLoadedListener dataListener = new ReaderInterfaces.DataLoadedListener() {
                 @Override
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isAdded())
@@ -1243,54 +1217,28 @@ public class ReaderPostListFragment extends Fragment
         return true;
     }
 
-    @Override
-    public void onScrollChanged() {
-        // onScrollChanged is only called when previewing posts in a specific blog so we
-        // can scale & reposition the blogInfo that appears above the listView
-        repositionBlogInfoView();
-    }
-
     /*
-     * scale & reposition blog info based on the listView's scroll position
-     */
-    private void repositionBlogInfoView() {
-        int scrollPos = mListView.getVerticalScrollOffset();
-        if (mBlogInfoView == null) {
-            return;
-        }
-
-        // scale the mshot based on the scroll position
-        mBlogInfoView.scaleMshotImageBasedOnScrollPos(scrollPos);
-
-        // get the first child of the listView and determine whether it's the mshot spacer
-        // we added in onCreateVew
-        View firstChild = mListView.getChildAt(0);
-        boolean isSpacer = (firstChild != null && MSHOT_SPACER_TAG.equals(firstChild.getTag()));
-
-        // if it is the spacer, the top of the blog info container should move to match the top
-        // of the spacer (which will be negative if list is scrolled) plus the height of the
-        // mshot - and if it's not the spacer, then it means the spacer has been scrolled out
-        // of view which means the blog info container should stick to the top
-        final int infoTop;
-        if (isSpacer) {
-            infoTop = Math.max(0, firstChild.getTop() + mBlogInfoView.getMshotHeight());
-        } else {
-            infoTop = 0;
-        }
-
-        mBlogInfoView.moveInfoContainer(infoTop);
-    }
-
-    /*
-     * tell the blog info view to show the current blog if it's not already loaded
+     * used by blog preview - tell the blog info view to show the current blog
+     * if it's not already loaded, then shows/updates posts once the blog info
+     * is loaded
      */
     private void loadBlogInfo() {
         if (mBlogInfoView != null && mBlogInfoView.isEmpty()) {
             AppLog.d(T.READER, "reader post list > loading blogInfo");
-            mBlogInfoView.loadBlogInfo(mCurrentBlogId, mCurrentBlogUrl, new ReaderBlogInfoView.BlogInfoListener() {
+            mBlogInfoView.loadBlogInfo(
+                    mCurrentBlogId,
+                    mCurrentBlogUrl,
+                    new ReaderBlogInfoView.BlogInfoListener() {
                         @Override
-                        public void onBlogInfoLoaded() {
-                            // nop
+                        public void onBlogInfoLoaded(ReaderBlog blogInfo) {
+                            if (isAdded()) {
+                                mCurrentBlogId = blogInfo.blogId;
+                                mCurrentBlogUrl = blogInfo.getUrl();
+                                if (isPostAdapterEmpty()) {
+                                    getPostAdapter().setCurrentBlog(mCurrentBlogId);
+                                    updatePostsInCurrentBlog(RequestDataAction.LOAD_NEWER);
+                                }
+                            }
                         }
                         @Override
                         public void onBlogInfoFailed() {

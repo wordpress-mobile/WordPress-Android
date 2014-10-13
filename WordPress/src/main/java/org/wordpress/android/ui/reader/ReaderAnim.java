@@ -4,10 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -17,12 +19,16 @@ import org.wordpress.android.R;
 
 public class ReaderAnim {
 
+    public static interface AnimationEndListener {
+        public void onAnimationEnd();
+    }
+
     public static enum Duration {
         SHORT,
         MEDIUM,
         LONG;
 
-        private long toMillis(Context context) {
+        public long toMillis(Context context) {
             switch (this) {
                 case LONG:
                     return context.getResources().getInteger(android.R.integer.config_longAnimTime);
@@ -90,6 +96,56 @@ public class ReaderAnim {
         set.start();
     }
 
+    public static void scaleIn(final View target, Duration duration) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                target.setVisibility(View.VISIBLE);
+            }
+        });
+
+        animator.start();
+    }
+
+    public static void scaleOut(final View target,
+                                final int endVisibility,
+                                Duration duration,
+                                final AnimationEndListener endListener) {
+        if (target == null || duration == null) {
+            return;
+        }
+
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
+
+        ObjectAnimator animator = ObjectAnimator.ofPropertyValuesHolder(target, scaleX, scaleY);
+        animator.setDuration(duration.toMillis(target.getContext()));
+        animator.setInterpolator(new AccelerateInterpolator());
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                target.setVisibility(endVisibility);
+                if (endListener != null) {
+                    endListener.onAnimationEnd();
+                }
+            }
+        });
+
+        animator.start();
+    }
+
     public static void scaleInScaleOut(final View target, Duration duration) {
         if (target == null || duration == null) {
             return;
@@ -109,12 +165,10 @@ public class ReaderAnim {
         set.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
                 target.setVisibility(View.VISIBLE);
             }
             @Override
             public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
                 target.setVisibility(View.GONE);
             }
         });
@@ -157,6 +211,8 @@ public class ReaderAnim {
                 // rotate like button +/- 72 degrees (72 = 360/5, 5 is the number of points in the star)
                 float endRotate = (button == ReaderButton.LIKE_ON ? 72f : -72f);
                 ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, endRotate);
+                animRotate.setRepeatMode(ValueAnimator.REVERSE);
+                animRotate.setRepeatCount(1);
                 set.play(animX).with(animY).with(animRotate);
                 // on Android 4.4.3 the rotation animation may cause the drawable to fade out unless
                 // we set the layer type - https://code.google.com/p/android/issues/detail?id=70914

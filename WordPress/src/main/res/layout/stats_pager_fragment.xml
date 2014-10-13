@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
+    <org.wordpress.android.widgets.WPTextView
         android:id="@+id/stats_pager_title"
         style="@style/StatsPagerTitle" />
 

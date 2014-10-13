@@ -50,7 +50,7 @@ public class StatsClicksFragment extends StatsAbsPagedViewFragment {
 
         StatsCursorTreeFragment fragment = StatsCursorTreeFragment.newInstance(groupUri, childrenUri,
                 R.string.stats_entry_clicks_url, R.string.stats_totals_clicks, R.string.stats_empty_clicks_title,
-                R.string.stats_empty_clicks_desc);
+                R.string.stats_empty_clicks_desc, getLocalTableBlogID());
         CustomAdapter adapter = new CustomAdapter(null, getActivity());
         adapter.setCursorLoaderCallback(fragment);
         fragment.setListAdapter(adapter);

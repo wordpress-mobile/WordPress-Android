@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    post header on reader comment activity
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_post_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_large">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/reader_list_margin"
+        android:layout_marginRight="@dimen/reader_list_margin"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_medium">
+
+        <org.wordpress.android.widgets.WPNetworkImageView
+            android:id="@+id/image_post_avatar"
+            style="@style/ReaderImageView.Avatar.Small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_small" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_toRightOf="@+id/image_post_avatar"
+            android:text="@string/reader_label_comments_on"
+            android:textColor="@color/grey_medium"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/text_label"
+            android:layout_below="@+id/text_label"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/grey_extra_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="text_post_title" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/margin_large"
+        android:background="@color/reader_divider_grey" />
+</LinearLayout>

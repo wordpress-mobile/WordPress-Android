@@ -10,13 +10,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -41,6 +39,8 @@ import net.simonvt.menudrawer.Position;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.WelcomeActivity;
@@ -57,13 +57,12 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
+import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.ui.notifications.SimperiumUtils;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.ApiHelper.ErrorType;
@@ -93,23 +92,6 @@ public abstract class WPActionBarActivity extends Activity {
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
-    /**
-     * Used to restore active activity on app creation
-     */
-    protected static final int READER_ACTIVITY = 0;
-    protected static final int POSTS_ACTIVITY = 1;
-    protected static final int MEDIA_ACTIVITY = 2;
-    protected static final int PAGES_ACTIVITY = 3;
-    protected static final int COMMENTS_ACTIVITY = 4;
-    protected static final int THEMES_ACTIVITY = 5;
-    protected static final int STATS_ACTIVITY = 6;
-    protected static final int QUICK_PHOTO_ACTIVITY = 7;
-    protected static final int QUICK_VIDEO_ACTIVITY = 8;
-    protected static final int VIEW_SITE_ACTIVITY = 9;
-    protected static final int DASHBOARD_ACTIVITY = 10;
-    protected static final int NOTIFICATIONS_ACTIVITY = 11;
-
-    protected static final String LAST_ACTIVITY_PREFERENCE = "wp_pref_last_activity";
 
     protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
@@ -266,7 +248,7 @@ public abstract class WPActionBarActivity extends Activity {
         int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
         menuDrawer.setDropShadowSize(shadowSizeInPixels);
         menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
-        menuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+        menuDrawer.setSlideDrawable(R.drawable.ic_navigation_drawer);
         return menuDrawer;
     }
 
@@ -282,6 +264,9 @@ public abstract class WPActionBarActivity extends Activity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
+        if (mMenuDrawer == null) {
+            return;
+        }
         mListView = new ListView(this);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setDivider(null);
@@ -313,11 +298,8 @@ public abstract class WPActionBarActivity extends Activity {
                     return;
                 MenuDrawerItem item = mAdapter.getItem(menuPosition);
                 // if the item has an id, remember it for launch
-                if (item.hasItemId()){
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WPActionBarActivity.this);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
-                    editor.commit();
+                if (item.hasItemId()) {
+                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
                 }
                 // only perform selection if the item isn't already selected
                 if (!item.isSelected())
@@ -326,17 +308,6 @@ public abstract class WPActionBarActivity extends Activity {
                 // close the menu drawer
                 mMenuDrawer.closeMenu();
                 // if we have an intent, start the new activity
-            }
-        });
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                    int totalItemCount) {
-                mMenuDrawer.invalidate();
             }
         });
 
@@ -551,16 +522,7 @@ public abstract class WPActionBarActivity extends Activity {
 
         for (int i = 0; i < blogCount; i++) {
             Map<String, Object> account = accounts.get(i);
-            String name;
-            if (account.get("blogName") != null) {
-                name = StringUtils.unescapeHTML(account.get("blogName").toString());
-                if (name.trim().length() == 0) {
-                    name = StringUtils.getHost(account.get("url").toString());
-                }
-            } else {
-                name = StringUtils.getHost(account.get("url").toString());
-            }
-            blogNames[i] = name;
+            blogNames[i] = BlogUtils.getBlogNameFromAccountMap(account);
             blogIDs[i] = Integer.valueOf(account.get("id").toString());
         }
 
@@ -618,8 +580,10 @@ public abstract class WPActionBarActivity extends Activity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    initMenuDrawer();
-                    mMenuDrawer.openMenu(false);
+                    if (mMenuDrawer != null) {
+                        initMenuDrawer();
+                        mMenuDrawer.openMenu(false);
+                    }
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();
@@ -638,7 +602,7 @@ public abstract class WPActionBarActivity extends Activity {
                         setupCurrentBlog();
                     }
                     if (data != null && data.getBooleanExtra(PreferencesActivity.CURRENT_BLOG_CHANGED, true)) {
-                        onBlogChanged();
+                        blogChanged();
                     }
                     WordPress.registerForCloudMessaging(this);
                 }
@@ -665,7 +629,7 @@ public abstract class WPActionBarActivity extends Activity {
             } else {
                 WordPress.setCurrentBlog(blogIDs[position]);
                 updateMenuDrawer();
-                onBlogChanged();
+                blogChanged();
             }
         }
 
@@ -693,8 +657,13 @@ public abstract class WPActionBarActivity extends Activity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int whichButton) {
-                            WordPress.signOut(WPActionBarActivity.this);
-                            refreshMenuDrawer();
+                            AnalyticsTracker.refreshMetadata();
+                            WordPress.signOutAsyncWithProgressBar(WPActionBarActivity.this, new SignOutCallback() {
+                                @Override
+                                public void onSignOut() {
+                                    refreshMenuDrawer();
+                                }
+                            });
                         }
                     });
             dialogBuilder.setNegativeButton(R.string.cancel,
@@ -739,7 +708,7 @@ public abstract class WPActionBarActivity extends Activity {
     /**
      * This method is called when the user changes the active blog or hides all blogs
      */
-    public void onBlogChanged() {
+    private void blogChanged() {
         WordPress.wpDB.updateLastBlogId(WordPress.getCurrentLocalTableBlogId());
         // the menu may have changed, we need to change the selection if the selected item
         // is not available in the menu anymore
@@ -755,11 +724,7 @@ public abstract class WPActionBarActivity extends Activity {
                 }
                 // if it has an item id save it to the preferences
                 if (item.hasItemId()) {
-                    SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-                            WPActionBarActivity.this);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putInt(LAST_ACTIVITY_PREFERENCE, item.getItemId());
-                    editor.commit();
+                    ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
                 }
                 break;
             }
@@ -769,6 +734,18 @@ public abstract class WPActionBarActivity extends Activity {
         if (shouldUpdateCurrentBlogStatsInBackground()) {
             WordPress.sUpdateCurrentBlogStats.forceRun();
         }
+
+        if (WordPress.getCurrentBlog() != null) {
+            onBlogChanged();
+        }
+
+    }
+
+    /**
+     * This method is called in when the user changes the active blog - descendants should override
+     * this to perform activity-specific updates upon blog change
+     */
+    protected void onBlogChanged() {
     }
 
     /**
@@ -809,7 +786,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ReaderMenuItem extends MenuDrawerItem {
         ReaderMenuItem(){
-            super(READER_ACTIVITY, R.string.reader, R.drawable.dashboard_icon_subs);
+            super(ActivityId.READER, R.string.reader, R.drawable.noticon_reader_alt_black);
         }
 
         @Override
@@ -834,7 +811,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PostsMenuItem extends MenuDrawerItem {
         PostsMenuItem() {
-            super(POSTS_ACTIVITY, R.string.posts, R.drawable.dashboard_icon_posts);
+            super(ActivityId.POSTS, R.string.posts, R.drawable.dashicon_admin_post_black);
         }
 
         @Override
@@ -862,7 +839,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class MediaMenuItem extends MenuDrawerItem {
         MediaMenuItem(){
-            super(MEDIA_ACTIVITY, R.string.media, R.drawable.dashboard_icon_media);
+            super(ActivityId.MEDIA, R.string.media, R.drawable.dashicon_admin_media_black);
         }
         @Override
         public Boolean isSelected(){
@@ -886,7 +863,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class PagesMenuItem extends MenuDrawerItem {
         PagesMenuItem(){
-            super(PAGES_ACTIVITY, R.string.pages, R.drawable.dashboard_icon_pages);
+            super(ActivityId.PAGES, R.string.pages, R.drawable.dashicon_admin_page_black);
         }
         @Override
         public Boolean isSelected(){
@@ -915,7 +892,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class CommentsMenuItem extends MenuDrawerItem {
         CommentsMenuItem(){
-            super(COMMENTS_ACTIVITY, R.string.tab_comments, R.drawable.dashboard_icon_comments);
+            super(ActivityId.COMMENTS, R.string.tab_comments, R.drawable.dashicon_admin_comments_black);
         }
         @Override
         public Boolean isSelected(){
@@ -957,7 +934,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ThemesMenuItem extends MenuDrawerItem {
         ThemesMenuItem(){
-            super(THEMES_ACTIVITY, R.string.themes, R.drawable.dashboard_icon_themes);
+            super(ActivityId.THEMES, R.string.themes, R.drawable.dashboard_icon_themes);
         }
         @Override
         public Boolean isSelected(){
@@ -983,7 +960,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
-            super(STATS_ACTIVITY, R.string.tab_stats, R.drawable.dashboard_icon_stats);
+            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashicon_chart_area_black);
         }
         @Override
         public Boolean isSelected(){
@@ -997,8 +974,7 @@ public abstract class WPActionBarActivity extends Activity {
                 mShouldFinish = true;
 
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
-            intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
-            intent.putExtra("isNew", true);
+            intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivityWithDelay(intent);
         }
@@ -1010,7 +986,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickPhotoMenuItem extends MenuDrawerItem {
         QuickPhotoMenuItem(){
-            super(R.string.quick_photo, R.drawable.dashboard_icon_photo);
+            super(R.string.quick_photo, R.drawable.dashicon_camera_black);
         }
         @Override
         public void onSelectItem(){
@@ -1030,7 +1006,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class QuickVideoMenuItem extends MenuDrawerItem {
         QuickVideoMenuItem(){
-            super(R.string.quick_video, R.drawable.dashboard_icon_video);
+            super(R.string.quick_video, R.drawable.dashicon_video_alt2_black);
         }
         @Override
         public void onSelectItem(){
@@ -1050,7 +1026,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class ViewSiteMenuItem extends MenuDrawerItem {
         ViewSiteMenuItem(){
-            super(VIEW_SITE_ACTIVITY, R.string.view_site, R.drawable.dashboard_icon_view);
+            super(ActivityId.VIEW_SITE, R.string.view_site, R.drawable.noticon_show_black);
         }
         @Override
         public Boolean isSelected(){
@@ -1074,7 +1050,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class NotificationsMenuItem extends MenuDrawerItem {
         NotificationsMenuItem(){
-            super(NOTIFICATIONS_ACTIVITY, R.string.notifications, R.drawable.dashboard_icon_notifications);
+            super(ActivityId.NOTIFICATIONS, R.string.notifications, R.drawable.noticon_notification_black);
         }
         @Override
         public Boolean isVisible(){

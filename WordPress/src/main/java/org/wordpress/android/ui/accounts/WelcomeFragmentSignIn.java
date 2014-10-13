@@ -32,13 +32,15 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService;
+import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -47,6 +49,8 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -59,6 +63,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     public static final String ENTERED_URL_KEY = "ENTERED_URL_KEY";
     public static final String ENTERED_USERNAME_KEY = "ENTERED_USERNAME_KEY";
+    public static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mUrlEditText;
@@ -157,6 +162,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 // Used to pass data to an eventual support service
                 newAccountIntent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 newAccountIntent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+                newAccountIntent.putExtra(FROM_LOGIN_SCREEN_KEY, true);
                 startActivity(newAccountIntent);
             }
         };
@@ -174,7 +180,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private void moveBottomButtons() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mBottomButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-            if (getResources().getInteger(R.integer.isTablet) == 0) {
+            if (getResources().getInteger(R.integer.isSW600DP) == 0) {
                 setSecondaryButtonVisible(true);
             } else {
                 setSecondaryButtonVisible(false);
@@ -537,7 +543,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 // Show a dialog
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                        getString(R.string.username_or_password_incorrect_third_time), R.drawable.nux_icon_alert, 3,
+                        getString(R.string.username_or_password_incorrect_third_time), R.drawable.noticon_alert_big, 3,
                         getString(R.string.cancel), getString(R.string.faq_button), getString(R.string.contact_us),
                         NUXDialogFragment.ACTION_OPEN_FAQ, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
                 // Put entered url and entered username args, that could help our support team
@@ -560,7 +566,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             NUXDialogFragment nuxAlert;
             if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
                 nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
-                        R.drawable.nux_icon_alert, 2, getString(R.string.cancel), getString(
+                        R.drawable.noticon_alert_big, 2, getString(R.string.cancel), getString(
                                 R.string.visit_security_settings), "", NUXDialogFragment.ACTION_OPEN_URL, 0);
                 Bundle bundle = nuxAlert.getArguments();
                 bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
@@ -577,7 +583,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     return;
                 } else {
                     nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), R.drawable.nux_icon_alert, getString(R.string.nux_tap_continue));
+                            mErrorMsgId), R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
                 }
             }
             ft.add(nuxAlert, "alert");
@@ -603,6 +609,11 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 return;
             }
 
+            Map<String, Boolean> properties = new HashMap<String, Boolean>();
+            properties.put("dotcom_user", mSetupBlog.isDotComBlog());
+
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
+
             refreshFirstBlogContent(userBlogList);
 
             if (mSelfHosted) {
@@ -624,6 +635,14 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                         ReaderUserActions.setCurrentUser(jsonObject);
                     }
                 }, null);
+            }
+
+            AnalyticsTracker.refreshMetadata();
+
+            // get reader tags so they're available as soon as the Reader is accessed - note that
+            // this uses the application context since the activity is finished immediately below
+            if (!mSelfHosted && isAdded()) {
+                ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(UpdateTask.TAGS));
             }
 
             if (userBlogList != null) {

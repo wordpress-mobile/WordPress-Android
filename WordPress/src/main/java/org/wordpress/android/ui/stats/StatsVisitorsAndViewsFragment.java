@@ -38,6 +38,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                                                            StatsBarChartUnit.MONTH.getLabel()};
 
     private TextView mVisitorsToday;
+    private TextView mVisitorsTodayLabel;
     private TextView mViewsToday;
     private TextView mViewsBestEver;
     private TextView mViewsAllTime;
@@ -57,6 +58,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         mVisitorsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_visitors_count);
+        mVisitorsTodayLabel = (TextView) view.findViewById(R.id.stats_visitors_and_views_header_label);
         mViewsToday = (TextView) view.findViewById(R.id.stats_visitors_and_views_today_views_count);
         mViewsBestEver = (TextView) view.findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
         mViewsAllTime = (TextView) view.findViewById(R.id.stats_visitors_and_views_all_time_view_count);
@@ -127,7 +129,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
                 unit = StatsBarChartUnit.DAY;
         }
 
-        StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit);
+        StatsBarGraphFragment statsBarGraphFragment = StatsBarGraphFragment.newInstance(unit, getLocalTableBlogID());
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.stats_fade_in, R.anim.stats_fade_out);
         ft.replace(R.id.stats_bar_chart_fragment_container, statsBarGraphFragment, childTag);
@@ -135,7 +137,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     }
 
     private void refreshSummary() {
-        if (WordPress.getCurrentBlog() == null) {
+        if (WordPress.getBlog(getLocalTableBlogID()) == null) {
             return;
         }
 
@@ -143,7 +145,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
         new Thread() {
             @Override
             public void run() {
-                String blogId = WordPress.getCurrentBlog().getDotComBlogId();
+                String blogId = WordPress.getBlog(getLocalTableBlogID()).getDotComBlogId();
                 if (TextUtils.isEmpty(blogId)) {
                     blogId = "0";
                 }
@@ -160,6 +162,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbsViewFragment implemen
     private void refreshSummary(final StatsSummary stats) {
         if (getActivity() == null) {
             return;
+        }
+
+        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(getLocalTableBlogID()));
+        long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
+
+        if (stats != null
+                && stats.getDay() != null
+                && StatsUtils.toMs(stats.getDay()) != currentDate
+                ) {
+            mVisitorsTodayLabel.setText(StatsUtils.parseDate(stats.getDay(), "yyyy-MM-dd", "MMM d"));
+        } else {
+            // set the default "Today" label
+            mVisitorsTodayLabel.setText(R.string.stats_visitors_and_views_header_today);
         }
 
         if (stats == null) {

@@ -3,13 +3,15 @@ package org.wordpress.android.util.ptr;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.R;
 
 import uk.co.senab.actionbarpulltorefresh.library.DefaultHeaderTransformer;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
 
 public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
@@ -17,8 +19,10 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
     private ViewGroup mContentLayout;
     private long mAnimationDuration;
     private boolean mShowProgressBarOnly;
-    private Animation mHeaderOutAnimation;
     private OnTopScrollChangedListener mOnTopScrollChangedListener;
+    private boolean mIsNetworkRefreshMode;
+    private Context mContext;
+    private PullToRefreshAttacher mPullToRefreshAttacher;
 
     public interface OnTopScrollChangedListener {
         public void onTopScrollChanged(boolean scrolledOnTop);
@@ -28,9 +32,18 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
         mShowProgressBarOnly = progressBarOnly;
     }
 
+    public boolean isNetworkRefreshMode() {
+        return mIsNetworkRefreshMode;
+    }
+
+    public void setNetworkRefreshMode(boolean isNetworkRefresh) {
+        mIsNetworkRefreshMode = isNetworkRefresh;
+    }
+
     @Override
     public void onViewCreated(Activity activity, View headerView) {
         super.onViewCreated(activity, headerView);
+        mContext = activity.getBaseContext();
         mHeaderView = headerView;
         mContentLayout = (ViewGroup) headerView.findViewById(R.id.ptr_content);
         mAnimationDuration = activity.getResources().getInteger(android.R.integer.config_shortAnimTime);
@@ -42,15 +55,33 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
         return super.hideHeaderView();
     }
 
+    public void setPullToRefreshAttacher(PullToRefreshAttacher pullToRefreshAttacher) {
+        mPullToRefreshAttacher = pullToRefreshAttacher;
+    }
+
+    private void setRefreshDisabled(boolean disabled) {
+        if (mPullToRefreshAttacher != null) {
+            mPullToRefreshAttacher.setRefreshDisabled(disabled);
+        }
+    }
+
     @Override
     public boolean showHeaderView() {
         // Workaround to avoid this bug https://github.com/chrisbanes/ActionBar-PullToRefresh/issues/265
         // Note, that also remove the alpha animation
+        setRefreshDisabled(false);
         resetContentLayoutAlpha();
 
         boolean changeVis = mHeaderView.getVisibility() != View.VISIBLE;
         mContentLayout.setVisibility(View.VISIBLE);
         if (changeVis) {
+            if (isNetworkAvailableOrNotChecked()) {
+                setPullText(mContext.getText(R.string.pull_to_refresh_pull_label));
+            } else {
+                // Network mode enabled and network not available: show a different PTR label
+                setPullText(mContext.getText(R.string.pull_to_refresh_pull_no_network_label));
+                setRefreshDisabled(true);
+            }
             mHeaderView.setVisibility(View.VISIBLE);
             AnimatorSet animSet = new AnimatorSet();
             ObjectAnimator alphaAnim = ObjectAnimator.ofFloat(mHeaderView, "alpha", 0f, 1f);
@@ -65,11 +96,6 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
             }
         }
         return changeVis;
-    }
-
-    @Override
-    public void onPulled(float percentagePulled) {
-        super.onPulled(percentagePulled);
     }
 
     private void resetContentLayoutAlpha() {
@@ -95,5 +121,9 @@ public class PullToRefreshHeaderTransformer extends DefaultHeaderTransformer {
 
     public void setOnTopScrollChangedListener(OnTopScrollChangedListener listener) {
         mOnTopScrollChangedListener = listener;
+    }
+
+    public boolean isNetworkAvailableOrNotChecked() {
+        return !mIsNetworkRefreshMode || NetworkUtils.isNetworkAvailable(mContext);
     }
 }

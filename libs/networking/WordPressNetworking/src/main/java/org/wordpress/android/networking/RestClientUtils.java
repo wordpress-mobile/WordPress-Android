@@ -54,9 +54,13 @@ public class RestClientUtils {
     }
 
     public RestClientUtils(RequestQueue queue, Authenticator authenticator) {
+        this(queue, authenticator, RestClient.REST_CLIENT_VERSIONS.V1);
+    }
+
+    public RestClientUtils(RequestQueue queue, Authenticator authenticator, RestClient.REST_CLIENT_VERSIONS version) {
         // load an existing access token from prefs if we have one
         mAuthenticator = authenticator;
-        mRestClient = RestClientFactory.instantiate(queue);
+        mRestClient = RestClientFactory.instantiate(queue, version);
         mRestClient.setUserAgent(sUserAgent);
     }
 
@@ -76,11 +80,11 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1/post/sites/%24site/posts/%24post_ID/replies/new/
      */
-    public void replyToComment(String siteId, String commentId, String content, Listener listener,
+    public void replyToComment(long siteId, long commentId, String content, Listener listener,
                                ErrorListener errorListener) {
         Map<String, String> params = new HashMap<String, String>();
         params.put(COMMENT_REPLY_CONTENT_FIELD, content);
-        String path = String.format("sites/%s/comments/%s/replies/new", siteId, commentId);
+        String path = String.format("sites/%d/comments/%d/replies/new", siteId, commentId);
         post(path, params, null, listener, errorListener);
     }
 
@@ -150,6 +154,34 @@ public class RestClientUtils {
     }
 
     /**
+     * Edit the content of a comment
+     */
+    public void editCommentContent(long siteId, long commentId, String content, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("content", content);
+        String path = String.format("sites/%d/comments/%d/", siteId, commentId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
+     * Like or unlike a comment.
+     */
+    public void likeComment(String siteId, String commentId, boolean isLiked, Listener listener,
+                                ErrorListener errorListener) {
+        Map<String, String> params = new HashMap<String, String>();
+        String path = String.format("sites/%s/comments/%s/likes/", siteId, commentId);
+
+        if (!isLiked) {
+            path += "mine/delete";
+        } else {
+            path += "new";
+        }
+
+        post(path, params, null, listener, errorListener);
+    }
+
+    /**
      * Get all a site's themes
      */
     public void getThemes(String siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
@@ -189,7 +221,7 @@ public class RestClientUtils {
                     ErrorListener errorListener) {
         // turn params into querystring
 
-        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null,
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null,
                                                       listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -221,7 +253,7 @@ public class RestClientUtils {
     public JSONObject getSynchronous(String path, Map<String, String> params, RetryPolicy retryPolicy)
             throws InterruptedException, ExecutionException, TimeoutException {
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        RestRequest request = mRestClient.makeRequest(Method.GET, RestClient.getAbsoluteURL(path, params), null, future, future);
+        RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient.getAbsoluteURL(path, params), null, future, future);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -246,7 +278,7 @@ public class RestClientUtils {
      */
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
-        final RestRequest request = mRestClient.makeRequest(Method.POST, RestClient.getAbsoluteURL(path), params,
+        final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient.getAbsoluteURL(path), params,
                                                             listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,

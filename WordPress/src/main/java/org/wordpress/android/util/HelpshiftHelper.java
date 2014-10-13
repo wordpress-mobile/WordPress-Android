@@ -12,14 +12,12 @@ import com.helpshift.Helpshift;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.util.AppLog.T;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HelpshiftHelper {
     private static HelpshiftHelper mInstance = null;
-    private static Application mApplication = null;
     private static HashMap<String, Object> mMetadata = new HashMap<String, Object>();
 
     public enum MetadataKey {
@@ -68,18 +66,16 @@ public class HelpshiftHelper {
 
     public static synchronized HelpshiftHelper getInstance() {
         if (mInstance == null) {
-            if (mApplication == null) {
-                AppLog.e(T.UTILS, "You must call HelpshiftHelper.init(Application application) before getInstance()");
-            }
             mInstance = new HelpshiftHelper();
-            Helpshift.install(mApplication, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
-                    BuildConfig.HELPSHIFT_API_ID);
         }
         return mInstance;
     }
 
     public static void init(Application application) {
-        mApplication = application;
+        HashMap<String, Boolean> config = new HashMap<String, Boolean>();
+        config.put("enableInAppNotification", false);
+        Helpshift.install(application, BuildConfig.HELPSHIFT_API_KEY, BuildConfig.HELPSHIFT_API_DOMAIN,
+                BuildConfig.HELPSHIFT_API_ID, config);
     }
 
     /**
@@ -142,14 +138,12 @@ public class HelpshiftHelper {
         mMetadata.put("log", AppLog.toPlainText(context));
 
         // List blogs name and url
-        StringBuilder blogList = new StringBuilder();
+        int counter = 1;
         for (Map<String, Object> account : WordPress.wpDB.getAllAccounts()) {
-            blogList.append(MapUtils.getMapStr(account, "blogName"));
-            blogList.append(": ");
-            blogList.append(MapUtils.getMapStr(account, "url"));
-            blogList.append("\n");
+            mMetadata.put("blog-name-" + counter, MapUtils.getMapStr(account, "blogName"));
+            mMetadata.put("blog-url-" + counter, MapUtils.getMapStr(account, "url"));
+            counter += 1;
         }
-        mMetadata.put("blogs", blogList.toString());
 
         // wpcom user
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

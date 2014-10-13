@@ -31,6 +31,7 @@ public class ReaderBlogTable {
                  + "    blog_id       INTEGER DEFAULT 0,"
                  + "    feed_id       INTEGER DEFAULT 0,"
                  + "	blog_url      TEXT NOT NULL COLLATE NOCASE,"
+                 + "    image_url     TEXT,"
                  + "    name          TEXT,"
                  + "    description   TEXT,"
                  + "    is_private    INTEGER DEFAULT 0,"
@@ -89,6 +90,12 @@ public class ReaderBlogTable {
         }
     }
 
+    public static String getBlogUrl(long blogId) {
+        String[] args = {Long.toString(blogId)};
+        return SqlUtils.stringForQuery(
+                ReaderDatabase.getReadableDb(), "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?", args);
+    }
+
     private static ReaderBlog getBlogInfoFromCursor(Cursor c) {
         if (c == null) {
             return null;
@@ -98,6 +105,7 @@ public class ReaderBlogTable {
         blogInfo.blogId = c.getLong(c.getColumnIndex("blog_id"));
         blogInfo.feedId = c.getLong(c.getColumnIndex("feed_id"));
         blogInfo.setUrl(c.getString(c.getColumnIndex("blog_url")));
+        blogInfo.setImageUrl(c.getString(c.getColumnIndex("image_url")));
         blogInfo.setName(c.getString(c.getColumnIndex("name")));
         blogInfo.setDescription(c.getString(c.getColumnIndex("description")));
         blogInfo.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
@@ -113,19 +121,20 @@ public class ReaderBlogTable {
             return;
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
-                + "   (blog_id, feed_id, blog_url, name, description, is_private, is_jetpack, is_following, num_followers)"
-                + "   VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
+                + "   (blog_id, feed_id, blog_url, image_url, name, description, is_private, is_jetpack, is_following, num_followers)"
+                + "   VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindLong  (1, blogInfo.blogId);
             stmt.bindLong  (2, blogInfo.feedId);
             stmt.bindString(3, blogInfo.getUrl());
-            stmt.bindString(4, blogInfo.getName());
-            stmt.bindString(5, blogInfo.getDescription());
-            stmt.bindLong  (6, SqlUtils.boolToSql(blogInfo.isPrivate));
-            stmt.bindLong  (7, SqlUtils.boolToSql(blogInfo.isJetpack));
-            stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.isFollowing));
-            stmt.bindLong  (9, blogInfo.numSubscribers);
+            stmt.bindString(4, blogInfo.getImageUrl());
+            stmt.bindString(5, blogInfo.getName());
+            stmt.bindString(6, blogInfo.getDescription());
+            stmt.bindLong  (7, SqlUtils.boolToSql(blogInfo.isPrivate));
+            stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.isJetpack));
+            stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.isFollowing));
+            stmt.bindLong  (10, blogInfo.numSubscribers);
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);
@@ -195,6 +204,20 @@ public class ReaderBlogTable {
         }
     }
 
+    /*
+     * sets the follow state for passed blog without creating a record for it if it doesn't exist
+     */
+    public static void setIsFollowedBlogId(long blogId, boolean isFollowed) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET is_following="
+                        + SqlUtils.boolToSql(isFollowed)
+                        + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
+    }
+
+    /*
+     * sets the followed state for the passed blog, creating a record for it if it doesn't exist
+     */
     public static void setIsFollowedBlog(long blogId, String url, boolean isFollowed) {
         if (TextUtils.isEmpty(url)) {
             return;
