@@ -302,7 +302,7 @@ public class WPNetworkImageView extends ImageView {
                 break;
             case AVATAR:
                 // "mystery man" for failed avatars
-                setImageResource(R.drawable.placeholder);
+                setImageResource(R.drawable.gravatar_placeholder);
                 break;
             default :
                 // medium grey box for all others
