@@ -61,9 +61,6 @@ public class NuxHelpActivity extends Activity {
                             WelcomeFragmentSignIn.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
-                    if (extras.getBoolean(WelcomeFragmentSignIn.FROM_LOGIN_SCREEN_KEY, false)) {
-                        HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.LOGIN_SCREEN});
-                    }
                 }
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }
