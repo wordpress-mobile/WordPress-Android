@@ -248,8 +248,10 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
         // Reset the note's local status when a change is received
         try {
             Note note = bucket.get(key);
-            note.setLocalStatus(null);
-            note.save();
+            if (note.isCommentType()) {
+                note.setLocalStatus(null);
+                note.save();
+            }
         } catch (BucketObjectMissingException e) {
             AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
         }
