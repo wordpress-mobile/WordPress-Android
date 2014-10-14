@@ -375,10 +375,10 @@ class ReaderPostRenderer {
     }
 
     /*
-     * javascript should only be enabled for wp blogs (not external feeds)
+     * javascript should only be enabled for WordPress.com blogs (not feeds or Jetpack blogs)
      */
     private boolean canEnableJavaScript() {
-        return mPost.isWP();
+        return mPost.isWP() && !mPost.isJetpack;
     }
 
     /*

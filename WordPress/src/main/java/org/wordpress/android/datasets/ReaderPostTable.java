@@ -50,11 +50,12 @@ public class ReaderPostTable {
           + "is_external,"          // 23
           + "is_private,"           // 24
           + "is_videopress,"        // 25
-          + "primary_tag,"          // 26
-          + "secondary_tag,"        // 27
-          + "is_likes_enabled,"     // 28
-          + "is_sharing_enabled,"   // 29
-          + "attachments_json";     // 30
+          + "is_jetpack,"           // 26
+          + "primary_tag,"          // 27
+          + "secondary_tag,"        // 28
+          + "is_likes_enabled,"     // 29
+          + "is_sharing_enabled,"   // 30
+          + "attachments_json";     // 31
 
     // used when querying multiple rows and skipping tbl_posts.text
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -82,11 +83,12 @@ public class ReaderPostTable {
           + "tbl_posts.is_external,"          // 22
           + "tbl_posts.is_private,"           // 23
           + "tbl_posts.is_videopress,"        // 24
-          + "tbl_posts.primary_tag,"          // 25
-          + "tbl_posts.secondary_tag,"        // 26
-          + "tbl_posts.is_likes_enabled,"     // 27
-          + "tbl_posts.is_sharing_enabled,"   // 28
-          + "tbl_posts.attachments_json";     // 29
+          + "tbl_posts.is_jetpack,"           // 25
+          + "tbl_posts.primary_tag,"          // 26
+          + "tbl_posts.secondary_tag,"        // 27
+          + "tbl_posts.is_likes_enabled,"     // 28
+          + "tbl_posts.is_sharing_enabled,"   // 29
+          + "tbl_posts.attachments_json";     // 30
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -115,6 +117,7 @@ public class ReaderPostTable {
                 + " is_external         INTEGER DEFAULT 0,"
                 + " is_private          INTEGER DEFAULT 0,"
                 + " is_videopress       INTEGER DEFAULT 0,"
+                + " is_jetpack          INTEGER DEFAULT 0,"
                 + " primary_tag         TEXT,"
                 + " secondary_tag       TEXT,"
                 + " is_likes_enabled    INTEGER DEFAULT 0,"
@@ -466,7 +469,7 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31)");
         SQLiteStatement stmtTags = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_post_tags (post_id, blog_id, pseudo_id, tag_name, tag_type) VALUES (?1,?2,?3,?4,?5)");
 
@@ -488,7 +491,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(12, post.getFeaturedImage());
                 stmtPosts.bindString(13, post.getFeaturedVideo());
                 stmtPosts.bindString(14, post.getPostAvatar());
-                stmtPosts.bindLong(15, post.timestamp);
+                stmtPosts.bindLong  (15, post.timestamp);
                 stmtPosts.bindString(16, post.getPublished());
                 stmtPosts.bindLong  (17, post.numReplies);
                 stmtPosts.bindLong  (18, post.numLikes);
@@ -499,11 +502,12 @@ public class ReaderPostTable {
                 stmtPosts.bindLong  (23, SqlUtils.boolToSql(post.isExternal));
                 stmtPosts.bindLong  (24, SqlUtils.boolToSql(post.isPrivate));
                 stmtPosts.bindLong  (25, SqlUtils.boolToSql(post.isVideoPress));
-                stmtPosts.bindString(26, post.getPrimaryTag());
-                stmtPosts.bindString(27, post.getSecondaryTag());
-                stmtPosts.bindLong  (28, SqlUtils.boolToSql(post.isLikesEnabled));
-                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isSharingEnabled));
-                stmtPosts.bindString(30, post.getAttachmentsJson());
+                stmtPosts.bindLong  (26, SqlUtils.boolToSql(post.isJetpack));
+                stmtPosts.bindString(27, post.getPrimaryTag());
+                stmtPosts.bindString(28, post.getSecondaryTag());
+                stmtPosts.bindLong  (29, SqlUtils.boolToSql(post.isLikesEnabled));
+                stmtPosts.bindLong  (30, SqlUtils.boolToSql(post.isSharingEnabled));
+                stmtPosts.bindString(31, post.getAttachmentsJson());
                 stmtPosts.execute();
             }
 
@@ -704,6 +708,7 @@ public class ReaderPostTable {
         post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
+        post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
 
         post.setPrimaryTag(c.getString(c.getColumnIndex("primary_tag")));
         post.setSecondaryTag(c.getString(c.getColumnIndex("secondary_tag")));
