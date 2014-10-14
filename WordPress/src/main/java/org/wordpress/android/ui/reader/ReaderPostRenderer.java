@@ -105,8 +105,8 @@ class ReaderPostRenderer {
 
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
-        if (webView == null) {
-            AppLog.w(AppLog.T.READER, "reader renderer > null webView");
+        if (webView == null || webView.getContext() == null || webView.isDestroyed()) {
+            AppLog.w(AppLog.T.READER, "reader renderer > webView invalid");
             return;
         }
 
