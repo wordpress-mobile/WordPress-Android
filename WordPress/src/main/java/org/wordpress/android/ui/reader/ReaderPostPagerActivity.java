@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResu
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
+import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -51,7 +52,7 @@ public class ReaderPostPagerActivity extends Activity
         implements ReaderInterfaces.FullScreenListener,
                    ReaderInterfaces.OnPostPopupListener {
 
-    private ViewPager mViewPager;
+    private ReaderViewPager mViewPager;
 
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -78,7 +79,7 @@ public class ReaderPostPagerActivity extends Activity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
 
         final String title;
         final long blogId;

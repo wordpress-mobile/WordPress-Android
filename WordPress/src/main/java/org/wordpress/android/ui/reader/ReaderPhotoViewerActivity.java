@@ -12,10 +12,11 @@ import android.view.Window;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.ui.reader.ReaderViewPagerTransformer.TransformType;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
+import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
+import org.wordpress.android.ui.reader.views.ReaderViewPager;
 import org.wordpress.android.util.AppLog;
 
 import javax.annotation.Nonnull;
@@ -30,7 +31,7 @@ public class ReaderPhotoViewerActivity extends Activity
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private String mContent;
-    private ViewPager mViewPager;
+    private ReaderViewPager mViewPager;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
 
@@ -41,7 +42,7 @@ public class ReaderPhotoViewerActivity extends Activity
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.reader_activity_photo_viewer);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
         mTxtTitle = (TextView) findViewById(R.id.text_title);
 
         // title is hidden until we know we can show it
