@@ -17,6 +17,7 @@ import com.simperium.client.BucketObjectMissingException;
 import org.wordpress.android.R;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
@@ -244,6 +245,15 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
 
     @Override
     public void onChange(Bucket<Note> bucket, Bucket.ChangeType type, String key) {
+        // Reset the note's local status when a change is received
+        try {
+            Note note = bucket.get(key);
+            note.setLocalStatus(null);
+            note.save();
+        } catch (BucketObjectMissingException e) {
+            AppLog.e(AppLog.T.NOTIFS, "Could not create note after receiving change.");
+        }
+
         refreshNotes();
     }
 

@@ -49,7 +49,8 @@ class NotesAdapter extends CursorAdapter {
                         Note.Schema.UNREAD_INDEX,
                         Note.Schema.ICON_URL_INDEX,
                         Note.Schema.NOTICON_INDEX,
-                        Note.Schema.IS_UNAPPROVED_INDEX)
+                        Note.Schema.IS_UNAPPROVED_INDEX,
+                        Note.Schema.LOCAL_STATUS)
                 .order(Note.Schema.TIMESTAMP_INDEX, Query.SortType.DESCENDING);
 
 
@@ -159,6 +160,16 @@ class NotesAdapter extends CursorAdapter {
             noteViewHolder.contentView.setVisibility(View.VISIBLE);
         }
 
+        CommentStatus commentStatus = CommentStatus.UNKNOWN;
+        if (SqlUtils.sqlToBool(getIntForColumnName(cursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
+            commentStatus = CommentStatus.UNAPPROVED;
+        }
+
+        String localStatus = getStringForColumnName(cursor, Note.Schema.LOCAL_STATUS);
+        if (!TextUtils.isEmpty(localStatus)) {
+            commentStatus = CommentStatus.fromString(localStatus);
+        }
+
         if (mModeratingNoteIds.size() > 0 && mModeratingNoteIds.contains(objectCursor.getSimperiumKey())) {
             noteViewHolder.progressBar.setVisibility(View.VISIBLE);
         } else {
@@ -190,7 +201,7 @@ class NotesAdapter extends CursorAdapter {
         String noticonCharacter = getStringForColumnName(objectCursor, Note.Schema.NOTICON_INDEX);
         if (!TextUtils.isEmpty(noticonCharacter)) {
             noteViewHolder.noteIcon.setText(noticonCharacter);
-            if (SqlUtils.sqlToBool(getIntForColumnName(cursor, Note.Schema.IS_UNAPPROVED_INDEX))) {
+            if (commentStatus == CommentStatus.UNAPPROVED) {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
             } else if (isUnread) {
                 noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue);
