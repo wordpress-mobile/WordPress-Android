@@ -154,16 +154,14 @@ public class ReaderPostTable {
      * is only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
-        int numDeleted = 0;
+        // delete posts in tbl_post_tags attached to tags that no longer exist
+        int numDeleted = db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
 
         // delete excess posts on a per-tag basis
         ReaderTagList tags = ReaderTagTable.getAllTags();
         for (ReaderTag tag: tags) {
             numDeleted += purgePostsForTag(db, tag);
         }
-
-        // delete posts in tbl_post_tags attached to tags that no longer exist
-        numDeleted += db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
 
         // delete posts in tbl_posts that no longer exist in tbl_post_tags
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
@@ -191,33 +189,7 @@ public class ReaderPostTable {
                      + "  ORDER BY tbl_posts.timestamp"
                      + "  LIMIT ?3"
                      + ")";
-        int numDeleted = db.delete("tbl_post_tags", where, args);
-        return numDeleted;
-    }
-
-    /*
-     * remove posts in "Blogs I Follow" that are no longer attached to followed blogs
-     */
-    public static int purgeUnfollowedPosts() {
-        String[] args = {ReaderTag.TAG_NAME_FOLLOWING};
-        int numPurged = ReaderDatabase.getWritableDb().delete(
-                "tbl_post_tags",
-                "tag_name=? AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_following!=0)",
-                args);
-        if (numPurged > 0) {
-            AppLog.d(AppLog.T.READER, String.format("purged %d unfollowed posts", numPurged));
-        }
-        return numPurged;
-    }
-
-
-    public static boolean isEmpty() {
-        return (getNumPosts() == 0);
-    }
-
-    private static int getNumPosts() {
-        long count = SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_posts");
-        return (int)count;
+        return db.delete("tbl_post_tags", where, args);
     }
 
     public static int getNumPostsInBlog(long blogId) {
@@ -256,11 +228,6 @@ public class ReaderPostTable {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-
-    public static void deletePost(long blogId, long postId) {
-        String[] args = {Long.toString(blogId), Long.toString(postId)};
-        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
     }
 
     public static String getPostTitle(long blogId, long postId) {
@@ -334,10 +301,7 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        if (post == null) {
-            return false;
-        }
-        return isPostLikedByCurrentUser(post.blogId, post.postId);
+        return post != null && isPostLikedByCurrentUser(post.blogId, post.postId);
     }
     public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
