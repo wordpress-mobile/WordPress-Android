@@ -294,7 +294,7 @@
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
-    <string name="select_a_blog">Select a blog</string>
+    <string name="select_a_blog">Select a WordPress site</string>
     <string name="share_action_title">Add to …</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
