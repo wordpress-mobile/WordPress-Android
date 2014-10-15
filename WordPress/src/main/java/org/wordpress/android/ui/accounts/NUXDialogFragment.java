@@ -34,10 +34,9 @@ public class NUXDialogFragment extends DialogFragment {
     private WPTextView mFooterCenterButton;
     private WPTextView mFooterTopButton;
 
-    public static int ACTION_FINISH = 1;
-    public static int ACTION_OPEN_URL = 2;
-    public static int ACTION_OPEN_SUPPORT_CHAT = 3;
-
+    public static final int ACTION_FINISH = 1;
+    public static final int ACTION_OPEN_URL = 2;
+    public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
 
     public NUXDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -130,9 +129,6 @@ public class NUXDialogFragment extends DialogFragment {
                 mFooterTopButton.setOnClickListener(clickListenerThirdButton);
                 break;
         }
-
-
-
         v.setClickable(true);
         v.setOnClickListener(clickListenerDismiss);
         mFooterBottomButton.setOnClickListener(clickListenerDismiss);
@@ -143,23 +139,24 @@ public class NUXDialogFragment extends DialogFragment {
         if (!isAdded()) {
             return;
         }
-        if (action == ACTION_FINISH) {
-            getActivity().finish();
-        }
-        if (action == ACTION_OPEN_URL) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM)));
-            startActivity(intent);
-            dismissAllowingStateLoss();
-        }
-        if (action == ACTION_OPEN_SUPPORT_CHAT) {
-            HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                    WelcomeFragmentSignIn.ENTERED_URL_KEY));
-            HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                    WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
-        }
-        if (action == ACTION_OPEN_SUPPORT_CHAT) {
-            HelpshiftHelper.getInstance().showConversation(getActivity());
-            dismissAllowingStateLoss();
+        switch (action) {
+            case ACTION_OPEN_URL:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(arguments.getString(ARG_OPEN_URL_PARAM)));
+                startActivity(intent);
+                dismissAllowingStateLoss();
+                break;
+            case ACTION_OPEN_SUPPORT_CHAT:
+                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
+                        WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
+                        WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                HelpshiftHelper.getInstance().showConversation(getActivity());
+                dismissAllowingStateLoss();
+                break;
+            default:
+            case ACTION_FINISH:
+                getActivity().finish();
+                break;
         }
     }
 }
