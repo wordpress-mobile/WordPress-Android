@@ -44,17 +44,8 @@ public class ReaderActions {
      * result when updating data (getting latest comments for a post, etc.)
      */
     public enum UpdateResult {CHANGED, UNCHANGED, FAILED}
-
-
     public interface UpdateResultListener {
         public void onUpdateResult(UpdateResult result);
-    }
-
-    /*
-     * same as UpdateResultListener but includes count
-     */
-    public interface UpdateResultAndCountListener {
-        public void onUpdateResult(UpdateResult result, int numNew);
     }
 
     /*

@@ -19,6 +19,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -157,7 +158,7 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
                 }
             }
         };
@@ -170,7 +171,7 @@ public class ReaderPostActions {
                                                  final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -219,8 +220,7 @@ public class ReaderPostActions {
                 }
 
                 if (resultListener != null) {
-                    final ReaderActions.UpdateResult result =
-                            (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
+                    final ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(result);
@@ -297,11 +297,11 @@ public class ReaderPostActions {
      */
     public static void updatePostsInTag(final ReaderTag tag,
                                         final ReaderActions.RequestDataAction updateAction,
-                                        final ReaderActions.UpdateResultAndCountListener resultListener) {
+                                        final ReaderActions.UpdateResultListener resultListener) {
         String endpoint = getEndpointForTag(tag);
         if (TextUtils.isEmpty(endpoint)) {
             if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -344,7 +344,7 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
                 if (resultListener != null) {
-                    resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
                 }
             }
         };
@@ -355,10 +355,10 @@ public class ReaderPostActions {
     private static void handleUpdatePostsWithTagResponse(final ReaderTag tag,
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
-                                                         final ReaderActions.UpdateResultAndCountListener resultListener) {
+                                                         final ReaderActions.UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -375,7 +375,7 @@ public class ReaderPostActions {
                     if (resultListener != null) {
                         handler.post(new Runnable() {
                             public void run() {
-                                resultListener.onUpdateResult(ReaderActions.UpdateResult.UNCHANGED, 0);
+                                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
                             }
                         });
                     }
@@ -407,16 +407,14 @@ public class ReaderPostActions {
                     ReaderTagTable.setTagLastUpdated(tag, DateTimeUtils.javaDateToIso8601(new Date()));
                 }
 
-
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (resultListener != null) {
-                            // always pass CHANGED as the result even if there are no new posts (since if
-                            // get this far, it means there are changed - updated - posts)
-                            resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED, numNewPosts);
+                if (resultListener != null) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            ReaderActions.UpdateResult result = (numNewPosts > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
+                            resultListener.onUpdateResult(result);
                         }
-                    }
-                });
+                    });
+                }
             }
         }.start();
     }

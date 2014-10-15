@@ -30,7 +30,6 @@ import org.wordpress.android.ui.reader.ReaderPostPagerEndFragment.EndFragmentTyp
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
-import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultAndCountListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
@@ -606,10 +605,11 @@ public class ReaderPostPagerActivity extends Activity
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
-                    UpdateResultAndCountListener resultListener = new UpdateResultAndCountListener() {
+                    ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
                         @Override
-                        public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
-                            doAfterUpdate(numNewPosts > 0);
+                        public void onUpdateResult(ReaderActions.UpdateResult result) {
+                            boolean hasNewPosts = (result == ReaderActions.UpdateResult.CHANGED);
+                            doAfterUpdate(hasNewPosts);
                         }
                     };
                     ReaderPostActions.updatePostsInTag(

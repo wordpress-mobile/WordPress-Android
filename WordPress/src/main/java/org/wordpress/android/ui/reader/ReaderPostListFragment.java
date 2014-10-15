@@ -929,9 +929,9 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
         }
 
-        ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
+        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isAdded()) {
                     AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
                     return;
@@ -941,11 +941,11 @@ public class ReaderPostListFragment extends Fragment
 
                 // make sure this is still the current tag (user may have switched tags during the update)
                 if (!isCurrentTag(tag)) {
-                    AppLog.i(T.READER, "reader post list > new posts in inactive tag");
                     return;
                 }
 
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
+                boolean hasNewPosts = (result == ReaderActions.UpdateResult.CHANGED);
+                if (hasNewPosts) {
                     // show the "new posts" bar rather than immediately update the list
                     // if the user is viewing posts for a followed tag, posts are already
                     // displayed, and the user has scrolled the list
