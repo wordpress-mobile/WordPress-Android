@@ -547,7 +547,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 // Show a dialog
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                        getString(R.string.username_or_password_incorrect_third_time), R.drawable.noticon_alert_big, 3,
+                        getString(R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 3,
                         getString(R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
                         NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
 
