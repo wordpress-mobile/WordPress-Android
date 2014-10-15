@@ -328,33 +328,23 @@ public class ReaderPostActions {
         // return newest posts first (this is the default, but make it explicit since it's important)
         sb.append("&order=DESC");
 
-        // apply the after/before to limit results based on previous update, but only if there are
-        // existing posts in this topic
-        if (ReaderPostTable.hasPostsWithTag(tag)) {
-            switch (updateAction) {
-                case LOAD_NEWER:
-                    String dateNewest = ReaderTagTable.getTagNewestDate(tag);
-                    if (!TextUtils.isEmpty(dateNewest)) {
-                        sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                        AppLog.d(T.READER, String.format("requesting newer posts in tag %s (%s)", tag.getTagNameForLog(), dateNewest));
-                    }
-                    break;
+        // apply the after/before to limit results based on previous update
+        switch (updateAction) {
+            case LOAD_NEWER:
+                String dateNewest = ReaderTagTable.getTagLastUpdated(tag);
+                if (!TextUtils.isEmpty(dateNewest)) {
+                    sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
+                    AppLog.d(T.READER, String.format("requesting newer posts in tag %s (%s)", tag.getTagNameForLog(), dateNewest));
+                }
+                break;
 
-                case LOAD_OLDER:
-                    String dateOldest = ReaderTagTable.getTagOldestDate(tag);
-                    // if oldest date isn't stored, it means we haven't requested older posts until
-                    // now, so use the date of the oldest stored post
-                    if (TextUtils.isEmpty(dateOldest)) {
-                        dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
-                    }
-                    if (!TextUtils.isEmpty(dateOldest)) {
-                        sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                        AppLog.d(T.READER, String.format("requesting older posts in tag %s (%s)", tag.getTagNameForLog(), dateOldest));
-                    }
-                    break;
-            }
-        } else {
-            AppLog.d(T.READER, "requesting posts in empty tag " + tag.getTagNameForLog());
+            case LOAD_OLDER:
+                String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
+                if (!TextUtils.isEmpty(dateOldest)) {
+                    sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
+                    AppLog.d(T.READER, String.format("requesting older posts in tag %s (%s)", tag.getTagNameForLog(), dateOldest));
+                }
+                break;
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -394,12 +384,6 @@ public class ReaderPostActions {
             public void run() {
                 final ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
 
-                // remember when this topic was updated if newer posts were requested, regardless of
-                // whether the response contained any posts
-                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
-                    ReaderTagTable.setTagLastUpdated(tag, DateTimeUtils.javaDateToIso8601(new Date()));
-                }
-
                 // go no further if the response didn't contain any posts
                 if (serverPosts.size() == 0) {
                     AppLog.d(T.READER, "no new posts in tag " + tag.getTagNameForLog());
@@ -411,28 +395,6 @@ public class ReaderPostActions {
                         });
                     }
                     return;
-                }
-
-                // json "date_range" tells the the range of dates in the response, which we want to
-                // store for use the next time we request newer/older if this response contained any
-                // posts - note that freshly-pressed uses "newest" and "oldest" but other endpoints
-                // use "after" and "before"
-                JSONObject jsonDateRange = jsonObject.optJSONObject("date_range");
-                if (jsonDateRange != null) {
-                    switch (updateAction) {
-                        case LOAD_NEWER:
-                            String newest = jsonDateRange.has("before") ? JSONUtil.getString(jsonDateRange, "before") : JSONUtil.getString(jsonDateRange, "newest");
-                            if (!TextUtils.isEmpty(newest)) {
-                                ReaderTagTable.setTagNewestDate(tag, newest);
-                            }
-                            break;
-                        case LOAD_OLDER:
-                            String oldest = jsonDateRange.has("after") ? JSONUtil.getString(jsonDateRange, "after") : JSONUtil.getString(jsonDateRange, "oldest");
-                            if (!TextUtils.isEmpty(oldest)) {
-                                ReaderTagTable.setTagOldestDate(tag, oldest);
-                            }
-                            break;
-                    }
                 }
 
                 // remember whether there were existing posts with this tag before adding
@@ -452,6 +414,14 @@ public class ReaderPostActions {
 
                 AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag %s",
                         serverPosts.size(), numNewPosts, tag.getTagNameForLog()));
+
+                // remember when this topic was updated if newer posts were requested - note that
+                // this is done regardless of whether new posts were retrieved since the update
+                // date is used when determining whether it's time to auto-update this tag
+                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
+                    ReaderTagTable.setTagLastUpdated(tag, DateTimeUtils.javaDateToIso8601(new Date()));
+                }
+
 
                 handler.post(new Runnable() {
                     public void run() {

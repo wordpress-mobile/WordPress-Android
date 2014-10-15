@@ -26,13 +26,13 @@ import java.util.Date;
  *      date_oldest is used when retrieving old posts - only get posts older than date_oldest
  */
 public class ReaderTagTable {
-    private static final String COLUMN_NAMES = "tag_name, tag_type, endpoint";
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_tags ("
-                 + "	tag_name    TEXT COLLATE NOCASE,"
-                 + "    tag_type    INTEGER DEFAULT 0,"
-                 + "    endpoint    TEXT,"
+                 + "	tag_name     TEXT COLLATE NOCASE,"
+                 + "    tag_type     INTEGER DEFAULT 0,"
+                 + "    endpoint     TEXT,"
+                + " 	date_updated TEXT,"
                  + "    PRIMARY KEY (tag_name, tag_type)"
                  + ")");
 
@@ -42,28 +42,11 @@ public class ReaderTagTable {
                  + "    endpoint    TEXT,"
                  + "    PRIMARY KEY (tag_name, tag_type)"
                  + ")");
-
-        db.execSQL("CREATE TABLE tbl_tag_updates ("
-                + "	    tag_name	 TEXT COLLATE NOCASE,"
-                + "     tag_type     INTEGER DEFAULT 0,"
-                + " 	date_updated TEXT,"
-                + " 	date_oldest	 TEXT,"
-                + " 	date_newest	 TEXT,"
-                + "     PRIMARY KEY (tag_name, tag_type)"
-                + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_tags");
         db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended");
-        db.execSQL("DROP TABLE IF EXISTS tbl_tag_updates");
-    }
-
-    /*
-     * remove update data for tags that no longer exist
-     */
-    protected static int purge(SQLiteDatabase db) {
-        return db.delete("tbl_tag_updates", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
     }
 
     /*
@@ -113,9 +96,8 @@ public class ReaderTagTable {
         SQLiteStatement stmt = null;
         try {
             stmt = ReaderDatabase.getWritableDb().compileStatement(
-                    "INSERT OR REPLACE INTO tbl_tags ("
-                            + COLUMN_NAMES
-                            + ") VALUES (?1,?2,?3)");
+                    "INSERT OR REPLACE INTO tbl_tags (tag_name, tag_type, endpoint) VALUES (?1,?2,?3)"
+            );
 
             for (ReaderTag tag: tagList) {
                 stmt.bindString(1, tag.getTagName());
@@ -233,61 +215,25 @@ public class ReaderTagTable {
         }
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_name=? AND tag_type=?", args);
-        ReaderDatabase.getWritableDb().delete("tbl_tag_updates", "tag_name=? AND tag_type=?", args);
     }
 
 
-    /**
-     * tbl_tag_updates routines
-     **/
-    public static String getTagNewestDate(ReaderTag tag) {
-        return getDateColumn(tag, "date_newest");
-    }
-    public static void setTagNewestDate(ReaderTag tag, String date) {
-        setDateColumn(tag, "date_newest", date);
-    }
-
-    public static String getTagOldestDate(ReaderTag tag) {
-        return getDateColumn(tag, "date_oldest");
-    }
-    public static void setTagOldestDate(ReaderTag tag, String date) {
-        setDateColumn(tag, "date_oldest", date);
-    }
-
-    private static String getTagLastUpdated(ReaderTag tag) {
-        return getDateColumn(tag, "date_updated");
-    }
-    public static void setTagLastUpdated(ReaderTag tag, String date) {
-        setDateColumn(tag, "date_updated", date);
-    }
-
-    private static String getDateColumn(ReaderTag tag, String colName) {
+    public static String getTagLastUpdated(ReaderTag tag) {
         if (tag == null) {
             return "";
         }
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT " + colName + " FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
+                "SELECT date_updated FROM tbl_tags WHERE tag_name=? AND tag_type=?",
                 args);
     }
-    private static void setDateColumn(ReaderTag tag, String colName, String date) {
-        if (tag == null) {
+
+    public static void setTagLastUpdated(ReaderTag tag, String date) {
+       if (tag == null) {
             return;
         }
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        boolean rowExists = SqlUtils.boolForQuery(
-                ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_tag_updates WHERE tag_name=? AND tag_type=?",
-                args);
-
-        final String sql;
-        if (rowExists) {
-            sql = "UPDATE tbl_tag_updates SET " + colName + "=?1 WHERE tag_name=?2 AND tag_type=?3";
-        } else {
-            sql = "INSERT INTO tbl_tag_updates (" + colName + ", tag_name, tag_type) VALUES (?1,?2,?3)";
-        }
-
+        String sql = "UPDATE tbl_tags SET date_updated=?1 WHERE tag_name=?2 AND tag_type=?3";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindString(1, date);
@@ -359,7 +305,8 @@ public class ReaderTagTable {
         }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_tags_recommended (" + COLUMN_NAMES + ") VALUES (?1,?2,?3)");
+        SQLiteStatement stmt = db.compileStatement
+                ("INSERT INTO tbl_tags_recommended (tag_name, tag_type, endpoint) VALUES (?1,?2,?3)");
         db.beginTransaction();
         try {
             try {

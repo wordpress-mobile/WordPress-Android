@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 95;
+    private static final int DB_VERSION = 96;
 
     /*
      * version history
@@ -47,6 +47,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   93 - tbl_posts text is now truncated to a max length (3.3)
      *   94 - added is_jetpack to tbl_posts (3.4)
      *   95 - added page_number to tbl_comments (3.4)
+     *   96 - removed tbl_tag_updates, added date_updated to tbl_tags (3.4)
      */
 
     /*
@@ -177,12 +178,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
                 if (numThumbsPurged > 0) {
                     AppLog.i(T.READER, String.format("%d thumbnails purged", numThumbsPurged));
-                }
-
-                // purge unattached tags
-                int numTagsPurged = ReaderTagTable.purge(db);
-                if (numTagsPurged > 0) {
-                    AppLog.i(T.READER, String.format("%d tags purged", numTagsPurged));
                 }
             }
             db.setTransactionSuccessful();
