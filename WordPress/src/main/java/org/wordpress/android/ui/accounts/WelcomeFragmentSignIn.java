@@ -39,6 +39,8 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -538,27 +540,41 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
+        private void showInvalidUsernameOrPasswordDialog() {
+            // Show a dialog
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            NUXDialogFragment nuxAlert;
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                        R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 3, getString(
+                        R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
+                        NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+            } else {
+                // create a 2 buttons dialog ("Forget your password?" and "Cancel")
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                                R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 2, getString(
+                                R.string.cancel), getString(R.string.forgot_password), null,
+                        NUXDialogFragment.ACTION_OPEN_URL, 0);
+            }
+
+            // Put entered url and entered username args, that could help our support team
+            Bundle bundle = nuxAlert.getArguments();
+            bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+            bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+            bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+            nuxAlert.setArguments(bundle);
+            ft.add(nuxAlert, "alert");
+            ft.commitAllowingStateLoss();
+        }
+
         private void handleInvalidUsernameOrPassword() {
             mErroneousLogInCount += 1;
             if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
                 // Clear previous errors
                 mPasswordEditText.setError(null);
                 mUsernameEditText.setError(null);
-                // Show a dialog
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in),
-                        getString(R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 3,
-                        getString(R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
-                        NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-
-                // Put entered url and entered username args, that could help our support team
-                Bundle bundle = nuxAlert.getArguments();
-                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
-                bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-                bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
-                nuxAlert.setArguments(bundle);
-                ft.add(nuxAlert, "alert");
-                ft.commitAllowingStateLoss();
+                showInvalidUsernameOrPasswordDialog();
             } else {
                 showUsernameError(mErrorMsgId);
                 showPasswordError(mErrorMsgId);
