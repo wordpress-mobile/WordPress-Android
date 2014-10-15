@@ -18,28 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/stats_tablet_header_title"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="@dimen/margin_small"
-                    android:src="@drawable/app_icon"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/app_name"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"/>
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/blog_spinner_title"
                 android:layout_width="wrap_content"
