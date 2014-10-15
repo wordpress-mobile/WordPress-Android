@@ -964,30 +964,7 @@ public class ReaderPostListFragment extends Fragment
             }
         };
 
-        // if this is a request for newer posts and posts with this tag already exist, assign
-        // a backfill listener to ensure there aren't any gaps between this update and the previous one
-        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER && !isPostAdapterEmpty());
-        if (allowBackfill) {
-            ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
-                @Override
-                public void onPostsBackfilled() {
-                    if (!isAdded()) {
-                        AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
-                        return;
-                    }
-                    if (!isCurrentTag(tag)) {
-                        AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
-                    } else if (isPostAdapterEmpty()) {
-                        // show the new posts right away if this is the current tag and there aren't
-                        // any posts showing, otherwise just let them be shown on the next refresh
-                        refreshPosts();
-                    }
-                }
-            };
-            ReaderPostActions.updatePostsInTagWithBackfill(tag, resultListener, backfillListener);
-        } else {
-            ReaderPostActions.updatePostsInTag(tag, updateAction, resultListener);
-        }
+        ReaderPostActions.updatePostsInTag(tag, updateAction, resultListener);
     }
 
     boolean isUpdating() {

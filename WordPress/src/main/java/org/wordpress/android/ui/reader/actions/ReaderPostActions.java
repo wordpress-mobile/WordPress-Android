@@ -293,25 +293,11 @@ public class ReaderPostActions {
 
     /*
      * get the latest posts in the passed topic - note that this uses an UpdateResultAndCountListener
-     * so the caller can be told how many new posts were added - use the second method which accepts
-     * a backfillListener to request new posts and backfill missing posts - note that a backfill
-     * will NOT occur unless a backfillListener is passed
+     * so the caller can be told how many new posts were added
      */
     public static void updatePostsInTag(final ReaderTag tag,
                                         final ReaderActions.RequestDataAction updateAction,
                                         final ReaderActions.UpdateResultAndCountListener resultListener) {
-        updatePostsInTag(tag, updateAction, resultListener, null);
-    }
-    public static void updatePostsInTagWithBackfill(final ReaderTag tag,
-                                                    final ReaderActions.UpdateResultAndCountListener resultListener,
-                                                    final ReaderActions.PostBackfillListener backfillListener) {
-        updatePostsInTag(tag, ReaderActions.RequestDataAction.LOAD_NEWER, resultListener, backfillListener);
-    }
-    private static void updatePostsInTag(final ReaderTag tag,
-                                         final ReaderActions.RequestDataAction updateAction,
-                                         final ReaderActions.UpdateResultAndCountListener resultListener,
-                                         final ReaderActions.PostBackfillListener backfillListener) {
-
         String endpoint = getEndpointForTag(tag);
         if (TextUtils.isEmpty(endpoint)) {
             if (resultListener != null) {
@@ -350,7 +336,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsWithTagResponse(tag, updateAction, jsonObject, resultListener, backfillListener);
+                handleUpdatePostsWithTagResponse(tag, updateAction, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -369,8 +355,7 @@ public class ReaderPostActions {
     private static void handleUpdatePostsWithTagResponse(final ReaderTag tag,
                                                          final ReaderActions.RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
-                                                         final ReaderActions.UpdateResultAndCountListener resultListener,
-                                                         final ReaderActions.PostBackfillListener backfillListener) {
+                                                         final ReaderActions.UpdateResultAndCountListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED, -1);
@@ -429,17 +414,6 @@ public class ReaderPostActions {
                             // always pass CHANGED as the result even if there are no new posts (since if
                             // get this far, it means there are changed - updated - posts)
                             resultListener.onUpdateResult(ReaderActions.UpdateResult.CHANGED, numNewPosts);
-                        }
-
-                        // if a backfill listener was passed, there were existing posts with this tag,
-                        // and all posts retrieved are new, then backfill the posts to fill in gaps
-                        // between posts just retrieved and posts previously retrieved
-                        if (backfillListener != null && hasExistingPostsWithTag) {
-                            boolean areAllPostsNew = (numNewPosts == ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
-                            if (areAllPostsNew) {
-                                Date dtOldestServerPost = serverPosts.getOldestPubDate();
-                                backfillPostsWithTag(tag, dtOldestServerPost, 0, backfillListener);
-                            }
                         }
                     }
                 });
@@ -531,85 +505,6 @@ public class ReaderPostActions {
         }
 
         return String.format("/read/tags/%s/posts", ReaderUtils.sanitizeTagName(tag.getTagName()));
-    }
-
-    /*
-     * "backfill" posts with a specific tag - used to fill in gaps between syncs, ex: sync the
-     * reader, come back the next day and sync again, with a popular tag there may be posts
-     * missing between the posts retrieved the previous day and the posts just retrieved
-     */
-    private static final int BACKFILL_MAX_RECURSION = 3;
-    private static void backfillPostsWithTag(final ReaderTag tag,
-                                             final Date dateBefore,
-                                             final int recursionCounter,
-                                             final ReaderActions.PostBackfillListener backfillListener) {
-        String endpoint = getEndpointForTag(tag);
-        if (TextUtils.isEmpty(endpoint)) {
-            return;
-        }
-
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                handleBackfillResponse(jsonObject, tag, recursionCounter, backfillListener);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(T.READER, volleyError);
-            }
-        };
-
-        String strDateBefore = DateTimeUtils.javaDateToIso8601(dateBefore);
-        String path = endpoint
-                    + "?number=" + ReaderConstants.READER_MAX_POSTS_TO_REQUEST
-                    + "&order=DESC"
-                    + "&before=" + UrlUtils.urlEncode(strDateBefore);
-        AppLog.i(T.READER, String.format("backfilling tag %s, recursion %d", tag.getTagNameForLog(), recursionCounter));
-        WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
-    }
-    private static void handleBackfillResponse(final JSONObject jsonObject,
-                                               final ReaderTag tag,
-                                               final int recursionCounter,
-                                               final ReaderActions.PostBackfillListener backfillListener) {
-        if (jsonObject == null) {
-            return;
-        }
-
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                final ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-                final int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
-                if (numNewPosts == 0) {
-                    return;
-                }
-
-                AppLog.i(T.READER, String.format("backfilling tag %s found %d new posts", tag.getTagNameForLog(), numNewPosts));
-                ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
-
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (backfillListener != null) {
-                            backfillListener.onPostsBackfilled();
-                        }
-
-                        // backfill again if all posts were new, but enforce a max on recursion
-                        // so we don't backfill forever
-                        boolean areAllPostsNew = (numNewPosts == ReaderConstants.READER_MAX_POSTS_TO_REQUEST);
-                        if (areAllPostsNew && recursionCounter < BACKFILL_MAX_RECURSION) {
-                            backfillPostsWithTag(tag,
-                                    serverPosts.getOldestPubDate(),
-                                    recursionCounter + 1,
-                                    backfillListener);
-                        }
-                    }
-                });
-            }
-        }.start();
     }
 
 }
