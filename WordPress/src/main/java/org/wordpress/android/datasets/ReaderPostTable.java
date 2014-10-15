@@ -202,10 +202,6 @@ public class ReaderPostTable {
                     args);
     }
 
-    public static boolean hasPostsWithTag(ReaderTag tag) {
-        return (getNumPostsWithTag(tag) > 0);
-    }
-
     public static void addOrUpdatePost(ReaderPost post) {
         if (post == null) {
             return;

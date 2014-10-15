@@ -382,35 +382,26 @@ public class ReaderPostActions {
                     return;
                 }
 
-                // remember whether there were existing posts with this tag before adding
-                // the ones we just retrieved
-                final boolean hasExistingPostsWithTag = ReaderPostTable.hasPostsWithTag(tag);
-
                 // determine how many of the downloaded posts are new (response may contain both
                 // new posts and posts updated since the last call), then save the posts even if
                 // none are new in order to update comment counts, likes, etc., on existing posts
-                final int numNewPosts;
-                if (hasExistingPostsWithTag) {
-                    numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
-                } else {
-                    numNewPosts = serverPosts.size();
-                }
+                int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
                 ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
 
                 AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag %s",
                         serverPosts.size(), numNewPosts, tag.getTagNameForLog()));
 
-                // remember when this topic was updated if newer posts were requested - note that
+                // remember when this tag was updated if newer posts were requested - note that
                 // this is done regardless of whether new posts were retrieved since the update
                 // date is used when determining whether it's time to auto-update this tag
                 if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
-                    ReaderTagTable.setTagLastUpdated(tag, DateTimeUtils.javaDateToIso8601(new Date()));
+                    ReaderTagTable.setTagLastUpdated(tag);
                 }
 
                 if (resultListener != null) {
+                    final ReaderActions.UpdateResult result = (numNewPosts > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
-                            ReaderActions.UpdateResult result = (numNewPosts > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                             resultListener.onUpdateResult(result);
                         }
                     });
