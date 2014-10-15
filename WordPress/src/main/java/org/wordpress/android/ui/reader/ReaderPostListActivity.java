@@ -120,7 +120,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -314,34 +313,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
-     * remove posts in blogs that are no longer followed
-     */
-    private void purgeUnfollowedPosts() {
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                // purge in the background
-                int numPurged = ReaderPostTable.purgeUnfollowedPosts();
-
-                // if any posts were purged and we're showing posts in followed blogs, refresh the
-                // list fragment so purged posts no longer appear
-                if (numPurged > 0) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            if (isListFragmentForTagShowing(ReaderTag.TAG_NAME_FOLLOWING)) {
-                                getListFragment().refreshPosts();
-                            }
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
-
-    /*
      * user tapped a post in the list fragment
      */
     @Override
@@ -418,10 +389,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
                         listFragment.updateCurrentTag();
                     }
                 }
-            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
-                // followed blogs have changed, so remove posts in blogs that are
-                // no longer being followed
-                purgeUnfollowedPosts();
             }
         }
     };
