@@ -20,10 +20,6 @@ import java.util.Date;
 /**
  *  tbl_tags stores the list of tags the user subscribed to or has by default
  *  tbl_tags_recommended stores the list of recommended tags returned by the api
- *  tbl_tag_updates stores the iso8601 dates each tag was updated by the app as follows:
- *      date_updated is the date the tag was last updated
- *      date_newest is used when retrieving new posts - only get posts newer than date_newest
- *      date_oldest is used when retrieving old posts - only get posts older than date_oldest
  */
 public class ReaderTagTable {
 
