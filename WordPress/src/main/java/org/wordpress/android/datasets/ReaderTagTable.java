@@ -205,6 +205,21 @@ public class ReaderTagTable {
         }
     }
 
+    static ReaderTagList getAllTags() {
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags ORDER BY tag_name", null);
+        try {
+            ReaderTagList tagList = new ReaderTagList();
+            if (c.moveToFirst()) {
+                do {
+                    tagList.add(getTagFromCursor(c));
+                } while (c.moveToNext());
+            }
+            return tagList;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     public static void deleteTag(ReaderTag tag) {
         if (tag == null) {
             return;

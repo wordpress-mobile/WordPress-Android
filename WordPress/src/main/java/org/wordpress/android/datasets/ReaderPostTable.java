@@ -11,7 +11,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
@@ -152,12 +154,44 @@ public class ReaderPostTable {
      * is only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
+        int numDeleted = 0;
+
+        // delete excess posts on a per-tag basis
+        ReaderTagList tags = ReaderTagTable.getAllTags();
+        for (ReaderTag tag: tags) {
+            numDeleted += purgePostsForTag(db, tag);
+        }
+
         // delete posts in tbl_post_tags attached to tags that no longer exist
-        int numDeleted = db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
+        numDeleted += db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
 
         // delete posts in tbl_posts that no longer exist in tbl_post_tags
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
 
+        return numDeleted;
+    }
+
+    /*
+     * purge excess posts in the passed tag
+     */
+    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+    private static int purgePostsForTag(SQLiteDatabase db, ReaderTag tag) {
+        int numPosts = getNumPostsWithTag(tag);
+        if (numPosts <= MAX_POSTS_PER_TAG) {
+            return 0;
+        }
+
+        int numToPurge = numPosts - MAX_POSTS_PER_TAG;
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
+        String where = "pseudo_id IN ("
+                     + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
+                     + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                     + "  AND tbl_post_tags.tag_name=?1"
+                     + "  AND tbl_post_tags.tag_type=?2"
+                     + "  ORDER BY tbl_posts.timestamp"
+                     + "  LIMIT ?3"
+                     + ")";
+        int numDeleted = db.delete("tbl_post_tags", where, args);
         return numDeleted;
     }
 
