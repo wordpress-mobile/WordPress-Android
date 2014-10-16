@@ -183,12 +183,7 @@ public class ReaderPostActions {
             @Override
             public void run() {
                 ReaderPost updatedPost = ReaderPost.fromJson(jsonObject);
-                boolean hasChanges =
-                         ( updatedPost.numReplies != originalPost.numReplies
-                        || updatedPost.numLikes != originalPost.numLikes
-                        || updatedPost.isCommentsOpen != originalPost.isCommentsOpen
-                        || updatedPost.isLikedByCurrentUser != originalPost.isLikedByCurrentUser
-                        || updatedPost.isFollowedByCurrentUser != originalPost.isFollowedByCurrentUser);
+                boolean hasChanges = !originalPost.isSamePost(updatedPost);
 
                 if (hasChanges) {
                     AppLog.d(T.READER, "post updated");
@@ -315,29 +310,22 @@ public class ReaderPostActions {
         // return newest posts first (this is the default, but make it explicit since it's important)
         sb.append("&order=DESC");
 
-        // apply the after/before to limit results based on previous update
-        switch (updateAction) {
-            case LOAD_NEWER:
-                String dateNewest = ReaderTagTable.getTagLastUpdated(tag);
-                if (!TextUtils.isEmpty(dateNewest)) {
-                    sb.append("&after=").append(UrlUtils.urlEncode(dateNewest));
-                    AppLog.d(T.READER, String.format("requesting newer posts in tag %s (%s)", tag.getTagNameForLog(), dateNewest));
-                }
-                break;
-
-            case LOAD_OLDER:
-                String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
-                if (!TextUtils.isEmpty(dateOldest)) {
-                    sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
-                    AppLog.d(T.READER, String.format("requesting older posts in tag %s (%s)", tag.getTagNameForLog(), dateOldest));
-                }
-                break;
+        // if older posts are being requested, add the &before param based on the oldest existing post
+        if (updateAction == RequestDataAction.LOAD_OLDER) {
+            String dateOldest = ReaderPostTable.getOldestPubDateWithTag(tag);
+            if (!TextUtils.isEmpty(dateOldest)) {
+                sb.append("&before=").append(UrlUtils.urlEncode(dateOldest));
+            }
         }
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleUpdatePostsWithTagResponse(tag, updateAction, jsonObject, resultListener);
+                // remember when this tag was updated if newer posts were requested
+                if (updateAction == RequestDataAction.LOAD_NEWER) {
+                    ReaderTagTable.setTagLastUpdated(tag);
+                }
+                handleUpdatePostsResponse(tag, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -351,75 +339,6 @@ public class ReaderPostActions {
         };
 
         WordPress.getRestClientUtils().get(sb.toString(), null, null, listener, errorListener);
-    }
-
-    private static void handleUpdatePostsWithTagResponse(final ReaderTag tag,
-                                                         final RequestDataAction updateAction,
-                                                         final JSONObject jsonObject,
-                                                         final UpdateResultListener resultListener) {
-        if (jsonObject == null) {
-            if (resultListener != null) {
-                resultListener.onUpdateResult(UpdateResult.FAILED);
-            }
-            return;
-        }
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                final ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-
-                // go no further if the response didn't contain any posts
-                if (serverPosts.size() == 0) {
-                    AppLog.d(T.READER, "no new posts in tag " + tag.getTagNameForLog());
-                    if (resultListener != null) {
-                        handler.post(new Runnable() {
-                            public void run() {
-                                resultListener.onUpdateResult(UpdateResult.UNCHANGED);
-                            }
-                        });
-                    }
-                    return;
-                }
-
-                // determine if any of the downloaded posts are new or changed
-                final UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
-                if (updateResult.isNewOrChanged()) {
-                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
-                }
-
-                switch (updateResult) {
-                    case HAS_NEW:
-                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (has new)",
-                                serverPosts.size(), tag.getTagNameForLog()));
-                        break;
-                    case CHANGED:
-                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (has changes)",
-                                serverPosts.size(), tag.getTagNameForLog()));
-                        break;
-                    default:
-                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (no new or changed)",
-                                serverPosts.size(), tag.getTagNameForLog()));
-                        break;
-                }
-
-                // remember when this tag was updated if newer posts were requested - note this
-                // is done regardless of whether new/changed posts were retrieved since the update
-                // date is used when determining whether it's time to auto-update this tag
-                if (updateAction == RequestDataAction.LOAD_NEWER) {
-                    ReaderTagTable.setTagLastUpdated(tag);
-                }
-
-                if (resultListener != null) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            resultListener.onUpdateResult(updateResult);
-                        }
-                    });
-                }
-            }
-        }.start();
     }
 
     /*
@@ -447,7 +366,7 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleGetPostsForBlogResponse(jsonObject, resultListener);
+                handleUpdatePostsResponse(null, jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -463,7 +382,12 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleGetPostsForBlogResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
+    /*
+     * called after requesting posts with a specific tag or in a specific blog
+     */
+    private static void handleUpdatePostsResponse(final ReaderTag tag,
+                                                  final JSONObject jsonObject,
+                                                  final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -478,8 +402,10 @@ public class ReaderPostActions {
                 ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
                 final UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
                 if (updateResult.isNewOrChanged()) {
-                    ReaderPostTable.addOrUpdatePosts(null, serverPosts);
+                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
                 }
+                AppLog.d(T.READER, "requested posts response = " + updateResult.toString());
+
                 if (resultListener != null) {
                     handler.post(new Runnable() {
                         public void run() {
