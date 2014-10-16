@@ -192,7 +192,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 if (isResultOK && data != null && listFragment != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 }
                 break;
 

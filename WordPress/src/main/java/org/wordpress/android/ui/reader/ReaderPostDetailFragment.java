@@ -360,7 +360,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // get the post again since it has changed, then refresh to show changes
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
         refreshLikes();
         refreshIconBarCounts(true);
 
@@ -393,7 +393,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // get the post again, since it has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
 
         // call returns before api completes, but local version of post will have been changed
         // so refresh to show those changes
@@ -427,7 +427,7 @@ public class ReaderPostDetailFragment extends Fragment
         }
 
         // get the post again since reblog status has changed
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
 
         final ImageView imgBtnReblog = (ImageView) mLayoutIcons.findViewById(R.id.image_reblog_btn);
         imgBtnReblog.setSelected(mPost != null && mPost.isRebloggedByCurrentUser);
@@ -468,7 +468,7 @@ public class ReaderPostDetailFragment extends Fragment
                 }
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged()) {
-                    mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+                    mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
                     refreshIconBarCounts(true);
                     refreshComments();
                 }
@@ -702,7 +702,7 @@ public class ReaderPostDetailFragment extends Fragment
                 return false;
             }
 
-            mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+            mPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
             if (mPost == null) {
                 return false;
             }

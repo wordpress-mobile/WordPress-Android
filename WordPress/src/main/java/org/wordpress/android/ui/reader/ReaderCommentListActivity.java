@@ -136,7 +136,7 @@ public class ReaderCommentListActivity extends Activity {
     }
 
     private void loadPost() {
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
         if (mPost == null) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
             finish();

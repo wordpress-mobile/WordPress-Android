@@ -383,27 +383,38 @@ public class ReaderPostActions {
                     return;
                 }
 
-                // determine how many of the downloaded posts are new (response may contain both
-                // new posts and posts updated since the last call), then save the posts even if
-                // none are new in order to update comment counts, likes, etc., on existing posts
-                int numNewPosts = ReaderPostTable.getNumNewPostsWithTag(tag, serverPosts);
-                ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+                // determine if any of the downloaded posts are new or changed
+                final UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
+                if (updateResult.isNewOrChanged()) {
+                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts);
+                }
 
-                AppLog.d(T.READER, String.format("retrieved %d posts (%d new) in tag %s",
-                        serverPosts.size(), numNewPosts, tag.getTagNameForLog()));
+                switch (updateResult) {
+                    case HAS_NEW:
+                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (has new)",
+                                serverPosts.size(), tag.getTagNameForLog()));
+                        break;
+                    case CHANGED:
+                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (has changes)",
+                                serverPosts.size(), tag.getTagNameForLog()));
+                        break;
+                    default:
+                        AppLog.d(T.READER, String.format("retrieved %d posts in tag %s (no new or changed)",
+                                serverPosts.size(), tag.getTagNameForLog()));
+                        break;
+                }
 
-                // remember when this tag was updated if newer posts were requested - note that
-                // this is done regardless of whether new posts were retrieved since the update
+                // remember when this tag was updated if newer posts were requested - note this
+                // is done regardless of whether new/changed posts were retrieved since the update
                 // date is used when determining whether it's time to auto-update this tag
                 if (updateAction == RequestDataAction.LOAD_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
 
                 if (resultListener != null) {
-                    final UpdateResult result = (numNewPosts > 0 ? UpdateResult.HAS_NEW : UpdateResult.CHANGED);
                     handler.post(new Runnable() {
                         public void run() {
-                            resultListener.onUpdateResult(result);
+                            resultListener.onUpdateResult(updateResult);
                         }
                     });
                 }
@@ -460,12 +471,13 @@ public class ReaderPostActions {
             return;
         }
 
-        ReaderPostList posts = ReaderPostList.fromJson(jsonObject);
-        ReaderPostTable.addOrUpdatePosts(null, posts);
-
+        ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
+        UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
+        if (updateResult.isNewOrChanged()) {
+            ReaderPostTable.addOrUpdatePosts(null, serverPosts);
+        }
         if (resultListener != null) {
-            UpdateResult result = (posts.size() > 0 ? UpdateResult.HAS_NEW : UpdateResult.UNCHANGED);
-            resultListener.onUpdateResult(result);
+            resultListener.onUpdateResult(updateResult);
         }
     }
 
