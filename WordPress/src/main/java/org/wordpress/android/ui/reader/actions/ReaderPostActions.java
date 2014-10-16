@@ -19,7 +19,10 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
+import org.wordpress.android.ui.reader.actions.ReaderActions.RequestDataAction;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -94,7 +97,7 @@ public class ReaderPostActions {
     public static void reblogPost(final ReaderPost post,
                                   long destinationBlogId,
                                   final String optionalComment,
-                                  final ReaderActions.ActionListener actionListener) {
+                                  final ActionListener actionListener) {
         if (post == null) {
             if (actionListener != null) {
                 actionListener.onActionResult(false);
@@ -142,7 +145,7 @@ public class ReaderPostActions {
      * like/comment count has changed, or if the current user's like/follow status has changed
      */
     public static void updatePost(final ReaderPost originalPost,
-                                  final ReaderActions.UpdateResultListener resultListener) {
+                                  final UpdateResultListener resultListener) {
         String path = "sites/" + originalPost.blogId + "/posts/" + originalPost.postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -166,7 +169,7 @@ public class ReaderPostActions {
 
     private static void handleUpdatePostResponse(final ReaderPost originalPost,
                                                  final JSONObject jsonObject,
-                                                 final ReaderActions.UpdateResultListener resultListener) {
+                                                 final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -218,7 +221,7 @@ public class ReaderPostActions {
                 }
 
                 if (resultListener != null) {
-                    final ReaderActions.UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
+                    final UpdateResult result = (hasChanges ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(result);
@@ -259,7 +262,7 @@ public class ReaderPostActions {
     /**
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
-    public static void requestPost(final long blogId, final long postId, final ReaderActions.ActionListener actionListener) {
+    public static void requestPost(final long blogId, final long postId, final ActionListener actionListener) {
         String path = "sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -294,8 +297,8 @@ public class ReaderPostActions {
      * so the caller can be told how many new posts were added
      */
     public static void updatePostsInTag(final ReaderTag tag,
-                                        final ReaderActions.RequestDataAction updateAction,
-                                        final ReaderActions.UpdateResultListener resultListener) {
+                                        final RequestDataAction updateAction,
+                                        final UpdateResultListener resultListener) {
         String endpoint = getEndpointForTag(tag);
         if (TextUtils.isEmpty(endpoint)) {
             if (resultListener != null) {
@@ -351,9 +354,9 @@ public class ReaderPostActions {
     }
 
     private static void handleUpdatePostsWithTagResponse(final ReaderTag tag,
-                                                         final ReaderActions.RequestDataAction updateAction,
+                                                         final RequestDataAction updateAction,
                                                          final JSONObject jsonObject,
-                                                         final ReaderActions.UpdateResultListener resultListener) {
+                                                         final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -392,12 +395,12 @@ public class ReaderPostActions {
                 // remember when this tag was updated if newer posts were requested - note that
                 // this is done regardless of whether new posts were retrieved since the update
                 // date is used when determining whether it's time to auto-update this tag
-                if (updateAction == ReaderActions.RequestDataAction.LOAD_NEWER) {
+                if (updateAction == RequestDataAction.LOAD_NEWER) {
                     ReaderTagTable.setTagLastUpdated(tag);
                 }
 
                 if (resultListener != null) {
-                    final ReaderActions.UpdateResult result = (numNewPosts > 0 ? UpdateResult.CHANGED : UpdateResult.UNCHANGED);
+                    final UpdateResult result = (numNewPosts > 0 ? UpdateResult.HAS_NEW : UpdateResult.CHANGED);
                     handler.post(new Runnable() {
                         public void run() {
                             resultListener.onUpdateResult(result);
@@ -413,8 +416,8 @@ public class ReaderPostActions {
      */
     public static void requestPostsForBlog(final long blogId,
                                            final String blogUrl,
-                                           final ReaderActions.RequestDataAction updateAction,
-                                           final ReaderActions.ActionListener actionListener) {
+                                           final RequestDataAction updateAction,
+                                           final UpdateResultListener resultListener) {
         String path;
         if (blogId == 0) {
             path = "sites/" + UrlUtils.getDomainFromUrl(blogUrl);
@@ -424,7 +427,7 @@ public class ReaderPostActions {
         path += "/posts/?meta=site,likes";
 
         // append the date of the oldest cached post in this blog when requesting older posts
-        if (updateAction == ReaderActions.RequestDataAction.LOAD_OLDER) {
+        if (updateAction == RequestDataAction.LOAD_OLDER) {
             String dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId);
             if (!TextUtils.isEmpty(dateOldest)) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest);
@@ -433,15 +436,15 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                handleGetPostsResponse(jsonObject, actionListener);
+                handleGetPostsForBlogResponse(jsonObject, resultListener);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(T.READER, volleyError);
-                if (actionListener != null) {
-                    actionListener.onActionResult(false);
+                if (resultListener != null) {
+                    resultListener.onUpdateResult(UpdateResult.FAILED);
                 }
             }
         };
@@ -449,10 +452,10 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleGetPostsResponse(JSONObject jsonObject, final ReaderActions.ActionListener actionListener) {
-        if (jsonObject==null) {
-            if (actionListener != null) {
-                actionListener.onActionResult(false);
+    private static void handleGetPostsForBlogResponse(JSONObject jsonObject, UpdateResultListener resultListener) {
+        if (jsonObject == null) {
+            if (resultListener != null) {
+                resultListener.onUpdateResult(UpdateResult.FAILED);
             }
             return;
         }
@@ -460,8 +463,9 @@ public class ReaderPostActions {
         ReaderPostList posts = ReaderPostList.fromJson(jsonObject);
         ReaderPostTable.addOrUpdatePosts(null, posts);
 
-        if (actionListener != null) {
-            actionListener.onActionResult(posts.size() > 0);
+        if (resultListener != null) {
+            UpdateResult result = (posts.size() > 0 ? UpdateResult.HAS_NEW : UpdateResult.UNCHANGED);
+            resultListener.onUpdateResult(result);
         }
     }
 

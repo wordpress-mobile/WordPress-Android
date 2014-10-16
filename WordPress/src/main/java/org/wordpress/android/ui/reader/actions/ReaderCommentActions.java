@@ -114,7 +114,7 @@ public class ReaderCommentActions {
                     handler.post(new Runnable() {
                         public void run() {
                             ReaderActions.UpdateResult result =
-                                    (hasNewComments ? ReaderActions.UpdateResult.CHANGED
+                                    (hasNewComments ? ReaderActions.UpdateResult.HAS_NEW
                                                     : ReaderActions.UpdateResult.UNCHANGED);
                             resultListener.onUpdateResult(result);
                         }

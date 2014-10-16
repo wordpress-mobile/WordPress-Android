@@ -875,19 +875,19 @@ public class ReaderPostListFragment extends Fragment
 
         setIsUpdating(true, updateAction);
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isAdded()) {
                     return;
                 }
                 setIsUpdating(false, updateAction);
-                if (succeeded) {
+                if (result.isNewOrChanged()) {
                     refreshPosts();
                 }
             }
         };
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
     }
 
     void updateCurrentTag() {
@@ -933,7 +933,7 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isAdded()) {
-                    AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
+                    AppLog.w(T.READER, "reader post list > posts updated when fragment has no activity");
                     return;
                 }
 
@@ -944,21 +944,20 @@ public class ReaderPostListFragment extends Fragment
                     return;
                 }
 
-                boolean hasNewPosts = (result == ReaderActions.UpdateResult.CHANGED);
-                if (hasNewPosts) {
-                    // show the "new posts" bar rather than immediately update the list
-                    // if the user is viewing posts for a followed tag, posts are already
-                    // displayed, and the user has scrolled the list
-                    if (!isPostAdapterEmpty()
-                            && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                            && updateAction == RequestDataAction.LOAD_NEWER
-                            && !isListScrolledToTop()) {
-                        showNewPostsBar();
-                    } else {
-                        refreshPosts();
-                    }
+                // show the "new posts" bar rather than immediately update the list
+                // if the user is viewing posts for a followed tag, posts are already
+                // displayed, and the user has scrolled the list
+                boolean showNewPostsBar = result == ReaderActions.UpdateResult.HAS_NEW
+                        && !isPostAdapterEmpty()
+                        && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
+                        && updateAction == RequestDataAction.LOAD_NEWER
+                        && !isListScrolledToTop();
+
+                if (showNewPostsBar) {
+                    showNewPostsBar();
+                } else if (result.isNewOrChanged()) {
+                    refreshPosts();
                 } else {
-                    // update empty view title and description if the the post list is empty
                     setEmptyTitleAndDescriptionForCurrentTag();
                 }
             }

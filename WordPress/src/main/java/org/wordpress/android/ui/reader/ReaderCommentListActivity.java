@@ -289,7 +289,7 @@ public class ReaderCommentListActivity extends Activity {
                 mIsUpdatingComments = false;
                 if (!isFinishing()) {
                     hideProgress();
-                    if (result == ReaderActions.UpdateResult.CHANGED) {
+                    if (result.isNewOrChanged()) {
                         retainTopmostComment();
                         refreshComments();
                     } else {

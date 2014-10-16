@@ -467,7 +467,7 @@ public class ReaderPostDetailFragment extends Fragment
                     return;
                 }
                 // if the post has changed, reload it from the db and update the like/comment counts
-                if (result == ReaderActions.UpdateResult.CHANGED) {
+                if (result.isNewOrChanged()) {
                     mPost = ReaderPostTable.getPost(mBlogId, mPostId);
                     refreshIconBarCounts(true);
                     refreshComments();
