@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -267,7 +266,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public void newPost() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST);
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
                 Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
