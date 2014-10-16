@@ -463,7 +463,7 @@ public class ReaderPostActions {
         WordPress.getRestClientUtils().get(path, null, null, listener, errorListener);
     }
 
-    private static void handleGetPostsForBlogResponse(JSONObject jsonObject, UpdateResultListener resultListener) {
+    private static void handleGetPostsForBlogResponse(final JSONObject jsonObject, final UpdateResultListener resultListener) {
         if (jsonObject == null) {
             if (resultListener != null) {
                 resultListener.onUpdateResult(UpdateResult.FAILED);
@@ -471,14 +471,24 @@ public class ReaderPostActions {
             return;
         }
 
-        ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
-        UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
-        if (updateResult.isNewOrChanged()) {
-            ReaderPostTable.addOrUpdatePosts(null, serverPosts);
-        }
-        if (resultListener != null) {
-            resultListener.onUpdateResult(updateResult);
-        }
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderPostList serverPosts = ReaderPostList.fromJson(jsonObject);
+                final UpdateResult updateResult = ReaderPostTable.comparePosts(serverPosts);
+                if (updateResult.isNewOrChanged()) {
+                    ReaderPostTable.addOrUpdatePosts(null, serverPosts);
+                }
+                if (resultListener != null) {
+                    handler.post(new Runnable() {
+                        public void run() {
+                            resultListener.onUpdateResult(updateResult);
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     /*
