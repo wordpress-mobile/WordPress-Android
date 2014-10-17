@@ -1,13 +1,14 @@
 language: android
 jdk: oraclejdk7
 
-notifications:
-  # Slack notification on failure (secured token).
-  slack:
-    rooms:
-      secure: sOTcwi1DT0lJykB/smJQwJ5lQblg9jc5PtLsTu4euI/P4nCv1CPu5DVZ1aDwXL6TPDUO5uEwbzbjVFZzrl2nFdAV9XvGT3wL3Zrm2Y5HBtwi8JWdbc4dYR/xobJlIg7HRczXwoFt6yls4BUayNJJbZFV9q0ftmUSe77Pag/ZWQw=
-    on_failure: always
-    on_success: change
+# TODO: re-enable Slack notifications when tests are fixed
+#notifications:
+#  # Slack notification on failure (secured token).
+#  slack:
+#    rooms:
+#      secure: sOTcwi1DT0lJykB/smJQwJ5lQblg9jc5PtLsTu4euI/P4nCv1CPu5DVZ1aDwXL6TPDUO5uEwbzbjVFZzrl2nFdAV9XvGT3wL3Zrm2Y5HBtwi8JWdbc4dYR/xobJlIg7HRczXwoFt6yls4BUayNJJbZFV9q0ftmUSe77Pag/ZWQw=
+#    on_failure: always
+#    on_success: change
 
 android:
   components:
