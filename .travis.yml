@@ -33,5 +33,5 @@ before_script:
 script:
   # build all variants and run lint
   - ./gradlew -PdisablePreDex build
-  # run tests
-  - ./gradlew -PdisablePreDex cAT
+  # run tests for the AndroidTestVanillaDebug variant only
+  - ./gradlew -PdisablePreDex WordPress:connectedAndroidTestVanillaDebug
