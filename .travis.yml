@@ -4,8 +4,10 @@ jdk: oraclejdk7
 notifications:
   # Slack notification on failure (secured token).
   slack:
-    on_failure:
-      secure: elfQ50sDg64Es4dviY3AwKwU9q9Et4Db32QBHVkBGfbFNHDbU/YWBu7seGkqBeEzBmk4xd8OvM1itT9k3wLuTlf4eBbq9Q1uFvNplor6z7e7YxyBUQD4HvyFi2FMd7H8oR9dXKam1ILDX2cP5R5fATWdDy+4AwNdGB8bvD2ZIC8=
+    rooms:
+      secure: sOTcwi1DT0lJykB/smJQwJ5lQblg9jc5PtLsTu4euI/P4nCv1CPu5DVZ1aDwXL6TPDUO5uEwbzbjVFZzrl2nFdAV9XvGT3wL3Zrm2Y5HBtwi8JWdbc4dYR/xobJlIg7HRczXwoFt6yls4BUayNJJbZFV9q0ftmUSe77Pag/ZWQw=
+    on_failure: always
+    on_success: change
 
 android:
   components:
