@@ -24,5 +24,14 @@ install:
   # Setup gradle.properties
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
+before_script:
+  # create and start an emulator for runnig tests later in the script step
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+
 script:
+  # build all variants and run lint
+  - ./gradlew -PdisablePreDex build
+  # run tests
   - ./gradlew -PdisablePreDex cAT
