@@ -1,6 +1,12 @@
 language: android
 jdk: oraclejdk7
 
+notifications:
+  # Slack notification on failure (secured token).
+  slack:
+    on_failure:
+      secure: elfQ50sDg64Es4dviY3AwKwU9q9Et4Db32QBHVkBGfbFNHDbU/YWBu7seGkqBeEzBmk4xd8OvM1itT9k3wLuTlf4eBbq9Q1uFvNplor6z7e7YxyBUQD4HvyFi2FMd7H8oR9dXKam1ILDX2cP5R5fATWdDy+4AwNdGB8bvD2ZIC8=
+
 android:
   components:
     - build-tools-19.1.0
