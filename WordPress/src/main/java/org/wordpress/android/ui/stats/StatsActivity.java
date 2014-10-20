@@ -67,6 +67,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         StatsDateSelectorFragment.TimeframeChangeListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
+    private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
 
     private static final int REQUEST_JETPACK = 7000;
 
@@ -86,7 +87,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
-    private StatsTimeframe mCurrentPeriod;
+    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.TODAY;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
 
@@ -143,8 +144,14 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
+            mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
         } else if (getIntent() != null) {
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
+            if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
+                mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
+            } else {
+                mCurrentTimeframe = StatsTimeframe.TODAY;
+            }
         }
 
         //Make sure the blog_id passed to this activity is valid and the blog is available within the app
@@ -200,6 +207,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         outState.putInt(SAVED_NAV_POSITION, mNavPosition);
         outState.putInt(SAVED_WP_LOGIN_STATE, mResultCode);
         outState.putInt(ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         super.onSaveInstanceState(outState);
     }
     private void loadStatsFragments() {
@@ -417,6 +425,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         stopStatsService();
 
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
+        mCurrentTimeframe = StatsTimeframe.TODAY;
         scrollToTop();
 
         //TODO: do something here
@@ -436,7 +445,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
 
         mPullToRefreshHelper.setRefreshing(true);
-        refreshStats(StatsTimeframe.TODAY);
+        refreshStats(mCurrentTimeframe);
     }
 
     /**
@@ -588,7 +597,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
     public void onTimeFrameChanged(StatsTimeframe timeframe) {
         AppLog.e(T.STATS, "NEW TIME FRAME : " + timeframe.getLabel());
-        // Refresh stats at startup if network and not on configuration changed
+        mCurrentTimeframe = timeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
             refreshStats(timeframe);
             mPullToRefreshHelper.setRefreshing(true);
