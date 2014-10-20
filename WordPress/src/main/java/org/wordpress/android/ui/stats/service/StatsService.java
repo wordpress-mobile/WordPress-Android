@@ -56,7 +56,7 @@ public class StatsService extends Service {
     private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
-    private StatsTimeframe mRequestedTimeframe;
+    private StatsTimeframe mServiceRequestedTimeframe;
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = 0; // The number of networks calls made by Stats.
@@ -103,7 +103,7 @@ public class StatsService extends Service {
 
         if (mServiceBlogId == null) {
             startTasks(blogId, period, startId);
-        } else if (blogId.equals(mServiceBlogId) && mRequestedTimeframe == period) {
+        } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period) {
             // already running on the same blogID, same period
             // Do nothing
             AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
@@ -120,7 +120,7 @@ public class StatsService extends Service {
 
     private void stopRefresh() {
         this.mServiceBlogId = null;
-        this.mRequestedTimeframe = StatsTimeframe.TODAY;
+        this.mServiceRequestedTimeframe = StatsTimeframe.TODAY;
         this.mServiceStartId = 0;
         for (Request<JSONObject> req : statsNetworkRequests) {
             if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
@@ -134,7 +134,7 @@ public class StatsService extends Service {
 
     private void startTasks(final String blogId, final StatsTimeframe timeframe, final int startId) {
         this.mServiceBlogId = blogId;
-        this.mRequestedTimeframe = timeframe;
+        this.mServiceRequestedTimeframe = timeframe;
         this.mServiceStartId = startId;
 
         new Thread() {
@@ -148,17 +148,17 @@ public class StatsService extends Service {
                 broadcastUpdate(true);
 
                 // Summary call
-                SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId);
+                SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", blogId, period, StatsUtils.getCurrentDate());
                 statsNetworkRequests.add(restClientUtils.get(summaryPath, sListener, sListener));
 
                 // Visits call: The Graph and the section just below the graph
-                VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId);
+                VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, StatsUtils.getCurrentDate());
                 statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
 
                // Posts & Pages
-                TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId);
+                TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", blogId, period, StatsUtils.getCurrentDate());
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
 
@@ -169,14 +169,18 @@ public class StatsService extends Service {
 
     private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
         protected String mRequestBlogId;
+        private final StatsTimeframe mTimeframe;
         protected Serializable responseObjectModel;
-        public AbsListener(String blogId) {
+
+        public AbsListener(String blogId, StatsTimeframe timeframe) {
             mRequestBlogId = blogId;
+            mTimeframe = timeframe;
         }
 
         @Override
         public void onResponse(final JSONObject response) {
-            if (mServiceBlogId == null || !mServiceBlogId.equals(mRequestBlogId)) {
+            if (mServiceBlogId == null || mServiceRequestedTimeframe == null
+            || !mServiceBlogId.equals(mRequestBlogId) || mServiceRequestedTimeframe != mTimeframe ) {
                 return;
             }
             parseResponseExecutor.submit(new Thread() {
@@ -246,8 +250,8 @@ public class StatsService extends Service {
 
     private class SummaryCallListener extends AbsListener {
 
-        public SummaryCallListener(String blogId) {
-            super(blogId);
+        public SummaryCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
         }
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
@@ -275,8 +279,8 @@ public class StatsService extends Service {
 
     private class VisitsCallListener extends AbsListener {
 
-        public VisitsCallListener(String blogId) {
-            super(blogId);
+        public VisitsCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
         }
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
@@ -300,8 +304,8 @@ public class StatsService extends Service {
 
     private class TopPostsAndPagesCallListener extends AbsListener {
 
-        public TopPostsAndPagesCallListener(String blogId) {
-            super(blogId);
+        public TopPostsAndPagesCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
         }
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,

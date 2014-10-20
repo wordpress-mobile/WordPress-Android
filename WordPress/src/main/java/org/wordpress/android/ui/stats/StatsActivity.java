@@ -128,6 +128,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             mPullToRefreshHelper.setRefreshing(false);
                             return;
                         }
+
+                        if (mIsUpdatingStats) {
+                            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
+                            return;
+                        }
                         refreshStats(StatsTimeframe.TODAY);
                     }
                 });
@@ -454,12 +459,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mPullToRefreshHelper.setRefreshing(false);
-            return;
-        }
-
-        if (mIsUpdatingStats) {
-            mPullToRefreshHelper.setRefreshing(false);
-            AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
             return;
         }
 
