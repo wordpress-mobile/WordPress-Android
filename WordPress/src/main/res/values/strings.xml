@@ -715,6 +715,7 @@
     <!-- NUX strings -->
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
+    <string name="new_blog_wpcom_created">WordPress.com blog successfully created</string>
     <string name="validating_user_data">Validating user data</string>
     <string name="validating_site_data">Validating site data</string>
     <string name="creating_your_account">Creating your account</string>
