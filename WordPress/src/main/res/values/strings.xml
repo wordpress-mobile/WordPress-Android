@@ -294,7 +294,7 @@
     <string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
 
     <!-- action from share intents -->
-    <string name="select_a_blog">Select a blog</string>
+    <string name="select_a_blog">Select a WordPress site</string>
     <string name="share_action_title">Add to …</string>
     <string name="share_action_post">New post</string>
     <string name="share_action_media">Media library</string>
@@ -764,7 +764,6 @@
     <string name="username_invalid">Invalid username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
-    <string name="username_or_password_incorrect_selfhosted_hint">The username or password you entered is incorrect. Have a self-hosted site? Tap \"%s\" and add the URL.</string>
     <string name="invalid_xmlrpc_url">XMLRPC url returned by your WordPress instance is invalid. Contact your site administrator.</string>
     <string name="nux_tap_continue">Continue</string>
     <string name="nux_cannot_log_in">We can\'t log you in</string>
@@ -787,7 +786,8 @@
     <string name="contact_us">Contact us</string>
     <string name="contact_us_pref_summary">Get help from Automattic support</string>
     <string name="help_center">Help center</string>
-    <string name="faq_button">Browse our FAQ</string>
+    <string name="browse_our_faq_button">Browse our FAQ</string>
+    <string name="faq_button">FAQ</string>
 
     <!-- Simperium -->
     <string name="simperium_connection_error">Couldn\'t sign in to get notifications.</string>

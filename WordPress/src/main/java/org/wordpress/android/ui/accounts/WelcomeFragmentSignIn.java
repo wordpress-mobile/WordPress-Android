@@ -39,6 +39,8 @@ import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -80,7 +82,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private ImageView mInfoButtonSecondary;
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
-    private int mWPComErroneousLogInCount;
+    private int mErroneousLogInCount;
 
     public WelcomeFragmentSignIn() {
         mEmailChecker = new EmailChecker();
@@ -131,6 +133,9 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
+
+
+
         return rootView;
     }
 
@@ -223,18 +228,22 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     };
 
+    private String getForgotPasswordURL() {
+        String baseUrl = DOT_COM_BASE_URL;
+        if (!isWPComLogin()) {
+            baseUrl = EditTextUtils.getText(mUrlEditText).trim();
+            String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
+            if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
+                baseUrl = "http://" + baseUrl;
+            }
+        }
+        return baseUrl + FORGOT_PASSWORD_RELATIVE_URL;
+    }
+
     private View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String baseUrl = DOT_COM_BASE_URL;
-            if (!isWPComLogin()) {
-                baseUrl = EditTextUtils.getText(mUrlEditText).trim();
-                String lowerCaseBaseUrl = baseUrl.toLowerCase(Locale.getDefault());
-                if (!lowerCaseBaseUrl.startsWith("https://") && !lowerCaseBaseUrl.startsWith("http://")) {
-                    baseUrl = "http://" + baseUrl;
-                }
-            }
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(baseUrl + FORGOT_PASSWORD_RELATIVE_URL));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
             startActivity(intent);
         }
     };
@@ -326,16 +335,6 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
 
     private void showUsernameError(int messageId) {
         mUsernameEditText.setError(getString(messageId));
-        mUsernameEditText.requestFocus();
-    }
-
-    private void showPasswordError(int messageId, String param) {
-        mPasswordEditText.setError(getString(messageId, param));
-        mPasswordEditText.requestFocus();
-    }
-
-    private void showUsernameError(int messageId, String param) {
-        mUsernameEditText.setError(getString(messageId, param));
         mUsernameEditText.requestFocus();
     }
 
@@ -541,16 +540,41 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             endProgress();
         }
 
-        private void handleInvalidUsernameOrPassword() {
-            if (isWPComLogin()) {
-                mWPComErroneousLogInCount += 1;
-                if (mWPComErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
-                    mErrorMsgId = R.string.username_or_password_incorrect_selfhosted_hint;
-                }
+        private void showInvalidUsernameOrPasswordDialog() {
+            // Show a dialog
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            NUXDialogFragment nuxAlert;
+            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+                // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                        R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 3, getString(
+                        R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
+                        NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+            } else {
+                // create a 2 buttons dialog ("Forget your password?" and "Cancel")
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
+                                R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 2, getString(
+                                R.string.cancel), getString(R.string.forgot_password), null,
+                        NUXDialogFragment.ACTION_OPEN_URL, 0);
             }
-            if (mErrorMsgId == R.string.username_or_password_incorrect_selfhosted_hint) {
-                showUsernameError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
-                showPasswordError(mErrorMsgId, getString(R.string.nux_add_selfhosted_blog));
+
+            // Put entered url and entered username args, that could help our support team
+            Bundle bundle = nuxAlert.getArguments();
+            bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+            bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+            bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+            nuxAlert.setArguments(bundle);
+            ft.add(nuxAlert, "alert");
+            ft.commitAllowingStateLoss();
+        }
+
+        private void handleInvalidUsernameOrPassword() {
+            mErroneousLogInCount += 1;
+            if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
+                // Clear previous errors
+                mPasswordEditText.setError(null);
+                mUsernameEditText.setError(null);
+                showInvalidUsernameOrPasswordDialog();
             } else {
                 showUsernameError(mErrorMsgId);
                 showPasswordError(mErrorMsgId);
@@ -563,10 +587,13 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             NUXDialogFragment nuxAlert;
             if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.noticon_alert_big, true,
-                        getString(R.string.visit_security_settings), NUXDialogFragment.ACTION_OPEN_URL,
+                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
+                        R.drawable.noticon_alert_big, 2, getString(R.string.cancel), getString(
+                                R.string.visit_security_settings), "", NUXDialogFragment.ACTION_OPEN_URL, 0);
+                Bundle bundle = nuxAlert.getArguments();
+                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
                         "https://wordpress.com/settings/security/?ssl=forced");
+                nuxAlert.setArguments(bundle);
             } else {
                 if (mErrorMsgId == R.string.username_or_password_incorrect) {
                     handleInvalidUsernameOrPassword();
@@ -578,7 +605,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                     return;
                 } else {
                     nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), getString(R.string.nux_tap_continue), R.drawable.noticon_alert_big);
+                            mErrorMsgId), R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
                 }
             }
             ft.add(nuxAlert, "alert");

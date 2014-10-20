@@ -39,9 +39,21 @@ public class ReaderWebView extends WebView {
     private ReaderWebViewUrlClickListener mUrlClickListener;
     private ReaderWebViewPageFinishedListener mPageFinishedListener;
 
+    private boolean mIsDestroyed;
+
     public ReaderWebView(Context context) {
         super(context);
         init();
+    }
+
+    @Override
+    public void destroy() {
+        mIsDestroyed = true;
+        super.destroy();
+    }
+
+    public boolean isDestroyed() {
+        return mIsDestroyed;
     }
 
     public ReaderWebView(Context context, AttributeSet attrs) {
@@ -62,6 +74,8 @@ public class ReaderWebView extends WebView {
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
         }
     }
+
+
 
     private ReaderWebViewUrlClickListener getUrlClickListener() {
         return mUrlClickListener;

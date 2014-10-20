@@ -19,7 +19,7 @@ import java.io.OutputStream;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 93;
+    private static final int DB_VERSION = 95;
 
     /*
      * version history
@@ -45,6 +45,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      *   90 - added default values for all INTEGER columns that were missing them (hotfix 3.1.1)
      *   92 - added default values for all INTEGER columns that were missing them (3.2)
      *   93 - tbl_posts text is now truncated to a max length (3.3)
+     *   94 - added is_jetpack to tbl_posts (3.4)
+     *   95 - added page_number to tbl_comments (3.4)
      */
 
     /*

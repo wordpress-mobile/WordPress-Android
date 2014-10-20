@@ -105,8 +105,8 @@ class ReaderPostRenderer {
 
         // make sure webView is still valid (containing fragment may have been detached)
         ReaderWebView webView = mWeakWebView.get();
-        if (webView == null) {
-            AppLog.w(AppLog.T.READER, "reader renderer > null webView");
+        if (webView == null || webView.getContext() == null || webView.isDestroyed()) {
+            AppLog.w(AppLog.T.READER, "reader renderer > webView invalid");
             return;
         }
 
@@ -375,10 +375,10 @@ class ReaderPostRenderer {
     }
 
     /*
-     * javascript should only be enabled for wp blogs (not external feeds)
+     * javascript should only be enabled for WordPress.com blogs (not feeds or Jetpack blogs)
      */
     private boolean canEnableJavaScript() {
-        return mPost.isWP();
+        return mPost.isWP() && !mPost.isJetpack;
     }
 
     /*

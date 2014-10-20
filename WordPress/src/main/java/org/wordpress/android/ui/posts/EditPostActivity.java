@@ -27,6 +27,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -141,6 +143,10 @@ public class EditPostActivity extends Activity {
             return;
         }
 
+        if (mIsNewPost) {
+            trackEditorCreatedPost(action, getIntent());
+        }
+
         setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
@@ -168,7 +174,6 @@ public class EditPostActivity extends Activity {
                     if (mEditPostPreviewFragment != null) {
                         mEditPostPreviewFragment.loadPost();
                     }
-
                 }
             }
         });
@@ -310,6 +315,31 @@ public class EditPostActivity extends Activity {
 
     public Post getPost() {
         return mPost;
+    }
+
+    private void trackEditorCreatedPost(String action, Intent intent) {
+        Map<String, Object> properties = new HashMap<String, Object>();
+        // Post created from the post list (new post button).
+        String normalizedSourceName = "post-list";
+        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
+            // Post created with share with WordPress
+            normalizedSourceName = "shared-from-external-app";
+        }
+        if (EditPostContentFragment.NEW_MEDIA_GALLERY.equals(action) || EditPostContentFragment.NEW_MEDIA_POST.equals(
+                action)) {
+            // Post created from the media library
+            normalizedSourceName = "media-library";
+        }
+        if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
+            // Quick press
+            normalizedSourceName = "quick-press";
+        }
+        if (intent != null && intent.getIntExtra("quick-media", -1) > -1) {
+            // Quick photo or quick video
+            normalizedSourceName = "quick-media";
+        }
+        properties.put("created_post_source", normalizedSourceName);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST, properties);
     }
 
     private void updatePostObject(boolean isAutosave) {

@@ -29,6 +29,8 @@ public class ReaderComment {
     public int numLikes;
     public boolean isLikedByCurrentUser;
 
+    public int pageNumber;
+
     // not stored in db - denotes the indentation level when displaying this comment
     public transient int level = 0;
 

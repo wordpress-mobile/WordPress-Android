@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.JSONUtil;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +42,8 @@ public class Note extends Syncable {
 
     private JSONObject mActions;
     private JSONObject mNoteJSON;
+
+    private String mLocalStatus;
 
     public static enum EnabledActions {
         ACTION_REPLY,
@@ -104,6 +107,14 @@ public class Note extends Syncable {
 
     public Boolean isAutomattcherType() {
         return isType(NOTE_MATCHER_TYPE);
+    }
+
+    public String getLocalStatus() {
+        return StringUtils.notNullStr(mLocalStatus);
+    }
+
+    public void setLocalStatus(String localStatus) {
+        mLocalStatus = localStatus;
     }
 
     private JSONObject getSubject() {
@@ -400,6 +411,8 @@ public class Note extends Syncable {
         static public final String UNREAD_INDEX = "unread";
         static public final String NOTICON_INDEX = "noticon";
         static public final String ICON_URL_INDEX = "icon";
+        static public final String IS_UNAPPROVED_INDEX = "unapproved";
+        static public final String LOCAL_STATUS = "local_status";
 
         private static final Indexer<Note> sNoteIndexer = new Indexer<Note>() {
 
@@ -419,6 +432,8 @@ public class Note extends Syncable {
                 indexes.add(new Index(UNREAD_INDEX, note.isUnread()));
                 indexes.add(new Index(NOTICON_INDEX, note.getNoticonCharacter()));
                 indexes.add(new Index(ICON_URL_INDEX, note.getIconURL()));
+                indexes.add(new Index(IS_UNAPPROVED_INDEX, note.getCommentStatus() == CommentStatus.UNAPPROVED));
+                indexes.add(new Index(LOCAL_STATUS, note.getLocalStatus()));
 
                 return indexes;
             }

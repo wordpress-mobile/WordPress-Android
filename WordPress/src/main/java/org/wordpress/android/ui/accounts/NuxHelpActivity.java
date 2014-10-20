@@ -15,7 +15,6 @@ import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
-import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.widgets.WPTextView;
 
 public class NuxHelpActivity extends Activity {
@@ -62,9 +61,6 @@ public class NuxHelpActivity extends Activity {
                             WelcomeFragmentSignIn.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
-                    if (extras.getBoolean(WelcomeFragmentSignIn.FROM_LOGIN_SCREEN_KEY, false)) {
-                        HelpshiftHelper.getInstance().setTags(new Tag[] {Tag.LOGIN_SCREEN});
-                    }
                 }
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }

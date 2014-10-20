@@ -316,6 +316,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         }
 
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
+            note.setLocalStatus(CommentStatus.toRESTString(newStatus));
+            note.save();
             mNotesListFragment.setNoteIsModerating(note.getId(), true);
             CommentActions.moderateCommentForNote(note, newStatus,
                     new CommentActions.CommentActionListener() {
@@ -326,6 +328,8 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                             mNotesListFragment.setNoteIsModerating(note.getId(), false);
 
                             if (!succeeded) {
+                                note.setLocalStatus(null);
+                                note.save();
                                 ToastUtils.showToast(NotificationsActivity.this,
                                         R.string.error_moderate_comment,
                                         ToastUtils.Duration.LONG

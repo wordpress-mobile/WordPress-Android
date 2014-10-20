@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
@@ -75,6 +76,11 @@ public class ReaderCommentListActivity extends Activity {
         } else {
             mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
             mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            // remove all but the first page of comments for this post if there's an active
+            // connection - infinite scroll will take care of filling in subsequent pages
+            if (NetworkUtils.isNetworkAvailable(this)) {
+                ReaderCommentTable.purgeExcessCommentsForPost(mBlogId, mPostId);
+            }
         }
 
         mListView = (WPListView) findViewById(android.R.id.list);
@@ -201,7 +207,8 @@ public class ReaderCommentListActivity extends Activity {
                 public void onDataLoaded(boolean isEmpty) {
                     if (!isFinishing()) {
                         if (isEmpty || !mHasUpdatedComments) {
-                            updateComments(isEmpty);
+                            // request the first page of comments
+                            updateComments(isEmpty, false);
                         } else if (mTopMostCommentId != 0) {
                             restoreTopmostComment();
                         }
@@ -223,8 +230,8 @@ public class ReaderCommentListActivity extends Activity {
                 @Override
                 public void onRequestData() {
                     if (!mIsUpdatingComments) {
-                        AppLog.i(T.READER, "reader comments > requesting newer comments");
-                        updateComments(true);
+                        AppLog.i(T.READER, "reader comments > requesting next page of comments");
+                        updateComments(true, true);
                     }
                 }
             };
@@ -250,15 +257,27 @@ public class ReaderCommentListActivity extends Activity {
     /*
      * request comments for this post
      */
-    private void updateComments(boolean showProgress) {
+    private void updateComments(boolean showProgress, boolean requestNextPage) {
         if (mIsUpdatingComments) {
             AppLog.w(T.READER, "reader comments > already updating comments");
             return;
         }
 
-        AppLog.d(T.READER, "reader comments > updateComments");
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            AppLog.w(T.READER, "reader comments > no connection, update canceled");
+            return;
+        }
+
         mIsUpdatingComments = true;
         mHasUpdatedComments = true;
+
+        int pageNumber;
+        if (requestNextPage) {
+            int prevPage = ReaderCommentTable.getLastPageNumberForPost(mPost.blogId, mPost.postId);
+            pageNumber = prevPage + 1;
+        } else {
+            pageNumber = 1;
+        }
 
         if (showProgress) {
             showProgress();
@@ -279,7 +298,8 @@ public class ReaderCommentListActivity extends Activity {
                 }
             }
         };
-        ReaderCommentActions.updateCommentsForPost(getPost(), true, resultListener);
+        AppLog.d(T.READER, "reader comments > updateComments, page " + pageNumber);
+        ReaderCommentActions.updateCommentsForPost(getPost(), pageNumber, resultListener);
     }
 
 
