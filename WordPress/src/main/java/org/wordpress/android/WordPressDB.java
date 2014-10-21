@@ -296,6 +296,7 @@ public class WordPressDB {
             values.putNull("wpVersion");
         }
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
@@ -435,6 +436,7 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {
