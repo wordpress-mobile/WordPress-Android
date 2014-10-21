@@ -24,7 +24,6 @@ import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiver;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
@@ -47,6 +46,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static final Map<String, Bundle> mActiveNotificationsMap = new HashMap<String, Bundle>();
     private static String mPreviousNoteId = null;
     private static long mPreviousNoteTime = 0L;
+    private static final int mMaxInboxItems = 5;
 
     @Override
     protected String[] getSenderIds(Context context) {
@@ -138,7 +138,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         NotificationCompat.Builder mBuilder;
 
-        Intent resultIntent = new Intent(this, PostsActivity.class);
+        Intent resultIntent = new Intent(this, NotificationsActivity.class);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
@@ -157,7 +157,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             // Add some actions if this is a comment notification
             String noteType = extras.getString("type");
             if (noteType != null && noteType.equals("c")) {
-                Intent commentReplyIntent = new Intent(this, PostsActivity.class);
+                Intent commentReplyIntent = new Intent(this, NotificationsActivity.class);
                 commentReplyIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 commentReplyIntent.setAction("android.intent.action.MAIN");
@@ -182,7 +182,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
             int noteCtr = 1;
             for (Bundle wpPN : mActiveNotificationsMap.values()) {
-                if (noteCtr > 5) // InboxStyle notification is limited to 5 lines
+                if (noteCtr > mMaxInboxItems) // InboxStyle notification is limited to 5 lines
                     break;
                 if (wpPN.getString("msg") == null)
                     continue;
@@ -198,9 +198,9 @@ public class GCMIntentService extends GCMBaseIntentService {
                 noteCtr++;
             }
 
-            if (mActiveNotificationsMap.size() > 5) {
+            if (mActiveNotificationsMap.size() > mMaxInboxItems) {
                 inboxStyle.setSummaryText(String.format(getString(R.string.more_notifications),
-                        mActiveNotificationsMap.size() - 5));
+                        mActiveNotificationsMap.size() - mMaxInboxItems));
             }
 
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
@@ -260,7 +260,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         if (extras.containsKey("mp_message")) {
             String mpMessage = intent.getExtras().getString("mp_message");
             String title = getString(R.string.app_name);
-            Intent resultIntent = new Intent(this, PostsActivity.class);
+            Intent resultIntent = new Intent(this, NotificationsActivity.class);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, resultIntent,
