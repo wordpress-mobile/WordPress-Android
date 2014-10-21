@@ -64,6 +64,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(null);
+        AppLog.i(T.NOTIFS, "Creating NotificationsActivity");
         createMenuDrawer(R.layout.notifications_activity);
 
         if (savedInstanceState == null) {
@@ -121,6 +122,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        AppLog.i(T.NOTIFS, "Launching NotificationsActivity with new intent");
         GCMIntentService.clearNotificationsMap();
         launchWithNoteId();
     }
@@ -135,6 +137,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
 
         if (SimperiumUtils.isUserAuthorized()) {
             SimperiumUtils.startBuckets();
+            AppLog.i(T.NOTIFS, "Starting Simperium buckets");
         }
     }
 
