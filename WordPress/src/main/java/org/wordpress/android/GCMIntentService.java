@@ -170,7 +170,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 }
                 PendingIntent commentReplyPendingIntent = PendingIntent.getActivity(context, 0, commentReplyIntent,
                         PendingIntent.FLAG_CANCEL_CURRENT);
-                mBuilder.addAction(R.drawable.ic_action_refresh, context.getText(R.string.reply),
+                mBuilder.addAction(R.drawable.ic_action_reply, context.getText(R.string.reply),
                         commentReplyPendingIntent);
             }
 
