@@ -96,7 +96,7 @@ public class StatsService extends Service {
 
         final String blogId = StringUtils.notNullStr(intent.getStringExtra(ARG_BLOG_ID));
 
-        StatsTimeframe period = StatsTimeframe.TODAY;
+        StatsTimeframe period = StatsTimeframe.DAY;
         if (intent.hasExtra(ARG_PERIOD)) {
             period = (StatsTimeframe) intent.getSerializableExtra(ARG_PERIOD);
         }
@@ -120,7 +120,7 @@ public class StatsService extends Service {
 
     private void stopRefresh() {
         this.mServiceBlogId = null;
-        this.mServiceRequestedTimeframe = StatsTimeframe.TODAY;
+        this.mServiceRequestedTimeframe = StatsTimeframe.DAY;
         this.mServiceStartId = 0;
         for (Request<JSONObject> req : statsNetworkRequests) {
             if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {

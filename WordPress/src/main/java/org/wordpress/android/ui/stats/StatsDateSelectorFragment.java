@@ -21,7 +21,7 @@ public class StatsDateSelectorFragment extends StatsAbstractFragment
     private RadioGroup mRadioGroup;
 
     private static final StatsTimeframe[] TIMEFRAMES = new StatsTimeframe[]{
-            StatsTimeframe.TODAY,
+            StatsTimeframe.DAY,
             StatsTimeframe.WEEK,
             StatsTimeframe.MONTH,
             StatsTimeframe.YEAR

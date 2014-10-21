@@ -16,12 +16,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -64,7 +68,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
  * </p>
  */
 public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.ScrollViewListener,
-        StatsDateSelectorFragment.TimeframeChangeListener {
+        ActionBar.OnNavigationListener {
     private static final String SAVED_NAV_POSITION = "SAVED_NAV_POSITION";
     private static final String SAVED_WP_LOGIN_STATE = "SAVED_WP_LOGIN_STATE";
     private static final String SAVED_STATS_TIMEFRAME = "SAVED_STATS_TIMEFRAME";
@@ -87,9 +91,10 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     private boolean mIsInFront;
     private boolean mNoMenuDrawer = false;
     private int mLocalBlogID = -1;
-    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.TODAY;
+    private StatsTimeframe mCurrentTimeframe = StatsTimeframe.DAY;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
+    private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
 
     private LinearLayout mFragmentContainer;
 
@@ -108,9 +113,9 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
 
         mNoMenuDrawer = getIntent().getBooleanExtra(ARG_NO_MENU_DRAWER, false);
+        ActionBar actionBar = getActionBar();
         if (mNoMenuDrawer) {
             setContentView(R.layout.stats_activity);
-            ActionBar actionBar = getActionBar();
             if (actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
@@ -134,7 +139,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                             AppLog.w(T.STATS, "stats are already updating, refresh cancelled");
                             return;
                         }
-                        refreshStats(StatsTimeframe.TODAY);
+                        refreshStats(StatsTimeframe.DAY);
                     }
                 });
 
@@ -150,7 +155,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
             } else {
-                mCurrentTimeframe = StatsTimeframe.TODAY;
+                mCurrentTimeframe = StatsTimeframe.DAY;
             }
         }
 
@@ -173,6 +178,20 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         if (scrollView != null) {
             scrollView.setScrollViewListener(this);
         }
+
+        // only change if we're not in list navigation mode, since that means the actionBar
+        // is already correctly configured
+        if (!mNoMenuDrawer && actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            StatsTimeframe[] timeframes = {StatsTimeframe.DAY, StatsTimeframe.WEEK,
+                    StatsTimeframe.MONTH, StatsTimeframe.YEAR};
+            mTimeframeSpinnerAdapter =
+                    new TimeframeSpinnerAdapter(this, timeframes);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+            actionBar.setListNavigationCallbacks(mTimeframeSpinnerAdapter, this);
+        }
+
+        selectTimeframeInActionBar(mCurrentTimeframe);
     }
 
     @Override
@@ -216,12 +235,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         StatsAbstractFragment fragment;
 
-        if (fm.findFragmentByTag(StatsDateSelectorFragment.TAG) == null) {
+      /*  if (fm.findFragmentByTag(StatsDateSelectorFragment.TAG) == null) {
             fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
             ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
             ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
         }
-
+*/
         if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
             fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
             ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
@@ -269,7 +288,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                                         AnalyticsTracker.Stat.PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN);
                                 if (!isFinishing()) {
                                     mPullToRefreshHelper.setRefreshing(true);
-                                    refreshStats(StatsTimeframe.TODAY);
+                                    refreshStats(StatsTimeframe.DAY);
                                 }
                             }
                         }
@@ -291,7 +310,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
                         }
                     }, "wp.getOptions", params);
                 } else {
-                    refreshStats(StatsTimeframe.TODAY);
+                    refreshStats(StatsTimeframe.DAY);
                 }
                 mPullToRefreshHelper.setRefreshing(true);
             }
@@ -425,7 +444,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         stopStatsService();
 
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
-        mCurrentTimeframe = StatsTimeframe.TODAY;
+        mCurrentTimeframe = StatsTimeframe.DAY;
         scrollToTop();
 
         //TODO: do something here
@@ -433,11 +452,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         FragmentTransaction ft = fm.beginTransaction();
 
         StatsAbstractFragment fragment;
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
+       /* fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
         ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
         ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
         ft.commit();
-
+*/
         fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
         ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
 
@@ -595,13 +614,104 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
     };
 
-    public void onTimeFrameChanged(StatsTimeframe timeframe) {
-        AppLog.e(T.STATS, "NEW TIME FRAME : " + timeframe.getLabel());
-        mCurrentTimeframe = timeframe;
+    /*
+* make sure the passed timeframe is the one selected in the actionbar
+*/
+    private void selectTimeframeInActionBar(final StatsTimeframe timeframe) {
+        ActionBar actionBar = getActionBar();
+        if (actionBar == null) {
+            return;
+        }
+
+        if (mTimeframeSpinnerAdapter == null) {
+            return;
+        }
+
+        int position = mTimeframeSpinnerAdapter.getIndexOfTimeframe(mCurrentTimeframe);
+        if (position == -1 || position == actionBar.getSelectedNavigationIndex()) {
+            return;
+        }
+
+        if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
+            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
+            return;
+        }
+
+        actionBar.setSelectedNavigationItem(position);
+    }
+
+    /*
+     * adapter used by the timeframe spinner
+     */
+    private class TimeframeSpinnerAdapter extends BaseAdapter {
+        private StatsTimeframe[] mTimeframes;
+        private LayoutInflater mInflater;
+
+        TimeframeSpinnerAdapter(Context context, StatsTimeframe[] timeframeNames) {
+            super();
+            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mTimeframes = timeframeNames;
+        }
+
+        @Override
+        public int getCount() {
+            return (mTimeframes != null ? mTimeframes.length : 0);
+        }
+
+        @Override
+        public Object getItem(int position) {
+            if (position < 0 || position >= getCount())
+                return "";
+            return mTimeframes[position];
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final View view;
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.spinner_menu_dropdown_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            final TextView text = (TextView) view.findViewById(R.id.menu_text_dropdown);
+            StatsTimeframe selectedTimeframe = (StatsTimeframe)getItem(position);
+            text.setText(selectedTimeframe.getLabel());
+            return view;
+        }
+
+        public int getIndexOfTimeframe(StatsTimeframe tm) {
+            int pos = 0;
+            for (int i = 0; i < mTimeframes.length; i++) {
+                if (mTimeframes[i] == tm) {
+                    pos = i;
+                    return pos;
+                }
+            }
+            return pos;
+        }
+    }
+
+    /*
+      * called when user selects a timeframe from the ActionBar dropdown
+      */
+    @Override
+    public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+        final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(itemPosition);
+
+        AppLog.e(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
+        mCurrentTimeframe = selectedTimeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
-            refreshStats(timeframe);
+            refreshStats(selectedTimeframe);
             mPullToRefreshHelper.setRefreshing(true);
         }
+
+        return true;
     }
 
     @Override
@@ -622,7 +732,6 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return true;
         }
     };
-
 
 
   /*  class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

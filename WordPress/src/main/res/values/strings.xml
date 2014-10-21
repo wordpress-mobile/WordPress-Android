@@ -369,6 +369,7 @@
     <string name="stats_timeframe_days">Days</string>
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
+    <string name="stats_timeframe_years">Years</string>
     <string name="stats_summary">Summary</string>
 
     <!-- stats: label for the entries -->

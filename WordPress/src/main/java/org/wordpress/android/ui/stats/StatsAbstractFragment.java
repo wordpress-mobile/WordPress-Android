@@ -12,9 +12,9 @@ public abstract class StatsAbstractFragment extends Fragment {
         StatsAbstractFragment fragment = null;
 
         switch (viewType) {
-            case TIMEFRAME_SELECTOR:
-                fragment = new StatsDateSelectorFragment();
-                break;
+            //case TIMEFRAME_SELECTOR:
+               // fragment = new StatsDateSelectorFragment();
+              //  break;
             case GRAPH_AND_SUMMARY:
                 fragment = new StatsVisitorsAndViewsFragment();
                 break;
