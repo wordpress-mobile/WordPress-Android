@@ -96,11 +96,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private String mRestoredReplyText;
 
     private boolean mIsUsersBlog = false;
+    private boolean mShouldFocusReplyField;
 
     /*
-     * Used to request a comment from a note using its site and comment ids, rather than build
-     * the comment with the content in the note. See showComment()
-     */
+         * Used to request a comment from a note using its site and comment ids, rather than build
+         * the comment with the content in the note. See showComment()
+         */
     private boolean mShouldRequestCommentFromNote = false;
 
     private boolean mIsSubmittingReply = false;
@@ -315,6 +316,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             showComment();
     }
 
+    public void setShouldFocusReplyField(boolean shouldFocusReplyField) {
+        mShouldFocusReplyField = shouldFocusReplyField;
+    }
+
     void setShouldRequestCommentFromNote(boolean shouldRequestComment) {
         mShouldRequestCommentFromNote = shouldRequestComment;
     }
@@ -515,8 +520,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         showPostTitle(getRemoteBlogId(), mComment.postID);
 
         // make sure reply box is showing
-        if (mLayoutReply.getVisibility() != View.VISIBLE && canReply())
+        if (mLayoutReply.getVisibility() != View.VISIBLE && canReply()) {
             AniUtils.flyIn(mLayoutReply);
+            if (mEditReply != null && mShouldFocusReplyField) {
+                mEditReply.requestFocus();
+                setShouldFocusReplyField(false);
+            }
+        }
     }
 
     /*

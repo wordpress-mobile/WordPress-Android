@@ -143,7 +143,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction("android.intent.action.MAIN");
         resultIntent.addCategory("android.intent.category.LAUNCHER");
-        resultIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
 
         if (mActiveNotificationsMap.size() <= 1) {
             mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.notification_icon).setContentTitle(title)
@@ -163,7 +162,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                 commentReplyIntent.setAction("android.intent.action.MAIN");
                 commentReplyIntent.addCategory("android.intent.category.LAUNCHER");
                 commentReplyIntent.addCategory("comment-reply");
-                commentReplyIntent.putExtra(NotificationsActivity.FROM_NOTIFICATION_EXTRA, true);
                 commentReplyIntent.putExtra(NotificationsActivity.NOTE_INSTANT_REPLY_EXTRA, true);
                 if (note_id != null) {
                     commentReplyIntent.putExtra(NotificationsActivity.NOTE_ID_EXTRA, note_id);

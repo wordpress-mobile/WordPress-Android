@@ -44,7 +44,6 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         CommentActions.OnCommentChangeListener {
     public static final String NOTIFICATION_ACTION = "org.wordpress.android.NOTIFICATION";
     public static final String NOTE_ID_EXTRA = "noteId";
-    public static final String FROM_NOTIFICATION_EXTRA = "fromNotification";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
 
     private static final String KEY_INITIAL_UPDATE = "initialUpdate";
@@ -222,6 +221,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
             CommentDetailFragment commentDetailFragment = CommentDetailFragment.newInstance(note);
             if (!TextUtils.isEmpty(mRestoredReplyText)) {
                 commentDetailFragment.setRestoredReplyText(mRestoredReplyText);
+            }
+
+            if (getIntent() != null && getIntent().hasExtra(NOTE_INSTANT_REPLY_EXTRA)) {
+                commentDetailFragment.setShouldFocusReplyField(true);
             }
 
             fragment = commentDetailFragment;
