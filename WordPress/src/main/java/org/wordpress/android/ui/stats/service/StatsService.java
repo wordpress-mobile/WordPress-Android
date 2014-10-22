@@ -42,10 +42,10 @@ public class StatsService extends Service {
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
-    public static final String ACTION_ONE_STAT_UPDATED = "wp-stats-updated";
+    public static final String ACTION_STATS_UPDATED = "wp-stats-updated";
     public static final String EXTRA_IS_UPDATING = "is-updating";
-    public static final String EXTRA_UPDATED_SECTION = "updated-section";
-    public static final String EXTRA_UPDATED_DATA = "updated-data";
+    public static final String EXTRA_UPDATED_SECTION_NAME = "updated-section-name";
+    public static final String EXTRA_UPDATED_SECTION_DATA = "updated-section-data";
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
 
@@ -236,9 +236,9 @@ public class StatsService extends Service {
 
         private void notifySectionUpdated() {
             Intent intent = new Intent()
-                    .setAction(ACTION_ONE_STAT_UPDATED)
-                    .putExtra(EXTRA_UPDATED_SECTION, getSectionEnum())
-                    .putExtra(EXTRA_UPDATED_DATA, responseObjectModel);
+                    .setAction(ACTION_STATS_UPDATED)
+                    .putExtra(EXTRA_UPDATED_SECTION_NAME, getSectionEnum())
+                    .putExtra(EXTRA_UPDATED_SECTION_DATA, responseObjectModel);
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 

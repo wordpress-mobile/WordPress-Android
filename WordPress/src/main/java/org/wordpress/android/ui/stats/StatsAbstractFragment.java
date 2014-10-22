@@ -8,7 +8,10 @@ import android.os.Bundle;
 public abstract class StatsAbstractFragment extends Fragment {
     public static final String TAG = StatsAbstractFragment.class.getSimpleName();
 
-    public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID) {
+    private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
+    private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
+
+    public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID, StatsTimeframe timeframe) {
         StatsAbstractFragment fragment = null;
 
         switch (viewType) {
@@ -26,12 +29,11 @@ public abstract class StatsAbstractFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARGS_VIEW_TYPE, viewType.ordinal());
         args.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, localTableBlogID);
+        args.putSerializable(StatsAbstractFragment.ARGS_TIMEFRAME, timeframe);
         fragment.setArguments(args);
 
         return fragment;
     }
-
-    private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
 
     protected StatsViewType getViewType() {
         int ordinal = getArguments().getInt(ARGS_VIEW_TYPE);
@@ -40,6 +42,10 @@ public abstract class StatsAbstractFragment extends Fragment {
 
     protected int getLocalTableBlogID() {
         return getArguments().getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID);
+    }
+
+    protected StatsTimeframe getTimeframe() {
+        return (StatsTimeframe) getArguments().getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
     }
 
     protected abstract String getTitle();

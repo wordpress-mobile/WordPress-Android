@@ -81,7 +81,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
     public void onResume() {
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
-        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_ONE_STAT_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
     }
 
 
@@ -93,16 +93,16 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
-            if (!action.equals(StatsService.ACTION_ONE_STAT_UPDATED) || !intent.hasExtra(StatsService.EXTRA_UPDATED_SECTION)) {
+            if (!action.equals(StatsService.ACTION_STATS_UPDATED) || !intent.hasExtra(StatsService.EXTRA_UPDATED_SECTION_NAME)) {
                 return;
             }
 
-            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION);
+            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_NAME);
             if (sectionToUpdate != StatsService.StatsSectionEnum.TOP_POSTS) {
                 return;
             }
 
-            Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_DATA);
+            Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_DATA);
             if ( dataObj == null || dataObj instanceof VolleyError) {
                 //TODO: show the error on the section ???
                 return;

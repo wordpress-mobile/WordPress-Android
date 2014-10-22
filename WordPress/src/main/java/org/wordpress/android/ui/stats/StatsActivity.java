@@ -169,7 +169,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             return;
         }
 
-        loadStatsFragments();
+        loadStatsFragments(false);
 
        // mDetector = new GestureDetectorCompat(this, new MyGestureListener());
        // mDetector.setIsLongpressEnabled(false);
@@ -229,7 +229,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         outState.putSerializable(SAVED_STATS_TIMEFRAME, mCurrentTimeframe);
         super.onSaveInstanceState(outState);
     }
-    private void loadStatsFragments() {
+
+    private void loadStatsFragments(boolean force) {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
@@ -241,15 +242,16 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
         }
 */
-        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
+        if (fm.findFragmentByTag(StatsVisitorsAndViewsFragment.TAG) == null || force) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID, mCurrentTimeframe);
             ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
         }
 
-        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null) {
-            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
+        if (fm.findFragmentByTag(StatsTopPostsAndPagesFragment.TAG) == null || force) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID, mCurrentTimeframe);
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
+
 
         ft.commit();
     }
@@ -440,29 +442,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
     @Override
     public void onBlogChanged() {
-
         stopStatsService();
-
         mLocalBlogID = WordPress.getCurrentBlog().getLocalTableBlogId();
         mCurrentTimeframe = StatsTimeframe.DAY;
+        selectTimeframeInActionBar(mCurrentTimeframe);
         scrollToTop();
-
-        //TODO: do something here
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-
-        StatsAbstractFragment fragment;
-       /* fragment = StatsAbstractFragment.newInstance(StatsViewType.TIMEFRAME_SELECTOR, mLocalBlogID);
-        ((StatsDateSelectorFragment)fragment).setTimeframeChangeListener(this);
-        ft.replace(R.id.stats_timeframe_selector, fragment, StatsDateSelectorFragment.TAG);
-        ft.commit();
-*/
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.GRAPH_AND_SUMMARY, mLocalBlogID);
-        ft.replace(R.id.stats_visitors_and_views_container, fragment, StatsVisitorsAndViewsFragment.TAG);
-
-        fragment = StatsAbstractFragment.newInstance(StatsViewType.TOP_POSTS_AND_PAGES, mLocalBlogID);
-        ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
-
+        loadStatsFragments(true);
         mPullToRefreshHelper.setRefreshing(true);
         refreshStats(mCurrentTimeframe);
     }
@@ -615,8 +600,8 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     };
 
     /*
-* make sure the passed timeframe is the one selected in the actionbar
-*/
+    * make sure the passed timeframe is the one selected in the actionbar
+    */
     private void selectTimeframeInActionBar(final StatsTimeframe timeframe) {
         ActionBar actionBar = getActionBar();
         if (actionBar == null) {
@@ -633,7 +618,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
 
         if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
-            AppLog.w(T.READER, "reader post list > unexpected ActionBar navigation mode");
+            AppLog.w(T.STATS, "stats activity  > unexpected ActionBar navigation mode");
             return;
         }
 
@@ -707,6 +692,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         AppLog.e(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
         mCurrentTimeframe = selectedTimeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
+            loadStatsFragments(true);
             refreshStats(selectedTimeframe);
             mPullToRefreshHelper.setRefreshing(true);
         }
