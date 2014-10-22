@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -75,13 +74,6 @@ public class PostsActivity extends WPActionBarActivity
             return;
         }
 
-        // Check if we came from a notification, if so let's launch NotificationsActivity
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
-            startNotificationsActivity(extras);
-            return;
-        }
-
         // Restore last selection on app creation
         if (WordPress.shouldRestoreSelectedActivity && WordPress.getCurrentBlog() != null &&
                 !(this instanceof PagesActivity)) {
@@ -112,6 +104,7 @@ public class PostsActivity extends WPActionBarActivity
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);
         mPostList = (PostsListFragment) fm.findFragmentById(R.id.postList);
 
+        Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
             showErrorDialogIfNeeded(extras);
@@ -156,20 +149,6 @@ public class PostsActivity extends WPActionBarActivity
             dialogBuilder.create().show();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            // Check if we came from a notification, if so let's launch NotificationsActivity
-            if (extras.getBoolean(NotificationsActivity.FROM_NOTIFICATION_EXTRA)) {
-                startNotificationsActivity(extras);
-                return;
-            }
-        }
-    }
-
     private void showErrorDialogIfNeeded(Bundle extras) {
         if (extras == null) {
             return;
@@ -180,16 +159,6 @@ public class PostsActivity extends WPActionBarActivity
             String errorInfoLink = extras.getString(EXTRA_ERROR_INFO_LINK);
             showPostUploadErrorAlert(errorMessage, errorInfoTitle, errorInfoLink);
         }
-    }
-
-    private void startNotificationsActivity(Bundle extras) {
-        // Manually set last selection to notifications
-        AppPrefs.setLastActivityStr(ActivityId.NOTIFICATIONS.name());
-
-        Intent i = new Intent(this, NotificationsActivity.class);
-        i.putExtras(extras);
-        startActivity(i);
-        finish();
     }
 
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
@@ -267,7 +236,6 @@ public class PostsActivity extends WPActionBarActivity
     }
 
     public void newPost() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST);
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
                 Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
