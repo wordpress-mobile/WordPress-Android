@@ -6,8 +6,8 @@ public class SummaryModel implements Serializable {
 
     private int followers;
     private int views;
-    private int reblog;
-    private int like;
+    private int reblogs;
+    private int likes;
     private int visitors;
     private int comments;
     private String period;
@@ -39,20 +39,20 @@ public class SummaryModel implements Serializable {
         this.views = views;
     }
 
-    public int getReblog() {
-        return reblog;
+    public int getReblogs() {
+        return reblogs;
     }
 
-    public void setReblog(int reblog) {
-        this.reblog = reblog;
+    public void setReblogs(int reblogs) {
+        this.reblogs = reblogs;
     }
 
-    public int getLike() {
-        return like;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setLike(int like) {
-        this.like = like;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public int getVisitors() {

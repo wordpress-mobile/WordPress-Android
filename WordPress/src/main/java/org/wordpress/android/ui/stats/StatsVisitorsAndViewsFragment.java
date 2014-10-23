@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
@@ -22,21 +21,22 @@ import com.jjoe64.graphview.GraphViewSeries;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.stats.model.SummaryModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Locale;
 
 
-public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment implements RadioGroup.OnCheckedChangeListener  {
+public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
+        implements RadioGroup.OnCheckedChangeListener, StatsBarGraph.OnGestureListener  {
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
 
@@ -48,15 +48,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
 
     private RadioGroup mRadioGroup;
     private int mSelectedButtonIndex = 0;
-    String[] titles = {"Views", "Visitors", "Likes", "Reblogs", "Comments" };
+
+    OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+        OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
         setRetainInstance(true);
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
-        titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
+       // TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
+       // titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         setupEmptyGraph();
@@ -66,17 +68,18 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
-        for (int i = 0; i < titles.length; i++) {
+        for (int i = 0; i < overviewItems.length; i++) {
             RadioButton rb = (RadioButton) inflater.inflate(R.layout.stats_radio_button, null, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT,
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             rb.setTypeface((TypefaceCache.getTypeface(view.getContext())));
 
-            params.setMargins(dp8, 0, 0, 0);
+            params.setMargins(0, dp8, 0, 0);
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
             rb.setLayoutParams(params);
-            rb.setText(titles[i]);
+            rb.setText(overviewItems[i].getLabel());
+            rb.setTag(overviewItems[i]);
             mRadioGroup.addView(rb);
 
             if (i == 0) {
@@ -130,11 +133,50 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
                 mapping.put(field, new Integer(i));
             }
         } catch (JSONException e) {
-            AppLog.e(AppLog.T.STATS, this.getClass().getName() + "JSON error", e);
+            AppLog.e(AppLog.T.STATS, "Cannot read the field indexes from the JSON response", e);
         }
         return mapping;
     }
 
+    private SummaryModel[] getDataToShowOnGraph(VisitsModel visitsData) {
+        final JSONArray dataJSON = visitsData.getDataJSON();
+        if (dataJSON == null) {
+            return null;
+        }
+        if (dataJSON.length() == 0) {
+            return new SummaryModel[0];
+        }
+
+        HashMap<String, Integer> columnsMapping = getDataModelColumnIndexes(visitsData);
+        int viewsColumnIndex = columnsMapping.get(OverviewLabel.VIEWS.getRestApiFieldName()).intValue();
+        int visitorsColumnIndex = columnsMapping.get(OverviewLabel.VISITORS.getRestApiFieldName()).intValue();
+        int likesColumnIndex = columnsMapping.get(OverviewLabel.LIKES.getRestApiFieldName()).intValue();
+        int reblogsColumnIndex = columnsMapping.get(OverviewLabel.REBLOGS.getRestApiFieldName()).intValue();
+        int commentsColumnIndex = columnsMapping.get(OverviewLabel.COMMENTS.getRestApiFieldName()).intValue();
+        int periodColumnIndex = columnsMapping.get("period").intValue();
+
+        int numPoints = Math.min(getNumOfPoints(), dataJSON.length());
+        int currentPointIndex = numPoints - 1;
+        SummaryModel[] summaryModels = new SummaryModel[numPoints];
+
+        for (int i = dataJSON.length() -1; i >= 0 && currentPointIndex >= 0; i--) {
+            try {
+                JSONArray currentDayData = dataJSON.getJSONArray(i);
+                SummaryModel currentSummaryModel = new SummaryModel();
+                currentSummaryModel.setPeriod(currentDayData.getString(periodColumnIndex));
+                currentSummaryModel.setViews(currentDayData.getInt(viewsColumnIndex));
+                currentSummaryModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));
+                currentSummaryModel.setComments(currentDayData.getInt(commentsColumnIndex));
+                currentSummaryModel.setLikes(currentDayData.getInt(likesColumnIndex));
+                currentSummaryModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
+                summaryModels[currentPointIndex] = currentSummaryModel;
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, "Cannot draw the bar at index " + currentPointIndex, e);
+            }
+            currentPointIndex--;
+        }
+        return summaryModels;
+    }
 
     private void updateGraph(VisitsModel visitsData) {
         mVisitsData = visitsData;
@@ -150,54 +192,107 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
             barToHighlight = mGraphView.getHighlightBar();
         }
 
-        String currentField = titles[mSelectedButtonIndex].toLowerCase();
-        HashMap<String, Integer> columnsMapping = getDataModelColumnIndexes(visitsData);
-        int numPoints = Math.min(getNumOfPoints(), dataJSON.length());
-        final String[] horLabels = new String[numPoints];
-        mStatsDate = new String[numPoints];
-        GraphView.GraphViewData[] views = new GraphView.GraphViewData[numPoints];
+        final SummaryModel[] dataToShowOnGraph = getDataToShowOnGraph(visitsData);
 
-        int currentPointIndex = numPoints - 1;
-        for (int i = dataJSON.length() -1; i >= 0 && currentPointIndex >= 0; i--) {
+        final String[] horLabels = new String[dataToShowOnGraph.length];
+        mStatsDate = new String[dataToShowOnGraph.length];
+        GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
+
+        boolean isEmptyGraph = true;
+
+        for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
-            try {
-                JSONArray currentDayData = dataJSON.getJSONArray(i);
-                currentItemValue = currentDayData.getInt(columnsMapping.get(currentField).intValue());
-                views[currentPointIndex] = new GraphView.GraphViewData(currentPointIndex, currentItemValue);
-                String currentItemStatsDate = currentDayData.getString(columnsMapping.get("period").intValue());
-                horLabels[currentPointIndex] = getDateLabel(currentItemStatsDate);
-                mStatsDate[currentPointIndex] = currentItemStatsDate;
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, this.getClass().getName() + "JSON error", e);
+            switch(overviewItems[mSelectedButtonIndex]) {
+                case VIEWS:
+                    currentItemValue = dataToShowOnGraph[i].getViews();
+                    break;
+                case VISITORS:
+                    currentItemValue = dataToShowOnGraph[i].getVisitors();
+                    break;
+                case REBLOGS:
+                    currentItemValue = dataToShowOnGraph[i].getReblogs();
+                    break;
+                case LIKES:
+                    currentItemValue = dataToShowOnGraph[i].getLikes();
+                    break;
+                case COMMENTS:
+                    currentItemValue = dataToShowOnGraph[i].getComments();
+                    break;
             }
-            currentPointIndex--;
+            views[i] = new GraphView.GraphViewData(i, currentItemValue);
+
+            String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
+            horLabels[i] = getDateLabel(currentItemStatsDate);
+            mStatsDate[i] = currentItemStatsDate;
+            if (currentItemValue > 0) {
+                isEmptyGraph = false;
+            }
         }
 
         mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
 
-        if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-            mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
+        if (isEmptyGraph) {
+            setupEmptyGraph();
         } else {
-            mGraphContainer.removeAllViews();
-            mGraphView = new StatsBarGraph(getActivity());
-            mGraphContainer.addView(mGraphView);
+            if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
+                mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
+            } else {
+                mGraphContainer.removeAllViews();
+                mGraphView = new StatsBarGraph(getActivity());
+                mGraphContainer.addView(mGraphView);
+            }
+
+            if (mGraphView != null) {
+                mGraphView.removeAllSeries();
+                mGraphView.addSeries(mCurrentSeriesOnScreen);
+                mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+                mGraphView.setHorizontalLabels(horLabels);
+                mGraphView.setGestureListener(this);
+            }
+
+            if (barToHighlight != -1) {
+                mGraphView.highlightBar(barToHighlight);
+            } else {
+                mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+            }
         }
 
-        if (mGraphView != null) {
-            mGraphView.removeAllSeries();
-            mGraphView.addSeries(mCurrentSeriesOnScreen);
-            mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(numPoints));
-            mGraphView.setHorizontalLabels(horLabels);
-        }
+        updateOverviewAreaBelowTheGraph(
+                barToHighlight != -1 ? barToHighlight : dataToShowOnGraph.length - 1 );
+    }
 
-        if (barToHighlight != -1) {
-            mGraphView.highlightBar(barToHighlight);
-        } else {
-            mGraphView.highlightBar(numPoints - 1);
+    private void updateOverviewAreaBelowTheGraph(int itemPosition) {
+        final SummaryModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
+        //update the area below the graph
+        SummaryModel modelTapped = dataToShowOnGraph[itemPosition];
+        for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
+            View o = mRadioGroup.getChildAt(i);
+            if (o instanceof RadioButton) {
+                RadioButton currentBtm = (RadioButton)o;
+                OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
+                switch (overviewItem) {
+                    case VIEWS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getViews());
+                        break;
+                    case VISITORS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getVisitors());
+                        break;
+                    case REBLOGS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getReblogs());
+                        break;
+                    case LIKES:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getLikes());
+                        break;
+                    case COMMENTS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  modelTapped.getComments());
+                        break;
+                }
+            }
         }
     }
+
 
     private String getDateLabel(String dateToFormat) {
         switch (getTimeframe()) {
@@ -247,64 +342,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
         }
     }
 
-/*
-
-    private void refreshSummary() {
-        if (WordPress.getBlog(getLocalTableBlogID()) == null) {
-            return;
-        }
-
-        final Handler handler = new Handler();
-        new Thread() {
-            @Override
-            public void run() {
-                String blogId = WordPress.getBlog(getLocalTableBlogID()).getDotComBlogId();
-                if (TextUtils.isEmpty(blogId)) {
-                    blogId = "0";
-                }
-                final StatsSummary summary = StatsUtils.getSummary(blogId);
-                handler.post(new Runnable() {
-                    public void run() {
-                        refreshSummary(summary);
-                    }
-                });
-            }
-        } .start();
-    }
-
-    private void refreshSummary(final StatsSummary stats) {
-        if (getActivity() == null) {
-            return;
-        }
-
-        String timezone = StatsUtils.getBlogTimezone(WordPress.getBlog(getLocalTableBlogID()));
-        long currentDate = timezone != null ? StatsUtils.getCurrentDateMsTZ(timezone) : StatsUtils.getCurrentDateMs();
-
-        if (stats != null
-                && stats.getDay() != null
-                && StatsUtils.toMs(stats.getDay()) != currentDate
-                ) {
-            mVisitorsTodayLabel.setText(StatsUtils.parseDate(stats.getDay(), "yyyy-MM-dd", "MMM d"));
-        } else {
-            // set the default "Today" label
-            mVisitorsTodayLabel.setText(R.string.stats_visitors_and_views_header_today);
-        }
-
-        if (stats == null) {
-            mVisitorsToday.setText("0");
-            mViewsToday.setText("0");
-            mViewsBestEver.setText("0");
-            mViewsAllTime.setText("0");
-            mCommentsAllTime.setText("0");
-        } else {
-            mVisitorsToday.setText(FormatUtils.formatDecimal(stats.getVisitorsToday()));
-            mViewsToday.setText(FormatUtils.formatDecimal(stats.getViewsToday()));
-            mViewsBestEver.setText(FormatUtils.formatDecimal(stats.getViewsBestDayTotal()));
-            mViewsAllTime.setText(FormatUtils.formatDecimal(stats.getViewsAllTime()));
-            mCommentsAllTime.setText(FormatUtils.formatDecimal(stats.getCommentsAllTime()));
-        }
-    }
-*/
     @Override
     protected String getTitle() {
         return getString(R.string.stats_view_visitors_and_views);
@@ -323,7 +360,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
             }
 
             StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_NAME);
-            if (sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && sectionToUpdate != StatsService.StatsSectionEnum.VISITS) {
+            if (/*sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && */ sectionToUpdate != StatsService.StatsSectionEnum.VISITS) {
                 return;
             }
 
@@ -335,14 +372,120 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment impleme
             //TODO: check period and blogID
             final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
 
-            if (sectionToUpdate == StatsService.StatsSectionEnum.SUMMARY) {
+           /* if (sectionToUpdate == StatsService.StatsSectionEnum.SUMMARY) {
 
-            }
+            }*/
 
             if (sectionToUpdate == StatsService.StatsSectionEnum.VISITS) {
+                // Reset the bar to highlight
+                if (mGraphView != null) {
+                    mGraphView.resetHighlightBar();
+                }
                 updateGraph((VisitsModel)dataObj);
             }
             return;
         }
     };
+
+    @Override
+    public void onBarTapped(int tappedBar) {
+        AppLog.e(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
+
+        updateOverviewAreaBelowTheGraph(tappedBar);
+
+        // Update Stats here
+        String date =  mStatsDate[tappedBar];
+
+        if (date == null) {
+            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
+            return;
+        }
+        //TODO: move this code in utility stats. See activity that has similar code.
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            return;
+        }
+
+        String calculatedDate = null;
+        switch (getTimeframe()) {
+            case DAY:
+                //calculatedDate = StatsUtils.parseDate(date, "yyyy-MM-dd", "MMM d");
+                calculatedDate = date;
+                break;
+            case WEEK:
+                // first four digits are the year
+                // followed by Wxx where xx is the month
+                // followed by Wxx where xx is the day of the month
+                // ex: 2013W07W22 = July 22, 2013
+                calculatedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "yyyy-MM-dd");
+                break;
+            case MONTH:
+                calculatedDate = StatsUtils.parseDate(date, "yyyy-MM", "yyyy-MM-dd");
+                break;
+            case YEAR:
+                //calculatedDate = StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy-MM-dd");
+                calculatedDate = date;
+                break;
+        }
+
+        if (calculatedDate == null) {
+            AppLog.w(AppLog.T.STATS, "A call to update stats is made but date received cannot be parsed!! " + date);
+            return;
+        }
+
+        final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
+        // start service to get stats
+        Intent intent = new Intent(getActivity(), StatsService.class);
+        intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
+        intent.putExtra(StatsService.ARG_PERIOD, getTimeframe());
+        intent.putExtra(StatsService.ARG_DATE, date);
+        intent.putExtra(StatsService.ARG_UPDATE_GRAPH, false);
+        getActivity().startService(intent);
+    }
+
+
+    private enum OverviewLabel {
+        VIEWS(R.string.stats_views),
+        VISITORS(R.string.stats_visitors),
+        LIKES(R.string.stats_likes),
+        REBLOGS(R.string.stats_reblogs),
+        COMMENTS(R.string.stats_comments),
+        ;
+
+        private final int mLabelResId;
+
+        private OverviewLabel(int labelResId) {
+            mLabelResId = labelResId;
+        }
+
+        public String getLabel() {
+            return WordPress.getContext().getString(mLabelResId);
+        }
+
+        public static String[] toStringArray(OverviewLabel[] timeframes) {
+            String[] titles = new String[timeframes.length];
+
+            for (int i = 0; i < timeframes.length; i++) {
+                titles[i] = timeframes[i].getLabel();
+            }
+
+            return titles;
+        }
+
+        // Field name as returned from the REST API
+        public String getRestApiFieldName() {
+            switch (this) {
+                case VIEWS:
+                    return "views";
+                case VISITORS:
+                    return "visitors";
+                case LIKES:
+                    return "likes";
+                case REBLOGS:
+                    return "reblogs";
+                case COMMENTS:
+                    return "comments";
+            }
+            return "";
+        }
+    }
 }

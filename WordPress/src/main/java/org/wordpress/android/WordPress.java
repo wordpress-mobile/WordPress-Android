@@ -45,6 +45,7 @@ import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
@@ -126,7 +127,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateCurrentBlogStats = new RateLimitedTask(SECONDS_BETWEEN_STATS_UPDATE) {
         protected boolean run() {
-            Blog currentBlog = WordPress.getCurrentBlog();
+         /*   Blog currentBlog = WordPress.getCurrentBlog();
             if (currentBlog != null) {
                 String blogID = null;
                 if (currentBlog.isDotcomFlag()) {
@@ -138,10 +139,11 @@ public class WordPress extends Application {
                     // start service to get stats
                     Intent intent = new Intent(mContext, StatsService.class);
                     intent.putExtra(StatsService.ARG_BLOG_ID, blogID);
+                    intent.putExtra(StatsService.ARG_DATE, StatsUtils.getCurrentDate());
                     mContext.startService(intent);
                     return true;
                 }
-            }
+            }*/
             return false;
         }
     };

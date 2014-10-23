@@ -5,10 +5,6 @@
     android:orientation="vertical"
     android:layout_gravity="top">
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/stats_pager_title"
-        style="@style/StatsPagerTitle" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,6 +30,13 @@
             android:orientation="vertical"
             android:visibility="gone" >
         </RadioGroup>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/stats_summary_date"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date"/>
 
     </LinearLayout>
 </LinearLayout>

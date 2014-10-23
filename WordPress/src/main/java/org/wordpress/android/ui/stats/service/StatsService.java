@@ -38,7 +38,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class StatsService extends Service {
     public static final String ARG_BLOG_ID = "blog_id";
     public static final String ARG_PERIOD = "stats_period";
-    public static enum StatsSectionEnum {SUMMARY, VISITS, TOP_POSTS }
+    public static final String ARG_DATE = "stats_date";
+    public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
+    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -49,14 +51,11 @@ public class StatsService extends Service {
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
 
-    // broadcast action to notify clients when summary data has changed
-    public static final String ACTION_STATS_SUMMARY_UPDATED = "STATS_SUMMARY_UPDATED";
-    public static final String STATS_SUMMARY_UPDATED_EXTRA = "STATS_SUMMARY_UPDATED_EXTRA";
-
-    private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+    //private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
     private StatsTimeframe mServiceRequestedTimeframe;
+    private String mServiceRequestedDate;
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> statsNetworkRequests = new LinkedList<Request<JSONObject>>();
     private int numberOfNetworkCalls = 0; // The number of networks calls made by Stats.
@@ -101,16 +100,28 @@ public class StatsService extends Service {
             period = (StatsTimeframe) intent.getSerializableExtra(ARG_PERIOD);
         }
 
+        String requestedDate = intent.getStringExtra(ARG_DATE);
+        if (requestedDate == null) {
+            AppLog.w(T.STATS, "StatsService is started with a NULL date on this blogID - "
+                    + mServiceBlogId + ". Using current date!!!");
+            requestedDate = StatsUtils.getCurrentDate();
+        }
+
+        // True when the network call to update the graph is needed
+        boolean updateGraph = intent.getBooleanExtra(ARG_UPDATE_GRAPH, true);
+
         if (mServiceBlogId == null) {
-            startTasks(blogId, period, startId);
-        } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period) {
+            startTasks(blogId, period, requestedDate, updateGraph, startId);
+        } else if (blogId.equals(mServiceBlogId) && mServiceRequestedTimeframe == period
+                && requestedDate.equals(mServiceRequestedDate)) {
             // already running on the same blogID, same period
             // Do nothing
-            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId);
+            AppLog.i(T.STATS, "StatsService is already running on this blogID - " + mServiceBlogId
+                    + " for the same period and the same date.");
         } else {
             // stats is running on a different blogID
             stopRefresh();
-            startTasks(blogId, period, startId);
+            startTasks(blogId, period, requestedDate, updateGraph, startId);
         }
         // Always update the startId. Always.
         this.mServiceStartId = startId;
@@ -121,6 +132,7 @@ public class StatsService extends Service {
     private void stopRefresh() {
         this.mServiceBlogId = null;
         this.mServiceRequestedTimeframe = StatsTimeframe.DAY;
+        this.mServiceRequestedDate = null;
         this.mServiceStartId = 0;
         for (Request<JSONObject> req : statsNetworkRequests) {
             if (req != null && !req.hasHadResponseDelivered() && !req.isCanceled()) {
@@ -132,9 +144,11 @@ public class StatsService extends Service {
         numberOfNetworkCalls = 0;
     }
 
-    private void startTasks(final String blogId, final StatsTimeframe timeframe, final int startId) {
+    private void startTasks(final String blogId, final StatsTimeframe timeframe, final String date,
+                            final boolean updateGraph, final int startId) {
         this.mServiceBlogId = blogId;
         this.mServiceRequestedTimeframe = timeframe;
+        this.mServiceRequestedDate = date;
         this.mServiceStartId = startId;
 
         new Thread() {
@@ -144,22 +158,27 @@ public class StatsService extends Service {
 
                 String period = timeframe.getLabelForRestCall();
 
-                AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period);
+                AppLog.i(T.STATS, "Update started for blogID - " + blogId + " with the following period: " + period
+                + " on the following date: " + mServiceRequestedDate);
+
                 broadcastUpdate(true);
 
-                // Summary call
+                /* Summary call
                 SummaryCallListener sListener = new SummaryCallListener(mServiceBlogId, mServiceRequestedTimeframe);
-                final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", blogId, period, StatsUtils.getCurrentDate());
+                final String summaryPath = String.format("/sites/%s/stats/summary?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(summaryPath, sListener, sListener));
-
-                // Visits call: The Graph and the section just below the graph
-                VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
-                final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", blogId, period, StatsUtils.getCurrentDate());
-                statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
+*/
+                if (updateGraph) {
+                    // Visits call: The Graph and the section just below the graph
+                    VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                    final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                    AppLog.e(T.STATS, "visitsPath - " + visitsPath);
+                    statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
+                }
 
                // Posts & Pages
                 TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
-                final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", blogId, period, StatsUtils.getCurrentDate());
+                final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
@@ -248,6 +267,7 @@ public class StatsService extends Service {
                 OperationApplicationException;
     }
 
+    /*
     private class SummaryCallListener extends AbsListener {
 
         public SummaryCallListener(String blogId, StatsTimeframe timeframe) {
@@ -276,7 +296,7 @@ public class StatsService extends Service {
             return StatsSectionEnum.SUMMARY;
         }
     }
-
+*/
     private class VisitsCallListener extends AbsListener {
 
         public VisitsCallListener(String blogId, StatsTimeframe timeframe) {

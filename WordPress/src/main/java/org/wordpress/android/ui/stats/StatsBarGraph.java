@@ -14,7 +14,6 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.TypefaceCache;
 
@@ -31,6 +30,7 @@ class StatsBarGraph extends GraphView {
     private int mBarPositionToHighlight = -1;
 
     private GestureDetectorCompat mDetector;
+    private OnGestureListener mGestureListener;
 
     public StatsBarGraph(Context context) {
         super(context, "");
@@ -48,6 +48,9 @@ class StatsBarGraph extends GraphView {
         mDetector.setIsLongpressEnabled(false);
     }
 
+    public void setGestureListener(OnGestureListener listener) {
+        this.mGestureListener = listener;
+    }
 
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
@@ -57,13 +60,13 @@ class StatsBarGraph extends GraphView {
 
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
-            doTappingAndBeQuiet();
+            highlightBarAndBroadcastDate();
             return false;
         }
 
         @Override
         public void onShowPress(MotionEvent e) {
-            doTappingAndBeQuiet();
+            highlightBarAndBroadcastDate();
         }
 
         @Override
@@ -76,11 +79,14 @@ class StatsBarGraph extends GraphView {
             return false;
         }
 
-        private void doTappingAndBeQuiet() {
+        private void highlightBarAndBroadcastDate() {
             int tappedBar = getTappedBar();
             AppLog.e(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
             if (tappedBar >= 0) {
                 highlightBar(tappedBar);
+                if (mGestureListener != null) {
+                    mGestureListener.onBarTapped(tappedBar);
+                }
             }
         }
     }
@@ -190,7 +196,7 @@ class StatsBarGraph extends GraphView {
         }
         return -1;
     }
-
+/*
     public float getMiddlePointOfTappedBar(int tappedBar) {
         if (tappedBar == -1 || mSeriesRectsDrawedOnScreen == null || mSeriesRectsDrawedOnScreen.size() == 0) {
             return -1;
@@ -215,7 +221,7 @@ class StatsBarGraph extends GraphView {
             }
         }, 500);
     }
-
+*/
     public void highlightBar(int barPosition) {
         mBarPositionToHighlight = barPosition;
         this.redrawAll();
@@ -223,6 +229,10 @@ class StatsBarGraph extends GraphView {
 
     public int getHighlightBar() {
         return mBarPositionToHighlight;
+    }
+
+    public void resetHighlightBar() {
+        mBarPositionToHighlight = -1;
     }
 
     @Override
@@ -283,5 +293,9 @@ class StatsBarGraph extends GraphView {
             }
             return false;
         }
+    }
+
+    interface OnGestureListener {
+        public void onBarTapped(int tappedBar);
     }
 }
