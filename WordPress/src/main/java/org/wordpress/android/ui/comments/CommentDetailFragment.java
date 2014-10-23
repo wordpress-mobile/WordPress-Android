@@ -800,7 +800,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!hasComment()) return;
+                    if (!hasComment() || !isAdded() || !NetworkUtils.checkConnection(getActivity())) {
+                        return;
+                    }
 
                     CommentStatus newStatus = CommentStatus.APPROVED;
                     if (mComment.getStatusEnum() == CommentStatus.APPROVED) {
