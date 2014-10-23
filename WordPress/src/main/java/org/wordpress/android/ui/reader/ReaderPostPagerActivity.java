@@ -172,6 +172,12 @@ public class ReaderPostPagerActivity extends Activity
         }
     }
 
+    private void removePagerAdapter() {
+        if (hasPagerAdapter()) {
+            mViewPager.setAdapter(null);
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(@Nonnull Bundle outState) {
         outState.putString(ReaderConstants.ARG_TITLE, (String) this.getTitle());
@@ -261,9 +267,7 @@ public class ReaderPostPagerActivity extends Activity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (hasPagerAdapter()) {
-                            mViewPager.setAdapter(null);
-                        }
+                        removePagerAdapter();
                         PostPagerAdapter adapter = new PostPagerAdapter(getFragmentManager(), idList);
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
