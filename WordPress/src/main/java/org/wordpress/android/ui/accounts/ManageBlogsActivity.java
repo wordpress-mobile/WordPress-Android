@@ -158,7 +158,7 @@ public class ManageBlogsActivity extends ListActivity {
         }
     }
 
-    private class UpdateBlogTask extends SetupBlogTask {
+    private class UpdateBlogTask extends UpdateBlogListTask {
         public UpdateBlogTask(Context context) {
             super(context);
         }
