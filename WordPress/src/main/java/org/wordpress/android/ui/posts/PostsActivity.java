@@ -448,7 +448,7 @@ public class PostsActivity extends WPActionBarActivity
                     WordPress.currentBlog.getPassword() };
 
             try {
-                ApiHelper.refreshComments(PostsActivity.this, WordPress.currentBlog, commentParams);
+                ApiHelper.refreshComments(WordPress.currentBlog, commentParams);
             } catch (final Exception e) {
                 mErrorMsg = getResources().getText(R.string.error_generic).toString();
             }

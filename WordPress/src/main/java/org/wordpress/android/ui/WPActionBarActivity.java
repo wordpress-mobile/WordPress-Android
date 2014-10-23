@@ -700,7 +700,7 @@ public abstract class WPActionBarActivity extends Activity {
                 public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 }
             };
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).executeOnExecutor(
+            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), callback).executeOnExecutor(
                     AsyncTask.THREAD_POOL_EXECUTOR, false);
         }
     }
