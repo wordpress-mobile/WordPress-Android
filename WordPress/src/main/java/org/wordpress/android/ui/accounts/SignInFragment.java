@@ -34,17 +34,18 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.LoginAndFecthBlogListWPOrg;
+import org.wordpress.android.networking.LoginAndFetchBlogListAbstract;
+import org.wordpress.android.networking.LoginAndFetchBlogListAbstract.Callback;
+import org.wordpress.android.networking.LoginAndFetchBlogListWPCom;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.util.ABTestingUtils;
+import org.wordpress.android.util.*;
 import org.wordpress.android.util.ABTestingUtils.Feature;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -59,7 +60,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implements TextWatcher {
+public class SignInFragment extends NewAccountAbstractPageFragment implements TextWatcher {
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -83,8 +84,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
     private int mErroneousLogInCount;
+    private String mUsername;
+    private String mPassword;
+    private String mHttpUsername;
+    private String mHttpPassword;
 
-    public WelcomeFragmentSignIn() {
+    public SignInFragment() {
         mEmailChecker = new EmailChecker();
     }
 
@@ -214,7 +219,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     }
 
     private boolean isWPComLogin() {
-        return !mSelfHosted || TextUtils.isEmpty(EditTextUtils.getText(mUrlEditText).trim());
+        String selfHosteUrl = EditTextUtils.getText(mUrlEditText).trim();
+        return !mSelfHosted || TextUtils.isEmpty(selfHosteUrl) || selfHosteUrl.contains("wordpress.com");
     }
 
     private View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
@@ -249,7 +255,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
     };
 
     protected void onDoneAction() {
-        signin();
+        signIn();
     }
 
     private TextView.OnEditorActionListener mEditorAction = new TextView.OnEditorActionListener() {
@@ -267,17 +273,114 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         }
     };
 
-    private void signin() {
+    private void readerPostLoginActions() {
+        // Fire off a request to get current user data
+        WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
+            @Override
+            public void onResponse(JSONObject jsonObject) {
+                ReaderUserActions.setCurrentUser(jsonObject);
+            }
+        }, null);
+
+        // get reader tags so they're available as soon as the Reader is accessed - note that
+        // this uses the application context since the activity is finished immediately below
+        if (isAdded()) {
+            ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(
+                    UpdateTask.TAGS));
+        }
+    }
+
+    private Callback signInCallback = new Callback() {
+        @Override
+        public void onSuccess(final List<Map<String, Object>> userBlogList) {
+            if (userBlogList != null) {
+                BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
+                // refresh first blog asynchronously
+                refreshFirstBlogContent(userBlogList);
+            }
+
+            // Analytics tracking
+            Map<String, Boolean> properties = new HashMap<String, Boolean>();
+            properties.put("dotcom_user", isWPComLogin());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
+            AnalyticsTracker.refreshMetadata();
+            if (!isWPComLogin()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
+            }
+
+            if (isWPComLogin()) {
+                readerPostLoginActions();
+            }
+
+            if (!isAdded()) {
+                return;
+            }
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    endProgress();
+                    if (userBlogList != null) {
+                        getActivity().setResult(Activity.RESULT_OK);
+                        getActivity().finish();
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onError(final int messageId, final boolean httpAuthRequired,
+                            final boolean erroneousSslCertificate) {
+            if (!isAdded()) {
+                return;
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (erroneousSslCertificate) {
+                        askForSslTrust();
+                        return;
+                    }
+                    if (httpAuthRequired) {
+                        askForHttpAuthCredentials();
+                        return;
+                    }
+                    if (messageId != 0) {
+                        signInError(messageId);
+                        return;
+                    }
+                    endProgress();
+                }
+            });
+        }
+    };
+
+    private void signIn() {
         if (!isUserDataValid()) {
             return;
         }
-        new SetupBlogTask().execute();
+        LoginAndFetchBlogListAbstract loginAndFetchBlogList;
+        mUsername = EditTextUtils.getText(mUsernameEditText).trim();
+        mPassword = EditTextUtils.getText(mPasswordEditText).trim();
+        if (isWPComLogin()) {
+            loginAndFetchBlogList = new LoginAndFetchBlogListWPCom(mUsername, mPassword);
+        } else {
+            String url = EditTextUtils.getText(mUrlEditText).trim();
+            LoginAndFecthBlogListWPOrg loginAndFecthBlogListWPOrg = new LoginAndFecthBlogListWPOrg(mUsername, mPassword,
+                    url);
+            if (mHttpUsername != null && mHttpPassword != null) {
+                loginAndFecthBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
+            }
+            loginAndFetchBlogList = loginAndFecthBlogListWPOrg;
+        }
+        startProgress(isWPComLogin() ? getString(R.string.signing_in) : getString(R.string.connecting_wpcom));
+        loginAndFetchBlogList.execute(signInCallback);
     }
 
     private OnClickListener mSignInClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            signin();
+            signIn();
         }
     };
 
@@ -363,7 +466,7 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         if (username != null && password != null) {
             mUsernameEditText.setText(username);
             mPasswordEditText.setText(password);
-            new SetupBlogTask().execute();
+            signIn();
         }
     }
 
@@ -393,13 +496,12 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         mForgotPassword.setEnabled(true);
     }
 
-    protected void askForSslTrust() {
+    public void askForSslTrust() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(getString(R.string.ssl_certificate_error));
         alert.setMessage(getString(R.string.ssl_certificate_ask_trust));
         alert.setPositiveButton(R.string.ssl_certificate_trust, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                SetupBlogTask setupBlogTask = new SetupBlogTask();
                 try {
                     SelfSignedSSLCertsManager selfSignedSSLCertsManager = SelfSignedSSLCertsManager.getInstance(
                             getActivity());
@@ -409,7 +511,8 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
                 } catch (GeneralSecurityException e) {
                     AppLog.e(T.NUX, e);
                 }
-                setupBlogTask.execute();
+                // Try to signin again
+                signIn();
             }
         });
         alert.setNeutralButton(R.string.ssl_certificate_details, new DialogInterface.OnClickListener() {
@@ -437,244 +540,137 @@ public class WelcomeFragmentSignIn extends NewAccountAbstractPageFragment implem
         endProgress();
     }
 
-    private class SetupBlogTask extends AsyncTask<Void, Void, List<Map<String, Object>>> {
-        private SetupBlog mSetupBlog;
-        private int mErrorMsgId;
+    private void askForHttpAuthCredentials() {
+        // Prompt for http credentials
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(R.string.http_authorization_required);
 
-        private void setHttpCredentials(String username, String password) {
-            if (mSetupBlog == null) {
-                mSetupBlog = new SetupBlog();
+        View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
+        final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
+        final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
+        alert.setView(httpAuth);
+        alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                mHttpUsername = EditTextUtils.getText(usernameEditText);
+                mHttpPassword = EditTextUtils.getText(passwordEditText);
+                signIn();
             }
-            mSetupBlog.setHttpUsername(username);
-            mSetupBlog.setHttpPassword(password);
+        });
+
+        alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+        endProgress();
+    }
+
+    protected void showInvalidUsernameOrPasswordDialog() {
+        // Show a dialog
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        NUXDialogFragment nuxAlert;
+        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+            // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
+            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                    org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
+                            org.wordpress.android.R.string.cancel), getString(
+                            org.wordpress.android.R.string.forgot_password), getString(
+                            org.wordpress.android.R.string.contact_us), NUXDialogFragment.ACTION_OPEN_URL,
+                    NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+        } else {
+            // create a 2 buttons dialog ("Forget your password?" and "Cancel")
+            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                    getString(org.wordpress.android.R.string.username_or_password_incorrect),
+                    org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
+                            org.wordpress.android.R.string.cancel), getString(
+                            org.wordpress.android.R.string.forgot_password), null, NUXDialogFragment.ACTION_OPEN_URL,
+                    0);
         }
 
-        @Override
-        protected void onPreExecute() {
-            if (mSetupBlog == null) {
-                mSetupBlog = new SetupBlog();
-            }
-            mSetupBlog.setUsername(EditTextUtils.getText(mUsernameEditText).trim());
-            mSetupBlog.setPassword(EditTextUtils.getText(mPasswordEditText).trim());
-            if (mSelfHosted) {
-                mSetupBlog.setSelfHostedURL(EditTextUtils.getText(mUrlEditText).trim());
-            } else {
-                mSetupBlog.setSelfHostedURL(null);
-            }
-            startProgress(selfHostedFieldsFilled() ? getString(R.string.attempting_configure) : getString(
-                    R.string.connecting_wpcom));
+        // Put entered url and entered username args, that could help our support team
+        Bundle bundle = nuxAlert.getArguments();
+        bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+        bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
+        bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+        nuxAlert.setArguments(bundle);
+        ft.add(nuxAlert, "alert");
+        ft.commitAllowingStateLoss();
+    }
+
+    protected void handleInvalidUsernameOrPassword(int messageId) {
+        mErroneousLogInCount += 1;
+        if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
+            // Clear previous errors
+            mPasswordEditText.setError(null);
+            mUsernameEditText.setError(null);
+            showInvalidUsernameOrPasswordDialog();
+        } else {
+            showUsernameError(messageId);
+            showPasswordError(messageId);
         }
+        endProgress();
+    }
 
-        private void refreshBlogContent(Map<String, Object> blogMap) {
-            String blogId = blogMap.get("blogid").toString();
-            String xmlRpcUrl = blogMap.get("xmlrpc").toString();
-            int intBlogId = StringUtils.stringToInt(blogId, -1);
-            if (intBlogId == -1) {
-                AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
-                return;
-            }
-            int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(intBlogId, xmlRpcUrl);
-            Blog firstBlog = WordPress.wpDB.instantiateBlogByLocalId(blogLocalId);
-            new ApiHelper.RefreshBlogContentTask(getActivity(), firstBlog, null).executeOnExecutor(
-                    AsyncTask.THREAD_POOL_EXECUTOR, false);
-        }
-
-        /**
-         * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
-         * Also when a user add a new self hosted blog, userBlogList contains only one element.
-         * TODO: when user's default blog autoselection is implemented, we should refresh the default one and
-         * not the first one.
-         * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
-         * user selects it.
-         */
-        private void refreshFirstBlogContent(List<Map<String, Object>> userBlogList) {
-            if (userBlogList != null && !userBlogList.isEmpty()) {
-                Map<String, Object> firstBlogMap = userBlogList.get(0);
-                refreshBlogContent(firstBlogMap);
-            }
-        }
-
-        @Override
-        protected List<Map<String, Object>> doInBackground(Void... args) {
-            List<Map<String, Object>> userBlogList = mSetupBlog.getBlogList();
-            mErrorMsgId = mSetupBlog.getErrorMsgId();
-            if (mErrorMsgId != 0) {
-                return null;
-            }
-            if (userBlogList != null) {
-                mSetupBlog.addBlogs(userBlogList);
-            }
-            mErrorMsgId = mSetupBlog.getErrorMsgId();
-            if (mErrorMsgId != 0) {
-                return null;
-            }
-            return userBlogList;
-        }
-
-        private void httpAuthRequired() {
-            // Prompt for http credentials
-            mSetupBlog.setHttpAuthRequired(false);
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-            alert.setTitle(R.string.http_authorization_required);
-
-            View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.alert_http_auth, null);
-            final EditText usernameEditText = (EditText) httpAuth.findViewById(R.id.http_username);
-            final EditText passwordEditText = (EditText) httpAuth.findViewById(R.id.http_password);
-            alert.setView(httpAuth);
-            alert.setPositiveButton(R.string.sign_in, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    SetupBlogTask setupBlogTask = new SetupBlogTask();
-                    setupBlogTask.setHttpCredentials(EditTextUtils.getText(usernameEditText), EditTextUtils.getText(
-                            passwordEditText));
-                    setupBlogTask.execute();
-                }
-            });
-
-            alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-
-            alert.show();
-            endProgress();
-        }
-
-        private void showInvalidUsernameOrPasswordDialog() {
-            // Show a dialog
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert;
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                        R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 3, getString(
-                        R.string.cancel), getString(R.string.forgot_password), getString(R.string.contact_us),
-                        NUXDialogFragment.ACTION_OPEN_URL, NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
-            } else {
-                // create a 2 buttons dialog ("Forget your password?" and "Cancel")
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                                R.string.username_or_password_incorrect), R.drawable.noticon_alert_big, 2, getString(
-                                R.string.cancel), getString(R.string.forgot_password), null,
-                        NUXDialogFragment.ACTION_OPEN_URL, 0);
-            }
-
-            // Put entered url and entered username args, that could help our support team
+    protected void signInError(int messageId) {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        NUXDialogFragment nuxAlert;
+        if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {
+            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                    getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
+                            org.wordpress.android.R.string.cancel), getString(
+                            org.wordpress.android.R.string.visit_security_settings), "",
+                    NUXDialogFragment.ACTION_OPEN_URL, 0);
             Bundle bundle = nuxAlert.getArguments();
-            bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
-            bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
-            bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
+            bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
+                    "https://wordpress.com/settings/security/?ssl=forced");
             nuxAlert.setArguments(bundle);
-            ft.add(nuxAlert, "alert");
-            ft.commitAllowingStateLoss();
-        }
-
-        private void handleInvalidUsernameOrPassword() {
-            mErroneousLogInCount += 1;
-            if (mErroneousLogInCount >= WPCOM_ERRONEOUS_LOGIN_THRESHOLD) {
-                // Clear previous errors
-                mPasswordEditText.setError(null);
-                mUsernameEditText.setError(null);
-                showInvalidUsernameOrPasswordDialog();
-            } else {
-                showUsernameError(mErrorMsgId);
-                showPasswordError(mErrorMsgId);
-            }
-            mErrorMsgId = 0;
-            endProgress();
-        }
-
-        private void signInError() {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            NUXDialogFragment nuxAlert;
-            if (mErrorMsgId == R.string.account_two_step_auth_enabled) {
-                nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(mErrorMsgId),
-                        R.drawable.noticon_alert_big, 2, getString(R.string.cancel), getString(
-                                R.string.visit_security_settings), "", NUXDialogFragment.ACTION_OPEN_URL, 0);
-                Bundle bundle = nuxAlert.getArguments();
-                bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
-                        "https://wordpress.com/settings/security/?ssl=forced");
-                nuxAlert.setArguments(bundle);
-            } else {
-                if (mErrorMsgId == R.string.username_or_password_incorrect) {
-                    handleInvalidUsernameOrPassword();
-                    return;
-                } else if (mErrorMsgId == R.string.invalid_url_message) {
-                    showUrlError(mErrorMsgId);
-                    mErrorMsgId = 0;
-                    endProgress();
-                    return;
-                } else {
-                    nuxAlert = NUXDialogFragment.newInstance(getString(R.string.nux_cannot_log_in), getString(
-                            mErrorMsgId), R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
-                }
-            }
-            ft.add(nuxAlert, "alert");
-            ft.commitAllowingStateLoss();
-            mErrorMsgId = 0;
-            endProgress();
-        }
-
-        @Override
-        protected void onPostExecute(final List<Map<String, Object>> userBlogList) {
-            if (mSetupBlog.isErroneousSslCertificates() && isAdded()) {
-                askForSslTrust();
+        } else {
+            if (messageId == org.wordpress.android.R.string.username_or_password_incorrect) {
+                handleInvalidUsernameOrPassword(messageId);
                 return;
-            }
-
-            if (mSetupBlog.isHttpAuthRequired() && isAdded()) {
-                httpAuthRequired();
-                return;
-            }
-
-            if (userBlogList == null && mErrorMsgId != 0 && isAdded()) {
-                signInError();
-                return;
-            }
-
-            Map<String, Boolean> properties = new HashMap<String, Boolean>();
-            properties.put("dotcom_user", mSetupBlog.isDotComBlog());
-
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-
-            refreshFirstBlogContent(userBlogList);
-
-            if (mSelfHosted) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
-            }
-
-            // Update wp.com credentials
-            if (mSetupBlog.getXmlrpcUrl() != null && mSetupBlog.getXmlrpcUrl().contains("wordpress.com")) {
-                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(WordPress.getContext());
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mSetupBlog.getUsername());
-                editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, WordPressDB.encryptPassword(
-                        mSetupBlog.getPassword()));
-                editor.commit();
-                // Fire off a request to get an access token
-                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        ReaderUserActions.setCurrentUser(jsonObject);
-                    }
-                }, null);
-            }
-
-            AnalyticsTracker.refreshMetadata();
-
-            // get reader tags so they're available as soon as the Reader is accessed - note that
-            // this uses the application context since the activity is finished immediately below
-            if (!mSelfHosted && isAdded()) {
-                ReaderUpdateService.startService(getActivity().getApplicationContext(), EnumSet.of(UpdateTask.TAGS));
-            }
-
-            if (userBlogList != null) {
-                if (getActivity() != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                }
-            } else {
+            } else if (messageId == org.wordpress.android.R.string.invalid_url_message) {
+                showUrlError(messageId);
                 endProgress();
+                return;
+            } else {
+                nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                        getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, getString(
+                        org.wordpress.android.R.string.nux_tap_continue));
             }
+        }
+        ft.add(nuxAlert, "alert");
+        ft.commitAllowingStateLoss();
+        endProgress();
+    }
+
+    private void refreshBlogContent(Map<String, Object> blogMap) {
+        String blogId = blogMap.get("blogid").toString();
+        String xmlRpcUrl = blogMap.get("xmlrpc").toString();
+        int intBlogId = StringUtils.stringToInt(blogId, -1);
+        if (intBlogId == -1) {
+            AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
+            return;
+        }
+        int blogLocalId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(intBlogId, xmlRpcUrl);
+        Blog firstBlog = WordPress.wpDB.instantiateBlogByLocalId(blogLocalId);
+        new ApiHelper.RefreshBlogContentTask(firstBlog, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, false);
+    }
+
+    /**
+     * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
+     * Also when a user add a new self hosted blog, userBlogList contains only one element.
+     * TODO: when user's default blog autoselection is implemented, we should refresh the default one and
+     * not the first one.
+     * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
+     * user selects it.
+     */
+    private void refreshFirstBlogContent(List<Map<String, Object>> userBlogList) {
+        if (userBlogList != null && !userBlogList.isEmpty()) {
+            Map<String, Object> firstBlogMap = userBlogList.get(0);
+            refreshBlogContent(firstBlogMap);
         }
     }
 }
