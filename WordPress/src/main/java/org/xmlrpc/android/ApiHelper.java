@@ -24,7 +24,6 @@ import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.MapUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -185,17 +184,11 @@ public class ApiHelper {
     public static class RefreshBlogContentTask extends HelperAsyncTask<Boolean, Void, Boolean> {
         private static HashSet<BlogIdentifier> refreshedBlogs = new HashSet<BlogIdentifier>();
         private Blog mBlog;
-        private Context mContext;
         private BlogIdentifier mBlogIdentifier;
         private GenericCallback mCallback;
 
-        public RefreshBlogContentTask(Context context, Blog blog, GenericCallback callback) {
-            if (context == null || blog == null) {
-                cancel(true);
-                return;
-            }
-
-            if (!NetworkUtils.isNetworkAvailable(context)) {
+        public RefreshBlogContentTask(Blog blog, GenericCallback callback) {
+            if ( blog == null) {
                 cancel(true);
                 return;
             }
@@ -208,7 +201,6 @@ public class ApiHelper {
             }
 
             mBlog = blog;
-            mContext = context;
             mCallback = callback;
         }
 
@@ -261,7 +253,6 @@ public class ApiHelper {
                 // get theme post formats
                 List<Object> args = new Vector<Object>();
                 args.add(mBlog);
-                args.add(mContext);
                 new GetPostFormatsTask().execute(args);
             }
 
@@ -287,7 +278,7 @@ public class ApiHelper {
             Object[] commentParams = {mBlog.getRemoteBlogId(), mBlog.getUsername(),
                     mBlog.getPassword(), hPost};
             try {
-                ApiHelper.refreshComments(mContext, mBlog, commentParams);
+                ApiHelper.refreshComments(mBlog, commentParams);
             } catch (Exception e) {
                 setError(ErrorType.NETWORK_XMLRPC, e.getMessage(), e);
                 return false;
@@ -359,7 +350,7 @@ public class ApiHelper {
         return numDeleted;
     }
 
-    public static CommentList refreshComments(Context context, Blog blog, Object[] commentParams)
+    public static CommentList refreshComments(Blog blog, Object[] commentParams)
             throws XMLRPCException, IOException, XmlPullParserException {
         if (blog == null) {
             return null;
