@@ -24,6 +24,30 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
         super(username, password);
     }
 
+    public static int jsonErrorToErrorMsgId(JSONObject errorObject) {
+        // Default to generic error message
+        int errorMsgId = R.string.nux_cannot_log_in;
+
+        // Map REST errors to local error codes
+        if (errorObject != null) {
+            try {
+                String error = (String) errorObject.get("error");
+                String errorDescription = (String) errorObject.get("error_description");
+                if (error != null && error.equals("invalid_request")) {
+                    if (errorDescription.contains("Incorrect username or password.")) {
+                        errorMsgId = R.string.username_or_password_incorrect;
+                    }
+                    if (errorDescription.contains("This account has two step authentication enabled.")) {
+                        errorMsgId = R.string.account_two_step_auth_enabled;
+                    }
+                }
+            } catch (JSONException e) {
+                AppLog.e(T.NUX, e);
+            }
+        }
+        return errorMsgId;
+    }
+
     protected void init() {
         super.init();
         mSetupBlog.setSelfHostedURL(null);
@@ -65,28 +89,8 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
         }, new Oauth.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                // Default to generic error message
-                int errorMsgId = R.string.nux_cannot_log_in;
-
-                // Map REST errors to local error codes
                 JSONObject errorObject = VolleyUtils.volleyErrorToJSON(volleyError);
-                if (errorObject != null) {
-                    try {
-                        String error = (String) errorObject.get("error");
-                        String errorDescription = (String) errorObject.get("error_description");
-                        if (error != null && error.equals("invalid_request")) {
-                            if (errorDescription.contains("Incorrect username or password.")) {
-                                errorMsgId = R.string.username_or_password_incorrect;
-                            }
-                            if (errorDescription.contains("This account has two step authentication enabled.")) {
-                                errorMsgId = R.string.account_two_step_auth_enabled;
-                            }
-                        }
-                    } catch (JSONException e) {
-                        AppLog.e(T.NUX, e);
-                    }
-                }
-                mCallback.onError(errorMsgId, false, false);
+                mCallback.onError(jsonErrorToErrorMsgId(errorObject), false, false);
             }
         }));
     }
