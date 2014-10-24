@@ -343,7 +343,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-
         if (item.getItemId() == R.id.menu_edit_comment) {
             editComment();
             return true;
