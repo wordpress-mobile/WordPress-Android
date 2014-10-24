@@ -186,9 +186,6 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         }
     }
 
-    /*
-     * async purge
-     */
     public static void purgeAsync() {
         new Thread() {
             @Override

@@ -151,8 +151,8 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge table of unattached posts - no need to wrap this in a transaction since this
-     * is only called from ReaderDatabase.purge() which already creates a transaction
+     * purge table of unattached/older posts - no need to wrap this in a transaction since it's
+     * only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
         // delete posts in tbl_post_tags attached to tags that no longer exist
@@ -171,9 +171,10 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge excess posts in the passed tag
+     * purge excess posts in the passed tag - note we only keep as many posts as are returned
+     * by a single request
      */
-    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
+    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_REQUEST;
     private static int purgePostsForTag(SQLiteDatabase db, ReaderTag tag) {
         int numPosts = getNumPostsWithTag(tag);
         if (numPosts <= MAX_POSTS_PER_TAG) {
@@ -183,14 +184,16 @@ public class ReaderPostTable {
         int numToPurge = numPosts - MAX_POSTS_PER_TAG;
         String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
         String where = "pseudo_id IN ("
-                     + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
-                     + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
-                     + "  AND tbl_post_tags.tag_name=?1"
-                     + "  AND tbl_post_tags.tag_type=?2"
-                     + "  ORDER BY tbl_posts.timestamp"
-                     + "  LIMIT ?3"
-                     + ")";
-        return db.delete("tbl_post_tags", where, args);
+                + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
+                + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                + "  AND tbl_post_tags.tag_name=?1"
+                + "  AND tbl_post_tags.tag_type=?2"
+                + "  ORDER BY tbl_posts.timestamp"
+                + "  LIMIT ?3"
+                + ")";
+        int numDeleted = db.delete("tbl_post_tags", where, args);
+        AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
+        return numDeleted;
     }
 
     public static int getNumPostsInBlog(long blogId) {
