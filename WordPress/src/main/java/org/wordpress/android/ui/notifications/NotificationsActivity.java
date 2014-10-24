@@ -311,7 +311,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
     public void showWebViewActivityForUrl(String url) {
         if (isFinishing() || url == null)
             return;
-        WPWebViewActivity.openUrlByUsingMainWPCOMCredentials(this, url);
+        WPWebViewActivity.openURL(this, url);
     }
 
     @Override
