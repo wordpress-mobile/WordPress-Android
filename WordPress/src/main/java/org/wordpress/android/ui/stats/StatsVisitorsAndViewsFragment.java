@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
@@ -22,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.stats.model.SummaryModel;
+import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
@@ -32,6 +33,10 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.TypefaceCache;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -43,11 +48,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private LinearLayout mGraphContainer;
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
-    private VisitsModel mVisitsData;
-    private String[] mStatsDate;
-
     private RadioGroup mRadioGroup;
     private int mSelectedButtonIndex = 0;
+    private TextView mDateTextView;
+
+    private VisitsModel mVisitsData;
+    private String[] mStatsDate;
 
     OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
         OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
@@ -57,9 +63,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
         setRetainInstance(true);
 
-       // TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
-       // titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
 
+        mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         setupEmptyGraph();
 
@@ -138,13 +143,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return mapping;
     }
 
-    private SummaryModel[] getDataToShowOnGraph(VisitsModel visitsData) {
+    private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
         final JSONArray dataJSON = visitsData.getDataJSON();
         if (dataJSON == null) {
             return null;
         }
         if (dataJSON.length() == 0) {
-            return new SummaryModel[0];
+            return new VisitModel[0];
         }
 
         HashMap<String, Integer> columnsMapping = getDataModelColumnIndexes(visitsData);
@@ -157,25 +162,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         int numPoints = Math.min(getNumOfPoints(), dataJSON.length());
         int currentPointIndex = numPoints - 1;
-        SummaryModel[] summaryModels = new SummaryModel[numPoints];
+        VisitModel[] visitModels = new VisitModel[numPoints];
 
         for (int i = dataJSON.length() -1; i >= 0 && currentPointIndex >= 0; i--) {
             try {
                 JSONArray currentDayData = dataJSON.getJSONArray(i);
-                SummaryModel currentSummaryModel = new SummaryModel();
-                currentSummaryModel.setPeriod(currentDayData.getString(periodColumnIndex));
-                currentSummaryModel.setViews(currentDayData.getInt(viewsColumnIndex));
-                currentSummaryModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));
-                currentSummaryModel.setComments(currentDayData.getInt(commentsColumnIndex));
-                currentSummaryModel.setLikes(currentDayData.getInt(likesColumnIndex));
-                currentSummaryModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
-                summaryModels[currentPointIndex] = currentSummaryModel;
+                VisitModel currentVisitModel = new VisitModel();
+                currentVisitModel.setPeriod(currentDayData.getString(periodColumnIndex));
+                currentVisitModel.setViews(currentDayData.getInt(viewsColumnIndex));
+                currentVisitModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));
+                currentVisitModel.setComments(currentDayData.getInt(commentsColumnIndex));
+                currentVisitModel.setLikes(currentDayData.getInt(likesColumnIndex));
+                currentVisitModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
+                visitModels[currentPointIndex] = currentVisitModel;
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.STATS, "Cannot draw the bar at index " + currentPointIndex, e);
             }
             currentPointIndex--;
         }
-        return summaryModels;
+        return visitModels;
     }
 
     private void updateGraph(VisitsModel visitsData) {
@@ -192,7 +197,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             barToHighlight = mGraphView.getHighlightBar();
         }
 
-        final SummaryModel[] dataToShowOnGraph = getDataToShowOnGraph(visitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(visitsData);
 
         final String[] horLabels = new String[dataToShowOnGraph.length];
         mStatsDate = new String[dataToShowOnGraph.length];
@@ -247,7 +252,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (mGraphView != null) {
                 mGraphView.removeAllSeries();
                 mGraphView.addSeries(mCurrentSeriesOnScreen);
-                mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+               //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+                mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
                 mGraphView.setHorizontalLabels(horLabels);
                 mGraphView.setGestureListener(this);
             }
@@ -259,14 +265,61 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             }
         }
 
-        updateOverviewAreaBelowTheGraph(
-                barToHighlight != -1 ? barToHighlight : dataToShowOnGraph.length - 1 );
+        int barSelectedOnGraph = barToHighlight != -1 ? barToHighlight : dataToShowOnGraph.length - 1;
+        updateOverviewAreaBelowTheGraph(barSelectedOnGraph);
     }
 
+    //update the area right below the graph
     private void updateOverviewAreaBelowTheGraph(int itemPosition) {
-        final SummaryModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
-        //update the area below the graph
-        SummaryModel modelTapped = dataToShowOnGraph[itemPosition];
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
+
+        String date =  mStatsDate[itemPosition];
+        if (date == null) {
+            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
+            return;
+        }
+
+        switch (getTimeframe()) {
+            case DAY:
+                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "MMMM d"));
+                break;
+            case WEEK:
+                try {
+                    SimpleDateFormat sdf;
+                    Calendar c;
+                    final Date parsedDate;
+                    // first four digits are the year
+                    // followed by Wxx where xx is the month
+                    // followed by Wxx where xx is the day of the month
+                    // ex: 2013W07W22 = July 22, 2013
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    //Calculate the end of the week
+                    parsedDate = sdf.parse(date);
+                    c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    // first day of this week
+                    c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek() + 1 );
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    // last day of this week
+                    c.add(Calendar.DAY_OF_WEEK, + 6);
+                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
+                    mDateTextView.setText(startDateLabel + " - " + endDateLabel);
+                } catch (ParseException e) {
+                    AppLog.e(AppLog.T.UTILS, e);
+                    mDateTextView.setText("");
+                }
+                break;
+            case MONTH:
+                mDateTextView.setText(
+                        StatsUtils.msToString(StatsUtils.toMs(date), "MMMM")
+                );
+                break;
+            case YEAR:
+                mDateTextView.setText(StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy"));
+                break;
+        }
+
+        VisitModel modelTapped = dataToShowOnGraph[itemPosition];
         for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
             View o = mRadioGroup.getChildAt(i);
             if (o instanceof RadioButton) {
@@ -327,20 +380,23 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private int getNumOfPoints() {
+        return 7;
+        /*
         if (getTimeframe() == StatsTimeframe.DAY) {
             return 7;
         } else {
             return 12;
         }
+        */
     }
 
-    private int getNumOfHorizontalLabels(int numPoints) {
+   /* private int getNumOfHorizontalLabels(int numPoints) {
         if (getTimeframe() == StatsTimeframe.DAY) {
             return numPoints / 2;
         } else {
             return numPoints / 3;
         }
-    }
+    }*/
 
     @Override
     protected String getTitle() {
@@ -381,11 +437,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 if (mGraphView != null) {
                     mGraphView.resetHighlightBar();
                 }
+
                 updateGraph((VisitsModel)dataObj);
+
             }
             return;
         }
     };
+
+
+
 
     @Override
     public void onBarTapped(int tappedBar) {
@@ -393,42 +454,72 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         updateOverviewAreaBelowTheGraph(tappedBar);
 
-        // Update Stats here
-        String date =  mStatsDate[tappedBar];
-
-        if (date == null) {
-            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
-            return;
-        }
         //TODO: move this code in utility stats. See activity that has similar code.
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             return;
         }
 
+        // Update Stats here
+        String date =  mStatsDate[tappedBar];
+        if (date == null) {
+            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
+            return;
+        }
+
+        //Calculate the correct end date for the selected period
         String calculatedDate = null;
-        switch (getTimeframe()) {
-            case DAY:
-                //calculatedDate = StatsUtils.parseDate(date, "yyyy-MM-dd", "MMM d");
-                calculatedDate = date;
-                break;
-            case WEEK:
-                // first four digits are the year
-                // followed by Wxx where xx is the month
-                // followed by Wxx where xx is the day of the month
-                // ex: 2013W07W22 = July 22, 2013
-                calculatedDate = StatsUtils.parseDate(date, "yyyy'W'MM'W'dd", "yyyy-MM-dd");
-                break;
-            case MONTH:
-                calculatedDate = StatsUtils.parseDate(date, "yyyy-MM", "yyyy-MM-dd");
-                break;
-            case YEAR:
-                //calculatedDate = StatsUtils.parseDate(date, "yyyy-MM-dd", "yyyy-MM-dd");
-                calculatedDate = date;
-                break;
+
+        try {
+            SimpleDateFormat sdf;
+            Calendar c;
+            final Date parsedDate;
+            switch (getTimeframe()) {
+                case DAY:
+                    calculatedDate = date;
+                    break;
+                case WEEK:
+                    // first four digits are the year
+                    // followed by Wxx where xx is the month
+                    // followed by Wxx where xx is the day of the month
+                    // ex: 2013W07W22 = July 22, 2013
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    //Calculate the end of the week
+                    parsedDate = sdf.parse(date);
+                    c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    // first day of this week
+                    c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
+                    // last day of this week
+                    c.add(Calendar.DAY_OF_WEEK, +7);
+                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), "yyyy-MM-dd");
+                    break;
+                case MONTH:
+                    sdf = new SimpleDateFormat("yyyy-MM");
+                    //Calculate the end of the month
+                    parsedDate = sdf.parse(date);
+                    c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    // last day of this month
+                    c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), "yyyy-MM-dd");
+                    break;
+                case YEAR:
+                    sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    //Calculate the end of the week
+                    parsedDate = sdf.parse(date);
+                    c = Calendar.getInstance();
+                    c.setTime(parsedDate);
+                    c.set(Calendar.MONTH, Calendar.DECEMBER);
+                    c.set(Calendar.DAY_OF_MONTH, 31);
+                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), "yyyy-MM-dd");
+                    break;
+            }
+        } catch (ParseException e) {
+            AppLog.e(AppLog.T.UTILS, e);
         }
 
         if (calculatedDate == null) {
-            AppLog.w(AppLog.T.STATS, "A call to update stats is made but date received cannot be parsed!! " + date);
+            AppLog.w(AppLog.T.STATS, "A call to request new stats stats is made but date received cannot be parsed!! " + date);
             return;
         }
 
@@ -437,7 +528,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         Intent intent = new Intent(getActivity(), StatsService.class);
         intent.putExtra(StatsService.ARG_BLOG_ID, blogId);
         intent.putExtra(StatsService.ARG_PERIOD, getTimeframe());
-        intent.putExtra(StatsService.ARG_DATE, date);
+        intent.putExtra(StatsService.ARG_DATE, calculatedDate);
         intent.putExtra(StatsService.ARG_UPDATE_GRAPH, false);
         getActivity().startService(intent);
     }

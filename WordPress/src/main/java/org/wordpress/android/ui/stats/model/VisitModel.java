@@ -1,17 +1,13 @@
 package org.wordpress.android.ui.stats.model;
 
-import java.io.Serializable;
+public class VisitModel {
 
-public class SummaryModel implements Serializable {
-
-    private int followers;
     private int views;
     private int reblogs;
     private int likes;
     private int visitors;
     private int comments;
     private String period;
-    private String date;
     private String blogID;
 
     public String getBlogID() {
@@ -20,15 +16,6 @@ public class SummaryModel implements Serializable {
 
     public void setBlogID(String blogID) {
         this.blogID = blogID;
-    }
-
-
-    public int getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(int followers) {
-        this.followers = followers;
     }
 
     public int getViews() {
@@ -79,11 +66,4 @@ public class SummaryModel implements Serializable {
         this.period = period;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 }
