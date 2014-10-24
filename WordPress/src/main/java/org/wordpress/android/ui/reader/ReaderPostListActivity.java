@@ -127,9 +127,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
     protected void onStart() {
         super.onStart();
 
-        // at startup, purge the database of older data and perform an initial update - note that
-        // these booleans are static
-        if (!mHasPerformedPurge) {
+        // purge the database of older data at startup, but only if there's an active connection
+        // since we don't want to purge posts that the user would expect to see when offline
+        if (!mHasPerformedPurge && NetworkUtils.isNetworkAvailable(this)) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
