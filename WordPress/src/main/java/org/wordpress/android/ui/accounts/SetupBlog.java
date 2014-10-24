@@ -58,6 +58,14 @@ public class SetupBlog {
         return mXmlrpcUrl;
     }
 
+    public String getCustomXmlrpcUrl() {
+        if (mIsCustomUrl) {
+            return mXmlrpcUrl;
+        } else {
+            return null;
+        }
+    }
+
     public void setUsername(String username) {
         mUsername = username;
     }

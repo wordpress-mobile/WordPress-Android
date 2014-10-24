@@ -161,7 +161,7 @@ public class WPComLoginActivity extends Activity implements TextWatcher {
     private class SignInTask extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected void onPreExecute() {
-            mSignInButton.setText(getString(R.string.attempting_configure));
+            mSignInButton.setText(getString(R.string.signing_in));
             setEditTextAndButtonEnabled(false);
             mIsWpcomAccountWith2FA = false;
             mIsInvalidUsernameOrPassword = false;
