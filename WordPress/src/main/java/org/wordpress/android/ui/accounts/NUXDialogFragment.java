@@ -147,9 +147,9 @@ public class NUXDialogFragment extends DialogFragment {
                 break;
             case ACTION_OPEN_SUPPORT_CHAT:
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, arguments.getString(
-                        WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                        SignInFragment.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
-                        WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                        SignInFragment.ENTERED_USERNAME_KEY));
                 HelpshiftHelper.getInstance().showConversation(getActivity());
                 dismissAllowingStateLoss();
                 break;

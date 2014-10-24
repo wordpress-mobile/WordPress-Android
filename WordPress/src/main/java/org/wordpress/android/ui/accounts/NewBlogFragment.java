@@ -202,7 +202,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
                     String password = WordPressDB.decryptPassword(settings.getString(
                             WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-                    setupBlog.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
+                    BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, null, null,
+                            true, true);
                 } catch (JSONException e) {
                     AppLog.e(T.NUX, "Invalid JSON response from site/new", e);
                 }

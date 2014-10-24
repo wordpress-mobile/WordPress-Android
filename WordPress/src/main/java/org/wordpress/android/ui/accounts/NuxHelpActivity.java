@@ -58,9 +58,9 @@ public class NuxHelpActivity extends Activity {
                     // This could be moved to WelcomeFragmentSignIn directly, but better to have all Helpshift
                     // related code at the same place (Note: value can be null).
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_URL, extras.getString(
-                            WelcomeFragmentSignIn.ENTERED_URL_KEY));
+                            SignInFragment.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
-                            WelcomeFragmentSignIn.ENTERED_USERNAME_KEY));
+                            SignInFragment.ENTERED_USERNAME_KEY));
                 }
                 HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
             }

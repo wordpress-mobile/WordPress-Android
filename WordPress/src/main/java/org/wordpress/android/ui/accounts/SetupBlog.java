@@ -128,7 +128,8 @@ public class SetupBlog {
             if (userBlogs == null) {
                 // Could happen if the returned server response is truncated
                 mErrorMsgId = R.string.xmlrpc_error;
-                return null;
+                callback.onError(mErrorMsgId, false, false);
+                return;
             }
             Arrays.sort(userBlogs, BlogUtils.BlogNameComparator);
             List<Map<String, Object>> userBlogList = new ArrayList<Map<String, Object>>();
@@ -157,21 +158,24 @@ public class SetupBlog {
             AppLog.e(T.NUX, "Exception received from XMLRPC call wp.getUsersBlogs", e);
             mErrorMsgId = R.string.no_site_error;
         }
-        return null;
+        callback.onError(mErrorMsgId, isHttpAuthRequired(), isErroneousSslCertificates());
     }
 
-    public List<Map<String, Object>> getBlogList() {
+    public void getBlogList(Callback callback) {
+        boolean isWPCom = false;
         if (mSelfHostedURL != null && mSelfHostedURL.length() != 0) {
             mXmlrpcUrl = getSelfHostedXmlrpcUrl(mSelfHostedURL);
         } else {
             mXmlrpcUrl = Constants.wpcomXMLRPCURL;
+            isWPCom = true;
         }
 
         if (mXmlrpcUrl == null) {
             if (!mHttpAuthRequired && mErrorMsgId == 0) {
                 mErrorMsgId = R.string.no_site_error;
             }
-            return null;
+            callback.onError(mErrorMsgId, isHttpAuthRequired(), isErroneousSslCertificates());
+            return;
         }
 
         // Validate the URL found before calling the client. Prevent a crash that can occur
@@ -179,10 +183,10 @@ public class SetupBlog {
         URI uri;
         try {
             uri = URI.create(mXmlrpcUrl);
-            return getUsersBlogsRequest(uri);
+            getUsersBlogsRequest(uri, isWPCom, callback);
         } catch (Exception e) {
             mErrorMsgId = R.string.no_site_error;
-            return null;
+            callback.onError(mErrorMsgId, isHttpAuthRequired(), isErroneousSslCertificates());
         }
     }
 
@@ -329,105 +333,5 @@ public class SetupBlog {
         }
 
         return xmlrpcUrl;
-    }
-
-    /**
-     * Add a new blog or update a blog name in local DB.
-     *
-     * @return true if a new blog has been added or an old blog has been updated.
-     * Return false if no change has been made.
-     */
-    public boolean addOrUpdateBlog(String blogName, String xmlRpcUrl, String homeUrl, String blogId, String username,
-                                   String password, boolean isAdmin) {
-        Blog blog;
-        if (!WordPress.wpDB.isBlogInDatabase(Integer.parseInt(blogId), xmlRpcUrl)) {
-            // The blog isn't in the app, so let's create it
-            blog = new Blog(xmlRpcUrl, username, password);
-            blog.setHomeURL(homeUrl);
-            blog.setHttpuser(mHttpUsername);
-            blog.setHttppassword(mHttpPassword);
-            blog.setBlogName(blogName);
-            // deprecated
-            blog.setImagePlacement("");
-            blog.setFullSizeImage(false);
-            blog.setMaxImageWidth(DEFAULT_IMAGE_SIZE);
-            // deprecated
-            blog.setMaxImageWidthId(0);
-            blog.setRemoteBlogId(Integer.parseInt(blogId));
-            blog.setDotcomFlag(xmlRpcUrl.contains("wordpress.com"));
-            // assigned later in getOptions call
-            blog.setWpVersion("");
-            blog.setAdmin(isAdmin);
-            WordPress.wpDB.saveBlog(blog);
-            return true;
-        } else {
-            // Update blog name
-            int localTableBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogIdAndXmlRpcUrl(
-                    Integer.parseInt(blogId), xmlRpcUrl);
-            try {
-                blog = WordPress.wpDB.instantiateBlogByLocalId(localTableBlogId);
-                if (!blogName.equals(blog.getBlogName())) {
-                    blog.setBlogName(blogName);
-                    WordPress.wpDB.saveBlog(blog);
-                    return true;
-                }
-            } catch (Exception e) {
-                AppLog.e(T.NUX, "localTableBlogId: " + localTableBlogId + " not found");
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Remove blogs that are not in the list and add others
-     * TODO: it's horribly slow due to datastructures used (List of Map), We should replace
-     * that by a HashSet of a specialized Blog class (that supports comparison)
-     *
-     * @return true if a change has been made (new blog added, old blog updated, blog deleted).
-     */
-    public boolean syncBlogs(Context context, List<Map<String, Object>> newBlogList) {
-        boolean retValue;
-
-        // Add all blogs from blogList
-        retValue = addBlogs(newBlogList);
-
-        // Delete blogs if not in blogList
-        List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
-        Set<String> newBlogURLs = new HashSet<String>();
-        for (Map<String, Object> blog : newBlogList) {
-            newBlogURLs.add(blog.get("xmlrpc").toString() + blog.get("blogid").toString());
-        }
-        for (Map<String, Object> blog : allBlogs) {
-            if (!newBlogURLs.contains(blog.get("url").toString() + blog.get("blogId"))) {
-                WordPress.wpDB.deleteAccount(context, Integer.parseInt(blog.get("id").toString()));
-                retValue = true;
-            }
-        }
-        return retValue;
-    }
-
-    /**
-     * Add selected blog(s) to the database.
-     *
-     * @return true if a change has been made (new blog added or old blog updated).
-     */
-    public boolean addBlogs(List<Map<String, Object>> blogList) {
-        boolean retValue = false;
-        for (int i = 0; i < blogList.size(); i++) {
-            Map<String, Object> blogMap = blogList.get(i);
-            String blogName = StringUtils.unescapeHTML(blogMap.get("blogName").toString());
-            String xmlrpcUrl = (mIsCustomUrl) ? mXmlrpcUrl : blogMap.get("xmlrpc").toString();
-            if (!UrlUtils.isValidUrlAndHostNotNull(xmlrpcUrl)) {
-                // xmlrpcUrl is invalid, set the error message
-                mErrorMsgId = R.string.invalid_xmlrpc_url;
-                AppLog.e(T.NUX, "Invalid XMLRPC url: " + xmlrpcUrl);
-                return retValue;
-            }
-            String homeUrl = blogMap.get("url").toString();
-            String blogId = blogMap.get("blogid").toString();
-            boolean isAdmin = MapUtils.getMapBool(blogMap, "isAdmin");
-            retValue |= addOrUpdateBlog(blogName, xmlrpcUrl, homeUrl, blogId, mUsername, mPassword, isAdmin);
-        }
-        return retValue;
     }
 }
