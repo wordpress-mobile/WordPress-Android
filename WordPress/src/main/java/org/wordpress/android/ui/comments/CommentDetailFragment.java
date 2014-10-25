@@ -10,13 +10,14 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.Comment;
@@ -36,8 +38,8 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
-import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
+import org.wordpress.android.ui.comments.CommentActions.OnCommentChangeListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -49,15 +51,14 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
@@ -90,8 +91,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
     private TextView mBtnSpamComment;
     private TextView mBtnTrashComment;
-    private TextView mBtnEditComment;
-    private TextView mBtnMore;
 
     private String mRestoredReplyText;
 
@@ -158,6 +157,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
             setComment(localBlogId, commentId);
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -185,12 +186,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateTextView = (TextView)mLayoutButtons.findViewById(R.id.btn_moderate_text);
         mBtnSpamComment = (TextView) mLayoutButtons.findViewById(R.id.text_btn_spam);
         mBtnTrashComment = (TextView) mLayoutButtons.findViewById(R.id.image_trash_comment);
-        mBtnEditComment = (TextView) mLayoutButtons.findViewById(R.id.image_edit_comment);
-        mBtnMore = (TextView)mLayoutButtons.findViewById(R.id.text_btn_more);
 
         setTextDrawable(mBtnSpamComment, R.drawable.ic_action_spam);
         setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
-        setTextDrawable(mBtnEditComment, R.drawable.ic_action_edit);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
         mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
@@ -201,7 +199,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // hide moderation buttons until updateModerationButtons() is called
         mLayoutButtons.setVisibility(View.GONE);
-        mBtnEditComment.setVisibility(View.GONE);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         mTxtContent.setLinksClickable(true);
@@ -236,14 +233,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editComment();
-            }
-        });
-
-
         mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,44 +247,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
-        mBtnMore.setOnClickListener(mMoreBtnClickListener);
-
         return view;
     }
-
-    private final View.OnClickListener mMoreBtnClickListener = new View.OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            PopupMenu popup = new PopupMenu(getActivity(), mBtnMore);
-
-            if (canMarkAsSpam() && mBtnSpamComment.getVisibility() == View.GONE) {
-                final MenuItem menuItem = popup.getMenu().add(mBtnSpamComment.getText());
-                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        moderateComment(CommentStatus.SPAM);
-                        return true;
-                    }
-                });
-            }
-
-            if (canEdit() && mBtnEditComment.getVisibility() == View.GONE) {
-                MenuItem menuItem = popup.getMenu().add(getString(R.string.mnu_comment_edit));
-                menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        editComment();
-                        return true;
-                    }
-                });
-            }
-
-            if (popup.getMenu().size() > 0) {
-                popup.show();
-            }
-        }
-    };
 
     void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
@@ -376,6 +329,26 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             if (mOnCommentChangeListener != null)
                 mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.comment_detail, menu);
+        if (!canEdit()) {
+            menu.removeItem(R.id.menu_edit_comment);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == R.id.menu_edit_comment) {
+            editComment();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean hasComment() {
@@ -527,6 +500,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 setShouldFocusReplyField(false);
             }
         }
+
+        getFragmentManager().invalidateOptionsMenu();
     }
 
     /*
@@ -770,10 +745,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 break;
         }
 
-        int commentActionCount = 0;
-
         if (mNote != null && canLike()) {
-            commentActionCount++;
             mBtnLikeComment.setVisibility(View.VISIBLE);
 
             toggleLikeButton(mNote.hasLikedComment());
@@ -795,7 +767,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canModerate()) {
-            commentActionCount++;
             setModerateButtonForStatus(mComment.getStatusEnum());
             mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -821,7 +792,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canMarkAsSpam()) {
-            commentActionCount++;
             mBtnSpamComment.setVisibility(View.VISIBLE);
             if (mComment.getStatusEnum() == CommentStatus.SPAM) {
                 mBtnSpamComment.setText(R.string.mnu_comment_unspam);
@@ -833,32 +803,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canTrash()) {
-            commentActionCount++;
             mBtnTrashComment.setVisibility(View.VISIBLE);
         } else {
             mBtnTrashComment.setVisibility(View.GONE);
-        }
-
-        if (canEdit()) {
-            commentActionCount++;
-            mBtnEditComment.setVisibility(View.VISIBLE);
-        } else {
-            mBtnEditComment.setVisibility(View.GONE);
-        }
-
-        if (commentActionCount > 3) {
-            // Hide buttons that will show in the overflow menu
-            if (commentActionCount >= 4 && canEdit()) {
-                mBtnEditComment.setVisibility(View.GONE);
-            }
-
-            if (commentActionCount == 5 && canMarkAsSpam()) {
-                mBtnSpamComment.setVisibility(View.GONE);
-            }
-
-            mBtnMore.setVisibility(View.VISIBLE);
-        } else {
-            mBtnMore.setVisibility(View.GONE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
@@ -953,6 +900,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int localBlogId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(mRemoteBlogId);
 
         setComment(localBlogId, note.buildComment());
+
+        getFragmentManager().invalidateOptionsMenu();
     }
 
     // Like or unlike a comment via the REST API
