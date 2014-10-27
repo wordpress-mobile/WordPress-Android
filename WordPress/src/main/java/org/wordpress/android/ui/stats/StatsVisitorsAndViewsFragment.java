@@ -123,24 +123,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return;
 
         mSelectedButtonIndex = index;
-        updateGraph(mVisitsData);
-    }
 
-    private HashMap<String, Integer> getDataModelColumnIndexes(VisitsModel visitsData) {
-        HashMap<String, Integer> mapping = new HashMap<String, Integer>(6);
-        final JSONArray fieldsJSON = visitsData.getFieldsJSON();
-        if (visitsData == null || fieldsJSON == null) {
-            return mapping;
+
+        // load the current highlighted bar position
+        int barToHighlight = -1;
+        if (mGraphView != null){
+            barToHighlight = mGraphView.getHighlightBar();
         }
-        try {
-            for (int i = 0; i < fieldsJSON.length(); i++) {
-                final String field = fieldsJSON.getString(i);
-                mapping.put(field, new Integer(i));
-            }
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.STATS, "Cannot read the field indexes from the JSON response", e);
-        }
-        return mapping;
+        updateGraph(mVisitsData, barToHighlight);
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
@@ -152,13 +142,28 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             return new VisitModel[0];
         }
 
-        HashMap<String, Integer> columnsMapping = getDataModelColumnIndexes(visitsData);
-        int viewsColumnIndex = columnsMapping.get(OverviewLabel.VIEWS.getRestApiFieldName()).intValue();
-        int visitorsColumnIndex = columnsMapping.get(OverviewLabel.VISITORS.getRestApiFieldName()).intValue();
-        int likesColumnIndex = columnsMapping.get(OverviewLabel.LIKES.getRestApiFieldName()).intValue();
-        int reblogsColumnIndex = columnsMapping.get(OverviewLabel.REBLOGS.getRestApiFieldName()).intValue();
-        int commentsColumnIndex = columnsMapping.get(OverviewLabel.COMMENTS.getRestApiFieldName()).intValue();
-        int periodColumnIndex = columnsMapping.get("period").intValue();
+        // Read the position/index of each field in the response
+        HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(6);
+        final JSONArray fieldsJSON = visitsData.getFieldsJSON();
+        if (visitsData == null || fieldsJSON == null) {
+            return new VisitModel[0];
+        }
+        try {
+            for (int i = 0; i < fieldsJSON.length(); i++) {
+                final String field = fieldsJSON.getString(i);
+                columnsMapping.put(field, i);
+            }
+        } catch (JSONException e) {
+            AppLog.e(AppLog.T.STATS, "Cannot read the fields indexes from the JSON response", e);
+            return new VisitModel[0];
+        }
+
+        int viewsColumnIndex = columnsMapping.get(OverviewLabel.VIEWS.getRestApiFieldName());
+        int visitorsColumnIndex = columnsMapping.get(OverviewLabel.VISITORS.getRestApiFieldName());
+        int likesColumnIndex = columnsMapping.get(OverviewLabel.LIKES.getRestApiFieldName());
+        int reblogsColumnIndex = columnsMapping.get(OverviewLabel.REBLOGS.getRestApiFieldName());
+        int commentsColumnIndex = columnsMapping.get(OverviewLabel.COMMENTS.getRestApiFieldName());
+        int periodColumnIndex = columnsMapping.get("period");
 
         int numPoints = Math.min(getNumOfPoints(), dataJSON.length());
         int currentPointIndex = numPoints - 1;
@@ -183,18 +188,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         return visitModels;
     }
 
-    private void updateGraph(VisitsModel visitsData) {
+    private void updateGraph(VisitsModel visitsData, int barToHighlight) {
         mVisitsData = visitsData;
         final JSONArray dataJSON = visitsData.getDataJSON();
         if (dataJSON == null || dataJSON.length() == 0) {
             setupEmptyGraph();
             return;
-        }
-
-        // keep a reference to the bar to hightlight in the graph.
-        int barToHighlight = -1;
-        if (mGraphView != null){
-            barToHighlight = mGraphView.getHighlightBar();
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(visitsData);
@@ -204,10 +203,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
         boolean isEmptyGraph = true;
+        OverviewLabel selectedStatsType = overviewItems[mSelectedButtonIndex];
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
-            switch(overviewItems[mSelectedButtonIndex]) {
+            switch(selectedStatsType) {
                 case VIEWS:
                     currentItemValue = dataToShowOnGraph[i].getViews();
                     break;
@@ -256,12 +256,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
                 mGraphView.setHorizontalLabels(horLabels);
                 mGraphView.setGestureListener(this);
-            }
 
-            if (barToHighlight != -1) {
-                mGraphView.highlightBar(barToHighlight);
-            } else {
-                mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+                if (barToHighlight != -1) {
+                    mGraphView.highlightBar(barToHighlight);
+                } else {
+                    mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+                }
             }
         }
 
@@ -275,7 +275,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         String date =  mStatsDate[itemPosition];
         if (date == null) {
-            AppLog.w(AppLog.T.STATS, "A call to update stats is made but a null date is received!!");
+            AppLog.w(AppLog.T.STATS, "Cannot update the area below the graph if a null date is passed!!");
             return;
         }
 
@@ -298,7 +298,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c = Calendar.getInstance();
                     c.setTime(parsedDate);
                     // first day of this week
-                    c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek() + 1 );
+                    c.setFirstDayOfWeek(Calendar.MONDAY);
+                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY );
                     String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), "MMMM dd");
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, + 6);
@@ -425,22 +426,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 //TODO: show the error on the section ???
                 return;
             }
-            //TODO: check period and blogID
-            final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
 
-           /* if (sectionToUpdate == StatsService.StatsSectionEnum.SUMMARY) {
-
-            }*/
-
-            if (sectionToUpdate == StatsService.StatsSectionEnum.VISITS) {
-                // Reset the bar to highlight
-                if (mGraphView != null) {
-                    mGraphView.resetHighlightBar();
-                }
-
-                updateGraph((VisitsModel)dataObj);
-
+            // Reset the bar to highlight
+            if (mGraphView != null) {
+                mGraphView.resetHighlightBar();
             }
+            updateGraph((VisitsModel)dataObj, -1);
             return;
         }
     };
@@ -450,7 +441,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     @Override
     public void onBarTapped(int tappedBar) {
-        AppLog.e(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
+        AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
 
         updateOverviewAreaBelowTheGraph(tappedBar);
 
@@ -471,7 +462,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         try {
             SimpleDateFormat sdf;
-            Calendar c;
+            Calendar c = Calendar.getInstance();
+            c.setFirstDayOfWeek(Calendar.MONDAY);
             final Date parsedDate;
             switch (getTimeframe()) {
                 case DAY:
@@ -485,19 +477,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
                     //Calculate the end of the week
                     parsedDate = sdf.parse(date);
-                    c = Calendar.getInstance();
                     c.setTime(parsedDate);
                     // first day of this week
-                    c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
+                    c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     // last day of this week
-                    c.add(Calendar.DAY_OF_WEEK, +7);
+                    c.add(Calendar.DAY_OF_WEEK, +6);
                     calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), "yyyy-MM-dd");
                     break;
                 case MONTH:
                     sdf = new SimpleDateFormat("yyyy-MM");
                     //Calculate the end of the month
                     parsedDate = sdf.parse(date);
-                    c = Calendar.getInstance();
                     c.setTime(parsedDate);
                     // last day of this month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -507,7 +497,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     sdf = new SimpleDateFormat("yyyy-MM-dd");
                     //Calculate the end of the week
                     parsedDate = sdf.parse(date);
-                    c = Calendar.getInstance();
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
