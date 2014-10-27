@@ -201,7 +201,7 @@ public class NotificationsListFragment extends ListFragment implements Bucket.Li
     }
 
     private void restoreListScrollPosition() {
-        if (getListView() != null && mRestoredListPosition != ListView.INVALID_POSITION
+        if (isAdded() && getListView() != null && mRestoredListPosition != ListView.INVALID_POSITION
                 && mRestoredListPosition < mNotesAdapter.getCount()) {
             // Restore scroll position in list
             getListView().setSelectionFromTop(mRestoredListPosition, 0);

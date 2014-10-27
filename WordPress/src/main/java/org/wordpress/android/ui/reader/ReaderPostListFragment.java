@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -1243,16 +1242,7 @@ public class ReaderPostListFragment extends Fragment
                         @Override
                         public void onBlogInfoFailed() {
                             if (isAdded()) {
-                                // blog couldn't be shown, alert user then back out after a brief delay
-                                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAdded()) {
-                                            getActivity().onBackPressed();
-                                        }
-                                    }
-                                }, 1000);
+                                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
                             }
                         }
                     }
