@@ -24,7 +24,7 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
         super(username, password);
     }
 
-    public static int jsonErrorToErrorMsgId(JSONObject errorObject) {
+    public static int restLoginErrorToMsgId(JSONObject errorObject) {
         // Default to generic error message
         int errorMsgId = R.string.nux_cannot_log_in;
 
@@ -90,7 +90,7 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 JSONObject errorObject = VolleyUtils.volleyErrorToJSON(volleyError);
-                mCallback.onError(jsonErrorToErrorMsgId(errorObject), false, false);
+                mCallback.onError(restLoginErrorToMsgId(errorObject), false, false);
             }
         }));
     }
