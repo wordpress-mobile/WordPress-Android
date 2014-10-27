@@ -71,7 +71,7 @@ public class SignInDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().getWindow().setBackgroundDrawable(getResources().getDrawable(R.color.nux_alert_bg));
-        View v = inflater.inflate(R.layout.nux_dialog_fragment, container, false);
+        View v = inflater.inflate(R.layout.signin_dialog_fragment, container, false);
 
         mImageView = (ImageView) v.findViewById(R.id.nux_dialog_image);
         mTitleTextView = (WPTextView) v.findViewById(R.id.nux_dialog_title);

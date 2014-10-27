@@ -45,7 +45,7 @@ public class HelpActivity extends Activity {
     }
 
     private void initHelpshiftLayout() {
-        setContentView(R.layout.activity_nux_help_with_helpshift);
+        setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
         version.setText(getString(R.string.version) + " " + WordPress.versionName);
@@ -76,7 +76,7 @@ public class HelpActivity extends Activity {
     }
 
     private void initDefaultLayout() {
-        setContentView(R.layout.activity_nux_help);
+        setContentView(R.layout.help_activity);
 
         WPTextView helpCenterButton = (WPTextView) findViewById(R.id.help_button);
         helpCenterButton.setOnClickListener(new OnClickListener() {

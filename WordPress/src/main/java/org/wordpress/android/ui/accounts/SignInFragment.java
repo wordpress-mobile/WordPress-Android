@@ -99,7 +99,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.nux_fragment_welcome, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.signin_fragment, container, false);
         mUrlButtonLayout = (RelativeLayout) rootView.findViewById(R.id.url_button_layout);
         mUsernameEditText = (EditText) rootView.findViewById(R.id.nux_username);
         mUsernameEditText.addTextChangedListener(this);
