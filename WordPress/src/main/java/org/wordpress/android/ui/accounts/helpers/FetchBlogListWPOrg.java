@@ -30,7 +30,6 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
     private boolean mHttpAuthRequired;
     private boolean mErroneousSslCertificate;
     private int mErrorMsgId;
-    private boolean mForcedXmlrpcUrl;
 
     public FetchBlogListWPOrg(String username, String password, String selfHostedUrl) {
         super(username, password);
