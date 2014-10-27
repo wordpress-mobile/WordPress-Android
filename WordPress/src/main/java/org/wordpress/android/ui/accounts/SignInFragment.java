@@ -34,18 +34,22 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.LoginAndFetchBlogListWPOrg;
-import org.wordpress.android.networking.LoginAndFetchBlogListAbstract;
-import org.wordpress.android.networking.LoginAndFetchBlogListAbstract.Callback;
-import org.wordpress.android.networking.LoginAndFetchBlogListWPCom;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
+import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
+import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
+import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
-import org.wordpress.android.util.*;
+import org.wordpress.android.util.ABTestingUtils;
 import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.xmlrpc.android.ApiHelper;
@@ -290,7 +294,7 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
         }
     }
 
-    private Callback signInCallback = new Callback() {
+    private Callback mFecthBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
             if (userBlogList != null) {
@@ -355,26 +359,44 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
         }
     };
 
+    private void signInAndFetchBlogListWPCom() {
+        LoginWPCom login = new LoginWPCom(mUsername, mPassword);
+        login.execute(new LoginAbstract.Callback() {
+            @Override
+            public void onSuccess() {
+                FetchBlogListWPCom fetchBlogListWPCom = new FetchBlogListWPCom();
+                fetchBlogListWPCom.execute(mFecthBlogListCallback);
+            }
+
+            @Override
+            public void onError(int errorMessageId, boolean httpAuthRequired, boolean erroneousSslCertificate) {
+                mFecthBlogListCallback.onError(errorMessageId, httpAuthRequired, erroneousSslCertificate);
+            }
+        });
+    }
+
+    private void signInAndFetchBlogListWPOrg() {
+        String url = EditTextUtils.getText(mUrlEditText).trim();
+        FetchBlogListWPOrg fetchBlogListWPOrg = new FetchBlogListWPOrg(mUsername, mPassword, url);
+        if (mHttpUsername != null && mHttpPassword != null) {
+            fetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
+        }
+        fetchBlogListWPOrg.execute(mFecthBlogListCallback);
+    }
+
     private void signIn() {
         if (!isUserDataValid()) {
             return;
         }
-        LoginAndFetchBlogListAbstract loginAndFetchBlogList;
         mUsername = EditTextUtils.getText(mUsernameEditText).trim();
         mPassword = EditTextUtils.getText(mPasswordEditText).trim();
         if (isWPComLogin()) {
-            loginAndFetchBlogList = new LoginAndFetchBlogListWPCom(mUsername, mPassword);
+            startProgress(getString(R.string.connecting_wpcom));
+            signInAndFetchBlogListWPCom();
         } else {
-            String url = EditTextUtils.getText(mUrlEditText).trim();
-            LoginAndFetchBlogListWPOrg loginAndFetchBlogListWPOrg = new LoginAndFetchBlogListWPOrg(mUsername, mPassword,
-                    url);
-            if (mHttpUsername != null && mHttpPassword != null) {
-                loginAndFetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
-            }
-            loginAndFetchBlogList = loginAndFetchBlogListWPOrg;
+            startProgress(getString(R.string.signing_in));
+            signInAndFetchBlogListWPOrg();
         }
-        startProgress(isWPComLogin() ? getString(R.string.signing_in) : getString(R.string.connecting_wpcom));
-        loginAndFetchBlogList.execute(signInCallback);
     }
 
     private OnClickListener mSignInClickListener = new OnClickListener() {

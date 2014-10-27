@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -191,7 +192,6 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     return;
                 }
                 endProgress();
-                SetupBlog setupBlog = new SetupBlog();
                 try {
                     JSONObject details = createSiteResponse.getJSONObject("blog_details");
                     String blogName = details.getString("blogname");
