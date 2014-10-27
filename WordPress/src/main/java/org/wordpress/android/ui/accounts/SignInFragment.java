@@ -64,7 +64,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignInFragment extends NewAccountAbstractPageFragment implements TextWatcher {
+public class SignInFragment extends AbstractFragment implements TextWatcher {
     private static final String DOT_COM_BASE_URL = "https://wordpress.com";
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
@@ -169,7 +169,7 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
         OnClickListener infoButtonListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
                 // Used to pass data to an eventual support service
                 newAccountIntent.putExtra(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
                 newAccountIntent.putExtra(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
@@ -233,7 +233,7 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
             Intent newAccountIntent = new Intent(getActivity(), NewAccountActivity.class);
             Activity activity = getActivity();
             if (activity != null) {
-                activity.startActivityForResult(newAccountIntent, WelcomeActivity.CREATE_ACCOUNT_REQUEST);
+                activity.startActivityForResult(newAccountIntent, SignInActivity.CREATE_ACCOUNT_REQUEST);
             }
         }
     };
@@ -546,7 +546,7 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
                     String lastFailureChainDesc = "URL: " + EditTextUtils.getText(mUrlEditText).trim() + "<br/><br/>"
                                 + selfSignedSSLCertsManager.getLastFailureChainDescription().replaceAll("\n", "<br/>");
                     intent.putExtra(SSLCertsViewActivity.CERT_DETAILS_KEYS, lastFailureChainDesc);
-                    getActivity().startActivityForResult(intent, WelcomeActivity.SHOW_CERT_DETAILS);
+                    getActivity().startActivityForResult(intent, SignInActivity.SHOW_CERT_DETAILS);
                 } catch (GeneralSecurityException e) {
                     AppLog.e(T.NUX, e);
                 } catch (IOException e) {
@@ -592,29 +592,29 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
     protected void showInvalidUsernameOrPasswordDialog() {
         // Show a dialog
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert;
+        SignInDialogFragment nuxAlert;
         if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             // create a 3 buttons dialog ("Contact us", "Forget your password?" and "Cancel")
-            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                     getString(org.wordpress.android.R.string.username_or_password_incorrect),
                     org.wordpress.android.R.drawable.noticon_alert_big, 3, getString(
                             org.wordpress.android.R.string.cancel), getString(
                             org.wordpress.android.R.string.forgot_password), getString(
-                            org.wordpress.android.R.string.contact_us), NUXDialogFragment.ACTION_OPEN_URL,
-                    NUXDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
+                            org.wordpress.android.R.string.contact_us), SignInDialogFragment.ACTION_OPEN_URL,
+                    SignInDialogFragment.ACTION_OPEN_SUPPORT_CHAT);
         } else {
             // create a 2 buttons dialog ("Forget your password?" and "Cancel")
-            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                     getString(org.wordpress.android.R.string.username_or_password_incorrect),
                     org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
                             org.wordpress.android.R.string.cancel), getString(
-                            org.wordpress.android.R.string.forgot_password), null, NUXDialogFragment.ACTION_OPEN_URL,
+                            org.wordpress.android.R.string.forgot_password), null, SignInDialogFragment.ACTION_OPEN_URL,
                     0);
         }
 
         // Put entered url and entered username args, that could help our support team
         Bundle bundle = nuxAlert.getArguments();
-        bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
+        bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM, getForgotPasswordURL());
         bundle.putString(ENTERED_URL_KEY, EditTextUtils.getText(mUrlEditText));
         bundle.putString(ENTERED_USERNAME_KEY, EditTextUtils.getText(mUsernameEditText));
         nuxAlert.setArguments(bundle);
@@ -638,15 +638,15 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
 
     protected void signInError(int messageId) {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert;
+        SignInDialogFragment nuxAlert;
         if (messageId == org.wordpress.android.R.string.account_two_step_auth_enabled) {
-            nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+            nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                     getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, 2, getString(
                             org.wordpress.android.R.string.cancel), getString(
                             org.wordpress.android.R.string.visit_security_settings), "",
-                    NUXDialogFragment.ACTION_OPEN_URL, 0);
+                    SignInDialogFragment.ACTION_OPEN_URL, 0);
             Bundle bundle = nuxAlert.getArguments();
-            bundle.putString(NUXDialogFragment.ARG_OPEN_URL_PARAM,
+            bundle.putString(SignInDialogFragment.ARG_OPEN_URL_PARAM,
                     "https://wordpress.com/settings/security/?ssl=forced");
             nuxAlert.setArguments(bundle);
         } else {
@@ -658,9 +658,9 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
                 endProgress();
                 return;
             } else {
-                nuxAlert = NUXDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
+                nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                         getString(messageId), org.wordpress.android.R.drawable.noticon_alert_big, getString(
-                        org.wordpress.android.R.string.nux_tap_continue));
+                                org.wordpress.android.R.string.nux_tap_continue));
             }
         }
         ft.add(nuxAlert, "alert");

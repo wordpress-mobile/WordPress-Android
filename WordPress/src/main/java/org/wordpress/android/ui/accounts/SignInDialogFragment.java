@@ -14,7 +14,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NUXDialogFragment extends DialogFragment {
+public class SignInDialogFragment extends DialogFragment {
     private static String ARG_TITLE = "title";
     private static String ARG_DESCRIPTION = "message";
     private static String ARG_FOOTER = "footer";
@@ -38,19 +38,19 @@ public class NUXDialogFragment extends DialogFragment {
     public static final int ACTION_OPEN_URL = 2;
     public static final int ACTION_OPEN_SUPPORT_CHAT = 3;
 
-    public NUXDialogFragment() {
+    public SignInDialogFragment() {
         // Empty constructor required for DialogFragment
     }
 
-    public static NUXDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
+    public static SignInDialogFragment newInstance(String title, String message, int imageSource, String buttonLabel) {
         return newInstance(title, message, imageSource, 1, buttonLabel, "", "", 0, 0);
     }
 
-    public static NUXDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
+    public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
                                                 String firstButtonLabel, String secondButtonLabel,
                                                 String thirdButtonLabel, int secondButtonAction,
                                                 int thirdButtonAction) {
-        NUXDialogFragment adf = new NUXDialogFragment();
+        SignInDialogFragment adf = new SignInDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(ARG_TITLE, title);
         bundle.putString(ARG_DESCRIPTION, message);

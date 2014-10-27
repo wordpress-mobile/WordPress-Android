@@ -29,7 +29,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
+public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private EditText mSiteUrlTextField;
     private EditText mSiteTitleTextField;
     private WPTextView mSignupButton;

@@ -9,7 +9,7 @@ import android.view.Window;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityId;
 
-public class WelcomeActivity extends Activity {
+public class SignInActivity extends Activity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
     public static final int CREATE_ACCOUNT_REQUEST = 3;

@@ -30,7 +30,7 @@ import org.wordpress.android.util.AppLog.T;
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
  */
-public abstract class NewAccountAbstractPageFragment extends Fragment {
+public abstract class AbstractFragment extends Fragment {
     protected static RequestQueue requestQueue;
     protected static RestClientUtils mRestClientUtils;
     protected ConnectivityManager mSystemService;
@@ -129,7 +129,7 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
             return;
         }
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        NUXDialogFragment nuxAlert = NUXDialogFragment.newInstance(getString(R.string.error), message,
+        SignInDialogFragment nuxAlert = SignInDialogFragment.newInstance(getString(R.string.error), message,
                 R.drawable.noticon_alert_big, getString(R.string.nux_tap_continue));
         ft.add(nuxAlert, "alert");
         ft.commitAllowingStateLoss();

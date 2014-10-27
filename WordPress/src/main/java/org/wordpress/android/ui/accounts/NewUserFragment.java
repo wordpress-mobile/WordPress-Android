@@ -33,7 +33,7 @@ import org.wordpress.emailchecker.EmailChecker;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewUserPageFragment extends NewAccountAbstractPageFragment implements TextWatcher {
+public class NewUserFragment extends AbstractFragment implements TextWatcher {
     private EditText mSiteUrlTextField;
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
@@ -45,7 +45,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl = true;
 
-    public NewUserPageFragment() {
+    public NewUserFragment() {
         mEmailChecker = new EmailChecker();
     }
 
@@ -311,7 +311,7 @@ public class NewUserPageFragment extends NewAccountAbstractPageFragment implemen
         infoBUtton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newAccountIntent = new Intent(getActivity(), NuxHelpActivity.class);
+                Intent newAccountIntent = new Intent(getActivity(), HelpActivity.class);
                 startActivity(newAccountIntent);
             }
         });

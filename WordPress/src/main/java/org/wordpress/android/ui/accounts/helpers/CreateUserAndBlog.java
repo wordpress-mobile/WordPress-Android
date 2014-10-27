@@ -15,7 +15,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.networking.RestClientUtils;
-import org.wordpress.android.ui.accounts.NewAccountAbstractPageFragment.ErrorListener;
+import org.wordpress.android.ui.accounts.AbstractFragment.ErrorListener;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;

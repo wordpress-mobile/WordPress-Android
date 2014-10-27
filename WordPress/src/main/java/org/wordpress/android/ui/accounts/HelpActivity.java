@@ -17,7 +17,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NuxHelpActivity extends Activity {
+public class HelpActivity extends Activity {
     final private static String FAQ_URL = "http://android.wordpress.org/faq/";
     final private static String FORUM_URL = "http://android.forums.wordpress.org/";
 
@@ -62,7 +62,7 @@ public class NuxHelpActivity extends Activity {
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             SignInFragment.ENTERED_USERNAME_KEY));
                 }
-                HelpshiftHelper.getInstance().showConversation(NuxHelpActivity.this);
+                HelpshiftHelper.getInstance().showConversation(HelpActivity.this);
             }
         });
 
@@ -70,7 +70,7 @@ public class NuxHelpActivity extends Activity {
         faqbutton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                HelpshiftHelper.getInstance().showFAQ(NuxHelpActivity.this);
+                HelpshiftHelper.getInstance().showFAQ(HelpActivity.this);
             }
         });
     }

@@ -33,7 +33,7 @@ public class BlogUtils {
         // Add all blogs from blogList
         retValue = addBlogs(newBlogList, username, password, httpUsername, httpPassword);
 
-        // Delete blogs if not in blogList
+        // Delete blogs if not in bloegList
         List<Map<String, Object>> allBlogs = WordPress.wpDB.getAccountsBy("dotcomFlag=1", null);
         Set<String> newBlogURLs = new HashSet<String>();
         for (Map<String, Object> blog : newBlogList) {
