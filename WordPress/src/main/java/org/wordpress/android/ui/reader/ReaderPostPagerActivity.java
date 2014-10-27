@@ -55,14 +55,15 @@ public class ReaderPostPagerActivity extends Activity
     private ReaderViewPager mViewPager;
 
     private ReaderTag mCurrentTag;
-    private long mCurrentBlogId;
+    private long mBlogId;
+    private long mPostId;
     private ReaderPostListType mPostListType;
 
     private boolean mIsFullScreen;
     private boolean mIsRequestingMorePosts;
     private boolean mIsSinglePostView;
 
-    protected static final String ARG_IS_SINGLE_POST = "is_single_post";
+    private static final String ARG_IS_SINGLE_POST = "is_single_post";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,10 @@ public class ReaderPostPagerActivity extends Activity
         mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
 
         final String title;
-        final long blogId;
-        final long postId;
         if (savedInstanceState != null) {
             title = savedInstanceState.getString(ReaderConstants.ARG_TITLE);
-            blogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
-            postId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
+            mBlogId = savedInstanceState.getLong(ReaderConstants.ARG_BLOG_ID);
+            mPostId = savedInstanceState.getLong(ReaderConstants.ARG_POST_ID);
             mIsSinglePostView = savedInstanceState.getBoolean(ARG_IS_SINGLE_POST);
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -97,8 +96,8 @@ public class ReaderPostPagerActivity extends Activity
             }
         } else {
             title = getIntent().getStringExtra(ReaderConstants.ARG_TITLE);
-            blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
-            postId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
+            mBlogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
+            mPostId = getIntent().getLongExtra(ReaderConstants.ARG_POST_ID, 0);
             mIsSinglePostView = getIntent().getBooleanExtra(ARG_IS_SINGLE_POST, false);
             if (getIntent().hasExtra(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 mPostListType = (ReaderPostListType) getIntent().getSerializableExtra(ReaderConstants.ARG_POST_LIST_TYPE);
@@ -110,15 +109,11 @@ public class ReaderPostPagerActivity extends Activity
 
         if (mPostListType == null) {
             mPostListType = ReaderPostListType.TAG_FOLLOWED;
-        } else if (mPostListType == ReaderPostListType.BLOG_PREVIEW) {
-            mCurrentBlogId = blogId;
         }
 
         if (!TextUtils.isEmpty(title)) {
             this.setTitle(title);
         }
-
-        loadPosts(blogId, postId, false);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -158,6 +153,14 @@ public class ReaderPostPagerActivity extends Activity
 
         mViewPager.setPageTransformer(false,
                 new ReaderViewPagerTransformer(ReaderViewPagerTransformer.TransformType.SLIDE_OVER));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!hasPagerAdapter()) {
+            loadPosts(mBlogId, mPostId, false);
+        }
     }
 
     private boolean hasPagerAdapter() {
@@ -261,9 +264,6 @@ public class ReaderPostPagerActivity extends Activity
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (hasPagerAdapter()) {
-                            mViewPager.setAdapter(null);
-                        }
                         PostPagerAdapter adapter = new PostPagerAdapter(getFragmentManager(), idList);
                         mViewPager.setAdapter(adapter);
                         if (adapter.isValidPosition(newPosition)) {
@@ -482,6 +482,12 @@ public class ReaderPostPagerActivity extends Activity
             }
         }
 
+        @Override
+        public void restoreState(Parcelable state, ClassLoader loader) {
+            AppLog.i(AppLog.T.READER, "reader pager > adapter restoreState");
+            super.restoreState(state, loader);
+        }
+
         private boolean hasEndFragment() {
             return (mIdList.indexOf(
                         ReaderPostPagerEndFragment.END_FRAGMENT_ID,
@@ -626,7 +632,7 @@ public class ReaderPostPagerActivity extends Activity
                         }
                     };
                     ReaderPostActions.requestPostsForBlog(
-                            mCurrentBlogId,
+                            mBlogId,
                             null,
                             ReaderActions.RequestDataAction.LOAD_OLDER,
                             actionListener);
