@@ -1,4 +1,4 @@
-package org.wordpress.android.networking;
+package org.wordpress.android.ui.accounts.helpers;
 
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
@@ -12,21 +12,20 @@ import com.wordpress.rest.Oauth.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.*;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.VolleyUtils;
 
-public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
-    public LoginAndFetchBlogListWPCom(String username, String password) {
+public class LoginWPCom extends LoginAbstract {
+    public LoginWPCom(String username, String password) {
         super(username, password);
     }
 
     public static int restLoginErrorToMsgId(JSONObject errorObject) {
         // Default to generic error message
-        int errorMsgId = R.string.nux_cannot_log_in;
+        int errorMsgId = org.wordpress.android.R.string.nux_cannot_log_in;
 
         // Map REST errors to local error codes
         if (errorObject != null) {
@@ -35,10 +34,10 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
                 String errorDescription = (String) errorObject.get("error_description");
                 if (error != null && error.equals("invalid_request")) {
                     if (errorDescription.contains("Incorrect username or password.")) {
-                        errorMsgId = R.string.username_or_password_incorrect;
+                        errorMsgId = org.wordpress.android.R.string.username_or_password_incorrect;
                     }
                     if (errorDescription.contains("This account has two step authentication enabled.")) {
-                        errorMsgId = R.string.account_two_step_auth_enabled;
+                        errorMsgId = org.wordpress.android.R.string.account_two_step_auth_enabled;
                     }
                 }
             } catch (JSONException e) {
@@ -46,11 +45,6 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
             }
         }
         return errorMsgId;
-    }
-
-    protected void init() {
-        super.init();
-        mSetupBlog.setSelfHostedURL(null);
     }
 
     private Request makeOAuthRequest(final String username, final String password, final Listener listener,
@@ -63,8 +57,8 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
         return oauthRequest;
     }
 
-    protected void loginAndGetBlogList() {
-        // Get OAuth token for the first time and check for errors, make it synch
+    protected void login() {
+        // Get OAuth token for the first time and check for errors
         WordPress.requestQueue.add(makeOAuthRequest(mUsername, mPassword, new Oauth.Listener() {
             @SuppressLint("CommitPrefEdits")
             @Override
@@ -79,12 +73,7 @@ public class LoginAndFetchBlogListWPCom extends LoginAndFetchBlogListAbstract {
                 editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
                 editor.commit();
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        mSetupBlog.getBlogList(mCallback);
-                    }
-                }.start();
+                mCallback.onSuccess();
             }
         }, new Oauth.ErrorListener() {
             @Override
