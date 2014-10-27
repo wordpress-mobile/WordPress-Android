@@ -361,6 +361,9 @@ class ReaderPostRenderer {
         .append("       padding: ").append(mResourceVars.marginExtraSmallPx).append("px; ")
         .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
 
+        // horizontally center iframes
+        .append("   iframe { display: block; margin: 0 auto; }")
+
         // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
         .append("  video {")
         .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
