@@ -34,7 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.LoginAndFecthBlogListWPOrg;
+import org.wordpress.android.networking.LoginAndFetchBlogListWPOrg;
 import org.wordpress.android.networking.LoginAndFetchBlogListAbstract;
 import org.wordpress.android.networking.LoginAndFetchBlogListAbstract.Callback;
 import org.wordpress.android.networking.LoginAndFetchBlogListWPCom;
@@ -366,12 +366,12 @@ public class SignInFragment extends NewAccountAbstractPageFragment implements Te
             loginAndFetchBlogList = new LoginAndFetchBlogListWPCom(mUsername, mPassword);
         } else {
             String url = EditTextUtils.getText(mUrlEditText).trim();
-            LoginAndFecthBlogListWPOrg loginAndFecthBlogListWPOrg = new LoginAndFecthBlogListWPOrg(mUsername, mPassword,
+            LoginAndFetchBlogListWPOrg loginAndFetchBlogListWPOrg = new LoginAndFetchBlogListWPOrg(mUsername, mPassword,
                     url);
             if (mHttpUsername != null && mHttpPassword != null) {
-                loginAndFecthBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
+                loginAndFetchBlogListWPOrg.setHttpCredentials(mHttpUsername, mHttpPassword);
             }
-            loginAndFetchBlogList = loginAndFecthBlogListWPOrg;
+            loginAndFetchBlogList = loginAndFetchBlogListWPOrg;
         }
         startProgress(isWPComLogin() ? getString(R.string.signing_in) : getString(R.string.connecting_wpcom));
         loginAndFetchBlogList.execute(signInCallback);

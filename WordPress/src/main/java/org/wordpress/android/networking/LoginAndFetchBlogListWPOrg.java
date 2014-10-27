@@ -1,11 +1,11 @@
 package org.wordpress.android.networking;
 
-public class LoginAndFecthBlogListWPOrg extends LoginAndFetchBlogListAbstract {
+public class LoginAndFetchBlogListWPOrg extends LoginAndFetchBlogListAbstract {
     private String mSelfHostedURL;
     protected String mHttpUsername;
     protected String mHttpPassword;
 
-    public LoginAndFecthBlogListWPOrg(String username, String password, String selfHostedURL) {
+    public LoginAndFetchBlogListWPOrg(String username, String password, String selfHostedURL) {
         super(username, password);
         mSelfHostedURL = selfHostedURL;
     }
