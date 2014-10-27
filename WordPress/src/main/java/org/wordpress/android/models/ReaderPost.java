@@ -438,6 +438,20 @@ public class ReaderPost {
         return !isExternal;
     }
 
+
+    public boolean isSamePost(ReaderPost post) {
+        return post != null
+                && post.blogId == this.blogId
+                && post.postId == this.postId
+                && post.numLikes == this.numLikes
+                && post.numReplies == this.numReplies
+                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
+                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
+                && post.isCommentsOpen == this.isCommentsOpen
+                && post.isLikesEnabled == this.isLikesEnabled
+                && post.isRebloggedByCurrentUser == this.isRebloggedByCurrentUser;
+    }
+
     /****
      * the following are transient variables - not stored in the db or returned in the json - whose
      * sole purpose is to cache commonly-used values for the post that speeds up using them inside

@@ -326,7 +326,7 @@ public class ReaderReblogActivity extends Activity {
             imgAvatar = (WPNetworkImageView) mLayoutExcerpt.findViewById(R.id.image_avatar);
             imgFeatured = (WPNetworkImageView) mLayoutExcerpt.findViewById(R.id.image_featured);
 
-            tmpPost = ReaderPostTable.getPost(mBlogId, mPostId);
+            tmpPost = ReaderPostTable.getPost(mBlogId, mPostId, false);
             return (tmpPost != null);
         }
 

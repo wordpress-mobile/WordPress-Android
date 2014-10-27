@@ -11,7 +11,10 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostList;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
@@ -148,12 +151,18 @@ public class ReaderPostTable {
     }
 
     /*
-     * purge table of unattached posts - no need to wrap this in a transaction since this
-     * is only called from ReaderDatabase.purge() which already creates a transaction
+     * purge table of unattached/older posts - no need to wrap this in a transaction since it's
+     * only called from ReaderDatabase.purge() which already creates a transaction
      */
     protected static int purge(SQLiteDatabase db) {
         // delete posts in tbl_post_tags attached to tags that no longer exist
         int numDeleted = db.delete("tbl_post_tags", "tag_name NOT IN (SELECT DISTINCT tag_name FROM tbl_tags)", null);
+
+        // delete excess posts on a per-tag basis
+        ReaderTagList tags = ReaderTagTable.getAllTags();
+        for (ReaderTag tag: tags) {
+            numDeleted += purgePostsForTag(db, tag);
+        }
 
         // delete posts in tbl_posts that no longer exist in tbl_post_tags
         numDeleted += db.delete("tbl_posts", "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_post_tags)", null);
@@ -162,28 +171,29 @@ public class ReaderPostTable {
     }
 
     /*
-     * remove posts in "Blogs I Follow" that are no longer attached to followed blogs
+     * purge excess posts in the passed tag - note we only keep as many posts as are returned
+     * by a single request
      */
-    public static int purgeUnfollowedPosts() {
-        String[] args = {ReaderTag.TAG_NAME_FOLLOWING};
-        int numPurged = ReaderDatabase.getWritableDb().delete(
-                "tbl_post_tags",
-                "tag_name=? AND blog_id NOT IN (SELECT DISTINCT blog_id FROM tbl_blog_info WHERE is_following!=0)",
-                args);
-        if (numPurged > 0) {
-            AppLog.d(AppLog.T.READER, String.format("purged %d unfollowed posts", numPurged));
+    private static final int MAX_POSTS_PER_TAG = ReaderConstants.READER_MAX_POSTS_TO_REQUEST;
+    private static int purgePostsForTag(SQLiteDatabase db, ReaderTag tag) {
+        int numPosts = getNumPostsWithTag(tag);
+        if (numPosts <= MAX_POSTS_PER_TAG) {
+            return 0;
         }
-        return numPurged;
-    }
 
-
-    public static boolean isEmpty() {
-        return (getNumPosts() == 0);
-    }
-
-    private static int getNumPosts() {
-        long count = SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_posts");
-        return (int)count;
+        int numToPurge = numPosts - MAX_POSTS_PER_TAG;
+        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt()), Integer.toString(numToPurge)};
+        String where = "pseudo_id IN ("
+                + "  SELECT tbl_posts.pseudo_id FROM tbl_posts, tbl_post_tags"
+                + "  WHERE tbl_posts.pseudo_id = tbl_post_tags.pseudo_id"
+                + "  AND tbl_post_tags.tag_name=?1"
+                + "  AND tbl_post_tags.tag_type=?2"
+                + "  ORDER BY tbl_posts.timestamp"
+                + "  LIMIT ?3"
+                + ")";
+        int numDeleted = db.delete("tbl_post_tags", where, args);
+        AppLog.d(AppLog.T.READER, String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
+        return numDeleted;
     }
 
     public static int getNumPostsInBlog(long blogId) {
@@ -202,10 +212,6 @@ public class ReaderPostTable {
                     args);
     }
 
-    public static boolean hasPostsWithTag(ReaderTag tag) {
-        return (getNumPostsWithTag(tag) > 0);
-    }
-
     public static void addOrUpdatePost(ReaderPost post) {
         if (post == null) {
             return;
@@ -215,9 +221,13 @@ public class ReaderPostTable {
         addOrUpdatePosts(null, posts);
     }
 
-    public static ReaderPost getPost(long blogId, long postId) {
+    public static ReaderPost getPost(long blogId, long postId, boolean excludeTextColumn) {
+
+        String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
+        String sql = "SELECT " + columns + " FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1";
+
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_posts WHERE blog_id=? AND post_id=? LIMIT 1", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -226,11 +236,6 @@ public class ReaderPostTable {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-
-    public static void deletePost(long blogId, long postId) {
-        String[] args = {Long.toString(blogId), Long.toString(postId)};
-        ReaderDatabase.getWritableDb().delete("tbl_posts", "blog_id=? AND post_id=?", args);
     }
 
     public static String getPostTitle(long blogId, long postId) {
@@ -248,34 +253,24 @@ public class ReaderPostTable {
     }
 
     /*
-     * returns a count of which posts in the passed list don't already exist in the db for the passed tag
+     * returns whether any of the passed posts are new or changed - used after posts are retrieved
      */
-    public static int getNumNewPostsWithTag(ReaderTag tag, ReaderPostList posts) {
-        if (posts == null || posts.size() == 0 || tag == null) {
-            return 0;
+    public static ReaderActions.UpdateResult comparePosts(ReaderPostList posts) {
+        if (posts == null || posts.size() == 0) {
+            return ReaderActions.UpdateResult.UNCHANGED;
         }
 
-        // if there aren't any posts in this tag, then all passed posts are new
-        if (getNumPostsWithTag(tag) == 0) {
-            return posts.size();
-        }
-
-        StringBuilder sb = new StringBuilder(
-                "SELECT COUNT(*) FROM tbl_post_tags WHERE tag_name=? AND tag_type=? AND pseudo_id IN (");
-        boolean isFirst = true;
+        boolean hasChanges = false;
         for (ReaderPost post: posts) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(",");
+            ReaderPost existingPost = getPost(post.blogId, post.postId, true);
+            if (existingPost == null) {
+                return ReaderActions.UpdateResult.HAS_NEW;
+            } else if (!hasChanges && !post.isSamePost(existingPost)) {
+                hasChanges = true;
             }
-            sb.append("'").append(post.getPseudoId()).append("'");
         }
-        sb.append(")");
 
-        String[] args = {tag.getTagName(), Integer.toString(tag.tagType.toInt())};
-        int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), args);
-        return posts.size() - numExisting;
+        return (hasChanges ? ReaderActions.UpdateResult.CHANGED : ReaderActions.UpdateResult.UNCHANGED);
     }
 
     /*
@@ -304,10 +299,7 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostLikedByCurrentUser(ReaderPost post) {
-        if (post == null) {
-            return false;
-        }
-        return isPostLikedByCurrentUser(post.blogId, post.postId);
+        return post != null && isPostLikedByCurrentUser(post.blogId, post.postId);
     }
     public static boolean isPostLikedByCurrentUser(long blogId, long postId) {
         String[] args = new String[] {Long.toString(blogId), Long.toString(postId)};

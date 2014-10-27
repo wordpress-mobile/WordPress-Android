@@ -120,7 +120,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_TAGS_CHANGED);
-        filter.addAction(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED);
         LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, filter);
     }
 
@@ -128,9 +127,9 @@ public class ReaderPostListActivity extends WPActionBarActivity
     protected void onStart() {
         super.onStart();
 
-        // at startup, purge the database of older data and perform an initial update - note that
-        // these booleans are static
-        if (!mHasPerformedPurge) {
+        // purge the database of older data at startup, but only if there's an active connection
+        // since we don't want to purge posts that the user would expect to see when offline
+        if (!mHasPerformedPurge && NetworkUtils.isNetworkAvailable(this)) {
             mHasPerformedPurge = true;
             ReaderDatabase.purgeAsync();
         }
@@ -193,7 +192,7 @@ public class ReaderPostListActivity extends WPActionBarActivity
                 if (isResultOK && data != null && listFragment != null) {
                     long blogId = data.getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long postId = data.getLongExtra(ReaderConstants.ARG_POST_ID, 0);
-                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId));
+                    listFragment.reloadPost(ReaderPostTable.getPost(blogId, postId, true));
                 }
                 break;
 
@@ -314,34 +313,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
     }
 
     /*
-     * remove posts in blogs that are no longer followed
-     */
-    private void purgeUnfollowedPosts() {
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                // purge in the background
-                int numPurged = ReaderPostTable.purgeUnfollowedPosts();
-
-                // if any posts were purged and we're showing posts in followed blogs, refresh the
-                // list fragment so purged posts no longer appear
-                if (numPurged > 0) {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            if (isListFragmentForTagShowing(ReaderTag.TAG_NAME_FOLLOWING)) {
-                                getListFragment().refreshPosts();
-                            }
-                        }
-                    });
-                }
-            }
-        }.start();
-    }
-
-
-    /*
      * user tapped a post in the list fragment
      */
     @Override
@@ -418,10 +389,6 @@ public class ReaderPostListActivity extends WPActionBarActivity
                         listFragment.updateCurrentTag();
                     }
                 }
-            } else if (action.equals(ReaderUpdateService.ACTION_FOLLOWED_BLOGS_CHANGED)) {
-                // followed blogs have changed, so remove posts in blogs that are
-                // no longer being followed
-                purgeUnfollowedPosts();
             }
         }
     };
