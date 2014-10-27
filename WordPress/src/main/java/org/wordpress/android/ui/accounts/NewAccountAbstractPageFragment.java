@@ -264,7 +264,7 @@ public abstract class NewAccountAbstractPageFragment extends Fragment {
 
     protected enum ErrorType {USERNAME, PASSWORD, SITE_URL, EMAIL, TITLE, UNDEFINED}
 
-    protected class ErrorListener implements RestRequest.ErrorListener {
+    public class ErrorListener implements RestRequest.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             String message = null;

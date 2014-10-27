@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
