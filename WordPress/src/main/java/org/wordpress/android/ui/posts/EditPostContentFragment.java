@@ -76,6 +76,8 @@ import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.OEmbedUtils;
+import org.wordpress.android.util.OEmbedUtils.Callback;
 import org.wordpress.android.widgets.MediaGalleryImageSpan;
 import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
@@ -469,6 +471,24 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return false;
     }
 
+    protected void autoDetectAndReplaceOEmbeds(String text) {
+        OEmbedUtils.autoEmbedUrl(text, new Callback() {
+            @Override
+            public void onSuccess(String inputUrl, String output) {
+                String currentText = mContentEditText.getText().toString();
+                // replace inputUrl by output
+                currentText = currentText.replace(inputUrl, output);
+                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(currentText), getActivity(),
+                        mActivity.getPost(), getMaximumThumbnailWidth()));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                AppLog.e(T.POSTS, t);
+            }
+        });
+    }
+
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
 
@@ -484,16 +504,9 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
                 // Just use the URL for YouTube links for oEmbed support
                 mContentEditText.setText(text);
             } else {
-                // add link tag around URLs, trac #64
-                text = text.replaceAll("((http|https|ftp|mailto):\\S+)", "<a href=\"$1\">$1</a>");
-                mContentEditText.setText(
-                        WPHtml.fromHtml(
-                                StringUtils.addPTags(text),
-                                getActivity(),
-                                mActivity.getPost(),
-                                getMaximumThumbnailWidth()
-                        )
-                );
+                autoDetectAndReplaceOEmbeds(text);
+                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost(),
+                                getMaximumThumbnailWidth()));
             }
         }
 
