@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -21,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.TopPostModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.service.StatsService;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -107,8 +109,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
                 //TODO: show the error on the section ???
                 return;
             }
-            //TODO: check period and blogID
-            final String blogId = StatsUtils.getBlogId(getLocalTableBlogID());
 
             TopPostsAndPagesModel topPostsAndPagesModel = (TopPostsAndPagesModel) dataObj;
             List<TopPostModel> postViews = topPostsAndPagesModel.getTopPostsAndPages();
@@ -146,13 +146,27 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
                 rowView.setTag(viewHolder);
             }
 
-            TopPostModel currentRowData = list.get(position);
+            final TopPostModel currentRowData = list.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries
             holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
+
+            holder.totalsTextView.setPaintFlags(holder.totalsTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            holder.totalsTextView.setTextColor(getResources().getColor(R.color.wordpress_blue));
+            holder.totalsTextView.setOnClickListener(new
+                             View.OnClickListener() {
+                                 @Override
+                                 public void onClick(View view) {
+                                     AppLog.w(AppLog.T.STATS, currentRowData.getPostId() + "");
+                                     Intent statsPostViewIntent = new Intent(getActivity(), StatsSinglePostDetailsActivity.class);
+                                     statsPostViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
+                                     statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_ID, currentRowData.getPostId());
+                                     getActivity().startActivity(statsPostViewIntent);
+                                 }
+                             });
             // no icon
             holder.networkImageView.setVisibility(View.GONE);
 

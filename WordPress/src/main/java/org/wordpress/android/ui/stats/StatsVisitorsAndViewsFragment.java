@@ -63,7 +63,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
         setRetainInstance(true);
 
-
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
         setupEmptyGraph();

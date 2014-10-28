@@ -8,12 +8,12 @@ import org.json.JSONObject;
  */
 public class TopPostModel {
     private String mBlogId;
-    private int mPostId;
+    private String mPostId;
     private String mTitle;
     private int mViews;
     private String mUrl;
 
-    public TopPostModel(String blogId, int postId, String title, int views, String url) {
+    public TopPostModel(String blogId, String postId, String title, int views, String url) {
         this.mBlogId = blogId;
         this.mPostId = postId;
         this.mTitle = title;
@@ -23,7 +23,7 @@ public class TopPostModel {
 
     public TopPostModel(String blogId, JSONObject result) throws JSONException {
         setBlogId(blogId);
-        setPostId(result.getInt("id"));
+        setPostId(result.getString("id"));
         setTitle(result.getString("title"));
         setViews(result.getInt("views"));
         setUrl(result.getString("href"));
@@ -37,11 +37,11 @@ public class TopPostModel {
         this.mBlogId = blogId;
     }
 
-    public int getPostId() {
+    public String getPostId() {
         return mPostId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(String postId) {
         this.mPostId = postId;
     }
 
