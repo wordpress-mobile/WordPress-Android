@@ -62,30 +62,29 @@ import com.android.volley.toolbox.ImageLoader;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.MediaGallery;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.AutolinkUtils;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.CrashlyticsUtils.ExceptionType;
 import org.wordpress.android.util.CrashlyticsUtils.ExtraKey;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
-import org.wordpress.android.util.OEmbedUtils;
-import org.wordpress.android.util.OEmbedUtils.Callback;
-import org.wordpress.android.widgets.MediaGalleryImageSpan;
-import org.wordpress.android.ui.media.MediaUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.util.WPHtml;
+import org.wordpress.android.widgets.MediaGalleryImageSpan;
+import org.wordpress.android.widgets.WPEditText;
 import org.wordpress.android.widgets.WPImageSpan;
 import org.wordpress.android.widgets.WPUnderlineSpan;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
@@ -95,6 +94,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditPostContentFragment extends Fragment implements TextWatcher,
         WPEditText.OnSelectionChangedListener, View.OnTouchListener {
@@ -471,24 +472,6 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
         return false;
     }
 
-    protected void autoDetectAndReplaceOEmbeds(String text) {
-        OEmbedUtils.autoEmbedUrl(text, new Callback() {
-            @Override
-            public void onSuccess(String inputUrl, String output) {
-                String currentText = mContentEditText.getText().toString();
-                // replace inputUrl by output
-                currentText = currentText.replace(inputUrl, output);
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(currentText), getActivity(),
-                        mActivity.getPost(), getMaximumThumbnailWidth()));
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                AppLog.e(T.POSTS, t);
-            }
-        });
-    }
-
     protected void setPostContentFromShareAction() {
         Intent intent = mActivity.getIntent();
 
@@ -499,15 +482,10 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             if (title != null) {
                 mTitleEditText.setText(title);
             }
-
-            if (text.contains("youtube_gdata")) {
-                // Just use the URL for YouTube links for oEmbed support
-                mContentEditText.setText(text);
-            } else {
-                autoDetectAndReplaceOEmbeds(text);
-                mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost(),
-                                getMaximumThumbnailWidth()));
-            }
+            // Create an <a href> element around links
+            text = AutolinkUtils.autoCreateLinks(text);
+            mContentEditText.setText(WPHtml.fromHtml(StringUtils.addPTags(text), getActivity(), mActivity.getPost(),
+                    getMaximumThumbnailWidth()));
         }
 
         // Check for shared media
