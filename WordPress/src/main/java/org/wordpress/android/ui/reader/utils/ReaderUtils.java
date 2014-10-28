@@ -1,15 +1,21 @@
 package org.wordpress.android.ui.reader.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cocosw.undobar.UndoBarController;
+import com.cocosw.undobar.UndoBarStyle;
 
 import org.wordpress.android.R;
 import org.wordpress.android.util.PhotonUtils;
@@ -193,5 +199,26 @@ public class ReaderUtils {
             return (numLikes == 1 ?
                     context.getString(R.string.reader_likes_one) : context.getString(R.string.reader_likes_multi, numLikes));
         }
+    }
+
+    public static void showTip(Activity activity, int tipMessageRes) {
+        if (activity ==  null || activity.isFinishing()) {
+            return;
+        }
+
+        UndoBarStyle style = new UndoBarStyle(
+                R.drawable.ic_action_accept,
+                R.string.reader_btn_got_it,
+                R.drawable.button_blue,
+                UndoBarStyle.DEFAULT_DURATION);
+        Animation animIn = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
+        Animation animOut = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
+        style.setAnim(animIn, animOut);
+
+        new UndoBarController.UndoBar(activity)
+                .message(tipMessageRes)
+                .style(style)
+                .translucent(true)
+                .show();
     }
 }
