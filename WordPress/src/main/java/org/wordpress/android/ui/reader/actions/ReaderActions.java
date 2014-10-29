@@ -41,20 +41,19 @@ public class ReaderActions {
     }
 
     /*
-     * result when updating data (getting latest comments for a post, etc.)
+     * result when updating data (getting latest posts or comments for a post, etc.)
      */
-    public enum UpdateResult {CHANGED, UNCHANGED, FAILED}
-
-
+    public enum UpdateResult {
+        HAS_NEW,    // new posts/comments/etc. have been retrieved
+        CHANGED,    // no new posts/comments, but existing ones have changed
+        UNCHANGED,  // no new or changed posts/comments
+        FAILED;     // request failed
+        public boolean isNewOrChanged() {
+            return (this == HAS_NEW || this == CHANGED);
+        }
+    }
     public interface UpdateResultListener {
         public void onUpdateResult(UpdateResult result);
-    }
-
-    /*
-     * same as UpdateResultListener but includes count
-     */
-    public interface UpdateResultAndCountListener {
-        public void onUpdateResult(UpdateResult result, int numNew);
     }
 
     /*
@@ -70,12 +69,5 @@ public class ReaderActions {
      */
     public interface UpdateBlogInfoListener {
         public void onResult(ReaderBlog blogInfo);
-    }
-
-    /*
-     * listener when updating posts and then backfilling them
-     */
-    public interface PostBackfillListener {
-        public void onPostsBackfilled();
     }
 }

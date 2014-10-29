@@ -179,7 +179,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             return;
         }
 
-        final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
+        final ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null) {
             mPosts.set(index, updatedPost);
             notifyDataSetChanged();
@@ -516,7 +516,7 @@ public class ReaderPostAdapter extends BaseAdapter {
         }
 
         // update post in array and on screen
-        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
+        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         mPosts.set(position, updatedPost);
         holder.likeCount.setSelected(updatedPost.isLikedByCurrentUser);
         showCounts(holder, updatedPost, true);
@@ -544,7 +544,7 @@ public class ReaderPostAdapter extends BaseAdapter {
             return;
         }
 
-        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId);
+        ReaderPost updatedPost = ReaderPostTable.getPost(post.blogId, post.postId, true);
         if (updatedPost != null) {
             mPosts.set(position, updatedPost);
         }

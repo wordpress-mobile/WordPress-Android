@@ -36,6 +36,7 @@
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textSize="@dimen/text_sz_large"
+            android:textStyle="bold"
             tools:text="Bob Ross" />
 
         <org.wordpress.android.widgets.WPTextView
