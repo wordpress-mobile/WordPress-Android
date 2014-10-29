@@ -286,6 +286,12 @@
 
         <service android:name="org.wordpress.android.GCMIntentService"/>
 
+        <service
+            android:name=".ui.suggestion.service.SuggestionService"
+            android:label="Suggestion Service"
+            android:exported="false" >
+        </service>
+
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 

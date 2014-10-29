@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM}
+    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING, SIMPERIUM, SUGGESTION}
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
 

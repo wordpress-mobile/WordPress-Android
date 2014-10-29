@@ -4,8 +4,15 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -16,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -36,6 +42,7 @@ import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
+import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.comments.CommentActions.ChangeType;
 import org.wordpress.android.ui.comments.CommentActions.ChangedFrom;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -47,6 +54,8 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
+import org.wordpress.android.ui.suggestion.service.SuggestionService;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -56,12 +65,15 @@ import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.ui.suggestion.util.SuggestionTokenizer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -74,10 +86,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
+    private SuggestionService mSuggestionService;
+    private SuggestionAdapter mSuggestionAdapter;
+
     private TextView mTxtStatus;
     private TextView mTxtContent;
     private ImageView mImgSubmitReply;
-    private EditText mEditReply;
+    private SuggestionAutoCompleteText mEditReply;
     private ViewGroup mLayoutReply;
     private ViewGroup mLayoutButtons;
 
@@ -191,7 +206,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         setTextDrawable(mBtnTrashComment, R.drawable.ic_action_trash);
 
         mLayoutReply = (ViewGroup) view.findViewById(R.id.layout_comment_box);
-        mEditReply = (EditText) mLayoutReply.findViewById(R.id.edit_comment);
+        mEditReply = (SuggestionAutoCompleteText) mLayoutReply.findViewById(R.id.edit_comment);
         mImgSubmitReply = (ImageView) mLayoutReply.findViewById(R.id.image_post_comment);
 
         // hide comment like button until we know it can be enabled in showCommentForNote()
@@ -250,6 +265,31 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
+    private void setupSuggestions() {
+        final Context context = getActivity().getApplicationContext();
+
+        mSuggestionAdapter = new SuggestionAdapter(context);
+        mEditReply.setAdapter(mSuggestionAdapter);
+        mEditReply.setTokenizer(new SuggestionTokenizer());
+        mEditReply.setThreshold(1);
+
+        Intent intent = new Intent(context, SuggestionService.class);
+        ServiceConnection connection = new ServiceConnection() {
+            public void onServiceConnected(ComponentName className, IBinder binder) {
+                SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) binder;
+                mSuggestionService = b.getService();
+
+                List<Suggestion> suggestions = mSuggestionService.suggestionList(mRemoteBlogId);
+                mSuggestionAdapter.setSuggestionList(suggestions);
+            }
+
+            public void onServiceDisconnected(ComponentName className) {
+                mSuggestionService = null;
+            }
+        };
+        context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
+
     void setComment(int localBlogId, long commentId) {
         setComment(localBlogId, CommentTable.getComment(localBlogId, commentId));
     }
@@ -267,6 +307,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (isAdded())
             showComment();
+
+        setupSuggestions();
     }
 
     public void setShouldFocusReplyField(boolean shouldFocusReplyField) {
@@ -309,6 +351,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .registerReceiver(mReceiver, new IntentFilter(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED));
+    }
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
+            if (updatedBlogId != 0 && mRemoteBlogId == updatedBlogId) {
+                List<Suggestion> suggestions = mSuggestionService.suggestionList(mRemoteBlogId);
+                mSuggestionAdapter.setSuggestionList(suggestions);
+            }
+        }
+    };
+
+    @Override
     public void onPause() {
         super.onPause();
         // Reset comment if this is from a notification
@@ -316,6 +377,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mComment = null;
         }
         EditTextUtils.hideSoftInput(mEditReply);
+        LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
+                .unregisterReceiver(mReceiver);
     }
 
     @Override
