@@ -753,7 +753,7 @@ public abstract class WPActionBarActivity extends Activity {
      * if want to stop refreshing of Stats when switching blog.
      */
     protected boolean shouldUpdateCurrentBlogStatsInBackground() {
-        return true;
+        return false; //FIXME: What do we need to do here?
     }
 
     /**

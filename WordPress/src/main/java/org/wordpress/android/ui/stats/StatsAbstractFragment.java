@@ -11,6 +11,8 @@ public abstract class StatsAbstractFragment extends Fragment {
     private static final String ARGS_VIEW_TYPE = "ARGS_VIEW_TYPE";
     private static final String ARGS_TIMEFRAME = "ARGS_TIMEFRAME";
 
+    protected static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
+
     public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID, StatsTimeframe timeframe) {
         StatsAbstractFragment fragment = null;
 

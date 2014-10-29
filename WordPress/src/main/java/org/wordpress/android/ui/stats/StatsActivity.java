@@ -139,12 +139,15 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
 
         setTitle(R.string.stats);
 
+        boolean needToRefreshStats = false;
+
         if (savedInstanceState != null) {
             mNavPosition = savedInstanceState.getInt(SAVED_NAV_POSITION);
             mResultCode = savedInstanceState.getInt(SAVED_WP_LOGIN_STATE);
             mLocalBlogID = savedInstanceState.getInt(ARG_LOCAL_TABLE_BLOG_ID);
             mCurrentTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(SAVED_STATS_TIMEFRAME);
         } else if (getIntent() != null) {
+            needToRefreshStats = true;
             mLocalBlogID = getIntent().getIntExtra(ARG_LOCAL_TABLE_BLOG_ID, -1);
             if (getIntent().hasExtra(SAVED_STATS_TIMEFRAME)) {
                 mCurrentTimeframe = (StatsTimeframe) getIntent().getSerializableExtra(SAVED_STATS_TIMEFRAME);
@@ -183,6 +186,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
         }
 
         selectTimeframeInActionBar(mCurrentTimeframe);
+
+        // Refresh stats on new activity only.
+        if (needToRefreshStats) {
+            refreshStats(mCurrentTimeframe, StatsUtils.getCurrentDate());
+            mPullToRefreshHelper.setRefreshing(true);
+        }
     }
 
     @Override
@@ -678,7 +687,12 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
     public boolean onNavigationItemSelected(int itemPosition, long itemId) {
         final StatsTimeframe selectedTimeframe =  (StatsTimeframe) mTimeframeSpinnerAdapter.getItem(itemPosition);
 
-        AppLog.e(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
+        if (mCurrentTimeframe == selectedTimeframe) {
+            AppLog.d(T.STATS, "The selected TIME FRAME is already active: " + selectedTimeframe.getLabel());
+            return true;
+        }
+
+        AppLog.d(T.STATS, "NEW TIME FRAME : " + selectedTimeframe.getLabel());
         mCurrentTimeframe = selectedTimeframe;
         if (NetworkUtils.isNetworkAvailable(this)) {
             loadStatsFragments(true);

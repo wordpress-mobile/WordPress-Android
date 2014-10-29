@@ -19,14 +19,13 @@ import com.android.volley.VolleyError;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -37,36 +36,37 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         implements RadioGroup.OnCheckedChangeListener, StatsBarGraph.OnGestureListener  {
 
     public static final String TAG = StatsVisitorsAndViewsFragment.class.getSimpleName();
+    private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
+    private static final String ARG_SELECTED_OVERVIEW_ITEM = "ARG_SELECTED_OVERVIEW_ITEM";
 
     private LinearLayout mGraphContainer;
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
     private RadioGroup mRadioGroup;
-    private int mSelectedButtonIndex = 0;
     private TextView mDateTextView;
-
-    private VisitsModel mVisitsData;
     private String[] mStatsDate;
 
     OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
-        OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
+            OverviewLabel.REBLOGS, OverviewLabel.COMMENTS};
+
+    // Restore the following variables on restart
+    private VisitsModel mVisitsData;
+    private int mSelectedOverviewItemIndex = 0;
+    private int mSelectedBarGraphBarIndex = -1;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_visitors_and_views_fragment, container, false);
-        setRetainInstance(true);
 
         mDateTextView = (TextView) view.findViewById(R.id.stats_summary_date);
         mGraphContainer = (LinearLayout) view.findViewById(R.id.stats_bar_chart_fragment_container);
-        setupEmptyGraph();
-
         mRadioGroup = (RadioGroup) view.findViewById(R.id.stats_pager_tabs);
 
         int dp8 = DisplayUtils.dpToPx(view.getContext(), 8);
@@ -86,15 +86,44 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             rb.setTag(overviewItems[i]);
             mRadioGroup.addView(rb);
 
-            if (i == 0) {
+            if (i == mSelectedOverviewItemIndex) {
                 rb.setChecked(true);
             }
         }
 
         mRadioGroup.setVisibility(View.VISIBLE);
+        updateUI();
         mRadioGroup.setOnCheckedChangeListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > restoring instance state");
+            if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+                mVisitsData = (VisitsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+            }
+            if (savedInstanceState.containsKey(ARG_SELECTED_OVERVIEW_ITEM)) {
+                mSelectedOverviewItemIndex = savedInstanceState.getInt(ARG_SELECTED_OVERVIEW_ITEM, 0);
+            }
+            if (savedInstanceState.containsKey(ARG_SELECTED_GRAPH_BAR)) {
+                mSelectedBarGraphBarIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        AppLog.d(T.STATS, "StatsVisitorsAndViewsFragment > saving instance state");
+
+        outState.putSerializable(ARG_REST_RESPONSE, mVisitsData);
+        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphBarIndex);
+        outState.putInt(ARG_SELECTED_OVERVIEW_ITEM, mSelectedOverviewItemIndex);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -121,88 +150,43 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (index == -1)
             return;
 
-        mSelectedButtonIndex = index;
-
-
-        // load the current highlighted bar position
-        int barToHighlight = -1;
-        if (mGraphView != null){
-            barToHighlight = mGraphView.getHighlightBar();
-        }
-        updateGraph(mVisitsData, barToHighlight);
+        mSelectedOverviewItemIndex = index;
+        updateUI();
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
-        final JSONArray dataJSON = visitsData.getDataJSON();
-        if (dataJSON == null) {
-            return null;
-        }
-        if (dataJSON.length() == 0) {
-            return new VisitModel[0];
-        }
-
-        // Read the position/index of each field in the response
-        HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(6);
-        final JSONArray fieldsJSON = visitsData.getFieldsJSON();
-        if (visitsData == null || fieldsJSON == null) {
-            return new VisitModel[0];
-        }
-        try {
-            for (int i = 0; i < fieldsJSON.length(); i++) {
-                final String field = fieldsJSON.getString(i);
-                columnsMapping.put(field, i);
-            }
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.STATS, "Cannot read the fields indexes from the JSON response", e);
-            return new VisitModel[0];
-        }
-
-        int viewsColumnIndex = columnsMapping.get(OverviewLabel.VIEWS.getRestApiFieldName());
-        int visitorsColumnIndex = columnsMapping.get(OverviewLabel.VISITORS.getRestApiFieldName());
-        int likesColumnIndex = columnsMapping.get(OverviewLabel.LIKES.getRestApiFieldName());
-        int reblogsColumnIndex = columnsMapping.get(OverviewLabel.REBLOGS.getRestApiFieldName());
-        int commentsColumnIndex = columnsMapping.get(OverviewLabel.COMMENTS.getRestApiFieldName());
-        int periodColumnIndex = columnsMapping.get("period");
-
-        int numPoints = Math.min(getNumOfPoints(), dataJSON.length());
+        VisitModel[] visitModels = visitsData.getVisits();
+        int numPoints = Math.min(getNumOfPoints(), visitModels.length);
         int currentPointIndex = numPoints - 1;
-        VisitModel[] visitModels = new VisitModel[numPoints];
+        VisitModel[] visitModelsToShow = new VisitModel[numPoints];
 
-        for (int i = dataJSON.length() -1; i >= 0 && currentPointIndex >= 0; i--) {
-            try {
-                JSONArray currentDayData = dataJSON.getJSONArray(i);
-                VisitModel currentVisitModel = new VisitModel();
-                currentVisitModel.setPeriod(currentDayData.getString(periodColumnIndex));
-                currentVisitModel.setViews(currentDayData.getInt(viewsColumnIndex));
-                currentVisitModel.setVisitors(currentDayData.getInt(visitorsColumnIndex));
-                currentVisitModel.setComments(currentDayData.getInt(commentsColumnIndex));
-                currentVisitModel.setLikes(currentDayData.getInt(likesColumnIndex));
-                currentVisitModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
-                visitModels[currentPointIndex] = currentVisitModel;
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot draw the bar at index " + currentPointIndex, e);
-            }
+        for (int i = visitModels.length -1; i >= 0 && currentPointIndex >= 0; i--) {
+            VisitModel currentVisitModel = visitModels[i];
+            visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
-        return visitModels;
+        return visitModelsToShow;
     }
 
-    private void updateGraph(VisitsModel visitsData, int barToHighlight) {
-        mVisitsData = visitsData;
-        final JSONArray dataJSON = visitsData.getDataJSON();
-        if (dataJSON == null || dataJSON.length() == 0) {
+    private void updateUI() {
+        if (mVisitsData == null) {
             setupEmptyGraph();
             return;
         }
 
-        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(visitsData);
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
+        if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
+            setupEmptyGraph();
+            return;
+        }
 
+        int barSelectedOnGraph = mSelectedBarGraphBarIndex != -1 ? mSelectedBarGraphBarIndex : dataToShowOnGraph.length - 1;
         final String[] horLabels = new String[dataToShowOnGraph.length];
         mStatsDate = new String[dataToShowOnGraph.length];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
         boolean isEmptyGraph = true;
-        OverviewLabel selectedStatsType = overviewItems[mSelectedButtonIndex];
+        OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
@@ -255,21 +239,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
                 mGraphView.setHorizontalLabels(horLabels);
                 mGraphView.setGestureListener(this);
-
-                if (barToHighlight != -1) {
-                    mGraphView.highlightBar(barToHighlight);
-                } else {
-                    mGraphView.highlightBar(dataToShowOnGraph.length - 1);
-                }
+                mGraphView.highlightBar(barSelectedOnGraph);
             }
         }
 
-        int barSelectedOnGraph = barToHighlight != -1 ? barToHighlight : dataToShowOnGraph.length - 1;
-        updateOverviewAreaBelowTheGraph(barSelectedOnGraph);
+        updateUIBelowTheGraph(barSelectedOnGraph);
     }
 
     //update the area right below the graph
-    private void updateOverviewAreaBelowTheGraph(int itemPosition) {
+    private void updateUIBelowTheGraph(int itemPosition) {
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
 
         String date =  mStatsDate[itemPosition];
@@ -324,6 +302,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             View o = mRadioGroup.getChildAt(i);
             if (o instanceof RadioButton) {
                 RadioButton currentBtm = (RadioButton)o;
+                if (i == mSelectedOverviewItemIndex) {
+                   currentBtm.setChecked(true);
+                }
                 OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
                 switch (overviewItem) {
                     case VIEWS:
@@ -430,7 +411,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (mGraphView != null) {
                 mGraphView.resetHighlightBar();
             }
-            updateGraph((VisitsModel)dataObj, -1);
+
+            mVisitsData = (VisitsModel)dataObj;
+            mSelectedBarGraphBarIndex = -1;
+            mSelectedOverviewItemIndex = 0;
+            updateUI();
             return;
         }
     };
@@ -441,8 +426,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     @Override
     public void onBarTapped(int tappedBar) {
         AppLog.d(AppLog.T.STATS, " Tapped bar date " + mStatsDate[tappedBar]);
-
-        updateOverviewAreaBelowTheGraph(tappedBar);
+        mSelectedBarGraphBarIndex = tappedBar;
+        updateUIBelowTheGraph(tappedBar);
 
         //TODO: move this code in utility stats. See activity that has similar code.
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -551,7 +536,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         // Field name as returned from the REST API
-        public String getRestApiFieldName() {
+       /* public String getRestApiFieldName() {
             switch (this) {
                 case VIEWS:
                     return "views";
@@ -565,6 +550,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     return "comments";
             }
             return "";
-        }
+        } */
     }
 }

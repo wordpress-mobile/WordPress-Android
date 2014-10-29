@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.model;
 
-public class VisitModel {
+import java.io.Serializable;
+
+public class VisitModel implements Serializable {
 
     private int views;
     private int reblogs;

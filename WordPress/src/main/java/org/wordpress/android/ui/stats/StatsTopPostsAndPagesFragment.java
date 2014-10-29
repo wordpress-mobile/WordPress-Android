@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.TopPostModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
@@ -38,11 +39,11 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
     private TextView mEmptyLabel;
     private LinearLayout mLinearLayout;
     private ArrayAdapter mAdapter;
+    private TopPostsAndPagesModel mTopPostsAndPagesModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.stats_list_fragment, container, false);
-        setRetainInstance(true);
 
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
@@ -69,7 +70,27 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
         mLinearLayout.setVisibility(View.VISIBLE);
 
+        updateUI();
+
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            AppLog.d(AppLog.T.STATS, "StatsTopPostsAndPagesFragment > restoring instance state");
+            if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
+                mTopPostsAndPagesModel = (TopPostsAndPagesModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        AppLog.d(AppLog.T.STATS, "StatsTopPostsAndPagesFragment > saving instance state");
+        outState.putSerializable(ARG_REST_RESPONSE, mTopPostsAndPagesModel);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -86,6 +107,17 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
     }
 
+
+    private void updateUI() {
+        if (mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.getTopPostsAndPages().size() > 0) {
+            List<TopPostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
+            setListAdapter(new TopPostsAndPagesAdapter(getActivity(), postViews));
+            mLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            mLinearLayout.setVisibility(View.INVISIBLE);
+        }
+        mEmptyLabel.setVisibility((mLinearLayout.getVisibility() == View.INVISIBLE) ? View.VISIBLE : View.INVISIBLE);
+    }
 
     /*
  * receives broadcast when data has been updated
@@ -110,9 +142,8 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
                 return;
             }
 
-            TopPostsAndPagesModel topPostsAndPagesModel = (TopPostsAndPagesModel) dataObj;
-            List<TopPostModel> postViews = topPostsAndPagesModel.getTopPostsAndPages();
-            setListAdapter(new TopPostsAndPagesAdapter(getActivity(), postViews));
+            mTopPostsAndPagesModel = (TopPostsAndPagesModel) dataObj;
+            updateUI();
             return;
         }
     };

@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,12 +20,14 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -305,15 +308,10 @@ public class StatsService extends Service {
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
 //            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-  //          AppLog.d(T.STATS, response.toString());
-            VisitsModel visitsModel = new VisitsModel();
-            visitsModel.setBlogID(mRequestBlogId);
-            visitsModel.setDate(response.getString("date"));
-            visitsModel.setUnit(response.getString("unit"));
-            visitsModel.setData(response.getJSONArray("data").toString());
-            visitsModel.setFields(response.getJSONArray("fields").toString());
+            //          AppLog.d(T.STATS, response.toString());
+            VisitsModel visitsModel = new VisitsModel(mRequestBlogId, response);
             return visitsModel;
-    //        AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+            //        AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
         StatsSectionEnum getSectionEnum() {
