@@ -52,11 +52,12 @@ public class AutolinkUtils {
         if (text == null) {
             return null;
         }
-        Pattern urlPattern = Pattern.compile("((http|https|ftp|mailto):\\S+)");
+        Pattern urlPattern = Pattern.compile("(\\s+|^)((http|https|ftp|mailto):\\S+)");
         Matcher matcher = urlPattern.matcher(text);
         StringBuffer stringBuffer = new StringBuffer();
         while (matcher.find()) {
-            String url = matcher.group(1);
+            String whitespaces = matcher.group(1);
+            String url = matcher.group(2);
             boolean blacklisted = false;
             // Check if the URL is blacklisted
             for (Pattern providerPattern : PROVIDERS) {
@@ -67,9 +68,9 @@ public class AutolinkUtils {
             }
             // Create a <a href> HTML tag for the link
             if (!blacklisted) {
-                matcher.appendReplacement(stringBuffer,  "<a href=\"" + url + "\">" + url + "</a>");
+                matcher.appendReplacement(stringBuffer, whitespaces + "<a href=\"" + url + "\">" + url + "</a>");
             } else {
-                matcher.appendReplacement(stringBuffer, url);
+                matcher.appendReplacement(stringBuffer, whitespaces + url);
             }
         }
         matcher.appendTail(stringBuffer);
