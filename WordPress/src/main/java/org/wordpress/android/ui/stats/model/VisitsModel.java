@@ -9,14 +9,16 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class VisitsModel implements Serializable {
     private String fields; // Holds a JSON Object
     private String unit;
     private String date;
     private String blogID;
-    private VisitModel[] visits;
+    private List<VisitModel> visits;
 
     public VisitsModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
@@ -33,13 +35,13 @@ public class VisitsModel implements Serializable {
         }
 
         if (dataJSON == null || dataJSON.length() == 0) {
-            visits =  new VisitModel[0];
+            visits =  new ArrayList<VisitModel>(0);
         } else {
             // Read the position/index of each field in the response
             HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(6);
             final JSONArray fieldsJSON = getFieldsJSON();
             if (fieldsJSON == null || fieldsJSON.length() == 0) {
-                visits =  new VisitModel[0];
+                visits =  new ArrayList<VisitModel>(0);
             }
             try {
                 for (int i = 0; i < fieldsJSON.length(); i++) {
@@ -47,8 +49,9 @@ public class VisitsModel implements Serializable {
                     columnsMapping.put(field, i);
                 }
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response", e);
-                visits =  new VisitModel[0];
+                AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response." +
+                        "Response: " + response.toString(), e);
+                visits =  new ArrayList<VisitModel>(0);
             }
 
             int viewsColumnIndex = columnsMapping.get("views");
@@ -59,7 +62,7 @@ public class VisitsModel implements Serializable {
             int periodColumnIndex = columnsMapping.get("period");
 
             int numPoints = dataJSON.length();
-            VisitModel[] visitModels = new VisitModel[numPoints];
+            visits = new ArrayList<VisitModel>(numPoints);
 
             for (int i = 0; i < numPoints; i++) {
                 try {
@@ -71,16 +74,16 @@ public class VisitsModel implements Serializable {
                     currentVisitModel.setComments(currentDayData.getInt(commentsColumnIndex));
                     currentVisitModel.setLikes(currentDayData.getInt(likesColumnIndex));
                     currentVisitModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
-                    visitModels[i] = currentVisitModel;
+                    visits.add(currentVisitModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Cannot read the Visit at index " + i, e);
+                    AppLog.e(AppLog.T.STATS, "Cannot read the Visit item at index " + i
+                            + " Response: " + response.toString(), e);
                 }
             }
-            this.visits = visitModels;
         }
     }
 
-    public VisitModel[] getVisits() {
+    public List<VisitModel> getVisits() {
         return visits;
     }
 

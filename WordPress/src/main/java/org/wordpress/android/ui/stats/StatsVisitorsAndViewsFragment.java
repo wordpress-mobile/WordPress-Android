@@ -36,6 +36,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
@@ -155,13 +156,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private VisitModel[] getDataToShowOnGraph(VisitsModel visitsData) {
-        VisitModel[] visitModels = visitsData.getVisits();
-        int numPoints = Math.min(getNumOfPoints(), visitModels.length);
+        List<VisitModel> visitModels = visitsData.getVisits();
+        int numPoints = Math.min(getNumOfPoints(), visitModels.size());
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModelsToShow = new VisitModel[numPoints];
 
-        for (int i = visitModels.length -1; i >= 0 && currentPointIndex >= 0; i--) {
-            VisitModel currentVisitModel = visitModels[i];
+        for (int i = visitModels.size() -1; i >= 0 && currentPointIndex >= 0; i--) {
+            VisitModel currentVisitModel = visitModels.get(i);
             visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
@@ -170,22 +171,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private void updateUI() {
         if (mVisitsData == null) {
-            setupEmptyGraph();
+            setupEmptyUI();
             return;
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
-            setupEmptyGraph();
+            setupEmptyUI();
             return;
         }
 
-        int barSelectedOnGraph = mSelectedBarGraphBarIndex != -1 ? mSelectedBarGraphBarIndex : dataToShowOnGraph.length - 1;
+
         final String[] horLabels = new String[dataToShowOnGraph.length];
         mStatsDate = new String[dataToShowOnGraph.length];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
 
-        boolean isEmptyGraph = true;
         OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
@@ -212,36 +212,30 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = getDateLabel(currentItemStatsDate);
             mStatsDate[i] = currentItemStatsDate;
-            if (currentItemValue > 0) {
-                isEmptyGraph = false;
-            }
         }
 
         mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(getActivity(), 1);
 
-        if (isEmptyGraph) {
-            setupEmptyGraph();
-        } else {
-            if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-                mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
-            } else {
-                mGraphContainer.removeAllViews();
-                mGraphView = new StatsBarGraph(getActivity());
-                mGraphContainer.addView(mGraphView);
-            }
 
-            if (mGraphView != null) {
-                mGraphView.removeAllSeries();
-                mGraphView.addSeries(mCurrentSeriesOnScreen);
-               //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
-                mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
-                mGraphView.setHorizontalLabels(horLabels);
-                mGraphView.setGestureListener(this);
-                mGraphView.highlightBar(barSelectedOnGraph);
-            }
+        if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
+            mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
+        } else {
+            mGraphContainer.removeAllViews();
+            mGraphView = new StatsBarGraph(getActivity());
+            mGraphContainer.addView(mGraphView);
         }
+
+        mGraphView.removeAllSeries();
+        mGraphView.addSeries(mCurrentSeriesOnScreen);
+       //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+        mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setGestureListener(this);
+
+        int barSelectedOnGraph = mSelectedBarGraphBarIndex != -1 ? mSelectedBarGraphBarIndex : dataToShowOnGraph.length - 1;
+        mGraphView.highlightBar(barSelectedOnGraph);
 
         updateUIBelowTheGraph(barSelectedOnGraph);
     }
@@ -347,7 +341,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private void setupEmptyGraph() {
+    private void setupEmptyUI() {
+        mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -355,6 +350,35 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
+            }
+        }
+        mDateTextView.setText("");
+
+        for (int i=0 ; i < mRadioGroup.getChildCount(); i++) {
+            View o = mRadioGroup.getChildAt(i);
+            if (o instanceof RadioButton) {
+                RadioButton currentBtm = (RadioButton)o;
+                if (i == mSelectedOverviewItemIndex) {
+                    currentBtm.setChecked(true);
+                }
+                OverviewLabel overviewItem = (OverviewLabel)currentBtm.getTag();
+                switch (overviewItem) {
+                    case VIEWS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        break;
+                    case VISITORS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " + 0);
+                        break;
+                    case REBLOGS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        break;
+                    case LIKES:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        break;
+                    case COMMENTS:
+                        currentBtm.setText(overviewItem.getLabel() + " - " +  0);
+                        break;
+                }
             }
         }
         return;

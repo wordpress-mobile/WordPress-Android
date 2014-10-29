@@ -14,10 +14,37 @@ import java.util.List;
 
 public class TopPostsAndPagesModel implements Serializable {
     private String period;
-    private String days;
     private String date;
     private String blogID;
+    private List<TopPostModel> topPostsAndPages;
 
+    public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
+        this.blogID = blogID;
+        JSONArray postViewsArray;
+        JSONObject jDaysObject = response.getJSONObject("days");
+        Iterator<String> keys = jDaysObject.keys();
+        if (keys.hasNext()) {
+            String key = keys.next();
+            JSONObject jDateObject = jDaysObject.getJSONObject(key);
+            postViewsArray = jDateObject.getJSONArray("postviews");
+        } else {
+            postViewsArray = new JSONArray();
+        }
+
+        ArrayList<TopPostModel> list = new ArrayList<TopPostModel>(postViewsArray.length());
+
+        for (int i=0; i < postViewsArray.length(); i++) {
+            try {
+                JSONObject postObject = postViewsArray.getJSONObject(i);
+                TopPostModel currentModel = new TopPostModel(blogID, postObject);
+                list.add(currentModel);
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, "Unexpected TopPostModel object in top posts and pages array" +
+                        "at position " + i + " Response: " + response.toString(), e);
+            }
+        }
+        this.topPostsAndPages = list;
+    }
 
     public String getBlogID() {
         return blogID;
@@ -35,7 +62,6 @@ public class TopPostsAndPagesModel implements Serializable {
         this.date = date;
     }
 
-
     public String getPeriod() {
         return period;
     }
@@ -44,43 +70,7 @@ public class TopPostsAndPagesModel implements Serializable {
         this.period = period;
     }
 
-    public String getDays() {
-        return days;
-    }
-
-    public void setDays(String days) {
-        this.days = days;
-    }
-
     public List<TopPostModel> getTopPostsAndPages() {
-        JSONArray jArray;
-        String decodedString = StringUtils.unescapeHTML(this.getDays() != null ? this.getDays() : "{}");
-        try {
-            JSONObject jDaysObject = new JSONObject(decodedString);
-            Iterator<String> keys = jDaysObject.keys();
-            if (keys.hasNext()) {
-                String key = keys.next();
-                JSONObject jDateObject = jDaysObject.getJSONObject(key);
-                jArray = jDateObject.getJSONArray("postviews");
-            } else {
-                jArray = new JSONArray();
-            }
-
-            ArrayList<TopPostModel> list = new ArrayList<TopPostModel>(jArray.length());
-
-            for (int i=0; i < jArray.length(); i++) {
-                try {
-                    JSONObject postObject = jArray.getJSONObject(i);
-                    TopPostModel currentModel = new TopPostModel(blogID, postObject);
-                    list.add(currentModel);
-                } catch (JSONException e) {
-                    AppLog.i(AppLog.T.NOTIFS, "Unexpected object in top posts and pages array.");
-                }
-            }
-            return  list;
-        } catch (JSONException e) {
-            AppLog.e(AppLog.T.STATS, e);
-            return new ArrayList<TopPostModel>(0);
-        }
+        return topPostsAndPages;
     }
 }

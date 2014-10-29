@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/stats_visitors_and_views_best_ever_views_count"
-                    android:text="@string/stats_totals_views_per_visitor" />
+                    android:text="@string/stats_totals_views" />
             </RelativeLayout>
 
             <org.wordpress.android.widgets.WPTextView

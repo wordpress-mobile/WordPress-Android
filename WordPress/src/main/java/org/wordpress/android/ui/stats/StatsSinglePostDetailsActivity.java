@@ -43,31 +43,30 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 /**
  *  Single item details activity.
  */
-public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
+public class StatsSinglePostDetailsActivity extends WPActionBarActivity
+        implements StatsBarGraph.OnGestureListener{
     public static final String ARG_REMOTE_POST_ID = "ARG_REMOTE_POST_ID";
     public static final String ARG_REST_RESPONSE = "ARG_REST_RESPONSE";
+    private static final String ARG_SELECTED_GRAPH_BAR = "ARG_SELECTED_GRAPH_BAR";
 
     private boolean mIsInFront;
     private boolean mIsUpdatingStats;
     private PullToRefreshHelper mPullToRefreshHelper;
-  //  private String mStatsDate = null;
+
     private final Handler mHandler = new Handler();
-   // private int mAltRowColor;
-    private int mLocalBlogID = -1;
-    private String mRemotePostID = null; // This is a string since postID could be very looong.
-
-    // Variables that hold data returned from the REST API
-    private int mVisitorsCount = 0;
-    private int mViewsCount = 0;
-    private float mViewsPerVisitor = 0f;
-
 
     private LinearLayout mGraphContainer;
     private StatsBarGraph mGraphView;
     private GraphViewSeries mCurrentSeriesOnScreen;
     private TextView mWholeResponse;
-    private PostViewsModel mRestResponseParsed;
+    private TextView mStatsDateTextView;
+    private TextView mStatsViewsCountTextView;
+
+    private int mLocalBlogID = -1;
+    private String mRemotePostID = null; // This is a string since postID could be very looong.
     private String mRestResponse;
+    private PostViewsModel mRestResponseParsed;
+    private int mSelectedBarGraphIndex = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,32 +102,37 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
 
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
         mWholeResponse = (TextView) findViewById(R.id.stats_all_response);
+        mStatsDateTextView = (TextView) findViewById(R.id.stats_summary_date);
+        mStatsViewsCountTextView = (TextView) findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
+
+        setTitle(getString(R.string.stats));
+        setupEmptyGraph();
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mRemotePostID = savedInstanceState.getString(ARG_REMOTE_POST_ID, null);
             mRestResponse = savedInstanceState.getString(ARG_REST_RESPONSE, null);
+            mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mRemotePostID = extras.getString(ARG_REMOTE_POST_ID, null);
             mRestResponse = extras.getString(ARG_REST_RESPONSE, null);
+            mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
-
-        setTitle(getString(R.string.stats));
-        setupEmptyGraph();
 
         if (mRestResponse == null) {
             refreshStats();
         } else {
             mRestResponseParsed = new PostViewsModel(mRestResponse);
-            updateGraph(-1);
+            updateUI();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
+        outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putString(ARG_REMOTE_POST_ID, mRemotePostID);
         outState.putSerializable(ARG_REST_RESPONSE, mRestResponse);
         super.onSaveInstanceState(outState);
@@ -139,7 +143,6 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
         super.onResume();
         mPullToRefreshHelper.registerReceiver(this);
         mIsInFront = true;
-        //refreshStats();
     }
 
     @Override
@@ -267,6 +270,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
     }
 
     private void setupEmptyGraph() {
+        mSelectedBarGraphIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -276,6 +280,9 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
                 mGraphContainer.addView(emptyBarGraphView);
             }
         }
+        mWholeResponse.setText("");
+        mStatsDateTextView.setText("");
+        mStatsViewsCountTextView.setText("0");
         return;
     }
 
@@ -289,7 +296,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
             return new VisitModel[0];
         }
 
-        int numPoints = Math.min(10, dayViews.length); //FIXME : 10 for now. this oculd change when the screen size changes
+        int numPoints = Math.min(getNumOfPoints(), dayViews.length);
         int currentPointIndex = numPoints - 1;
         VisitModel[] visitModels = new VisitModel[numPoints];
 
@@ -301,12 +308,28 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
         return visitModels;
     }
 
-    private void updateGraph(int barToHighlight) {
+    private int getNumOfPoints() {
+        return 7;
+        /*
+        if (getTimeframe() == StatsTimeframe.DAY) {
+            return 7;
+        } else {
+            return 12;
+        }
+        */
+    }
+
+    private void updateUI() {
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
+
+        if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
+            setupEmptyGraph();
+            return;
+        }
+
         final String[] horLabels = new String[dataToShowOnGraph.length];
         String[] mStatsDate = new String[dataToShowOnGraph.length];
         GraphView.GraphViewData[] views = new GraphView.GraphViewData[dataToShowOnGraph.length];
-        boolean isEmptyGraph = true;
 
         for (int i = 0; i < dataToShowOnGraph.length; i++) {
             int currentItemValue = 0;
@@ -316,48 +339,36 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
             String currentItemStatsDate = dataToShowOnGraph[i].getPeriod();
             horLabels[i] = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", "MMM d");
             mStatsDate[i] = currentItemStatsDate;
-            if (currentItemValue > 0) {
-                isEmptyGraph = false;
-            }
         }
 
         mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_views);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 1);
 
-        if (isEmptyGraph) {
-            setupEmptyGraph();
+        if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
+            mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
         } else {
-            if (mGraphContainer.getChildCount() >= 1 && mGraphContainer.getChildAt(0) instanceof GraphView) {
-                mGraphView = (StatsBarGraph) mGraphContainer.getChildAt(0);
-            } else {
-                mGraphContainer.removeAllViews();
-                mGraphView = new StatsBarGraph(this);
-                mGraphContainer.addView(mGraphView);
-            }
-
-            if (mGraphView != null) {
-                mGraphView.removeAllSeries();
-                mGraphView.addSeries(mCurrentSeriesOnScreen);
-                //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
-                mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
-                mGraphView.setHorizontalLabels(horLabels);
-                //mGraphView.setGestureListener(this);
-
-                 if (barToHighlight != -1) {
-                    mGraphView.highlightBar(barToHighlight);
-                } else {
-                    mGraphView.highlightBar(dataToShowOnGraph.length - 1);
-                }
-            }
+            mGraphContainer.removeAllViews();
+            mGraphView = new StatsBarGraph(this);
+            mGraphContainer.addView(mGraphView);
         }
+
+
+        mGraphView.removeAllSeries();
+        mGraphView.addSeries(mCurrentSeriesOnScreen);
+        //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+        mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
+        mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setGestureListener(this);
+        mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+        mGraphView.highlightBar(mSelectedBarGraphIndex);
+
+        mStatsDateTextView.setText(StatsUtils.parseDate(mStatsDate[mSelectedBarGraphIndex], "yyyy-MM-dd", "MMM d"));
+        mStatsViewsCountTextView.setText(dataToShowOnGraph[mSelectedBarGraphIndex].getViews() + "");
 
         if (mRestResponseParsed.getOriginalResponse() != null) {
             mWholeResponse.setText(mRestResponseParsed.getOriginalResponse().toString());
         }
-
-        //int barSelectedOnGraph = barToHighlight != -1 ? barToHighlight : dataToShowOnGraph.length - 1;
-        //updateOverviewAreaBelowTheGraph(barSelectedOnGraph);
     }
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
@@ -381,6 +392,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
             AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
             mRestResponse = response.toString();
             mRestResponseParsed = new PostViewsModel(response);
+            mSelectedBarGraphIndex = -1;
 
             // single background thread used to parse the response.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
@@ -391,7 +403,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
                     final boolean post = mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            updateGraph(-1);
+                            updateUI();
                         }
                     });
                 }
@@ -414,4 +426,15 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity {
             mPullToRefreshHelper.setRefreshing(false);
         }
     }
+
+    @Override
+    public void onBarTapped(int tappedBar) {
+        mSelectedBarGraphIndex = tappedBar;
+        final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
+        String currentItemStatsDate = dataToShowOnGraph[mSelectedBarGraphIndex].getPeriod();
+        currentItemStatsDate = StatsUtils.parseDate(currentItemStatsDate, "yyyy-MM-dd", "MMM d");
+        mStatsDateTextView.setText(currentItemStatsDate);
+        mStatsViewsCountTextView.setText(dataToShowOnGraph[mSelectedBarGraphIndex].getViews() + "");
+    }
+
 }

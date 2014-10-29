@@ -3,10 +3,12 @@ package org.wordpress.android.ui.stats.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
- /*
- * A model to represent a SINGLE post or page stat
- */
-public class TopPostModel {
+import java.io.Serializable;
+
+/*
+* A model to represent a SINGLE post or page stat
+*/
+public class TopPostModel implements Serializable{
     private String mBlogId;
     private String mPostId;
     private String mTitle;

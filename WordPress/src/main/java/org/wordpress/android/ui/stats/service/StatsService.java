@@ -174,7 +174,6 @@ public class StatsService extends Service {
                     // Visits call: The Graph and the section just below the graph
                     VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
-                    AppLog.e(T.STATS, "visitsPath - " + visitsPath);
                     statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
                 }
 
@@ -329,11 +328,7 @@ public class StatsService extends Service {
                 OperationApplicationException {
             //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
             //     AppLog.d(T.STATS, response.toString());
-            TopPostsAndPagesModel topPostsAndPagesModel = new TopPostsAndPagesModel();
-            topPostsAndPagesModel.setBlogID(mRequestBlogId);
-            topPostsAndPagesModel.setDate(response.getString("date"));
-            topPostsAndPagesModel.setPeriod(response.getString("period"));
-            topPostsAndPagesModel.setDays(response.getJSONObject("days").toString());
+            TopPostsAndPagesModel topPostsAndPagesModel = new TopPostsAndPagesModel(mRequestBlogId, response);
             return topPostsAndPagesModel;
             //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
