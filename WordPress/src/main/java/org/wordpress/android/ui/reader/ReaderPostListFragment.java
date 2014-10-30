@@ -4,7 +4,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -875,19 +874,19 @@ public class ReaderPostListFragment extends Fragment
 
         setIsUpdating(true, updateAction);
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onActionResult(boolean succeeded) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isAdded()) {
                     return;
                 }
                 setIsUpdating(false, updateAction);
-                if (succeeded) {
+                if (result.isNewOrChanged()) {
                     refreshPosts();
                 }
             }
         };
-        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, listener);
+        ReaderPostActions.requestPostsForBlog(mCurrentBlogId, mCurrentBlogUrl, updateAction, resultListener);
     }
 
     void updateCurrentTag() {
@@ -929,11 +928,11 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
         }
 
-        ReaderActions.UpdateResultAndCountListener resultListener = new ReaderActions.UpdateResultAndCountListener() {
+        ReaderActions.UpdateResultListener resultListener = new ReaderActions.UpdateResultListener() {
             @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result, int numNewPosts) {
+            public void onUpdateResult(ReaderActions.UpdateResult result) {
                 if (!isAdded()) {
-                    AppLog.w(T.READER, "reader post list > new posts when fragment has no activity");
+                    AppLog.w(T.READER, "reader post list > posts updated when fragment has no activity");
                     return;
                 }
 
@@ -941,53 +940,29 @@ public class ReaderPostListFragment extends Fragment
 
                 // make sure this is still the current tag (user may have switched tags during the update)
                 if (!isCurrentTag(tag)) {
-                    AppLog.i(T.READER, "reader post list > new posts in inactive tag");
                     return;
                 }
 
-                if (result == ReaderActions.UpdateResult.CHANGED && numNewPosts > 0) {
-                    // show the "new posts" bar rather than immediately update the list
-                    // if the user is viewing posts for a followed tag, posts are already
-                    // displayed, and the user has scrolled the list
-                    if (!isPostAdapterEmpty()
-                            && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
-                            && updateAction == RequestDataAction.LOAD_NEWER
-                            && !isListScrolledToTop()) {
-                        showNewPostsBar();
-                    } else {
-                        refreshPosts();
-                    }
+                // show the "new posts" bar rather than immediately update the list
+                // if the user is viewing posts for a followed tag, posts are already
+                // displayed, and the user has scrolled the list
+                boolean showNewPostsBar = result == ReaderActions.UpdateResult.HAS_NEW
+                        && !isPostAdapterEmpty()
+                        && getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)
+                        && updateAction == RequestDataAction.LOAD_NEWER
+                        && !isListScrolledToTop();
+
+                if (showNewPostsBar) {
+                    showNewPostsBar();
+                } else if (result.isNewOrChanged()) {
+                    refreshPosts();
                 } else {
-                    // update empty view title and description if the the post list is empty
                     setEmptyTitleAndDescriptionForCurrentTag();
                 }
             }
         };
 
-        // if this is a request for newer posts and posts with this tag already exist, assign
-        // a backfill listener to ensure there aren't any gaps between this update and the previous one
-        boolean allowBackfill = (updateAction == RequestDataAction.LOAD_NEWER && !isPostAdapterEmpty());
-        if (allowBackfill) {
-            ReaderActions.PostBackfillListener backfillListener = new ReaderActions.PostBackfillListener() {
-                @Override
-                public void onPostsBackfilled() {
-                    if (!isAdded()) {
-                        AppLog.w(T.READER, "reader post list > new posts backfilled when fragment has no activity");
-                        return;
-                    }
-                    if (!isCurrentTag(tag)) {
-                        AppLog.i(T.READER, "reader post list > new posts backfilled in inactive tag");
-                    } else if (isPostAdapterEmpty()) {
-                        // show the new posts right away if this is the current tag and there aren't
-                        // any posts showing, otherwise just let them be shown on the next refresh
-                        refreshPosts();
-                    }
-                }
-            };
-            ReaderPostActions.updatePostsInTagWithBackfill(tag, resultListener, backfillListener);
-        } else {
-            ReaderPostActions.updatePostsInTag(tag, updateAction, resultListener);
-        }
+        ReaderPostActions.updatePostsInTag(tag, updateAction, resultListener);
     }
 
     boolean isUpdating() {
@@ -1243,16 +1218,7 @@ public class ReaderPostListFragment extends Fragment
                         @Override
                         public void onBlogInfoFailed() {
                             if (isAdded()) {
-                                // blog couldn't be shown, alert user then back out after a brief delay
-                                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (isAdded()) {
-                                            getActivity().onBackPressed();
-                                        }
-                                    }
-                                }, 1000);
+                                ToastUtils.showToast(getActivity(), R.string.reader_toast_err_get_blog_info, ToastUtils.Duration.LONG);
                             }
                         }
                     }

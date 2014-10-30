@@ -223,6 +223,7 @@ public class WordPress extends Application {
     // Configure Simperium and start buckets if we are signed in to WP.com
     private void configureSimperium() {
         if (!TextUtils.isEmpty(getWPComAuthToken(this))) {
+            AppLog.i(T.NOTIFS, "Configuring Simperium");
             SimperiumUtils.configureSimperium(this, getWPComAuthToken(this));
         }
     }

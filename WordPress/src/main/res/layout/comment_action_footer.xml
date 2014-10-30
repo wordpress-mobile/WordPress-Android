@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/margin_small"
-                android:src="@drawable/ic_action_like"
+                android:src="@drawable/ic_action_approve"
                 android:contentDescription="@string/reader_label_like" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-4dp"
-                android:text="@string/reader_label_like"
+                android:text="@string/mnu_comment_approve"
                 android:textColor="@color/calypso_blue"
                 android:textSize="@dimen/text_sz_small" />
         </LinearLayout>
@@ -90,25 +90,6 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_action_spam"
             android:text="@string/mnu_comment_spam" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/image_edit_comment"
-            style="@style/WordPress.ModerateButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_edit"
-            android:text="@string/mnu_comment_edit" />
-
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_btn_more"
-            style="@style/WordPress.ModerateButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_action_more"
-            android:text="@string/more" />
     </LinearLayout>
 
     <View

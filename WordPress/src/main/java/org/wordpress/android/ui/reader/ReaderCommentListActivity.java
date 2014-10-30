@@ -136,7 +136,7 @@ public class ReaderCommentListActivity extends Activity {
     }
 
     private void loadPost() {
-        mPost = ReaderPostTable.getPost(mBlogId, mPostId);
+        mPost = ReaderPostTable.getPost(mBlogId, mPostId, true);
         if (mPost == null) {
             ToastUtils.showToast(this, R.string.reader_toast_err_get_post);
             finish();
@@ -289,7 +289,7 @@ public class ReaderCommentListActivity extends Activity {
                 mIsUpdatingComments = false;
                 if (!isFinishing()) {
                     hideProgress();
-                    if (result == ReaderActions.UpdateResult.CHANGED) {
+                    if (result.isNewOrChanged()) {
                         retainTopmostComment();
                         refreshComments();
                     } else {
