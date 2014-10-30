@@ -1,6 +1,15 @@
 language: android
 jdk: oraclejdk7
 
+# TODO: re-enable Slack notifications when tests are fixed
+#notifications:
+#  # Slack notification on failure (secured token).
+#  slack:
+#    rooms:
+#      secure: sOTcwi1DT0lJykB/smJQwJ5lQblg9jc5PtLsTu4euI/P4nCv1CPu5DVZ1aDwXL6TPDUO5uEwbzbjVFZzrl2nFdAV9XvGT3wL3Zrm2Y5HBtwi8JWdbc4dYR/xobJlIg7HRczXwoFt6yls4BUayNJJbZFV9q0ftmUSe77Pag/ZWQw=
+#    on_failure: always
+#    on_success: change
+
 android:
   components:
     - build-tools-19.1.0
@@ -16,5 +25,14 @@ install:
   # Setup gradle.properties
   - cp WordPress/gradle.properties-example WordPress/gradle.properties
 
+before_script:
+  # create and start an emulator for runnig tests later in the script step
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+
 script:
+  # build all variants and run lint
   - ./gradlew -PdisablePreDex build
+  # run tests for the AndroidTestVanillaDebug variant only
+  - ./gradlew -PdisablePreDex WordPress:connectedAndroidTestVanillaDebug
