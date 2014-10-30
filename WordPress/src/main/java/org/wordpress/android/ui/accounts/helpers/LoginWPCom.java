@@ -30,8 +30,8 @@ public class LoginWPCom extends LoginAbstract {
         // Map REST errors to local error codes
         if (errorObject != null) {
             try {
-                String error = (String) errorObject.get("error");
-                String errorDescription = (String) errorObject.get("error_description");
+                String error = errorObject.getString("error");
+                String errorDescription = errorObject.getString("error_description");
                 if (error != null && error.equals("invalid_request")) {
                     if (errorDescription.contains("Incorrect username or password.")) {
                         errorMsgId = org.wordpress.android.R.string.username_or_password_incorrect;
@@ -71,6 +71,7 @@ public class LoginWPCom extends LoginAbstract {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(WordPress.WPCOM_USERNAME_PREFERENCE, mUsername);
                 editor.putString(WordPress.WPCOM_PASSWORD_PREFERENCE, mPassword);
+                editor.putString(WordPress.ACCESS_TOKEN_PREFERENCE, token.toString());
                 editor.commit();
 
                 mCallback.onSuccess();
