@@ -80,6 +80,7 @@ public class FetchBlogListWPOrg extends FetchBlogListAbstract {
                 }
             }
             callback.onSuccess(userBlogList);
+            return;
         } catch (XmlPullParserException parserException) {
             mErrorMsgId = org.wordpress.android.R.string.xmlrpc_error;
             AppLog.e(T.NUX, "invalid data received from XMLRPC call wp.getUsersBlogs", parserException);
