@@ -28,19 +28,20 @@ import android.widget.TextView;
 
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.networking.SSLCertsViewActivity;
+import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListAbstract.Callback;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPCom;
 import org.wordpress.android.ui.accounts.helpers.FetchBlogListWPOrg;
 import org.wordpress.android.ui.accounts.helpers.LoginAbstract;
 import org.wordpress.android.ui.accounts.helpers.LoginWPCom;
-import org.wordpress.android.networking.SSLCertsViewActivity;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.reader.actions.ReaderUserActions;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
@@ -277,15 +278,24 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     };
 
-    private void readerPostLoginActions() {
-        // Fire off a request to get current user data
-        WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                ReaderUserActions.setCurrentUser(jsonObject);
+    private void setPrimaryBlog(JSONObject jsonObject) {
+        try {
+            String primaryBlogId = jsonObject.getString("primary_blog");
+            // Look for a visible blog with this id in the DB
+            List<Map<String, Object>> blogs = WordPress.wpDB.getAccountsBy("isHidden = 0 AND blogId = " + primaryBlogId,
+                    null, "1");
+            if (blogs != null && !blogs.isEmpty()) {
+                Map<String, Object> primaryBlog = blogs.get(0);
+                // Ask for a refresh and select it
+                refreshBlogContent(primaryBlog);
+                WordPress.setCurrentBlog((Integer) primaryBlog.get("id"));
             }
-        }, null);
+        } catch (JSONException e) {
+            AppLog.e(T.NUX, e);
+        }
+    }
 
+    private void wpcomPostLoginActions() {
         // get reader tags so they're available as soon as the Reader is accessed - note that
         // this uses the application context since the activity is finished immediately below
         if (isAdded()) {
@@ -294,42 +304,59 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
+    private void trackAnalyticsSignIn() {
+        Map<String, Boolean> properties = new HashMap<String, Boolean>();
+        properties.put("dotcom_user", isWPComLogin());
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
+        AnalyticsTracker.refreshMetadata();
+        if (!isWPComLogin()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
+        }
+    }
+
+    private void finishCurrentActivity(final List<Map<String, Object>> userBlogList) {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (userBlogList != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
+            }
+        });
+    }
+
     private Callback mFecthBlogListCallback = new Callback() {
         @Override
         public void onSuccess(final List<Map<String, Object>> userBlogList) {
             if (userBlogList != null) {
                 BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
-                // refresh first blog asynchronously
-                refreshFirstBlogContent(userBlogList);
+                // refresh first blog
+                refreshFirstBlogContent();
             }
 
-            // Analytics tracking
-            Map<String, Boolean> properties = new HashMap<String, Boolean>();
-            properties.put("dotcom_user", isWPComLogin());
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN, properties);
-            AnalyticsTracker.refreshMetadata();
-            if (!isWPComLogin()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ADDED_SELF_HOSTED_SITE);
-            }
+            trackAnalyticsSignIn();
 
             if (isWPComLogin()) {
-                readerPostLoginActions();
-            }
+                wpcomPostLoginActions();
+                // Fire off a request to get current user data
+                WordPress.getRestClientUtils().get("me", new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        // Update Reader Current user.
+                        ReaderUserActions.setCurrentUser(jsonObject);
 
-            if (!isAdded()) {
-                return;
-            }
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    endProgress();
-                    if (userBlogList != null) {
-                        getActivity().setResult(Activity.RESULT_OK);
-                        getActivity().finish();
+                        // Set primary blog
+                        setPrimaryBlog(jsonObject);
+                        finishCurrentActivity(userBlogList);
                     }
-                }
-            });
+                }, null);
+            } else {
+                finishCurrentActivity(userBlogList);
+            }
         }
 
         @Override
@@ -669,8 +696,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private void refreshBlogContent(Map<String, Object> blogMap) {
-        String blogId = blogMap.get("blogid").toString();
-        String xmlRpcUrl = blogMap.get("xmlrpc").toString();
+        String blogId = blogMap.get("blogId").toString();
+        String xmlRpcUrl = blogMap.get("url").toString();
         int intBlogId = StringUtils.stringToInt(blogId, -1);
         if (intBlogId == -1) {
             AppLog.e(T.NUX, "Can't refresh blog content - invalid blogId: " + blogId);
@@ -684,15 +711,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     /**
      * Get first blog and call RefreshBlogContentTask. First blog will be autoselected when user login.
      * Also when a user add a new self hosted blog, userBlogList contains only one element.
-     * TODO: when user's default blog autoselection is implemented, we should refresh the default one and
-     * not the first one.
      * We don't want to refresh the whole list because it can be huge and each blog is refreshed when
      * user selects it.
      */
-    private void refreshFirstBlogContent(List<Map<String, Object>> userBlogList) {
-        if (userBlogList != null && !userBlogList.isEmpty()) {
-            Map<String, Object> firstBlogMap = userBlogList.get(0);
-            refreshBlogContent(firstBlogMap);
+    private void refreshFirstBlogContent() {
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getAccountsBy("isHidden = 0", null, "1");
+        if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
+            Map<String, Object> firstBlog = visibleBlogs.get(0);
+            refreshBlogContent(firstBlog);
         }
     }
 }
