@@ -316,6 +316,10 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
+        return getAccountsBy(byString, extraFields, null);
+    }
+
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, String limit) {
         if (db == null) {
             return new Vector<Map<String, Object>>();
         }
@@ -325,7 +329,7 @@ public class WordPressDB {
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
         }
-        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limit);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
