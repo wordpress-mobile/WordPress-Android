@@ -38,6 +38,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
@@ -186,6 +187,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setupSuggestionsServiceAndAdapter();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
@@ -265,8 +273,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         return view;
     }
 
-    private void setupSuggestions() {
-        final Context context = getActivity().getApplicationContext();
+    private void setupSuggestionsServiceAndAdapter() {
+        if (!isAdded()) return;
+
+        final Context context = getActivity();
 
         mSuggestionAdapter = new SuggestionAdapter(context);
         mEditReply.setAdapter(mSuggestionAdapter);
@@ -307,8 +317,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (isAdded())
             showComment();
-
-        setupSuggestions();
     }
 
     public void setShouldFocusReplyField(boolean shouldFocusReplyField) {
