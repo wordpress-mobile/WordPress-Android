@@ -21,7 +21,6 @@ import com.android.volley.VolleyError;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.TopPostModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
@@ -37,7 +36,8 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
 
     private static final int NO_STRING_ID = -1;
     private TextView mEmptyLabel;
-    private LinearLayout mLinearLayout;
+    private LinearLayout mListContainer;
+    private LinearLayout mTopPostList;
     private ArrayAdapter mAdapter;
     private TopPostsAndPagesModel mTopPostsAndPagesModel;
 
@@ -53,25 +53,16 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         TextView totalsLabel = (TextView) view.findViewById(R.id.stats_list_totals_label);
         totalsLabel.setText(getTotalsLabelResId());
         mEmptyLabel = (TextView) view.findViewById(R.id.stats_list_empty_text);
+        mTopPostList = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
+        mTopPostList.setVisibility(View.INVISIBLE);
+        mListContainer = (LinearLayout) view.findViewById(R.id.stats_list_header_container);
 
-        String label;
-        if (getEmptyLabelDescResId() == NO_STRING_ID) {
-            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b>";
+        // Init the UI
+        if (mTopPostsAndPagesModel != null) {
+            updateUI();
         } else {
-            label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+            showEmptyUI(true);
         }
-        if (label.contains("<")) {
-            mEmptyLabel.setText(Html.fromHtml(label));
-        } else {
-            mEmptyLabel.setText(label);
-        }
-        configureEmptyLabel();
-
-        mLinearLayout = (LinearLayout) view.findViewById(R.id.stats_list_linearlayout);
-        mLinearLayout.setVisibility(View.VISIBLE);
-
-        updateUI();
-
         return view;
     }
 
@@ -105,18 +96,48 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
     }
-
 
     private void updateUI() {
         if (mTopPostsAndPagesModel != null && mTopPostsAndPagesModel.getTopPostsAndPages().size() > 0) {
             List<TopPostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
             setListAdapter(new TopPostsAndPagesAdapter(getActivity(), postViews));
-            mLinearLayout.setVisibility(View.VISIBLE);
+            showEmptyUI(false);
         } else {
-            mLinearLayout.setVisibility(View.INVISIBLE);
+            showEmptyUI(true);
         }
-        mEmptyLabel.setVisibility((mLinearLayout.getVisibility() == View.INVISIBLE) ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private void showLoadingUI() {
+        mEmptyLabel.setText("Loading...");
+        mEmptyLabel.setVisibility(View.VISIBLE);
+        mTopPostList.setVisibility(View.GONE);
+        mListContainer.setVisibility(View.GONE);
+        return;
+    }
+
+    private void showEmptyUI(boolean show) {
+        if (show) {
+            String label;
+            if (getEmptyLabelDescResId() == NO_STRING_ID) {
+                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b>";
+            } else {
+                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b> " + getString(getEmptyLabelDescResId());
+            }
+            if (label.contains("<")) {
+                mEmptyLabel.setText(Html.fromHtml(label));
+            } else {
+                mEmptyLabel.setText(label);
+            }
+            mEmptyLabel.setVisibility(View.VISIBLE);
+            mListContainer.setVisibility(View.GONE);
+            mTopPostList.setVisibility(View.GONE);
+        } else {
+            mEmptyLabel.setVisibility(View.GONE);
+            mListContainer.setVisibility(View.VISIBLE);
+            mTopPostList.setVisibility(View.VISIBLE);
+        }
     }
 
     /*
@@ -127,30 +148,38 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
-            if (!action.equals(StatsService.ACTION_STATS_UPDATED) || !intent.hasExtra(StatsService.EXTRA_UPDATED_SECTION_NAME)) {
+            if (!(action.equals(StatsService.ACTION_STATS_UPDATED) || action.equals(StatsService.ACTION_STATS_UPDATING))) {
                 return;
             }
 
-            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_NAME);
+            if (!intent.hasExtra(StatsService.EXTRA_SECTION_NAME)) {
+                return;
+            }
+
+            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
             if (sectionToUpdate != StatsService.StatsSectionEnum.TOP_POSTS) {
                 return;
             }
 
-            Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_DATA);
-            if ( dataObj == null || dataObj instanceof VolleyError) {
-                //TODO: show the error on the section ???
-                return;
+            if (action.equals(StatsService.ACTION_STATS_UPDATED)) {
+                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_SECTION_DATA);
+               /* if (dataObj == null || dataObj instanceof VolleyError) {
+                    //TODO: show the error on the section ???
+                    return;
+                }*/
+                mTopPostsAndPagesModel = (dataObj == null || dataObj instanceof VolleyError) ? null : (TopPostsAndPagesModel) dataObj;
+                updateUI();
+            } if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
+               showLoadingUI();
             }
 
-            mTopPostsAndPagesModel = (TopPostsAndPagesModel) dataObj;
-            updateUI();
             return;
         }
     };
 
     public void setListAdapter(ArrayAdapter adapter) {
         mAdapter = adapter;
-        StatsUIHelper.reloadLinearLayout(getActivity(), mAdapter, mLinearLayout);
+        StatsUIHelper.reloadLinearLayout(getActivity(), mAdapter, mTopPostList);
     }
 
     public class TopPostsAndPagesAdapter extends ArrayAdapter<TopPostModel> {
@@ -219,13 +248,6 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractFragment {
 
     private int getEmptyLabelDescResId() {
         return R.string.stats_empty_top_posts_desc;
-    }
-
-    private void configureEmptyLabel() {
-        if (mAdapter == null || mAdapter.getCount() == 0)
-            mEmptyLabel.setVisibility(View.VISIBLE);
-        else
-            mEmptyLabel.setVisibility(View.GONE);
     }
 
     @Override

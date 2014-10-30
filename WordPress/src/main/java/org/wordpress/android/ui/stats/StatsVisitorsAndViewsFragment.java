@@ -93,7 +93,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         mRadioGroup.setVisibility(View.VISIBLE);
-        updateUI();
+        if (mVisitsData != null) {
+            updateUI();
+        } else {
+            setupEmptyUI(false);
+        }
         mRadioGroup.setOnCheckedChangeListener(this);
 
         return view;
@@ -139,6 +143,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         super.onResume();
         LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(getActivity());
         lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATED));
+        lbm.registerReceiver(mReceiver, new IntentFilter(StatsService.ACTION_STATS_UPDATING));
     }
 
     @Override
@@ -171,13 +176,13 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
     private void updateUI() {
         if (mVisitsData == null) {
-            setupEmptyUI();
+            setupEmptyUI(false);
             return;
         }
 
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph(mVisitsData);
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
-            setupEmptyUI();
+            setupEmptyUI(false);
             return;
         }
 
@@ -341,12 +346,16 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private void setupEmptyUI() {
+    private void setupEmptyUI(boolean isLoading) {
         mSelectedBarGraphBarIndex = -1;
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
+            if (isLoading) {
+                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                emptyLabel.setText("Loading...");
+            }
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
@@ -416,36 +425,41 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         public void onReceive(Context context, Intent intent) {
             String action = StringUtils.notNullStr(intent.getAction());
 
-            if (!action.equals(StatsService.ACTION_STATS_UPDATED) || !intent.hasExtra(StatsService.EXTRA_UPDATED_SECTION_NAME)) {
+            if (!(action.equals(StatsService.ACTION_STATS_UPDATED) || action.equals(StatsService.ACTION_STATS_UPDATING))) {
                 return;
             }
 
-            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_NAME);
+            if (!intent.hasExtra(StatsService.EXTRA_SECTION_NAME)) {
+                return;
+            }
+
+            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
             if (/*sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && */ sectionToUpdate != StatsService.StatsSectionEnum.VISITS) {
                 return;
             }
 
-            Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_UPDATED_SECTION_DATA);
-            if ( dataObj == null || dataObj instanceof VolleyError) {
-                //TODO: show the error on the section ???
-                return;
-            }
+            if (action.equals(StatsService.ACTION_STATS_UPDATED)) {
+                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_SECTION_DATA);
 
-            // Reset the bar to highlight
-            if (mGraphView != null) {
-                mGraphView.resetHighlightBar();
-            }
+                /*if (dataObj == null || dataObj instanceof VolleyError) {
+                    //TODO: show the error on the section ???
+                    return;
+                }*/
+                mVisitsData = (dataObj == null || dataObj instanceof VolleyError) ? null : (VisitsModel) dataObj;
+                mSelectedBarGraphBarIndex = -1;
+                mSelectedOverviewItemIndex = 0;
 
-            mVisitsData = (VisitsModel)dataObj;
-            mSelectedBarGraphBarIndex = -1;
-            mSelectedOverviewItemIndex = 0;
-            updateUI();
-            return;
+                // Reset the bar to highlight
+                if (mGraphView != null) {
+                    mGraphView.resetHighlightBar();
+                }
+
+                updateUI();
+            } if (action.equals(StatsService.ACTION_STATS_UPDATING)) {
+                setupEmptyUI(true);
+            }
         }
     };
-
-
-
 
     @Override
     public void onBarTapped(int tappedBar) {

@@ -18,39 +18,47 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingBottom="@dimen/margin_large">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/margin_extra_large" >
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/stats_list_entry_label"
-                style="@style/StatsHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:text="TITLE" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/stats_list_totals_label"
-                style="@style/StatsHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/margin_small"
-                android:text="VIEWS" />
-        </RelativeLayout>
-
-        <include layout="@layout/stats_header_line" />
-
-        <LinearLayout
-            android:id="@+id/stats_list_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:scrollbarStyle="outsideOverlay"
-            android:visibility="gone" >
+            android:id="@+id/stats_list_header_container">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/margin_extra_large" >
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/stats_list_entry_label"
+                    style="@style/StatsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:text="TITLE" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/stats_list_totals_label"
+                    style="@style/StatsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:text="VIEWS" />
+            </RelativeLayout>
+
+            <include layout="@layout/stats_header_line" />
+
+            <LinearLayout
+                android:id="@+id/stats_list_linearlayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scrollbarStyle="outsideOverlay"
+                android:visibility="gone" >
+            </LinearLayout>
+
         </LinearLayout>
 
         <!-- ListView

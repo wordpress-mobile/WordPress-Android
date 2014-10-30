@@ -25,6 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.stats.model.PostViewsModel;
 import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -124,7 +125,14 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         if (mRestResponse == null) {
             refreshStats();
         } else {
-            mRestResponseParsed = new PostViewsModel(mRestResponse);
+            try {
+                mRestResponseParsed = new PostViewsModel(mRestResponse);
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
+                mRestResponseParsed = null;
+                mRestResponse = null;
+                mSelectedBarGraphIndex = -1;
+            }
             updateUI();
         }
     }
@@ -158,81 +166,6 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.stats_details, menu);
         return true;
-    }
-
-    private class PostViewsModel implements Serializable {
-        private String mOriginalResponse;
-        //private int mHighestMonth, mHighestDayAverage, mHighestWeekAverage;
-        //private String mDate;
-        private VisitModel[] mDayViews;
-
-        public String getOriginalResponse() {
-            return mOriginalResponse;
-        }
-
-        public VisitModel[] getDayViews() {
-            return mDayViews;
-        }
-
-        PostViewsModel(String response) {
-            try {
-                this.mOriginalResponse = response;
-                JSONObject responseObj = new JSONObject(response);
-                parseResponseObject(responseObj);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
-            }
-        }
-
-        PostViewsModel(JSONObject response) {
-            if (response == null) {
-                return;
-            }
-            this.mOriginalResponse = response.toString();
-            parseResponseObject(response);
-        }
-
-        private void parseResponseObject(JSONObject response) {
-            try {
-                JSONArray dataJSON =  response.getJSONArray("data");
-                if (dataJSON != null) {
-                    // Read the position/index of each field in the response
-                    HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(2);
-                    JSONArray fieldsJSON = response.getJSONArray("fields");
-                    try {
-                        for (int i = 0; i < fieldsJSON.length(); i++) {
-                            final String field = fieldsJSON.getString(i);
-                            columnsMapping.put(field, i);
-                        }
-                    } catch (JSONException e) {
-                        AppLog.e(AppLog.T.STATS, "Cannot read the fields indexes from the JSON response", e);
-                        throw e;
-                    }
-
-                    VisitModel[] visitModels = new VisitModel[dataJSON.length()];
-                    int viewsColumnIndex = columnsMapping.get("views");
-                    int periodColumnIndex = columnsMapping.get("period");
-
-                    for (int i = 0; i < dataJSON.length(); i++) {
-                        try {
-                            JSONArray currentDayData = dataJSON.getJSONArray(i);
-                            VisitModel currentVisitModel = new VisitModel();
-                            currentVisitModel.setPeriod(currentDayData.getString(periodColumnIndex));
-                            currentVisitModel.setViews(currentDayData.getInt(viewsColumnIndex));
-                            visitModels[i] = currentVisitModel;
-                        } catch (JSONException e) {
-                            AppLog.e(AppLog.T.STATS, "Cannot create the Visit at index " + i, e);
-                        }
-                    }
-                    mDayViews = visitModels;
-                } else {
-                    mDayViews = null;
-                }
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, e);
-                mDayViews = null;
-            }
-        }
     }
 
     private void refreshStats() {
@@ -384,15 +317,23 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
 
         @Override
         public void onResponse(final JSONObject response) {
-            if (mActivityRef.get() == null) {
+            if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
             mIsUpdatingStats = false;
             mPullToRefreshHelper.setRefreshing(false);
             AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
             mRestResponse = response.toString();
-            mRestResponseParsed = new PostViewsModel(response);
             mSelectedBarGraphIndex = -1;
+
+            try {
+                mRestResponseParsed = new PostViewsModel(response);
+            } catch (JSONException e) {
+                AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
+                mRestResponseParsed = null;
+                mRestResponse = null;
+                mSelectedBarGraphIndex = -1;
+            }
 
             // single background thread used to parse the response.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);

@@ -11,7 +11,6 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,14 +19,12 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
-import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -48,8 +45,9 @@ public class StatsService extends Service {
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
     public static final String ACTION_STATS_UPDATED = "wp-stats-updated";
     public static final String EXTRA_IS_UPDATING = "is-updating";
-    public static final String EXTRA_UPDATED_SECTION_NAME = "updated-section-name";
-    public static final String EXTRA_UPDATED_SECTION_DATA = "updated-section-data";
+    public static final String EXTRA_SECTION_NAME = "updated-section-name";
+    public static final String EXTRA_SECTION_DATA = "updated-section-data";
+
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
 
@@ -175,12 +173,14 @@ public class StatsService extends Service {
                     VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                     statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
+                    broadcastSectionUpdating(StatsSectionEnum.VISITS);
                 }
 
                // Posts & Pages
                 TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
+                broadcastSectionUpdating(StatsSectionEnum.TOP_POSTS);
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
@@ -257,8 +257,8 @@ public class StatsService extends Service {
         private void notifySectionUpdated() {
             Intent intent = new Intent()
                     .setAction(ACTION_STATS_UPDATED)
-                    .putExtra(EXTRA_UPDATED_SECTION_NAME, getSectionEnum())
-                    .putExtra(EXTRA_UPDATED_SECTION_DATA, responseObjectModel);
+                    .putExtra(EXTRA_SECTION_NAME, getSectionEnum())
+                    .putExtra(EXTRA_SECTION_DATA, responseObjectModel);
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
@@ -377,6 +377,15 @@ public class StatsService extends Service {
             intent.putExtra(EXTRA_ERROR_OBJECT, mErrorObject);
         }
 */
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void broadcastSectionUpdating(StatsSectionEnum sectionName) {
+        Intent intent = new Intent()
+                .setAction(ACTION_STATS_UPDATING)
+                .putExtra(EXTRA_SECTION_NAME, sectionName)
+                .putExtra(EXTRA_IS_UPDATING, true);
+
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
