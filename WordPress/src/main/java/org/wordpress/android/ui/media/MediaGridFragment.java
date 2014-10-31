@@ -7,11 +7,14 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -618,14 +621,26 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     public void onMultiSelectChange(int count) {
         if (count == 0) {
             // enable filtering when not in multiselect
+            Rect drawRect = new Rect(0, 0, 0, 0);
+            mSpinnerContainer.getDrawingRect(drawRect);
+            mSpinnerContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_from_top));
+            TranslateAnimation gridAnimation = new TranslateAnimation(0, 0, -drawRect.height(), 0);
+            gridAnimation.setDuration(200);
+            mGridView.startAnimation(gridAnimation);
             mSpinner.setEnabled(true);
             mSpinnerContainer.setEnabled(true);
             mSpinnerContainer.setVisibility(View.VISIBLE);
-        } else {
+        } else if(mSpinner.isEnabled()) {
             // disable filtering on multiselect
+            Rect drawRect = new Rect(0, 0, 0, 0);
+            mSpinnerContainer.getDrawingRect(drawRect);
             mSpinner.setEnabled(false);
             mSpinnerContainer.setEnabled(false);
             mSpinnerContainer.setVisibility(View.GONE);
+            mSpinnerContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_off_top));
+            TranslateAnimation gridAnimation = new TranslateAnimation(0, 0, drawRect.height(), 0);
+            gridAnimation.setDuration(200);
+            mGridView.startAnimation(gridAnimation);
         }
 
         mListener.onMultiSelectChange(count);
