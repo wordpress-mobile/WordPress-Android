@@ -5,8 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -240,9 +240,10 @@ public class WPNetworkImageView extends ImageView {
         if (response.getBitmap() != null) {
             Bitmap bitmap = response.getBitmap();
 
-            // Apply circular rounding to avatars
+            // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                bitmap = ImageUtils.getCircularBitmap(bitmap);
+                new CircularizeBitmapTask().execute(bitmap);
+                return;
             }
 
             setImageBitmap(bitmap);
@@ -318,11 +319,9 @@ public class WPNetworkImageView extends ImageView {
             case AVATAR:
                 if (getContext() == null) break;
                 // "mystery man" (circular) for failed avatars
-                setImageBitmap(ImageUtils.getCircularBitmap(
-                        BitmapFactory.decodeResource(
-                                getContext().getResources(),
-                                R.drawable.gravatar_placeholder
-                        )
+                new CircularizeBitmapTask().execute(BitmapFactory.decodeResource(
+                        getContext().getResources(),
+                        R.drawable.gravatar_placeholder
                 ));
                 break;
             default :
@@ -341,5 +340,27 @@ public class WPNetworkImageView extends ImageView {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(this, View.ALPHA, 0.25f, 1f);
         alpha.setDuration(FADE_TRANSITION);
         alpha.start();
+    }
+
+    // Circularizes a bitmap in a background thread
+    private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Bitmap... params) {
+            if (params == null || params.length == 0) return null;
+
+            Bitmap bitmap = params[0];
+            return ImageUtils.getCircularBitmap(bitmap);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                setImageBitmap(bitmap);
+
+                if (mImageListener != null) {
+                    mImageListener.onImageLoaded(true);
+                }
+            }
+        }
     }
 }
