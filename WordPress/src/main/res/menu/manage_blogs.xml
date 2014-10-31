@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_show_all"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/show_all"/>
     <item
         android:id="@+id/menu_hide_all"
-        android:showAsAction="collapseActionView|ifRoom"
+        app:showAsAction="collapseActionView|ifRoom"
         android:title="@string/hide_all"/>
     <item
         android:id="@+id/menu_refresh"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/refresh"/>
 </menu>

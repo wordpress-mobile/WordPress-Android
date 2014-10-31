@@ -170,10 +170,10 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     if (backStackEntryCount == 0) {
-                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                        mDrawerToggle.setDrawerIndicatorEnabled(true);
                         setTitle(R.string.notifications);
                     } else {
-                        mMenuDrawer.setDrawerIndicatorEnabled(false);
+                        mDrawerToggle.setDrawerIndicatorEnabled(false);
                     }
                 }
             };
@@ -268,7 +268,7 @@ public class NotificationsActivity extends WPActionBarActivity implements Commen
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.hide(mNotesListFragment);
         ft.add(R.id.layout_fragment_container, mDetailFragment);
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
+        //mMenuDrawer.setDrawerIndicatorEnabled(false);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
 

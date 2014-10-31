@@ -272,7 +272,9 @@
     <string name="attempting_configure">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
-    <!-- drafts -->
+    <!-- Menu Drawer -->
+    <string name="open_drawer">Open menu drawer</string>
+    <string name="close_drawer">Close menu drawer</string>
 
 
     <!-- media selection -->

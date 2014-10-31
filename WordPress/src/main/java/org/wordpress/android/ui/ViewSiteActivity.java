@@ -108,13 +108,6 @@ public class ViewSiteActivity extends WebViewActivity {
             return false;
         }
 
-        if (item.getItemId() == android.R.id.home) {
-            if (mMenuDrawer != null) {
-                mMenuDrawer.toggleMenu();
-                return true;
-            }
-        }
-
         int itemID = item.getItemId();
         if (itemID == R.id.menu_refresh) {
             mWebView.reload();

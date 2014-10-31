@@ -135,11 +135,11 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
 
     private void setupBaseLayout() {
         if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mMenuDrawer.setDrawerIndicatorEnabled(true);
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
             mViewPager.setVisibility(View.VISIBLE);
             mTabView.setVisibility(View.VISIBLE);
         } else {
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
             mViewPager.setVisibility(View.GONE);
             mTabView.setVisibility(View.GONE);
         }
@@ -290,9 +290,9 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        if (mMenuDrawer.isMenuVisible()) {
+        /*if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
-        } else if (fm.getBackStackEntryCount() > 0) {
+        } else*/ if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {

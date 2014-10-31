@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="WordPress" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="WordPress" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Material theme -->
+        <item name="colorPrimary">@color/blue_medium</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="colorAccent">@color/blue_light</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+
         <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
 
         <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
@@ -18,8 +24,11 @@
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
+    </style>
 
-        <item name="menuDrawerStyle">@style/MenuDrawer</item>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/white</item>
     </style>
 
     <style name="WordPress.DropDownListView.Light" parent="WordPress">
@@ -133,24 +142,19 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MenuDrawer" parent="Widget.MenuDrawer">
-        <item name="mdMenuSize">@dimen/menu_drawer_width</item>
-        <item name="mdContentBackground">@color/background_grey</item>
-    </style>
-
-    <style name="MenuDrawer.Button">
+    <style name="MenuDrawerButton">
         <item name="android:background">@drawable/md_list_selector</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="MenuDrawer.Button.Text">
+    <style name="MenuDrawerButton.Text">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="MenuDrawer.CommentBadge">
+    <style name="MenuDrawerCommentBadge">
         <item name="android:background">@drawable/comment_badge_background</item>
         <item name="android:textAppearance">?android:attr/textAppearance</item>
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>

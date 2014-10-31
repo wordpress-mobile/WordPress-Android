@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -26,7 +25,6 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.MenuDrawerItem;
 import org.wordpress.android.ui.WPActionBarActivity;
-import org.wordpress.android.ui.notifications.NotificationsActivity;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostActionListener;
 import org.wordpress.android.ui.posts.PostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
@@ -95,7 +93,7 @@ public class PostsActivity extends WPActionBarActivity
 
         createMenuDrawer(R.layout.posts);
 
-        ActionBar actionBar = getActionBar();
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
         }
@@ -164,7 +162,7 @@ public class PostsActivity extends WPActionBarActivity
     private FragmentManager.OnBackStackChangedListener mOnBackStackChangedListener = new FragmentManager.OnBackStackChangedListener() {
         public void onBackStackChanged() {
             if (getFragmentManager().getBackStackEntryCount() == 0)
-                mMenuDrawer.setDrawerIndicatorEnabled(true);
+                mDrawerToggle.setDrawerIndicatorEnabled(true);
         }
     };
 
@@ -306,7 +304,7 @@ public class PostsActivity extends WPActionBarActivity
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
             } else {
                 viewPostFragment.loadPost(post);
             }

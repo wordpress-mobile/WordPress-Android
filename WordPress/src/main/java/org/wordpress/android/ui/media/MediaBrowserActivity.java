@@ -161,9 +161,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private void setupBaseLayout() {
         // hide access to the drawer when there are fragments in the back stack
         if (getFragmentManager().getBackStackEntryCount() == 0) {
-            mMenuDrawer.setDrawerIndicatorEnabled(true);
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
         } else {
-            mMenuDrawer.setDrawerIndicatorEnabled(false);
+            mDrawerToggle.setDrawerIndicatorEnabled(false);
         }
     }
 
@@ -328,7 +328,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 ft.add(R.id.media_browser_container, mMediaItemFragment, MediaItemFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commit();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
             }
         } else {
             // tablet: update the edit fragment with the new item
@@ -401,7 +401,7 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
                 ft.add(R.id.media_browser_container, mMediaEditFragment, MediaEditFragment.TAG);
                 ft.addToBackStack(null);
                 ft.commit();
-                mMenuDrawer.setDrawerIndicatorEnabled(false);
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
             } else {
                 // tablet layout: update edit fragment
                 mMediaEditFragment.loadMedia(mediaId);
@@ -603,9 +603,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public void onBackPressed() {
         FragmentManager fm = getFragmentManager();
-        if (mMenuDrawer.isMenuVisible()) {
+        /*if (mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
-        } else if (fm.getBackStackEntryCount() > 0) {
+        } else*/ if (fm.getBackStackEntryCount() > 0) {
             fm.popBackStack();
             setupBaseLayout();
         } else {

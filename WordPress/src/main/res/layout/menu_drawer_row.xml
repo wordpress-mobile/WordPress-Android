@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_posts_btn"
-    style="@style/MenuDrawer.Button"
+    style="@style/MenuDrawerButton"
     android:layout_width="match_parent"
     android:layout_height="52dp"
     android:orientation="horizontal"
@@ -20,7 +20,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_title"
-        style="@style/MenuDrawer.Button.Text"
+        style="@style/MenuDrawerButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
@@ -29,7 +29,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/menu_row_badge"
-        style="@style/MenuDrawer.CommentBadge"
+        style="@style/MenuDrawerCommentBadge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="24dp"

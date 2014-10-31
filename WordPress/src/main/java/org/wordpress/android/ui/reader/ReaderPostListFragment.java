@@ -5,6 +5,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -542,12 +545,14 @@ public class ReaderPostListFragment extends Fragment
      * ensures that the ActionBar is correctly configured based on the type of list
      */
     private void checkActionBar() {
-        final ActionBar actionBar = getActionBar();
+        if (!isAdded()) return;
+
+        final android.support.v7.app.ActionBar actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
         if (actionBar == null) {
             return;
         }
 
-        if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
+        /*if (getPostListType().equals(ReaderPostListType.TAG_FOLLOWED)) {
             // only change if we're not in list navigation mode, since that means the actionBar
             // is already correctly configured
             if (actionBar.getNavigationMode() != ActionBar.NAVIGATION_MODE_LIST) {
@@ -560,7 +565,7 @@ public class ReaderPostListFragment extends Fragment
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        }
+        }*/
     }
 
     private void startBoxAndPagesAnimation() {

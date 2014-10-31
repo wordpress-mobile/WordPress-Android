@@ -2,8 +2,6 @@
 package org.wordpress.android.ui;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,12 +14,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -29,12 +32,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -59,7 +58,6 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.DeviceUtils;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -75,7 +73,7 @@ import java.util.Map;
 /**
  * Base class for Activities that include a standard action bar and menu drawer.
  */
-public abstract class WPActionBarActivity extends Activity {
+public abstract class WPActionBarActivity extends ActionBarActivity {
     public static final int NEW_BLOG_CANCELED = 10;
 
     /**
@@ -92,8 +90,6 @@ public abstract class WPActionBarActivity extends Activity {
      */
     private static final int AUTHENTICATE_REQUEST = 300;
 
-
-    protected MenuDrawer mMenuDrawer;
     private static int[] blogIDs;
     protected boolean isAnimatingRefreshButton;
     protected boolean mShouldFinish;
@@ -101,14 +97,21 @@ public abstract class WPActionBarActivity extends Activity {
     private boolean mReauthCanceled;
     private boolean mNewBlogActivityRunning;
 
+    private Toolbar mToolbar;
+    protected ActionBarDrawerToggle mDrawerToggle;
     private MenuAdapter mAdapter;
     protected List<MenuDrawerItem> mMenuItems = new ArrayList<MenuDrawerItem>();
-    private ListView mListView;
+    private ListView mDrawerListView;
     private Spinner mBlogSpinner;
     protected boolean mFirstLaunch = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_action_bar);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         // configure all the available menu items
         mMenuItems.add(new ReaderMenuItem());
@@ -122,6 +125,15 @@ public abstract class WPActionBarActivity extends Activity {
         mMenuItems.add(new QuickPhotoMenuItem());
         mMenuItems.add(new QuickVideoMenuItem());
         mMenuItems.add(new ViewSiteMenuItem());
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mDrawerToggle != null) {
+            // Sync the toggle state after onRestoreInstanceState has occurred.
+            mDrawerToggle.syncState();
+        }
     }
 
     @Override
@@ -152,16 +164,15 @@ public abstract class WPActionBarActivity extends Activity {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed());
     }
 
-    protected void refreshMenuDrawer(){
+    protected void refreshMenuDrawer() {
+        if (mAdapter == null) return;
         // the current blog may have changed while we were away
         setupCurrentBlog();
-        if (mMenuDrawer != null) {
-            updateMenuDrawer();
-        }
+        updateMenuDrawer();
 
         Blog currentBlog = WordPress.getCurrentBlog();
 
-        if (currentBlog != null && mListView != null && mListView.getHeaderViewsCount() > 0) {
+        if (currentBlog != null && mDrawerListView != null && mDrawerListView.getHeaderViewsCount() > 0) {
             for (int i = 0; i < blogIDs.length; i++) {
                 if (blogIDs[i] == currentBlog.getLocalTableBlogId()) {
                     if (mBlogSpinner != null) {
@@ -175,16 +186,11 @@ public abstract class WPActionBarActivity extends Activity {
     /**
      * Create a menu drawer and attach it to the activity.
      *
-     * @param contentViewID {@link View} of the main content for the activity.
+     * @param contentViewId {@link View} of the main content for the activity.
      */
-    protected void createMenuDrawer(int contentViewID) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        mMenuDrawer = attachMenuDrawer();
-        mMenuDrawer.setContentView(contentViewID);
+    protected void createMenuDrawer(int contentViewId) {
+        ViewGroup layoutContainer = (ViewGroup)findViewById(R.id.activity_container);
+        layoutContainer.addView(getLayoutInflater().inflate(contentViewId, null));
 
         initMenuDrawer();
     }
@@ -195,13 +201,8 @@ public abstract class WPActionBarActivity extends Activity {
      * @param contentView {@link View} of the main content for the activity.
      */
     protected void createMenuDrawer(View contentView) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-
-        mMenuDrawer = attachMenuDrawer();
-        mMenuDrawer.setContentView(contentView);
+        ViewGroup layoutContainer = (ViewGroup)findViewById(R.id.activity_container);
+        layoutContainer.addView(contentView);
 
         initMenuDrawer();
     }
@@ -224,34 +225,6 @@ public abstract class WPActionBarActivity extends Activity {
              || mask == Configuration.SCREENLAYOUT_SIZE_XLARGE);
     }
 
-    /**
-     * Attach a menu drawer to the Activity
-     * Set to be a static drawer if on a landscape x-large device
-     */
-    private MenuDrawer attachMenuDrawer() {
-        final MenuDrawer menuDrawer;
-        ActionBar actionBar = getActionBar();
-
-        if (isStaticMenuDrawer()) {
-            menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.STATIC, Position.LEFT);
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(false);
-            }
-        } else {
-            menuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY);
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-            menuDrawer.setDrawerIndicatorEnabled(true);
-        }
-
-        int shadowSizeInPixels = getResources().getDimensionPixelSize(R.dimen.menu_shadow_width);
-        menuDrawer.setDropShadowSize(shadowSizeInPixels);
-        menuDrawer.setDropShadowColor(getResources().getColor(R.color.md__shadowColor));
-        menuDrawer.setSlideDrawable(R.drawable.ic_navigation_drawer);
-        return menuDrawer;
-    }
-
     public boolean isStaticMenuDrawer() {
         return isXLargeLandscape();
     }
@@ -264,35 +237,23 @@ public abstract class WPActionBarActivity extends Activity {
      * Create menu drawer ListView and listeners
      */
     private void initMenuDrawer(int blogSelection) {
-        if (mMenuDrawer == null) {
-            return;
-        }
-        mListView = new ListView(this);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListView.setDivider(null);
-        mListView.setDividerHeight(0);
-        mListView.setCacheColorHint(android.R.color.transparent);
 
-        // if the ActionBar overlays window content, we must insert a view which is the same
-        // height as the ActionBar as the first header in the ListView - without this the
-        // ActionBar will cover the first item
-        if (DisplayUtils.hasActionBarOverlay(getWindow())) {
-            final int actionbarHeight = DisplayUtils.getActionBarHeight(this);
-            RelativeLayout header = new RelativeLayout(this);
-            header.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, actionbarHeight));
-            mListView.addHeaderView(header, null, false);
-        }
-
+        // Set up the menu drawer
+        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerListView = (ListView) findViewById(R.id.left_drawer);
         mAdapter = new MenuAdapter(this);
+
         String[] blogNames = getBlogNames();
         if (blogNames.length > 1) {
             addBlogSpinner(blogNames);
         }
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mDrawerListView.setAdapter(mAdapter);
+        // Set the list's click listener
+        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // account for header views
-                int menuPosition = position - mListView.getHeaderViewsCount();
+                int menuPosition = position - mDrawerListView.getHeaderViewsCount();
                 // bail if the adjusted position is out of bounds for the adapter
                 if (menuPosition < 0 || menuPosition >= mAdapter.getCount())
                     return;
@@ -306,16 +267,38 @@ public abstract class WPActionBarActivity extends Activity {
                     item.selectItem();
                 // save the last activity preference
                 // close the menu drawer
-                mMenuDrawer.closeMenu();
+                drawerLayout.closeDrawer(Gravity.LEFT);
                 // if we have an intent, start the new activity
             }
         });
 
-        mMenuDrawer.setMenuView(mListView);
-        mListView.setAdapter(mAdapter);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, mToolbar, R.string.open_drawer,
+                R.string.close_drawer
+        ) {
+            public void onDrawerClosed(View view) {
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                invalidateOptionsMenu();
+            }
+        };
+
+        drawerLayout.setDrawerListener(mDrawerToggle);
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+        mDrawerToggle.syncState();
+
         if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
         }
+
         updateMenuDrawer();
     }
 
@@ -335,7 +318,7 @@ public abstract class WPActionBarActivity extends Activity {
         mBlogSpinner = (Spinner) spinnerWrapper.findViewById(R.id.blog_spinner);
         mBlogSpinner.setOnItemSelectedListener(mItemSelectedListener);
         populateBlogSpinner(blogNames);
-        mListView.addHeaderView(spinnerWrapper);
+        mDrawerListView.addHeaderView(spinnerWrapper);
     }
 
     /*
@@ -345,7 +328,7 @@ public abstract class WPActionBarActivity extends Activity {
         if (mBlogSpinner == null)
             return;
         mBlogSpinnerInitialized = false;
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             mBlogSpinner.setAdapter(new BlogSpinnerAdapter(actionBar.getThemedContext(), blogNames));
         } else {
@@ -497,13 +480,13 @@ public abstract class WPActionBarActivity extends Activity {
      */
     @Override
     public void onBackPressed() {
-        if (mMenuDrawer != null) {
+        /*if (mMenuDrawer != null) {
             final int drawerState = mMenuDrawer.getDrawerState();
             if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
                 mMenuDrawer.closeMenu();
                 return;
             }
-        }
+        }*/
         super.onBackPressed();
     }
 
@@ -580,10 +563,10 @@ public abstract class WPActionBarActivity extends Activity {
                     // new blog has been added, so rebuild cache of blogs and setup current blog
                     getBlogNames();
                     setupCurrentBlog();
-                    if (mMenuDrawer != null) {
+                    /*if (mMenuDrawer != null) {
                         initMenuDrawer();
                         mMenuDrawer.openMenu(false);
-                    }
+                    }*/
                     WordPress.registerForCloudMessaging(this);
                     // If logged in without blog, redirect to the Reader view
                     showReaderIfNoBlog();
@@ -593,7 +576,7 @@ public abstract class WPActionBarActivity extends Activity {
                 break;
             case SETTINGS_REQUEST:
                 // user returned from settings - skip if user signed out
-                if (mMenuDrawer != null && resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
+                if (/*mMenuDrawer != null && */resultCode != PreferencesActivity.RESULT_SIGNED_OUT) {
                     // If we need to add or remove the blog spinner, init the drawer again
                     initMenuDrawer();
 
@@ -640,12 +623,12 @@ public abstract class WPActionBarActivity extends Activity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (mMenuDrawer != null) {
-                mMenuDrawer.toggleMenu();
-                return true;
-            } else {
+            //if (mMenuDrawer != null) {
+                //mMenuDrawer.toggleMenu();
+                //return true;
+            //} else {
                 onBackPressed();
-            }
+            //}
         } else if (item.getItemId() == R.id.menu_settings) {
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivityForResult(i, SETTINGS_REQUEST);
@@ -761,27 +744,6 @@ public abstract class WPActionBarActivity extends Activity {
      * this to perform activity-specific cleanup upon signout
      */
     public void onSignout() {
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        if (isXLarge()) {
-            if (mMenuDrawer != null) {
-                // Re-attach the drawer if an XLarge device is rotated, so it can be static if in landscape
-                View content = mMenuDrawer.getContentContainer().getChildAt(0);
-                if (content != null) {
-                    mMenuDrawer.getContentContainer().removeView(content);
-                    mMenuDrawer = attachMenuDrawer();
-                    mMenuDrawer.setContentView(content);
-                    if (mBlogSpinner != null) {
-                        initMenuDrawer(mBlogSpinner.getSelectedItemPosition());
-                    } else {
-                        initMenuDrawer();
-                    }
-                }
-            }
-        }
-        super.onConfigurationChanged(newConfig);
     }
 
     private class ReaderMenuItem extends MenuDrawerItem {

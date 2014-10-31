@@ -118,9 +118,9 @@ public class CommentsActivity extends WPActionBarActivity
                 public void onBackStackChanged() {
                     int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
                     if (backStackEntryCount == 0) {
-                        mMenuDrawer.setDrawerIndicatorEnabled(true);
+                        mDrawerToggle.setDrawerIndicatorEnabled(true);
                     } else {
-                        mMenuDrawer.setDrawerIndicatorEnabled(false);
+                        mDrawerToggle.setDrawerIndicatorEnabled(false);
                     }
                 }
             };
@@ -196,7 +196,7 @@ public class CommentsActivity extends WPActionBarActivity
             ft.hide(listFragment);
         }
         ft.commitAllowingStateLoss();
-        mMenuDrawer.setDrawerIndicatorEnabled(false);
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
     }
 
     /*

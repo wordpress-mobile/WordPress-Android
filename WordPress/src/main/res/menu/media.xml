@@ -1,35 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
         android:id="@+id/menu_new_media"
         android:icon="@drawable/ic_action_new"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/new_media"/>
     <item
         android:id="@+id/menu_search"
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_action_search"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/menu_search"/>
     <item
         android:id="@+id/menu_delete"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/delete"/>
     <item
         android:id="@+id/menu_refresh"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/refresh"/>
     <item
         android:id="@+id/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/settings"
         android:orderInCategory="1000"/>
     <item
         android:id="@+id/menu_signout"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/sign_out"
         android:orderInCategory="2000"/>
 

@@ -31,7 +31,7 @@
         ReaderIconCountView attributes
     -->
     <declare-styleable name="ReaderIconCountView">
-        <attr name="icon" format="enum">
+        <attr name="readerIcon" format="enum">
             <enum name="like" value="0" />
             <enum name="comment" value="1" />
         </attr>

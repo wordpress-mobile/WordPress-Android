@@ -148,14 +148,14 @@ public class ReaderPostListActivity extends WPActionBarActivity
 
     @Override
     public void onBackPressed() {
-        if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
+        /*if (mMenuDrawer != null && mMenuDrawer.isMenuVisible()) {
             super.onBackPressed();
-        } else {
+        } else {*/
             ReaderPostListFragment fragment = getListFragment();
             if (fragment == null || !fragment.goBackInTagHistory()) {
                 super.onBackPressed();
             }
-        }
+        //}
     }
 
     @Override

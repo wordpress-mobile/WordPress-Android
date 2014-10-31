@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_view_stats_full_site"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/view_stats_full_site"/>
     <item
         android:id="@+id/menu_refresh"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/refresh"/>
     <item
         android:id="@+id/menu_settings"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/settings"/>
     <item
         android:id="@+id/menu_signout"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/sign_out"/>
 </menu>
