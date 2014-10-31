@@ -252,23 +252,27 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         // Set the list's click listener
         mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // close the menu drawer
+                drawerLayout.closeDrawer(Gravity.LEFT);
+
                 // account for header views
                 int menuPosition = position - mDrawerListView.getHeaderViewsCount();
+
                 // bail if the adjusted position is out of bounds for the adapter
-                if (menuPosition < 0 || menuPosition >= mAdapter.getCount())
+                if (menuPosition < 0 || menuPosition >= mAdapter.getCount()) {
                     return;
+                }
                 MenuDrawerItem item = mAdapter.getItem(menuPosition);
+
                 // if the item has an id, remember it for launch
                 if (item.hasItemId()) {
                     ActivityId.trackLastActivity(WPActionBarActivity.this, item.getItemId());
                 }
+
                 // only perform selection if the item isn't already selected
-                if (!item.isSelected())
+                if (!item.isSelected()) {
                     item.selectItem();
-                // save the last activity preference
-                // close the menu drawer
-                drawerLayout.closeDrawer(Gravity.LEFT);
-                // if we have an intent, start the new activity
+                }
             }
         });
 
@@ -292,8 +296,6 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-
-        mDrawerToggle.syncState();
 
         if (blogSelection != -1 && mBlogSpinner != null) {
             mBlogSpinner.setSelection(blogSelection);
@@ -396,26 +398,6 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             text.setText((String)getItem(position));
 
             return view;
-        }
-    }
-
-    protected void startActivityWithDelay(final Intent i) {
-        if (isXLargeLandscape()) {
-            // Tablets in landscape don't need a delay because the menu drawer doesn't close
-            startActivity(i);
-        } else {
-            // When switching to LAST_ACTIVITY_PREFERENCE onCreate we don't need to delay
-            if (mFirstLaunch) {
-                startActivity(i);
-                return;
-            }
-            // Let the menu animation finish before starting a new activity
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(i);
-                }
-            }, 400);
         }
     }
 
@@ -767,7 +749,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             Intent intent;
             intent = new Intent(WPActionBarActivity.this, ReaderPostListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
     }
 
@@ -791,7 +773,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             }
             Intent intent = new Intent(WPActionBarActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -815,7 +797,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             }
             Intent intent = new Intent(WPActionBarActivity.this, MediaBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -844,7 +826,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             intent.putExtra("isNew", true);
             intent.putExtra(PostsActivity.EXTRA_VIEW_PAGES, true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -872,7 +854,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             intent.putExtra("id", WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.putExtra("isNew", true);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public void configureView(View view){
@@ -908,7 +890,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, ThemeBrowserActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
 
         @Override
@@ -938,7 +920,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             Intent intent = new Intent(WPActionBarActivity.this, StatsActivity.class);
             intent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, WordPress.getCurrentBlog().getLocalTableBlogId());
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -958,7 +940,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                     ? Constants.QUICK_POST_PHOTO_CAMERA
                     : Constants.QUICK_POST_PHOTO_LIBRARY);
             intent.putExtra("isNew", true);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -978,7 +960,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                     ? Constants.QUICK_POST_VIDEO_CAMERA
                     : Constants.QUICK_POST_VIDEO_LIBRARY);
             intent.putExtra("isNew", true);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -1002,7 +984,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
             }
             Intent intent = new Intent(WPActionBarActivity.this, ViewSiteActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
         @Override
         public Boolean isVisible() {
@@ -1028,7 +1010,7 @@ public abstract class WPActionBarActivity extends ActionBarActivity {
                 mShouldFinish = true;
             Intent intent = new Intent(WPActionBarActivity.this, NotificationsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
         }
     }
 

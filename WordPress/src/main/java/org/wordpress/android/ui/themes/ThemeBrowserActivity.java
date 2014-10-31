@@ -121,7 +121,7 @@ public class ThemeBrowserActivity extends WPActionBarActivity implements
         if (WordPress.getCurrentBlog() != null && !WordPress.getCurrentBlog().isDotcomFlag()) {
             Intent intent = new Intent(ThemeBrowserActivity.this, PostsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivityWithDelay(intent);
+            startActivity(intent);
             return false;
         }
         return true;
