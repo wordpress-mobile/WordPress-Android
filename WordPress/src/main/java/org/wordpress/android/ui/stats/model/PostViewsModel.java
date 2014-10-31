@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -114,13 +116,33 @@ public class PostViewsModel implements Serializable {
             mDayViews = null;
         }
 
+        parseYears(response);
+        parseAverages(response);
+        parseWeeks(response);
+    }
+
+    private String[] orderKeys(Iterator keys, int numberOfKeys) {
+        // Keys could not be ordered fine. Reordering them.
+        String[] orderedKeys = new String[numberOfKeys];
+        int i = 0;
+        while (keys.hasNext()) {
+            orderedKeys[i] = (String)keys.next();
+            i++;
+        }
+        Arrays.sort(orderedKeys);
+        return orderedKeys;
+    }
+
+    private void parseYears(JSONObject response) {
         // Parse the Years section
         try {
             JSONObject yearsJSON = response.getJSONObject("years");
-            final Iterator keys = yearsJSON.keys();
-            while (keys.hasNext()) {
+            // Keys could not be ordered fine. Reordering them.
+            String[] orderedKeys = orderKeys(yearsJSON.keys(), yearsJSON.length());
+
+            for (int j = 0; j < orderedKeys.length; j++) {
                 Year currentYear = new Year();
-                String currentYearKey = (String) keys.next();
+                String currentYearKey = orderedKeys[j];
                 currentYear.setLabel(currentYearKey);
 
                 JSONObject currentYearObj = yearsJSON.getJSONObject(currentYearKey);
@@ -128,9 +150,9 @@ public class PostViewsModel implements Serializable {
                 currentYear.setTotal(total);
 
                 JSONObject months = currentYearObj.getJSONObject("months");
-                final Iterator monthsKeys = months.keys();
-                while (monthsKeys.hasNext()) {
-                    String currentMonthKey = (String) monthsKeys.next();
+                String[] orderedMonthsKeys = orderKeys(months.keys(), months.length());
+                for (int i = 0; i < orderedMonthsKeys.length; i++) {
+                    String currentMonthKey = orderedMonthsKeys[i];
                     int currentMonthVisits = months.getInt(currentMonthKey);
                     int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
                     currentYear.getMonths()[currentMonthIndex] = currentMonthVisits;
@@ -140,24 +162,27 @@ public class PostViewsModel implements Serializable {
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, "Cannot parse the Years section", e);
         }
+    }
 
+    private void parseAverages(JSONObject response) {
         // Parse the Averages section
         try {
             JSONObject averagesJSON = response.getJSONObject("averages");
-            final Iterator averagesKeys = averagesJSON.keys();
-            while(averagesKeys.hasNext()) {
-                Average currentAverage = new Average();
+            // Keys could not be ordered fine. Reordering them.
+            String[] orderedKeys = orderKeys(averagesJSON.keys(), averagesJSON.length());
 
-                String currentJSONKey = (String) averagesKeys.next();
+            for (int j = 0; j < orderedKeys.length; j++) {
+                Average currentAverage = new Average();
+                String currentJSONKey = orderedKeys[j];
                 currentAverage.setLabel(currentJSONKey);
 
                 JSONObject currentAverageJSONObj = averagesJSON.getJSONObject(currentJSONKey);
                 currentAverage.setOverall(currentAverageJSONObj.getInt("overall"));
 
                 JSONObject monthsJSON = currentAverageJSONObj.getJSONObject("months");
-                final Iterator monthsKeys = monthsJSON.keys();
-                while(monthsKeys.hasNext()) {
-                    String currentMonthKey = (String) monthsKeys.next();
+                String[] orderedMonthsKeys = orderKeys(monthsJSON.keys(), monthsJSON.length());
+                for (int i = 0; i < orderedMonthsKeys.length; i++) {
+                    String currentMonthKey = orderedMonthsKeys[i];
                     int currentMonthVisits = monthsJSON.getInt(currentMonthKey);
                     int currentMonthIndex = Integer.parseInt(currentMonthKey) - 1;
                     currentAverage.getMonths()[currentMonthIndex] = currentMonthVisits;
@@ -167,7 +192,9 @@ public class PostViewsModel implements Serializable {
         } catch (JSONException e) {
             AppLog.e(AppLog.T.STATS, "Cannot parse the Averages section", e);
         }
+    }
 
+    private void parseWeeks(JSONObject response) {
         // Parse the Weeks section
         try {
             JSONArray weeksJSON = response.getJSONArray("weeks");
@@ -184,8 +211,14 @@ public class PostViewsModel implements Serializable {
                         currentWeek.setChange(currentWeekJSON.getInt("change"));
                     }
                 } catch (JSONException e){
-                    // TODO: if i == 0 is the first week. if notit could mean infinity
-                    currentWeek.setChange(0);
+                    AppLog.w(AppLog.T.STATS, "Cannot parse the change value in weeks section. Trying to understand the meaning: 42!!");
+                    //  if i == 0 is the first week. if notit could mean infinity
+                    String aProblematicValue = currentWeekJSON.get("change").toString();
+                    if (aProblematicValue.contains("infinity")) {
+                        currentWeek.setChange(Integer.MAX_VALUE);
+                    } else {
+                        currentWeek.setChange(0);
+                    }
                 }
 
                 currentWeek.setAverage(currentWeekJSON.getInt("average"));
