@@ -3,12 +3,15 @@ package org.wordpress.android.ui.stats;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +20,6 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -29,13 +31,13 @@ import org.wordpress.android.ui.stats.model.PostViewsModel;
 import org.wordpress.android.ui.stats.model.VisitModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ptr.PullToRefreshHelper;
 
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -62,10 +64,11 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
     private TextView mWholeResponse;
     private TextView mStatsDateTextView;
     private TextView mStatsViewsCountTextView;
+    private LinearLayout mMonthsAndYearsList;
+    private LinearLayout mAveragesList;
 
     private int mLocalBlogID = -1;
     private String mRemotePostID = null; // This is a string since postID could be very looong.
-    private String mRestResponse;
     private PostViewsModel mRestResponseParsed;
     private int mSelectedBarGraphIndex = -1;
 
@@ -105,34 +108,28 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         mWholeResponse = (TextView) findViewById(R.id.stats_all_response);
         mStatsDateTextView = (TextView) findViewById(R.id.stats_summary_date);
         mStatsViewsCountTextView = (TextView) findViewById(R.id.stats_visitors_and_views_best_ever_views_count);
+        mMonthsAndYearsList = (LinearLayout) findViewById(R.id.stats_months_years_list_linearlayout);
+        mAveragesList = (LinearLayout) findViewById(R.id.stats_averages_list_linearlayout);
 
         setTitle(getString(R.string.stats));
-        setupEmptyGraph();
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mRemotePostID = savedInstanceState.getString(ARG_REMOTE_POST_ID, null);
-            mRestResponse = savedInstanceState.getString(ARG_REST_RESPONSE, null);
+            mRestResponseParsed = (PostViewsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = savedInstanceState.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         } else if (getIntent() != null) {
             Bundle extras = getIntent().getExtras();
             mLocalBlogID = extras.getInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, -1);
             mRemotePostID = extras.getString(ARG_REMOTE_POST_ID, null);
-            mRestResponse = extras.getString(ARG_REST_RESPONSE, null);
+            mRestResponseParsed = (PostViewsModel) extras.getSerializable(ARG_REST_RESPONSE);
             mSelectedBarGraphIndex = extras.getInt(ARG_SELECTED_GRAPH_BAR, -1);
         }
 
-        if (mRestResponse == null) {
+        if (mRestResponseParsed == null) {
+            setupEmptyUI(true);
             refreshStats();
         } else {
-            try {
-                mRestResponseParsed = new PostViewsModel(mRestResponse);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
-                mRestResponseParsed = null;
-                mRestResponse = null;
-                mSelectedBarGraphIndex = -1;
-            }
             updateUI();
         }
     }
@@ -142,7 +139,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         outState.putInt(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, mLocalBlogID);
         outState.putInt(ARG_SELECTED_GRAPH_BAR, mSelectedBarGraphIndex);
         outState.putString(ARG_REMOTE_POST_ID, mRemotePostID);
-        outState.putSerializable(ARG_REST_RESPONSE, mRestResponse);
+        outState.putSerializable(ARG_REST_RESPONSE, mRestResponseParsed);
         super.onSaveInstanceState(outState);
     }
 
@@ -199,15 +196,23 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
 
         mIsUpdatingStats = true;
         mPullToRefreshHelper.setRefreshing(true);
+
+        mMonthsAndYearsList.setVisibility(View.GONE);
+        mAveragesList.setVisibility(View.GONE);
+
+
         return;
     }
 
-    private void setupEmptyGraph() {
-        mSelectedBarGraphIndex = -1;
+    private void setupEmptyUI(boolean isLoading) {
         Context context = mGraphContainer.getContext();
         if (context != null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
+            if (isLoading) {
+                final TextView emptyLabel = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                emptyLabel.setText("Loading...");
+            }
             if (emptyBarGraphView != null) {
                 mGraphContainer.removeAllViews();
                 mGraphContainer.addView(emptyBarGraphView);
@@ -216,6 +221,8 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         mWholeResponse.setText("");
         mStatsDateTextView.setText("");
         mStatsViewsCountTextView.setText("0");
+        mMonthsAndYearsList.setVisibility(View.GONE);
+        mAveragesList.setVisibility(View.GONE);
         return;
     }
 
@@ -256,7 +263,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         final VisitModel[] dataToShowOnGraph = getDataToShowOnGraph();
 
         if (dataToShowOnGraph == null || dataToShowOnGraph.length == 0) {
-            setupEmptyGraph();
+            setupEmptyUI(false);
             return;
         }
 
@@ -302,7 +309,92 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
         if (mRestResponseParsed.getOriginalResponse() != null) {
             mWholeResponse.setText(mRestResponseParsed.getOriginalResponse().toString());
         }
+
+        //FIXME: Ugly trick to show all the months on the screen in a simple list. Need to change this. Shame on me!
+        mMonthsAndYearsList.setVisibility(View.VISIBLE);
+        List<PostViewsModel.Year> years = mRestResponseParsed.getYears();
+        Integer[] allMonths = new Integer[years.size() * 13];
+        for (int i = 0; i < years.size() ; i++) {
+            PostViewsModel.Year currentYear = years.get(i);
+            int correctPositionOfTheYearLabel = i * 13;
+            allMonths[correctPositionOfTheYearLabel] = Integer.parseInt(currentYear.getLabel());
+            int[] currentMonths = currentYear.getMonths();
+            int startPositionForMonths = correctPositionOfTheYearLabel + 1;
+            for (int j = 0; j < 12; j++) {
+                allMonths[startPositionForMonths + j] = currentMonths[j];
+            }
+        }
+        StatsUIHelper.reloadLinearLayout(this, new TemporaryAdapter(this, allMonths, mRestResponseParsed.getHighestMonth()), mMonthsAndYearsList, allMonths.length);
+
+
+        //FIXME: Ugly trick to show all the months on the screen in a simple list. Need to change this. Shame on me!
+        mAveragesList.setVisibility(View.VISIBLE);
+        List<PostViewsModel.Average> averages = mRestResponseParsed.getAverages();
+        Integer[] allAverages = new Integer[averages.size() * 13];
+        for (int i = 0; i < averages.size() ; i++) {
+            PostViewsModel.Average currentAverage = averages.get(i);
+            int correctPositionOfTheAverageLabel = i * 13;
+            allAverages[correctPositionOfTheAverageLabel] = Integer.parseInt(currentAverage.getLabel());
+            int[] currentAverages = currentAverage.getMonths();
+            int startPositionForAverages = correctPositionOfTheAverageLabel + 1;
+            for (int j = 0; j < 12; j++) {
+                allAverages[startPositionForAverages + j] = currentAverages[j];
+            }
+        }
+        StatsUIHelper.reloadLinearLayout(this, new TemporaryAdapter(this, allAverages, mRestResponseParsed.getHighestDayAverage()), mAveragesList, allAverages.length);
+
     }
+
+    public class TemporaryAdapter extends ArrayAdapter<Integer> {
+
+        private final Integer[] list;
+        private final Activity context;
+        private final LayoutInflater inflater;
+        private final int mValueToHighlight;
+
+        public TemporaryAdapter(Activity context, Integer[] list, int valueToHighlight) {
+            super(context, R.layout.stats_list_cell, list);
+            this.context = context;
+            this.list = list;
+            this.mValueToHighlight = valueToHighlight;
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View rowView = convertView;
+            // reuse views
+            if (rowView == null) {
+                rowView = inflater.inflate(R.layout.stats_list_cell, null);
+                // configure view holder
+                StatsViewHolder viewHolder = new StatsViewHolder(rowView);
+                rowView.setTag(viewHolder);
+            }
+
+            int currentRowData = list[position];
+            StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
+            // fill data
+            if (position == 0 || (position % 13) == 0) {
+                // entries
+                holder.entryTextView.setText("" + currentRowData);
+                // totals
+                holder.totalsTextView.setText("");
+            } else {
+                // entries
+                holder.entryTextView.setText("" + (position % 13));
+                // totals
+                if (currentRowData == mValueToHighlight) {
+                    holder.totalsTextView.setTextColor(Color.BLUE);
+                }
+                holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData));
+            }
+            // no icon
+            holder.networkImageView.setVisibility(View.GONE);
+
+            return rowView;
+        }
+    }
+
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final String mRequestBlogId, mRemotePostID;
@@ -322,24 +414,19 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
             }
             mIsUpdatingStats = false;
             mPullToRefreshHelper.setRefreshing(false);
-            AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
-            mRestResponse = response.toString();
-            mSelectedBarGraphIndex = -1;
-
-            try {
-                mRestResponseParsed = new PostViewsModel(response);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
-                mRestResponseParsed = null;
-                mRestResponse = null;
-                mSelectedBarGraphIndex = -1;
-            }
-
-            // single background thread used to parse the response.
+            // single background thread used to parse the response in BG.
             ThreadPoolExecutor parseResponseExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
+                    AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
+                    mSelectedBarGraphIndex = -1;
+                    try {
+                        mRestResponseParsed = new PostViewsModel(response);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.STATS, "Cannot parse the JSON response", e);
+                        resetModelVariables();
+                    }
                     // Update the UI
                     final boolean post = mHandler.post(new Runnable() {
                         @Override
@@ -360,13 +447,21 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
             }
+            resetModelVariables();
             ToastUtils.showToast(mActivityRef.get(),
                     mActivityRef.get().getString(R.string.error_refresh_stats),
                     ToastUtils.Duration.LONG);
             mIsUpdatingStats = false;
             mPullToRefreshHelper.setRefreshing(false);
+            updateUI();
         }
     }
+
+    private void resetModelVariables() {
+        mRestResponseParsed = null;
+        mSelectedBarGraphIndex = -1;
+    }
+
 
     @Override
     public void onBarTapped(int tappedBar) {

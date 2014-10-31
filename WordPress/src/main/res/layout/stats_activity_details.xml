@@ -53,13 +53,66 @@
                     android:text="@string/stats_totals_views" />
             </RelativeLayout>
 
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_months_years_title"
+                style="@style/StatsPagerTitle"
+                android:text="Months and Years"
+                />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stats_white_background"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_large">
+
+                <LinearLayout
+                    android:id="@+id/stats_months_years_list_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:visibility="gone" >
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/stats_averages_title"
+                style="@style/StatsPagerTitle"
+                android:text="Averages per Day"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stats_white_background"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                android:paddingBottom="@dimen/margin_large">
+
+                <LinearLayout
+                    android:id="@+id/stats_averages_list_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:visibility="gone" >
+                </LinearLayout>
+
+            </LinearLayout>
+
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_all_response"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="whole response"/>
-
 
         </LinearLayout>
     </ScrollView>
