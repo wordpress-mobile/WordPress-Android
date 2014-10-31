@@ -190,7 +190,7 @@ public class StatsSinglePostDetailsActivity extends WPActionBarActivity
 
         // View and visitor counts for a site
         final String singlePostRestPath = String.format(
-                "/sites/%s/stats/post-views?post=%s", blogId, mRemotePostID);
+                "/sites/%s/stats/post/%s", blogId, mRemotePostID);
 
         AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + singlePostRestPath);
 
