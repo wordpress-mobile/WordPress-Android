@@ -344,6 +344,19 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         getMenuInflater().inflate(R.menu.media, menu);
         mSearchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener()
+        {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus)
+            {
+                if (!hasFocus && (mQuery == null || mQuery.equals(""))) {
+                    if (mSearchView != null) {
+                        mSearchView.clearFocus();
+                        mSearchView.setIconified(true);
+                    }
+                }
+            }
+        });
         return true;
     }
 
