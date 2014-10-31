@@ -81,8 +81,12 @@ public class TestUtils {
     public static void clearApplicationState(Context context) {
         WordPress.currentBlog = null;
         if (WordPress.getContext() != null) {
-            WordPress.signOut(context);
-        }
+            try {
+                WordPress.signOut(context);
+            } catch (Exception e) {
+                // noop
+            }
+       }
         TestUtils.clearDefaultSharedPreferences(context);
         TestUtils.dropDB(context);
     }
