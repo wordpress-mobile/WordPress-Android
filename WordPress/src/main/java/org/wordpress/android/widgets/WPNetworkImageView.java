@@ -2,7 +2,10 @@ package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -20,6 +23,7 @@ import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 /**
@@ -234,7 +238,14 @@ public class WPNetworkImageView extends ImageView {
                                 boolean isCached,
                                 boolean allowFadeIn) {
         if (response.getBitmap() != null) {
-            setImageBitmap(response.getBitmap());
+            Bitmap bitmap = response.getBitmap();
+
+            // Apply circular rounding to avatars
+            if (mImageType == ImageType.AVATAR) {
+                bitmap = ImageUtils.getCircularBitmap(bitmap);
+            }
+
+            setImageBitmap(bitmap);
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
             if (!isCached && allowFadeIn && canFadeInImageType(mImageType))
@@ -288,6 +299,10 @@ public class WPNetworkImageView extends ImageView {
                 // null default for mshots
                 setImageDrawable(null);
                 break;
+            case AVATAR:
+                // Grey circle for avatars
+                setImageResource(R.drawable.shape_oval_grey_light);
+                break;
             default :
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -301,8 +316,14 @@ public class WPNetworkImageView extends ImageView {
                 // do nothing
                 break;
             case AVATAR:
-                // "mystery man" for failed avatars
-                setImageResource(R.drawable.gravatar_placeholder);
+                if (getContext() == null) break;
+                // "mystery man" (circular) for failed avatars
+                setImageBitmap(ImageUtils.getCircularBitmap(
+                        BitmapFactory.decodeResource(
+                                getContext().getResources(),
+                                R.drawable.gravatar_placeholder
+                        )
+                ));
                 break;
             default :
                 // medium grey box for all others
