@@ -77,6 +77,8 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     private int mMultiSelectCount;
     private String mQuery;
 
+    private boolean mAddingContent;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -374,15 +376,9 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         } else if (itemId == R.id.menu_new_media) {
             View view = findViewById(R.id.menu_new_media);
             if (view != null) {
-                int y_offset = getResources().getDimensionPixelSize(R.dimen.action_bar_spinner_y_offset);
-                int[] loc = new int[2];
-                view.getLocationOnScreen(loc);
-                mAddMediaPopup.showAtLocation(view, Gravity.TOP | Gravity.LEFT, loc[0],
-                        loc[1] + view.getHeight() + y_offset);
-            } else {
-                // In case menu button is not on screen (declared showAsAction="ifRoom"), center the popup in the view.
-                View gridView = findViewById(R.id.media_gridview);
-                mAddMediaPopup.showAtLocation(gridView, Gravity.CENTER, 0, 0);
+                mAddingContent = true;
+                mActionMode = startActionMode(this);
+                mActionMode.setTitle(getString(R.string.add_media));
             }
             return true;
         } else if (itemId == R.id.menu_search) {
@@ -660,7 +656,13 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         MenuInflater inflater = mode.getMenuInflater();
-        inflater.inflate(R.menu.media_multiselect, menu);
+
+        if (!mAddingContent) {
+            inflater.inflate(R.menu.media_multiselect, menu);
+        } else {
+            inflater.inflate(R.menu.media_add_content, menu);
+        }
+
         if (mMediaGridFragment != null) {
             mMediaGridFragment.setPullToRefreshEnabled(false);
         }
@@ -670,15 +672,12 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         if (mActionMode != null) {
-            if (mMultiSelectCount == 1) {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(true);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
-            } else if (mMultiSelectCount > 1) {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(true);
+            if(mAddingContent) {
+                menu.findItem(R.id.media_add_content_actionbar_cancel).setVisible(true);
+//                menu.findItem(R.id.media_add_content_actionbar_add).setVisible(mMultiSelectCount > 0);
             } else {
-                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(false);
-                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(false);
+                menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(mMultiSelectCount == 1);
+                menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(mMultiSelectCount > 1);
             }
         }
         return false;
@@ -697,12 +696,20 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
             case R.id.media_multiselect_actionbar_trash:
                 handleMultiSelectDelete();
                 return true;
+            case R.id.media_add_content_actionbar_cancel:
+                mAddingContent = false;
+                mActionMode.finish();
+                return true;
         }
         return false;
     }
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
+        if (mAddingContent) {
+            mAddingContent = false;
+        }
+
         mActionMode = null;
         mMediaGridFragment.setPullToRefreshEnabled(true);
         cancelMultiSelect();

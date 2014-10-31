@@ -79,6 +79,7 @@
     <string name="upload">Upload</string>
     <string name="learn_more">Learn more</string>
     <string name="posting_post">Posting \"%s\"</string>
+    <string name="add_media">Add Media</string>
 
     <!-- Media Gallery Action Bar -->
     <string name="media_add_popup_title">Add to media library</string>
