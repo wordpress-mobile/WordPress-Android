@@ -674,7 +674,6 @@ public class MediaBrowserActivity extends WPActionBarActivity implements MediaGr
         if (mActionMode != null) {
             if(mAddingContent) {
                 menu.findItem(R.id.media_add_content_actionbar_cancel).setVisible(true);
-//                menu.findItem(R.id.media_add_content_actionbar_add).setVisible(mMultiSelectCount > 0);
             } else {
                 menu.findItem(R.id.media_multiselect_actionbar_post).setVisible(mMultiSelectCount == 1);
                 menu.findItem(R.id.media_multiselect_actionbar_gallery).setVisible(mMultiSelectCount > 1);

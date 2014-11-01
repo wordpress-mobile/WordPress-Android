@@ -72,6 +72,8 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     private static final String BUNDLE_DATE_FILTER_END_MONTH = "BUNDLE_DATE_FILTER_END_MONTH";
     private static final String BUNDLE_DATE_FILTER_END_DAY = "BUNDLE_DATE_FILTER_END_DAY";
 
+    private static final long MULTI_SELECT_ANIMATION_DURATION = 200L;
+
     private Filter mFilter = Filter.ALL;
     private String[] mFiltersText;
     private MultiSelectGridView mGridView;
@@ -620,30 +622,31 @@ public class MediaGridFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onMultiSelectChange(int count) {
         if (count == 0) {
-            // enable filtering when not in multiselect
-            Rect drawRect = new Rect(0, 0, 0, 0);
-            mSpinnerContainer.getDrawingRect(drawRect);
-            mSpinnerContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_in_from_top));
-            TranslateAnimation gridAnimation = new TranslateAnimation(0, 0, -drawRect.height(), 0);
-            gridAnimation.setDuration(200);
-            mGridView.startAnimation(gridAnimation);
-            mSpinner.setEnabled(true);
-            mSpinnerContainer.setEnabled(true);
-            mSpinnerContainer.setVisibility(View.VISIBLE);
+            toggleMultiSelectView(false);
         } else if(mSpinner.isEnabled()) {
-            // disable filtering on multiselect
-            Rect drawRect = new Rect(0, 0, 0, 0);
-            mSpinnerContainer.getDrawingRect(drawRect);
-            mSpinner.setEnabled(false);
-            mSpinnerContainer.setEnabled(false);
-            mSpinnerContainer.setVisibility(View.GONE);
-            mSpinnerContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_off_top));
-            TranslateAnimation gridAnimation = new TranslateAnimation(0, 0, drawRect.height(), 0);
-            gridAnimation.setDuration(200);
-            mGridView.startAnimation(gridAnimation);
+            toggleMultiSelectView(true);
         }
 
         mListener.onMultiSelectChange(count);
+    }
+
+    private void toggleMultiSelectView(boolean multiSelectOn) {
+        Rect drawRect = new Rect(0, 0, 0, 0);
+        mSpinnerContainer.getDrawingRect(drawRect);
+        int gridAnimationStartY = multiSelectOn ? drawRect.height() : -drawRect.height();
+        int spinnerVisibility = multiSelectOn ? View.GONE : View.VISIBLE;
+        int spinnerAnimation = multiSelectOn ? R.anim.slide_off_top : R.anim.slide_in_from_top;
+
+        // Animate grid and spinner
+        TranslateAnimation gridAnimation = new TranslateAnimation(0, 0, gridAnimationStartY, 0);
+        gridAnimation.setDuration(MULTI_SELECT_ANIMATION_DURATION);
+        mGridView.startAnimation(gridAnimation);
+        mSpinnerContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), spinnerAnimation));
+
+        // toggle filtering
+        mSpinner.setEnabled(!multiSelectOn);
+        mSpinnerContainer.setEnabled(!multiSelectOn);
+        mSpinnerContainer.setVisibility(spinnerVisibility);
     }
 
     @Override
