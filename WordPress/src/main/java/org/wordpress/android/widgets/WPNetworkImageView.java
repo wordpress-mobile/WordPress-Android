@@ -242,7 +242,7 @@ public class WPNetworkImageView extends ImageView {
 
             // Apply circular rounding to avatars in a background task
             if (mImageType == ImageType.AVATAR) {
-                new CircularizeBitmapTask().execute(bitmap);
+                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                 return;
             }
 
@@ -319,7 +319,7 @@ public class WPNetworkImageView extends ImageView {
             case AVATAR:
                 if (getContext() == null) break;
                 // "mystery man" (circular) for failed avatars
-                new CircularizeBitmapTask().execute(BitmapFactory.decodeResource(
+                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                         getContext().getResources(),
                         R.drawable.gravatar_placeholder
                 ));
