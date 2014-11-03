@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
@@ -39,7 +40,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS }
+    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -178,8 +179,14 @@ public class StatsService extends Service {
 
                // Posts & Pages
                 TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
-                final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&max=11&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
+                broadcastSectionUpdating(StatsSectionEnum.TOP_POSTS);
+
+                // Referrers
+                ReferrersCallListener referrersListener = new ReferrersCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                final String referrersPath = String.format("/sites/%s/stats/referrers?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                statsNetworkRequests.add(restClientUtils.get(referrersPath, referrersListener, referrersListener));
                 broadcastSectionUpdating(StatsSectionEnum.TOP_POSTS);
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
@@ -306,11 +313,8 @@ public class StatsService extends Service {
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-//            AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-            //          AppLog.d(T.STATS, response.toString());
             VisitsModel visitsModel = new VisitsModel(mRequestBlogId, response);
             return visitsModel;
-            //        AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
         StatsSectionEnum getSectionEnum() {
@@ -326,15 +330,29 @@ public class StatsService extends Service {
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-            //     AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-            //     AppLog.d(T.STATS, response.toString());
             TopPostsAndPagesModel topPostsAndPagesModel = new TopPostsAndPagesModel(mRequestBlogId, response);
             return topPostsAndPagesModel;
-            //       AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
         }
 
         StatsSectionEnum getSectionEnum() {
             return StatsSectionEnum.TOP_POSTS;
+        }
+    }
+
+    private class ReferrersCallListener extends AbsListener {
+
+        public ReferrersCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            ReferrersModel referrersModel = new ReferrersModel(mRequestBlogId, response);
+            return referrersModel;
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.REFERRERS;
         }
     }
 

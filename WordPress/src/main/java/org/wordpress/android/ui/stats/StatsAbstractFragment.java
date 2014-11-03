@@ -26,6 +26,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case TOP_POSTS_AND_PAGES:
                 fragment = new StatsTopPostsAndPagesFragment();
                 break;
+            case REFERRERS:
+                fragment = new StatsReferrersFragment();
+                break;
         }
 
         Bundle args = new Bundle();

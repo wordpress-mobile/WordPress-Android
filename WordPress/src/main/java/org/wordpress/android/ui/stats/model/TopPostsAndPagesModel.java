@@ -20,8 +20,14 @@ public class TopPostsAndPagesModel implements Serializable {
 
     public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
         this.blogID = blogID;
+        this.period = response.getString("period");
+        this.date = response.getString("date");
         JSONArray postViewsArray;
         JSONObject jDaysObject = response.getJSONObject("days");
+        if (jDaysObject == null) {
+            return;
+        }
+
         Iterator<String> keys = jDaysObject.keys();
         if (keys.hasNext()) {
             String key = keys.next();

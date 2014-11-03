@@ -252,6 +252,11 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             ft.replace(R.id.stats_top_posts_container, fragment, StatsTopPostsAndPagesFragment.TAG);
         }
 
+        if (fm.findFragmentByTag(StatsReferrersFragment.TAG) == null || force) {
+            fragment = StatsAbstractFragment.newInstance(StatsViewType.REFERRERS, mLocalBlogID, mCurrentTimeframe);
+            ft.replace(R.id.stats_referrers_container, fragment, StatsReferrersFragment.TAG);
+        }
+
         ft.commit();
     }
 
