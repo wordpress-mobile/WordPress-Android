@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 
 import com.cocosw.undobar.UndoBarController;
 
@@ -52,6 +53,7 @@ public class ReaderPostPagerActivity extends Activity
                    ReaderInterfaces.OnPostPopupListener {
 
     private ReaderViewPager mViewPager;
+    private ProgressBar mProgress;
 
     private ReaderTag mCurrentTag;
     private long mBlogId;
@@ -80,6 +82,7 @@ public class ReaderPostPagerActivity extends Activity
         }
 
         mViewPager = (ReaderViewPager) findViewById(R.id.viewpager);
+        mProgress = (ProgressBar) findViewById(R.id.progress_loading);
 
         final String title;
         if (savedInstanceState != null) {
@@ -571,6 +574,7 @@ public class ReaderPostPagerActivity extends Activity
             }
 
             mIsRequestingMorePosts = true;
+            mProgress.setVisibility(View.VISIBLE);
             AppLog.d(AppLog.T.READER, "reader pager > requesting older posts");
 
             switch (getPostListType()) {
@@ -610,6 +614,8 @@ public class ReaderPostPagerActivity extends Activity
             if (isFinishing()) {
                 return;
             }
+
+            mProgress.setVisibility(View.GONE);
 
             if (hasNewPosts) {
                 AppLog.d(AppLog.T.READER, "reader pager > older posts received");
