@@ -485,6 +485,9 @@ public class ReaderPostPagerActivity extends Activity
 
         @Override
         public void restoreState(Parcelable state, ClassLoader loader) {
+            // work around "Fragement no longer exists for key" Android bug
+            // by catching the IllegalStateException
+            // https://code.google.com/p/android/issues/detail?id=42601
             try {
                 AppLog.d(AppLog.T.READER, "reader pager > adapter restoreState");
                 super.restoreState(state, loader);
