@@ -18,22 +18,23 @@ import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
-public class StatsClicksFragment extends StatsAbstractExpandableListFragment {
+public class StatsClicksFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsClicksFragment.class.getSimpleName();
 
     @Override
     protected void updateUI() {
        if (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups().size() > 0) {
-            setListAdapter(new MyExpandableListAdapter(getActivity(), ((ClicksModel)mDatamodel).getClickGroups()));
+           BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), ((ClicksModel)mDatamodel).getClickGroups());
+           StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList);
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
         }
     }
 
-    public void setListAdapter(BaseExpandableListAdapter adapter) {
-        mAdapter = adapter;
-        StatsUIHelper.reloadGroupViews(getActivity(), mAdapter, mGroupIdToExpandedMap, mList);
+    @Override
+    protected boolean isExpandableList() {
+        return true;
     }
 
     @Override

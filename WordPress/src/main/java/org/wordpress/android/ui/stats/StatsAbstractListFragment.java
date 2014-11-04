@@ -26,14 +26,13 @@ import java.io.Serializable;
 import java.util.Locale;
 
 
-public abstract class StatsAbstractExpandableListFragment extends StatsAbstractFragment {
+public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
 
     protected static final int NO_STRING_ID = -1;
 
     protected TextView mEmptyLabel;
     protected LinearLayout mListContainer;
     protected LinearLayout mList;
-    protected BaseExpandableListAdapter mAdapter;
     protected Serializable mDatamodel;
 
     protected SparseBooleanArray mGroupIdToExpandedMap;
@@ -44,11 +43,16 @@ public abstract class StatsAbstractExpandableListFragment extends StatsAbstractF
     protected abstract int getEmptyLabelDescResId();
     protected abstract StatsService.StatsSectionEnum getSectionToUpdate();
     protected abstract void updateUI();
-
+    protected abstract boolean isExpandableList();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
+        View view;
+        if (isExpandableList()) {
+            view = inflater.inflate(R.layout.stats_expandable_list_fragment, container, false);
+        } else {
+            view = inflater.inflate(R.layout.stats_list_fragment, container, false);
+        }
 
         TextView titleTextView = (TextView) view.findViewById(R.id.stats_pager_title);
         titleTextView.setText(getTitle().toUpperCase(Locale.getDefault()));
@@ -137,7 +141,7 @@ public abstract class StatsAbstractExpandableListFragment extends StatsAbstractF
             mEmptyLabel.setVisibility(View.GONE);
             mListContainer.setVisibility(View.VISIBLE);
             mList.setVisibility(View.VISIBLE);
-            StatsUIHelper.reloadGroupViews(getActivity(), mAdapter, mGroupIdToExpandedMap, mList);
+            //StatsUIHelper.reloadGroupViews(getActivity(), mAdapter, mGroupIdToExpandedMap, mList);
         }
     }
 
