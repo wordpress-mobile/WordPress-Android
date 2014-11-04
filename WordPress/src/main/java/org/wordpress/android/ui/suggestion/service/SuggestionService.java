@@ -13,6 +13,7 @@ import com.wordpress.rest.RestRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.util.AppLog;
 
@@ -20,7 +21,6 @@ import java.util.List;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
-    private final SparseArray<List<Suggestion>> mCache = new SparseArray<List<Suggestion>>();
 
     // broadcast action to notify clients when summary data has changed
     public static final String ACTION_SUGGESTIONS_LIST_UPDATED = "SUGGESTIONS_LIST_UPDATED";
@@ -48,16 +48,7 @@ public class SuggestionService extends Service {
         return mBinder;
     }
 
-    public List<Suggestion> suggestionList(int remoteBlogId) {
-        List<Suggestion> suggestions = mCache.get(remoteBlogId);
-        if (suggestions == null) {
-            updateSuggestions(remoteBlogId);
-        }
-        return suggestions;
-    }
-
-    private void updateSuggestions(final int remoteBlogId) {
-        AppLog.i(AppLog.T.SUGGESTION, "updating suggestions for blogId: " + remoteBlogId);
+    public void updateSuggestions(final int remoteBlogId) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -85,9 +76,9 @@ public class SuggestionService extends Service {
                 }
 
                 JSONArray jsonSuggestions = jsonObject.optJSONArray("suggestions");
-                List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions);
+                List<Suggestion> suggestions = Suggestion.suggestionListFromJSON(jsonSuggestions, remoteBlogId);
                 if (suggestions != null) {
-                    mCache.put(remoteBlogId, suggestions);
+                    SuggestionTable.insertSuggestionsForSite(remoteBlogId, suggestions);
 
                     LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(WordPress.getContext());
                     Intent intent = new Intent(SuggestionService.ACTION_SUGGESTIONS_LIST_UPDATED);

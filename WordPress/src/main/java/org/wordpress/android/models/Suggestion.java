@@ -9,19 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Suggestion {
+    private static final String MENTION_TAXONOMY = "mention";
+
+    public long siteID;
+
     private String userLogin;
     private String displayName;
     private String imageUrl;
+    private String taxonomy;
 
-    public Suggestion(String userLogin,
+    public Suggestion(long siteID,
+                      String userLogin,
                       String displayName,
-                      String imageUrl) {
+                      String imageUrl,
+                      String taxonomy) {
+        this.siteID = siteID;
         this.userLogin = userLogin;
         this.displayName = displayName;
         this.imageUrl = imageUrl;
+        this.taxonomy = taxonomy;
     }
 
-    public static Suggestion fromJSON(JSONObject json) {
+    public static Suggestion fromJSON(JSONObject json, long siteID) {
         if (json == null) {
             return null;
         }
@@ -30,10 +39,11 @@ public class Suggestion {
         String displayName = JSONUtil.getString(json, "display_name");
         String imageUrl = JSONUtil.getString(json, "image_URL");
 
-        return new Suggestion(userLogin, displayName, imageUrl);
+        // the api currently doesn't return a taxonomy field but we want to be ready for when it does
+        return new Suggestion(siteID, userLogin, displayName, imageUrl, MENTION_TAXONOMY);
     }
 
-    public static List<Suggestion> suggestionListFromJSON(JSONArray jsonArray) {
+    public static List<Suggestion> suggestionListFromJSON(JSONArray jsonArray, long siteID) {
         if (jsonArray == null) {
             return null;
         }
@@ -41,7 +51,7 @@ public class Suggestion {
         ArrayList<Suggestion> suggestions = new ArrayList<Suggestion>(jsonArray.length());
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            Suggestion suggestion = Suggestion.fromJSON(jsonArray.optJSONObject(i));
+            Suggestion suggestion = Suggestion.fromJSON(jsonArray.optJSONObject(i), siteID);
             suggestions.add(suggestion);
         }
 
@@ -57,4 +67,5 @@ public class Suggestion {
     public String getImageUrl() {
         return StringUtils.notNullStr(imageUrl);
     }
+    public String getTaxonomy() { return StringUtils.notNullStr(taxonomy); }
 }

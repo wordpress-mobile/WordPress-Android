@@ -38,6 +38,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Comment;
 import org.wordpress.android.models.CommentStatus;
@@ -87,7 +88,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Comment mComment;
     private Note mNote;
 
-    private SuggestionService mSuggestionService;
     private SuggestionAdapter mSuggestionAdapter;
 
     private TextView mTxtStatus;
@@ -152,6 +152,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
      */
     public static CommentDetailFragment newInstance(final Note note) {
         CommentDetailFragment fragment = new CommentDetailFragment();
+        fragment.setRemoteBlogId(note.getSiteId());
         fragment.setNote(note);
         return fragment;
     }
@@ -184,13 +185,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             outState.putInt(KEY_LOCAL_BLOG_ID, getLocalBlogId());
             outState.putLong(KEY_COMMENT_ID, getCommentId());
         }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setupSuggestionsServiceAndAdapter();
     }
 
     @Override
@@ -270,6 +264,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         });
 
+        setupSuggestionsServiceAndAdapter();
+
         return view;
     }
 
@@ -283,21 +279,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mEditReply.setTokenizer(new SuggestionTokenizer());
         mEditReply.setThreshold(1);
 
-        Intent intent = new Intent(context, SuggestionService.class);
-        ServiceConnection connection = new ServiceConnection() {
-            public void onServiceConnected(ComponentName className, IBinder binder) {
-                SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) binder;
-                mSuggestionService = b.getService();
+        List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(mRemoteBlogId);
+        // if the suggestions are not stored yet, we want to trigger an update for it
+        if (suggestions.isEmpty()) {
+            Intent intent = new Intent(context, SuggestionService.class);
+            ServiceConnection connection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName className, IBinder binder) {
+                    SuggestionService.SuggestionBinder b = (SuggestionService.SuggestionBinder) binder;
+                    SuggestionService suggestionService = b.getService();
 
-                List<Suggestion> suggestions = mSuggestionService.suggestionList(mRemoteBlogId);
-                mSuggestionAdapter.setSuggestionList(suggestions);
-            }
+                    suggestionService.updateSuggestions(mRemoteBlogId);
+                }
 
-            public void onServiceDisconnected(ComponentName className) {
-                mSuggestionService = null;
-            }
-        };
-        context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+                @Override
+                public void onServiceDisconnected(ComponentName componentName) { }
+            };
+            context.bindService(intent, connection, Context.BIND_AUTO_CREATE);
+        }
+        mSuggestionAdapter.setSuggestionList(suggestions);
     }
 
     void setComment(int localBlogId, long commentId) {
@@ -371,7 +371,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         public void onReceive(Context context, Intent intent) {
             int updatedBlogId = intent.getIntExtra(SuggestionService.SUGGESTIONS_LIST_UPDATED_EXTRA, 0);
             if (updatedBlogId != 0 && mRemoteBlogId == updatedBlogId) {
-                List<Suggestion> suggestions = mSuggestionService.suggestionList(mRemoteBlogId);
+                List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(mRemoteBlogId);
                 mSuggestionAdapter.setSuggestionList(suggestions);
             }
         }
@@ -960,7 +960,6 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
          * this user made on someone else's blog
          */
         mEnabledActions = note.getEnabledActions();
-        mRemoteBlogId = note.getSiteId();
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
         if (!TextUtils.isEmpty(mNote.getCommentAuthorName()) && mNote.getCommentAuthorName().length() < 28) {
@@ -1102,5 +1101,9 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         final String path = String.format("/sites/%s/comments/%s", remoteBlogId, commentId);
         WordPress.getRestClientUtils().get(path, restListener, restErrListener);
+    }
+
+    private void setRemoteBlogId(int remoteBlogId) {
+        mRemoteBlogId = remoteBlogId;
     }
 }

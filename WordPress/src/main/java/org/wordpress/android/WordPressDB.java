@@ -14,6 +14,7 @@ import android.util.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
 import org.wordpress.android.datasets.CommentTable;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.MediaFile;
 import org.wordpress.android.models.Post;
@@ -156,6 +157,7 @@ public class WordPressDB {
         db.execSQL(CREATE_TABLE_MEDIA);
         db.execSQL(CREATE_TABLE_THEMES);
         CommentTable.createTables(db);
+        SuggestionTable.createTables(db);
 
         // Update tables for new installs and app updates
         int currentVersion = db.getVersion();
