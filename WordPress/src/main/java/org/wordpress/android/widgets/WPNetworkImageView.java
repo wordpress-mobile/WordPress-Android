@@ -39,7 +39,8 @@ public class WPNetworkImageView extends ImageView {
                                   PHOTO,
                                   MSHOT,
                                   VIDEO,
-                                  AVATAR}
+                                  AVATAR,
+                             SITE_AVATAR}
 
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
@@ -318,11 +319,15 @@ public class WPNetworkImageView extends ImageView {
                 break;
             case AVATAR:
                 if (getContext() == null) break;
-                // "mystery man" (circular) for failed avatars
+                // circular "mystery man" for failed avatars
                 new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
                         getContext().getResources(),
                         R.drawable.gravatar_placeholder
                 ));
+                break;
+            case SITE_AVATAR:
+                // square "mystery man" for failed site avatars
+                setImageResource(R.drawable.gravatar_placeholder);
                 break;
             default :
                 // medium grey box for all others
