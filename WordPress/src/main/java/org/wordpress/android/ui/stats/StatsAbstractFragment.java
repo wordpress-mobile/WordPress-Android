@@ -32,6 +32,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case CLICKS:
                 fragment = new StatsClicksFragment();
                 break;
+            case GEOVIEWS:
+                fragment = new StatsGeoviewsFragment();
+                break;
         }
 
         Bundle args = new Bundle();

@@ -19,6 +19,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.ClicksModel;
+import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
@@ -41,7 +42,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS }
+    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -196,6 +197,11 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils.get(clicksPath, clicksListener, clicksListener));
                 broadcastSectionUpdating(StatsSectionEnum.CLICKS);
 
+                // Geoviews
+                GeoviewsCallListener countriesListener = new GeoviewsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                final String countriesPath = String.format("/sites/%s/stats/country-views?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                statsNetworkRequests.add(restClientUtils.get(countriesPath, countriesListener, countriesListener));
+                broadcastSectionUpdating(StatsSectionEnum.GEO_VIEWS);
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
@@ -372,14 +378,33 @@ public class StatsService extends Service {
 
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-            ClicksModel referrersModel = new ClicksModel(mRequestBlogId, response);
-            return referrersModel;
+            ClicksModel model = new ClicksModel(mRequestBlogId, response);
+            return model;
         }
 
         StatsSectionEnum getSectionEnum() {
             return StatsSectionEnum.CLICKS;
         }
     }
+
+
+    private class GeoviewsCallListener extends AbsListener {
+
+        public GeoviewsCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            GeoviewsModel model = new GeoviewsModel(mRequestBlogId, response);
+            return model;
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.GEO_VIEWS;
+        }
+    }
+
 
     private void stopService() {
         /* Stop the service if this is the current response, or mServiceBlogId is null
