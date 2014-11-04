@@ -650,8 +650,6 @@
     <string name="reader_label_unfollowed_blog">Blog unfollowed</string>
     <string name="reader_label_more_recommendations">More recommendations</string>
     <string name="reader_label_tag_preview">Posts tagged %s</string>
-    <string name="reader_label_reached_last_post">You\'ve reached the end</string>
-    <string name="reader_label_tap_to_dismiss">Tap to dismiss</string>
     <string name="reader_label_comments_on">Comments on</string>
     <string name="reader_label_comments_closed">Comments are closed</string>
     <string name="reader_label_comment_count_single">One comment</string>
