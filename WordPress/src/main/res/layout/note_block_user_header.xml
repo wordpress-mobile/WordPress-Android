@@ -17,13 +17,12 @@
         android:paddingRight="@dimen/margin_extra_large"
         android:paddingTop="@dimen/comment_avatar_margin_top">
 
-        <com.android.volley.toolbox.NetworkImageView
+        <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/header_avatar"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
-            android:layout_marginTop="@dimen/comment_avatar_margin_top"
-            android:background="@color/grey_light" />
+            android:layout_marginTop="@dimen/comment_avatar_margin_top" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/header_user"

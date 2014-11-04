@@ -8,12 +8,11 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/comment_avatar_margin_top">
 
-    <com.android.volley.toolbox.NetworkImageView
+    <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/user_avatar"
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginTop="@dimen/comment_avatar_margin_top"
-        android:background="@color/grey_light" />
+        android:layout_marginTop="@dimen/comment_avatar_margin_top" />
 
     <RelativeLayout
         android:id="@+id/user_name_wrapper"

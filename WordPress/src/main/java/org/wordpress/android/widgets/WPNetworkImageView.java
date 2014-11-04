@@ -2,8 +2,11 @@ package org.wordpress.android.widgets;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -20,6 +23,7 @@ import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.VolleyUtils;
 
 /**
@@ -35,7 +39,8 @@ public class WPNetworkImageView extends ImageView {
                                   PHOTO,
                                   MSHOT,
                                   VIDEO,
-                                  AVATAR}
+                                  AVATAR,
+                             SITE_AVATAR}
 
     private ImageType mImageType = ImageType.NONE;
     private String mUrl;
@@ -234,7 +239,15 @@ public class WPNetworkImageView extends ImageView {
                                 boolean isCached,
                                 boolean allowFadeIn) {
         if (response.getBitmap() != null) {
-            setImageBitmap(response.getBitmap());
+            Bitmap bitmap = response.getBitmap();
+
+            // Apply circular rounding to avatars in a background task
+            if (mImageType == ImageType.AVATAR) {
+                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                return;
+            }
+
+            setImageBitmap(bitmap);
 
             // fade in photos/videos if not cached (not used for other image types since animation can be expensive)
             if (!isCached && allowFadeIn && canFadeInImageType(mImageType))
@@ -288,6 +301,10 @@ public class WPNetworkImageView extends ImageView {
                 // null default for mshots
                 setImageDrawable(null);
                 break;
+            case AVATAR:
+                // Grey circle for avatars
+                setImageResource(R.drawable.shape_oval_grey_light);
+                break;
             default :
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -301,7 +318,15 @@ public class WPNetworkImageView extends ImageView {
                 // do nothing
                 break;
             case AVATAR:
-                // "mystery man" for failed avatars
+                if (getContext() == null) break;
+                // circular "mystery man" for failed avatars
+                new CircularizeBitmapTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+                        getContext().getResources(),
+                        R.drawable.gravatar_placeholder
+                ));
+                break;
+            case SITE_AVATAR:
+                // square "mystery man" for failed site avatars
                 setImageResource(R.drawable.gravatar_placeholder);
                 break;
             default :
@@ -320,5 +345,27 @@ public class WPNetworkImageView extends ImageView {
         ObjectAnimator alpha = ObjectAnimator.ofFloat(this, View.ALPHA, 0.25f, 1f);
         alpha.setDuration(FADE_TRANSITION);
         alpha.start();
+    }
+
+    // Circularizes a bitmap in a background thread
+    private class CircularizeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Bitmap... params) {
+            if (params == null || params.length == 0) return null;
+
+            Bitmap bitmap = params[0];
+            return ImageUtils.getCircularBitmap(bitmap);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                setImageBitmap(bitmap);
+
+                if (mImageListener != null) {
+                    mImageListener.onImageLoaded(true);
+                }
+            }
+        }
     }
 }
