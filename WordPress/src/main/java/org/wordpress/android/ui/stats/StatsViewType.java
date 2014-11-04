@@ -8,5 +8,7 @@ public enum StatsViewType {
     // TIMEFRAME_SELECTOR,
     GRAPH_AND_SUMMARY,
     TOP_POSTS_AND_PAGES,
-    REFERRERS
+    REFERRERS,
+    CLICKS,
+    GEOVIEWS
 }

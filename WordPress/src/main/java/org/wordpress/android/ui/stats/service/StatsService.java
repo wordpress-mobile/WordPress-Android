@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
@@ -40,7 +41,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS }
+    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -187,7 +188,14 @@ public class StatsService extends Service {
                 ReferrersCallListener referrersListener = new ReferrersCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String referrersPath = String.format("/sites/%s/stats/referrers?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(referrersPath, referrersListener, referrersListener));
-                broadcastSectionUpdating(StatsSectionEnum.TOP_POSTS);
+                broadcastSectionUpdating(StatsSectionEnum.REFERRERS);
+
+                // Clicks
+                ClicksCallListener clicksListener = new ClicksCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                final String clicksPath = String.format("/sites/%s/stats/clicks?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                statsNetworkRequests.add(restClientUtils.get(clicksPath, clicksListener, clicksListener));
+                broadcastSectionUpdating(StatsSectionEnum.CLICKS);
+
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
@@ -353,6 +361,23 @@ public class StatsService extends Service {
 
         StatsSectionEnum getSectionEnum() {
             return StatsSectionEnum.REFERRERS;
+        }
+    }
+
+    private class ClicksCallListener extends AbsListener {
+
+        public ClicksCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            ClicksModel referrersModel = new ClicksModel(mRequestBlogId, response);
+            return referrersModel;
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.CLICKS;
         }
     }
 

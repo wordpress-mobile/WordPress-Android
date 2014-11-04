@@ -29,6 +29,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case REFERRERS:
                 fragment = new StatsReferrersFragment();
                 break;
+            case CLICKS:
+                fragment = new StatsClicksFragment();
+                break;
         }
 
         Bundle args = new Bundle();

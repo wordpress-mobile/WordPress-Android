@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.stats.model.ClickGroupModel;
+import org.wordpress.android.ui.stats.model.ClickModel;
+import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
 import org.wordpress.android.ui.stats.model.ReferrerResultModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
@@ -15,13 +18,13 @@ import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
-public class StatsReferrersFragment extends StatsAbstractExpandableListFragment {
-    public static final String TAG = StatsReferrersFragment.class.getSimpleName();
+public class StatsClicksFragment extends StatsAbstractExpandableListFragment {
+    public static final String TAG = StatsClicksFragment.class.getSimpleName();
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((ReferrersModel) mDatamodel).getGroups().size() > 0) {
-            setListAdapter(new MyExpandableListAdapter(getActivity(), ((ReferrersModel)mDatamodel).getGroups()));
+       if (mDatamodel != null && ((ClicksModel) mDatamodel).getClickGroups().size() > 0) {
+            setListAdapter(new MyExpandableListAdapter(getActivity(), ((ClicksModel)mDatamodel).getClickGroups()));
             showEmptyUI(false);
         } else {
             showEmptyUI(true);
@@ -35,42 +38,42 @@ public class StatsReferrersFragment extends StatsAbstractExpandableListFragment 
 
     @Override
     protected StatsService.StatsSectionEnum getSectionToUpdate() {
-        return StatsService.StatsSectionEnum.REFERRERS;
+        return StatsService.StatsSectionEnum.CLICKS;
     }
 
     @Override
     protected int getEntryLabelResId() {
-        return R.string.stats_entry_referrers;
+        return R.string.stats_entry_clicks_url;
     }
     @Override
     protected int getTotalsLabelResId() {
-        return R.string.stats_totals_views;
+        return R.string.stats_totals_clicks;
     }
     @Override
     protected int getEmptyLabelTitleResId() {
-        return R.string.stats_empty_referrers_title;
+        return R.string.stats_empty_clicks_title;
     }
     @Override
     protected int getEmptyLabelDescResId() {
-        return R.string.stats_empty_referrers_desc;
+        return R.string.stats_empty_clicks_desc;
     }
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public LayoutInflater inflater;
         public Activity activity;
-        private List<ReferrerGroupModel> groups;
+        private List<ClickGroupModel> clickGroups;
 
-        public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
+        public MyExpandableListAdapter(Activity act, List<ClickGroupModel> clickGroups) {
             this.activity = act;
-            this.groups = groups;
+            this.clickGroups = clickGroups;
             this.inflater = act.getLayoutInflater();
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<ReferrerResultModel> results = currentGroup.getResults();
-            ReferrerResultModel currentRes = results.get(childPosition);
+            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            List<ClickModel> results = currentGroup.getClicks();
+            ClickModel currentRes = results.get(childPosition);
             return currentRes;
         }
 
@@ -83,7 +86,7 @@ public class StatsReferrersFragment extends StatsAbstractExpandableListFragment 
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-            final ReferrerResultModel children = (ReferrerResultModel) getChild(groupPosition, childPosition);
+            final ClickModel children = (ClickModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -111,23 +114,23 @@ public class StatsReferrersFragment extends StatsAbstractExpandableListFragment 
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            ReferrerGroupModel currentGroup = groups.get(groupPosition);
-            List<ReferrerResultModel> referrals = currentGroup.getResults();
-            if (referrals == null) {
+            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            List<ClickModel> clicks = currentGroup.getClicks();
+            if (clicks == null) {
                 return 0;
             } else {
-                return referrals.size();
+                return clicks.size();
             }
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return clickGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return clickGroups.size();
         }
 
 
@@ -147,10 +150,10 @@ public class StatsReferrersFragment extends StatsAbstractExpandableListFragment 
 
             final StatsViewHolder holder = (StatsViewHolder) convertView.getTag();
 
-            ReferrerGroupModel group = (ReferrerGroupModel) getGroup(groupPosition);
+            ClickGroupModel group = (ClickGroupModel) getGroup(groupPosition);
 
             String name = group.getName();
-            int total = group.getTotal();
+            int total = group.getViews();
             String url = group.getUrl();
             String icon = group.getIcon();
             int children = getChildrenCount(groupPosition);
@@ -182,6 +185,6 @@ public class StatsReferrersFragment extends StatsAbstractExpandableListFragment 
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_referrers);
+        return getString(R.string.stats_view_clicks);
     }
 }
