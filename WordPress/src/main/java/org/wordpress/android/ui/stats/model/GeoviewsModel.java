@@ -22,22 +22,21 @@ public class GeoviewsModel implements Serializable {
         this.date = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
-        if (jDaysObject == null || jDaysObject.length() == 0) {
-            //FIXME: ???
-            return;
+        if (jDaysObject.length() == 0) {
+            throw new JSONException("Invalid document returned from the REST API");
         }
 
         // Read the first day
         Iterator<String> keys = jDaysObject.keys();
         String firstDayKey = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(firstDayKey);
-        this.otherViews = firstDayObject.optInt("other_clicks");
-        this.totalViews = firstDayObject.optInt("total_clicks");
+        this.otherViews = firstDayObject.getInt("other_views");
+        this.totalViews = firstDayObject.getInt("total_views");
 
         JSONObject countryInfoJSON = response.optJSONObject("country-info");
         JSONObject viewsJSON = firstDayObject.optJSONObject("views");
 
-        if (viewsJSON != null) {
+        if (viewsJSON != null && countryInfoJSON != null) {
             countries = new ArrayList<GeoviewModel>(viewsJSON.length());
             Iterator<String> countryKeys = viewsJSON.keys();
 

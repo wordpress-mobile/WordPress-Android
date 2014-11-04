@@ -25,9 +25,8 @@ public class ClicksModel implements Serializable {
         this.date = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
-        if (jDaysObject == null || jDaysObject.length() == 0) {
-            //FIXME: ???
-            return;
+        if (jDaysObject.length() == 0) {
+            throw new JSONException("Invalid document returned from the REST API");
         }
 
         JSONArray jClickGroupsArray;
@@ -35,8 +34,8 @@ public class ClicksModel implements Serializable {
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.otherViews = firstDayObject.optInt("other_clicks");
-        this.totalViews = firstDayObject.optInt("total_clicks");
+        this.otherViews = firstDayObject.getInt("other_clicks");
+        this.totalViews = firstDayObject.getInt("total_clicks");
         jClickGroupsArray = firstDayObject.optJSONArray("clicks");
 
         if (jClickGroupsArray != null) {
@@ -47,7 +46,7 @@ public class ClicksModel implements Serializable {
                     ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, date, currentGroupJSON);
                     clickGroups.add(currentGroupModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object referrers" +
+                    AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object " +
                             "at position " + i + " Response: " + response.toString(), e);
                 }
             }

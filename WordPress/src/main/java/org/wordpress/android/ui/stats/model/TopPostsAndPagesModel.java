@@ -24,8 +24,8 @@ public class TopPostsAndPagesModel implements Serializable {
         this.date = response.getString("date");
         JSONArray postViewsArray;
         JSONObject jDaysObject = response.getJSONObject("days");
-        if (jDaysObject == null) {
-            return;
+        if (jDaysObject.length() == 0) {
+            throw new JSONException("Invalid document returned from the REST API");
         }
 
         Iterator<String> keys = jDaysObject.keys();

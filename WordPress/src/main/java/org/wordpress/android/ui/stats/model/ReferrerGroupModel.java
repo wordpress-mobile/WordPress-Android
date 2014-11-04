@@ -46,7 +46,6 @@ public class ReferrerGroupModel implements Serializable {
                 results.add(rm);
             }
         }
-
     }
 
     public String getBlogId() {

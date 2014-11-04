@@ -25,9 +25,8 @@ public class ReferrersModel implements Serializable {
         this.date = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
-        if (jDaysObject == null || jDaysObject.length() == 0) {
-            //FIXME: ???
-            return;
+        if (jDaysObject.length() == 0) {
+            throw new JSONException("Invalid document returned from the REST API");
         }
 
         JSONArray jGroupsArray;
@@ -37,7 +36,7 @@ public class ReferrersModel implements Serializable {
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
         this.otherViews = firstDayObject.optInt("other_views");
         this.totalViews = firstDayObject.optInt("total_views");
-        jGroupsArray = firstDayObject.getJSONArray("groups");
+        jGroupsArray = firstDayObject.optJSONArray("groups");
 
         if (jGroupsArray != null) {
             groups = new ArrayList<ReferrerGroupModel>(jGroupsArray.length());
@@ -47,7 +46,7 @@ public class ReferrersModel implements Serializable {
                     ReferrerGroupModel currentGroupModel = new ReferrerGroupModel(blogID, date, currentGroupJSON);
                     groups.add(currentGroupModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object referrers" +
+                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object " +
                             "at position " + i + " Response: " + response.toString(), e);
                 }
             }
