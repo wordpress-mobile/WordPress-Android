@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +54,14 @@ public class GeoviewsModel implements Serializable {
                 GeoviewModel m = new GeoviewModel(currentCountryKey, countryFullName, views, flagIcon);
                 countries.add(m);
             }
+
+            // Sort the countries by views.
+            Collections.sort(countries, new java.util.Comparator<GeoviewModel>() {
+                public int compare(GeoviewModel o1, GeoviewModel o2) {
+                    // descending order
+                    return o2.getViews() - o1.getViews();
+                }
+            });
         }
     }
 
