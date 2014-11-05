@@ -35,8 +35,8 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsSectionEnum getSectionToUpdate() {
-        return StatsService.StatsSectionEnum.AUTHORS;
+    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
+        return StatsService.StatsEndpointsEnum.AUTHORS;
     }
 
     @Override

@@ -97,8 +97,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsSectionEnum getSectionToUpdate() {
-        return StatsService.StatsSectionEnum.GEO_VIEWS;
+    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
+        return StatsService.StatsEndpointsEnum.GEO_VIEWS;
     }
 
     @Override

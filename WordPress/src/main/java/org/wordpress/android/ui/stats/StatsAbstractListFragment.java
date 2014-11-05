@@ -11,7 +11,6 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,7 +40,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     protected abstract int getTotalsLabelResId();
     protected abstract int getEmptyLabelTitleResId();
     protected abstract int getEmptyLabelDescResId();
-    protected abstract StatsService.StatsSectionEnum getSectionToUpdate();
+    protected abstract StatsService.StatsEndpointsEnum getSectionToUpdate();
     protected abstract void updateUI();
     protected abstract boolean isExpandableList();
 
@@ -161,7 +160,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 return;
             }
 
-            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
+            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
             if (sectionToUpdate != getSectionToUpdate()) {
                 return;
             }

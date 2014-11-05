@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.model.VideoPlaysModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -43,7 +44,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS }
+    public static enum StatsEndpointsEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -177,38 +178,44 @@ public class StatsService extends Service {
                     VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                     statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
-                    broadcastSectionUpdating(StatsSectionEnum.VISITS);
+                    broadcastSectionUpdating(StatsEndpointsEnum.VISITS);
                 }
 
                // Posts & Pages
                 TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
-                broadcastSectionUpdating(StatsSectionEnum.TOP_POSTS);
+                broadcastSectionUpdating(StatsEndpointsEnum.TOP_POSTS);
 
                 // Referrers
                 ReferrersCallListener referrersListener = new ReferrersCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String referrersPath = String.format("/sites/%s/stats/referrers?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(referrersPath, referrersListener, referrersListener));
-                broadcastSectionUpdating(StatsSectionEnum.REFERRERS);
+                broadcastSectionUpdating(StatsEndpointsEnum.REFERRERS);
 
                 // Clicks
                 ClicksCallListener clicksListener = new ClicksCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String clicksPath = String.format("/sites/%s/stats/clicks?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(clicksPath, clicksListener, clicksListener));
-                broadcastSectionUpdating(StatsSectionEnum.CLICKS);
+                broadcastSectionUpdating(StatsEndpointsEnum.CLICKS);
 
                 // Geoviews
                 GeoviewsCallListener countriesListener = new GeoviewsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String countriesPath = String.format("/sites/%s/stats/country-views?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(countriesPath, countriesListener, countriesListener));
-                broadcastSectionUpdating(StatsSectionEnum.GEO_VIEWS);
+                broadcastSectionUpdating(StatsEndpointsEnum.GEO_VIEWS);
 
                 // Authors
                 AuthorsCallListener authorsListener = new AuthorsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
                 final String authorsPath = String.format("/sites/%s/stats/top-authors?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(authorsPath, authorsListener, authorsListener));
-                broadcastSectionUpdating(StatsSectionEnum.AUTHORS);
+                broadcastSectionUpdating(StatsEndpointsEnum.AUTHORS);
+
+                // Video plays
+                VideoplaysCallListener videoPlaysListener = new VideoplaysCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                final String videoPlaysPath = String.format("/sites/%s/stats/video-plays?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                statsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.VIDEO_PLAYS);
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
@@ -290,7 +297,7 @@ public class StatsService extends Service {
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
-        abstract StatsSectionEnum getSectionEnum();
+        abstract StatsEndpointsEnum getSectionEnum();
 
         abstract Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException;
@@ -338,8 +345,8 @@ public class StatsService extends Service {
             return visitsModel;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.VISITS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.VISITS;
         }
     }
 
@@ -355,8 +362,8 @@ public class StatsService extends Service {
             return topPostsAndPagesModel;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.TOP_POSTS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.TOP_POSTS;
         }
     }
 
@@ -372,8 +379,8 @@ public class StatsService extends Service {
             return referrersModel;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.REFERRERS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.REFERRERS;
         }
     }
 
@@ -389,8 +396,8 @@ public class StatsService extends Service {
             return model;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.CLICKS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.CLICKS;
         }
     }
 
@@ -407,8 +414,8 @@ public class StatsService extends Service {
             return model;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.GEO_VIEWS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.GEO_VIEWS;
         }
     }
 
@@ -424,8 +431,25 @@ public class StatsService extends Service {
             return model;
         }
 
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.AUTHORS;
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.AUTHORS;
+        }
+    }
+
+    private class VideoplaysCallListener extends AbsListener {
+
+        public VideoplaysCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            VideoPlaysModel model = new VideoPlaysModel(mRequestBlogId, response);
+            return model;
+        }
+
+        StatsEndpointsEnum getSectionEnum() {
+            return StatsEndpointsEnum.VIDEO_PLAYS;
         }
     }
 
@@ -471,7 +495,7 @@ public class StatsService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void broadcastSectionUpdating(StatsSectionEnum sectionName) {
+    private void broadcastSectionUpdating(StatsEndpointsEnum sectionName) {
         Intent intent = new Intent()
                 .setAction(ACTION_STATS_UPDATING)
                 .putExtra(EXTRA_SECTION_NAME, sectionName)

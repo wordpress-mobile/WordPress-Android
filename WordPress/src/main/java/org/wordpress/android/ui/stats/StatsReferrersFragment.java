@@ -35,8 +35,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsSectionEnum getSectionToUpdate() {
-        return StatsService.StatsSectionEnum.REFERRERS;
+    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
+        return StatsService.StatsEndpointsEnum.REFERRERS;
     }
 
     @Override

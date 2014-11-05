@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +8,21 @@ import android.widget.ArrayAdapter;
 
 import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.TopPostModel;
-import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
+import org.wordpress.android.ui.stats.model.VideoPlaysModel;
 import org.wordpress.android.ui.stats.service.StatsService;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 
 import java.util.List;
 
 
-public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
-    public static final String TAG = StatsTopPostsAndPagesFragment.class.getSimpleName();
+public class StatsVideoplaysFragment extends StatsAbstractListFragment {
+    public static final String TAG = StatsVideoplaysFragment.class.getSimpleName();
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null && ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages().size() > 0) {
-            List<TopPostModel> postViews = ((TopPostsAndPagesModel) mDatamodel).getTopPostsAndPages();
+        if (mDatamodel != null && ((VideoPlaysModel) mDatamodel).getPlays() != null
+                && ((VideoPlaysModel) mDatamodel).getPlays().size() > 0) {
+            List<TopPostModel> postViews = ((VideoPlaysModel) mDatamodel).getPlays();
             ArrayAdapter adapter = new TopPostsAndPagesAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);
             showEmptyUI(false);
@@ -67,22 +65,10 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
             // fill data
             // entries
             holder.setEntryTextOrLink(currentRowData.getUrl(), currentRowData.getTitle());
+
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
-            holder.totalsTextView.setPaintFlags(holder.totalsTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            holder.totalsTextView.setTextColor(getResources().getColor(R.color.wordpress_blue));
-            holder.totalsTextView.setOnClickListener(new
-                             View.OnClickListener() {
-                                 @Override
-                                 public void onClick(View view) {
-                                     AppLog.w(AppLog.T.STATS, currentRowData.getPostId() + "");
-                                     Intent statsPostViewIntent = new Intent(getActivity(), StatsSinglePostDetailsActivity.class);
-                                     statsPostViewIntent.putExtra(StatsActivity.ARG_LOCAL_TABLE_BLOG_ID, getLocalTableBlogID());
-                                     statsPostViewIntent.putExtra(StatsSinglePostDetailsActivity.ARG_REMOTE_POST_ID, currentRowData.getPostId());
-                                     getActivity().startActivity(statsPostViewIntent);
-                                 }
-                             });
             // no icon
             holder.networkImageView.setVisibility(View.GONE);
 
@@ -92,31 +78,31 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
     @Override
     protected int getEntryLabelResId() {
-        return R.string.stats_entry_posts_and_pages;
+        return R.string.stats_entry_video_plays;
     }
 
     @Override
     protected int getTotalsLabelResId() {
-        return R.string.stats_totals_views;
+        return R.string.stats_totals_plays;
     }
 
     @Override
     protected int getEmptyLabelTitleResId() {
-        return R.string.stats_empty_top_posts_title;
+        return R.string.stats_empty_video;
     }
 
     @Override
     protected int getEmptyLabelDescResId() {
-        return R.string.stats_empty_top_posts_desc;
+        return R.string.stats_empty_video_desc;
     }
 
     @Override
     protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
-        return StatsService.StatsEndpointsEnum.TOP_POSTS;
+        return StatsService.StatsEndpointsEnum.VIDEO_PLAYS;
     }
 
     @Override
     public String getTitle() {
-        return getString(R.string.stats_view_top_posts_and_pages);
+        return getString(R.string.stats_view_video_plays);
     }
 }

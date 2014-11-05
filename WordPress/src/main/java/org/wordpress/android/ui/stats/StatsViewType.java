@@ -11,5 +11,6 @@ public enum StatsViewType {
     REFERRERS,
     CLICKS,
     GEOVIEWS,
-    AUTHORS
+    AUTHORS,
+    VIDEO_PLAYS
 }

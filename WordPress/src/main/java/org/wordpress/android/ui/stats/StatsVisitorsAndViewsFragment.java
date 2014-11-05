@@ -433,8 +433,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return;
             }
 
-            StatsService.StatsSectionEnum sectionToUpdate = (StatsService.StatsSectionEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
-            if (/*sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && */ sectionToUpdate != StatsService.StatsSectionEnum.VISITS) {
+            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
+            if (/*sectionToUpdate != StatsService.StatsSectionEnum.SUMMARY && */ sectionToUpdate != StatsService.StatsEndpointsEnum.VISITS) {
                 return;
             }
 

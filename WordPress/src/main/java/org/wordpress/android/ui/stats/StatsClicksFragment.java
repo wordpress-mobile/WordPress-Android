@@ -10,9 +10,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.stats.model.ClickGroupModel;
 import org.wordpress.android.ui.stats.model.ClickModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
-import org.wordpress.android.ui.stats.model.ReferrerGroupModel;
-import org.wordpress.android.ui.stats.model.ReferrerResultModel;
-import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
@@ -38,8 +35,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     }
 
     @Override
-    protected StatsService.StatsSectionEnum getSectionToUpdate() {
-        return StatsService.StatsSectionEnum.CLICKS;
+    protected StatsService.StatsEndpointsEnum getSectionToUpdate() {
+        return StatsService.StatsEndpointsEnum.CLICKS;
     }
 
     @Override
