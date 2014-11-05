@@ -106,7 +106,7 @@
                     android:background="@drawable/shape_oval_blue"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     tools:text="\uf814" />
             </FrameLayout>
 
