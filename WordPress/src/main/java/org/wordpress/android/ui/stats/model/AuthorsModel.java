@@ -11,15 +11,14 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class ClicksModel implements Serializable {
+public class AuthorsModel implements Serializable {
     private String period;
     private String date;
     private String blogID;
-    private int otherClicks;
-    private int totalClicks;
-    private List<ClickGroupModel> clickGroups;
+    private int otherViews;
+    private List<AuthorModel> mAuthors;
 
-    public ClicksModel(String blogID, JSONObject response) throws JSONException {
+    public AuthorsModel(String blogID, JSONObject response) throws JSONException {
         this.blogID = blogID;
         this.period = response.getString("period");
         this.date = response.getString("date");
@@ -29,24 +28,23 @@ public class ClicksModel implements Serializable {
             throw new JSONException("Invalid document returned from the REST API");
         }
 
-        JSONArray jClickGroupsArray;
+        JSONArray authorsJSONArray;
         // Read the first day
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.otherClicks = firstDayObject.getInt("other_clicks");
-        this.totalClicks = firstDayObject.getInt("total_clicks");
-        jClickGroupsArray = firstDayObject.optJSONArray("clicks");
+        this.otherViews = firstDayObject.getInt("other_views");
+        authorsJSONArray = firstDayObject.optJSONArray("authors");
 
-        if (jClickGroupsArray != null) {
-            clickGroups = new ArrayList<ClickGroupModel>(jClickGroupsArray.length());
-            for (int i = 0; i < jClickGroupsArray.length(); i++) {
+        if (authorsJSONArray != null) {
+            mAuthors = new ArrayList<AuthorModel>(authorsJSONArray.length());
+            for (int i = 0; i < authorsJSONArray.length(); i++) {
                 try {
-                    JSONObject currentGroupJSON = jClickGroupsArray.getJSONObject(i);
-                    ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, date, currentGroupJSON);
-                    clickGroups.add(currentGroupModel);
+                    JSONObject currentAuthorJSON = authorsJSONArray.getJSONObject(i);
+                    AuthorModel currentAuthor = new AuthorModel(blogID, date, currentAuthorJSON);
+                    mAuthors.add(currentAuthor);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object " +
+                    AppLog.e(AppLog.T.STATS, "Unexpected Author object " +
                             "at position " + i + " Response: " + response.toString(), e);
                 }
             }
@@ -77,7 +75,7 @@ public class ClicksModel implements Serializable {
         this.period = period;
     }
 
-    public List<ClickGroupModel> getClickGroups() {
-        return this.clickGroups;
+    public List<AuthorModel> getAuthors() {
+        return this.mAuthors;
     }
 }

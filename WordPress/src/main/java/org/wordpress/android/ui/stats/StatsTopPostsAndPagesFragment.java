@@ -90,18 +90,22 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
         }
     }
 
+    @Override
     protected int getEntryLabelResId() {
         return R.string.stats_entry_posts_and_pages;
     }
 
+    @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
 
+    @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_top_posts_title;
     }
 
+    @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_top_posts_desc;
     }

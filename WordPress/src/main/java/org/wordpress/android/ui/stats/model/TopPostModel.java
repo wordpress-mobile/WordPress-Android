@@ -8,7 +8,7 @@ import java.io.Serializable;
 /*
 * A model to represent a SINGLE post or page stat
 */
-public class TopPostModel implements Serializable{
+public class TopPostModel implements Serializable {
     private String mBlogId;
     private String mPostId;
     private String mTitle;

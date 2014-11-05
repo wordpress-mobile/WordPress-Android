@@ -35,6 +35,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case GEOVIEWS:
                 fragment = new StatsGeoviewsFragment();
                 break;
+            case AUTHORS:
+                fragment = new StatsAuthorsFragment();
+                break;
         }
 
         Bundle args = new Bundle();

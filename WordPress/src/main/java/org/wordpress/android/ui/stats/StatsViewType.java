@@ -10,5 +10,6 @@ public enum StatsViewType {
     TOP_POSTS_AND_PAGES,
     REFERRERS,
     CLICKS,
-    GEOVIEWS
+    GEOVIEWS,
+    AUTHORS
 }

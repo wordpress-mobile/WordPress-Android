@@ -18,6 +18,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
+import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
@@ -42,7 +43,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS }
+    public static enum StatsSectionEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS }
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -202,6 +203,12 @@ public class StatsService extends Service {
                 final String countriesPath = String.format("/sites/%s/stats/country-views?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(countriesPath, countriesListener, countriesListener));
                 broadcastSectionUpdating(StatsSectionEnum.GEO_VIEWS);
+
+                // Authors
+                AuthorsCallListener authorsListener = new AuthorsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                final String authorsPath = String.format("/sites/%s/stats/top-authors?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
+                statsNetworkRequests.add(restClientUtils.get(authorsPath, authorsListener, authorsListener));
+                broadcastSectionUpdating(StatsSectionEnum.AUTHORS);
 
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
@@ -405,6 +412,22 @@ public class StatsService extends Service {
         }
     }
 
+    private class AuthorsCallListener extends AbsListener {
+
+        public AuthorsCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+            AuthorsModel model = new AuthorsModel(mRequestBlogId, response);
+            return model;
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.AUTHORS;
+        }
+    }
 
     private void stopService() {
         /* Stop the service if this is the current response, or mServiceBlogId is null

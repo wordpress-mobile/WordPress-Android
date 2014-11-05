@@ -76,18 +76,22 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         }
     }
 
+    @Override
     protected int getEntryLabelResId() {
         return R.string.stats_entry_country;
     }
 
+    @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
 
+    @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_geoviews;
     }
 
+    @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_geoviews_desc;
     }
