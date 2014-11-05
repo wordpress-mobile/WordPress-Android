@@ -64,6 +64,14 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
+    public Authenticator getAuthenticator() {
+        return mAuthenticator;
+    }
+
+    public RestClient getRestClient() {
+        return mRestClient;
+    }
+
     /**
      * Reply to a comment
      * <p/>

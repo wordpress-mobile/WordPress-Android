@@ -269,7 +269,7 @@
     <string name="uploading_total">Uploading %1$d of %2$d</string>
 
     <!-- new account view -->
-    <string name="attempting_configure">Signing in…</string>
+    <string name="signing_in">Signing in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
 
     <!-- drafts -->
