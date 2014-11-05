@@ -24,6 +24,16 @@
             android:orientation="vertical"
             android:id="@+id/stats_list_header_container">
 
+            <RadioGroup
+                android:id="@+id/stats_pager_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="6dp"
+                android:orientation="horizontal"
+                android:visibility="gone" >
+            </RadioGroup>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

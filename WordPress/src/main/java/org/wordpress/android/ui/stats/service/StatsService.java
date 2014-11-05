@@ -20,6 +20,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
+import org.wordpress.android.ui.stats.model.CommentsModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
@@ -44,7 +45,7 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS}
+    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS, COMMENTS}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -215,6 +216,12 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.VIDEO_PLAYS);
 
+                // Comments
+                RestListener commentsListener = new RestListener(StatsEndpointsEnum.COMMENTS, mServiceBlogId, mServiceRequestedTimeframe);
+                final String commentsPath = String.format("/sites/%s/stats/comments", mServiceBlogId);
+                statsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.COMMENTS);
+
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
         } .start();
@@ -321,6 +328,9 @@ public class StatsService extends Service {
                     break;
                 case VIDEO_PLAYS:
                     model = new VideoPlaysModel(mRequestBlogId, response);
+                    break;
+                case COMMENTS:
+                    model = new CommentsModel(mRequestBlogId, response);
                     break;
             }
             return model;

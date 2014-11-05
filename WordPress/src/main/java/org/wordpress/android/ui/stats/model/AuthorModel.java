@@ -15,13 +15,22 @@ import java.util.List;
 public class AuthorModel implements Serializable {
     private String mBlogId;
     private long mDate;
-
     private String mGroupId;
     private String mName;
     private String mAvatar;
     private int mViews;
     private String mFollowData;
     private List<TopPostModel> mPosts;
+
+    public AuthorModel(String mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, String mFollowData) {
+        this.mBlogId = mBlogId;
+        setDate(StatsUtils.toMs(date));
+        this.mGroupId = mGroupId;
+        this.mName = mName;
+        this.mAvatar = mAvatar;
+        this.mViews = mViews;
+        this.mFollowData = mFollowData;
+    }
 
     public AuthorModel(String blogId, String date, JSONObject authorJSON) throws JSONException {
         setBlogId(blogId);

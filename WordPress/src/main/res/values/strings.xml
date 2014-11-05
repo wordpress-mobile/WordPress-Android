@@ -444,7 +444,8 @@
     <string name="stats_empty_tags_and_categories">No tagged posts or pages have been viewed yet.</string>
     <string name="stats_empty_video">No videos have been played yet.</string>
     <string name="stats_empty_video_desc">If you\'ve uploaded videos using VideoPress, find out how many times they’ve been watched.</string>
-    <string name="stats_empty_comments">No comments yet</string>
+    <string name="stats_empty_comments">No comments yet.</string>
+    <string name="stats_empty_comments_desc">If you allow comments on your site, track your top commenters and discover what content sparks the liveliest conversations, based on the most recent 1,000 comments.</string>
     <string name="stats_bar_graph_empty">No stats available</string>
 
     <!-- invalid_url -->

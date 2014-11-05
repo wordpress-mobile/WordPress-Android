@@ -41,6 +41,9 @@ public abstract class StatsAbstractFragment extends Fragment {
             case VIDEO_PLAYS:
                 fragment = new StatsVideoplaysFragment();
                 break;
+            case COMMENTS:
+                fragment = new StatsCommentsFragment();
+                break;
         }
 
         Bundle args = new Bundle();
