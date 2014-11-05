@@ -30,7 +30,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
                     android:text="@string/help"
-                    android:id="@+id/create_account_label"
+                    android:id="@+id/help_title"
                     app:fontVariation="light"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -41,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    app:fixWidowWords="true"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
