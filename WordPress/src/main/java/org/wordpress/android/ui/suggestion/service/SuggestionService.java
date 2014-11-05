@@ -17,10 +17,12 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SuggestionService extends Service {
     private final IBinder mBinder = new SuggestionBinder();
+    private final List<Integer> mCurrentlyRequestingSiteIds = new ArrayList<Integer>();
 
     // broadcast action to notify clients when summary data has changed
     public static final String ACTION_SUGGESTIONS_LIST_UPDATED = "SUGGESTIONS_LIST_UPDATED";
@@ -49,16 +51,22 @@ public class SuggestionService extends Service {
     }
 
     public void updateSuggestions(final int remoteBlogId) {
+        if (mCurrentlyRequestingSiteIds.contains(remoteBlogId)) {
+            return;
+        }
+        mCurrentlyRequestingSiteIds.add(remoteBlogId);
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 handleSuggestionsUpdatedResponse(remoteBlogId, jsonObject);
+                removeSiteIdFromRequestsAndStopServiceIfNecessary(remoteBlogId);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.e(AppLog.T.SUGGESTION, volleyError);
+                removeSiteIdFromRequestsAndStopServiceIfNecessary(remoteBlogId);
             }
         };
 
@@ -87,6 +95,16 @@ public class SuggestionService extends Service {
                 }
             }
         }.start();
+    }
+
+    private void removeSiteIdFromRequestsAndStopServiceIfNecessary(Integer remoteBlogId) {
+        mCurrentlyRequestingSiteIds.remove(remoteBlogId);
+
+        // if there are no requests being made, we want to stop the service
+        if (mCurrentlyRequestingSiteIds.isEmpty()) {
+            AppLog.d(AppLog.T.SUGGESTION, "stopping suggestion service");
+            stopSelf();
+        }
     }
 
     public class SuggestionBinder extends Binder {
