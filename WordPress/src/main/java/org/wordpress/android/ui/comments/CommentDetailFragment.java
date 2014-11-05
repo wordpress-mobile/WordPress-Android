@@ -272,6 +272,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setupSuggestionsServiceAndAdapter() {
         if (!isAdded()) return;
 
+        Blog blog = WordPress.wpDB.getBlogForDotComBlogId(Integer.toString(mRemoteBlogId));
+        if (!blog.isDotcomFlag()) {
+            return;
+        }
+
         final Context context = getActivity();
 
         mSuggestionAdapter = new SuggestionAdapter(context);
