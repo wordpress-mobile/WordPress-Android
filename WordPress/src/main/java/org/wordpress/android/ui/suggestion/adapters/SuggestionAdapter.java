@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ import java.util.List;
 
 public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater mInflater;
+    private final Context mContext;
     private Filter mSuggestionFilter;
     private List<Suggestion> mSuggestionList;
     private List<Suggestion> mOrigSuggestionList;
 
     public SuggestionAdapter(Context context) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
     }
 
@@ -66,7 +69,9 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         Suggestion suggestion = getItem(position);
 
         if (suggestion != null) {
-            holder.imgAvatar.setImageUrl(suggestion.getImageUrl(), WPNetworkImageView.ImageType.AVATAR);
+            int avatarSz = mContext.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+            String avatarUrl = PhotonUtils.fixAvatar(suggestion.getImageUrl(), avatarSz);
+            holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
             holder.txtUserLogin.setText(suggestion.getUserLogin());
             holder.txtDisplayName.setText(suggestion.getDisplayName());
         }
