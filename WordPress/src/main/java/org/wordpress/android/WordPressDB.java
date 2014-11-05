@@ -323,7 +323,7 @@ public class WordPressDB {
             return new Vector<Map<String, Object>>();
         }
         String limitStr = null;
-        if (limit == 0) {
+        if (limit != 0) {
             limitStr = String.valueOf(limit);
         }
         String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url", "password"};
