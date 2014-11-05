@@ -283,7 +283,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             String primaryBlogId = jsonObject.getString("primary_blog");
             // Look for a visible blog with this id in the DB
             List<Map<String, Object>> blogs = WordPress.wpDB.getAccountsBy("isHidden = 0 AND blogId = " + primaryBlogId,
-                    null, "1");
+                    null, 1);
             if (blogs != null && !blogs.isEmpty()) {
                 Map<String, Object> primaryBlog = blogs.get(0);
                 // Ask for a refresh and select it
@@ -715,7 +715,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * user selects it.
      */
     private void refreshFirstBlogContent() {
-        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getAccountsBy("isHidden = 0", null, "1");
+        List<Map<String, Object>> visibleBlogs = WordPress.wpDB.getAccountsBy("isHidden = 0", null, 1);
         if (visibleBlogs != null && !visibleBlogs.isEmpty()) {
             Map<String, Object> firstBlog = visibleBlogs.get(0);
             refreshBlogContent(firstBlog);

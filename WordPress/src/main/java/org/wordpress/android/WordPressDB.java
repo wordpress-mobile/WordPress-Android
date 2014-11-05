@@ -141,7 +141,6 @@ public class WordPressDB {
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
-
     private Context context;
 
     public WordPressDB(Context ctx) {
@@ -316,20 +315,23 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
-        return getAccountsBy(byString, extraFields, null);
+        return getAccountsBy(byString, extraFields, 0);
     }
 
-    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, String limit) {
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, int limit) {
         if (db == null) {
             return new Vector<Map<String, Object>>();
         }
-        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url",
-                "password"};
+        String limitStr = null;
+        if (limit == 0) {
+            limitStr = String.valueOf(limit);
+        }
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url", "password"};
         String[] allFields = baseFields;
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
         }
-        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limit);
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
