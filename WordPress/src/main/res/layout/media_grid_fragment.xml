@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_grey">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/background_grey">
 
     <FrameLayout
         android:id="@+id/media_filter_spinner_container"
@@ -65,7 +66,8 @@
                 android:text="@string/media_empty_list_custom_date"
                 android:layout_marginBottom="@dimen/empty_list_title_bottom_margin"
                 android:layout_marginLeft="@dimen/empty_list_title_side_margin"
-                android:layout_marginRight="@dimen/empty_list_title_side_margin" />
+                android:layout_marginRight="@dimen/empty_list_title_side_margin"
+                app:fixWidowWords="true"/>
 
         </LinearLayout>
 
