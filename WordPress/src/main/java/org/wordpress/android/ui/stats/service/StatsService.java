@@ -44,19 +44,17 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsEndpointsEnum {/*SUMMARY,*/ VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS }
+    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
     public static final String ACTION_STATS_UPDATED = "wp-stats-updated";
     public static final String EXTRA_IS_UPDATING = "is-updating";
-    public static final String EXTRA_SECTION_NAME = "updated-section-name";
-    public static final String EXTRA_SECTION_DATA = "updated-section-data";
+    public static final String EXTRA_ENDPOINT_NAME = "updated-endpoint-name";
+    public static final String EXTRA_ENDPOINT_DATA = "updated-endpoint-data";
 
     public static final String EXTRA_IS_ERROR = "is-error";
     public static final String EXTRA_ERROR_OBJECT = "error-object";
-
-    //private static final long TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
 
     private String mServiceBlogId;
     private StatsTimeframe mServiceRequestedTimeframe;
@@ -175,44 +173,44 @@ public class StatsService extends Service {
 */
                 if (updateGraph) {
                     // Visits call: The Graph and the section just below the graph
-                    VisitsCallListener vListener = new VisitsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                    RestListener vListener = new RestListener(StatsEndpointsEnum.VISITS, mServiceBlogId, mServiceRequestedTimeframe);
                     final String visitsPath = String.format("/sites/%s/stats/visits?unit=%s&quantity=10&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                     statsNetworkRequests.add(restClientUtils.get(visitsPath, vListener, vListener));
                     broadcastSectionUpdating(StatsEndpointsEnum.VISITS);
                 }
 
                // Posts & Pages
-                TopPostsAndPagesCallListener topPostsAndPagesListener = new TopPostsAndPagesCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener topPostsAndPagesListener = new RestListener(StatsEndpointsEnum.TOP_POSTS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String topPostsAndPagesPath = String.format("/sites/%s/stats/top-posts?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(topPostsAndPagesPath, topPostsAndPagesListener, topPostsAndPagesListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.TOP_POSTS);
 
                 // Referrers
-                ReferrersCallListener referrersListener = new ReferrersCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener referrersListener = new RestListener(StatsEndpointsEnum.REFERRERS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String referrersPath = String.format("/sites/%s/stats/referrers?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(referrersPath, referrersListener, referrersListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.REFERRERS);
 
                 // Clicks
-                ClicksCallListener clicksListener = new ClicksCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener clicksListener = new RestListener(StatsEndpointsEnum.CLICKS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String clicksPath = String.format("/sites/%s/stats/clicks?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(clicksPath, clicksListener, clicksListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.CLICKS);
 
                 // Geoviews
-                GeoviewsCallListener countriesListener = new GeoviewsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener countriesListener = new RestListener(StatsEndpointsEnum.GEO_VIEWS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String countriesPath = String.format("/sites/%s/stats/country-views?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(countriesPath, countriesListener, countriesListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.GEO_VIEWS);
 
                 // Authors
-                AuthorsCallListener authorsListener = new AuthorsCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener authorsListener = new RestListener(StatsEndpointsEnum.AUTHORS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String authorsPath = String.format("/sites/%s/stats/top-authors?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(authorsPath, authorsListener, authorsListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.AUTHORS);
 
                 // Video plays
-                VideoplaysCallListener videoPlaysListener = new VideoplaysCallListener(mServiceBlogId, mServiceRequestedTimeframe);
+                RestListener videoPlaysListener = new RestListener(StatsEndpointsEnum.VIDEO_PLAYS, mServiceBlogId, mServiceRequestedTimeframe);
                 final String videoPlaysPath = String.format("/sites/%s/stats/video-plays?period=%s&date=%s", mServiceBlogId, period, mServiceRequestedDate);
                 statsNetworkRequests.add(restClientUtils.get(videoPlaysPath, videoPlaysListener, videoPlaysListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.VIDEO_PLAYS);
@@ -222,14 +220,16 @@ public class StatsService extends Service {
         } .start();
     }
 
-    private abstract class AbsListener implements RestRequest.Listener, RestRequest.ErrorListener {
+    private class RestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         protected String mRequestBlogId;
         private final StatsTimeframe mTimeframe;
-        protected Serializable responseObjectModel;
+        protected Serializable mResponseObjectModel;
+        final StatsEndpointsEnum mEndpointName;
 
-        public AbsListener(String blogId, StatsTimeframe timeframe) {
+        public RestListener(StatsEndpointsEnum endpointName, String blogId, StatsTimeframe timeframe) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
+            mEndpointName = endpointName;
         }
 
         @Override
@@ -250,7 +250,7 @@ public class StatsService extends Service {
                     if (response != null) {
                         try {
                             AppLog.d(T.STATS, response.toString());
-                            responseObjectModel = parseResponse(response);
+                            mResponseObjectModel = parseResponse(response);
                         } catch (JSONException e) {
                             AppLog.e(AppLog.T.STATS, e);
                         } catch (RemoteException e) {
@@ -282,7 +282,7 @@ public class StatsService extends Service {
                     if (volleyError != null) {
                         AppLog.e(T.STATS, "Error details: \n" + volleyError.getMessage(), volleyError);
                     }
-                    responseObjectModel = volleyError;
+                    mResponseObjectModel = volleyError;
                     notifySectionUpdated();
                     checkAllRequestsFinished();
                 }
@@ -292,164 +292,38 @@ public class StatsService extends Service {
         private void notifySectionUpdated() {
             Intent intent = new Intent()
                     .setAction(ACTION_STATS_UPDATED)
-                    .putExtra(EXTRA_SECTION_NAME, getSectionEnum())
-                    .putExtra(EXTRA_SECTION_DATA, responseObjectModel);
+                    .putExtra(EXTRA_ENDPOINT_NAME, mEndpointName)
+                    .putExtra(EXTRA_ENDPOINT_DATA, mResponseObjectModel);
             LocalBroadcastManager.getInstance(WordPress.getContext()).sendBroadcast(intent);
         }
 
-        abstract StatsEndpointsEnum getSectionEnum();
-
-        abstract Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException;
-    }
-
-    /*
-    private class SummaryCallListener extends AbsListener {
-
-        public SummaryCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
         Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
                 OperationApplicationException {
-        //    AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
-        //    AppLog.d(T.STATS, response.toString());
-            SummaryModel summaryModel = new SummaryModel();
-            summaryModel.setBlogID(mRequestBlogId);
-            summaryModel.setFollowers(response.optInt("followers", 0));
-            summaryModel.setViews(response.optInt("views", 0));
-            summaryModel.setReblog(response.optInt("reblogs", 0));
-            summaryModel.setLike(response.optInt("likes", 0));
-            summaryModel.setVisitors(response.optInt("visitors", 0));
-            summaryModel.setComments(response.optInt("comments", 0));
-            summaryModel.setDate(response.getString("date"));
-            summaryModel.setPeriod(response.getString("period"));
-            return summaryModel;
-         //   AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
-        }
-
-        StatsSectionEnum getSectionEnum() {
-            return StatsSectionEnum.SUMMARY;
-        }
-    }
-*/
-    private class VisitsCallListener extends AbsListener {
-
-        public VisitsCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            VisitsModel visitsModel = new VisitsModel(mRequestBlogId, response);
-            return visitsModel;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.VISITS;
-        }
-    }
-
-    private class TopPostsAndPagesCallListener extends AbsListener {
-
-        public TopPostsAndPagesCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            TopPostsAndPagesModel topPostsAndPagesModel = new TopPostsAndPagesModel(mRequestBlogId, response);
-            return topPostsAndPagesModel;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.TOP_POSTS;
-        }
-    }
-
-    private class ReferrersCallListener extends AbsListener {
-
-        public ReferrersCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            ReferrersModel referrersModel = new ReferrersModel(mRequestBlogId, response);
-            return referrersModel;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.REFERRERS;
-        }
-    }
-
-    private class ClicksCallListener extends AbsListener {
-
-        public ClicksCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            ClicksModel model = new ClicksModel(mRequestBlogId, response);
+            Serializable model = null;
+            switch (mEndpointName) {
+                case VISITS:
+                    model = new VisitsModel(mRequestBlogId, response);
+                    break;
+                case TOP_POSTS:
+                    model = new TopPostsAndPagesModel(mRequestBlogId, response);
+                    break;
+                case REFERRERS:
+                    model = new ReferrersModel(mRequestBlogId, response);
+                    break;
+                case CLICKS:
+                    model = new ClicksModel(mRequestBlogId, response);
+                    break;
+                case GEO_VIEWS:
+                    model = new GeoviewsModel(mRequestBlogId, response);
+                    break;
+                case AUTHORS:
+                    model = new AuthorsModel(mRequestBlogId, response);
+                    break;
+                case VIDEO_PLAYS:
+                    model = new VideoPlaysModel(mRequestBlogId, response);
+                    break;
+            }
             return model;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.CLICKS;
-        }
-    }
-
-
-    private class GeoviewsCallListener extends AbsListener {
-
-        public GeoviewsCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            GeoviewsModel model = new GeoviewsModel(mRequestBlogId, response);
-            return model;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.GEO_VIEWS;
-        }
-    }
-
-    private class AuthorsCallListener extends AbsListener {
-
-        public AuthorsCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            AuthorsModel model = new AuthorsModel(mRequestBlogId, response);
-            return model;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.AUTHORS;
-        }
-    }
-
-    private class VideoplaysCallListener extends AbsListener {
-
-        public VideoplaysCallListener(String blogId, StatsTimeframe timeframe) {
-            super(blogId, timeframe);
-        }
-
-        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
-                OperationApplicationException {
-            VideoPlaysModel model = new VideoPlaysModel(mRequestBlogId, response);
-            return model;
-        }
-
-        StatsEndpointsEnum getSectionEnum() {
-            return StatsEndpointsEnum.VIDEO_PLAYS;
         }
     }
 
@@ -498,11 +372,43 @@ public class StatsService extends Service {
     private void broadcastSectionUpdating(StatsEndpointsEnum sectionName) {
         Intent intent = new Intent()
                 .setAction(ACTION_STATS_UPDATING)
-                .putExtra(EXTRA_SECTION_NAME, sectionName)
+                .putExtra(EXTRA_ENDPOINT_NAME, sectionName)
                 .putExtra(EXTRA_IS_UPDATING, true);
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
+
+        /*
+    private class SummaryCallListener extends AbsListener {
+
+        public SummaryCallListener(String blogId, StatsTimeframe timeframe) {
+            super(blogId, timeframe);
+        }
+
+        Serializable parseResponse(JSONObject response) throws JSONException, RemoteException,
+                OperationApplicationException {
+        //    AppLog.d(T.STATS, ">>>>>>> " + this.getClass().getName() );
+        //    AppLog.d(T.STATS, response.toString());
+            SummaryModel summaryModel = new SummaryModel();
+            summaryModel.setBlogID(mRequestBlogId);
+            summaryModel.setFollowers(response.optInt("followers", 0));
+            summaryModel.setViews(response.optInt("views", 0));
+            summaryModel.setReblog(response.optInt("reblogs", 0));
+            summaryModel.setLike(response.optInt("likes", 0));
+            summaryModel.setVisitors(response.optInt("visitors", 0));
+            summaryModel.setComments(response.optInt("comments", 0));
+            summaryModel.setDate(response.getString("date"));
+            summaryModel.setPeriod(response.getString("period"));
+            return summaryModel;
+         //   AppLog.d(T.STATS, "<<<<<<< " + this.getClass().getName() );
+        }
+
+        StatsSectionEnum getSectionEnum() {
+            return StatsSectionEnum.SUMMARY;
+        }
+    }
+*/
 
 /*
     private String getBarChartPath(String blogID, StatsBarChartUnit mBarChartUnit, int quantity) {

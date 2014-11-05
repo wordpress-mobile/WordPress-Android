@@ -156,18 +156,18 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 return;
             }
 
-            if (!intent.hasExtra(StatsService.EXTRA_SECTION_NAME)) {
+            if (!intent.hasExtra(StatsService.EXTRA_ENDPOINT_NAME)) {
                 return;
             }
 
-            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_SECTION_NAME);
+            StatsService.StatsEndpointsEnum sectionToUpdate = (StatsService.StatsEndpointsEnum) intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_NAME);
             if (sectionToUpdate != getSectionToUpdate()) {
                 return;
             }
 
             mGroupIdToExpandedMap.clear();
             if (action.equals(StatsService.ACTION_STATS_UPDATED)) {
-                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_SECTION_DATA);
+                Serializable dataObj = intent.getSerializableExtra(StatsService.EXTRA_ENDPOINT_DATA);
                /* if (dataObj == null || dataObj instanceof VolleyError) {
                     //TODO: show the error on the section ???
                     return;
