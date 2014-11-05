@@ -34,6 +34,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
+import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
@@ -218,6 +219,9 @@ public class WordPress extends Application {
         ApplicationLifecycleMonitor pnBackendMonitor = new ApplicationLifecycleMonitor();
         registerComponentCallbacks(pnBackendMonitor);
         registerActivityLifecycleCallbacks(pnBackendMonitor);
+
+        // we want to reset the suggestion table in every launch so we can get a fresh list
+        SuggestionTable.reset(wpDB.getDatabase());
     }
 
     // Configure Simperium and start buckets if we are signed in to WP.com
