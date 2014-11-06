@@ -5,16 +5,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
@@ -73,7 +71,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
         if (hasImageMediaItem()) {
             String imageUrl = PhotonUtils.fixAvatar(getNoteMediaItem().optString("url", ""), getAvatarSize());
-            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WordPress.imageLoader);
+            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
@@ -161,7 +159,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     private class CommentUserNoteBlockHolder {
-        private final NetworkImageView avatarImageView;
+        private final WPNetworkImageView avatarImageView;
         private final TextView nameTextView;
         private final TextView agoTextView;
         private final TextView bulletTextView;
@@ -177,7 +175,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             siteTextView = (TextView)view.findViewById(R.id.user_comment_site);
             commentTextView = (TextView)view.findViewById(R.id.user_comment);
             commentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            avatarImageView = (NetworkImageView)view.findViewById(R.id.user_avatar);
+            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.user_avatar);
             dividerView = view.findViewById(R.id.divider_view);
 
             siteTextView.setOnClickListener(new View.OnClickListener() {

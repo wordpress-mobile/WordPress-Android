@@ -141,7 +141,6 @@ public class WordPressDB {
     private SQLiteDatabase db;
 
     protected static final String PASSWORD_SECRET = BuildConfig.DB_SECRET;
-
     private Context context;
 
     public WordPressDB(Context ctx) {
@@ -296,6 +295,7 @@ public class WordPressDB {
             values.putNull("wpVersion");
         }
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         return db.insert(SETTINGS_TABLE, null, values) > -1;
     }
 
@@ -315,16 +315,23 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields) {
+        return getAccountsBy(byString, extraFields, 0);
+    }
+
+    public List<Map<String, Object>> getAccountsBy(String byString, String[] extraFields, int limit) {
         if (db == null) {
             return new Vector<Map<String, Object>>();
         }
-        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url",
-                "password"};
+        String limitStr = null;
+        if (limit != 0) {
+            limitStr = String.valueOf(limit);
+        }
+        String[] baseFields = new String[]{"id", "blogName", "username", "blogId", "url", "password"};
         String[] allFields = baseFields;
         if (extraFields != null) {
             allFields = (String[]) ArrayUtils.addAll(baseFields, extraFields);
         }
-        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null);
+        Cursor c = db.query(SETTINGS_TABLE, allFields, byString, null, null, null, null, limitStr);
         int numRows = c.getCount();
         c.moveToFirst();
         List<Map<String, Object>> accounts = new Vector<Map<String, Object>>();
@@ -435,6 +442,7 @@ public class WordPressDB {
         values.put("isHidden", blog.isHidden());
         values.put("blogName", blog.getBlogName());
         values.put("isAdmin", blog.isAdmin());
+        values.put("isHidden", blog.isHidden());
         if (blog.getWpVersion() != null) {
             values.put("wpVersion", blog.getWpVersion());
         } else {

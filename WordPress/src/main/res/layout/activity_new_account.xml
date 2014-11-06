@@ -5,7 +5,7 @@
     android:background="@color/nux_background"
     android:orientation="vertical" >
 
-        <fragment android:name="org.wordpress.android.ui.accounts.NewUserPageFragment"
+        <fragment android:name="org.wordpress.android.ui.accounts.NewUserFragment"
             android:id="@+id/new_user_page_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -43,7 +43,7 @@ import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.NotificationsActivity;
@@ -533,8 +533,8 @@ public abstract class WPActionBarActivity extends Activity {
         if (!WordPress.isSignedIn(WPActionBarActivity.this)) {
             AppLog.d(T.NUX, "No accounts configured.  Sending user to set up an account");
             mShouldFinish = false;
-            Intent intent = new Intent(this, WelcomeActivity.class);
-            intent.putExtra("request", WelcomeActivity.SIGN_IN_REQUEST);
+            Intent intent = new Intent(this, SignInActivity.class);
+            intent.putExtra("request", SignInActivity.SIGN_IN_REQUEST);
             startActivityForResult(intent, ADD_ACCOUNT_REQUEST);
             return false;
         }
@@ -611,7 +611,7 @@ public abstract class WPActionBarActivity extends Activity {
             case AUTHENTICATE_REQUEST:
                 if (resultCode == RESULT_CANCELED) {
                     mReauthCanceled = true;
-                    Intent i = new Intent(this, WelcomeActivity.class);
+                    Intent i = new Intent(this, SignInActivity.class);
                     startActivityForResult(i, ADD_ACCOUNT_REQUEST);
                 } else {
                     WordPress.registerForCloudMessaging(this);
@@ -700,7 +700,7 @@ public abstract class WPActionBarActivity extends Activity {
                 public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
                 }
             };
-            new ApiHelper.RefreshBlogContentTask(this, WordPress.getCurrentBlog(), callback).executeOnExecutor(
+            new ApiHelper.RefreshBlogContentTask(WordPress.getCurrentBlog(), callback).executeOnExecutor(
                     AsyncTask.THREAD_POOL_EXECUTOR, false);
         }
     }
@@ -960,7 +960,7 @@ public abstract class WPActionBarActivity extends Activity {
 
     private class StatsMenuItem extends MenuDrawerItem {
         StatsMenuItem(){
-            super(ActivityId.STATS, R.string.tab_stats, R.drawable.dashicon_chart_area_black);
+            super(ActivityId.STATS, R.string.tab_stats, R.drawable.noticon_milestone_black);
         }
         @Override
         public Boolean isSelected(){

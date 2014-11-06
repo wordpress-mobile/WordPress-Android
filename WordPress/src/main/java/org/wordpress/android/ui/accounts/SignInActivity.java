@@ -9,15 +9,14 @@ import android.view.Window;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.ActivityId;
 
-// TODO: this will probably be merged with New Account Activity (maybe add a tab bar)
-public class WelcomeActivity extends Activity {
+public class SignInActivity extends Activity {
     public static final int SIGN_IN_REQUEST = 1;
     public static final int ADD_SELF_HOSTED_BLOG = 2;
     public static final int CREATE_ACCOUNT_REQUEST = 3;
     public static final int SHOW_CERT_DETAILS = 4;
     public static String START_FRAGMENT_KEY = "start-fragment";
 
-    private WelcomeFragmentSignIn mWelcomeFragmentSignIn;
+    private SignInFragment mSignInFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,7 @@ public class WelcomeActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_welcome);
         FragmentManager fragmentManager = getFragmentManager();
-        mWelcomeFragmentSignIn = (WelcomeFragmentSignIn) fragmentManager.findFragmentById(R.id.sign_in_fragment);
+        mSignInFragment = (SignInFragment) fragmentManager.findFragmentById(R.id.sign_in_fragment);
         actionMode(getIntent().getExtras());
         ActivityId.trackLastActivity(this, ActivityId.LOGIN);
     }
@@ -37,7 +36,7 @@ public class WelcomeActivity extends Activity {
         }
         switch (actionMode) {
             case ADD_SELF_HOSTED_BLOG:
-                mWelcomeFragmentSignIn.forceSelfHostedMode();
+                mSignInFragment.forceSelfHostedMode();
                 break;
             default:
                 break;
@@ -49,11 +48,11 @@ public class WelcomeActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SHOW_CERT_DETAILS) {
-            mWelcomeFragmentSignIn.askForSslTrust();
+            mSignInFragment.askForSslTrust();
         } else if (resultCode == RESULT_OK && data != null) {
             String username = data.getStringExtra("username");
             if (username != null) {
-                mWelcomeFragmentSignIn.signInDotComUser();
+                mSignInFragment.signInDotComUser();
             }
         }
     }

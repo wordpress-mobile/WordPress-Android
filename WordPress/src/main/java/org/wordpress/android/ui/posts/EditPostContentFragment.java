@@ -1614,6 +1614,4 @@ public class EditPostContentFragment extends Fragment implements TextWatcher,
             }
         }
     }
-
-
 }

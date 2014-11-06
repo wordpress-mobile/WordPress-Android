@@ -70,11 +70,11 @@ public class TypefaceCache {
         // read custom fontVariation from attributes, default to normal
         int variation = TypefaceCache.VARIATION_NORMAL;
         if (attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTypeface, 0, 0);
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.WPTextView, 0, 0);
 
             if (a != null) {
                 try {
-                    variation = a.getInteger(R.styleable.WPTypeface_fontVariation, TypefaceCache.VARIATION_NORMAL);
+                    variation = a.getInteger(R.styleable.WPTextView_fontVariation, TypefaceCache.VARIATION_NORMAL);
                 } finally {
                     a.recycle();
                 }

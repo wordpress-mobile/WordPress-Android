@@ -22,6 +22,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.ui.WPActionBarActivity;
+import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtil;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -29,7 +30,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
 
-public class NewBlogFragment extends NewAccountAbstractPageFragment implements TextWatcher {
+public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private EditText mSiteUrlTextField;
     private EditText mSiteTitleTextField;
     private WPTextView mSignupButton;
@@ -192,7 +193,6 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     return;
                 }
                 endProgress();
-                SetupBlog setupBlog = new SetupBlog();
                 try {
                     JSONObject details = createSiteResponse.getJSONObject("blog_details");
                     String blogName = details.getString("blogname");
@@ -203,7 +203,8 @@ public class NewBlogFragment extends NewAccountAbstractPageFragment implements T
                     String username = settings.getString(WordPress.WPCOM_USERNAME_PREFERENCE, "");
                     String password = WordPressDB.decryptPassword(settings.getString(
                             WordPress.WPCOM_PASSWORD_PREFERENCE, null));
-                    setupBlog.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, true);
+                    BlogUtils.addOrUpdateBlog(blogName, xmlRpcUrl, homeUrl, blogId, username, password, null, null,
+                            true, true);
                     ToastUtils.showToast(getActivity(), R.string.new_blog_wpcom_created);
                 } catch (JSONException e) {
                     AppLog.e(T.NUX, "Invalid JSON response from site/new", e);

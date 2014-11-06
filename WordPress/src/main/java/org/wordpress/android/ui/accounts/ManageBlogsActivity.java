@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.ListScrollPositionManager;
@@ -158,7 +159,7 @@ public class ManageBlogsActivity extends ListActivity {
         }
     }
 
-    private class UpdateBlogTask extends SetupBlogTask {
+    private class UpdateBlogTask extends UpdateBlogListTask {
         public UpdateBlogTask(Context context) {
             super(context);
         }
