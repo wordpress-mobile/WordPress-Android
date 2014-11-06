@@ -7,14 +7,12 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.util.JSONUtil;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
 public class HeaderUserNoteBlock extends NoteBlock {
@@ -52,7 +50,7 @@ public class HeaderUserNoteBlock extends NoteBlock {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
 
         noteBlockHolder.nameTextView.setText(getUserName());
-        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), WordPress.imageLoader);
+        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), WPNetworkImageView.ImageType.AVATAR);
         if (!TextUtils.isEmpty(getUserUrl())) {
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
@@ -108,14 +106,14 @@ public class HeaderUserNoteBlock extends NoteBlock {
     private class NoteHeaderBlockHolder {
         private final TextView nameTextView;
         private final TextView snippetTextView;
-        private final NetworkImageView avatarImageView;
+        private final WPNetworkImageView avatarImageView;
 
         public NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
             nameTextView = (TextView)view.findViewById(R.id.header_user);
             snippetTextView = (TextView)view.findViewById(R.id.header_snippet);
-            avatarImageView = (NetworkImageView)view.findViewById(R.id.header_avatar);
+            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.header_avatar);
         }
     }
 

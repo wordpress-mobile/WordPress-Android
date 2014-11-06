@@ -52,7 +52,7 @@
 
         <!-- Account activities -->
         <activity
-            android:name=".ui.accounts.WelcomeActivity"
+            android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.accounts.NewAccountActivity"
@@ -63,7 +63,7 @@
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".ui.accounts.NuxHelpActivity"/>
+        <activity android:name=".ui.accounts.HelpActivity"/>
 
         <!-- Preferences activities -->
         <activity android:name=".ui.prefs.AboutActivity" />

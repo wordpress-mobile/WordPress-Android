@@ -1,7 +1,5 @@
 package org.wordpress.android.util;
 
-import java.io.UnsupportedEncodingException;
-
 import android.content.Context;
 
 import com.android.volley.Request;
@@ -12,9 +10,10 @@ import com.android.volley.toolbox.ImageRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.networking.WPDelayedHurlStack;
+
+import java.io.UnsupportedEncodingException;
 
 public class VolleyUtils {
     /*
@@ -44,15 +43,15 @@ public class VolleyUtils {
      * contain JSON in the response
      */
     public static JSONObject volleyErrorToJSON(VolleyError volleyError) {
-        if (volleyError==null
-                || volleyError.networkResponse==null
-                || volleyError.networkResponse.data==null
-                || volleyError.networkResponse.headers==null)
+        if (volleyError == null || volleyError.networkResponse == null || volleyError.networkResponse.data == null
+                || volleyError.networkResponse.headers == null) {
             return null;
+        }
 
         String contentType = volleyError.networkResponse.headers.get("Content-Type");
-        if (contentType==null || !contentType.equals("application/json"))
+        if (contentType == null || !contentType.equals("application/json")) {
             return null;
+        }
 
         try {
             String response = new String(volleyError.networkResponse.data, "UTF-8");
