@@ -32,7 +32,6 @@ import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
@@ -209,7 +208,6 @@ public class WordPress extends Application {
 
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 
