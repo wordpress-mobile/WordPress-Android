@@ -640,7 +640,7 @@ public class StatsActivity extends WPActionBarActivity implements ScrollViewExt.
             // blogId is null at this point.
             if (!currentBlog.isDotcomFlag()) {
                 // Refresh blog settings/options that includes 'jetpack_client_id'needed here
-                new ApiHelper.RefreshBlogContentTask(this, currentBlog,
+                new ApiHelper.RefreshBlogContentTask(currentBlog,
                         new VerifyJetpackSettingsCallback(StatsActivity.this)).execute(false);
             } else {
                 // blodID cannot be null on dotcom blogs.

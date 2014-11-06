@@ -32,7 +32,6 @@ import org.wordpress.android.WordPress.SignOutAsync.SignOutCallback;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
-import org.wordpress.android.analytics.AnalyticsTrackerWPCom;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Blog;
@@ -42,7 +41,7 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
-import org.wordpress.android.ui.accounts.SetupBlogTask.GenericSetupBlogTask;
+import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -113,7 +112,7 @@ public class WordPress extends Application {
         protected boolean run() {
             Blog currentBlog = WordPress.getCurrentBlog();
             if (currentBlog != null) {
-                new ApiHelper.RefreshBlogContentTask(mContext, currentBlog, null).executeOnExecutor(
+                new ApiHelper.RefreshBlogContentTask(currentBlog, null).executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR, false);
                 return true;
             }
@@ -154,7 +153,7 @@ public class WordPress extends Application {
      */
     public static RateLimitedTask sUpdateWordPressComBlogList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
-            new GenericSetupBlogTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new GenericUpdateBlogListTask(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
     };
@@ -210,7 +209,6 @@ public class WordPress extends Application {
 
         AnalyticsTracker.init();
         AnalyticsTracker.registerTracker(new AnalyticsTrackerMixpanel());
-        AnalyticsTracker.registerTracker(new AnalyticsTrackerWPCom());
         AnalyticsTracker.beginSession();
         AnalyticsTracker.track(Stat.APPLICATION_STARTED);
 

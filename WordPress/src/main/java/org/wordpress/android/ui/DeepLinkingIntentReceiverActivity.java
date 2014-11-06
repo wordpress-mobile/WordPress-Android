@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.WelcomeActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,7 +44,7 @@ public class DeepLinkingIntentReceiverActivity extends Activity {
             if (WordPress.hasValidWPComCredentials(this)) {
                 showPost();
             } else {
-                Intent intent = new Intent(this, WelcomeActivity.class);
+                Intent intent = new Intent(this, SignInActivity.class);
                 startActivityForResult(intent, INTENT_WELCOME);
             }
         } else {
