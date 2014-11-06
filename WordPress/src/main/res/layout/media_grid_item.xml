@@ -1,34 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    media grid item - non-tablet
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
     <org.wordpress.android.ui.CheckableFrameLayout
         android:id="@+id/media_grid_frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/media_gallery_grid_cell">
 
         <ViewStub
             android:id="@+id/media_grid_image_stub"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inflatedId="@+id/media_grid_item_image" />
+            android:inflatedId="@+id/media_grid_item_image"/>
 
         <RelativeLayout
             android:id="@+id/media_grid_item_upload_state_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"
-            android:background="@color/wordpress_blue"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium"
             android:visibility="gone">
 
             <ProgressBar
@@ -37,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small" />
+                android:paddingRight="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_upload_state"
@@ -48,7 +39,7 @@
                 android:gravity="right"
                 android:paddingLeft="@dimen/margin_small"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_sz_small" />
+                android:textSize="@dimen/text_sz_small"/>
         </RelativeLayout>
 
         <CheckBox
@@ -59,14 +50,14 @@
             android:button="@android:color/transparent"
             android:clickable="false"
             android:duplicateParentState="true"
-            android:focusable="false" />
+            android:focusable="false"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/media_gallery_grid_label_bg"
-            android:padding="@dimen/margin_medium">
+            android:padding="@dimen/margin_medium"
+            android:background="@color/media_gallery_grid_label_bg">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_name"
@@ -76,7 +67,7 @@
                 android:singleLine="true"
                 android:layout_toLeftOf="@+id/media_grid_item_filetype"
                 android:textSize="@dimen/text_sz_small"
-                android:textColor="@color/media_gallery_grid_label" />
+                android:textColor="@color/media_gallery_grid_label"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"
@@ -87,7 +78,7 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textSize="@dimen/text_sz_small"
-                android:textColor="@color/media_gallery_grid_label" />
+                android:textColor="@color/media_gallery_grid_label"/>
         </RelativeLayout>
     </org.wordpress.android.ui.CheckableFrameLayout>
 

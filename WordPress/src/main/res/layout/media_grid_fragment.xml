@@ -46,8 +46,10 @@
             android:numColumns="@integer/media_grid_num_columns"
             android:scrollbarStyle="outsideOverlay"
             android:stretchMode="columnWidth"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingLeft="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
+            android:verticalSpacing="@dimen/margin_small"
+            android:horizontalSpacing="@dimen/margin_small"
             android:visibility="gone"/>
 
         <LinearLayout
