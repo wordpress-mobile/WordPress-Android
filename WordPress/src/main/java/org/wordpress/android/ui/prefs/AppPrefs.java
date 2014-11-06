@@ -8,6 +8,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.reader.utils.ReaderTips;
 
 public class AppPrefs {
     public enum PrefKey {
@@ -99,6 +100,8 @@ public class AppPrefs {
             editor.remove(key.name());
         }
         editor.apply();
+
+        ReaderTips.reset();
     }
 
     public static long getCurrentUserId() {
