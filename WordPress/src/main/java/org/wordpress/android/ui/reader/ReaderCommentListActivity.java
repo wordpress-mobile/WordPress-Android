@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -14,13 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
@@ -28,7 +27,6 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.Suggestion;
-import org.wordpress.android.ui.posts.PostsActivity;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -60,6 +58,7 @@ public class ReaderCommentListActivity extends Activity {
     private ReaderPost mPost;
     private ReaderCommentAdapter mCommentAdapter;
     private SuggestionAdapter mSuggestionAdapter;
+    private ServiceConnection mSuggestionServiceConnection;
 
     private WPListView mListView;
     private SuggestionAutoCompleteText mEditComment;
@@ -118,7 +117,8 @@ public class ReaderCommentListActivity extends Activity {
 
         refreshComments();
 
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mPost.isWP());
+        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection((int)mBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions((int)mBlogId, this, mSuggestionServiceConnection, mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }
@@ -240,6 +240,13 @@ public class ReaderCommentListActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        this.unbindService(mSuggestionServiceConnection);
     }
 
     private boolean hasCommentAdapter() {

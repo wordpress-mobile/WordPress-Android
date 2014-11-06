@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,7 @@ public class ViewPostFragment extends Fragment {
     private boolean mShouldLoadPost = true;
 
     private SuggestionAdapter mSuggestionAdapter;
+    private ServiceConnection mSuggestionServiceConnection;
 
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -98,6 +100,13 @@ public class ViewPostFragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getActivity().getApplicationContext())
                 .unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getActivity().unbindService(mSuggestionServiceConnection);
     }
 
     @Override
@@ -183,7 +192,8 @@ public class ViewPostFragment extends Fragment {
         if (!isAdded()) return;
 
         int remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity());
+        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection(remoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnection);
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
         }

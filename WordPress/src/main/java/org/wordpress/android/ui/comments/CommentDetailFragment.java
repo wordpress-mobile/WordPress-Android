@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
@@ -85,6 +86,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private Note mNote;
 
     private SuggestionAdapter mSuggestionAdapter;
+    private ServiceConnection mSuggestionServiceConnection;
 
     private TextView mTxtStatus;
     private TextView mTxtContent;
@@ -184,6 +186,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        getActivity().unbindService(mSuggestionServiceConnection);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
@@ -268,7 +277,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private void setupSuggestionsServiceAndAdapter() {
         if (!isAdded()) return;
 
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity());
+        mSuggestionServiceConnection = SuggestionUtils.suggestionServiceConnection(mRemoteBlogId);
+        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mRemoteBlogId, getActivity(), mSuggestionServiceConnection);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }
