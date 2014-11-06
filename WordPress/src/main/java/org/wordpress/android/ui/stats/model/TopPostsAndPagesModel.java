@@ -13,16 +13,16 @@ import java.util.List;
 
 
 public class TopPostsAndPagesModel implements Serializable {
-    private String period;
-    private String date;
-    private String blogID;
-    private List<TopPostModel> topPostsAndPages;
+    private String mPeriod;
+    private String mDate;
+    private String mBlogID;
+    private List<TopPostModel> mTopPostsAndPages;
 
     public TopPostsAndPagesModel(String blogID, JSONObject response) throws JSONException {
-        this.blogID = blogID;
-        this.period = response.getString("period");
-        this.date = response.getString("date");
-        JSONArray postViewsArray;
+        this.mBlogID = blogID;
+        this.mPeriod = response.getString("period");
+        this.mDate = response.getString("date");
+        JSONArray postViewsArray = null;
         JSONObject jDaysObject = response.getJSONObject("days");
         if (jDaysObject.length() == 0) {
             throw new JSONException("Invalid document returned from the REST API");
@@ -31,9 +31,11 @@ public class TopPostsAndPagesModel implements Serializable {
         Iterator<String> keys = jDaysObject.keys();
         if (keys.hasNext()) {
             String key = keys.next();
-            JSONObject jDateObject = jDaysObject.getJSONObject(key);
-            postViewsArray = jDateObject.getJSONArray("postviews");
-        } else {
+            JSONObject jDateObject = jDaysObject.optJSONObject(key); // This could be an empty array on site with low traffic
+            postViewsArray = (jDateObject != null) ? jDateObject.getJSONArray("postviews") : null;
+        }
+
+        if (postViewsArray == null) {
             postViewsArray = new JSONArray();
         }
 
@@ -49,34 +51,34 @@ public class TopPostsAndPagesModel implements Serializable {
                         "at position " + i + " Response: " + response.toString(), e);
             }
         }
-        this.topPostsAndPages = list;
+        this.mTopPostsAndPages = list;
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public String getPeriod() {
-        return period;
+        return mPeriod;
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        this.mPeriod = period;
     }
 
     public List<TopPostModel> getTopPostsAndPages() {
-        return topPostsAndPages;
+        return mTopPostsAndPages;
     }
 }

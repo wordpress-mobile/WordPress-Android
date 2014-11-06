@@ -10,8 +10,8 @@ import java.util.List;
 
 
 public class CommentsModel implements Serializable {
-    private String date;
-    private String blogID;
+    private String mDate;
+    private String mBlogID;
     private int monthlyComments;
     private int totalComments;
     private String mostActiveDay;
@@ -22,8 +22,8 @@ public class CommentsModel implements Serializable {
     private List<AuthorModel> mAuthors;
 
     public CommentsModel(String blogID, JSONObject response) throws JSONException {
-        this.blogID = blogID;
-        this.date = response.getString("date");
+        this.mBlogID = blogID;
+        this.mDate = response.getString("date");
 
         this.monthlyComments = response.getInt("monthly_comments");
         this.totalComments = response.getInt("total_comments");
@@ -54,26 +54,26 @@ public class CommentsModel implements Serializable {
                 int comments = currentAuthorJSON.getInt("comments");
                 String url = currentAuthorJSON.getString("link");
                 String gravatar = currentAuthorJSON.getString("gravatar");
-                AuthorModel currentAuthor = new AuthorModel(blogID, date, url, name, gravatar, comments, null);
+                AuthorModel currentAuthor = new AuthorModel(blogID, mDate, url, name, gravatar, comments, null);
                 mAuthors.add(currentAuthor);
             }
         }
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public List<TopPostModel> getPosts() {

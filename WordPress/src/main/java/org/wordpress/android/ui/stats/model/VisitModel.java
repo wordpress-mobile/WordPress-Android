@@ -4,68 +4,68 @@ import java.io.Serializable;
 
 public class VisitModel implements Serializable {
 
-    private int views;
-    private int reblogs;
-    private int likes;
-    private int visitors;
-    private int comments;
-    private String period;
-    private String blogID;
+    private int mViews;
+    private int mReblogs;
+    private int mLikes;
+    private int mVisitors;
+    private int mComments;
+    private String mPeriod;
+    private String mBlogID;
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public int getViews() {
-        return views;
+        return mViews;
     }
 
     public void setViews(int views) {
-        this.views = views;
+        this.mViews = views;
     }
 
     public int getReblogs() {
-        return reblogs;
+        return mReblogs;
     }
 
     public void setReblogs(int reblogs) {
-        this.reblogs = reblogs;
+        this.mReblogs = reblogs;
     }
 
     public int getLikes() {
-        return likes;
+        return mLikes;
     }
 
     public void setLikes(int likes) {
-        this.likes = likes;
+        this.mLikes = likes;
     }
 
     public int getVisitors() {
-        return visitors;
+        return mVisitors;
     }
 
     public void setVisitors(int visitors) {
-        this.visitors = visitors;
+        this.mVisitors = visitors;
     }
 
     public int getComments() {
-        return comments;
+        return mComments;
     }
 
     public void setComments(int comments) {
-        this.comments = comments;
+        this.mComments = comments;
     }
 
     public String getPeriod() {
-        return period;
+        return mPeriod;
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        this.mPeriod = period;
     }
 
 }

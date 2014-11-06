@@ -12,17 +12,17 @@ import java.util.List;
 
 
 public class ClicksModel implements Serializable {
-    private String period;
-    private String date;
-    private String blogID;
-    private int otherClicks;
-    private int totalClicks;
-    private List<ClickGroupModel> clickGroups;
+    private String mPeriod;
+    private String mDate;
+    private String mBlogID;
+    private int mOtherClicks;
+    private int mTotalClicks;
+    private List<ClickGroupModel> mClickGroups;
 
     public ClicksModel(String blogID, JSONObject response) throws JSONException {
-        this.blogID = blogID;
-        this.period = response.getString("period");
-        this.date = response.getString("date");
+        this.mBlogID = blogID;
+        this.mPeriod = response.getString("period");
+        this.mDate = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
         if (jDaysObject.length() == 0) {
@@ -34,17 +34,17 @@ public class ClicksModel implements Serializable {
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.otherClicks = firstDayObject.getInt("other_clicks");
-        this.totalClicks = firstDayObject.getInt("total_clicks");
+        this.mOtherClicks = firstDayObject.getInt("other_clicks");
+        this.mTotalClicks = firstDayObject.getInt("total_clicks");
         jClickGroupsArray = firstDayObject.optJSONArray("clicks");
 
         if (jClickGroupsArray != null) {
-            clickGroups = new ArrayList<ClickGroupModel>(jClickGroupsArray.length());
+            mClickGroups = new ArrayList<ClickGroupModel>(jClickGroupsArray.length());
             for (int i = 0; i < jClickGroupsArray.length(); i++) {
                 try {
                     JSONObject currentGroupJSON = jClickGroupsArray.getJSONObject(i);
-                    ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, date, currentGroupJSON);
-                    clickGroups.add(currentGroupModel);
+                    ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, mDate, currentGroupJSON);
+                    mClickGroups.add(currentGroupModel);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object " +
                             "at position " + i + " Response: " + response.toString(), e);
@@ -54,30 +54,38 @@ public class ClicksModel implements Serializable {
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public String getPeriod() {
-        return period;
+        return mPeriod;
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        this.mPeriod = period;
     }
 
     public List<ClickGroupModel> getClickGroups() {
-        return this.clickGroups;
+        return this.mClickGroups;
+    }
+
+    public int getOtherClicks() {
+        return mOtherClicks;
+    }
+
+    public int getTotalClicks() {
+        return mTotalClicks;
     }
 }

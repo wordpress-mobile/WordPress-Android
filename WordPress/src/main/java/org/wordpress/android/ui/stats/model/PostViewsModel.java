@@ -239,122 +239,122 @@ public class PostViewsModel implements Serializable {
     }
 
     public class Day implements Serializable {
-        private int count;
-        private String day;
+        private int mCount;
+        private String mDay;
 
         public String getDay() {
-            return day;
+            return mDay;
         }
 
         public void setDay(String day) {
-            this.day = day;
+            this.mDay = day;
         }
 
         public int getCount() {
-            return count;
+            return mCount;
         }
 
         public void setCount(int count) {
-            this.count = count;
+            this.mCount = count;
         }
     }
 
     public class Week implements Serializable {
-        int change;
-        int total;
-        int average;
-        List<Day> days = new LinkedList<Day>();
+        int mChange;
+        int mTotal;
+        int mAverage;
+        List<Day> mDays = new LinkedList<Day>();
 
         public int getTotal() {
-            return total;
+            return mTotal;
         }
 
         public void setTotal(int total) {
-            this.total = total;
+            this.mTotal = total;
         }
 
         public int getAverage() {
-            return average;
+            return mAverage;
         }
 
         public void setAverage(int average) {
-            this.average = average;
+            this.mAverage = average;
         }
 
         public int getChange() {
-            return change;
+            return mChange;
         }
 
         public void setChange(int change) {
-            this.change = change;
+            this.mChange = change;
         }
 
         public List<Day> getDays() {
-            return days;
+            return mDays;
         }
 
         public void setDays(List<Day> days) {
-            this.days = days;
+            this.mDays = days;
         }
     }
 
     public class Average implements Serializable {
-        private String label;
-        private int overall;
-        private int[] months = new int[12];
+        private String mLabel;
+        private int mOverall;
+        private int[] mMonths = new int[12];
 
         public String getLabel() {
-            return label;
+            return mLabel;
         }
 
         public void setLabel(String label) {
-            this.label = label;
+            this.mLabel = label;
         }
 
         public int getOverall() {
-            return overall;
+            return mOverall;
         }
 
         public void setOverall(int overall) {
-            this.overall = overall;
+            this.mOverall = overall;
         }
 
         public int[] getMonths() {
-            return months;
+            return mMonths;
         }
 
         public void setMonths(int[] months) {
-            this.months = months;
+            this.mMonths = months;
         }
     }
 
     public class Year implements Serializable {
-        String label;
-        int total;
-        int[] months = new int[12];
+        String mLabel;
+        int mTotal;
+        int[] mMonths = new int[12];
 
         public int[] getMonths() {
-            return months;
+            return mMonths;
         }
 
         public void setMonths(int[] months) {
-            this.months = months;
+            this.mMonths = months;
         }
 
         public String getLabel() {
-            return label;
+            return mLabel;
         }
 
         public void setLabel(String label) {
-            this.label = label;
+            this.mLabel = label;
         }
 
         public int getTotal() {
-            return total;
+            return mTotal;
         }
 
         public void setTotal(int total) {
-            this.total = total;
+            this.mTotal = total;
         }
     }
 }

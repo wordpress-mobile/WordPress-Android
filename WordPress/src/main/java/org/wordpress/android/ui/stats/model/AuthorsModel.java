@@ -12,16 +12,16 @@ import java.util.List;
 
 
 public class AuthorsModel implements Serializable {
-    private String period;
-    private String date;
-    private String blogID;
+    private String mPeriod;
+    private String mDate;
+    private String mBlogID;
     private int otherViews;
     private List<AuthorModel> mAuthors;
 
     public AuthorsModel(String blogID, JSONObject response) throws JSONException {
-        this.blogID = blogID;
-        this.period = response.getString("period");
-        this.date = response.getString("date");
+        this.mBlogID = blogID;
+        this.mPeriod = response.getString("period");
+        this.mDate = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
         if (jDaysObject.length() == 0) {
@@ -33,7 +33,7 @@ public class AuthorsModel implements Serializable {
         Iterator<String> keys = jDaysObject.keys();
         String key = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(key);
-        this.otherViews = firstDayObject.getInt("other_views");
+        this.otherViews = firstDayObject.optInt("other_views");
         authorsJSONArray = firstDayObject.optJSONArray("authors");
 
         if (authorsJSONArray != null) {
@@ -41,7 +41,7 @@ public class AuthorsModel implements Serializable {
             for (int i = 0; i < authorsJSONArray.length(); i++) {
                 try {
                     JSONObject currentAuthorJSON = authorsJSONArray.getJSONObject(i);
-                    AuthorModel currentAuthor = new AuthorModel(blogID, date, currentAuthorJSON);
+                    AuthorModel currentAuthor = new AuthorModel(blogID, mDate, currentAuthorJSON);
                     mAuthors.add(currentAuthor);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Unexpected Author object " +
@@ -52,27 +52,27 @@ public class AuthorsModel implements Serializable {
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public String getPeriod() {
-        return period;
+        return mPeriod;
     }
 
     public void setPeriod(String period) {
-        this.period = period;
+        this.mPeriod = period;
     }
 
     public List<AuthorModel> getAuthors() {

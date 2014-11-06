@@ -11,6 +11,7 @@ import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,9 +21,12 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsUtils;
 import org.wordpress.android.ui.stats.model.AuthorsModel;
 import org.wordpress.android.ui.stats.model.ClicksModel;
+import org.wordpress.android.ui.stats.model.CommentFollowersModel;
 import org.wordpress.android.ui.stats.model.CommentsModel;
+import org.wordpress.android.ui.stats.model.FollowersModel;
 import org.wordpress.android.ui.stats.model.GeoviewsModel;
 import org.wordpress.android.ui.stats.model.ReferrersModel;
+import org.wordpress.android.ui.stats.model.TagsModel;
 import org.wordpress.android.ui.stats.model.TopPostsAndPagesModel;
 import org.wordpress.android.ui.stats.model.VideoPlaysModel;
 import org.wordpress.android.ui.stats.model.VisitsModel;
@@ -31,6 +35,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -45,7 +50,8 @@ public class StatsService extends Service {
     public static final String ARG_PERIOD = "stats_period";
     public static final String ARG_DATE = "stats_date";
     public static final String ARG_UPDATE_GRAPH = "stats_update_graph";
-    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS, VIDEO_PLAYS, COMMENTS}
+    public static enum StatsEndpointsEnum {VISITS, TOP_POSTS, REFERRERS, CLICKS, GEO_VIEWS, AUTHORS,
+        VIDEO_PLAYS, COMMENTS, FOLLOWERS, COMMENT_FOLLOWERS, TAGS_AND_CATEGORIES}
 
     // broadcast action to notify clients of update start/end
     public static final String ACTION_STATS_UPDATING = "wp-stats-updating";
@@ -222,6 +228,24 @@ public class StatsService extends Service {
                 statsNetworkRequests.add(restClientUtils.get(commentsPath, commentsListener, commentsListener));
                 broadcastSectionUpdating(StatsEndpointsEnum.COMMENTS);
 
+                // Followers
+                RestListener followersListener = new RestListener(StatsEndpointsEnum.FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
+                final String followersPath = String.format("/sites/%s/stats/followers?max=%s", mServiceBlogId, 7);
+                statsNetworkRequests.add(restClientUtils.get(followersPath, followersListener, followersListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.FOLLOWERS);
+
+                // Comments Followers
+                RestListener commentFollowersListener = new RestListener(StatsEndpointsEnum.COMMENT_FOLLOWERS, mServiceBlogId, mServiceRequestedTimeframe);
+                final String commentFollowersPath = String.format("/sites/%s/stats/comment-followers?max=%s", mServiceBlogId, 7);
+                statsNetworkRequests.add(restClientUtils.get(commentFollowersPath, commentFollowersListener, commentFollowersListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.COMMENT_FOLLOWERS);
+
+                // Tags and Categories
+                RestListener tagsListener = new RestListener(StatsEndpointsEnum.TAGS_AND_CATEGORIES, mServiceBlogId, mServiceRequestedTimeframe);
+                final String tagsPath = String.format("/sites/%s/stats/tags", mServiceBlogId);
+                statsNetworkRequests.add(restClientUtils.get(tagsPath, tagsListener, tagsListener));
+                broadcastSectionUpdating(StatsEndpointsEnum.TAGS_AND_CATEGORIES);
+
                 numberOfNetworkCalls = statsNetworkRequests.size();
             } // end run
         } .start();
@@ -331,6 +355,21 @@ public class StatsService extends Service {
                     break;
                 case COMMENTS:
                     model = new CommentsModel(mRequestBlogId, response);
+                    break;
+                case FOLLOWERS:
+                    model = new FollowersModel(mRequestBlogId, response);
+                    break;
+                case COMMENT_FOLLOWERS:
+                    model = new CommentFollowersModel(mRequestBlogId, response);
+                    break;
+                case TAGS_AND_CATEGORIES:
+                    JSONArray outerTags = response.getJSONArray("tags");
+                    ArrayList<TagsModel> tagsParsed = new ArrayList<TagsModel>(outerTags.length());
+                    for (int i = 0; i < outerTags.length(); i++) {
+                        JSONObject current = outerTags.getJSONObject(i);
+                        tagsParsed.add(new TagsModel(mRequestBlogId, current));
+                    }
+                    model = tagsParsed;
                     break;
             }
             return model;

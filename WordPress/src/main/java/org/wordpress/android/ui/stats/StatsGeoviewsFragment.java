@@ -20,7 +20,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
     @Override
     protected void updateUI() {
-        if (mDatamodel != null) {
+        if (mDatamodel != null && ((GeoviewsModel) mDatamodel).getCountries() != null) {
             List<GeoviewModel> postViews = ((GeoviewsModel) mDatamodel).getCountries();
             ArrayAdapter adapter = new GeoviewsAdapter(getActivity(), postViews);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList);

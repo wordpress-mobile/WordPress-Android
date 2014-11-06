@@ -14,11 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class VisitsModel implements Serializable {
-    private String fields; // Holds a JSON Object
-    private String unit;
-    private String date;
-    private String blogID;
-    private List<VisitModel> visits;
+    private String mFields; // Holds a JSON Object
+    private String mUnit;
+    private String mDate;
+    private String mBlogID;
+    private List<VisitModel> mVisits;
 
     public VisitsModel(String blogID, JSONObject response) throws JSONException {
         this.setBlogID(blogID);
@@ -35,13 +35,13 @@ public class VisitsModel implements Serializable {
         }
 
         if (dataJSON == null || dataJSON.length() == 0) {
-            visits =  new ArrayList<VisitModel>(0);
+            mVisits =  new ArrayList<VisitModel>(0);
         } else {
             // Read the position/index of each field in the response
             HashMap<String, Integer> columnsMapping = new HashMap<String, Integer>(6);
             final JSONArray fieldsJSON = getFieldsJSON();
             if (fieldsJSON == null || fieldsJSON.length() == 0) {
-                visits =  new ArrayList<VisitModel>(0);
+                mVisits =  new ArrayList<VisitModel>(0);
             }
             try {
                 for (int i = 0; i < fieldsJSON.length(); i++) {
@@ -51,7 +51,7 @@ public class VisitsModel implements Serializable {
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.STATS, "Cannot read the parameter fields from the JSON response." +
                         "Response: " + response.toString(), e);
-                visits =  new ArrayList<VisitModel>(0);
+                mVisits =  new ArrayList<VisitModel>(0);
             }
 
             int viewsColumnIndex = columnsMapping.get("views");
@@ -62,7 +62,7 @@ public class VisitsModel implements Serializable {
             int periodColumnIndex = columnsMapping.get("period");
 
             int numPoints = dataJSON.length();
-            visits = new ArrayList<VisitModel>(numPoints);
+            mVisits = new ArrayList<VisitModel>(numPoints);
 
             for (int i = 0; i < numPoints; i++) {
                 try {
@@ -74,7 +74,7 @@ public class VisitsModel implements Serializable {
                     currentVisitModel.setComments(currentDayData.getInt(commentsColumnIndex));
                     currentVisitModel.setLikes(currentDayData.getInt(likesColumnIndex));
                     currentVisitModel.setReblogs(currentDayData.getInt(reblogsColumnIndex));
-                    visits.add(currentVisitModel);
+                    mVisits.add(currentVisitModel);
                 } catch (JSONException e) {
                     AppLog.e(AppLog.T.STATS, "Cannot read the Visit item at index " + i
                             + " Response: " + response.toString(), e);
@@ -84,31 +84,31 @@ public class VisitsModel implements Serializable {
     }
 
     public List<VisitModel> getVisits() {
-        return visits;
+        return mVisits;
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public String getUnit() {
-        return unit;
+        return mUnit;
     }
 
     public void setUnit(String unit) {
-        this.unit = unit;
+        this.mUnit = unit;
     }
 
     private JSONArray getFieldsJSON() {
@@ -128,10 +128,10 @@ public class VisitsModel implements Serializable {
     }
 
     private void setFields(String fields) {
-        this.fields = fields;
+        this.mFields = fields;
     }
 
     private String getFields() {
-        return fields;
+        return mFields;
     }
 }

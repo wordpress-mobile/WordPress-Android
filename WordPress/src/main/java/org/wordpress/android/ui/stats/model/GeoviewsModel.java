@@ -11,15 +11,15 @@ import java.util.List;
 
 
 public class GeoviewsModel implements Serializable {
-    private String date;
-    private String blogID;
+    private String mDate;
+    private String mBlogID;
     private int otherViews;
     private int totalViews;
     private List<GeoviewModel> countries;
 
     public GeoviewsModel(String blogID, JSONObject response) throws JSONException {
-        this.blogID = blogID;
-        this.date = response.getString("date");
+        this.mBlogID = blogID;
+        this.mDate = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
         if (jDaysObject.length() == 0) {
@@ -65,19 +65,19 @@ public class GeoviewsModel implements Serializable {
     }
 
     public String getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public void setBlogID(String blogID) {
-        this.blogID = blogID;
+        this.mBlogID = blogID;
     }
 
     public String getDate() {
-        return date;
+        return mDate;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.mDate = date;
     }
 
     public List<GeoviewModel> getCountries() {
