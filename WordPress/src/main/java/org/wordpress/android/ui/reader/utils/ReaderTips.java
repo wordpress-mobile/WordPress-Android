@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.utils;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,7 +22,16 @@ public class ReaderTips {
         SWIPE_POSTS
     }
 
-    public static void showTip(Activity activity, final ReaderTipType tipType) {
+    public static void showTipDelayed(final Activity activity, final ReaderTipType tipType) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showTip(activity, tipType);
+            }
+        }, 500);
+    }
+
+    public static void showTip(final Activity activity, final ReaderTipType tipType) {
         if (tipType == null || isTipShown(tipType)) {
             return;
         }

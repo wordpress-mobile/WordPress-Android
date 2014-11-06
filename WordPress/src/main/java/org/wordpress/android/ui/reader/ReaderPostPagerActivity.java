@@ -261,7 +261,7 @@ public class ReaderPostPagerActivity extends Activity
                         }
                         // let user know they can swipe through posts the first time around
                         if (!mHasAlreadyLoaded && idList.size() > 1) {
-                            ReaderTips.showTip(ReaderPostPagerActivity.this, ReaderTipType.SWIPE_POSTS);
+                            ReaderTips.showTipDelayed(ReaderPostPagerActivity.this, ReaderTipType.SWIPE_POSTS);
                         }
                         mHasAlreadyLoaded = true;
                     }
