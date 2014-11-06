@@ -14,10 +14,7 @@ import org.wordpress.android.models.ReaderUrlList;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderAnim;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -58,8 +55,6 @@ public class ReaderUserAdapter extends BaseAdapter {
         return mUsers.get(position).userId;
     }
 
-
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ReaderUser user = mUsers.get(position);
@@ -77,8 +72,6 @@ public class ReaderUserAdapter extends BaseAdapter {
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
-
-            // tapping anywhere in the view shows the user's blog (requires knowing the blog id)
             convertView.setEnabled(true);
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,21 +81,8 @@ public class ReaderUserAdapter extends BaseAdapter {
                     }
                 }
             });
-
-            // enable following/unfollowing the user's blog
-            ReaderUtils.showFollowStatus(holder.txtFollow, user.isFollowed);
-            holder.txtFollow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderAnim.animateFollowButton(holder.txtFollow);
-                    toggleFollowUser(user, holder.txtFollow);
-                }
-            });
-            holder.txtFollow.setVisibility(View.VISIBLE);
         } else {
-            // no blog url, so can't view blog or follow
             holder.txtUrl.setVisibility(View.GONE);
-            holder.txtFollow.setVisibility(View.GONE);
             convertView.setOnClickListener(null);
             convertView.setEnabled(false);
         }
@@ -112,28 +92,14 @@ public class ReaderUserAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void toggleFollowUser(ReaderUser user, TextView txtFollow) {
-        if (user == null) {
-            return;
-        }
-
-        boolean isAskingToFollow = !user.isFollowed;
-        if (ReaderBlogActions.performFollowAction(user.blogId, user.getUrl(), isAskingToFollow, null)) {
-            user.isFollowed = isAskingToFollow;
-            ReaderUtils.showFollowStatus(txtFollow, isAskingToFollow);
-        }
-    }
-
     private static class UserViewHolder {
         private final TextView txtName;
         private final TextView txtUrl;
-        private final TextView txtFollow;
         private final WPNetworkImageView imgAvatar;
 
         UserViewHolder(View view) {
             txtName = (TextView) view.findViewById(R.id.text_name);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
-            txtFollow = (TextView) view.findViewById(R.id.text_follow);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
         }
     }
