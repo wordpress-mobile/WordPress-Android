@@ -155,7 +155,9 @@
         </activity>
 
         <!-- Theme Activities -->
-        <activity android:name=".ui.themes.ThemeBrowserActivity" >
+        <activity
+            android:name=".ui.themes.ThemeBrowserActivity"
+            android:theme="@style/CalypsoTheme" >
         </activity>
 
         <!-- Deep Linking Activity -->
